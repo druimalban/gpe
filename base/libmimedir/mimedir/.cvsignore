@@ -1,0 +1,4 @@
+Makefile
+Makefile.in
+mimedir-marshal.c
+mimedir-marshal.h

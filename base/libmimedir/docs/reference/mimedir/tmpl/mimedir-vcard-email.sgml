@@ -1,0 +1,95 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVCardEMail
+
+<!-- ##### SECTION Short_Description ##### -->
+vCard e-mail address object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The #MIMEDirVCardEMail object contains information about a particular
+e-mail address that can be found in vCards. It contains some special properties
+that relate to the type of e-mail address.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### ENUM MIMEDirVCardEMailType ##### -->
+<para>
+Type of e-mail address.
+</para>
+
+@MIMEDIR_VCARD_EMAIL_TYPE_UNKNOWN: The e-mail address type is unknown or unsupported.
+@MIMEDIR_VCARD_EMAIL_TYPE_INTERNET: An Internet e-mail address.
+@MIMEDIR_VCARD_EMAIL_TYPE_X400: An X.400 address.
+
+<!-- ##### STRUCT MIMEDirVCardEMail ##### -->
+<para>
+The #MIMEDirVCardEMail-struct struct contains private data only, and
+should be accessed using the functions below.
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_vcard_email_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_email_new_from_attribute ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_email_set_from_attribute ##### -->
+<para>
+
+</para>
+
+@email: 
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_email_save_to_attribute ##### -->
+<para>
+
+</para>
+
+@email: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_email_get_as_string ##### -->
+<para>
+
+</para>
+
+@email: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_email_get_type_string ##### -->
+<para>
+
+</para>
+
+@email: 
+@Returns: 
+
+

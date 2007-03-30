@@ -1,0 +1,1672 @@
+# Finnish messages for libmimedir
+# Copyright (C) 2005 Ilkka Tuohela
+# This file is distributed under the same license as the /ibmimedir package.
+# Ilkka Tuohela <hile@iki.fi>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libmimedir\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-11-20 11:35+0200\n"
+"PO-Revision-Date: 2005-09-02 21:20+0300\n"
+"Last-Translator: Ilkka Tuohela <hile@iki.fi>\n"
+"Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../bin/ical-dump.c:48
+#, c-format
+msgid "Usage: %s ICALFILE\n"
+msgstr "Käyttö %s ICAL-tiedosto\n"
+
+#: ../bin/ical-dump.c:57
+msgid "secondly"
+msgstr "sekunneittain"
+
+#: ../bin/ical-dump.c:59
+msgid "minutely"
+msgstr "minuuteittain"
+
+#: ../bin/ical-dump.c:61
+msgid "hourly"
+msgstr "tunneittain"
+
+#: ../bin/ical-dump.c:63
+msgid "daily"
+msgstr "päivittäin"
+
+#: ../bin/ical-dump.c:65
+msgid "weekly"
+msgstr "viikoittain"
+
+#: ../bin/ical-dump.c:67
+msgid "monthly"
+msgstr "kuukausittain"
+
+#: ../bin/ical-dump.c:69
+msgid "yearly"
+msgstr "vuosittain"
+
+#: ../bin/ical-dump.c:71 ../bin/ical-dump.c:97
+msgid "unknown"
+msgstr "tuntematon"
+
+#: ../bin/ical-dump.c:81
+msgid "second"
+msgstr "sekunti"
+
+#: ../bin/ical-dump.c:83
+msgid "minute"
+msgstr "minuutti"
+
+#: ../bin/ical-dump.c:85
+msgid "hour"
+msgstr "tunti"
+
+#: ../bin/ical-dump.c:87
+msgid "day"
+msgstr "päivä"
+
+#: ../bin/ical-dump.c:89
+msgid "day of month"
+msgstr "kuukauden päivä"
+
+#: ../bin/ical-dump.c:91
+msgid "day of year"
+msgstr "vuoden päivä"
+
+#: ../bin/ical-dump.c:93
+msgid "week number"
+msgstr "viikon numero"
+
+#: ../bin/ical-dump.c:95
+msgid "month"
+msgstr "kuukausi"
+
+#: ../bin/ical-dump.c:118
+#, c-format
+msgid "  Recurrence:\n"
+msgstr "  Toistuvuus:\n"
+
+#: ../bin/ical-dump.c:120
+#, c-format
+msgid "    Frequency: %s\n"
+msgstr "    Taajuus: %s\n"
+
+#: ../bin/ical-dump.c:123
+#, c-format
+msgid "    Until: %s\n"
+msgstr "    Kunnes: %s\n"
+
+#: ../bin/ical-dump.c:128
+#, c-format
+msgid "    Count: %d\n"
+msgstr "    Kerrat: %d\n"
+
+#: ../bin/ical-dump.c:131
+#, c-format
+msgid "    Interval: %d\n"
+msgstr "    Aikaväli: %d\n"
+
+#: ../bin/ical-dump.c:134
+#, c-format
+msgid "    Unit: %s\n"
+msgstr "    Yksikkö: %s\n"
+
+#: ../bin/ical-dump.c:137
+#, c-format
+msgid "    Units: %s\n"
+msgstr "    Yksiköt: %s\n"
+
+#: ../bin/ical-dump.c:152
+#, c-format
+msgid ""
+"Event:\n"
+"\n"
+msgstr ""
+"Tapahtuma:\n"
+"\n"
+
+#: ../bin/ical-dump.c:154
+#, c-format
+msgid ""
+"Todo item:\n"
+"\n"
+msgstr ""
+"Tehtävä:\n"
+"\n"
+
+#: ../bin/ical-dump.c:156
+#, c-format
+msgid ""
+"Unknown component:\n"
+"\n"
+msgstr ""
+"Tuntematon komponentti:\n"
+"\n"
+
+#: ../bin/ical-dump.c:177
+#, c-format
+msgid "  Summary: %s\n"
+msgstr "  Yhteenveto: %s\n"
+
+#: ../bin/ical-dump.c:182
+#, c-format
+msgid "  Categories: %s\n"
+msgstr "Luokat: %s\n"
+
+#: ../bin/ical-dump.c:188
+msgid "high"
+msgstr "korkea"
+
+#: ../bin/ical-dump.c:190
+msgid "low"
+msgstr "matala"
+
+#: ../bin/ical-dump.c:192
+msgid "medium"
+msgstr "tavallinen"
+
+#: ../bin/ical-dump.c:193
+#, c-format
+msgid "  Priority: %s (%d)\n"
+msgstr "  Kiireellisyys: %s (%d)\n"
+
+#: ../bin/ical-dump.c:198
+#, c-format
+msgid "  Start date: %s\n"
+msgstr "  Aloituspäivä: %s\n"
+
+#: ../bin/ical-dump.c:205
+#, c-format
+msgid "  End date: %s\n"
+msgstr "  Lopetuspäivä: %s\n"
+
+#: ../bin/ical-dump.c:213
+#, c-format
+msgid "  Due date: %s\n"
+msgstr "  Eräpäivä: %s\n"
+
+#: ../bin/ical-dump.c:222
+#, c-format
+msgid "  Unique ID: %s\n"
+msgstr "  Yksilöllinen tunniste: %s\n"
+
+#: ../bin/ical-dump.c:223
+#, c-format
+msgid "  Sequence: %u\n"
+msgstr "  Järjestys: %u\n"
+
+#: ../bin/ical-dump.c:236
+#, c-format
+msgid "  All day event\n"
+msgstr "  Koko päivän tapahtuma\n"
+
+#: ../bin/ical-dump.c:261 ../bin/vcard-dump.c:84 ../bin/vcard-normalize.c:68
+#, c-format
+msgid "%s: invalid number of arguments\n"
+msgstr "%s: virheellinen määrä argumentteja\n"
+
+#: ../bin/vcard-dump.c:43 ../bin/vcard-normalize.c:43
+#, c-format
+msgid "Usage: %s VCARDFILE\n"
+msgstr "Käyttö: %s VCARD-tiedosto\n"
+
+#: ../bin/vcard-normalize.c:79
+#, c-format
+msgid "%s: error reading card file: %s\n"
+msgstr "%s: virhe luettaessa korttia: %s\n"
+
+#: ../bin/vcard-normalize.c:96
+#, c-format
+msgid "%s: error writing card file: %s\n"
+msgstr "%s: virhe kirjoitettaessa korttia: %s\n"
+
+#: ../mimedir/mimedir-attribute.c:131 ../mimedir/mimedir-vcard.c:298
+msgid "Name"
+msgstr "Nimi"
+
+#: ../mimedir/mimedir-attribute.c:132
+msgid "The attribute's name"
+msgstr "ominaisuuden nimi"
+
+#: ../mimedir/mimedir-attribute.c:137
+msgid "Group"
+msgstr "Ryhmä"
+
+#: ../mimedir/mimedir-attribute.c:138
+msgid "The attribute's group"
+msgstr "ominaisuuden ryhmä"
+
+#: ../mimedir/mimedir-attribute.c:896
+msgid "missing parameter name"
+msgstr "puuttuva parametrin nimi"
+
+#: ../mimedir/mimedir-attribute.c:921
+msgid "missing closing quotation mark"
+msgstr "puuttuva lainausmerkki lopusta"
+
+#: ../mimedir/mimedir-attribute.c:946
+msgid "wrong parameter syntax"
+msgstr "virheellinen parametrin syntaksi"
+
+#: ../mimedir/mimedir-attribute.c:956
+msgid "no parameter value"
+msgstr "parametrilla ei ole arvoa"
+
+#: ../mimedir/mimedir-attribute.c:1049
+msgid "missing attribute name/group"
+msgstr "puuttuva ominaisuuden nimi tai ryhmä"
+
+#: ../mimedir/mimedir-attribute.c:1065
+msgid "no attribute name after group"
+msgstr "puuttuva ominaisuuden nimi ryhmän jälkeen"
+
+#: ../mimedir/mimedir-attribute.c:1081
+msgid "missing value delimiter"
+msgstr "puuttuva arvojen erotin"
+
+#: ../mimedir/mimedir-attribute.c:1097
+msgid "invalid character"
+msgstr "virheellinen merkki"
+
+#: ../mimedir/mimedir-attribute.c:2468 ../mimedir/mimedir-attribute.c:2477
+msgid "illegal character"
+msgstr "virheellinen merkki"
+
+#: ../mimedir/mimedir-attribute.h:48
+#, c-format
+msgid "syntax error (%s)"
+msgstr "syntaksivirhe (%s)"
+
+#: ../mimedir/mimedir-attribute.h:49
+#, c-format
+msgid "illegal character 0x%02x for type \"%s\""
+msgstr "virheellinen merkki 0x%02x tyypille \"%s\""
+
+#: ../mimedir/mimedir-attribute.h:50
+#, c-format
+msgid "invalid format for type \"%s\" in attribute %s"
+msgstr "virheellinen muoto \"%s\" ominaisuudessa %s"
+
+#: ../mimedir/mimedir-attribute.h:51
+#, c-format
+msgid "attribute %s could not be decoded, since its encoding is unknown"
+msgstr "ominaisuutta %s ei voitu dekoodata, koska koodaus on tuntematon"
+
+#: ../mimedir/mimedir-attribute.h:52
+#, c-format
+msgid "invalid value in attribute %s"
+msgstr "virheellinen arvo ominaisuudessa %s"
+
+#: ../mimedir/mimedir-attribute.h:53
+#, c-format
+msgid "parameter \"%s\" must not be used more than once in attribute %s"
+msgstr ""
+"parametria \"%s\" ei voida käyttää useammin kuin kerran ominaisuudelle %s"
+
+#: ../mimedir/mimedir-attribute.h:54
+msgid "invalid Base64 sequence"
+msgstr "virheellinen Base64-sekvenssi"
+
+#: ../mimedir/mimedir-attribute.h:55
+msgid "invalid quoted-printable sequence"
+msgstr "virheellinen \"qouted-printable\"-sekvenssi"
+
+#: ../mimedir/mimedir-attribute.h:56
+#, c-format
+msgid "attribute list of %s is too short"
+msgstr "kohteen %s ominaisuuslista on liian lyhyt"
+
+#: ../mimedir/mimedir-attribute.h:57
+#, c-format
+msgid "attribute list of %s is too long"
+msgstr "kohteen %s ominaisuuslista on liian pitkä"
+
+#: ../mimedir/mimedir-datetime.c:114 ../mimedir/mimedir-vcomponent.c:352
+msgid "Time zone identifier"
+msgstr "Aikavyöhyke"
+
+#: ../mimedir/mimedir-datetime.c:115
+msgid "Time zone identifying string"
+msgstr "Aikavyöhykkeen esittävä merkkijono"
+
+#. Translators: YYYY-MM-DD HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1081
+#, c-format
+msgid "%04d-%02d-%02d %02d:%02d:%02d"
+msgstr "%04d-%02d-%02d %02d:%02d:%02d"
+
+#. Translators: YYYY-MM-DD
+#: ../mimedir/mimedir-datetime.c:1086
+#, c-format
+msgid "%04d-%02d-%02d"
+msgstr "%04d-%02d-%02d"
+
+#. Translators: HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1090
+#, c-format
+msgid "%02d:%02d:%02d"
+msgstr "%02d:%02d:%02d"
+
+#: ../mimedir/mimedir-period.c:111
+msgid "Free/busy type"
+msgstr "Vapaa/varattu-tyyppi"
+
+#: ../mimedir/mimedir-period.c:112
+msgid "Whether this object signifies a free or a busy period"
+msgstr "Määritteleekö tämä kohde vapaata tai varattua aikaa"
+
+#: ../mimedir/mimedir-profile.c:114
+msgid "Profile name"
+msgstr "Profiilin nimi"
+
+#: ../mimedir/mimedir-profile.c:115
+msgid "The name (type) of the profile"
+msgstr "Profiilin nimi (tyyppi)"
+
+#: ../mimedir/mimedir-profile.c:121
+msgid "Character set"
+msgstr "Merkistö"
+
+#: ../mimedir/mimedir-profile.c:122
+msgid "Character set used to en-/decode this profile"
+msgstr "Profiilin koodauksessa käytetty merkistö"
+
+#: ../mimedir/mimedir-profile.h:40
+#, c-format
+msgid "attribute %s defined twice"
+msgstr "ominaisuus %s määritelty kahdesti"
+
+#: ../mimedir/mimedir-profile.h:41
+msgid "unexpected end of profile"
+msgstr "odottamaton profiilin loppu"
+
+#: ../mimedir/mimedir-profile.h:42
+#, c-format
+msgid "required attribute %s is missing"
+msgstr "vaadittu ominaisuus %s puuttuu"
+
+#: ../mimedir/mimedir-profile.h:43
+msgid "unmatched END attribute"
+msgstr "END-ominaisuudella ei ole alkua"
+
+#: ../mimedir/mimedir-profile.h:44
+#, c-format
+msgid "wrong profile %s; expected %s"
+msgstr "väärä profiili %s; oletettiin %s"
+
+#: ../mimedir/mimedir-recurrence.c:221
+msgid "Frequency"
+msgstr "Esiintymistiheys"
+
+#: ../mimedir/mimedir-recurrence.c:222
+msgid "Frequency type of this recurrency rule"
+msgstr "Tämän toistuvuus-säännön esiintymistiheyden tyyppi"
+
+#: ../mimedir/mimedir-recurrence.c:229
+msgid "Date of last recurrence"
+msgstr "Viimeisimmän toiston päivämäärä"
+
+#: ../mimedir/mimedir-recurrence.c:230
+msgid "The date of the last recurrence of an event"
+msgstr "Tapahtuman viimeisimmän toistumisen päivämäärä"
+
+#: ../mimedir/mimedir-recurrence.c:235
+msgid "Number of recurrences"
+msgstr "Toistumisten lukumäärä"
+
+#: ../mimedir/mimedir-recurrence.c:236
+msgid "The number of recurrences of an event"
+msgstr "Tapahtuman toistumiskertojen lukumäärä"
+
+#: ../mimedir/mimedir-recurrence.c:243
+msgid "Recurrence interval"
+msgstr "Toistumisten aikaväli"
+
+#: ../mimedir/mimedir-recurrence.c:244
+msgid "The interval of recurrences of an event"
+msgstr "Tapahtuman Toistumiskertojen kertojen aikaväli"
+
+#: ../mimedir/mimedir-recurrence.c:251
+msgid "Recurrence unit"
+msgstr "Toistuvuuden yksikkö"
+
+#: ../mimedir/mimedir-recurrence.c:252
+msgid "By which unit a recurrence should be repeated"
+msgstr "Minkä yksikön mukaan toistuminen tapahtuu"
+
+#: ../mimedir/mimedir-recurrence.c:259
+msgid "Recurrence units"
+msgstr "Toistuvuuden yksiköt"
+
+#: ../mimedir/mimedir-recurrence.c:260
+msgid "List of units by which a recurrence should be repeated"
+msgstr "Lista yksiköistä, joiden mukaan toistuvuus tapahtuu"
+
+#: ../mimedir/mimedir-valarm.c:548
+#, c-format
+msgid ""
+"Reminder of your appointment:\n"
+"\n"
+"%s\n"
+"%s"
+msgstr ""
+"Muistutus tapaamisestasi:\n"
+"\n"
+"%s\n"
+"%s"
+
+#: ../mimedir/mimedir-vcal.c:148
+msgid "Method"
+msgstr "Menetelmä"
+
+#: ../mimedir/mimedir-vcal.c:149
+msgid "The vCalendar's method"
+msgstr "vCalendarin menetelmä"
+
+#: ../mimedir/mimedir-vcal.c:154 ../mimedir/mimedir-vcard.c:505
+msgid "Product identifier"
+msgstr "Tuotteen tunniste"
+
+#: ../mimedir/mimedir-vcal.c:155
+msgid ""
+"The product identifier of the vCalendar. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr ""
+"vCalendarin tuotetunniste. Uusien olioiden tapauksessa arvoksi asetetaan "
+"libMIMEDir:in tuotetunniste"
+
+#: ../mimedir/mimedir-vcal.c:384 ../mimedir/mimedir-vcard.c:2411
+#: ../mimedir/mimedir-vcomponent.c:2109
+#, c-format
+msgid "The profile contains the unsupported custom attribute %s.\n"
+msgstr "Profiili sisältää itse määritellyn, tukemattoman attribuutin %s.\n"
+
+#: ../mimedir/mimedir-vcal.c:387 ../mimedir/mimedir-vcard.c:2414
+#: ../mimedir/mimedir-vcomponent.c:2112
+#, c-format
+msgid "The profile contains the unknown attribute %s.\n"
+msgstr "Profiili sisältää tuntemattoman attribuutin %s.\n"
+
+#: ../mimedir/mimedir-vcal.c:432 ../mimedir/mimedir-vcal.c:454
+#: ../mimedir/mimedir-vcal.c:482 ../mimedir/mimedir-vcal.c:506
+#, c-format
+msgid "Error reading calendar file %s: %s!"
+msgstr "Virhe luettaessa kalenteritiedostoa %s: %s!"
+
+#: ../mimedir/mimedir-vcard-address.c:167
+msgid "Title"
+msgstr "Otsikko"
+
+#: ../mimedir/mimedir-vcard-address.c:168
+msgid "A one-line string with the most important address information"
+msgstr "Yksirivinen merkkijono, joka sisältää tärkeimmät osoitetiedot"
+
+#: ../mimedir/mimedir-vcard-address.c:174
+msgid "Freeform address"
+msgstr "Vapaamuotoinen osoite"
+
+#: ../mimedir/mimedir-vcard-address.c:175
+msgid "A freeform address string"
+msgstr "Vapaamuotoinen osoite"
+
+#: ../mimedir/mimedir-vcard-address.c:180
+msgid "Post office box"
+msgstr "Postilaatikko"
+
+#: ../mimedir/mimedir-vcard-address.c:181
+msgid "The addresses post office box"
+msgstr "Postilaatikon osoite"
+
+#: ../mimedir/mimedir-vcard-address.c:186
+msgid "Extended address"
+msgstr "Laajennettu osoite"
+
+#: ../mimedir/mimedir-vcard-address.c:187
+msgid "Extended address string"
+msgstr "Laajennetun osoitteen merkkijono"
+
+#: ../mimedir/mimedir-vcard-address.c:192
+msgid "Street"
+msgstr "Katuosoite"
+
+#: ../mimedir/mimedir-vcard-address.c:193
+msgid "Street address"
+msgstr "Katuosoite"
+
+#: ../mimedir/mimedir-vcard-address.c:198
+msgid "Locality"
+msgstr "Sijainti"
+
+#: ../mimedir/mimedir-vcard-address.c:199
+msgid "Locality (e.g. city, town, etc.)"
+msgstr "Sijainti (esim, kaupunki, kylä)"
+
+#: ../mimedir/mimedir-vcard-address.c:204
+msgid "Region"
+msgstr "Alue"
+
+#: ../mimedir/mimedir-vcard-address.c:205
+msgid "Region (e.g. state)"
+msgstr "Alue (esim. osavaltio)"
+
+#: ../mimedir/mimedir-vcard-address.c:210
+msgid "Postal code"
+msgstr "Postinumero"
+
+#: ../mimedir/mimedir-vcard-address.c:211
+msgid "Postal code (freeform string)"
+msgstr "Postinumero (vapaamuotoinen merkkijono)"
+
+#: ../mimedir/mimedir-vcard-address.c:216
+#: ../mimedir/mimedir-vcard-address.c:217
+msgid "Country"
+msgstr "Maa"
+
+#: ../mimedir/mimedir-vcard-address.c:222
+msgid "Domestic"
+msgstr "Kotimainen"
+
+#: ../mimedir/mimedir-vcard-address.c:223
+msgid "Whether this is a domestic address"
+msgstr "Onko tämä kotimainen osoite"
+
+#: ../mimedir/mimedir-vcard-address.c:228
+msgid "International"
+msgstr "Kansainvälinen"
+
+#: ../mimedir/mimedir-vcard-address.c:229
+msgid "Whether this is an international address"
+msgstr "Onko tämä kansainvälinen osoite"
+
+#: ../mimedir/mimedir-vcard-address.c:234
+msgid "Postal"
+msgstr "Postitusosoite"
+
+#: ../mimedir/mimedir-vcard-address.c:235
+msgid "Whether this is a postal address"
+msgstr "Onko tämä postitusosoite"
+
+#: ../mimedir/mimedir-vcard-address.c:240
+msgid "Parcel"
+msgstr "Paketti"
+
+#: ../mimedir/mimedir-vcard-address.c:241
+msgid "Whether parcels can be received at this address"
+msgstr "Voidaanko tähän osoitteeseen toimittaa paketteja"
+
+#: ../mimedir/mimedir-vcard-address.c:246 ../mimedir/mimedir-vcard-email.c:163
+#: ../mimedir/mimedir-vcard-phone.c:160
+msgid "Home"
+msgstr "Koti"
+
+#: ../mimedir/mimedir-vcard-address.c:247
+msgid "Whether this is a home address"
+msgstr "Onko tämä kotiosoite"
+
+#: ../mimedir/mimedir-vcard-address.c:252 ../mimedir/mimedir-vcard-email.c:169
+#: ../mimedir/mimedir-vcard-phone.c:166
+msgid "Work"
+msgstr "Työ"
+
+#: ../mimedir/mimedir-vcard-address.c:253
+msgid "Whether this is a work address"
+msgstr "Onko tämä työosoite"
+
+#: ../mimedir/mimedir-vcard-address.c:258 ../mimedir/mimedir-vcard-email.c:157
+#: ../mimedir/mimedir-vcard-phone.c:232
+msgid "Preferred"
+msgstr "Suositeltu"
+
+#: ../mimedir/mimedir-vcard-address.c:259
+msgid "Whether this is the preferred address"
+msgstr "Onko tämä suositeltu osoite"
+
+#: ../mimedir/mimedir-vcard-address.c:572
+#, c-format
+msgid "The %s attribute contains too many elements.\n"
+msgstr "Attribuutissa %s on liian monta osaa.\n"
+
+#: ../mimedir/mimedir-vcard-address.c:772
+#, c-format
+msgid "The address field is of unknown type %s.\n"
+msgstr "Osoitekenttä on tuntematonta tyyppiä %s.\n"
+
+#. Translators: pcode city
+#: ../mimedir/mimedir-vcard-address.c:864
+#: ../mimedir/mimedir-vcard-address.c:873
+#, c-format
+msgid "%s %s"
+msgstr "%s %s"
+
+#. Translators: city, region
+#: ../mimedir/mimedir-vcard-address.c:871
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
+#: ../mimedir/mimedir-vcard-address.c:914 ../mimedir/mimedir-vcard-email.c:538
+#: ../mimedir/mimedir-vcard-phone.c:695
+msgid "preferred"
+msgstr "suositeltu"
+
+#: ../mimedir/mimedir-vcard-address.c:919
+msgid "domestic"
+msgstr "kotimainen"
+
+#: ../mimedir/mimedir-vcard-address.c:924
+msgid "international"
+msgstr "kansainvälinen"
+
+#: ../mimedir/mimedir-vcard-address.c:929
+msgid "postal"
+msgstr "postitusosoite"
+
+#: ../mimedir/mimedir-vcard-address.c:934
+msgid "parcel"
+msgstr "paketti"
+
+#: ../mimedir/mimedir-vcard-address.c:939 ../mimedir/mimedir-vcard-email.c:560
+#: ../mimedir/mimedir-vcard-phone.c:701
+msgid "home"
+msgstr "koti"
+
+#: ../mimedir/mimedir-vcard-address.c:944 ../mimedir/mimedir-vcard-email.c:566
+#: ../mimedir/mimedir-vcard-phone.c:706
+msgid "work"
+msgstr "työ"
+
+#. Translators: Short address format: "locality/street"
+#: ../mimedir/mimedir-vcard-address.c:996
+#, c-format
+msgid "%s/%s"
+msgstr "%s/%s"
+
+#: ../mimedir/mimedir-vcard-address.c:1002
+msgid "<unknown>"
+msgstr "<tuntematon>"
+
+#: ../mimedir/mimedir-vcard-email.c:142 ../mimedir/mimedir-vcard.c:368
+msgid "Address"
+msgstr "Osoite"
+
+#: ../mimedir/mimedir-vcard-email.c:143
+msgid "The e-mail address"
+msgstr "Sähköpostiosoite"
+
+#: ../mimedir/mimedir-vcard-email.c:149
+msgid "Type"
+msgstr "Tyyppi"
+
+#: ../mimedir/mimedir-vcard-email.c:150
+msgid "Type of this e-mail address"
+msgstr "Sähköpostiosoitteen tyyppi"
+
+#: ../mimedir/mimedir-vcard-email.c:158
+msgid "Whether this is the preferred e-mail address"
+msgstr "Onko tämä suositeltu sähköpostiosoite"
+
+#: ../mimedir/mimedir-vcard-email.c:164
+msgid "Whether is a home e-mail address"
+msgstr "Onko sähköpostiosoite kotiosoite"
+
+#: ../mimedir/mimedir-vcard-email.c:170
+msgid "Whether this is an e-mail address at work"
+msgstr "Onko sähköpostiosoite työosoite"
+
+#: ../mimedir/mimedir-vcard-email.c:442
+#, c-format
+msgid "The email field is of unknown type %s.\n"
+msgstr "Sähköpostikenttä on tuntematonta tyyppiä %s.\n"
+
+#: ../mimedir/mimedir-vcard-email.c:548
+msgid "Internet"
+msgstr "Internet"
+
+#: ../mimedir/mimedir-vcard-email.c:553
+msgid "X.400"
+msgstr "X.400"
+
+#: ../mimedir/mimedir-vcard-phone.c:153
+msgid "Number"
+msgstr "Numero"
+
+#: ../mimedir/mimedir-vcard-phone.c:154
+msgid "The telephone number (freeform string)"
+msgstr "Puhelinnumero (vapaamuotoinen merkkijono)"
+
+#: ../mimedir/mimedir-vcard-phone.c:161
+msgid "Whether this is a home phone number"
+msgstr "Onko tämä kotipuhelinnumero"
+
+#: ../mimedir/mimedir-vcard-phone.c:167
+msgid "Whether this is a phone number at work"
+msgstr "Onko tämä työpuhelinnumero"
+
+#: ../mimedir/mimedir-vcard-phone.c:172
+msgid "Voice"
+msgstr "Puhe"
+
+#: ../mimedir/mimedir-vcard-phone.c:173
+msgid "Whether this is a voice number"
+msgstr "Voiko tähän numeroon puhua"
+
+#: ../mimedir/mimedir-vcard-phone.c:178
+msgid "Fax"
+msgstr "Faksi"
+
+#: ../mimedir/mimedir-vcard-phone.c:179
+msgid "Whether this is a facsimile number"
+msgstr "Onko tämä faksinumero"
+
+#: ../mimedir/mimedir-vcard-phone.c:184 ../mimedir/mimedir-vcard-phone.c:721
+msgid "BBS"
+msgstr "BBS"
+
+#: ../mimedir/mimedir-vcard-phone.c:185
+msgid "Whether this is a bulletin board system number"
+msgstr "Onko tämä BBS-järjestelmän numero"
+
+#: ../mimedir/mimedir-vcard-phone.c:190
+msgid "Modem"
+msgstr "Modeemi"
+
+#: ../mimedir/mimedir-vcard-phone.c:191
+msgid "Whether this is a modem number"
+msgstr "Onko tämä modeeminumero"
+
+#: ../mimedir/mimedir-vcard-phone.c:196
+msgid "Pager"
+msgstr "Hakulaite"
+
+#: ../mimedir/mimedir-vcard-phone.c:197
+msgid "Whether this is a pager number"
+msgstr "Onko tämä hakulaitteen numero"
+
+#: ../mimedir/mimedir-vcard-phone.c:202
+msgid "Video"
+msgstr "Video"
+
+#: ../mimedir/mimedir-vcard-phone.c:203
+msgid "Whether this is a video phone number"
+msgstr "Onko tämä numero videopuhelimen numero"
+
+#: ../mimedir/mimedir-vcard-phone.c:208
+msgid "Cell"
+msgstr "Matkapuhelin"
+
+#: ../mimedir/mimedir-vcard-phone.c:209
+msgid "Whether this is a cell (mobile) phone number"
+msgstr "Onko tämä matkapuhelimen numero"
+
+#: ../mimedir/mimedir-vcard-phone.c:214
+msgid "Car"
+msgstr "Autopuhelin"
+
+#: ../mimedir/mimedir-vcard-phone.c:215
+msgid "Whether this is car phone number"
+msgstr "Onko tämä puhelin autopuhelimen numero"
+
+#: ../mimedir/mimedir-vcard-phone.c:220 ../mimedir/mimedir-vcard-phone.c:756
+msgid "ISDN"
+msgstr "ISDN"
+
+#: ../mimedir/mimedir-vcard-phone.c:221
+msgid "Whether this is a ISDN number"
+msgstr "Onko tämä numero ISDN-numero"
+
+#: ../mimedir/mimedir-vcard-phone.c:226 ../mimedir/mimedir-vcard-phone.c:761
+msgid "PCS"
+msgstr "PCS"
+
+#: ../mimedir/mimedir-vcard-phone.c:227
+msgid "Whether this is a PCS number"
+msgstr "Onko tämä PCS-numero"
+
+#: ../mimedir/mimedir-vcard-phone.c:233
+msgid "Whether this is the preferred number"
+msgstr "Onko tämä suositeltu numero"
+
+#: ../mimedir/mimedir-vcard-phone.c:238
+msgid "Message"
+msgstr "Viesti"
+
+#: ../mimedir/mimedir-vcard-phone.c:239
+msgid "Whether this number has a voice recorder"
+msgstr "Onko tässä numerossa puhelinvastaaja"
+
+#: ../mimedir/mimedir-vcard-phone.c:588
+#, c-format
+msgid "The phone field is of unknown type %s.\n"
+msgstr "Puhelinnumeron kenttä on tuntematonta tyyppiä %s.\n"
+
+#: ../mimedir/mimedir-vcard-phone.c:711
+msgid "voice"
+msgstr "puhe"
+
+#: ../mimedir/mimedir-vcard-phone.c:716
+msgid "fax"
+msgstr "fax"
+
+#: ../mimedir/mimedir-vcard-phone.c:726
+msgid "modem"
+msgstr "modeemi"
+
+#: ../mimedir/mimedir-vcard-phone.c:731
+msgid "pager"
+msgstr "hakulaite"
+
+#: ../mimedir/mimedir-vcard-phone.c:736
+msgid "video"
+msgstr "video"
+
+#: ../mimedir/mimedir-vcard-phone.c:741
+msgid "voice message"
+msgstr "ääniviesti"
+
+#: ../mimedir/mimedir-vcard-phone.c:746
+msgid "cell phone"
+msgstr "matkapuhelin"
+
+#: ../mimedir/mimedir-vcard-phone.c:751
+msgid "car phone"
+msgstr "autopuhelin"
+
+#: ../mimedir/mimedir-vcard.c:299
+msgid "The spelled out name full name of this person"
+msgstr "Henkilön koko nimi"
+
+#: ../mimedir/mimedir-vcard.c:304
+msgid "Family name"
+msgstr "Sukunimi"
+
+#: ../mimedir/mimedir-vcard.c:305
+msgid "The family name of this person"
+msgstr "Henkilön sukunimi"
+
+#: ../mimedir/mimedir-vcard.c:310
+msgid "Given name"
+msgstr "Etunimi"
+
+#: ../mimedir/mimedir-vcard.c:311
+msgid "The given name of this person"
+msgstr "Henkilön etunimi"
+
+#: ../mimedir/mimedir-vcard.c:316
+msgid "Middle name"
+msgstr "Muut etunimet"
+
+#: ../mimedir/mimedir-vcard.c:317
+msgid "The middle name or middle initials of this person"
+msgstr "Nimen välikirjaimet tai muut etunimet"
+
+#: ../mimedir/mimedir-vcard.c:322
+msgid "Prefix"
+msgstr "Etuliite"
+
+#: ../mimedir/mimedir-vcard.c:323
+msgid "The name prefix (e.g. honorific prefix) of this person"
+msgstr "Nimeen liitettävä etuliite (esimerkiksi kunnioittava nimitys)"
+
+#: ../mimedir/mimedir-vcard.c:328
+msgid "Suffix"
+msgstr "Jälkiliite"
+
+#: ../mimedir/mimedir-vcard.c:329
+msgid "The name suffix of this person"
+msgstr "Nimeen liitettävä jälkiliite"
+
+#: ../mimedir/mimedir-vcard.c:334
+msgid "Nickname list"
+msgstr "Lista lempinimistä"
+
+#: ../mimedir/mimedir-vcard.c:335
+msgid ""
+"List of all nick names. This is a GList *, where the elements are of type "
+"const gchar *"
+msgstr ""
+"Lista lempinimistä. Tämä on GList *-tietorakenne, jossa osat ovat tyyppiä "
+"const gchar *"
+
+#: ../mimedir/mimedir-vcard.c:339
+msgid "Nick name"
+msgstr "Lempinimi"
+
+#: ../mimedir/mimedir-vcard.c:340
+msgid "The first nick name"
+msgstr "Ensimmäinen lempinimi"
+
+#. FIXME: this is useless
+#: ../mimedir/mimedir-vcard.c:345
+msgid "Photo"
+msgstr "Valokuva"
+
+#: ../mimedir/mimedir-vcard.c:346
+msgid "Pointer to a byte stream, representing an image of the person"
+msgstr "Osoitin tavuvirtaan, joka sisältää kuvan henkilöstä"
+
+#: ../mimedir/mimedir-vcard.c:350
+msgid "Photo URI"
+msgstr "Valokuvan URI"
+
+#: ../mimedir/mimedir-vcard.c:351
+msgid "URI to an image of this person"
+msgstr "URI kuvaan tästä henkilöstä"
+
+#: ../mimedir/mimedir-vcard.c:356
+msgid "Birthday"
+msgstr "Syntymäpäivä"
+
+#: ../mimedir/mimedir-vcard.c:357
+msgid "The person's birthday"
+msgstr "Henkilön syntymäpäivä"
+
+#: ../mimedir/mimedir-vcard.c:363
+msgid "Address list"
+msgstr "Osoitelista"
+
+#: ../mimedir/mimedir-vcard.c:364
+msgid ""
+"List of all addresses. This is a GList *, where the elements are of type "
+"MIMEDirAddress *"
+msgstr ""
+"Lista osoitteista. Tämä on GList *-tietorakenne, jossa osat ovat tyyppiä "
+"MIMEDirAddress *"
+
+#: ../mimedir/mimedir-vcard.c:369
+msgid "The preferred address"
+msgstr "Ensisijainen osoite"
+
+#: ../mimedir/mimedir-vcard.c:375
+msgid "Phone number list"
+msgstr "Lista puhelinnumeroista"
+
+#: ../mimedir/mimedir-vcard.c:376
+msgid ""
+"List of all phone numbers. This is a GList *, where the elements are of type "
+"MIMEDirPhone *"
+msgstr ""
+"Lista puhelinnumeroista. Tämä on GList *-tietorakenne, jossa osat ovat "
+"tyyppiä MIMEDirPhone *"
+
+#: ../mimedir/mimedir-vcard.c:380
+msgid "Phone number"
+msgstr "Puhelinnumero"
+
+#: ../mimedir/mimedir-vcard.c:381
+msgid "The preferred phone number"
+msgstr "Ensisijainen puhelinnumero"
+
+#: ../mimedir/mimedir-vcard.c:386
+msgid "E-mail address list"
+msgstr "Lista sähköpostiosoitteista"
+
+#: ../mimedir/mimedir-vcard.c:387
+msgid ""
+"List of all e-mail addresses. This is a GList *, where the elements are of "
+"type MIMEDirEmail *"
+msgstr ""
+"Lista kaikista sähöpostiosoitteista. Tämä on GList *-tietorakenne, jossa "
+"osat ovat tyyppiä MIMEDirEmail *"
+
+#: ../mimedir/mimedir-vcard.c:391
+msgid "E-mail address"
+msgstr "Sähköpostiosoite"
+
+#: ../mimedir/mimedir-vcard.c:392
+msgid "The preferred e-mail address"
+msgstr "Ensisijainen sähköpostiosoite"
+
+#: ../mimedir/mimedir-vcard.c:397
+msgid "Mailer"
+msgstr "Sähköpostiohjelma"
+
+#: ../mimedir/mimedir-vcard.c:398
+msgid "The mailing program used by this person"
+msgstr "Henkilön käyttämä sähköpostiohjelma"
+
+#: ../mimedir/mimedir-vcard.c:404
+msgid "Time zone"
+msgstr "Aikavyöhyke"
+
+#: ../mimedir/mimedir-vcard.c:405
+msgid "The time zone this person lives in"
+msgstr "Aikavyöhyke, jossa henkilö asuu"
+
+#: ../mimedir/mimedir-vcard.c:412
+msgid "Time zone string"
+msgstr "Aikavyöhykkeen merkkijono"
+
+#: ../mimedir/mimedir-vcard.c:413
+msgid "The time zone this person lives in (deprecated string representation)"
+msgstr "Aikavyöhyke, jossa henkilö  asuu (käytöstä poistettu esitysmuoto)"
+
+#: ../mimedir/mimedir-vcard.c:418
+msgid "Latitude"
+msgstr "Leveyspiiri"
+
+#: ../mimedir/mimedir-vcard.c:419
+msgid "Latitude of this person's residence"
+msgstr "Henkilön asuinpaikan leveyspiiri"
+
+#: ../mimedir/mimedir-vcard.c:426
+msgid "Longitude"
+msgstr "Pituuspiiri"
+
+#: ../mimedir/mimedir-vcard.c:427
+msgid "Longitude of this person's residence"
+msgstr "Henkilön asuinpaikan pituuspiiri"
+
+#: ../mimedir/mimedir-vcard.c:435
+msgid "Job title"
+msgstr "Työnimike"
+
+#: ../mimedir/mimedir-vcard.c:436
+msgid "The person's job title"
+msgstr "Henkilö työnimike"
+
+#: ../mimedir/mimedir-vcard.c:441
+msgid "Role"
+msgstr "Asema"
+
+#: ../mimedir/mimedir-vcard.c:442
+msgid "The person's job role"
+msgstr "Henkilön asema työssä"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:447
+msgid "Logo"
+msgstr "Logo"
+
+#: ../mimedir/mimedir-vcard.c:448
+msgid "Pointer to a byte stream, representing the logo of the person's company"
+msgstr "Osoitin tavuvirtaan, joka sisältää kuvan henkilön yrityksen logosta"
+
+#: ../mimedir/mimedir-vcard.c:452
+msgid "Logo URI"
+msgstr "Logon URI"
+
+#: ../mimedir/mimedir-vcard.c:453
+msgid "URI to the logo of this person's company"
+msgstr "URI henkilön yrityksen logon sisältävään kuvaan"
+
+#: ../mimedir/mimedir-vcard.c:458
+msgid "Agent"
+msgstr "Edustaja"
+
+#: ../mimedir/mimedir-vcard.c:459
+msgid "A person, acting for the person described in this card"
+msgstr "Kortissa kuvatun henkilön edustaja"
+
+#: ../mimedir/mimedir-vcard.c:464
+msgid "Agent URI"
+msgstr "Edustajan URI"
+
+#: ../mimedir/mimedir-vcard.c:465
+msgid ""
+"URI to the description of a person, acting for the person described in this "
+"card"
+msgstr ""
+"URI kuvaukseen henkilöstä, joka toimii tässä kortissa kuvatun henkilön "
+"edustajana"
+
+#: ../mimedir/mimedir-vcard.c:470
+msgid "Agent string"
+msgstr "Edustajan merkkijono"
+
+#: ../mimedir/mimedir-vcard.c:471
+msgid ""
+"A person, acting for the person described in this card (deprecated string "
+"representation)"
+msgstr ""
+"Kuvaus henkilöstä, joka toimii tässä kortissa kuvatun henkilön edustajana "
+"(käytöstä poistunut esitysmuoto)"
+
+#: ../mimedir/mimedir-vcard.c:476
+msgid "Organization list"
+msgstr "Lista organisaatioista"
+
+#: ../mimedir/mimedir-vcard.c:477
+msgid ""
+"List of all organization this person belongs to. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr ""
+"Lista kaikista organisaatiosta, joihin tämä henkilö kuuluu. Tämä on "
+"GList *-tietorakenne, jossa osat ovat tyyppiä gchar *"
+
+#: ../mimedir/mimedir-vcard.c:481
+msgid "Organization"
+msgstr "Organisaatio"
+
+#: ../mimedir/mimedir-vcard.c:482
+msgid "The person's first organization"
+msgstr "Henkilön ensimmäinen organisaatio"
+
+#: ../mimedir/mimedir-vcard.c:488 ../mimedir/mimedir-vcomponent.c:266
+msgid "Category list"
+msgstr "Luokka"
+
+#: ../mimedir/mimedir-vcard.c:489
+msgid ""
+"List of all categories of this person. This is a GList *, where the elements "
+"are gchar *'s"
+msgstr ""
+"Lista kaikista tämän henkilön luokista. Tämä on GList *-tietorakenne, jossa "
+"osat ovat tyyppiä gchar *"
+
+#: ../mimedir/mimedir-vcard.c:493
+msgid "Categories"
+msgstr "Luokat"
+
+#: ../mimedir/mimedir-vcard.c:494
+msgid "String representation of this person's categories"
+msgstr "Merkkijonoesitys tämän käyttäjän luokista"
+
+#: ../mimedir/mimedir-vcard.c:499
+msgid "Note"
+msgstr "Huomautus"
+
+#: ../mimedir/mimedir-vcard.c:500
+msgid "Additional comments"
+msgstr "Lisähuomautukset"
+
+#: ../mimedir/mimedir-vcard.c:506
+msgid ""
+"The product identifier of the vCard. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr ""
+"VCardin tuotetuniste. Uusille korteille arvo on LibMIMEDir-kirjaston "
+"tuetetunniste."
+
+#: ../mimedir/mimedir-vcard.c:511
+msgid "Revision"
+msgstr "Revisio"
+
+#: ../mimedir/mimedir-vcard.c:512
+msgid "Card's revision"
+msgstr "Kortin revisio"
+
+#: ../mimedir/mimedir-vcard.c:517
+msgid "Sort string"
+msgstr "Järjestysmerkkijono"
+
+#: ../mimedir/mimedir-vcard.c:518
+msgid "String that defines this card's sort order"
+msgstr "Merkkijono, joka määrittelee tämän kortin järjestyksen"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:523
+msgid "Sound"
+msgstr "Ääni"
+
+#: ../mimedir/mimedir-vcard.c:524
+msgid "Pointer to a byte stream, representing a sound file"
+msgstr "Osoitin tavuvirtaan, josta löytyy äänitiedosto"
+
+#: ../mimedir/mimedir-vcard.c:528
+msgid "Sound URI"
+msgstr "Äänen URI"
+
+#: ../mimedir/mimedir-vcard.c:529
+msgid "URI to a sound file"
+msgstr "URI äänitiedostoon"
+
+#: ../mimedir/mimedir-vcard.c:534
+msgid "Unique Identifier"
+msgstr "Yksilöllinen tunniste"
+
+#: ../mimedir/mimedir-vcard.c:535
+msgid "A unique identifier for this card"
+msgstr "Tämän kortin yksilöllinen tunniste"
+
+#: ../mimedir/mimedir-vcard.c:540
+msgid "URL"
+msgstr "URL"
+
+#: ../mimedir/mimedir-vcard.c:541
+msgid "An alternate URL for this resource"
+msgstr "Vaihtoehtoinen URL näille tiedoille"
+
+#: ../mimedir/mimedir-vcard.c:547
+msgid "Classification"
+msgstr "Luokittelu"
+
+#: ../mimedir/mimedir-vcard.c:548
+msgid "The security classfication of this card"
+msgstr "Tämän osoitekortin turvaluokitus"
+
+#: ../mimedir/mimedir-vcard.c:553
+msgid "Public key list"
+msgstr "Lista julkisista avaimista"
+
+#: ../mimedir/mimedir-vcard.c:554
+msgid ""
+"List of this person's public keys. This is a GList *, where the elements are "
+"MIMEDirVCardKeys"
+msgstr ""
+"Lista tämän henkilön julkisista avaimista. Tämä on GList *-tietorakenne, "
+"jossa ovat tyyppiä MIMEDirVCardKeys"
+
+#: ../mimedir/mimedir-vcard.c:558
+msgid "Public key"
+msgstr "Julkinen avain"
+
+#: ../mimedir/mimedir-vcard.c:559
+msgid "This person's first public key"
+msgstr "Henkilön ensimmäinen julkinen avain"
+
+#: ../mimedir/mimedir-vcard.c:564
+msgid "Key type"
+msgstr "Avaimen tyyppi"
+
+#: ../mimedir/mimedir-vcard.c:565
+msgid "Type of the first public key"
+msgstr "Ensimmäisen julkisen avaimen tyyppi"
+
+#: ../mimedir/mimedir-vcard.c:1474 ../mimedir/mimedir-vcard.c:1496
+#: ../mimedir/mimedir-vcard.c:1524 ../mimedir/mimedir-vcard.c:1548
+#, c-format
+msgid "Error reading card file %s: %s!"
+msgstr "Virhe luettaessa korttitiedostoa %s: %s!"
+
+#: ../mimedir/mimedir-vcard.c:1671
+#, c-format
+msgid "Error writing card file %s: %s!"
+msgstr "Virhe kirjoitettaessa korttitiedostoa %s: %s!"
+
+#: ../mimedir/mimedir-vcard.c:3409
+#, c-format
+msgid "Name: %s\n"
+msgstr "Nimi: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3411
+msgid "Name\n"
+msgstr "Nimi\n"
+
+#: ../mimedir/mimedir-vcard.c:3413
+#, c-format
+msgid "  Prefix:     %s\n"
+msgstr "  Etuliite:    %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3415
+#, c-format
+msgid "  Given:      %s\n"
+msgstr "  Etunimi:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3417
+#, c-format
+msgid "  Additional: %s\n"
+msgstr "   Lisätiedot: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3419
+#, c-format
+msgid "  Family:     %s\n"
+msgstr "  Sukunimi:    %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3421
+#, c-format
+msgid "  Suffix:     %s\n"
+msgstr "  Jälkiliite: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3427
+#, c-format
+msgid "Birth Date: %04d-%02d-%02d\n"
+msgstr "Syntymäaika: %04d-%02d-%02d\n"
+
+#: ../mimedir/mimedir-vcard.c:3452
+#, c-format
+msgid "Address label (%s):\n"
+msgstr "Osoitemerkintä (%s):\n"
+
+#: ../mimedir/mimedir-vcard.c:3472
+#, c-format
+msgid "Address (%s):\n"
+msgstr "Osoite (%s):\n"
+
+#: ../mimedir/mimedir-vcard.c:3486
+#, c-format
+msgid "  Postal Box:  %s\n"
+msgstr "   Postilaatikko:  %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3488
+#, c-format
+msgid "  Extended:    %s\n"
+msgstr "  Laajennettu:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3490
+#, c-format
+msgid "  Street:      %s\n"
+msgstr "  Katuosoite:  %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3492
+#, c-format
+msgid "  City:        %s\n"
+msgstr "  Kaupunki:    %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3494
+#, c-format
+msgid "  Region:      %s\n"
+msgstr "  Alue:        %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3496
+#, c-format
+msgid "  Postal Code: %s\n"
+msgstr "  Postinumero: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3498
+#, c-format
+msgid "  Country:     %s\n"
+msgstr "  Maa:         %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3518
+msgid "Telephone:\n"
+msgstr "Puhelinnumero:\n"
+
+#: ../mimedir/mimedir-vcard.c:3542
+#, c-format
+msgid "Telephone: %s (%s)\n"
+msgstr "Puhelin: %s (%s)\n"
+
+#: ../mimedir/mimedir-vcard.c:3556
+msgid "E-mail:\n"
+msgstr "Sähköpostiosoite:\n"
+
+#: ../mimedir/mimedir-vcard.c:3580
+#, c-format
+msgid "E-mail: %s (%s)\n"
+msgstr "Sähköpostiosoite: %s (%s)\n"
+
+#: ../mimedir/mimedir-vcard.c:3602
+#, c-format
+msgid "Time zone: %c%02d:%02d\n"
+msgstr "Aikavyöhyke %c%02d:%02d\n"
+
+#: ../mimedir/mimedir-vcard.c:3611
+#, c-format
+msgid "Location: %.2f,%.2f\n"
+msgstr "Sijainti: %.2f,%.2f\n"
+
+#: ../mimedir/mimedir-vcard.c:3620
+#, c-format
+msgid "Organization: %s\n"
+msgstr "Organisaatio: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3625
+#, c-format
+msgid "Job title: %s\n"
+msgstr "Työnimike: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3628
+#, c-format
+msgid "Business role: %s\n"
+msgstr "Asema työssä: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3638
+#, c-format
+msgid "Categories: %s\n"
+msgstr "Luokat: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3643
+#, c-format
+msgid "Comment: %s\n"
+msgstr "Huomautus: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3646
+#, c-format
+msgid "Homepage: %s\n"
+msgstr "Kotisivu: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3649
+#, c-format
+msgid "Unique string: %s\n"
+msgstr "Yksilöllinen tunniste: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3659
+msgid "X.509"
+msgstr "X.509"
+
+#: ../mimedir/mimedir-vcard.c:3662
+msgid "PGP"
+msgstr "PGP"
+
+#: ../mimedir/mimedir-vcard.c:3665
+msgid "yes"
+msgstr "kyllä"
+
+#: ../mimedir/mimedir-vcard.c:3669
+#, c-format
+msgid "Public Key: %s\n"
+msgstr "Julkinen avain: %s\n"
+
+#: ../mimedir/mimedir-vcomponent.c:267
+msgid ""
+"List of all categories of this component. This is a GList *, where the "
+"elements are gchar *'s"
+msgstr ""
+"Lista tämän komponentin kaikista luokista. Tämä GList *-tietorakenne, "
+"jossa osat ovat tyyppiä gchar *"
+
+#: ../mimedir/mimedir-vcomponent.c:271
+msgid "Comment list"
+msgstr "Lista kommenteista"
+
+#: ../mimedir/mimedir-vcomponent.c:272
+msgid ""
+"List of all additional comments for this component. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr ""
+"Lista kaikista tämän komponentin lisäkommenteista. Tämä on GList "
+"*-tietorakenne, jossa osat ovat tyyppiä gchar *"
+
+#: ../mimedir/mimedir-vcomponent.c:276
+msgid "Description"
+msgstr "Kuvaus"
+
+#: ../mimedir/mimedir-vcomponent.c:277
+msgid "Full description of this component"
+msgstr "Koko kuvaus tästä komponentista"
+
+#: ../mimedir/mimedir-vcomponent.c:282
+msgid "Percent complete"
+msgstr "Prosenttia valmiina"
+
+#: ../mimedir/mimedir-vcomponent.c:283
+msgid "Percentage of this task's completion"
+msgstr "Kuinka monta prosenttia tehtävästä on valmiina"
+
+#: ../mimedir/mimedir-vcomponent.c:290
+msgid "Priority"
+msgstr "Kiireellisyys"
+
+#: ../mimedir/mimedir-vcomponent.c:291
+msgid "This task's priority"
+msgstr "Tehtävän kiireellisyys"
+
+#. FIXME: whoops, this isn't handled
+#: ../mimedir/mimedir-vcomponent.c:296
+msgid "Resource list"
+msgstr "Lista resursseista"
+
+#: ../mimedir/mimedir-vcomponent.c:297
+msgid "List of the resources assigned to this component"
+msgstr "Lista tähän komponenttiin liittyvistä resursseista"
+
+#: ../mimedir/mimedir-vcomponent.c:301
+msgid "Status"
+msgstr "Tila"
+
+#: ../mimedir/mimedir-vcomponent.c:302
+msgid "This task's completion status"
+msgstr "Tehtävän valmistumisen tila"
+
+#: ../mimedir/mimedir-vcomponent.c:309
+msgid "Summary"
+msgstr "Yhteenveto"
+
+#: ../mimedir/mimedir-vcomponent.c:310
+msgid "Component's short description"
+msgstr "Lyhyt kuvaus komponentista"
+
+#: ../mimedir/mimedir-vcomponent.c:316
+msgid "Date/time completed"
+msgstr "Valmistumispäivä"
+
+#: ../mimedir/mimedir-vcomponent.c:317
+msgid "Date/time that this task was completed"
+msgstr "Päivä ja aika, jolloin tehtävä valmistuu"
+
+#: ../mimedir/mimedir-vcomponent.c:322
+msgid "Date/time end"
+msgstr "Päättymispäivä"
+
+#: ../mimedir/mimedir-vcomponent.c:323
+msgid "End date/time of this component"
+msgstr "Päivä ja aika, jolloin komponentti päättyy"
+
+#: ../mimedir/mimedir-vcomponent.c:328
+msgid "Due"
+msgstr "Erääntyy"
+
+#: ../mimedir/mimedir-vcomponent.c:329
+msgid "This task's due date"
+msgstr "Tehtävän erpäivä"
+
+#: ../mimedir/mimedir-vcomponent.c:334
+msgid "Date/time start"
+msgstr "Alkamisen päiväys ja aika"
+
+#: ../mimedir/mimedir-vcomponent.c:335
+msgid "Start date/time of this component"
+msgstr "Komponentin alkamispäivä ja aika"
+
+#: ../mimedir/mimedir-vcomponent.c:340
+msgid "Duration"
+msgstr "Kesto"
+
+#: ../mimedir/mimedir-vcomponent.c:341
+msgid "This date's duration"
+msgstr "Päiväyksen kesto"
+
+#: ../mimedir/mimedir-vcomponent.c:346
+msgid "Free/busy"
+msgstr "Vapaa/Varattu"
+
+#: ../mimedir/mimedir-vcomponent.c:347
+msgid "GList of free/busy objects"
+msgstr "GList vapaa/varattu-olioista"
+
+#: ../mimedir/mimedir-vcomponent.c:353
+msgid "This component's time zone identifier"
+msgstr "Komponentin aikavyöhyketunniste"
+
+#: ../mimedir/mimedir-vcomponent.c:358
+msgid "Time zone name list"
+msgstr "Lista aikavyöhykkeiden nimistä"
+
+#: ../mimedir/mimedir-vcomponent.c:359
+msgid "GList of time zone names"
+msgstr "GList aikavyöhykkeiden nimistä"
+
+#: ../mimedir/mimedir-vcomponent.c:363 ../mimedir/mimedir-vcomponent.c:364
+msgid "Time zone offset from"
+msgstr "Aikavyöhykkeen siirtymä kohteesta"
+
+#: ../mimedir/mimedir-vcomponent.c:371 ../mimedir/mimedir-vcomponent.c:372
+msgid "Time zone offset to"
+msgstr "Aikavyöhykkeen siirtymä kohteeseen"
+
+#: ../mimedir/mimedir-vcomponent.c:379
+msgid "Time zone URL"
+msgstr "Aikavyöhykkeen URL"
+
+#: ../mimedir/mimedir-vcomponent.c:380
+msgid "URL to a time zone description"
+msgstr "URL aikavyöhykkeen kuvaukseen"
+
+#: ../mimedir/mimedir-vcomponent.c:386
+msgid "Contact"
+msgstr "Yhteystiedot"
+
+#: ../mimedir/mimedir-vcomponent.c:387
+msgid "Contact information"
+msgstr "Yhteystiedot"
+
+#: ../mimedir/mimedir-vcomponent.c:393
+msgid "Unique identifier"
+msgstr "Yksilöllinen tunniste"
+
+#: ../mimedir/mimedir-vcomponent.c:394
+msgid "A unique identifier for this component"
+msgstr "Komponentin yksilöllinen tunniste"
+
+#: ../mimedir/mimedir-vcomponent.c:400
+msgid "Recurrence object"
+msgstr "Toistuva kohde"
+
+#: ../mimedir/mimedir-vcomponent.c:401
+msgid "An object representing the RRULE tag"
+msgstr "RRULE-tagia esittävä kohde"
+
+#: ../mimedir/mimedir-vcomponent.c:407 ../mimedir/mimedir-vcomponent.c:408
+msgid "Action"
+msgstr "Toiminto"
+
+#: ../mimedir/mimedir-vcomponent.c:413 ../mimedir/mimedir-vcomponent.c:414
+msgid "Repeat"
+msgstr "Toisto"
+
+#: ../mimedir/mimedir-vcomponent.c:419 ../mimedir/mimedir-vcomponent.c:420
+msgid "Trigger"
+msgstr "Liipasin"
+
+#: ../mimedir/mimedir-vcomponent.c:425
+msgid "Trigger date/time"
+msgstr "Liipaisupäiväys/aika"
+
+#: ../mimedir/mimedir-vcomponent.c:426
+msgid "Date/time of the trigger"
+msgstr "Liipaisun päivämäärä ja aika"
+
+#: ../mimedir/mimedir-vcomponent.c:431
+msgid "Trigger end"
+msgstr "Liipaisun päättyminen"
+
+#: ../mimedir/mimedir-vcomponent.c:432
+msgid "Whether the trigger is set at the end of the time interval"
+msgstr "Onko liipaisu asetettu aikavälin loppuun"
+
+#: ../mimedir/mimedir-vcomponent.c:438
+msgid "Created"
+msgstr "Luotu"
+
+#: ../mimedir/mimedir-vcomponent.c:439
+msgid "Date/time of the creation"
+msgstr "Luonnin aikaleima"
+
+#: ../mimedir/mimedir-vcomponent.c:444
+msgid "Date/time stamp"
+msgstr "Aikaleima"
+
+#: ../mimedir/mimedir-vcomponent.c:445
+msgid "Date/time of the creation of the iCalendar object"
+msgstr "iCalendar-olion luonnin aikaleima"
+
+#: ../mimedir/mimedir-vcomponent.c:450
+msgid "Last modified"
+msgstr "Viimeksi muokattu"
+
+#: ../mimedir/mimedir-vcomponent.c:451
+msgid "Date/time of the last modification"
+msgstr "Viimeisen muokkauksen aikaleima"
+
+#: ../mimedir/mimedir-vcomponent.c:456
+msgid "Sequence"
+msgstr "Sekvenssi"
+
+#: ../mimedir/mimedir-vcomponent.c:457
+msgid "Sequence number"
+msgstr "Sekvenssinumero"
+

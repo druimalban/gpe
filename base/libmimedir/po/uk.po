@@ -1,0 +1,1636 @@
+# Ukrainian translation of libmimedir.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Maxim Dziumanenko <mvd@mylinux.ua>, 2005
+msgid ""
+msgstr ""
+"Project-Id-Version: libmimedir\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-09-04 15:04+0200\n"
+"PO-Revision-Date: 2005-08-07 11:46+0300\n"
+"Last-Translator: Maxim Dziumanenko <mvd@mylinux.ua>\n"
+"Language-Team: Ukrainian <uk@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: ../bin/ical-dump.c:48
+#, c-format
+msgid "Usage: %s ICALFILE\n"
+msgstr "Використання: %s ICALFILE\n"
+
+#: ../bin/ical-dump.c:57
+msgid "secondly"
+msgstr ""
+
+#: ../bin/ical-dump.c:59
+msgid "minutely"
+msgstr ""
+
+#: ../bin/ical-dump.c:61
+#, fuzzy
+msgid "hourly"
+msgstr "Країна"
+
+#: ../bin/ical-dump.c:63
+msgid "daily"
+msgstr ""
+
+#: ../bin/ical-dump.c:65
+msgid "weekly"
+msgstr ""
+
+#: ../bin/ical-dump.c:67
+msgid "monthly"
+msgstr ""
+
+#: ../bin/ical-dump.c:69
+msgid "yearly"
+msgstr ""
+
+#: ../bin/ical-dump.c:71 ../bin/ical-dump.c:97
+#, fuzzy
+msgid "unknown"
+msgstr "<невідомо>"
+
+#: ../bin/ical-dump.c:81
+msgid "second"
+msgstr ""
+
+#: ../bin/ical-dump.c:83
+msgid "minute"
+msgstr ""
+
+#: ../bin/ical-dump.c:85
+msgid "hour"
+msgstr ""
+
+#: ../bin/ical-dump.c:87
+msgid "day"
+msgstr ""
+
+#: ../bin/ical-dump.c:89
+msgid "day of month"
+msgstr ""
+
+#: ../bin/ical-dump.c:91
+msgid "day of year"
+msgstr ""
+
+#: ../bin/ical-dump.c:93
+#, fuzzy
+msgid "week number"
+msgstr "Номер телефону"
+
+#: ../bin/ical-dump.c:95
+msgid "month"
+msgstr ""
+
+#: ../bin/ical-dump.c:118
+#, fuzzy, c-format
+msgid "  Recurrence:\n"
+msgstr "  Послідовність: %u\n"
+
+#: ../bin/ical-dump.c:120
+#, fuzzy, c-format
+msgid "    Frequency: %s\n"
+msgstr "  Послідовність: %u\n"
+
+#: ../bin/ical-dump.c:123
+#, fuzzy, c-format
+msgid "    Until: %s\n"
+msgstr "  Унікальний ідентифікатор: %s\n"
+
+#: ../bin/ical-dump.c:128
+#, fuzzy, c-format
+msgid "    Count: %d\n"
+msgstr "  Країна:     %s\n"
+
+#: ../bin/ical-dump.c:131
+#, c-format
+msgid "    Interval: %d\n"
+msgstr ""
+
+#: ../bin/ical-dump.c:134
+#, fuzzy, c-format
+msgid "    Unit: %s\n"
+msgstr "  Унікальний ідентифікатор: %s\n"
+
+#: ../bin/ical-dump.c:137
+#, fuzzy, c-format
+msgid "    Units: %s\n"
+msgstr "  Унікальний ідентифікатор: %s\n"
+
+#: ../bin/ical-dump.c:152
+#, c-format
+msgid ""
+"Event:\n"
+"\n"
+msgstr ""
+"Подія:\n"
+"\n"
+
+#: ../bin/ical-dump.c:154
+#, c-format
+msgid ""
+"Todo item:\n"
+"\n"
+msgstr ""
+"Елемент Todo:\n"
+"\n"
+
+#: ../bin/ical-dump.c:156
+#, c-format
+msgid ""
+"Unknown component:\n"
+"\n"
+msgstr ""
+"Невідомий компонент:\n"
+"\n"
+
+#: ../bin/ical-dump.c:177
+#, c-format
+msgid "  Summary: %s\n"
+msgstr "  Зведення: %s\n"
+
+#: ../bin/ical-dump.c:182
+#, c-format
+msgid "  Categories: %s\n"
+msgstr "  Категорії: %s\n"
+
+#: ../bin/ical-dump.c:188
+msgid "high"
+msgstr "високий"
+
+#: ../bin/ical-dump.c:190
+msgid "low"
+msgstr "низький"
+
+#: ../bin/ical-dump.c:192
+msgid "medium"
+msgstr "середній"
+
+#: ../bin/ical-dump.c:193
+#, c-format
+msgid "  Priority: %s (%d)\n"
+msgstr "  Пріоритет: %s (%d)\n"
+
+#: ../bin/ical-dump.c:198
+#, c-format
+msgid "  Start date: %s\n"
+msgstr "  Дата початку: %s\n"
+
+#: ../bin/ical-dump.c:205
+#, c-format
+msgid "  End date: %s\n"
+msgstr "  Дата завершення: %s\n"
+
+#: ../bin/ical-dump.c:213
+#, c-format
+msgid "  Due date: %s\n"
+msgstr "  Дата виконання: %s\n"
+
+#: ../bin/ical-dump.c:222
+#, c-format
+msgid "  Unique ID: %s\n"
+msgstr "  Унікальний ідентифікатор: %s\n"
+
+#: ../bin/ical-dump.c:223
+#, c-format
+msgid "  Sequence: %u\n"
+msgstr "  Послідовність: %u\n"
+
+#: ../bin/ical-dump.c:236
+#, c-format
+msgid "  All day event\n"
+msgstr "  Щоденна подія\n"
+
+#: ../bin/ical-dump.c:261 ../bin/vcard-dump.c:67 ../bin/vcard-normalize.c:68
+#, c-format
+msgid "%s: invalid number of arguments\n"
+msgstr "%s: неправильна кількість аргументів\n"
+
+#: ../bin/vcard-dump.c:43 ../bin/vcard-normalize.c:43
+#, c-format
+msgid "Usage: %s VCARDFILE\n"
+msgstr "Використання: %s VCARDFILE\n"
+
+#: ../bin/vcard-normalize.c:79
+#, c-format
+msgid "%s: error reading card file: %s\n"
+msgstr "%s: помилка читання з файлу картки: %s\n"
+
+#: ../bin/vcard-normalize.c:96
+#, c-format
+msgid "%s: error writing card file: %s\n"
+msgstr "%s: помилка запису у файл картки: %s\n"
+
+#: ../mimedir/mimedir-attribute.c:131 ../mimedir/mimedir-vcard.c:298
+msgid "Name"
+msgstr "Назва"
+
+#: ../mimedir/mimedir-attribute.c:132
+msgid "The attribute's name"
+msgstr "Назва атрибута"
+
+#: ../mimedir/mimedir-attribute.c:137
+msgid "Group"
+msgstr "Група"
+
+#: ../mimedir/mimedir-attribute.c:138
+msgid "The attribute's group"
+msgstr "Група атрибута"
+
+#: ../mimedir/mimedir-attribute.c:894
+msgid "missing parameter name"
+msgstr "відсутня назва параметра"
+
+#: ../mimedir/mimedir-attribute.c:919
+msgid "missing closing quotation mark"
+msgstr "відсутня закриваюча дужка "
+
+#: ../mimedir/mimedir-attribute.c:1040
+msgid "missing attribute name/group"
+msgstr "не вказано назву/групу атрибута"
+
+#: ../mimedir/mimedir-attribute.c:1056
+msgid "no attribute name after group"
+msgstr "не вказана назва атрибута після групи"
+
+#: ../mimedir/mimedir-attribute.c:1072
+msgid "missing value delimiter"
+msgstr "відсутній розділювач значень"
+
+#: ../mimedir/mimedir-attribute.c:1088
+msgid "invalid character"
+msgstr "неправильний символ"
+
+#: ../mimedir/mimedir-attribute.c:2459 ../mimedir/mimedir-attribute.c:2468
+msgid "illegal character"
+msgstr "недопустимий символ"
+
+#: ../mimedir/mimedir-attribute.h:48
+#, c-format
+msgid "syntax error (%s)"
+msgstr "синтаксична помилка(%s)"
+
+#: ../mimedir/mimedir-attribute.h:49
+#, c-format
+msgid "illegal character 0x%02x for type \"%s\""
+msgstr "неправильний символ 0x%02x для типу \"%s\""
+
+#: ../mimedir/mimedir-attribute.h:50
+#, c-format
+msgid "invalid format for type \"%s\" in attribute %s"
+msgstr "неправильний формат для типу \"%s\" у атрибуті %s"
+
+#: ../mimedir/mimedir-attribute.h:51
+#, c-format
+msgid "attribute %s could not be decoded, since its encoding is unknown"
+msgstr "не вдається декодувати атрибут %s, тому що кодування невідоме"
+
+#: ../mimedir/mimedir-attribute.h:52
+#, c-format
+msgid "invalid value in attribute %s"
+msgstr "неправильне значення атрибута %s"
+
+#: ../mimedir/mimedir-attribute.h:53
+#, c-format
+msgid "parameter \"%s\" must not be used more than once in attribute %s"
+msgstr ""
+"параметри \"%s\" не повинен використовуватись більше ніж у одному атрибуті %s"
+
+#: ../mimedir/mimedir-attribute.h:54
+msgid "invalid Base64 sequence"
+msgstr "неправильна послідовність Base64"
+
+#: ../mimedir/mimedir-attribute.h:55
+msgid "invalid quoted-printable sequence"
+msgstr "неправильна MIME-сумісна послідовність (Quoted Printable)"
+
+#: ../mimedir/mimedir-attribute.h:56
+#, c-format
+msgid "attribute list of %s is too short"
+msgstr "список атрибутів %s надто короткий"
+
+#: ../mimedir/mimedir-attribute.h:57
+#, c-format
+msgid "attribute list of %s is too long"
+msgstr "список атрибутів %s надто довгий"
+
+#: ../mimedir/mimedir-datetime.c:114 ../mimedir/mimedir-vcomponent.c:350
+msgid "Time zone identifier"
+msgstr "Ідентифікатор часового поясу"
+
+#: ../mimedir/mimedir-datetime.c:115
+msgid "Time zone identifying string"
+msgstr "Рядок, що вказує часовий пояс"
+
+#. Translators: YYYY-MM-DD HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1081
+#, c-format
+msgid "%04d-%02d-%02d %02d:%02d:%02d"
+msgstr "%04d-%02d-%02d %02d:%02d:%02d"
+
+#. Translators: YYYY-MM-DD
+#: ../mimedir/mimedir-datetime.c:1086
+#, c-format
+msgid "%04d-%02d-%02d"
+msgstr "%04d-%02d-%02d"
+
+#. Translators: HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1090
+#, c-format
+msgid "%02d:%02d:%02d"
+msgstr "%02d:%02d:%02d"
+
+#: ../mimedir/mimedir-period.c:111
+msgid "Free/busy type"
+msgstr "Посилання (URL) \"вільний/зайнятий\""
+
+#: ../mimedir/mimedir-period.c:112
+msgid "Whether this object signifies a free or a busy period"
+msgstr "Чи цей об'єкт означає період \"вільний/зайнятий\""
+
+#: ../mimedir/mimedir-profile.c:114
+msgid "Profile name"
+msgstr "Назва профілю"
+
+#: ../mimedir/mimedir-profile.c:115
+msgid "The name (type) of the profile"
+msgstr "Назва (тип) профілю"
+
+#: ../mimedir/mimedir-profile.c:121
+msgid "Character set"
+msgstr "Набір символів:"
+
+#: ../mimedir/mimedir-profile.c:122
+msgid "Character set used to en-/decode this profile"
+msgstr ""
+"Набір символів, що використовується для кодування/розкодування цього профілю"
+
+#: ../mimedir/mimedir-profile.h:40
+#, c-format
+msgid "attribute %s defined twice"
+msgstr "атрибут %s вказано двічі"
+
+#: ../mimedir/mimedir-profile.h:41
+msgid "unexpected end of profile"
+msgstr "несподіване закінчення профілю"
+
+#: ../mimedir/mimedir-profile.h:42
+#, c-format
+msgid "required attribute %s is missing"
+msgstr "відсутній обов'язковий атрибут %s"
+
+#: ../mimedir/mimedir-profile.h:43
+msgid "unmatched END attribute"
+msgstr "непарний атрибут END"
+
+#: ../mimedir/mimedir-profile.h:44
+#, c-format
+msgid "wrong profile %s; expected %s"
+msgstr "неправильний профіль %s; очікувалось %s"
+
+#: ../mimedir/mimedir-recurrence.c:221
+#, fuzzy
+msgid "Frequency"
+msgstr "Послідовність"
+
+#: ../mimedir/mimedir-recurrence.c:222
+msgid "Frequency type of this recurrency rule"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:229
+msgid "Date of last recurrence"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:230
+msgid "The date of the last recurrence of an event"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:235
+msgid "Number of recurrences"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:236
+msgid "The numer of recurrences of an event"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:243
+msgid "Recurrence interval"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:244
+msgid "The interval of recurrences of an event"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:251
+#, fuzzy
+msgid "Recurrence unit"
+msgstr "Список ресурсів"
+
+#: ../mimedir/mimedir-recurrence.c:252
+msgid "By which unit a recurrence should be repeated"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:259
+#, fuzzy
+msgid "Recurrence units"
+msgstr "Список ресурсів"
+
+#: ../mimedir/mimedir-recurrence.c:260
+msgid "List of units by which a recurrence should be repeated"
+msgstr ""
+
+#: ../mimedir/mimedir-valarm.c:548
+#, c-format
+msgid ""
+"Reminder of your appointment:\n"
+"\n"
+"%s\n"
+"%s"
+msgstr ""
+"Нагадування зустрічі:\n"
+"\n"
+"%s\n"
+"%s"
+
+#: ../mimedir/mimedir-vcal.c:148
+msgid "Method"
+msgstr "Метод"
+
+#: ../mimedir/mimedir-vcal.c:149
+msgid "The vCalendar's method"
+msgstr "Метод vCalendar"
+
+#: ../mimedir/mimedir-vcal.c:154 ../mimedir/mimedir-vcard.c:505
+msgid "Product identifier"
+msgstr "Ідентифікатор продукту"
+
+#: ../mimedir/mimedir-vcal.c:155
+msgid ""
+"The product identifier of the vCalendar. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr ""
+"Ідентифікатор продукту vCalendar. Для новостворених об'єктів він має "
+"значення ідентифікатора продукту LibMIMEDir."
+
+#: ../mimedir/mimedir-vcal.c:384 ../mimedir/mimedir-vcard.c:2411
+#: ../mimedir/mimedir-vcomponent.c:2060
+#, c-format
+msgid "The profile contains the unsupported custom attribute %s.\n"
+msgstr "Профіль містить непідтримуваний атрибут %s.\n"
+
+#: ../mimedir/mimedir-vcal.c:387 ../mimedir/mimedir-vcard.c:2414
+#: ../mimedir/mimedir-vcomponent.c:2063
+#, c-format
+msgid "The profile contains the unknown attribute %s.\n"
+msgstr "Профіль містить невідомий атрибут %s.\n"
+
+#: ../mimedir/mimedir-vcal.c:432 ../mimedir/mimedir-vcal.c:454
+#: ../mimedir/mimedir-vcal.c:482 ../mimedir/mimedir-vcal.c:506
+#, c-format
+msgid "Error reading calendar file %s: %s!"
+msgstr "Помилка читання файлу календаря %s: %s!"
+
+#: ../mimedir/mimedir-vcard-address.c:167
+msgid "Title"
+msgstr "Заголовок"
+
+#: ../mimedir/mimedir-vcard-address.c:168
+msgid "A one-line string with the most important address information"
+msgstr "Один рядок з найбільш важливою інформацією п ро адресу"
+
+#: ../mimedir/mimedir-vcard-address.c:174
+msgid "Freeform address"
+msgstr "Адреса у довільній формі"
+
+#: ../mimedir/mimedir-vcard-address.c:175
+msgid "A freeform address string"
+msgstr "Рядок з адресою у довільній формі"
+
+#: ../mimedir/mimedir-vcard-address.c:180
+msgid "Post office box"
+msgstr "Абонентська скринька"
+
+#: ../mimedir/mimedir-vcard-address.c:181
+msgid "The addresses post office box"
+msgstr "Адреси абонентських скриньок"
+
+#: ../mimedir/mimedir-vcard-address.c:186
+msgid "Extended address"
+msgstr "Розширена адреса"
+
+#: ../mimedir/mimedir-vcard-address.c:187
+msgid "Extended address string"
+msgstr "Рядок з розширеною адресою"
+
+#: ../mimedir/mimedir-vcard-address.c:192
+msgid "Street"
+msgstr "Вулиця"
+
+#: ../mimedir/mimedir-vcard-address.c:193
+msgid "Street address"
+msgstr "Вулиця"
+
+#: ../mimedir/mimedir-vcard-address.c:198
+msgid "Locality"
+msgstr "Місто"
+
+#: ../mimedir/mimedir-vcard-address.c:199
+msgid "Locality (e.g. city, town, etc.)"
+msgstr "Місцевість (наприклад місто, село тощо.)"
+
+#: ../mimedir/mimedir-vcard-address.c:204
+msgid "Region"
+msgstr "Регіон"
+
+#: ../mimedir/mimedir-vcard-address.c:205
+msgid "Region (e.g. state)"
+msgstr "Регіон (наприклад область, штат)"
+
+#: ../mimedir/mimedir-vcard-address.c:210
+msgid "Postal code"
+msgstr "Поштовий індекс"
+
+#: ../mimedir/mimedir-vcard-address.c:211
+msgid "Postal code (freeform string)"
+msgstr "Поштовий індекс (довільний рядок)"
+
+#: ../mimedir/mimedir-vcard-address.c:216
+#: ../mimedir/mimedir-vcard-address.c:217
+msgid "Country"
+msgstr "Країна"
+
+#: ../mimedir/mimedir-vcard-address.c:222
+msgid "Domestic"
+msgstr "Внутрішня"
+
+#: ../mimedir/mimedir-vcard-address.c:223
+msgid "Whether this is a domestic address"
+msgstr "Чи ця адреса є внутрішньою адресою"
+
+#: ../mimedir/mimedir-vcard-address.c:228
+msgid "International"
+msgstr "Міжнародна"
+
+#: ../mimedir/mimedir-vcard-address.c:229
+msgid "Whether this is an international address"
+msgstr "Чи ця адреса вже є міжнародною адресою"
+
+#: ../mimedir/mimedir-vcard-address.c:234
+msgid "Postal"
+msgstr "Поштова"
+
+#: ../mimedir/mimedir-vcard-address.c:235
+msgid "Whether this is a postal address"
+msgstr "Чи ця адреса є поштовою адресою"
+
+#: ../mimedir/mimedir-vcard-address.c:240
+msgid "Parcel"
+msgstr "Посилка"
+
+#: ../mimedir/mimedir-vcard-address.c:241
+msgid "Whether parcels can be received at this address"
+msgstr "Чи за цією адресою можливе отримання посилок"
+
+#: ../mimedir/mimedir-vcard-address.c:246 ../mimedir/mimedir-vcard-phone.c:160
+msgid "Home"
+msgstr "Домашня"
+
+#: ../mimedir/mimedir-vcard-address.c:247
+msgid "Whether this is a home address"
+msgstr "Чи ця адреса є домашньою адресою"
+
+#: ../mimedir/mimedir-vcard-address.c:252 ../mimedir/mimedir-vcard-phone.c:166
+msgid "Work"
+msgstr "Робоча"
+
+#: ../mimedir/mimedir-vcard-address.c:253
+msgid "Whether this is a work address"
+msgstr "Чи ця адреса є робочою адресою"
+
+#: ../mimedir/mimedir-vcard-address.c:258 ../mimedir/mimedir-vcard-email.c:153
+#: ../mimedir/mimedir-vcard-phone.c:232
+msgid "Preferred"
+msgstr "Головна"
+
+#: ../mimedir/mimedir-vcard-address.c:259
+msgid "Whether this is the preferred address"
+msgstr "Чи ця адреса є головною адресою"
+
+#: ../mimedir/mimedir-vcard-address.c:572
+#, c-format
+msgid "The %s attribute contains too many elements.\n"
+msgstr "Атрибут %s містить надто багато елементів.\n"
+
+#: ../mimedir/mimedir-vcard-address.c:772
+#, c-format
+msgid "The address field is of unknown type %s."
+msgstr "Поле адреси має невідомий тип %s."
+
+#. Translators: pcode city
+#: ../mimedir/mimedir-vcard-address.c:864
+#: ../mimedir/mimedir-vcard-address.c:873
+#, c-format
+msgid "%s %s"
+msgstr "%s %s"
+
+#. Translators: city, region
+#: ../mimedir/mimedir-vcard-address.c:871
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
+#: ../mimedir/mimedir-vcard-address.c:914 ../mimedir/mimedir-vcard-email.c:504
+#: ../mimedir/mimedir-vcard-phone.c:695
+msgid "preferred"
+msgstr "головна"
+
+#: ../mimedir/mimedir-vcard-address.c:919
+msgid "domestic"
+msgstr "внутрішня"
+
+#: ../mimedir/mimedir-vcard-address.c:924
+msgid "international"
+msgstr "міжнародна"
+
+#: ../mimedir/mimedir-vcard-address.c:929
+msgid "postal"
+msgstr "поштова"
+
+#: ../mimedir/mimedir-vcard-address.c:934
+msgid "parcel"
+msgstr "посилка"
+
+#: ../mimedir/mimedir-vcard-address.c:939 ../mimedir/mimedir-vcard-phone.c:701
+msgid "home"
+msgstr "домашня"
+
+#: ../mimedir/mimedir-vcard-address.c:944 ../mimedir/mimedir-vcard-phone.c:706
+msgid "work"
+msgstr "робоча"
+
+#. Translators: Short address format: "locality/street"
+#: ../mimedir/mimedir-vcard-address.c:996
+#, c-format
+msgid "%s/%s"
+msgstr "%s/%s"
+
+#: ../mimedir/mimedir-vcard-address.c:1002
+msgid "<unknown>"
+msgstr "<невідомо>"
+
+#: ../mimedir/mimedir-vcard-email.c:138 ../mimedir/mimedir-vcard.c:368
+msgid "Address"
+msgstr "Адреса"
+
+#: ../mimedir/mimedir-vcard-email.c:139
+msgid "The e-mail address"
+msgstr "Адреса ел.пошти"
+
+#: ../mimedir/mimedir-vcard-email.c:145
+msgid "Type"
+msgstr "Тип"
+
+#: ../mimedir/mimedir-vcard-email.c:146
+msgid "Type of this e-mail address"
+msgstr "Тип адреса ел. пошти"
+
+#: ../mimedir/mimedir-vcard-email.c:154
+msgid "Whether this is the preferred e-mail address"
+msgstr "Чи ця адреса є головною адресою ел.пошти"
+
+#: ../mimedir/mimedir-vcard-email.c:412
+#, c-format
+msgid "The email field is of unknown type %s."
+msgstr "Поле адреси елюпошти має невідомий тип %s."
+
+#: ../mimedir/mimedir-vcard-email.c:514
+msgid "Internet"
+msgstr "Інтернет"
+
+#: ../mimedir/mimedir-vcard-email.c:519
+msgid "X.400"
+msgstr "X.400"
+
+#: ../mimedir/mimedir-vcard-phone.c:153
+msgid "Number"
+msgstr "Номер"
+
+#: ../mimedir/mimedir-vcard-phone.c:154
+msgid "The telephone number (freeform string)"
+msgstr "Номер телефону (у довільній формі)"
+
+#: ../mimedir/mimedir-vcard-phone.c:161
+msgid "Whether this is a home phone number"
+msgstr "Чи це домашній телефон"
+
+#: ../mimedir/mimedir-vcard-phone.c:167
+msgid "Whether this is a phone number at work"
+msgstr "Чи це робочий телефон"
+
+#: ../mimedir/mimedir-vcard-phone.c:172
+msgid "Voice"
+msgstr "Голос"
+
+#: ../mimedir/mimedir-vcard-phone.c:173
+msgid "Whether this is a voice number"
+msgstr "Чи це голосовий номер телефону"
+
+#: ../mimedir/mimedir-vcard-phone.c:178
+msgid "Fax"
+msgstr "Факс"
+
+#: ../mimedir/mimedir-vcard-phone.c:179
+msgid "Whether this is a facsimile number"
+msgstr "Чи це телефонний номер факсу"
+
+#: ../mimedir/mimedir-vcard-phone.c:184 ../mimedir/mimedir-vcard-phone.c:721
+msgid "BBS"
+msgstr "BBS"
+
+#: ../mimedir/mimedir-vcard-phone.c:185
+msgid "Whether this is a bulletin board system number"
+msgstr "Чи це номер телефону електронної інформаційної системи"
+
+#: ../mimedir/mimedir-vcard-phone.c:190
+msgid "Modem"
+msgstr "Модем"
+
+#: ../mimedir/mimedir-vcard-phone.c:191
+msgid "Whether this is a modem number"
+msgstr "Чи це номер телефону модему"
+
+#: ../mimedir/mimedir-vcard-phone.c:196
+msgid "Pager"
+msgstr "Пейджер"
+
+#: ../mimedir/mimedir-vcard-phone.c:197
+msgid "Whether this is a pager number"
+msgstr "Чи це номер телефону пейджера"
+
+#: ../mimedir/mimedir-vcard-phone.c:202
+msgid "Video"
+msgstr "Відео"
+
+#: ../mimedir/mimedir-vcard-phone.c:203
+msgid "Whether this is a video phone number"
+msgstr "Чи це номер телефону відео"
+
+#: ../mimedir/mimedir-vcard-phone.c:208
+msgid "Cell"
+msgstr "Мобільний"
+
+#: ../mimedir/mimedir-vcard-phone.c:209
+msgid "Whether this is a cell (mobile) phone number"
+msgstr "Чи це номер мобільного телефону"
+
+#: ../mimedir/mimedir-vcard-phone.c:214
+msgid "Car"
+msgstr "Автомобільний"
+
+#: ../mimedir/mimedir-vcard-phone.c:215
+msgid "Whether this is car phone number"
+msgstr "Чи це номер телефону у автомобілі"
+
+#: ../mimedir/mimedir-vcard-phone.c:220 ../mimedir/mimedir-vcard-phone.c:756
+msgid "ISDN"
+msgstr "ISDN"
+
+#: ../mimedir/mimedir-vcard-phone.c:221
+msgid "Whether this is a ISDN number"
+msgstr "Чи це номер телефону ISDN"
+
+#: ../mimedir/mimedir-vcard-phone.c:226 ../mimedir/mimedir-vcard-phone.c:761
+msgid "PCS"
+msgstr "PCS"
+
+#: ../mimedir/mimedir-vcard-phone.c:227
+msgid "Whether this is a PCS number"
+msgstr "Чи це номер телефону PCS"
+
+#: ../mimedir/mimedir-vcard-phone.c:233
+msgid "Whether this is the preferred number"
+msgstr "Чи це головний номер телефону"
+
+#: ../mimedir/mimedir-vcard-phone.c:238
+msgid "Message"
+msgstr "Автовідповідач"
+
+#: ../mimedir/mimedir-vcard-phone.c:239
+msgid "Whether this number has a voice recorder"
+msgstr "Чи це номер телефону для запису голосу"
+
+#: ../mimedir/mimedir-vcard-phone.c:588
+#, c-format
+msgid "The phone field is of unknown type %s."
+msgstr "Поле телефону має невідомий тип %s."
+
+#: ../mimedir/mimedir-vcard-phone.c:711
+msgid "voice"
+msgstr "голосовий"
+
+#: ../mimedir/mimedir-vcard-phone.c:716
+msgid "fax"
+msgstr "факс"
+
+#: ../mimedir/mimedir-vcard-phone.c:726
+msgid "modem"
+msgstr "модем"
+
+#: ../mimedir/mimedir-vcard-phone.c:731
+msgid "pager"
+msgstr "Пейджер"
+
+#: ../mimedir/mimedir-vcard-phone.c:736
+msgid "video"
+msgstr "Відео"
+
+#: ../mimedir/mimedir-vcard-phone.c:741
+msgid "voice message"
+msgstr "голосові повідомлення"
+
+#: ../mimedir/mimedir-vcard-phone.c:746
+msgid "cell phone"
+msgstr "мобільний телефон"
+
+#: ../mimedir/mimedir-vcard-phone.c:751
+msgid "car phone"
+msgstr "автомобільний телефон"
+
+#: ../mimedir/mimedir-vcard.c:299
+msgid "The spelled out name full name of this person"
+msgstr "Повне ім'я цієї особи"
+
+#: ../mimedir/mimedir-vcard.c:304
+msgid "Family name"
+msgstr "Прізвище"
+
+#: ../mimedir/mimedir-vcard.c:305
+msgid "The family name of this person"
+msgstr "Прізвище цієї особи"
+
+#: ../mimedir/mimedir-vcard.c:310
+msgid "Given name"
+msgstr "Ім'я"
+
+#: ../mimedir/mimedir-vcard.c:311
+msgid "The given name of this person"
+msgstr "Ім'я цієї особи"
+
+#: ../mimedir/mimedir-vcard.c:316
+msgid "Middle name"
+msgstr "По-батькові"
+
+#: ../mimedir/mimedir-vcard.c:317
+msgid "The middle name or middle initials of this person"
+msgstr "Ім`я по-батькові або ініціал цієї особи"
+
+#: ../mimedir/mimedir-vcard.c:322
+msgid "Prefix"
+msgstr "Префікс"
+
+#: ../mimedir/mimedir-vcard.c:323
+msgid "The name prefix (e.g. honorific prefix) of this person"
+msgstr "Префікс імені (наприклад почесний префікс) цієї особи"
+
+#: ../mimedir/mimedir-vcard.c:328
+msgid "Suffix"
+msgstr "Суфікс"
+
+#: ../mimedir/mimedir-vcard.c:329
+msgid "The name suffix of this person"
+msgstr "Суфікс імені цієї особи"
+
+#: ../mimedir/mimedir-vcard.c:334
+msgid "Nickname list"
+msgstr "Список прізвиськ"
+
+#: ../mimedir/mimedir-vcard.c:335
+msgid ""
+"List of all nick names. This is a GList *, where the elements are of type "
+"const gchar *"
+msgstr "Список усіх прізвиськ. Це  GList *, де елементи мають тип gchar *"
+
+#: ../mimedir/mimedir-vcard.c:339
+msgid "Nick name"
+msgstr "Прізвисько"
+
+#: ../mimedir/mimedir-vcard.c:340
+msgid "The first nick name"
+msgstr "Перше прізвисько"
+
+#. FIXME: this is useless
+#: ../mimedir/mimedir-vcard.c:345
+msgid "Photo"
+msgstr "Фотографія"
+
+#: ../mimedir/mimedir-vcard.c:346
+msgid "Pointer to a byte stream, representing an image of the person"
+msgstr "Вказівник на потік, що представляє зображення цієї особи"
+
+#: ../mimedir/mimedir-vcard.c:350
+msgid "Photo URI"
+msgstr "URI фотографії"
+
+#: ../mimedir/mimedir-vcard.c:351
+msgid "URI to an image of this person"
+msgstr "URI зображення цієї особи"
+
+#: ../mimedir/mimedir-vcard.c:356
+msgid "Birthday"
+msgstr "День народження"
+
+#: ../mimedir/mimedir-vcard.c:357
+msgid "The person's birthday"
+msgstr "День народження особи"
+
+#: ../mimedir/mimedir-vcard.c:363
+msgid "Address list"
+msgstr "Список адрес"
+
+#: ../mimedir/mimedir-vcard.c:364
+msgid ""
+"List of all addresses. This is a GList *, where the elements are of type "
+"MIMEDirAddress *"
+msgstr "Список усіх адрес. Це GList * з елементів типу MIMEDirAddress *"
+
+#: ../mimedir/mimedir-vcard.c:369
+msgid "The preferred address"
+msgstr "Головна адреса"
+
+#: ../mimedir/mimedir-vcard.c:375
+msgid "Phone number list"
+msgstr "Список номерів телефонів"
+
+#: ../mimedir/mimedir-vcard.c:376
+msgid ""
+"List of all phone numbers. This is a GList *, where the elements are of type "
+"MIMEDirPhone *"
+msgstr "Список номерів телефонів. Це GList * з елементів MIMEDirPhone *"
+
+#: ../mimedir/mimedir-vcard.c:380
+msgid "Phone number"
+msgstr "Номер телефону"
+
+#: ../mimedir/mimedir-vcard.c:381
+msgid "The preferred phone number"
+msgstr "Це головний номер телефону"
+
+#: ../mimedir/mimedir-vcard.c:386
+msgid "E-mail address list"
+msgstr "Список адрес ел.пошти"
+
+#: ../mimedir/mimedir-vcard.c:387
+msgid ""
+"List of all e-mail addresses. This is a GList *, where the elements are of "
+"type MIMEDirEmail *"
+msgstr ""
+"Список адрес електронної пошти. Це GList * з елементів типу MIMEDirEmail *"
+
+#: ../mimedir/mimedir-vcard.c:391
+msgid "E-mail address"
+msgstr "Адреса ел.пошти"
+
+#: ../mimedir/mimedir-vcard.c:392
+msgid "The preferred e-mail address"
+msgstr "Головна адреса ел.пошти"
+
+#: ../mimedir/mimedir-vcard.c:397
+msgid "Mailer"
+msgstr "Поштова програма"
+
+#: ../mimedir/mimedir-vcard.c:398
+msgid "The mailing program used by this person"
+msgstr "Програма для електронної пошти, якою користується особа"
+
+#: ../mimedir/mimedir-vcard.c:404
+msgid "Time zone"
+msgstr "Часовий пояс"
+
+#: ../mimedir/mimedir-vcard.c:405
+msgid "The time zone this person lives in"
+msgstr "Часовий пояс у якому живе особа"
+
+#: ../mimedir/mimedir-vcard.c:412
+msgid "Time zone string"
+msgstr "Рядок часового поясу"
+
+#: ../mimedir/mimedir-vcard.c:413
+msgid "The time zone this person lives in (deprecated string representation)"
+msgstr "Часовий пояс у якому живе особа (застаріла символьна форма)"
+
+#: ../mimedir/mimedir-vcard.c:418
+msgid "Latitude"
+msgstr "Широта"
+
+#: ../mimedir/mimedir-vcard.c:419
+msgid "Latitude of this person's residence"
+msgstr "Широта місцевості де перебуває особа"
+
+#: ../mimedir/mimedir-vcard.c:426
+msgid "Longitude"
+msgstr "Довгота"
+
+#: ../mimedir/mimedir-vcard.c:427
+msgid "Longitude of this person's residence"
+msgstr "Довгота місцевості де перебуває особа"
+
+#: ../mimedir/mimedir-vcard.c:435
+msgid "Job title"
+msgstr "Назва роботи"
+
+#: ../mimedir/mimedir-vcard.c:436
+msgid "The person's job title"
+msgstr "Назва роботи особи"
+
+#: ../mimedir/mimedir-vcard.c:441
+msgid "Role"
+msgstr "Посада"
+
+#: ../mimedir/mimedir-vcard.c:442
+msgid "The person's job role"
+msgstr "Посада особи"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:447
+msgid "Logo"
+msgstr "Емблема"
+
+#: ../mimedir/mimedir-vcard.c:448
+msgid "Pointer to a byte stream, representing the logo of the person's company"
+msgstr "Вказівник на потік байтів, що представляє емблему компанії особи"
+
+#: ../mimedir/mimedir-vcard.c:452
+msgid "Logo URI"
+msgstr "URI емблеми"
+
+#: ../mimedir/mimedir-vcard.c:453
+msgid "URI to the logo of this person's company"
+msgstr "URI емблеми компанії цієї особи"
+
+#: ../mimedir/mimedir-vcard.c:458
+msgid "Agent"
+msgstr "Агент"
+
+#: ../mimedir/mimedir-vcard.c:459
+msgid "A person, acting for the person described in this card"
+msgstr "Особа, що виступає від імені особи, яка описана у цій картці"
+
+#: ../mimedir/mimedir-vcard.c:464
+msgid "Agent URI"
+msgstr "URI агента"
+
+#: ../mimedir/mimedir-vcard.c:465
+msgid ""
+"URI to the description of a person, acting for the person described in this "
+"card"
+msgstr "URI опису особи, що виступає від імені особи, яка описана у цій картці"
+
+#: ../mimedir/mimedir-vcard.c:470
+msgid "Agent string"
+msgstr "Рядок агента"
+
+#: ../mimedir/mimedir-vcard.c:471
+msgid ""
+"A person, acting for the person described in this card (deprecated string "
+"representation)"
+msgstr ""
+"Особа, що виступає від імені особи, яка описана у цій картці (застаріла "
+"символьна форма)"
+
+#: ../mimedir/mimedir-vcard.c:476
+msgid "Organization list"
+msgstr "Список організацій"
+
+#: ../mimedir/mimedir-vcard.c:477
+msgid ""
+"List of all organization this person belongs to. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr ""
+"Список організацій до яких належить особа. Це GList * з елементів типу gchar "
+"*"
+
+#: ../mimedir/mimedir-vcard.c:481
+msgid "Organization"
+msgstr "Організація"
+
+#: ../mimedir/mimedir-vcard.c:482
+msgid "The person's first organization"
+msgstr "Перша організація особи"
+
+#: ../mimedir/mimedir-vcard.c:488 ../mimedir/mimedir-vcomponent.c:264
+msgid "Category list"
+msgstr "Список категорій"
+
+#: ../mimedir/mimedir-vcard.c:489
+msgid ""
+"List of all categories of this person. This is a GList *, where the elements "
+"are gchar *'s"
+msgstr "Список категорій цієї особи. Це GList * з елементів типу gchar *"
+
+#: ../mimedir/mimedir-vcard.c:493
+msgid "Categories"
+msgstr "Категорії"
+
+#: ../mimedir/mimedir-vcard.c:494
+msgid "String representation of this person's categories"
+msgstr "Символьне представлення категорій особи"
+
+#: ../mimedir/mimedir-vcard.c:499
+msgid "Note"
+msgstr "Примітка"
+
+#: ../mimedir/mimedir-vcard.c:500
+msgid "Additional comments"
+msgstr "Додаткові коментарі"
+
+#: ../mimedir/mimedir-vcard.c:506
+msgid ""
+"The product identifier of the vCard. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr ""
+"Ідентифікатор продукту картки. Для новостворених об'єктів має значення "
+"ідентифікатора продукту LibMIMEDir"
+
+#: ../mimedir/mimedir-vcard.c:511
+msgid "Revision"
+msgstr "Випуск"
+
+#: ../mimedir/mimedir-vcard.c:512
+msgid "Card's revision"
+msgstr "Випуск картки"
+
+#: ../mimedir/mimedir-vcard.c:517
+msgid "Sort string"
+msgstr "Рядок сортування"
+
+#: ../mimedir/mimedir-vcard.c:518
+msgid "String that defines this card's sort order"
+msgstr "Рядок який визначає порядок карток"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:523
+msgid "Sound"
+msgstr "Звук"
+
+#: ../mimedir/mimedir-vcard.c:524
+msgid "Pointer to a byte stream, representing a sound file"
+msgstr "Вказівник на потік байтів, що представляють звуковий файл"
+
+#: ../mimedir/mimedir-vcard.c:528
+msgid "Sound URI"
+msgstr "URI звуку"
+
+#: ../mimedir/mimedir-vcard.c:529
+msgid "URI to a sound file"
+msgstr "URI звукового файлу"
+
+#: ../mimedir/mimedir-vcard.c:534
+msgid "Unique Identifier"
+msgstr "Унікальний ідентифікатор"
+
+#: ../mimedir/mimedir-vcard.c:535
+msgid "A unique identifier for this card"
+msgstr "Унікальний ідентифікатор цього файлу"
+
+#: ../mimedir/mimedir-vcard.c:540
+msgid "URL"
+msgstr "URL"
+
+#: ../mimedir/mimedir-vcard.c:541
+msgid "An alternate URL for this resource"
+msgstr "Альтернативний URL цього ресурсу"
+
+#: ../mimedir/mimedir-vcard.c:547
+msgid "Classification"
+msgstr "Класифікація"
+
+#: ../mimedir/mimedir-vcard.c:548
+msgid "The security classfication of this card"
+msgstr "Клас безпеки цієї картки"
+
+#: ../mimedir/mimedir-vcard.c:553
+msgid "Public key list"
+msgstr "Список відкритих ключів"
+
+#: ../mimedir/mimedir-vcard.c:554
+msgid ""
+"List of this person's public keys. This is a GList *, where the elements are "
+"MIMEDirVCardKeys"
+msgstr ""
+"Список відкритих ключів цієї особи. Це GList * з елементів MIMEDirVCardKeys"
+
+#: ../mimedir/mimedir-vcard.c:558
+msgid "Public key"
+msgstr "Відкритий ключ"
+
+#: ../mimedir/mimedir-vcard.c:559
+msgid "This person's first public key"
+msgstr "Перший публічний ключ особи"
+
+#: ../mimedir/mimedir-vcard.c:564
+msgid "Key type"
+msgstr "Тип ключа"
+
+#: ../mimedir/mimedir-vcard.c:565
+msgid "Type of the first public key"
+msgstr "Тип першого публічного ключа"
+
+#: ../mimedir/mimedir-vcard.c:1474 ../mimedir/mimedir-vcard.c:1496
+#: ../mimedir/mimedir-vcard.c:1524 ../mimedir/mimedir-vcard.c:1548
+#, c-format
+msgid "Error reading card file %s: %s!"
+msgstr "Помилка читання з файлу картки %s: %s!"
+
+#: ../mimedir/mimedir-vcard.c:1671
+#, c-format
+msgid "Error writing card file %s: %s!"
+msgstr "Помилка запису у файл картки %s: %s!"
+
+#: ../mimedir/mimedir-vcard.c:3409
+#, c-format
+msgid "Name: %s\n"
+msgstr "Назва: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3411
+msgid "Name\n"
+msgstr "Назва\n"
+
+#: ../mimedir/mimedir-vcard.c:3413
+#, c-format
+msgid "  Prefix:     %s\n"
+msgstr "  Префікс:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3415
+#, c-format
+msgid "  Given:      %s\n"
+msgstr "  Ім'я:      %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3417
+#, c-format
+msgid "  Additional: %s\n"
+msgstr "  Додаткове: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3419
+#, c-format
+msgid "  Family:     %s\n"
+msgstr "  Прізвище:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3421
+#, c-format
+msgid "  Suffix:     %s\n"
+msgstr "  Суфікс:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3427
+#, c-format
+msgid "Birth Date: %04d-%02d-%02d\n"
+msgstr "День народження: %04d-%02d-%02d\n"
+
+#: ../mimedir/mimedir-vcard.c:3452
+#, c-format
+msgid "Address label (%s):\n"
+msgstr "Ярлик адреси (%s):\n"
+
+#: ../mimedir/mimedir-vcard.c:3472
+#, c-format
+msgid "Address (%s):\n"
+msgstr "Адреса (%s):\n"
+
+#: ../mimedir/mimedir-vcard.c:3486
+#, c-format
+msgid "  Postal Box:  %s\n"
+msgstr "  Абонентська скринька:  %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3488
+#, c-format
+msgid "  Extended:    %s\n"
+msgstr "  Розширена:    %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3490
+#, c-format
+msgid "  Street:      %s\n"
+msgstr "  Вулиця:      %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3492
+#, c-format
+msgid "  City:        %s\n"
+msgstr "  Місто:        %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3494
+#, c-format
+msgid "  Region:      %s\n"
+msgstr "  Регіон:      %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3496
+#, c-format
+msgid "  Postal Code: %s\n"
+msgstr "  Поштовий індекс: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3498
+#, c-format
+msgid "  Country:     %s\n"
+msgstr "  Країна:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3518
+msgid "Telephone:\n"
+msgstr "Телефон:\n"
+
+#: ../mimedir/mimedir-vcard.c:3542
+#, c-format
+msgid "Telephone: %s (%s)\n"
+msgstr "Телефон: %s (%s)\n"
+
+#: ../mimedir/mimedir-vcard.c:3554
+msgid "E-mail:\n"
+msgstr "Ел.пошта:\n"
+
+#: ../mimedir/mimedir-vcard.c:3578
+#, c-format
+msgid "E-mail: %s (%s)\n"
+msgstr "Ел.пошта: %s (%s)\n"
+
+#: ../mimedir/mimedir-vcard.c:3598
+#, c-format
+msgid "Time zone: %c%02d:%02d\n"
+msgstr "Часовий пояс: %c%02d:%02d\n"
+
+#: ../mimedir/mimedir-vcard.c:3607
+#, c-format
+msgid "Location: %.2f,%.2f\n"
+msgstr "Місцевість: %.2f,%.2f\n"
+
+#: ../mimedir/mimedir-vcard.c:3616
+#, c-format
+msgid "Organization: %s\n"
+msgstr "Організація: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3621
+#, c-format
+msgid "Job title: %s\n"
+msgstr "Назва роботи: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3624
+#, c-format
+msgid "Business role: %s\n"
+msgstr "Посада: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3634
+#, c-format
+msgid "Categories: %s\n"
+msgstr "Категорії: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3639
+#, c-format
+msgid "Comment: %s\n"
+msgstr "Коментар: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3642
+#, c-format
+msgid "Homepage: %s\n"
+msgstr "Домашня сторінка: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3645
+#, c-format
+msgid "Unique string: %s\n"
+msgstr " Унікальний рядок: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3655
+msgid "X.509"
+msgstr "X.509"
+
+#: ../mimedir/mimedir-vcard.c:3658
+msgid "PGP"
+msgstr "PGP"
+
+#: ../mimedir/mimedir-vcard.c:3661
+msgid "yes"
+msgstr "так"
+
+#: ../mimedir/mimedir-vcard.c:3665
+#, c-format
+msgid "Public Key: %s\n"
+msgstr "Відкритий ключ: %s\n"
+
+#: ../mimedir/mimedir-vcomponent.c:265
+msgid ""
+"List of all categories of this component. This is a GList *, where the "
+"elements are gchar *'s"
+msgstr ""
+"Список усіх категорій цієї компоненти. Це GList * з елементів gchar *'s"
+
+#: ../mimedir/mimedir-vcomponent.c:269
+msgid "Comment list"
+msgstr "Список коментарів"
+
+#: ../mimedir/mimedir-vcomponent.c:270
+msgid ""
+"List of all additional comments for this component. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr ""
+"Список додаткових коментарів цієї компоненти. Це GList * з елементів gchar "
+"*'s"
+
+#: ../mimedir/mimedir-vcomponent.c:274
+msgid "Description"
+msgstr "Опис"
+
+#: ../mimedir/mimedir-vcomponent.c:275
+msgid "Full description of this component"
+msgstr "Повний опис цієї компоненти"
+
+#: ../mimedir/mimedir-vcomponent.c:280
+msgid "Percent complete"
+msgstr "Відсоток виконання"
+
+#: ../mimedir/mimedir-vcomponent.c:281
+msgid "Percentage of this task's completion"
+msgstr "Відсоток завершення цього завдання"
+
+#: ../mimedir/mimedir-vcomponent.c:288
+msgid "Priority"
+msgstr "Пріоритет"
+
+#: ../mimedir/mimedir-vcomponent.c:289
+msgid "This task's priority"
+msgstr "Пріоритет цього завдання"
+
+#. FIXME: whoops, this isn't handled
+#: ../mimedir/mimedir-vcomponent.c:294
+msgid "Resource list"
+msgstr "Список ресурсів"
+
+#: ../mimedir/mimedir-vcomponent.c:295
+msgid "List of the resources assigned to this component"
+msgstr "Список ресурсів, що пов'язані з цією компонентою"
+
+#: ../mimedir/mimedir-vcomponent.c:299
+msgid "Status"
+msgstr "Статус"
+
+#: ../mimedir/mimedir-vcomponent.c:300
+msgid "This task's completion status"
+msgstr "Статус завершення цього завдання"
+
+#: ../mimedir/mimedir-vcomponent.c:307
+msgid "Summary"
+msgstr "Зведення"
+
+#: ../mimedir/mimedir-vcomponent.c:308
+msgid "Component's short description"
+msgstr "Короткий опис компоненту"
+
+#: ../mimedir/mimedir-vcomponent.c:314
+msgid "Date/time completed"
+msgstr "Дата/час завершення"
+
+#: ../mimedir/mimedir-vcomponent.c:315
+msgid "Date/time that this task was completed"
+msgstr "Дата/час коли завдання було завершено"
+
+#: ../mimedir/mimedir-vcomponent.c:320
+msgid "Date/time end"
+msgstr "Дата/час закінчення"
+
+#: ../mimedir/mimedir-vcomponent.c:321
+msgid "End date/time of this component"
+msgstr "Дата/час закінчення цього компоненту"
+
+#: ../mimedir/mimedir-vcomponent.c:326
+msgid "Due"
+msgstr "Плановий строк"
+
+#: ../mimedir/mimedir-vcomponent.c:327
+msgid "This task's due date"
+msgstr "Планова дата завершення"
+
+#: ../mimedir/mimedir-vcomponent.c:332
+msgid "Date/time start"
+msgstr "Дата/час початку"
+
+#: ../mimedir/mimedir-vcomponent.c:333
+msgid "Start date/time of this component"
+msgstr "Дата/час початку цього компоненту"
+
+#: ../mimedir/mimedir-vcomponent.c:338
+msgid "Duration"
+msgstr "Тривалість"
+
+#: ../mimedir/mimedir-vcomponent.c:339
+msgid "This date's duration"
+msgstr "Тривалість цієї дати"
+
+#: ../mimedir/mimedir-vcomponent.c:344
+msgid "Free/busy"
+msgstr "Зайнятий/вільний"
+
+#: ../mimedir/mimedir-vcomponent.c:345
+msgid "GList of free/busy objects"
+msgstr "Список GList з об'єктами вільний/зайнятий"
+
+#: ../mimedir/mimedir-vcomponent.c:351
+msgid "This component's time zone identifier"
+msgstr "Ідентифікатор часового поясу цього компоненту"
+
+#: ../mimedir/mimedir-vcomponent.c:356
+msgid "Time zone name list"
+msgstr "Список назв часових поясів"
+
+#: ../mimedir/mimedir-vcomponent.c:357
+msgid "GList of time zone names"
+msgstr "Список GList назв часових поясів"
+
+#: ../mimedir/mimedir-vcomponent.c:361 ../mimedir/mimedir-vcomponent.c:362
+msgid "Time zone offset from"
+msgstr "Зсув часового поясу від"
+
+#: ../mimedir/mimedir-vcomponent.c:369 ../mimedir/mimedir-vcomponent.c:370
+msgid "Time zone offset to"
+msgstr "Зсув часового поясу до"
+
+#: ../mimedir/mimedir-vcomponent.c:377
+msgid "Time zone URL"
+msgstr "URL часового поясу"
+
+#: ../mimedir/mimedir-vcomponent.c:378
+msgid "URL to a time zone description"
+msgstr "URL опису часового поясу"
+
+#: ../mimedir/mimedir-vcomponent.c:384
+msgid "Contact"
+msgstr "Контакт"
+
+#: ../mimedir/mimedir-vcomponent.c:385
+msgid "Contact information"
+msgstr "Контактна інформація"
+
+#: ../mimedir/mimedir-vcomponent.c:391
+msgid "Unique identifier"
+msgstr "Унікальний ідентифікатор"
+
+#: ../mimedir/mimedir-vcomponent.c:392
+msgid "A unique identifier for this component"
+msgstr "Унікальний ідентифікатор цього компоненту"
+
+#: ../mimedir/mimedir-vcomponent.c:398
+msgid "Recurrence object"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:399
+msgid "An object representing the RRULE tag"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:405 ../mimedir/mimedir-vcomponent.c:406
+msgid "Action"
+msgstr "Дія"
+
+#: ../mimedir/mimedir-vcomponent.c:411 ../mimedir/mimedir-vcomponent.c:412
+msgid "Repeat"
+msgstr "Повтор"
+
+#: ../mimedir/mimedir-vcomponent.c:417 ../mimedir/mimedir-vcomponent.c:418
+msgid "Trigger"
+msgstr "Тригер"
+
+#: ../mimedir/mimedir-vcomponent.c:423
+msgid "Trigger date/time"
+msgstr "Дата/час тригера"
+
+#: ../mimedir/mimedir-vcomponent.c:424
+msgid "Date/time of the trigger"
+msgstr "Дата/час тригера"
+
+#: ../mimedir/mimedir-vcomponent.c:429
+msgid "Trigger end"
+msgstr "Кінець тригера"
+
+#: ../mimedir/mimedir-vcomponent.c:430
+msgid "Whether the trigger is set at the end of the time interval"
+msgstr "Чи тригер встановлено на кінець інтервалу часу"
+
+#: ../mimedir/mimedir-vcomponent.c:436
+msgid "Created"
+msgstr "Створено"
+
+#: ../mimedir/mimedir-vcomponent.c:437
+msgid "Date/time of the creation"
+msgstr "Дата/час створення"
+
+#: ../mimedir/mimedir-vcomponent.c:442
+msgid "Date/time stamp"
+msgstr "Штамп дати/часу"
+
+#: ../mimedir/mimedir-vcomponent.c:443
+msgid "Date/time of the last modification"
+msgstr "Дата/час останньої зміни"
+
+#: ../mimedir/mimedir-vcomponent.c:448
+msgid "Sequence"
+msgstr "Послідовність"
+
+#: ../mimedir/mimedir-vcomponent.c:449
+msgid "Sequence number"
+msgstr "Номер послідовності"

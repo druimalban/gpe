@@ -1,0 +1,67 @@
+<!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!ENTITY mimedir-intro SYSTEM "mimedir-intro.sgml">
+<!ENTITY mimedir-init SYSTEM "sgml/mimedir-init.sgml">
+<!ENTITY mimedir-MIMEDirAttribute SYSTEM "sgml/mimedir-attribute.sgml">
+<!ENTITY mimedir-MIMEDirProfile SYSTEM "sgml/mimedir-profile.sgml">
+<!ENTITY mimedir-MIMEDirVCardAddress SYSTEM "sgml/mimedir-vcard-address.sgml">
+<!ENTITY mimedir-MIMEDirVCard SYSTEM "sgml/mimedir-vcard.sgml">
+<!ENTITY mimedir-MIMEDirVCardEMail SYSTEM "sgml/mimedir-vcard-email.sgml">
+<!ENTITY mimedir-MIMEDirVCardPhone SYSTEM "sgml/mimedir-vcard-phone.sgml">
+<!ENTITY mimedir-MIMEDirVCal SYSTEM "sgml/mimedir-vcal.sgml">
+<!ENTITY mimedir-MIMEDirVComponent SYSTEM "sgml/mimedir-vcomponent.sgml">
+<!ENTITY mimedir-MIMEDirVAlarm SYSTEM "sgml/mimedir-valarm.sgml">
+<!ENTITY mimedir-MIMEDirVEvent SYSTEM "sgml/mimedir-vevent.sgml">
+<!ENTITY mimedir-MIMEDirVFreeBusy SYSTEM "sgml/mimedir-vfreebusy.sgml">
+<!ENTITY mimedir-MIMEDirVJournal SYSTEM "sgml/mimedir-vjournal.sgml">
+<!ENTITY mimedir-MIMEDirVTimeZone SYSTEM "sgml/mimedir-vtimezone.sgml">
+<!ENTITY mimedir-MIMEDirVTodo SYSTEM "sgml/mimedir-vtodo.sgml">
+<!ENTITY mimedir-MIMEDirAttachment SYSTEM "sgml/mimedir-attachment.sgml">
+<!ENTITY mimedir-MIMEDirAttendee SYSTEM "sgml/mimedir-attendee.sgml">
+<!ENTITY mimedir-MIMEDirRecurrence SYSTEM "sgml/mimedir-recurrence.sgml">
+<!ENTITY mimedir-MIMEDirDateTime SYSTEM "sgml/mimedir-datetime.sgml">
+<!ENTITY mimedir-bib SYSTEM "mimedir-bib.sgml">
+]>
+<book id="index">
+  <bookinfo>
+    <title>MIME Directory Library Reference Manual</title>
+  </bookinfo>
+
+  &mimedir-intro;
+
+  <chapter id="core-ref">
+    <title>Core Reference</title>
+    &mimedir-init;
+    &mimedir-MIMEDirAttribute;
+    &mimedir-MIMEDirProfile;
+  </chapter>
+
+  <chapter id="vcard-ref">
+    <title>vCard Object Reference</title>
+    &mimedir-MIMEDirVCard;
+    &mimedir-MIMEDirVCardAddress;
+    &mimedir-MIMEDirVCardEMail;
+    &mimedir-MIMEDirVCardPhone;
+  </chapter>
+
+  <chapter id="ical-ref">
+    <title>iCal Object Reference</title>
+    &mimedir-MIMEDirVCal;
+    &mimedir-MIMEDirVComponent;
+    &mimedir-MIMEDirVAlarm;
+    &mimedir-MIMEDirVEvent;
+    &mimedir-MIMEDirVFreeBusy;
+    &mimedir-MIMEDirVJournal;
+    &mimedir-MIMEDirVTimeZone;
+    &mimedir-MIMEDirVTodo;
+  </chapter>
+
+  <chapter id="ical-util">
+    <title>Utility Ojects</title>
+    &mimedir-MIMEDirAttachment;
+    &mimedir-MIMEDirAttendee;
+    &mimedir-MIMEDirDateTime;
+    &mimedir-MIMEDirRecurrence;
+  </chapter>
+
+  &mimedir-bib;
+</book>

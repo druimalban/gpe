@@ -1,0 +1,85 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVEvent
+
+<!-- ##### SECTION Short_Description ##### -->
+iCalendar event object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirVEvent ##### -->
+<para>
+
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_vevent_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vevent_new_from_profile ##### -->
+<para>
+
+</para>
+
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vevent_read_from_profile ##### -->
+<para>
+
+</para>
+
+@vevent: 
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vevent_write_to_channel ##### -->
+<para>
+
+</para>
+
+@vevent: 
+@channel: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vevent_write_to_profile ##### -->
+<para>
+
+</para>
+
+@vevent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vevent_write_to_string ##### -->
+<para>
+
+</para>
+
+@vevent: 
+@Returns: 
+
+

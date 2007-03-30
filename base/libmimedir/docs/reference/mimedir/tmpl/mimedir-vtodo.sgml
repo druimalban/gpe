@@ -1,0 +1,85 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVTodo
+
+<!-- ##### SECTION Short_Description ##### -->
+iCalendar todo object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirVTodo ##### -->
+<para>
+
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_vtodo_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vtodo_new_from_profile ##### -->
+<para>
+
+</para>
+
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vtodo_read_from_profile ##### -->
+<para>
+
+</para>
+
+@vtodo: 
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vtodo_write_to_channel ##### -->
+<para>
+
+</para>
+
+@vtodo: 
+@channel: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vtodo_write_to_profile ##### -->
+<para>
+
+</para>
+
+@vtodo: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vtodo_write_to_string ##### -->
+<para>
+
+</para>
+
+@vtodo: 
+@Returns: 
+
+

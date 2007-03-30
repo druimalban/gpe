@@ -1,0 +1,574 @@
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_NOTZ ##### -->
+<para>
+Signifies that the time is not associated with a specific time zone.
+</para>
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_UTC ##### -->
+<para>
+Signifies the time zone UTC.
+</para>
+
+
+<!-- ##### MACRO MIMEDIR_VCAL_ERROR_NO_COMPONENTS_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_VAL_ERROR_NO_COMPONENTS
+error code.
+</para>
+
+
+<!-- ##### STRUCT MIMEDirAttributeDateTime ##### -->
+<para>
+Stores date/time information, including the timezone.
+</para>
+
+@year: year
+@month: month (1-12)
+@day: day (1-31)
+@hour: hour (0-23)
+@minute: minute (0-59)
+@second: second (0-59)
+@timezone: time zone in minutes from median time
+
+<!-- ##### FUNCTION mimedir_attribute_error_quark ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### MACRO mimedir_attribute_free_date_list ##### -->
+<para>
+Frees a list of #MIMEDirAttributeDateTime pointers as returned by
+mimedir_attribute_get_value_date_list().
+</para>
+
+@list: 
+
+<!-- ##### FUNCTION mimedir_attribute_free_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+<!-- ##### MACRO mimedir_attribute_free_time_list ##### -->
+<para>
+Frees a list of #MIMEDirAttributeDateTime pointers as returned by
+mimedir_attribute_get_value_time_list().
+</para>
+
+@list: 
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_decoded ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_raw ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_attribute_new_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_attribute_read_from_channel ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_decoded ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@value: 
+@encoding: 
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_raw ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@value: 
+
+<!-- ##### FUNCTION mimedir_profile_error_quark ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_profile_new_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_profile_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_profile_read_from_channel ##### -->
+<para>
+
+</para>
+
+@profile: 
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_profile_read_from_string ##### -->
+<para>
+
+</para>
+
+@profile: 
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_valarm_new_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_valarm_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_valarm_read_from_channel ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_valarm_read_from_string ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcal_new_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcal_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcal_read_from_channel ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcal_read_from_string ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcal_read_list ##### -->
+<para>
+Reads a list of iCalendars from the supplied file and returns it. @error
+will be set if an error occurs. You should free the returned list with
+mimedir_vcal_free_list().
+</para>
+<para>
+The supplied file will first be treated as being in UTF-8 encoding.
+If there are conversion errors, the file will be treated as being in
+the encoding of the current locale. It there are also conversion
+errors, the file will finally be treated as being in ISO-8859-15
+encoding. See
+<link linkend="overview-encoding" endterm="overview-encoding">the section
+called Encoding Issues</link> for more information.
+</para>
+
+@filename: file to read
+@error: error storage location or %NULL
+@Returns: list of iCalendar objects
+
+<!-- ##### FUNCTION mimedir_vcal_read_list_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcal_write_list ##### -->
+<para>
+
+</para>
+
+@filename: 
+@list: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcal_write_list_to_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@list: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcard_new_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcard_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcard_read_from_channel ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcard_read_from_string ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcard_read_list ##### -->
+<para>
+Reads a list of vCards from the supplied file and returns it. @error
+will be set if an error occurs. You should free the returned list with
+mimedir_vcard_free_list().
+</para>
+<para>       
+The supplied file will first be treated as being in UTF-8 encoding.
+If there are conversion errors, the file will be treated as being in
+the encoding of the current locale. It there are also conversion
+errors, the file will finally be treated as being in ISO-8859-15
+encoding. See
+<link linkend="overview-encoding" endterm="overview-encoding">the section
+called Encoding Issues</link> for more information.
+</para>
+
+@filename: file to read
+@error: error storage location or %NULL
+@Returns: list of vCard objects
+
+<!-- ##### FUNCTION mimedir_vcard_read_list_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vcomponent_is_allday ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vevent_get_categories_as_string ##### -->
+<para>
+
+</para>
+
+@vevent: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vevent_is_allday ##### -->
+<para>
+
+</para>
+
+@vevent: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vevent_new_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vevent_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vevent_read_from_channel ##### -->
+<para>
+
+</para>
+
+@vevent: 
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vevent_read_from_string ##### -->
+<para>
+
+</para>
+
+@vevent: 
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vfreebusy_new_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vfreebusy_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vfreebusy_read_from_channel ##### -->
+<para>
+
+</para>
+
+@vfreebusy: 
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vfreebusy_read_from_string ##### -->
+<para>
+
+</para>
+
+@vfreebusy: 
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vjournal_new_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vjournal_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vjournal_read_from_channel ##### -->
+<para>
+
+</para>
+
+@vjournal: 
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vjournal_read_from_string ##### -->
+<para>
+
+</para>
+
+@vjournal: 
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vtimezone_new_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vtimezone_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vtimezone_read_from_channel ##### -->
+<para>
+
+</para>
+
+@vtimezone: 
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vtimezone_read_from_string ##### -->
+<para>
+
+</para>
+
+@vtimezone: 
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vtodo_get_categories_as_string ##### -->
+<para>
+
+</para>
+
+@vtodo: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vtodo_new_from_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vtodo_new_from_string ##### -->
+<para>
+
+</para>
+
+@string: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vtodo_read_from_channel ##### -->
+<para>
+
+</para>
+
+@vtodo: 
+@channel: 
+@error: 
+@Returns: 
+
+<!-- ##### FUNCTION mimedir_vtodo_read_from_string ##### -->
+<para>
+
+</para>
+
+@vtodo: 
+@string: 
+@error: 
+@Returns: 
+

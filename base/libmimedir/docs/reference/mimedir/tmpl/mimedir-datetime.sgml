@@ -1,0 +1,312 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirDateTime
+
+<!-- ##### SECTION Short_Description ##### -->
+date time object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO MIMEDIR_DATETIME_NOTZ ##### -->
+<para>
+This date time object does not specify the time zone.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_DATETIME_UTC ##### -->
+<para>
+The time is given in Universal Standard Time (UTC).
+</para>
+
+
+
+<!-- ##### STRUCT MIMEDirDateTime ##### -->
+<para>
+
+</para>
+
+@parent: 
+@year: 
+@month: 
+@day: 
+@hour: 
+@minute: 
+@second: 
+@timezone: 
+@flags: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_datetime_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_new_now ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_new_from_datetime ##### -->
+<para>
+
+</para>
+
+@year: 
+@month: 
+@day: 
+@hour: 
+@minute: 
+@second: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_new_from_date ##### -->
+<para>
+
+</para>
+
+@year: 
+@month: 
+@day: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_new_from_time ##### -->
+<para>
+
+</para>
+
+@hour: 
+@minute: 
+@second: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_new_from_gdate ##### -->
+<para>
+
+</para>
+
+@date: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_new_from_time_t ##### -->
+<para>
+
+</para>
+
+@t: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_new_from_struct_tm ##### -->
+<para>
+
+</para>
+
+@tm: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_set_datetime ##### -->
+<para>
+
+</para>
+
+@dt: 
+@year: 
+@month: 
+@day: 
+@hour: 
+@minute: 
+@second: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_set_date ##### -->
+<para>
+
+</para>
+
+@dt: 
+@year: 
+@month: 
+@day: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_set_time ##### -->
+<para>
+
+</para>
+
+@dt: 
+@hour: 
+@minute: 
+@second: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_set_gdate ##### -->
+<para>
+
+</para>
+
+@dt: 
+@date: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_set_time_t ##### -->
+<para>
+
+</para>
+
+@dt: 
+@t: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_set_struct_tm ##### -->
+<para>
+
+</para>
+
+@dt: 
+@tm: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_get_datetime ##### -->
+<para>
+
+</para>
+
+@dt: 
+@year: 
+@month: 
+@day: 
+@hour: 
+@minute: 
+@second: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_get_date ##### -->
+<para>
+
+</para>
+
+@dt: 
+@year: 
+@month: 
+@day: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_get_time ##### -->
+<para>
+
+</para>
+
+@dt: 
+@hour: 
+@minute: 
+@second: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_get_gdate ##### -->
+<para>
+
+</para>
+
+@dt: 
+@date: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_get_time_t ##### -->
+<para>
+
+</para>
+
+@dt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_get_struct_tm ##### -->
+<para>
+
+</para>
+
+@dt: 
+@tm: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_is_valid ##### -->
+<para>
+
+</para>
+
+@dt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_is_valid_date ##### -->
+<para>
+
+</para>
+
+@year: 
+@month: 
+@day: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_is_valid_time ##### -->
+<para>
+
+</para>
+
+@hour: 
+@minute: 
+@second: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_to_utc ##### -->
+<para>
+
+</para>
+
+@dt: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_to_string ##### -->
+<para>
+
+</para>
+
+@dt: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_datetime_compare ##### -->
+<para>
+
+</para>
+
+@dt1: 
+@dt2: 
+@Returns: 
+
+

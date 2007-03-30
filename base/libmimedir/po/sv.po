@@ -1,0 +1,1667 @@
+# Swedish messages for libmimedir.
+# Copyright (C) 2002, 2003, 2006 Free Software Foundation, Inc.
+# This file is distributed under the same license as the libmimedir package.
+# Christian Rose <menthos@menthos.com>, 2002, 2003.
+# Daniel Nylander <po@danielnylander.se>, 2006.
+#
+# $Id: sv.po,v 1.8 2006/04/16 20:26:19 dnylande Exp $
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libmimedir\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-04-12 20:15+0200\n"
+"PO-Revision-Date: 2006-04-16 19:51+0100\n"
+"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../bin/ical-dump.c:48
+#, c-format
+msgid "Usage: %s ICALFILE\n"
+msgstr "Användning: %s ICALFIL\n"
+
+#: ../bin/ical-dump.c:57
+msgid "secondly"
+msgstr "per sekund"
+
+#: ../bin/ical-dump.c:59
+msgid "minutely"
+msgstr "per minut"
+
+#: ../bin/ical-dump.c:61
+msgid "hourly"
+msgstr "per timma"
+
+#: ../bin/ical-dump.c:63
+msgid "daily"
+msgstr "dagligen"
+
+#: ../bin/ical-dump.c:65
+msgid "weekly"
+msgstr "veckovis"
+
+#: ../bin/ical-dump.c:67
+msgid "monthly"
+msgstr "månadsvis"
+
+#: ../bin/ical-dump.c:69
+msgid "yearly"
+msgstr "årligen"
+
+#: ../bin/ical-dump.c:71
+#: ../bin/ical-dump.c:97
+msgid "unknown"
+msgstr "okänd"
+
+#: ../bin/ical-dump.c:81
+msgid "second"
+msgstr "sekund"
+
+#: ../bin/ical-dump.c:83
+msgid "minute"
+msgstr "minut"
+
+#: ../bin/ical-dump.c:85
+msgid "hour"
+msgstr "timma"
+
+#: ../bin/ical-dump.c:87
+msgid "day"
+msgstr "dag"
+
+#: ../bin/ical-dump.c:89
+msgid "day of month"
+msgstr "dag i månad"
+
+#: ../bin/ical-dump.c:91
+msgid "day of year"
+msgstr "dag i år"
+
+#: ../bin/ical-dump.c:93
+msgid "week number"
+msgstr "veckonummer"
+
+#: ../bin/ical-dump.c:95
+msgid "month"
+msgstr "månad"
+
+#: ../bin/ical-dump.c:118
+#, c-format
+msgid "  Recurrence:\n"
+msgstr "  Återkomst:\n"
+
+#: ../bin/ical-dump.c:120
+#, c-format
+msgid "    Frequency: %s\n"
+msgstr "    Frekvens: %s\n"
+
+#: ../bin/ical-dump.c:123
+#, c-format
+msgid "    Until: %s\n"
+msgstr "    Tills: %s\n"
+
+#: ../bin/ical-dump.c:128
+#, c-format
+msgid "    Count: %d\n"
+msgstr "    Antal: %d\n"
+
+#: ../bin/ical-dump.c:131
+#, c-format
+msgid "    Interval: %d\n"
+msgstr "    Intervall: %d\n"
+
+#: ../bin/ical-dump.c:134
+#, c-format
+msgid "    Unit: %s\n"
+msgstr "    Enhet: %s\n"
+
+#: ../bin/ical-dump.c:137
+#, c-format
+msgid "    Units: %s\n"
+msgstr "    Enheter: %s\n"
+
+#: ../bin/ical-dump.c:152
+#, c-format
+msgid ""
+"Event:\n"
+"\n"
+msgstr ""
+"Händelse:\n"
+"\n"
+
+#: ../bin/ical-dump.c:154
+#, c-format
+msgid ""
+"Todo item:\n"
+"\n"
+msgstr ""
+"Att-göra-post:\n"
+"\n"
+
+#: ../bin/ical-dump.c:156
+#, c-format
+msgid ""
+"Unknown component:\n"
+"\n"
+msgstr ""
+"Okänd komponent:\n"
+"\n"
+
+#: ../bin/ical-dump.c:177
+#, c-format
+msgid "  Summary: %s\n"
+msgstr "  Sammanfattning: %s\n"
+
+#: ../bin/ical-dump.c:182
+#, c-format
+msgid "  Categories: %s\n"
+msgstr "  Kategorier: %s\n"
+
+#: ../bin/ical-dump.c:188
+msgid "high"
+msgstr "hög"
+
+#: ../bin/ical-dump.c:190
+msgid "low"
+msgstr "låg"
+
+#: ../bin/ical-dump.c:192
+msgid "medium"
+msgstr "mellan"
+
+#: ../bin/ical-dump.c:193
+#, c-format
+msgid "  Priority: %s (%d)\n"
+msgstr "  Prioritet: %s (%d)\n"
+
+#: ../bin/ical-dump.c:198
+#, c-format
+msgid "  Start date: %s\n"
+msgstr "  Startdatum: %s\n"
+
+#: ../bin/ical-dump.c:205
+#, c-format
+msgid "  End date: %s\n"
+msgstr "  Slutdatum: %s\n"
+
+#: ../bin/ical-dump.c:213
+#, c-format
+msgid "  Due date: %s\n"
+msgstr "  Förfallodatum: %s\n"
+
+#: ../bin/ical-dump.c:222
+#, c-format
+msgid "  Unique ID: %s\n"
+msgstr "  Unikt ID: %s\n"
+
+#: ../bin/ical-dump.c:223
+#, c-format
+msgid "  Sequence: %u\n"
+msgstr "  Sekvens: %u\n"
+
+#: ../bin/ical-dump.c:236
+#, c-format
+msgid "  All day event\n"
+msgstr "  Heldagsarrangemang\n"
+
+#: ../bin/ical-dump.c:261
+#: ../bin/vcard-dump.c:84
+#: ../bin/vcard-normalize.c:68
+#, c-format
+msgid "%s: invalid number of arguments\n"
+msgstr "%s: ogiltigt antal argument\n"
+
+#: ../bin/vcard-dump.c:43
+#: ../bin/vcard-normalize.c:43
+#, c-format
+msgid "Usage: %s VCARDFILE\n"
+msgstr "Användning: %s VCARDFIL\n"
+
+#: ../bin/vcard-normalize.c:79
+#, c-format
+msgid "%s: error reading card file: %s\n"
+msgstr "%s: fel vid läsning av kortfil: %s\n"
+
+#: ../bin/vcard-normalize.c:96
+#, c-format
+msgid "%s: error writing card file: %s\n"
+msgstr "%s: fel vid skrivande av kortfil: %s\n"
+
+#: ../mimedir/mimedir-attribute.c:131
+#: ../mimedir/mimedir-vcard.c:298
+msgid "Name"
+msgstr "Namn"
+
+#: ../mimedir/mimedir-attribute.c:132
+msgid "The attribute's name"
+msgstr "Attributets namn"
+
+#: ../mimedir/mimedir-attribute.c:137
+msgid "Group"
+msgstr "Grupp"
+
+#: ../mimedir/mimedir-attribute.c:138
+msgid "The attribute's group"
+msgstr "Attributets grupp"
+
+#: ../mimedir/mimedir-attribute.c:933
+msgid "missing parameter name"
+msgstr "parameternamn saknas"
+
+#: ../mimedir/mimedir-attribute.c:958
+msgid "missing closing quotation mark"
+msgstr "avslutande citattecken saknas"
+
+#: ../mimedir/mimedir-attribute.c:983
+msgid "wrong parameter syntax"
+msgstr "felaktig parametersyntax"
+
+#: ../mimedir/mimedir-attribute.c:993
+msgid "no parameter value"
+msgstr "parametervärde saknas"
+
+#: ../mimedir/mimedir-attribute.c:1086
+msgid "missing attribute name/group"
+msgstr "attributnamn/grupp saknas"
+
+#: ../mimedir/mimedir-attribute.c:1102
+msgid "no attribute name after group"
+msgstr "inget attributnamn efter grupp"
+
+#: ../mimedir/mimedir-attribute.c:1118
+msgid "missing value delimiter"
+msgstr "värdeavgränsare saknas"
+
+#: ../mimedir/mimedir-attribute.c:1134
+msgid "invalid character"
+msgstr "ogiltigt tecken"
+
+#: ../mimedir/mimedir-attribute.c:2505
+#: ../mimedir/mimedir-attribute.c:2514
+msgid "illegal character"
+msgstr "otillåtet tecken"
+
+#: ../mimedir/mimedir-attribute.h:48
+#, c-format
+msgid "syntax error (%s)"
+msgstr "syntaxfel (%s)"
+
+#: ../mimedir/mimedir-attribute.h:49
+#, c-format
+msgid "illegal character 0x%02x for type \"%s\""
+msgstr "otillåtet tecken 0x%02x för typen \"%s\""
+
+#: ../mimedir/mimedir-attribute.h:50
+#, c-format
+msgid "invalid format for type \"%s\" in attribute %s"
+msgstr "ogiltigt format för typen \"%s\" i attributet %s"
+
+#: ../mimedir/mimedir-attribute.h:51
+#, c-format
+msgid "attribute %s could not be decoded, since its encoding is unknown"
+msgstr "attributet %s kunde inte avkodas eftersom dess kodning är okänd"
+
+#: ../mimedir/mimedir-attribute.h:52
+#, c-format
+msgid "invalid value in attribute %s"
+msgstr "ogiltigt värde i attributet %s"
+
+#: ../mimedir/mimedir-attribute.h:53
+#, c-format
+msgid "parameter \"%s\" must not be used more than once in attribute %s"
+msgstr "parametern \"%s\" får inte användas mer än en gång i attributet %s"
+
+#: ../mimedir/mimedir-attribute.h:54
+msgid "invalid Base64 sequence"
+msgstr "ogiltig Base64-sekvens"
+
+#: ../mimedir/mimedir-attribute.h:55
+msgid "invalid quoted-printable sequence"
+msgstr "ogiltig \"quoted-printable\"-sekvens"
+
+#: ../mimedir/mimedir-attribute.h:56
+#, c-format
+msgid "attribute list of %s is too short"
+msgstr "attributlistan till %s är för kort"
+
+#: ../mimedir/mimedir-attribute.h:57
+#, c-format
+msgid "attribute list of %s is too long"
+msgstr "attributlistan till %s är för lång"
+
+#: ../mimedir/mimedir-datetime.c:114
+#: ../mimedir/mimedir-vcomponent.c:352
+msgid "Time zone identifier"
+msgstr "Tidszonsidentifierare"
+
+#: ../mimedir/mimedir-datetime.c:115
+msgid "Time zone identifying string"
+msgstr "Identifieringssträng för tidszon"
+
+#. Translators: YYYY-MM-DD HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1081
+#, c-format
+msgid "%04d-%02d-%02d %02d:%02d:%02d"
+msgstr "%04d-%02d-%02d %02d.%02d.%02d"
+
+#. Translators: YYYY-MM-DD
+#: ../mimedir/mimedir-datetime.c:1086
+#, c-format
+msgid "%04d-%02d-%02d"
+msgstr "%04d-%02d-%02d"
+
+#. Translators: HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1090
+#, c-format
+msgid "%02d:%02d:%02d"
+msgstr "%02d.%02d.%02d"
+
+#: ../mimedir/mimedir-period.c:111
+msgid "Free/busy type"
+msgstr "Ledig-/upptagentyp"
+
+#: ../mimedir/mimedir-period.c:112
+msgid "Whether this object signifies a free or a busy period"
+msgstr "Huruvida detta objekt representerar en ledig eller en upptagen period"
+
+#: ../mimedir/mimedir-profile.c:114
+msgid "Profile name"
+msgstr "Profilnamn"
+
+#: ../mimedir/mimedir-profile.c:115
+msgid "The name (type) of the profile"
+msgstr "Namnet (typen) av profil"
+
+#: ../mimedir/mimedir-profile.c:121
+msgid "Character set"
+msgstr "Teckenkodning"
+
+#: ../mimedir/mimedir-profile.c:122
+msgid "Character set used to en-/decode this profile"
+msgstr "Teckenkodning att använda för att koda/avkoda denna profil"
+
+#: ../mimedir/mimedir-profile.h:40
+#, c-format
+msgid "attribute %s defined twice"
+msgstr "attributet %s är angivet två gånger"
+
+#: ../mimedir/mimedir-profile.h:41
+msgid "unexpected end of profile"
+msgstr "oväntat slut på profilen"
+
+#: ../mimedir/mimedir-profile.h:42
+#, c-format
+msgid "required attribute %s is missing"
+msgstr "nödvändiga attributet %s saknas"
+
+#: ../mimedir/mimedir-profile.h:43
+msgid "unmatched END attribute"
+msgstr "ensamt END-attribut"
+
+#: ../mimedir/mimedir-profile.h:44
+#, c-format
+msgid "wrong profile %s; expected %s"
+msgstr "felaktig profil %s; %s förväntades"
+
+#: ../mimedir/mimedir-recurrence.c:221
+msgid "Frequency"
+msgstr "Frekvens"
+
+#: ../mimedir/mimedir-recurrence.c:222
+msgid "Frequency type of this recurrency rule"
+msgstr "Frekvenstyp för denna återkomstregel"
+
+#: ../mimedir/mimedir-recurrence.c:229
+msgid "Date of last recurrence"
+msgstr "Datum för senaste återkomst"
+
+#: ../mimedir/mimedir-recurrence.c:230
+msgid "The date of the last recurrence of an event"
+msgstr "Datumet för den senaste återkomsten av en händelse"
+
+#: ../mimedir/mimedir-recurrence.c:235
+msgid "Number of recurrences"
+msgstr "Antal återkomster"
+
+#: ../mimedir/mimedir-recurrence.c:236
+msgid "The number of recurrences of an event"
+msgstr "Antalet återkomster av en händelse"
+
+#: ../mimedir/mimedir-recurrence.c:243
+msgid "Recurrence interval"
+msgstr "Återkomstintervall"
+
+#: ../mimedir/mimedir-recurrence.c:244
+msgid "The interval of recurrences of an event"
+msgstr "Intervallet för återkomster av en händelse"
+
+#: ../mimedir/mimedir-recurrence.c:251
+msgid "Recurrence unit"
+msgstr "Återkomstenhet"
+
+#: ../mimedir/mimedir-recurrence.c:252
+msgid "By which unit a recurrence should be repeated"
+msgstr "Efter vilken enhet en återkomst ska repeteras"
+
+#: ../mimedir/mimedir-recurrence.c:259
+msgid "Recurrence units"
+msgstr "Återkomstenheter"
+
+# Hmm. Osäker
+#: ../mimedir/mimedir-recurrence.c:260
+msgid "List of units by which a recurrence should be repeated"
+msgstr "Lista på enheter som för vilka en återkomst ska repeteras"
+
+#: ../mimedir/mimedir-valarm.c:548
+#, c-format
+msgid ""
+"Reminder of your appointment:\n"
+"\n"
+"%s\n"
+"%s"
+msgstr ""
+"Påminnelse om ditt möte:\n"
+"\n"
+"%s\n"
+"%s"
+
+#: ../mimedir/mimedir-vcal.c:148
+msgid "Method"
+msgstr "Metod"
+
+#: ../mimedir/mimedir-vcal.c:149
+msgid "The vCalendar's method"
+msgstr "Metoden för vCalendar"
+
+#: ../mimedir/mimedir-vcal.c:154
+#: ../mimedir/mimedir-vcard.c:505
+msgid "Product identifier"
+msgstr "Produktidentifierare"
+
+#: ../mimedir/mimedir-vcal.c:155
+msgid "The product identifier of the vCalendar. In case of newly generated objects, this is LibMIMEDir's product identifier"
+msgstr "Produktidentifieraren för vCalendar. För nyligen genererade objekt är detta LibMIMEDirs produktidentifierare"
+
+#: ../mimedir/mimedir-vcal.c:384
+#: ../mimedir/mimedir-vcard.c:2411
+#: ../mimedir/mimedir-vcomponent.c:2111
+#, c-format
+msgid "The profile contains the unsupported custom attribute %s.\n"
+msgstr "Profilen innehåller det anpassade attributet %s som inte stöds.\n"
+
+#: ../mimedir/mimedir-vcal.c:387
+#: ../mimedir/mimedir-vcard.c:2414
+#: ../mimedir/mimedir-vcomponent.c:2114
+#, c-format
+msgid "The profile contains the unknown attribute %s.\n"
+msgstr "Profilen innehåller det okända attributet %s.\n"
+
+#: ../mimedir/mimedir-vcal.c:432
+#: ../mimedir/mimedir-vcal.c:454
+#: ../mimedir/mimedir-vcal.c:482
+#: ../mimedir/mimedir-vcal.c:506
+#, c-format
+msgid "Error reading calendar file %s: %s!"
+msgstr "Fel vid läsning av kalenderfilen %s: %s!"
+
+#: ../mimedir/mimedir-vcard-address.c:167
+msgid "Title"
+msgstr "Titel"
+
+#: ../mimedir/mimedir-vcard-address.c:168
+msgid "A one-line string with the most important address information"
+msgstr "En enradssträng med den viktigaste adressinformationen"
+
+#: ../mimedir/mimedir-vcard-address.c:174
+msgid "Freeform address"
+msgstr "Friformsadress"
+
+#: ../mimedir/mimedir-vcard-address.c:175
+msgid "A freeform address string"
+msgstr "En adressträng på fri form"
+
+#: ../mimedir/mimedir-vcard-address.c:180
+msgid "Post office box"
+msgstr "Postbox"
+
+#: ../mimedir/mimedir-vcard-address.c:181
+msgid "The addresses post office box"
+msgstr "Adressatens postbox"
+
+#: ../mimedir/mimedir-vcard-address.c:186
+msgid "Extended address"
+msgstr "Utökad adress"
+
+#: ../mimedir/mimedir-vcard-address.c:187
+msgid "Extended address string"
+msgstr "Utökad adressträng"
+
+#: ../mimedir/mimedir-vcard-address.c:192
+msgid "Street"
+msgstr "Gata"
+
+#: ../mimedir/mimedir-vcard-address.c:193
+msgid "Street address"
+msgstr "Gatuadress"
+
+#: ../mimedir/mimedir-vcard-address.c:198
+msgid "Locality"
+msgstr "Ort"
+
+#: ../mimedir/mimedir-vcard-address.c:199
+msgid "Locality (e.g. city, town, etc.)"
+msgstr "Ort (t.ex. stad)"
+
+#: ../mimedir/mimedir-vcard-address.c:204
+msgid "Region"
+msgstr "Region"
+
+#: ../mimedir/mimedir-vcard-address.c:205
+msgid "Region (e.g. state)"
+msgstr "Region (t.ex. delstat)"
+
+#: ../mimedir/mimedir-vcard-address.c:210
+msgid "Postal code"
+msgstr "Postkod"
+
+#: ../mimedir/mimedir-vcard-address.c:211
+msgid "Postal code (freeform string)"
+msgstr "Postkod (friformssträng)"
+
+#: ../mimedir/mimedir-vcard-address.c:216
+#: ../mimedir/mimedir-vcard-address.c:217
+msgid "Country"
+msgstr "Land"
+
+#: ../mimedir/mimedir-vcard-address.c:222
+msgid "Domestic"
+msgstr "Inrikes"
+
+#: ../mimedir/mimedir-vcard-address.c:223
+msgid "Whether this is a domestic address"
+msgstr "Huruvida detta är en inrikesadress"
+
+#: ../mimedir/mimedir-vcard-address.c:228
+msgid "International"
+msgstr "Utrikes"
+
+#: ../mimedir/mimedir-vcard-address.c:229
+msgid "Whether this is an international address"
+msgstr "Huruvida detta är en utrikesadress"
+
+#: ../mimedir/mimedir-vcard-address.c:234
+msgid "Postal"
+msgstr "Post"
+
+#: ../mimedir/mimedir-vcard-address.c:235
+msgid "Whether this is a postal address"
+msgstr "Huruvida detta är en postadress"
+
+#: ../mimedir/mimedir-vcard-address.c:240
+msgid "Parcel"
+msgstr "Bud"
+
+#: ../mimedir/mimedir-vcard-address.c:241
+msgid "Whether parcels can be received at this address"
+msgstr "Huruvida bud kan tas emot på denna adress"
+
+#: ../mimedir/mimedir-vcard-address.c:246
+#: ../mimedir/mimedir-vcard-email.c:163
+#: ../mimedir/mimedir-vcard-phone.c:160
+msgid "Home"
+msgstr "Hem"
+
+#: ../mimedir/mimedir-vcard-address.c:247
+msgid "Whether this is a home address"
+msgstr "Huruvida detta är en hemadress"
+
+#: ../mimedir/mimedir-vcard-address.c:252
+#: ../mimedir/mimedir-vcard-email.c:169
+#: ../mimedir/mimedir-vcard-phone.c:166
+msgid "Work"
+msgstr "Jobb"
+
+#: ../mimedir/mimedir-vcard-address.c:253
+msgid "Whether this is a work address"
+msgstr "Huruvida detta är en jobbadress"
+
+#: ../mimedir/mimedir-vcard-address.c:258
+#: ../mimedir/mimedir-vcard-email.c:157
+#: ../mimedir/mimedir-vcard-phone.c:232
+msgid "Preferred"
+msgstr "Föredras"
+
+#: ../mimedir/mimedir-vcard-address.c:259
+msgid "Whether this is the preferred address"
+msgstr "Huruvida denna adress föredras"
+
+#: ../mimedir/mimedir-vcard-address.c:572
+#, c-format
+msgid "The %s attribute contains too many elements.\n"
+msgstr "%s-attributet innehåller för många element.\n"
+
+#: ../mimedir/mimedir-vcard-address.c:772
+#, c-format
+msgid "The address field is of unknown type %s.\n"
+msgstr "Adressfältet är av okända typen %s.\n"
+
+#. Translators: pcode city
+#: ../mimedir/mimedir-vcard-address.c:864
+#: ../mimedir/mimedir-vcard-address.c:873
+#, c-format
+msgid "%s %s"
+msgstr "%s %s"
+
+#. Translators: city, region
+#: ../mimedir/mimedir-vcard-address.c:871
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
+#: ../mimedir/mimedir-vcard-address.c:914
+#: ../mimedir/mimedir-vcard-email.c:538
+#: ../mimedir/mimedir-vcard-phone.c:695
+msgid "preferred"
+msgstr "föredras"
+
+#: ../mimedir/mimedir-vcard-address.c:919
+msgid "domestic"
+msgstr "inrikes"
+
+#: ../mimedir/mimedir-vcard-address.c:924
+msgid "international"
+msgstr "utrikes"
+
+#: ../mimedir/mimedir-vcard-address.c:929
+msgid "postal"
+msgstr "post"
+
+#: ../mimedir/mimedir-vcard-address.c:934
+msgid "parcel"
+msgstr "bud"
+
+#: ../mimedir/mimedir-vcard-address.c:939
+#: ../mimedir/mimedir-vcard-email.c:560
+#: ../mimedir/mimedir-vcard-phone.c:701
+msgid "home"
+msgstr "hem"
+
+#: ../mimedir/mimedir-vcard-address.c:944
+#: ../mimedir/mimedir-vcard-email.c:566
+#: ../mimedir/mimedir-vcard-phone.c:706
+msgid "work"
+msgstr "jobb"
+
+#. Translators: Short address format: "locality/street"
+#: ../mimedir/mimedir-vcard-address.c:996
+#, c-format
+msgid "%s/%s"
+msgstr "%s/%s"
+
+#: ../mimedir/mimedir-vcard-address.c:1002
+msgid "<unknown>"
+msgstr "<okänd>"
+
+#: ../mimedir/mimedir-vcard-email.c:142
+#: ../mimedir/mimedir-vcard.c:368
+msgid "Address"
+msgstr "Adress"
+
+#: ../mimedir/mimedir-vcard-email.c:143
+msgid "The e-mail address"
+msgstr "E-postadressen"
+
+#: ../mimedir/mimedir-vcard-email.c:149
+msgid "Type"
+msgstr "Typ"
+
+#: ../mimedir/mimedir-vcard-email.c:150
+msgid "Type of this e-mail address"
+msgstr "Typen av e-postadress"
+
+#: ../mimedir/mimedir-vcard-email.c:158
+msgid "Whether this is the preferred e-mail address"
+msgstr "Huruvida denna e-postadress föredras"
+
+#: ../mimedir/mimedir-vcard-email.c:164
+msgid "Whether is a home e-mail address"
+msgstr "Huruvida detta är en e-postadress för hemmet"
+
+#: ../mimedir/mimedir-vcard-email.c:170
+msgid "Whether this is an e-mail address at work"
+msgstr "Huruvida detta är en e-postadress till arbetsplatsen"
+
+#: ../mimedir/mimedir-vcard-email.c:442
+#, c-format
+msgid "The email field is of unknown type %s.\n"
+msgstr "E-postfältet är av okända typen %s.\n"
+
+#: ../mimedir/mimedir-vcard-email.c:548
+msgid "Internet"
+msgstr "Internet"
+
+#: ../mimedir/mimedir-vcard-email.c:553
+msgid "X.400"
+msgstr "X.400"
+
+#: ../mimedir/mimedir-vcard-phone.c:153
+msgid "Number"
+msgstr "Nummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:154
+msgid "The telephone number (freeform string)"
+msgstr "Telefonnumret (friformssträng)"
+
+#: ../mimedir/mimedir-vcard-phone.c:161
+msgid "Whether this is a home phone number"
+msgstr "Huruvida detta är ett hemtelefonnummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:167
+msgid "Whether this is a phone number at work"
+msgstr "Huruvida detta är ett jobbtelefonnummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:172
+msgid "Voice"
+msgstr "Röst"
+
+#: ../mimedir/mimedir-vcard-phone.c:173
+msgid "Whether this is a voice number"
+msgstr "Huruvida detta är ett röstnummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:178
+msgid "Fax"
+msgstr "Fax"
+
+#: ../mimedir/mimedir-vcard-phone.c:179
+msgid "Whether this is a facsimile number"
+msgstr "Huruvida detta är ett faxnummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:184
+#: ../mimedir/mimedir-vcard-phone.c:721
+msgid "BBS"
+msgstr "BBS"
+
+#: ../mimedir/mimedir-vcard-phone.c:185
+msgid "Whether this is a bulletin board system number"
+msgstr "Huruvida detta är ett nummer för en elektronisk anslagstavla"
+
+#: ../mimedir/mimedir-vcard-phone.c:190
+msgid "Modem"
+msgstr "Modem"
+
+#: ../mimedir/mimedir-vcard-phone.c:191
+msgid "Whether this is a modem number"
+msgstr "Huruvida detta är ett modemnummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:196
+msgid "Pager"
+msgstr "Personsökare"
+
+#: ../mimedir/mimedir-vcard-phone.c:197
+msgid "Whether this is a pager number"
+msgstr "Huruvida detta är ett personsökarnummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:202
+msgid "Video"
+msgstr "Bild"
+
+#: ../mimedir/mimedir-vcard-phone.c:203
+msgid "Whether this is a video phone number"
+msgstr "Huruvida detta är ett bildtelefonnummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:208
+msgid "Cell"
+msgstr "Mobil"
+
+#: ../mimedir/mimedir-vcard-phone.c:209
+msgid "Whether this is a cell (mobile) phone number"
+msgstr "Huruvida detta är ett mobiltelefonnummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:214
+msgid "Car"
+msgstr "Bil"
+
+#: ../mimedir/mimedir-vcard-phone.c:215
+msgid "Whether this is car phone number"
+msgstr "Huruvida detta är ett biltelefonnummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:220
+#: ../mimedir/mimedir-vcard-phone.c:756
+msgid "ISDN"
+msgstr "ISDN"
+
+#: ../mimedir/mimedir-vcard-phone.c:221
+msgid "Whether this is a ISDN number"
+msgstr "Huruvida detta är ett ISDN-nummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:226
+#: ../mimedir/mimedir-vcard-phone.c:761
+msgid "PCS"
+msgstr "PCS"
+
+#: ../mimedir/mimedir-vcard-phone.c:227
+msgid "Whether this is a PCS number"
+msgstr "Huruvida detta är ett PCS-nummer"
+
+#: ../mimedir/mimedir-vcard-phone.c:233
+msgid "Whether this is the preferred number"
+msgstr "Huruvida detta nummer föredras"
+
+#: ../mimedir/mimedir-vcard-phone.c:238
+msgid "Message"
+msgstr "Meddelande"
+
+#: ../mimedir/mimedir-vcard-phone.c:239
+msgid "Whether this number has a voice recorder"
+msgstr "Huruvida detta nummer har en röstinspelare"
+
+#: ../mimedir/mimedir-vcard-phone.c:588
+#, c-format
+msgid "The phone field is of unknown type %s.\n"
+msgstr "Telefonfältet är av okända typen %s.\n"
+
+#: ../mimedir/mimedir-vcard-phone.c:711
+msgid "voice"
+msgstr "röst"
+
+#: ../mimedir/mimedir-vcard-phone.c:716
+msgid "fax"
+msgstr "fax"
+
+#: ../mimedir/mimedir-vcard-phone.c:726
+msgid "modem"
+msgstr "modem"
+
+#: ../mimedir/mimedir-vcard-phone.c:731
+msgid "pager"
+msgstr "personsökare"
+
+#: ../mimedir/mimedir-vcard-phone.c:736
+msgid "video"
+msgstr "video"
+
+#: ../mimedir/mimedir-vcard-phone.c:741
+msgid "voice message"
+msgstr "röstmeddelande"
+
+#: ../mimedir/mimedir-vcard-phone.c:746
+msgid "cell phone"
+msgstr "mobiltelefon"
+
+#: ../mimedir/mimedir-vcard-phone.c:751
+msgid "car phone"
+msgstr "biltelefon"
+
+#: ../mimedir/mimedir-vcard.c:299
+msgid "The spelled out name full name of this person"
+msgstr "Det fullständiga namnet för denna person"
+
+#: ../mimedir/mimedir-vcard.c:304
+msgid "Family name"
+msgstr "Efternamn"
+
+#: ../mimedir/mimedir-vcard.c:305
+msgid "The family name of this person"
+msgstr "Efternamnet för denna person"
+
+#: ../mimedir/mimedir-vcard.c:310
+msgid "Given name"
+msgstr "Förnamn"
+
+#: ../mimedir/mimedir-vcard.c:311
+msgid "The given name of this person"
+msgstr "Förnamnet för denna person"
+
+#: ../mimedir/mimedir-vcard.c:316
+msgid "Middle name"
+msgstr "Mellannamn"
+
+#: ../mimedir/mimedir-vcard.c:317
+msgid "The middle name or middle initials of this person"
+msgstr "Mellannamnet eller mellaninitialerna för denna person"
+
+#: ../mimedir/mimedir-vcard.c:322
+msgid "Prefix"
+msgstr "Prefix"
+
+#: ../mimedir/mimedir-vcard.c:323
+msgid "The name prefix (e.g. honorific prefix) of this person"
+msgstr "Namnprefixet (t.ex. hedersprefixet) för denna person"
+
+#: ../mimedir/mimedir-vcard.c:328
+msgid "Suffix"
+msgstr "Suffix"
+
+#: ../mimedir/mimedir-vcard.c:329
+msgid "The name suffix of this person"
+msgstr "Namnsuffixet för denna person"
+
+#: ../mimedir/mimedir-vcard.c:334
+msgid "Nickname list"
+msgstr "Smeknamnslista"
+
+#: ../mimedir/mimedir-vcard.c:335
+msgid "List of all nick names. This is a GList *, where the elements are of type const gchar *"
+msgstr "Lista med alla smeknamn. Detta är en GList * där elementen är av typen const gchar *"
+
+#: ../mimedir/mimedir-vcard.c:339
+msgid "Nick name"
+msgstr "Smeknamn"
+
+#: ../mimedir/mimedir-vcard.c:340
+msgid "The first nick name"
+msgstr "Det första smeknamnet"
+
+#. FIXME: this is useless
+#: ../mimedir/mimedir-vcard.c:345
+msgid "Photo"
+msgstr "Foto"
+
+#: ../mimedir/mimedir-vcard.c:346
+msgid "Pointer to a byte stream, representing an image of the person"
+msgstr "Pekare till en byteström som representerar en bild av personen"
+
+#: ../mimedir/mimedir-vcard.c:350
+msgid "Photo URI"
+msgstr "Foto-URI"
+
+#: ../mimedir/mimedir-vcard.c:351
+msgid "URI to an image of this person"
+msgstr "URI till en bild av denna person"
+
+#: ../mimedir/mimedir-vcard.c:356
+msgid "Birthday"
+msgstr "Födelsedag"
+
+#: ../mimedir/mimedir-vcard.c:357
+msgid "The person's birthday"
+msgstr "Personens födelsedag"
+
+#: ../mimedir/mimedir-vcard.c:363
+msgid "Address list"
+msgstr "Adresslista"
+
+#: ../mimedir/mimedir-vcard.c:364
+msgid "List of all addresses. This is a GList *, where the elements are of type MIMEDirAddress *"
+msgstr "Lista med alla adresser. Detta är en GList * där elementen är av typen MIMEDirAddress *"
+
+#: ../mimedir/mimedir-vcard.c:369
+msgid "The preferred address"
+msgstr "Den adress som föredras"
+
+#: ../mimedir/mimedir-vcard.c:375
+msgid "Phone number list"
+msgstr "Telefonnummerslista"
+
+#: ../mimedir/mimedir-vcard.c:376
+msgid "List of all phone numbers. This is a GList *, where the elements are of type MIMEDirPhone *"
+msgstr "Lista med alla telefonnummer. Detta är en GList * där elementen är av typen MIMEDirPhone *"
+
+#: ../mimedir/mimedir-vcard.c:380
+msgid "Phone number"
+msgstr "Telefonnummer"
+
+#: ../mimedir/mimedir-vcard.c:381
+msgid "The preferred phone number"
+msgstr "Det föredragna telefonnumret"
+
+#: ../mimedir/mimedir-vcard.c:386
+msgid "E-mail address list"
+msgstr "E-postadresslista"
+
+#: ../mimedir/mimedir-vcard.c:387
+msgid "List of all e-mail addresses. This is a GList *, where the elements are of type MIMEDirEmail *"
+msgstr "Lista med alla e-postadresser. Detta är en GList * där elementen är av typen MIMEDirEmail *"
+
+#: ../mimedir/mimedir-vcard.c:391
+msgid "E-mail address"
+msgstr "E-postadress"
+
+#: ../mimedir/mimedir-vcard.c:392
+msgid "The preferred e-mail address"
+msgstr "Den e-postadress som föredras"
+
+#: ../mimedir/mimedir-vcard.c:397
+msgid "Mailer"
+msgstr "E-postprogram"
+
+#: ../mimedir/mimedir-vcard.c:398
+msgid "The mailing program used by this person"
+msgstr "Det e-postprogram som används av denna person"
+
+#: ../mimedir/mimedir-vcard.c:404
+msgid "Time zone"
+msgstr "Tidszon"
+
+#: ../mimedir/mimedir-vcard.c:405
+msgid "The time zone this person lives in"
+msgstr "Tidszonen som denna person befinner sig i"
+
+#: ../mimedir/mimedir-vcard.c:412
+msgid "Time zone string"
+msgstr "Tidszonssträng"
+
+#: ../mimedir/mimedir-vcard.c:413
+msgid "The time zone this person lives in (deprecated string representation)"
+msgstr "Tidszonen som denna person bor i (föråldrad strängrepresentation)"
+
+#: ../mimedir/mimedir-vcard.c:418
+msgid "Latitude"
+msgstr "Latitud"
+
+#: ../mimedir/mimedir-vcard.c:419
+msgid "Latitude of this person's residence"
+msgstr "Latituden för denna persons hemvist"
+
+#: ../mimedir/mimedir-vcard.c:426
+msgid "Longitude"
+msgstr "Longitud"
+
+#: ../mimedir/mimedir-vcard.c:427
+msgid "Longitude of this person's residence"
+msgstr "Longituden för denna persons hemvist"
+
+#: ../mimedir/mimedir-vcard.c:435
+msgid "Job title"
+msgstr "Jobbtitel"
+
+#: ../mimedir/mimedir-vcard.c:436
+msgid "The person's job title"
+msgstr "Personens jobbtitel"
+
+#: ../mimedir/mimedir-vcard.c:441
+msgid "Role"
+msgstr "Roll"
+
+#: ../mimedir/mimedir-vcard.c:442
+msgid "The person's job role"
+msgstr "Personens yrkesroll"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:447
+msgid "Logo"
+msgstr "Logotyp"
+
+#: ../mimedir/mimedir-vcard.c:448
+msgid "Pointer to a byte stream, representing the logo of the person's company"
+msgstr "Pekare till en byteström som representerar logotypen för personens företag"
+
+#: ../mimedir/mimedir-vcard.c:452
+msgid "Logo URI"
+msgstr "Logotyp-URI"
+
+#: ../mimedir/mimedir-vcard.c:453
+msgid "URI to the logo of this person's company"
+msgstr "URI till logotypen för denna persons företag"
+
+#: ../mimedir/mimedir-vcard.c:458
+msgid "Agent"
+msgstr "Agent"
+
+#: ../mimedir/mimedir-vcard.c:459
+msgid "A person, acting for the person described in this card"
+msgstr "En person som agerar som agent för personen som beskrivs i detta kort"
+
+#: ../mimedir/mimedir-vcard.c:464
+msgid "Agent URI"
+msgstr "Agent-URI"
+
+#: ../mimedir/mimedir-vcard.c:465
+msgid "URI to the description of a person, acting for the person described in this card"
+msgstr "URI till beskrivningen av en person som agerar för personen som är beskriven i detta kort"
+
+#: ../mimedir/mimedir-vcard.c:470
+msgid "Agent string"
+msgstr "Agentsträng"
+
+#: ../mimedir/mimedir-vcard.c:471
+msgid "A person, acting for the person described in this card (deprecated string representation)"
+msgstr "En person som agerar för personen som är beskriven i detta kort (föråldrad strängrepresentation)"
+
+#: ../mimedir/mimedir-vcard.c:476
+msgid "Organization list"
+msgstr "Organisationslista"
+
+#: ../mimedir/mimedir-vcard.c:477
+msgid "List of all organization this person belongs to. This is a GList *, where the elements are gchar *'s"
+msgstr "Lista med alla organisationer som denna person hör till. Detta är en GList * där elementen är gchar *"
+
+#: ../mimedir/mimedir-vcard.c:481
+msgid "Organization"
+msgstr "Organisation"
+
+#: ../mimedir/mimedir-vcard.c:482
+msgid "The person's first organization"
+msgstr "Personens första organisation"
+
+#: ../mimedir/mimedir-vcard.c:488
+#: ../mimedir/mimedir-vcomponent.c:266
+msgid "Category list"
+msgstr "Kategorilista"
+
+#: ../mimedir/mimedir-vcard.c:489
+msgid "List of all categories of this person. This is a GList *, where the elements are gchar *'s"
+msgstr "Lista med alla kategorier för denna person. Detta är en GList * där elementen är gchar *"
+
+#: ../mimedir/mimedir-vcard.c:493
+msgid "Categories"
+msgstr "Kategorier"
+
+#: ../mimedir/mimedir-vcard.c:494
+msgid "String representation of this person's categories"
+msgstr "Strängrepresentation för denna persons kategorier"
+
+#: ../mimedir/mimedir-vcard.c:499
+msgid "Note"
+msgstr "Anteckning"
+
+#: ../mimedir/mimedir-vcard.c:500
+msgid "Additional comments"
+msgstr "Ytterligare kommentarer"
+
+#: ../mimedir/mimedir-vcard.c:506
+msgid "The product identifier of the vCard. In case of newly generated objects, this is LibMIMEDir's product identifier"
+msgstr "Produktidentifieraren för vCard. För nyligen genererade objekt är detta produktidentifieraren för LibMIMEDir"
+
+#: ../mimedir/mimedir-vcard.c:511
+msgid "Revision"
+msgstr "Revision"
+
+#: ../mimedir/mimedir-vcard.c:512
+msgid "Card's revision"
+msgstr "Kortets revisionsnummer"
+
+#: ../mimedir/mimedir-vcard.c:517
+msgid "Sort string"
+msgstr "Sorteringssträng"
+
+#: ../mimedir/mimedir-vcard.c:518
+msgid "String that defines this card's sort order"
+msgstr "Sträng som definierar detta korts sorteringsorder"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:523
+msgid "Sound"
+msgstr "Ljud"
+
+#: ../mimedir/mimedir-vcard.c:524
+msgid "Pointer to a byte stream, representing a sound file"
+msgstr "Pekare till en byteström som representerar en ljudfil"
+
+#: ../mimedir/mimedir-vcard.c:528
+msgid "Sound URI"
+msgstr "Ljud-URI"
+
+#: ../mimedir/mimedir-vcard.c:529
+msgid "URI to a sound file"
+msgstr "URI till en ljudfil"
+
+#: ../mimedir/mimedir-vcard.c:534
+msgid "Unique Identifier"
+msgstr "Unik identifierare"
+
+#: ../mimedir/mimedir-vcard.c:535
+msgid "A unique identifier for this card"
+msgstr "En unik identifierare för detta kort"
+
+#: ../mimedir/mimedir-vcard.c:540
+msgid "URL"
+msgstr "URL"
+
+#: ../mimedir/mimedir-vcard.c:541
+msgid "An alternate URL for this resource"
+msgstr "En alternativ URL för denna resurs"
+
+#: ../mimedir/mimedir-vcard.c:547
+msgid "Classification"
+msgstr "Klassificering"
+
+#: ../mimedir/mimedir-vcard.c:548
+msgid "The security classfication of this card"
+msgstr "Säkerhetsklassificeringen för detta kort"
+
+#: ../mimedir/mimedir-vcard.c:553
+msgid "Public key list"
+msgstr "Lista med publika nycklar"
+
+#: ../mimedir/mimedir-vcard.c:554
+msgid "List of this person's public keys. This is a GList *, where the elements are MIMEDirVCardKeys"
+msgstr "Lista med denna persons publika nycklar. Detta är en GList * där elementen är MIMEDirVCardKeys"
+
+#: ../mimedir/mimedir-vcard.c:558
+msgid "Public key"
+msgstr "Publik nyckel"
+
+#: ../mimedir/mimedir-vcard.c:559
+msgid "This person's first public key"
+msgstr "Denna persons första publika nyckel"
+
+#: ../mimedir/mimedir-vcard.c:564
+msgid "Key type"
+msgstr "Nyckeltyp"
+
+#: ../mimedir/mimedir-vcard.c:565
+msgid "Type of the first public key"
+msgstr "Typen för den första publika nyckeln"
+
+#: ../mimedir/mimedir-vcard.c:1474
+#: ../mimedir/mimedir-vcard.c:1496
+#: ../mimedir/mimedir-vcard.c:1524
+#: ../mimedir/mimedir-vcard.c:1548
+#, c-format
+msgid "Error reading card file %s: %s!"
+msgstr "Fel vid läsning av kortfilen %s: %s!"
+
+#: ../mimedir/mimedir-vcard.c:1671
+#, c-format
+msgid "Error writing card file %s: %s!"
+msgstr "Fel vid skrivning av kortfilen %s: %s!"
+
+#: ../mimedir/mimedir-vcard.c:3409
+#, c-format
+msgid "Name: %s\n"
+msgstr "Namn: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3411
+msgid "Name\n"
+msgstr "Namn\n"
+
+#: ../mimedir/mimedir-vcard.c:3413
+#, c-format
+msgid "  Prefix:     %s\n"
+msgstr "  Prefix:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3415
+#, c-format
+msgid "  Given:      %s\n"
+msgstr "  Förnamn:    %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3417
+#, c-format
+msgid "  Additional: %s\n"
+msgstr "  Ytterligare: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3419
+#, c-format
+msgid "  Family:     %s\n"
+msgstr "  Familj:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3421
+#, c-format
+msgid "  Suffix:     %s\n"
+msgstr "  Suffix:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3427
+#, c-format
+msgid "Birth Date: %04d-%02d-%02d\n"
+msgstr "Födelsedatum: %04d-%02d-%02d\n"
+
+#: ../mimedir/mimedir-vcard.c:3452
+#, c-format
+msgid "Address label (%s):\n"
+msgstr "Adressetikett (%s):\n"
+
+#: ../mimedir/mimedir-vcard.c:3472
+#, c-format
+msgid "Address (%s):\n"
+msgstr "Adress (%s):\n"
+
+#: ../mimedir/mimedir-vcard.c:3486
+#, c-format
+msgid "  Postal Box:  %s\n"
+msgstr "  Postbox:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3488
+#, c-format
+msgid "  Extended:    %s\n"
+msgstr "  Utökat:      %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3490
+#, c-format
+msgid "  Street:      %s\n"
+msgstr "  Gatuadress:  %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3492
+#, c-format
+msgid "  City:        %s\n"
+msgstr "  Ort:         %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3494
+#, c-format
+msgid "  Region:      %s\n"
+msgstr "  Region:      %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3496
+#, c-format
+msgid "  Postal Code: %s\n"
+msgstr "  Postkod:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3498
+#, c-format
+msgid "  Country:     %s\n"
+msgstr "  Land:        %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3518
+msgid "Telephone:\n"
+msgstr "Telefon:\n"
+
+#: ../mimedir/mimedir-vcard.c:3542
+#, c-format
+msgid "Telephone: %s (%s)\n"
+msgstr "Telefon: %s (%s)\n"
+
+#: ../mimedir/mimedir-vcard.c:3556
+msgid "E-mail:\n"
+msgstr "E-postadress:\n"
+
+#: ../mimedir/mimedir-vcard.c:3580
+#, c-format
+msgid "E-mail: %s (%s)\n"
+msgstr "E-postadress: %s (%s)\n"
+
+#: ../mimedir/mimedir-vcard.c:3602
+#, c-format
+msgid "Time zone: %c%02d:%02d\n"
+msgstr "Tidszon: %c%02d%02d\n"
+
+#: ../mimedir/mimedir-vcard.c:3611
+#, c-format
+msgid "Location: %.2f,%.2f\n"
+msgstr "Plats: %.2f,%.2f\n"
+
+#: ../mimedir/mimedir-vcard.c:3620
+#, c-format
+msgid "Organization: %s\n"
+msgstr "Organisation: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3625
+#, c-format
+msgid "Job title: %s\n"
+msgstr "Jobbtitel: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3628
+#, c-format
+msgid "Business role: %s\n"
+msgstr "Affärsroll: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3638
+#, c-format
+msgid "Categories: %s\n"
+msgstr "Kategorier: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3643
+#, c-format
+msgid "Comment: %s\n"
+msgstr "Kommentar: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3646
+#, c-format
+msgid "Homepage: %s\n"
+msgstr "hemsida: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3649
+#, c-format
+msgid "Unique string: %s\n"
+msgstr "Unik sträng: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3659
+msgid "X.509"
+msgstr "X.509"
+
+#: ../mimedir/mimedir-vcard.c:3662
+msgid "PGP"
+msgstr "PGP"
+
+#: ../mimedir/mimedir-vcard.c:3665
+msgid "yes"
+msgstr "ja"
+
+#: ../mimedir/mimedir-vcard.c:3669
+#, c-format
+msgid "Public Key: %s\n"
+msgstr "Publik nyckel: %s\n"
+
+#: ../mimedir/mimedir-vcomponent.c:267
+msgid "List of all categories of this component. This is a GList *, where the elements are gchar *'s"
+msgstr "Lista med alla kategorier för denna komponent. Detta är en GList * där elementen är gchar *"
+
+#: ../mimedir/mimedir-vcomponent.c:271
+msgid "Comment list"
+msgstr "Kommentarlista"
+
+#: ../mimedir/mimedir-vcomponent.c:272
+msgid "List of all additional comments for this component. This is a GList *, where the elements are gchar *'s"
+msgstr "Lista med alla ytterligare kommentarer för denna komponent. Detta är en GList * där elementen är gchar *"
+
+#: ../mimedir/mimedir-vcomponent.c:276
+msgid "Description"
+msgstr "Beskrivning"
+
+#: ../mimedir/mimedir-vcomponent.c:277
+msgid "Full description of this component"
+msgstr "Fullständig beskrivning för denna komponent"
+
+#: ../mimedir/mimedir-vcomponent.c:282
+msgid "Percent complete"
+msgstr "Procent klar"
+
+#: ../mimedir/mimedir-vcomponent.c:283
+msgid "Percentage of this task's completion"
+msgstr "Procent som denna uppgift är klar"
+
+#: ../mimedir/mimedir-vcomponent.c:290
+msgid "Priority"
+msgstr "Prioritet"
+
+#: ../mimedir/mimedir-vcomponent.c:291
+msgid "This task's priority"
+msgstr "Denna uppgifts prioritet"
+
+#. FIXME: whoops, this isn't handled
+#: ../mimedir/mimedir-vcomponent.c:296
+msgid "Resource list"
+msgstr "Resurslista"
+
+#: ../mimedir/mimedir-vcomponent.c:297
+msgid "List of the resources assigned to this component"
+msgstr "Lista med de resurser som är tilldelade till denna komponent"
+
+#: ../mimedir/mimedir-vcomponent.c:301
+msgid "Status"
+msgstr "Status"
+
+#: ../mimedir/mimedir-vcomponent.c:302
+msgid "This task's completion status"
+msgstr "Denna uppgifts färdigställningsstatus"
+
+#: ../mimedir/mimedir-vcomponent.c:309
+msgid "Summary"
+msgstr "Sammanfattning"
+
+#: ../mimedir/mimedir-vcomponent.c:310
+msgid "Component's short description"
+msgstr "Kort beskrivning för komponenten"
+
+#: ../mimedir/mimedir-vcomponent.c:316
+msgid "Date/time completed"
+msgstr "Datum/tid för färdigställande"
+
+#: ../mimedir/mimedir-vcomponent.c:317
+msgid "Date/time that this task was completed"
+msgstr "Datum/tid då denna uppgift färdigställdes"
+
+#: ../mimedir/mimedir-vcomponent.c:322
+msgid "Date/time end"
+msgstr "Slutdatum/-tid"
+
+#: ../mimedir/mimedir-vcomponent.c:323
+msgid "End date/time of this component"
+msgstr "Slutdatum/-tid för denna komponent"
+
+#: ../mimedir/mimedir-vcomponent.c:328
+msgid "Due"
+msgstr "Klar"
+
+#: ../mimedir/mimedir-vcomponent.c:329
+msgid "This task's due date"
+msgstr "Det datum då denna uppgift ska vara klar"
+
+#: ../mimedir/mimedir-vcomponent.c:334
+msgid "Date/time start"
+msgstr "Startdatum/-tid"
+
+#: ../mimedir/mimedir-vcomponent.c:335
+msgid "Start date/time of this component"
+msgstr "Stardatum/-tid för denna komponent"
+
+#: ../mimedir/mimedir-vcomponent.c:340
+msgid "Duration"
+msgstr "Varaktighet"
+
+#: ../mimedir/mimedir-vcomponent.c:341
+msgid "This date's duration"
+msgstr "Detta datums varaktighet"
+
+#: ../mimedir/mimedir-vcomponent.c:346
+msgid "Free/busy"
+msgstr "Ledig/upptagen"
+
+#: ../mimedir/mimedir-vcomponent.c:347
+msgid "GList of free/busy objects"
+msgstr "GList med ledig/upptagenobjekt"
+
+#: ../mimedir/mimedir-vcomponent.c:353
+msgid "This component's time zone identifier"
+msgstr "Denna komponents tidszonsidentifierare"
+
+#: ../mimedir/mimedir-vcomponent.c:358
+msgid "Time zone name list"
+msgstr "Tidszonslista"
+
+#: ../mimedir/mimedir-vcomponent.c:359
+msgid "GList of time zone names"
+msgstr "GList med tidszonsnamn"
+
+#: ../mimedir/mimedir-vcomponent.c:363
+#: ../mimedir/mimedir-vcomponent.c:364
+msgid "Time zone offset from"
+msgstr "Tidszonsavstånd från"
+
+#: ../mimedir/mimedir-vcomponent.c:371
+#: ../mimedir/mimedir-vcomponent.c:372
+msgid "Time zone offset to"
+msgstr "Tidszonsavstånd till"
+
+#: ../mimedir/mimedir-vcomponent.c:379
+msgid "Time zone URL"
+msgstr "Tidszons-URL"
+
+#: ../mimedir/mimedir-vcomponent.c:380
+msgid "URL to a time zone description"
+msgstr "URL till en tidszonsbeskrivning"
+
+#: ../mimedir/mimedir-vcomponent.c:386
+msgid "Contact"
+msgstr "Kontakt"
+
+#: ../mimedir/mimedir-vcomponent.c:387
+msgid "Contact information"
+msgstr "Kontaktinformation"
+
+#: ../mimedir/mimedir-vcomponent.c:393
+msgid "Unique identifier"
+msgstr "Unik identifierare"
+
+#: ../mimedir/mimedir-vcomponent.c:394
+msgid "A unique identifier for this component"
+msgstr "En unik identifierare för denna komponent"
+
+#: ../mimedir/mimedir-vcomponent.c:400
+msgid "Recurrence object"
+msgstr "Återkomstobjekt"
+
+#: ../mimedir/mimedir-vcomponent.c:401
+msgid "An object representing the RRULE tag"
+msgstr "Ett objekt som representerar RRULE-taggen"
+
+#: ../mimedir/mimedir-vcomponent.c:407
+#: ../mimedir/mimedir-vcomponent.c:408
+msgid "Action"
+msgstr "Åtgärd"
+
+#: ../mimedir/mimedir-vcomponent.c:413
+#: ../mimedir/mimedir-vcomponent.c:414
+msgid "Repeat"
+msgstr "Upprepa"
+
+#: ../mimedir/mimedir-vcomponent.c:419
+#: ../mimedir/mimedir-vcomponent.c:420
+msgid "Trigger"
+msgstr "Trigger"
+
+#: ../mimedir/mimedir-vcomponent.c:425
+msgid "Trigger date/time"
+msgstr "Triggerdatum/-tid"
+
+#: ../mimedir/mimedir-vcomponent.c:426
+msgid "Date/time of the trigger"
+msgstr "Datum/tid för triggern"
+
+#: ../mimedir/mimedir-vcomponent.c:431
+msgid "Trigger end"
+msgstr "Triggerslut"
+
+#: ../mimedir/mimedir-vcomponent.c:432
+msgid "Whether the trigger is set at the end of the time interval"
+msgstr "Huruvida triggern sätts vid slutet på tidsintervallet"
+
+#: ../mimedir/mimedir-vcomponent.c:438
+msgid "Created"
+msgstr "Skapad"
+
+#: ../mimedir/mimedir-vcomponent.c:439
+msgid "Date/time of the creation"
+msgstr "Datum/tid för skapandet"
+
+#: ../mimedir/mimedir-vcomponent.c:444
+msgid "Date/time stamp"
+msgstr "Datum-/tidsstämpel"
+
+#: ../mimedir/mimedir-vcomponent.c:445
+msgid "Date/time of the creation of the iCalendar object"
+msgstr "Datum/tid för skapandet av iCalender-objektet"
+
+#: ../mimedir/mimedir-vcomponent.c:450
+msgid "Last modified"
+msgstr "Senast ändrad"
+
+#: ../mimedir/mimedir-vcomponent.c:451
+msgid "Date/time of the last modification"
+msgstr "Datum/tid för senaste ändring"
+
+#: ../mimedir/mimedir-vcomponent.c:456
+msgid "Sequence"
+msgstr "Sekvens"
+
+#: ../mimedir/mimedir-vcomponent.c:457
+msgid "Sequence number"
+msgstr "Sekvensnummer"
+
+#~ msgid "%s: error reading calendar file: %s\n"
+#~ msgstr "%s: fel vid läsning av kalenderfil: %s\n"
+#~ msgid "Can not open temporary file %s: %s\n"
+#~ msgstr "Kan inte öppna temporära filen %s: %s\n"
+#~ msgid "Error writing calendar file %s: %s!"
+#~ msgstr "Fel vid skrivande av kalenderfilen %s: %s!"
+#~ msgid "Category"
+#~ msgstr "Kategori"
+#~ msgid "Resource"
+#~ msgstr "Resurs"
+#~ msgid "syntax error"
+#~ msgstr "syntaxfel"
+#~ msgid "GPG"
+#~ msgstr "GPG"
+

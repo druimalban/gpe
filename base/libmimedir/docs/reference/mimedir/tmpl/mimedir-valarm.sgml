@@ -1,0 +1,157 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVAlarm
+
+<!-- ##### SECTION Short_Description ##### -->
+iCalendar alarm object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### ENUM MIMEDirVAlarmType ##### -->
+<para>
+
+</para>
+
+@MIMEDIR_VALARM_UNKNOWN: 
+@MIMEDIR_VALARM_AUDIO: 
+@MIMEDIR_VALARM_DISPLAY: 
+@MIMEDIR_VALARM_EMAIL: 
+@MIMEDIR_VALARM_PROCEDURE: 
+
+<!-- ##### STRUCT MIMEDirVAlarm ##### -->
+<para>
+
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_valarm_new ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_new_from_profile ##### -->
+<para>
+
+</para>
+
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_read_from_profile ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_write_to_profile ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_write_to_string ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_write_to_channel ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@channel: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_set_alarm_type ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@type: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_get_alarm_type ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_get_next_occurence ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@vcomponent: 
+@after: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_get_trigger ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@start: 
+@end: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_get_trigger_from_vcomponent ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@vcomponent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_valarm_get_reminder_string ##### -->
+<para>
+
+</para>
+
+@valarm: 
+@vcomponent: 
+@Returns: 
+
+

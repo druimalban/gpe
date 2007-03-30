@@ -1,0 +1,331 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVCard
+
+<!-- ##### SECTION Short_Description ##### -->
+vCard business card object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### ENUM MIMEDirVCardKeyType ##### -->
+<para>
+The type of a public key that is associated with the vCard.
+</para>
+
+@MIMEDIR_VCARD_KEY_UNKNOWN: unknown/unsupported key type
+@MIMEDIR_VCARD_KEY_X509: X.509 key
+@MIMEDIR_VCARD_KEY_PGP: PGP/GnuPG key
+
+<!-- ##### MACRO MIMEDIR_VCARD_TIMEZONE_MAX ##### -->
+<para>
+Maximum valid value for the timezone parameter.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_VCARD_TIMEZONE_MIN ##### -->
+<para>
+Minimum valid value for the timezone parameter.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_VCARD_LATITUDE_MAX ##### -->
+<para>
+Maximum valid value for the latitude parameter.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_VCARD_LATITUDE_MIN ##### -->
+<para>
+Minimum valid value for the latitude parameter.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_VCARD_LONGITUDE_MAX ##### -->
+<para>
+Maximum valid value for the longitude parameter.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_VCARD_LONGITUDE_MIN ##### -->
+<para>
+Minimum valid value for the longitude parameter.
+</para>
+
+
+
+<!-- ##### STRUCT MIMEDirVCard ##### -->
+<para>
+The #MIMEDirVCard-struct struct contains private data only, and
+should be accessed using the functions below.
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_vcard_free_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_write_list ##### -->
+<para>
+
+</para>
+
+@filename: 
+@list: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_write_list_to_channel ##### -->
+<para>
+
+</para>
+
+@channel: 
+@list: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_new_from_profile ##### -->
+<para>
+
+</para>
+
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_read_from_profile ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_write_to_profile ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_write_to_channel ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@channel: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_write_to_string ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_set_birthday ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@birthday: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_get_birthday ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_set_timezone ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@timezone: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_get_timezone ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@timezone: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_clear_timezone ##### -->
+<para>
+
+</para>
+
+@vcard: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_set_geo_position ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@latitude: 
+@longitude: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_get_geo_position ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@latitude: 
+@longitude: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_clear_geo_position ##### -->
+<para>
+
+</para>
+
+@vcard: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_append_address ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@address: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_remove_address ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@address: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_append_email ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@email: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_remove_email ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@email: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_append_phone ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@phone: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_remove_phone ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@phone: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_get_preferred_address ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_get_preferred_email ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_get_preferred_phone ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_get_as_string ##### -->
+<para>
+
+</para>
+
+@vcard: 
+@Returns: 
+
+

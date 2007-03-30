@@ -1,0 +1,1565 @@
+2006-12-19  Pema Geyleg  <pgeyleg@gmail.com>
+
+	* configure.in: Added 'dz' to ALL_LINGUAS
+
+2006-08-15  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attribute.c (mimedir_attribute_get_value_text_list):
+	CATEGORY_LIST only returned one element. Patch by Martin Felis.
+
+2006-02-09  Clytie Siddall  <clytie@riverland.net.au>
+
+	* configure.in	Added vi in ALL_LINGUAS line.
+
+2006-01-01  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* configure.in: Also bump MIMEDIR_*_VERSION. (Thanks, Florian Boor)
+
+	Based on a patch by Olivier Berger:
+	* mimedir/mimedir-attribute (char_to_int): Handle '0' to '9'. Renamed
+	to base64_char_to_int. Removed the error parameter.
+	(int_to_char): Renamed to base64_int_to_char. Removed the
+	error parameter.
+	(base64_check): New function.
+	(base64_decode): Cleaned up.
+	(mimedir_attribute_internal_append_parameter): Recognize "base64" as
+	alternative Base64 identifier.
+	(get_attribute_string): Handle Base64.
+
+2005-11-26  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* configure.in: Bumped version number to 0.4.0.
+	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_parse_attribute):
+	Parse LAST-MODIFIED field with non-UTC time value. (Martin Felis)
+
+2005-11-03  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* bin/vcard-dump.c (print_vcard): Split function out of main().
+	* mimedir/mimedir-vcomponent.c: Added support for LAST-MODIFIED.
+	(Martin Felis); plugged some memory leaks.
+
+2005-10-08  Ilkka Tuohela  <hile@iki.fi>
+
+	* For translators: fixed invalid original string in
+	  mimedir/mimedir-recurrance.c (numer -> number)
+
+2005-09-11  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcard-address.c
+	(mimedir_vcard_address_set_from_attribute):
+	* mimedir/mimedir-vcard-email.c
+	(mimedir_vcard_email_set_from_attribute):
+	* mimedir/mimedir-vcard-phone.c
+	(mimedir_vcard_phone_set_from_attribute): String fix (missing
+	newline).
+	* mimedir/mimedir-attribute.c (parse_parameter_list): Parsing
+	fix.
+	* mimedir/mimedir-vcard-email.c (mimedir_vcard_email_class_init):
+	(mimedir_vcard_email_set_property):
+	(mimedir_vcard_email_get_property):
+	(mimedir_vcard_email_set_from_attribute):
+	(mimedir_vcard_email_save_to_attribute):
+	(mimedir_vcard_email_get_type_string): New properties: home
+	and work.
+
+2005-09-08  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	Fix crasher bugs with obsolete value-only attribute parameters
+	(i.e. parameters of the form "N;QUOTED-PRINTABLE:FooBar".
+
+	* mimedir/mimedir-attribute.c (split_quoted_string): Supplied string
+	is const.
+	(parse_parameter_list): Initialize parameter name with NULL
+	(instead of junk) if the name is missing. Plugged memory leaks in
+	case of parse errors. New boolean parameter: no_name_allowed.
+	(parse_attribute_parameters): Properly handle parameters without
+	name.
+	(mimedir_attribute_get_value_parameters): Changed
+	parse_parameter_list() API.
+
+2005-09-01  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* bin/ical-dump.c (print_recurrence): New function.
+	(print_component): Print recurrence information.
+
+	New API for recurrence frequency: The parameter was renamed from
+	"freq" to "frequency" and now takes an enumeration value instead
+	of a string.
+
+	* bin/ical-dump.c (frequency_to_string): New function.
+	(print_recurrence): New API, uses frequency_to_string().
+	* mimedir/mimedir-recurrence.[ch] (MIMEDirRecurrenceFrequency):
+	Frequency enumeration.
+	(freq_to_string):
+	(string_to_freq): New utility functions.
+	(mimedir_recurrence_class_init): Change param spec.
+	(mimedir_recurrence_dispose): Don't free priv->freq.
+	(mimedir_recurrence_set_property):
+	(mimedir_recurrence_get_property): Changed API.
+	(mimedir_recurrence_set_frequency_string): New method.
+	(mimedir_recurrence_write_to_string): Use freq_to_string().
+	* mimedir/mimedir-vcomponent.c (parse_rrule): New internal method.
+	Uses code formerly from mimedir_vcomponent_parse_attribute(), but
+	use new frequency API.
+	(mimedir_vcomponent_parse_attribute): Moved RRULE parsing code to
+	parse_rrule(). Check RRULE for duplicity.
+
+	Moved recurrence parsing code into mimedir-recurrence.c.
+
+	* mimedir/mimedir-recurrence.[ch] (mimedir_recurrence_init):
+	Initialize frequency.
+	(mimedir_recurrence_new_parse):
+	(mimedir_recurrence_parse): New methods. The latter was moved here
+	from mimedir/mimedir-vcomponent.c:parse_rrule().
+	(mimedir_recurrence_set_frequency_string): Removed.
+	* mimedir/mimedir-vcomponent (parse_rrule): Moved main body to
+	mimedir/mimedir-recurrence.c.
+
+	API change for units: use another enum.
+
+	* bin/dump-ical.c (unit_to_string): New method.
+	(print_recurrence): Use new API and unit_to_string().
+	* mimedir/mimedir-recurrence.h (MIMEDirRecurrenceUnit): New
+	enumeration.
+	* mimedir/mimedir-recurrence.c (unit_to_string):
+	(string_to_unit): New methods.
+	(mimedir_recurrence_class_init): Change "byunit" property to "unit".
+	(mimedir_recurrence_init): Initialize unit.
+	(mimedir_recurrence_dispose): Don't free unit.
+	(mimedir_recurrence_set_property):
+	(mimedir_recurrence_get_property): byunit -> unit
+	(mimedir_recurrence_parse): Parse BYXXX using string_to_unit().
+	(mimedir_recurrence_write_to_string): Use unit_to_string().
+
+	Moved datetime parsing into mimedir/mimedir-datetime.c.
+
+	* mimedir/mimedir-attribute.c
+	(mimedir_attribute_get_value_datetime_list): Use
+	mimedir_datetime_new_parse(). Parse only list stuff here.
+	* mimedir/mimedir-datetime.[ch] (mimedir_datetime_new_parse):
+	(mimedir_datetime_parse): New methods. The latter uses code from the
+	former version of mimedir_attribute_get_value_datetime_list().
+	* mimedir/mimedir-recurrence.c (mimedir_recurrence_parse): Use
+	mimedir_datetime_new_parse().
+
+2005-08-31  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attribute.c (parse_parameter_list): Assert that
+	the list has an even length before returning.
+
+	Implemented the recurrence object. Patch by Martin Felis, thanks
+	Martin!
+
+	* mimedir/mimedir-attribute.[ch]
+	(mimedir_attribute_set_value_text_unescaped): New method.
+	(mimedir_attribute_set_value_text): Use above method.
+	* mimedir/mimedir-recurrence.[ch]:
+	(mimedir_recurrence_set_property):
+	(mimedir_recurrence_get_property): New methods.
+	(mimedir_recurrence_class_init): Set set_property and get_property
+	and initialize properties.
+	(mimedir_recurrence_dispose): Free private structure.
+	(mimedir_recurrence_write_to_string): New public method.
+	* mimedir/mimedir-vcard.c (mimedir_vcard_write_to_profile):
+	Use uppercase "VCARD" identifier for new profiles.
+	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_class_init):
+	(mimedir_vcomponent_set_property):
+	(mimedir_vcomponent_get_property): New property "recurrence".
+	(mimedir_vcomponent_parse_attribute): Parse RRULE property.
+
+2005-08-26  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	Changes for easier parsing of RRULE. RRULE values use a key=value
+	syntax that closely resembles that of ordinary attribute parameters.
+	Therefore the new method parse_parameter_list() was introduced that
+	shares parsing code.
+
+	* mimedir/mimedir-attribute.[ch] (split_quoted_string):
+	new helper method
+	(parse_parameter_list): new internal method to parse parameter list,
+	uses code from parse_attribute()
+	(parse_attribute_parameters): new internal method for parsing
+	parameters, uses parse_parameter_list()
+	(parse_attribute): use new method parse_attribute_parameters()
+	(mimedir_attribute_append_value_text): renamed to append_value_text()
+	(mimedir_attribute_set_value_parameters):
+	(mimedir_attribute_get_value_parameters): new methods to set/retrieve
+	attribute values in parameter style (e.g. RRULE)
+	(mimedir_attribute_param_list_free): replaced by ...
+	(mimedir_attribute_free_string_list): new method
+
+	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_parse_attribute):
+	RRULE stub parsing code
+
+2005-08-15  Ilkka Tuohela  <hile@iki.fi>
+
+	* configure.in: Added fi to ALL_LINGUAS
+
+2005-08-07  Maxim Dziumanenko <mvd@mylinux.ua>
+
+	* configure.in: Added uk in ALL_LINGUAS
+
+2005-07-19  Pawan Chitrakar  <pawan@nplinux.org>
+
+	* configure.in: Added ne in ALL_LINGUAS
+
+2005-04-14  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attribute.c (parse_attribute):
+	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_parse_attribute):
+	(mimedir_vcomponent_parse_number): Warning fixes.
+
+2005-04-01  Steve Murphy  <murf@e-tools.com>
+
+	* configure.in: Added "rw" to ALL_LINGUAS.
+
+2005-03-10  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attribute.c (parse_attribute): Plug a memory leak.
+	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_set_property):
+	Ref'ed the wrong object.
+	(mimedir_vcomponent_get_occurences_between): Started to implement.
+	Can't handle recurrence yet.
+
+2005-03-04  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attribute.c: (mimedir_attribute_get_value_data):
+	Dupe the return value and document that it should be freed by the
+	caller. Also, allow a NULL len parameter.
+	(mimedir_attribute_get_value_text):
+	(mimedir_attribute_get_value_text_list): Fix.
+	* mimedir/mimedir-attribute.h: (mimedir_attribute_parse): Fix parameter
+	names and constness.
+	* mimedir/mimedir-vcomponent.c: (mimedir_vcomponent_parse_number): Fix
+	parameter constness.
+
+2005-03-01  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcal.[ch] (mimedir_vcal_write_list):
+	(mimedir_vcal_write_list_to_channel): Removed.
+	(mimedir_vcal_write_to_file): New.
+	(mimedir_vcal_add_component): Ref supplied object.
+	(mimedir_vcal_add_component_list): Use mimedir_vcal_add_component().
+
+	* mimedir/mimedir-datetime.c (mimedir_datetime_new_from_gdate):
+	(mimedir_datetime_set_gdate): Allow invalid GDates.
+
+	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_set_property):
+	Fixed setting the "description" property.
+
+2005-02-28  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcard.c (mimedir_vcard_read_file): Fixed error
+	output string.
+	* mimedir/mimedir-vcal.[ch]: Removed the
+	MIMEDIR_VCAL_ERROR_NO_COMPONENTS error.
+
+	* mimedir/mimedir-vcal.c: (mimedir_vcal_read_channel): Incorrect
+	variable type did truncate signess.
+	
+	* bin/ical-dump.c (main): Removed extraneous error output.
+
+	* mimedir/mimedir-attribute.c (get_line): Ignore empty lines.
+	(mimedir_attribute_get_value_datetime_list): Skip leading and
+	trailing white space.
+	* mimedir/mimedir-vcard.c (mimedir_vcard_read_channel):
+	* mimedir/mimedir-vcal.c (mimedir_vcal_read_channel): Skip extraneous
+	white space and set attribute encoding.
+
+2005-02-27  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-datetime.[ch]: (mimedir_datetime_new_from_gdate):
+	const argument
+
+2005-02-26  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/*.[ch]:
+	* bin/*.c: Major restructuring of file/channel reading. API changes.
+
+2004-05-01  Adam Weinberger  <adamw@gnome.org>
+
+	* configure.in: Added en_CA to ALL_LINGUAS.
+
+2004-04-12  Gareth Owen  <gowen72@yahoo.com>
+
+	* configure.in: Added en_GB to ALL_LINGUAS
+
+2004-02-07  Robert Sedak  <robert.sedak@sk.htnet.hr>
+
+	* configure.in: Added "hr" (Croatian) to ALL_LINGUAS.
+
+2004-02-02 Alastair McKinstry <mckinstry@computer.org>
+
+	* configure.in: Added Irish ("ga") to ALL_LINGUAS.
+
+2003-09-01  Metin Amiroff  <metin@karegen.com>
+
+	configure.in: Added "az" in ALL_LINGUAS.
+
+2003-07-25  Artur Flinta  <aflinta@cvs.gnome.org>
+	                                                                                    
+	* configure.in: Added "pl" to ALL_LINGUAS.
+
+2003-07-08  Sebastian Rittau <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-period.[ch]:
+	* mimedir/mimedir-vcomponent.[ch]:
+	* mimedir/mimedir-vfreebusy.h:
+	* mimedir/mimedir-vcard.h: Moved MIMEDirFreeBusyType from
+	mimedir-period.h to mimedir-vfreebusy.h and renamed to
+	MIMEDirVFreeBusyType. Docstring fixes.
+
+	* docs/reference/mimedir/mimedir-docs.sgml:
+	* docs/reference/mimedir/mimedir-sections.txt:
+	* docs/reference/mimedir/tmpl/mimedir-attachment.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-datetime.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-period.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-unused.sgml
+	* docs/reference/mimedir/tmpl/mimedir-vcard.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-vcomponent.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-vfreebusy.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-vjournal.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-vtimezone.sgml: Documentation
+	updates.
+
+2003-06-23  Danilo Šegan  <dsegan@gmx.net>
+
+	* configure.in: Added "sr" and "sr@Latn" to ALL_LINGUAS.
+
+2003-05-01  Evandro Fernandes Giovanini <evandrofg@ig.com.br>
+
+	* configure.in(ALL_LINGUAS): Added "pt_BR" (Brazilian 
+	Portuguese).
+
+2003-04-16  Duarte Loreto <happyguy_pt@hotmail.com>
+
+	* configure.in: Added "pt" (Portuguese) to ALL_LINGUAS.
+
+2003-02-27  Pablo Gonzalo del Campo  <pablodc@bigfoot.com>
+
+	* configure.in: Added Spanish (es) to ALL_LINGUAS
+
+2003-02-21  Pablo Saratxaga  <pablo@mandrakesoft.com>
+
+	* configure.in: Added Catalan (ca) to ALL_LINGUAS
+
+2003-02-02  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcard.[ch] (mimedir_vcard_class_init): Correct
+	blurb of "key-list" property.
+	(mimedir_vcard_set_timezone):
+	(mimedir_vcard_clear_timezone):
+	(mimedir_vcard_get_timezone):
+	(mimedir_vcard_set_geo_position):
+	(mimedir_vcard_clear_geo_position):
+	(mimedir_vcard_get_geo_position): New methods.
+	(mimedir_vcard_get_as_string): Show time zone only if it in a valid
+	range.
+
+2003-01-20  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attribute.c (mimedir_attribute_class_init):
+	Attribute name: defaults to NULL and remove CONSTRUCT flag.
+	* mimedir/mimedir-datetime.c (mimedir_datetime_new_from_gdate):
+	Check whether supplied GDate is valid.
+	* mimedir/mimedir-vcard.[ch] (mimedir_vcard_[sg]et_birthday):
+	New methods.
+	* mimedir/mimedir-vcard-email.c (mimedir_vcard_email_set_from_attribute):
+	* mimedir/mimedir-vcard-phone.c (mimedir_vcard_phone_set_from_attribute):
+	Parse attribute as text value.
+
+2003-01-17  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attribute.c (mimedir_attribute_class_init):
+	* mimedir/mimedir-datetime.c (mimedir_datetime_class_init):
+	* mimedir/mimedir-period.c (mimedir_period_class_init):
+	* mimedir/mimedir-profile.c (mimedir_profile_class_init):
+	* mimedir/mimedir-vcal.c (mimedir_vcal_class_init):
+	* mimedir/mimedir-vcard-address.c (mimedir_vcard_address_class_init):
+	* mimedir/mimedir-vcard.c (mimedir_vcard_class_init):
+	* mimedir/mimedir-vcard-email.c (mimedir_vcard_email_class_init):
+	* mimedir/mimedir-vcard-phone.c (mimedir_vcard_phone_class_init):
+	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_class_init):
+	Added "nicks" and "blurbs" to all property definitions.
+
+	* mimedir/mimedir-vcard-address.c (mimedir_vcard_address_get_title):
+	Improved doc string.
+
+2003-01-13  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcard.c (mimedir_vcard_get_as_string): "Geo.
+	position" -> "Location".
+
+2003-01-08  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcomponent.c: Implemented a few more attributes.
+
+2002-12-19  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* TODO: Updates.
+
+	* mimedir/mimedir-vfreebusy.[ch]:
+	* mimedir/mimedir-vjournal.[ch]:
+	* mimedir/mimedir-vtimezone.[ch]: New files.
+	* mimedir/Makefile.am: Compile them.
+	* mimedir/mimedir-vcal.c: Use new classes.
+
+	* mimedir/mimedir-attribute.c:
+	(mimedir_attribute_set_value_float_list): Float value will have
+	a precision of 6.
+	* mimedir/mimedir-datetime.c:
+	(mimedir_datetime_set_struct_tm): Set timezone to UTC.
+	(mimedir_datetime_set_time_t): Use gmtime_r() instead of localtime_r().
+	* mimedir/mimedir-vcard.c: Parse NAME and SOURCE attributes.
+	Attribute BDAY is now a MIMEDirDateTime object. Multiple public keys
+	are now possible. Check whether PROFILE is correct (if present).
+	While writing files: Force the type attribute to be set for some
+	attributes with non-standard types.
+	* mimedir/mimedir-vcomponent.c: Support for attributes TZNAME and
+	TZURL. s/_/-/g in property names.
+
+2002-12-17  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-valarm.c:
+	(mimedir_valarm_get_trigger):
+	(mimedir_valarm_get_trigger_from_vcomponent): Objects returned
+	by g_object_get() can be NULL now.
+
+2002-12-14  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-datetime.[ch]: Added a property: tzid (time zone id)
+	(mimedir_datetime_to_utc): New method.
+
+	* mimedir/mimedir-period.[ch]: New files.
+	* mimedir/Makefile.am: Compile them.
+
+	* mimedit/mimedir-vcomponent.[ch]: Implemented more attributes.
+	mimedir_vcomponent_is_allday() renamed to _get_allday(). Remove
+	ugly hacks to cope with the inability of g_value_set_object() to
+	set NULL pointers. Just not calling g_value_set_object() (and
+	thereby not modifying the value) does the trick.
+
+	* mimedir/mimedir-attribute.c:
+	(mimedir_attribute_get_value_datetime_list): Fix timezone parsing.
+	(Did I mention that not only the method name but also the method
+	implementation is much too long? I should. They are.)
+
+	* mimedir/mimedir-vevent.c (mimedir_vevent_read_from_profile):
+	* mimedir/mimedir-vtodo.c (mimedir_vtodo_read_from_profile):
+	Removed validity checks, since they break on old GNOME-PIM
+	created files (and probably others).
+
+	* bin/ical-dump.c:
+	(print_component): mimedir_vcomponent_is_allday() -> _get_allday()
+	Objects dtstart, dtend, and due may be NULL now. Cope with this.
+
+2002-12-11  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attachment.[ch]: New files.
+	* mimedir/Makefile.am: Compile them.
+
+	* mimedir/mimedir-vcomponent.c:
+	(mimedir_vcomponent_parse_attribute):
+	(mimedir_vcomponent_write_to_profile): Parse ATTACH attribute.
+
+2002-12-09  Christophe Merlet  <redfox@redfoxcenter.org>
+
+	* configure.in: Added "fr" to ALL_LINGUAS.
+
+2002-12-05  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-valarm.h: Typedef MIMEDirVAlarmType directly.
+	Take no retour though _MIMEDirVAlarmType.
+	* mimedir/mimedir/attendee.c:
+	* mimedir/mimedir/attendee.h:
+	* mimedir/mimedir-attribute.h:
+	* mimedir/mimedir-datetime.h:
+	* mimedir/mimedir-vcomponent.c: Fixed doc-strings.
+
+	* docs/reference/mimedir/mimedir-bib.sgml: Added bibliographic entry
+	for RFCs 2279 and 2445.
+	* docs/reference/mimedir/mimedir-intro.sgml: Wrote some text to
+	replace bothersome FIXMEs.
+	* docs/reference/mimedir/tmpl/*: Updated.
+	* docs/reference/mimedir/tmpl/mimedir-vcal.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-vevent.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-vtodo.sgml:
+	iCal -> iCalendar
+	* docs/reference/mimedir/tmpl/mimedir-vcard-address.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-vcard-email.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-vcard-phone.sgml:
+	Added introductory sections.
+	* docs/reference/mimedir/mimedir-sections.txt: Added new sections
+	and entries.
+	* docs/reference/mimedir/mimedir-docs.sgml: Added new sections.
+
+	* mimedir/mimedir-vcard.c (mimedir_vcard_read_list):
+	* mimedir/mimedir-vcal.c (mimedir_vcard_read_list): Explain the
+	triple try on conversion error in the doc-string. Try to open
+	the file as ISO-8859-15 if conversion from the current locale fails,
+	too.
+
+2002-11-26  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* HACKING:
+	* MAINTAINERS: New files.
+
+2002-11-15  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* bin/ical-dump.c:
+	(print_component): Only print dates that are valid.
+
+	* mimedir/mimedir-profile.c:
+	(mimedir_profile_internal_append_attribute): Strip trailing
+	white space from the profile name.
+
+2002-11-03  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* TODO: Check for RFC compliance.
+
+	* mimedir/mimedir-attendee.c: Actually implemented this.
+	(MIMEDirAttendeePriv): Filled struct.
+	(mimedir_attendee_dispose): Free strings.
+	(mimedir_attendee_read_from_attribute): Read parameters.
+	(mimedir_attendee_write_to_attribute): Write parameters.
+
+	* mimedir/mimedir-profile.c:
+	(mimedir_profile_read_from_string):
+	(mimedir_profile_write_to_string): Implemented.
+
+	* mimedir/mimedir-valarm.c:
+	(mimedir_valarm_read_from_profile): Implemented validity checks.
+	(mimedir_valarm_get_trigger): Fixed a mem leak. Don't return junk
+	if trigger_dt is not set.
+
+	* mimedir/mimedir-vcomponent.h:
+	* mimedir/mimedir-vcomponent.c:
+	(MIMEDirVComponentPriv): New fields: recurrence, duration, repeat,
+	created, and dtstamp.
+	(mimedir_vcomponent_class_init):
+	(mimedir_vcomponent_get_property):
+	(mimedir_vcomponent_set_property): New properties: duration, repeat,
+	created, and dtstamp.
+	(mimedir_vcomponent_clear): Unref recurrence object.
+	(mimedir_vcomponent_parse_attribute): Parse attributes DURATION,
+	REPEAT, CREATED, DCREATED, and DTSTAMP.
+	(mimedir_vcomponent_write_to_profile): Write attributes DURATION,
+	REPEAT, CREATED, and DTSTAMP.
+	(mimedir_vcomponent_does_recur):
+	(mimedir_vcomponent_set_recurrence):
+	(mimedir_vcomponent_get_recurrence):
+	(mimedir_vcomponent_get_next_occurence):
+	(mimedir_vcomponent_get_occurences_between):
+	(mimedir_vcomponent_free_occurences): New public methods.
+
+	* mimedir/mimedir-vevent.c:
+	(mimedir_vevent_new): Set dtstamp to "now".
+	(mimedir_vevent_read_from_profile): Validity checks.
+	* mimedir/mimedir-vtodo.c:
+	(mimedir_vtodo_new): Set dtstamp to "now".
+	(mimedir_vtodo_read_from_profile): Validity checks.
+
+2002-11-03  Christian Rose  <menthos@menthos.com>
+
+	* configure.in: Added "sv" to ALL_LINGUAS.
+
+2002-09-17  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attendee.h:
+	* mimedir/mimedir-attendee.c: New files.
+	* mimedir/Makefile.am: Added.
+
+	* mimedir/mimedir-valarm.h:
+	* mimedir/mimedir-valarm.c:
+	(mimedir_valarm_new): Does now take the type as argument.
+	(mimedir_valarm_get_trigger_from_vcomponent):
+	(mimedir_valarm_get_next_occurence): component -> vcomponent
+	(mimedir_valarm_get_reminder_string): New method.
+
+	* mimedir/mimedir-vcomponent.h:
+	* mimedir/mimedir-vcomponent.c:
+	(MIMEDirVComponentPriv): New field: attendees.
+	(mimedir_vcomponent_clear): Free attendees.
+	(mimedir_vcomponent_parse_attribute): Handle ATTENDEE attribute.
+	Started to parse [ADMP]ALARM attributes.
+	(mimedir_vcomponent_write_to_profile): Handle ATTENDEE attribute.
+	(mimedir_vcomponent_set_alarm_list): Document missing attribute.
+	(mimedir_vcomponent_set_attendee_list):
+	(mimedir_vcomponent_get_attendee_list): New methods.
+
+2002-09-13  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	Handling for vAlarms added.
+
+	* mimedir/mimedir-valarm.c:
+	* mimedir/mimedir-valarm.h: New files.
+	* mimedir/Makefile.am: Added.
+
+	* mimedir/mimedir-datetime.h:
+	* mimedir/mimedir-datetime.c:
+	(mimedir_datetime_new_now): New constructor.
+	(mimedir_datetime_compare): New method.
+
+	* mimedir/mimedir-utils.h:
+	* mimedir/mimedir-utils.c:
+	(mimedir_utils_copy_object_list):
+	(mimedir_utils_free_object_list): New functions.
+	(mimedir_utils_copy_string_list):
+	(mimedir_utils_copy_object_slist):
+	(mimedir_utils_free_object_slist):
+	GList * argument -> const GList *
+	(mimedir_utils_free_string_list): Minor doc string change.
+
+	* mimedir/mimedir-vcal.c: Include mimedir-valarm.h.
+	(mimedir_vcal_read_from_profile): Handle vAlarms.
+
+	* mimedir/mimedir-vcomponent.h:
+	* mimedir/mimedir-vcomponent.c: Trigger handling. New properties:
+	action, trigger, trigger_dt, and trigger_end. New signal:
+	alarms-changed.
+	(MIMEDirVComponentPriv): New fields: alarms, action, trigger,
+	trigger_dt, and trigger_end.
+	(mimedir_vcomponent_class_init): Initialize new properties and signal.
+	(mimedir_vcomponent_init): Initialize new fields.
+	(mimedir_vcomponent_[sg]et_property): Handle new properties.
+	(mimedir_vcomponent_set_value_duration):
+	(mimedir_vcomponent_parse_number):
+	(mimedir_vcomponent_get_value_duration): New internal methods.
+	(mimedir_vcomponent_clear): Free new fields.
+	(mimedir_vcomponent_parse_attribute): Parse ACTION and TRIGGER
+	attributes.
+	(mimedir_vcomponent_read_from_profile): Emit alarms-changed signal.
+	(mimedir_vcomponent_write_to_profile): Write ACTION and TRIGGER
+	attributes. Write vAlarms.
+	(mimedir_vcomponent_set_allday):
+	(mimedir_vcomponent_is_allday): Fixed doc-strings.
+	(mimedir_vcomponent_set_alarm_list):
+	(mimedir_vcomponent_get_alarm_list): New methods.
+
+	* mimedir/mimedir-vevent.c:
+	* mimedir/mimedir-vtodo.c:
+	(mimedir_vevent_read_from_profile): FIXME: validity checks.
+
+2002-09-07  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcomponent.c:
+	(mimedir_vcomponent_parse_attribute): Ignore (for now) custom GNOME-PIM
+	attributes AALARM, EALARM, DALARM, and PALARM.
+
+	* mimedir/mimedir-attribute.c:
+	(mimedir_attribute_set_value_datetime_list): Fixed two assertion
+	strings.
+	* mimedir/mimedir-datetime.h:
+	* mimedir/mimedir-datetime.c:
+	(mimedir_datetime_is_valid): New function.
+	(mimedir_datetime_set_gdate):
+	(mimedir_datetime_set_struct_tm):
+	(mimedir_datetime_set_datetime):
+	(mimedir_datetime_set_date):
+	(mimedir_datetime_set_time): Or the flags to the date so that
+	a previously set date/time that isn't overwritten is still valid.
+	E.g. if you call set_time() a previously set date is still set.
+	* mimedir/mimedir-profile.c:
+	(mimedir_profile_write_to_channel): Save sub-profiles.
+	* mimedir/mimedir-vcal.c:
+	Define macros MIMEDIR_IS_V{JOURNAL,FREEBUSY,TIMEZONE,ALARM} (just
+	to FALSE for now).
+	(mimedir_vcal_write_to_profile): Profile name is "VCALENDAR", not
+	"VCAL". Uncomment writing of the above component types, since we
+	did define the needed macros locally.
+	* mimedir/mimedir-vcomponent.c:
+	(mimedir_vcomponent_read_from_profile): Added dummies for not yet
+	implemented attributes.
+	(mimedir_vcomponent_write_to_profile): Actually implemented (not
+	complete).
+	
+	* TODO: FIXMEs must be fixed before the public releases.
+	
+2002-08-28  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* TODO: Updated and structured in form of a roadmap.
+
+	* mimedir/mimedir-datetime.h:
+	* mimedir/mimedir-datetime.c:
+	* mimedir/mimedir-recurrence.h:
+	* mimedir/mimedir-recurrence.c: New files.
+	* mimedir/Makefile.am: Compile/distribute these files.
+
+	* mimedir/mimedir-attribute.h: Removed struct MIMEDirAttributeDateTime
+	in favor of the new stand-alone class MIMEDirDateTime. Method
+	changes (s.b.)
+	* mimedir/mimedir-attribute.c: MIMEDirAttributeDateTime ->
+	MIMEDirDateTime
+	(mimedir_attribute_set_value_datetime):
+	(mimedir_attribute_get_value_datetime):
+	(mimedir_attribute_free_datetime_list): New methods.
+	(mimedir_attribute_set_value_datetime_list):
+	(mimedir_attribute_get_value_datetime_list): Reimplemented.
+	(mimedir_attribute_set_value_date):
+	(mimedir_attribute_get_value_date):
+	(mimedir_attribute_set_value_date_list):
+	(mimedir_attribute_get_value_date_list):
+	(mimedir_attribute_set_value_time_list):
+	(mimedir_attribute_get_value_time_list): Removed methods in favor
+	of the unified mimedir_attribute_[sg]et_datetime{,_list}().
+	(mimedir_attribute_read_number):
+	(mimedir_attribute_read_date):
+	(mimedir_attribute_read_time): Removed obsolete internal methods.
+
+	* mimedir/mimedir-vcard.c:
+	* mimedir/mimedir-vcomponent.c:
+	* bin/ical-dump.c: MIMEDirAttributeDateTime -> MIMEDirDateTime
+
+2002-08-25  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcomponent.h:
+	* mimedir/mimedir-vcomponent.c: New base class for iCal components.
+	* mimedir/Makefile.am: Added new files.
+
+	* mimedir/mimedir-attribute.c:
+	(mimedir_attribute_qp_check): Method to peek into the first line of
+	a attribute to determine if the attribute is QP encoded.
+	(mimedir_attribute_get_value_decoded): Assert that error argument
+	is ok. Return NULL if mimedir_attribute_qp_decode() returned NULL.
+	(mimedir_attribute_set_value_date): Implemented.
+	(mimedir_attribute_read_from_channel): Handle QP encoded attributes
+	correctly. As opposed to other attributes, line folding is indicated
+	by a trailing equal sign. Needs some hackery. Recognize parameters
+	of the form QUOTED-PRINTABLE as meaning ENDODING=QUOTED-PRINTABLE,
+	not TYPE=QUOTED-PRINTABLE.
+	* mimedir/mimedir-utils.h: Include <glib-object.h>.
+	* mimedir/mimedir-vcal.h: Some new methods (s.b.)
+	* mimedir/mimedir-vcal.c:
+	(mimedir_vcal_parse_attribute): Don't handle generic attributes
+	NAME, PROFILE, and SOURCE. They are not allowed.
+	(mimedir_vcal_write_list):
+	(mimedir_vcal_write_list_to_channel):
+	(mimedir_vcal_write_to_profile):
+	(mimedir_vcal_write_to_channel):
+	(mimedir_vcal_get_event_list):
+	(mimedir_vcal_add_component):
+	(mimedir_vcal_add_component_list): New methods.
+	(mimedir_vcal_read_from_profile): Handle VEVENT components.
+	* mimedir/mimedir-vevent.h:
+	* mimedir/mimedir-vevent.c:
+	* mimedir/mimedir-vtodo.h:
+	* mimedir/mimedir-vtodo.c: Derive from MIMEDirComponent and remove
+	most of the functionality, since it's now in mimedir-vcomponent.c.
+
+	* bin/ical-dump.c:
+	(print_todo): Folded into print_component.
+	(print_component): New.
+	(main): Use print_component().
+
+	* docs/reference/mimedir/tmpl/mimedir-vcal.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-vevent.sgml:
+	* docs/reference/mimedir/tmpl/mimedir-vtodo.sgml: New files.
+	* docs/reference/mimedir/tmpl/*: Updates.
+	* docs/reference/mimedir/mimedir-docs.sgml: New chapters for iCal.
+	* docs/reference/mimedir/mimedir-sections.txt: Updated.
+
+2002-08-24  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcard.c:
+	(mimedir_vcard_read_from_profile): Slightly improved UID reading
+	code.
+
+	* mimedir/mimedir-utils.h:
+	* mimedir/mimedir-utils.c:
+	(mimedir_utils_copy_string_list):
+	(mimedir_utils_free_string_list): New functions.
+
+	* mimedir/mimedir-attribute.h:
+	* mimedir/mimedir-attribute.c:
+	(mimedir_attribute_set_value_date):
+	(mimedir_attribute_get_value_date):
+	(mimedir_attribute_set_value_int):
+	(mimedir_attribute_get_value_int): New methods.
+
+	* mimedir/mimedir-vcal.c:
+	* mimedir/mimedir-vcal.h:
+	* mimedir/mimedir-vevent.c:
+	* mimedir/mimedir-vevent.h:
+	* mimedir/mimedir-vtodo.c:
+	* mimedir/mimedir-vtodo.h: New files, containing a very rudamentary
+	iCal implementation.
+	* mimedir/Makefile.am: Added these files.
+
+	* bin/ical-dump.c: New program to test the iCal component.
+	* bin/Makefile.am: Compile ical-dump.c.
+
+2002-08-18  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-profile.c: New property: name:
+	(mimedir_profile_class_init): Property handling.
+	(mimedir_profile_set_property):
+	(mimedir_profile_get_property): New methods.
+	(mimedir_profile_new): name argument may now be NULL.
+
+	Support for sub-profiles:
+	(MIMEDirProfilePriv): New field: sub_profiles.
+	(mimedir_profile_dispose): Unref sub profiles.
+	(mimedir_profile_read_from_channel): Implemented support for
+	sub-profiles; cleaned up.
+	(mimedir_profile_append_subprofile):
+	(mimedir_profile_get_subprofiles): New methods.
+
+	* mimedir/mimedir-profile.h:
+	(MIMEDIR_PROFILE_ERROR_WRONG_PROFILE{,_STR}): New error.
+	(mimedir_profile_append_subprofile):
+	(mimedir_profile_get_subprofiles): New methods.
+
+	* mimedir/mimedir-vcard.c:
+	(mimedir_vcard_read_from_profile): Check whether the profile name is
+	actually "VCARD". BEGIN and END attributes are now just ignored.
+
+2002-08-15  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* Makefile.am: Don't distribute config.rpath.
+
+2002-08-05  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* docs/reference/mimedir/mimedir-docs.sgml:
+	MIME Directory Library Reference (libmimedir) -> Core Reference
+	New chapter: vCard Object Reference
+	* docs/reference/mimedir/mimedir-intro.sgml:
+	Classes -> Class Hierarchy, added one paragraph
+	* docs/reference/mimedir/tmpl/*.sgml: Added short descriptions.
+
+2002-08-01  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcard-address.c: Removed (wrong) forward
+	declaration for mimedir_vcard_address_get_title().
+
+	* mimedir/mimedir-profile.h:
+	(mimedir_profile_new_from_string):
+	(mimedir_profile_read_from_string):
+	(mimedir_profile_write_to_string): New methods.
+	* mimedir/mimedir-profile.c:
+	(mimedir_profile_new_from_string):
+	(mimedir_profile_read_from_string):
+	(mimedir_profile_write_to_string): New methods.
+	* mimedir/mimedir-vcard.h:
+	(mimedir_vcard_new_from_profile):
+	(mimedir_vcard_new_from_string):
+	(mimedir_vcard_read_from_profile):
+	(mimedir_vcard_read_from_string):
+	(mimedir_vcard_write_to_profile): New methods.
+	(mimedir_vcard_write_to_buffer): Renamed to _to_string().
+	* mimedir/mimedir-vcard.c:
+	(mimedir_vcard_class_init):
+	(mimedir_vcard_set_property):
+	(mimedir_vcard_get_property): New property: "timezone_string".
+	(mimedir_vcard_read_from_channel): Use
+	mimedir_attribute_get_value_text() instead of
+	mimedir_vcard_get_value_escaped_text(). Read TIMEZONE attribute,
+	even if it is an overloaded text type.
+	(mimedir_vcard_new_from_profile):
+	(mimedir_vcard_new_from_string):
+	(mimedir_vcard_read_from_profile):
+	(mimedir_vcard_read_from_string):
+	(mimedir_vcard_write_to_profile): New methods.
+	(mimedir_vcard_write_to_buffer): Renamed to _to_string().
+	(mimedir_vcard_get_value_escaped_text): Removed.
+	* docs/reference/mimedir/mimedir-sections.txt: Added new/renamed
+	methods.
+	* docs/reference/mimedir/tmpl/mimedir-vcard.sgml: Updated.
+
+2002-07-31  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* TODO: PROP_TITLE does now work with LABEL addresses.
+	* mimedir/Makefile.am: Added -DLOCALEDIR to INCLUDES. Compile
+	mimedir-init.[ch]. Don't distribute mimedir-utils.h.
+	* mimedir/mimedir-init.[ch]: New files.
+	* mimedir/mimedir-attribute.c: "config.h" -> <config.h>
+	Fixed a	comment typo.
+	* mimedir/mimedir-profile.c: "config.h" -> <config.h>
+	* mimedir/mimedir-vcard.c: "config.h" -> <config.h>
+	(MIMEDirVCardPriv): Added address_signals, phone_signals, and
+	email_signals.
+	(mimedir_vcard_internal_append_address):
+	(mimedir_vcard_internal_append_phone):
+	(mimedir_vcard_internal_append_email): Save signal connection id.
+	(mimedir_vcard_internal_remove_address):
+	(mimedir_vcard_internal_remove_phone):
+	(mimedir_vcard_internal_remove_email): Unconnect from changed
+	signal.
+	* mimedir/mimedir-vcard-address.c:
+	(mimedir_vcard_address_get_title): Is now a public method, added
+	docstring, moved, and handles LABEL addresses.
+	* mimedir/mimedir-vcard-address.h: Added _get_title().
+	* bin/vcard-dump.c (main):
+	* bin/vcard-normalize.c (main): Use mimedir_init() instead of
+	g_type_init().
+
+	* docs/reference/mimedir/tmpl/mimedir-init.sgml: New file.
+	* docs/reference/mimedir/tmpl/mimedir-profile.sgml: Describe
+	MIMEDIR_PROFILE_ERROR_UNMATCHED_END{,_STR}.
+	* docs/reference/mimedir/tmpl/mimedir-utils.sgml: Reordered.
+	* docs/reference/mimedir/tmpl/mimedir-vcard-address.sgml:
+	Added mimedir_vcard_address_get_title.
+	* docs/reference/mimedir/mimedir-intro.sgml: New file (mostly
+	empty for now).
+	* docs/reference/mimedir/Makefile.am: Added mimedir-intro.sgml
+	* docs/reference/mimedir/mimedir-bib.sgml: Added an id to the
+	bibliography section.
+	* docs/reference/mimedir/mimedir-docs.sgml: Added intro and
+	mimedir-init sections, removed mimedir-utils.
+	* docs/reference/mimedir/mimedir-sections.sgml: Added mimedir-init,
+	MIMEDIR_PROFILE_ERROR_UNMATCHED_END_STR, and
+	mimedir_vcard_address_get_title and reordered (now unused)
+	mimedir-utils section.
+
+2002-07-30  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* TODO: Lots of new items, just to make life more interesting.
+
+	* mimedir/mimedir-attribute.c:
+	(mimedir_attribute_qp_decode): Just assume that the QP encoded
+	string is in fact a human readable string and strip out carriage
+	returns and convert string from local encoding to UTF-8. Yes, it's
+	ugly, but what the heck, QP is not in the standard, anyways...
+	(mimedir_attribute_escape):
+	(mimedir_attribute_unescape):
+	(mimedir_attribute_get_value_text_list):Ignore carriage returns
+	and handle newlines.
+	(mimedir_attribute_internal_append_parameter): Recognize QP encoding.
+	(mimedir_attribute_get_value_decoded): Ditto.
+	(mimedir_attribute_get_value_text):
+	(mimedir_attribute_get_value_text_list): Decode string instead of
+	just unescaping it.
+
+	* mimedir/mimedir-attribute.h:
+	* mimedir/mimedir-attribute.c:
+	(mimedir_attribute_escape):
+	(mimedir_attribute_unescape):
+	(mimedir_attribute_get_value_text_list):
+	MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR does now take two arguments.
+
+	* mimedir/mimedir-utils.h:
+	* mimedir/mimedir-utils.c (mimedir_utils_set_property_string):
+	New function.
+	* mimedir/mimedir-vcard-address.c: Handle address labels (LABEL)
+	and add new property "full".
+	(MIMEDirVCardAddressPriv): New field: full.
+	(mimedir_vcard_address_clear): Free field full.
+	(mimedir_vcard_address_class_init): Install new property.
+	(mimedir_vcard_address_set_property):
+	(mimedir_vcard_address_get_property): Handle new property and use
+	mimedir_utils_set_property_string().
+	(mimedir_vcard_address_set_property_string): Obsolete and replaced
+	by mimedir_utils_set_property_string().
+	(mimedir_vcard_address_set_adr_from_attribute): New private method,
+	basically the old set_from_attribute().
+	(mimedir_vcard_address_set_label_from_attribute):
+	(mimedir_vcard_address_save_adr_to_attribute):
+	(mimedir_vcard_address_save_label_to_attribute): New methods.
+	(mimedir_vcard_address_set_from_attribute):
+	(mimedir_vcard_address_save_to_attribute): Use new internal methods.
+	(mimedir_vcard_address_get_as_string): Handle address labels.
+
+	* mimedir/mimedir-vcard.c: New properties: "agent", "agent_uri",
+	"agent_string", "revision", "sort-string", and "class".
+	(MIMEDirVCardPriv): New fields: agent, agent_string, agent_uri,
+	sort_string, and klass.
+	(mimedir_vcard_clear): Free new fields.
+	(mimedir_vcard_class_init): Install new properties.
+	(mimedir_vcard_set_property):
+	(mimedir_vcard_get_property): Handle new properties and use
+	mimedir_utils_set_property_string().
+	(mimedir_vcard_set_property_string): Obsolete and replaced by
+	mimedir_utils_set_property_string().
+	(mimedir_vcard_read_from_channel):
+	(mimedir_vcard_write_to_channel): Handle LABEL, AGENT, SORT-STRING,
+	and CLASS.
+
+2002-07-29  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* configure.in: Because of introducing a fourth argument to
+	AC_INIT, we now require autoconf 2.53. I *love* it when the
+	introduction of new features is not versioned in the documentation.
+
+	* mimedir/mimedir-utils.h
+	(mimedir_utils_is_token_char):
+	(mimedir_utils_compare_tokens):
+	* mimedir/mimedir-utils.c
+	(mimedir_utils_is_token_char):
+	(mimedir_utils_compare_tokens): New functions.
+	(mimedir_utils_is_token): Use mimedir_utils_is_token_char().
+	* mimedir/mimedir-profile.h: New error: UNMATCHED_END.
+	* mimedir/mimedir-profile.c (mimedir_profile_read_from_channel):
+	Reimplemented. (Still incomplete: Nested profiles don't work, yet.)
+
+	Valgrinded (great tool, really):
+
+	* mimedir/mimedir-attribute.c:
+	(mimedir_attribute_free_parameter):
+	New utility function.
+	(mimedir_attribute_dispose): Use it. (Fixes a memory leak.)
+	* mimedir/mimedir-attribute.c (mimedir_attribute_retrieve_line):
+	(mimedir_attribute_read_from_channel):
+	* mimedir/mimedir-vcard.c (mimedir_vcard_get_as_string):
+	Fixed memory leaks.
+	* mimedir/mimedir-vcard.c (mimedir_vcard_read_from_channel):
+	* mimedir/mimedir-vcard-address
+	(mimedir_vcard_address_read_from_channel):
+	* mimedir/mimedir_vcard_email.c
+	(mimedir_vcard_email_read_from_channel):
+	* mimedir/mimedir_vcard_phone.c
+	(mimedir_vcard_phone_read_from_channel):
+	Fix wrong memory accesses. (Ouch, I wonder why it did work, before.)
+	* mimedir/mimedir_vcard_email.c (mimedir_vcard_email_init):
+	* mimedir/mimedir_vcard_phone.c (mimedir_vcard_phone_init):
+	Don't initialize string variables with empty strings. Plugs memory
+	leaks.
+
+2002-07-26  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* TODO: Revision updates? Doc needs.
+
+	* configure.in: Added Id tag.
+	Define version number as variables and substitute them.
+	(AC_INIT): Changed package name, added tar name.
+	* mimedir/Makefile.am: Use new variables. -release is now only
+	MAJOR.MINOR. Changed include dir to ${prefix}/include/mimedir-1.0.
+	* mimedir-1.0.pc.in: Change include dir.
+
+	* docs/class-overview.dia: Changed an arrow, layout changes.
+	* docs/reference/mimedir/tmpl/mimedir-attribute.sgml: Changed [RFC
+	1738] to [URI].
+	* mimedir/mimedir-attribute.c (mimedir_attribute_get_value_decoded):
+	Improved doc string.
+
+	* mimedir/mimedir-vcard.c: Added properties photo, photo_uri, logo,
+	logo_uri, prodid, sound, and sound_uri.
+	(MIMEDirVCardPriv): photo, logo, and sound are now of type GString *.
+	New fields: photo_uri, logo_uri, and sound_uri.
+	(mimedir_vcard_class_init): New properties.
+	(mimedir_vcard_[sg]et_property): Dito.
+	(mimedir_vcard_clear): Clear new/changed fields properly.
+	(mimedir_vcard_read_from_channel): Read PHOTO, LOGO, and SOUND.
+	(mimedir_vcard_write_to_channel): Write PHOTO, LOGO, and SOUND. Also
+	update the revision if the revision year is 0. (I.e. the read that has
+	been read didn't have a revision.)
+	(mimedir_vcard_write_list): Fixed an error string.
+
+2002-07-23  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* configure.in: Version 0.2.1.
+
+	* docs/reference/mimedir/tmpl/mimedir-attribute.sgml: File has
+	changed automatically.
+	* docs/reference/mimedir/mimedir.types: Added empty (but required)
+	file.
+
+	* configure.in: Added LT_* version variables. Thanks to Frédéric
+	Crozat for pointing this out.
+	* mimedir/Makefile.am: Use -version-info in addition to -revision.
+
+2002-07-23  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* NEWS: API is now documented.
+
+	* mimedir/*.c: Added, changed, and improved many doc-strings.
+	* mimedir/mimedir-attribute.c (mimedir_attribute_set_value_decoded):
+	Slightly improved the assertion handling.
+	* mimedir/mimedir-attribute.h: Slight improvements for better
+	documentation support.
+
+2002-07-22  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* docs/reference/mimedir/*: Still preparing. (gtk-doc is such a
+	crappy, unusable mess... It's terrible.)
+
+2002-07-22  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* TODO: Updated.
+
+	* bin/Makefile.am: GLIB_LDFLAGS -> GLIB_LIBS
+
+	* mimedir/mimedir-attribute.c
+	(mimedir_attribute_retrieve_line): Ignore empty lines.
+	(mimedir_attribute_append_parameter): Fix docstring.
+	(mimedir_attribute_append_parameter_simple): Ditto.
+	(mimedir_attribute_get_value_raw): Ditto.
+	* mimedir/mimedir-vcard-email.c
+	(mimedir_vcard_email_save_to_attribute): Ditto.
+	* mimedir/mimedir-vcard-phone.c:
+	(mimedir_vcard_phone_save_to_attribute): Ditto.
+	* mimedir/mimedir-vcard.c (mimedir_vcard_get_as_string): Free
+	memory returned by g_object_get().
+
+	* configure.in: Added docs/reference/Makefile and
+	docs/reference/mimedir/Makefile to generated files. Check for
+	gtk-doc.
+	* docs/Makefile.am: Added subdir reference. Add Id tag.
+	* docs/reference/Makefile.am: New file.
+	* docs/reference/mimedir/*: New files for doc generation.
+
+2002-07-20  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* configure.in: Version 0.2.0.
+	* TODO: Non-UTF-8 files are handled.
+
+	* bin/vcard-dump.c: Improved an assertion.
+	* bin/vcard-normalize.c: New program.
+	* bin/Makefile.am: Ditto.
+
+	* mimedir/Makefile.am: Use -release instead of -version-info for now.
+
+	* mimedir/mimedir-attribute.h: 
+	(mimedir_attribute_append_parameter_simple): New method.
+	(mimedir_attribute_append_parameter): Uses g_critical for error
+	output, removed the error argument, returns void.
+	(mimedir_attribute_set_value_decoded): Ditto.
+	(mimedir_attribute_set_value_uri): Ditto.
+	(mimedir_attribute_set_value_text): Ditto.
+	(mimedir_attribute_set_value_text_list): Ditto.
+	(mimedir_attribute_set_value_date_list): Ditto.
+	(mimedir_attribute_set_value_time_list): Ditto.
+	(mimedir_attribute_set_value_datetime_list): Ditto.
+	(mimedir_attribute_set_value_bool): Ditto.
+	(mimedir_attribute_set_value_int_list): Ditto.
+	(mimedir_attribute_set_value_float_list): Ditto.
+	(mimedir_attribute_set_value_structured_text): Ditto.
+	(mimedir_attribute_write_to_channel): New method.
+
+	* mimedir/mimedir-utils.[ch]:
+	(mimedir_utils_is_token): New function.
+	(mimedir_utils_is_safe): Ditto.
+	(mimedir_utils_is_qsafe): Ditto.
+
+	* mimedir/mimedir-attribute.c: Start property count at 1.
+	(mimedir_attribute_set_property): Check name and group for
+	validity before setting.
+	(mimedir_attribute_escape): Allow characters > 0x7f.
+	(mimedir_attribute_unescape): Ditto.
+	(mimedir_attribute_get_value_text_list): Ditto.
+	(mimedir_attribute_append_value_text): Removed error argument.
+	It's enough to know that it failed. Allow characters > 0x7f.
+	(mimedir_attribute_internal_append_paramter): New internal
+	function. (Mainly a renamed mimedir_attribute_append_parameter().)
+	(mimedir_attribute_append_parameter): Add docstring. Use
+	mimedir_attribute_internal_parameter(). Uses g_critical for
+	error output, removed the error argument, returns void.
+	(mimedir_attribute_append_parameter_simple): New function.
+	(mimedir_attribute_set_value_decoded): Use g_critical for error
+	output, removed the error argument, returns void.
+	(mimedir_attribute_set_value_uri): Ditto.
+	(mimedir_attribute_set_value_bool): Ditto.
+	(mimedir_attribute_set_value_int_list): Ditto.
+	(mimedir_attribute_set_value_float_list): Ditto.
+	(mimedir_attribute_set_value_structured_text): Ditto.
+	(mimedir_attribute_set_value_text): Ditto. Added docstring.
+	(mimedir_attribute_set_value_text_list): Ditto. Added docstring.
+	(mimedir_attribute_set_value_date_list): Ditto. Added docstring.
+	Added an assertion. Setting multiple values was broken.
+	(mimedir_attribute_set_value_time_list): Ditto. Added docstring.
+	Added an assertion. Setting multiple values was broken.
+	(mimedir_attribute_set_value_datetime_list): Ditto. Added
+	docstring. Added an assertion. Setting multiple values was broken.
+	(mimedir_attribute_read_date): Made some operator preferences
+	explicit. Fixes parser bugs.
+	(mimedir_attribute_read_time): Ditto.
+	(mimedir_attribute_read_from_channel): Use
+	mimedir_attribute_internal_append_parameter().
+	(mimedir_attribute_write_to_channel): New method.
+
+	* mimedir/mimedir-profile.h:
+	(mimedir_profile_new): Does now take profile name as argument.
+	(mimedir_profile_append_attribute): Simplified. Added docstring.
+	Removed success indicator and error argument.
+	(mimedir_profile_write_to_channel): New method.
+
+	* mimedir/mimedir-profile.c:
+	(mimedir_profile_new): Added docstring. Does now take profile
+	name as argument.
+	(mimedir_profile_internal_append_attribute): New private method.
+	(Mainly a renamed mimedir_profile_append_attribute().)
+	(mimedir_profile_append_attribute): Simplified. Added docstring.
+	Removed success indicator and error argument.
+	(mimedir_profile_read_from_channel): Use
+	mimedir_profile_internal_append_attribute().
+	(mimedir_profile_write_to_channel): New method.
+
+	* mimedir/mimedir-vcard-address.[ch]:
+	(mimedir_vcard_address_save_to_attribute): New method.
+	(mimedir_vcard_address_get_as_string): Ditto.
+
+	* mimedir/mimedir-vcard-email.[ch]:
+	(mimedir_vcard_email_save_to_attribute): New method.
+	(mimedir_vcard_email_get_as_string): Ditto.
+
+	* mimedir/mimedir-vcard-phone.[ch]:
+	(mimedir_vcard_phone_save_to_attribute): New method.
+	(mimedir_vcard_phone_get_as_string): Ditto.
+
+	* mimedir/mimedir-vcard.h: Don't include mimedir-profile.h
+	(_MIMEDirVCard): Don't subclass MIMEDirProfile.
+	(_MIMEDirVCardClass): Ditto.
+	(mimedir_vcard_write_list): New method.
+	(mimedir_vcard_write_list_to_channel): Ditto.
+	* mimedir/mimedir-vcard.c: Prepared the properties prodid and revision.
+	(_MIMEDirVCardPriv): New field prodid. Field revision is now of
+	type MIMEDirAttributeDateTime.
+	(mimedir_vcard_clear): Free prodid.
+	(mimedir_vcard_get_type): Sub-class G_OBJECT directly, instead of
+	MIMEDIR_PROFILE.
+	(mimedir_vcard_get_property): Properties address, email, and phone
+	are of type string, not pointer!
+	(mimedir_vcard_internal_append_{address,email,phone}): Ref object.
+	(mimedir_vcard_append_{address,email,phone}_list): Improved assertion.
+	(mimedir_vcard_free_{address,email,phone}_list): Fixed.
+	(mimedir_vcard_update_revision): revision field is now of type
+	MIMEDirAttributeDateTime.
+	(mimedir_vcard_free_list): Added docstring.
+	(mimedir_vcard_write_list): New method.
+	(mimedir_vcard_write_list_to_channel): Ditto.
+	(mimedir_vcard_read_from_channel): Create new profile object, since
+	the vCard class isn't a subclass of the profile class any longer.
+	Preparations for handling attributes NAME, PROFILE, and SOURCE.
+	revision field is now of type MIMEDirAttributeDateTime; no need
+	to convert it. Don't call mimedir_vcard_changed, but emit the
+	changed signal directly; we don't want the changed flag to be set.
+	(mimedir_vcard_write_to_channel): Implement.
+	(mimedir_vcard_get_preferred_{address,email,phone}): Fixed.
+	
+2002-07-20  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* Makefile.am: Distribute intltool.
+	* mimedir/Makefile.am: Compile mimedir-marshal.[ch] first to
+	force these files to be generated first. Distribute
+	mimedir-marshal.list.
+
+	* mimedir/mimedir-attribute.h:
+	MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR has now only one argument.
+	(mimedir_attribute_set_value_decoded): Return success indicator.
+	(mimedir_attribute_set_value_uri): Ditto.
+	(mimedir_attribute_set_value_date_list): Ditto.
+	(mimedir_attribute_set_value_time_list): Ditto.
+	(mimedir_attribute_set_value_datetime_list): Ditto.
+	(mimedir_attribute_set_value_bool): Ditto.
+	(mimedir_attribute_set_value_int_list): Ditto.
+	(mimedir_attribute_set_value_float_list): Ditto.
+	(mimedir_attribute_[sg]et_value_text): New methods.
+	* mimedir/mimedir-attribute.c: Added properties name and group.
+	(mimedir_attribute_[sg]et_property): New methods.
+	(mimedir_attribute_set_property_string): New helper function.
+	(mimedir_attribute_class_init): Overload [sg]er_property with
+	custom functions. Added properties name and group.
+	(mimedir_attribute_{un,}escape): New utility functions.
+	(mimedir_attribute_set_value_decoded): Return success indicator.
+	(mimedir_attribute_set_value_uri): Ditto.
+	(mimedir_attribute_set_value_date_list): Ditto.
+	(mimedir_attribute_set_value_time_list): Ditto.
+	(mimedir_attribute_set_value_datetime_list): Ditto.
+	(mimedir_attribute_set_value_bool): Ditto.
+	(mimedir_attribute_set_value_int_list): Ditto.
+	(mimedir_attribute_set_value_float_list): Ditto.
+	(mimedir_attribute_[sg]et_value_text): New methods.
+	(mimedir_attribute_append_value_text):
+	MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR has now only one argument.
+	(mimedir_attribute_get_value_date_list): Added docstring.
+	(mimedir_attribute_get_value_time_list): Ditto.
+	(mimedir_attribute_get_value_datetime_list): Ditto.
+
+	* mimedir/mimedir-vcard.h:
+	(MIMEDirVCardKeyType): New enum.
+	(mimedir_vcard_get_preferred_address): New method.
+	(mimedir_vcard_get_preferred_email): Ditto.
+	(mimedir_vcard_get_preferred_phone): Ditto.
+	* mimedir/mimedir-vcard.c: New properties role, pubkey, and keytype.
+	Prepared properties photo, logo, sound, and uid. Revision handling.
+	(_MIMEDirVCardPriv): New fields: changed, photo, jobrole, logo,
+	revision, sound, uid, pubkey, and keytype.
+	(mimedir_vcard_clear): Free photo, jobrole, logo, sound, uid,
+	and pubkey.
+	(mimedir_vcard_changed): New internal method.
+	(mimedir_vcard_update_revision): Ditto.
+	(mimedir_vcard_class_init): Install new properties.
+	(mimedir_vcard_set_property): Handle new properties. Fixed an
+	infinite loop caused by setting the organization property. Fixed
+	setting of the categories property. Use mimedir_vcard_changed().
+	(mimedir_vcard_get_property): Handle new properties. Handle
+	properties address, phone, and email.
+	(mimedir_vcard_strsplit): Strip leading and trailing white
+	space.
+	(mimedir_vcard_internal_append_address): Preparations for
+	storing the connection id. Connect to mimedir_vcard_changed()
+	instead of mimedir_vcard_emit_changed().
+	(mimedir_vcard_internal_append_phone): Ditto.
+	(mimedir_vcard_internal_append_email): Ditto.
+	(mimedir_vcard_internal_remove_address): Remove object from
+	list as well.
+	(mimedir_vcard_internal_remove_phone): Ditto.
+	(mimedir_vcard_internal_remove_email): Ditto.
+	(mimedir_vcard_emit_changed): Removed.
+	(mimedir_vcard_read_from_channel): Parse attributes ROLE, REV,
+	UID, and KEY. Use mimedir_vcard_changed().
+	(mimedir_vcard_write_to_channel): Update revision if card has
+	changed and reset changed flag.
+	(mimedir_vcard_append_address): Call mimedir_vcard_changed().
+	(mimedir_vcard_append_email): Ditto.
+	(mimedir_vcard_append_phone): Ditto.
+	(mimedir_vcard_remove_address): Don't remove object manually.
+	Call mimedir_vcard_changed().
+	(mimedir_vcard_remove_email): Ditto.
+	(mimedir_vcard_remove_phone): Ditto.
+	(mimedir_vcard_get_preferred_address): New method.
+	(mimedir_vcard_get_preferred_email): Ditto.
+	(mimedir_vcard_get_preferred_phone): Ditto.
+	(mimedir_vcard_get_as_string): Added docstring. Fix time zone
+	display, show geographical information, organization, job title,
+	job role, categories, comment, uid, and public key. Cleanup.
+
+2002-07-19  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-vcard-phone.[ch]: New files.
+	* mimedir/Makefile.am: Compile/distribute them.
+
+	* mimedir/mimedir-vcard.h:
+	(mimedir_vcard_{append,remove}_{email,phone}): New methods.
+	(_MIMEDirVCardEMail): Removed in favor of a new external class.
+	* mimedir/mimedir-vcard.c: New properties: address, phone_list,
+	phone. E-mail is now handled through MIMEDirVCardEMail.
+	(_MIMEDirVCardPriv): New field: phone (3.3.1: TEL).
+	(mimedir_vcard_class_init): Added new properties.
+	(mimedir_vcard_[sg]et_property): Handler properties. (Partly
+	still FIXMEs.)
+	(mimedir_vcard_{internal_,}{append,remove}_{email,phone}): New
+	methods.
+	(mimedir_vcard_{append,free}_{phone,email}_list): Ditto.
+	(mimedir_vcard_set_from_attribute): Parse TEL attribute. Parse
+	EMAIL attribute using mimedir_vcard_email_new_from_attribute().
+	(mimedir_vcard_get_as_string): Print out telephone information,
+	use methods from MIMEDirVCardEMail for e-mail, print out URL,
+	cleaned up a bit.
+	(mimedir_vcard_copy_mem_list): Removed.
+	
+	* mimedir/mimedir-vcard-address.c:
+	(mimedir_vcard_address_new): Added docstring.
+	(mimedir_vcard_address_new_from_attribute):  Ditto.
+	(mimedir_vcard_address_set_from_attribute): Don't set default
+	type if a type was supplied in the attribute; if no type is
+	supplied, there is no need to set the defaults explicitly,
+	_reset() takes care of that.
+
+	* mimedir/mimedir-vcard-email.h: New enum: MIMEDirVCardEMailType.
+	* mimedir/mimedir-vcard-email.c: New property: type.
+	(_MIMEDirVCardEMailPriv): New field: type.
+	(mimedir_vcard_email_class_init): Install property.
+	(mimedir_vcard_email_init): Initialize address and type fields.
+	(mimedir_vcard_email_[sg]et_property): Handle new property.
+	(mimedir_vcard_email_set_from_attribute): Parse type.
+	(mimedir_vcard_email_get_type_string): Add type to string.
+	(mimedir_vcard_email_new): Added docstring.
+	(mimedir_vcard_email_new_from_attribute): Ditto.
+
+2002-07-18  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* Makefile.am: Removed directory m4.
+	* configure.in: dito
+
+	* mimedir/mimedir-vcard-email.[ch]: New files.
+	* mimedir/Makefile.am: Added.
+
+	* mimedir/mimedir-attribute.h:
+	(MIMEDIR_ATTRIBUTE_ERROR_INVALID_VALUE_STR): Removed the type
+	argument from MIMEDIR_ATTRIBUTE_ERROR_INVALID_VALUE_STR.
+	(MIMEDIR_ATTRIBUTE_TYPE_PTEXT): Renamed to
+	MIMEDIR_ATTRIBUTE_TYPE_STRUCTURED_TEXT.
+	(mimedir_attribute_set_value_ptext): Renamed to
+	mimedir_attribute_set_value_structured_text.
+	(mimedir_attribute_get_value_ptext): Renamed to
+	mimedir_attribute_get_value_structured_text.
+	(mimedir_attribute_free_ptext_list): Renamed to
+	mimedir_attribute_free_structured_text_list.
+	* mimedir/mimedir-attribute.c: Removed the type argument from 
+	MIMEDIR_ATTRIBUTE_ERROR_INVALID_VALUE_STR.
+	(mimedir_attribute_get_value_float_list): Added docstring.
+	(mimedir_attribute_free_float_list): Ditto.
+	(mimedir_attribute_set_value_ptext): Renamed.
+	(mimedir_attribute_get_value_ptext): Renamed. Enhanced docstring.
+	(mimedir_attribute_free_ptext_list): Renamed.
+
+	* mimedir/mimedir-vcard-address.c:
+	(mimedir_vcard_address_reset): Use mimedir_vcard_init().
+	(mimedir_vcard_address_set_from_attribute):
+	mimedir_attribute_get_value_ptext() -> _structured_text()
+
+	* mimedir/mimedir-vcard.h: New defines:
+	MIMEDIR_VCARD_{LONG,LAT}ITUDE_{MAX,MIN}.
+	* mimedir/mimedir-vcard.c: New properties: longitude, latitude,
+	category list.
+	(_MIMEDirVCardPriv): Added property names in comments. Added
+	longitude and latitude.
+	(mimedir_vcard_strsplit): New function.
+	(mimedir_vcard_strjoin): Ditto.
+	(mimedir_vcard_list_to_string): Obsolete.
+	(mimedir_vcard_string_to_list): Ditto.
+	(mimedir_vcard_class_init): New properties.
+	(mimedir_vcard_get_property): Ditto.
+	(mimedir_vcard_set_property): Ditto. "organization" property now
+	settable.
+	(mimedir_vcard_read_from_channel):
+	mimedir_attribute_get_value_ptext() -> _structured_text. Use
+	mimedir_vcard_strjoin(). Added longitude/latitude handling.
+
+2002-07-14  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attribute.h: Added default error strings as #defines.
+	New method declaration: mimedir_attribute_get_parameter_value().
+	* mimedit/mimedir-profile.h: Added default error strings as #defines.
+	* mimedir/mimedir-profile.c: Use them.
+	* mimedir/mimedir-attribute.c: Dito.
+	(mimedir_attribute_get_parameter_value): New method.
+	* mimedir/mimedir_vcard.h): New defines:
+	MIMEDIR_VCARD_TIMEZONE_{MAX,MIN}. New methods:
+	mimedir_vcard_{append,remove}_address().
+	* mimedir/mimedir-vcard.c: Use default error strings.
+	(_MIMEDirVCardPriv): New fields: mailer, timezone, timezone_string.
+	(mimedir_vcard_class_init): New properties: mailer, timezone.
+	(mimedir_vcard_set_property): Handle them.
+	(mimedir_vcard_get_property): Dito.
+	(mimedir_vcard_init): Initialize timezone to G_MAXINT.
+	(mimedir_vcard_clear): Free mailer.
+	(mimedir_vcard_reset): Call mimedir_vcard_init() instead of allocating
+	priv ourselves.
+	(mimedir_vcard_internal_remove_address): New internal method.
+	(mimedir_vcard_free_address_list): Use it.
+	(mimedir_vcard_get_email_type_string): Implement.
+	(mimedir_vcard_parse_utc_offset): Dito.
+	(mimedir_vcard_read_from_channel): Added yet unimplemented dummies
+	for the BEGIN, END, and X-* attributes (suppresses warnings).
+	Parse TZ and MAILER attributes.
+	(mimedir_vcard_append_address): New method.
+	(mimedir_vcard_remove_address): Dito.
+	(mimedir_vcard_get_as_string): Add mailer and timezone.
+
+2002-07-07  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir/mimedir-attribute.c:
+	(mimedir_attribute_get_parameter):
+	New internal method.
+	(mimedir_attribute_append_parameter): Fold parameters.
+	(mimedir_attribute_has_parameter): Added doc string, added debug
+	macros, use mimedir_attribute_get_parameter().
+	(mimedir_attribute_get_parameter_values): ditto
+	(mimedir_attribute_free_parameter_values): New method (for
+	consistency).
+	(mimedir_attribute_set_value_raw): Added doc string, takes now a
+	gchar * instead of a GString *.
+	(mimedir_attribute_get_value_raw): ditto
+	* mimedir/mimedir-attribute.h:
+	(mimedir_attribute_set_value_raw): Takes now a gchar * instead of
+	a GString *.
+	(mimedir_attribute_get_value_raw): ditto
+
+	* mimedir/mimedir-utils.c:
+	(mimedir_utils_copy_string_slist): New function.
+	(mimedir_utils_copy_object_slist): ditto
+	(mimedir_utils_free_string_list): Renamed to
+	mimedir_utils_free_string_slist().
+	(mimedir_utils_free_object_list): Renamed to
+	mimedir_utils_free_object_slist(). Corrected doc string.
+	* mimedir/mimedir-utils.h: Incorporated these changes here, too.
+
+	* mimedir/mimedir-vcard-address.c: New properties: domestic,
+	international, postal, parcel, home, work, preferred.
+	(MIMEDirVCardAddressPriv): Added boolean fields for the properties.
+	(mimedir_vcard_address_class_init): Install properties.
+	(mimedir_vcard_address_init): Defaults for these properties.
+	(mimedir_vcard_address_reset): ditto
+	(mimedir_vcard_address_get_property): Handle properties.
+	(mimedir_vcard_address_set_property): ditto
+	(mimedir_vcard_address_set_from_attribute): Added doc string, read
+	properties from vCard parameters.
+	(mimedir_vcard_address_get_type_string): New function.
+	* mimedir/mimedir-vcard-address.h:
+	(mimedir_vcard_address_get_type_string): New function.
+
+	* mimedir/mimedir-vcard.c:
+	(mimedir_vcard_set_property): mimedir_utils_free_string_list()
+	-> _slist(), handle PROP_ADDRESS_LIST.
+	(mimedir_vcard_emit_changed): New callback to forward changed
+	signals.
+	(mimedir_vcard_dispose): mimedir_utils_free_string_list()
+	-> slist().
+	(mimedir_vcard_append_address_list): New internal method.
+	(mimedir_vcard_free_address_list): ditto
+	(mimedir_vcard_internal_append_address): ditto
+	(mimedir_vcard_read_from_channel): Use it, also use
+	mimedir_vcard_address_get_type_string().
+
+2002-07-07  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* TODO: String review, g_object_get() check.
+
+	* mimedir/mimedir-vcarc.c: LAST_SIGNAL -> SIGNAL_LAST
+
+	* mimedir/mimedir-vcard-address.c (mimedir_vcard_address_get_title):
+	New function that build a summary string.
+	(mimedir_vcard_address_class_init):
+	New read-only property "title".
+	(mimedir_vcard_address_get_property): Handle it.
+
+2002-07-06  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* mimedir-1.0.pc.in: Added missing $ sign.
+
+2002-07-05  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* docs: New directory.
+	* docs/Makefile.am: Makefile for this directory.
+	* configure.in: Parse Makefile
+	* Makefile.am: Handle directory.
+
+	* docs/class-overview.dia: New diagram, describing the class
+	relationships.
+
+	* mimedir/mimedir-vcard.c (mimedir_vcard_read_from_channel): Warn if
+	an unknown attribute is encountered. The PHONE attribute is actually
+	called TEL.
+	* mimedir/mimedir-vcard-address.c: gettext -> dgettext
+	(mimedir_vcard_address_set_from_attribute): Warn if the ADR attribute
+	contains too many elements.
+
+	* mimedir/mimedir-file.[ch]: Removed obsolete files.
+	* mimedir/Makefila.am: Removed them from the lib.
+	* po/POTFILES.in: Update.
+
+	* mimedir/mimedir-attribute.c (mimedir_attribute_retrieve_line):
+	New internal method that reads a line from the supplied channel,
+	possibly converting it to UTF-8.
+	(mimedir_attribute_read_from_channel): Use it.
+	* mimedir/mimedir-vcard.c (mimedir_vcard_read_list): Retry reading
+	a file with NULL encoding if reading it as UTF-8 failed with a
+	conversion error.
+
+	* bin/vcard-dump.c (main): Call setlocale().
+
+2002-07-05  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* TODO: New file.
+	* mimedir/mimedir-vcard.c (mimedir_vcard_get_as_string): Handle
+	birthdays and addresses.
+	* bin/vcard-dump.c (main): Convert output to locale encoding.
+	Free strings.
+	* mimedir/Makefile.am: Install header files in
+	$(prefix)/include/mimedir.
+
+	* mimedir-1.0.pc.in: New file.
+	* configure.in: Handle pkgconfig installation.
+	* Makefile.am: ditto
+	* .cvsignore: Ignore generated mimedir-1.0.pc.
+
+2002-07-05  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* .cvsignore:
+	* bin/.cvsignore:
+	* mimedir/.cvsignore:
+	* po/.cvsignore: Ignore generated files.
+
+2002-07-05  Sebastian Rittau  <srittau@jroger.in-berlin.de>
+
+	* */*: Initial version.

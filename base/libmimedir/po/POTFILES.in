@@ -1,0 +1,19 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+bin/ical-dump.c
+bin/vcard-dump.c
+bin/vcard-normalize.c
+mimedir/mimedir-attribute.c
+mimedir/mimedir-attribute.h
+mimedir/mimedir-datetime.c
+mimedir/mimedir-period.c
+mimedir/mimedir-profile.c
+mimedir/mimedir-profile.h
+mimedir/mimedir-recurrence.c
+mimedir/mimedir-valarm.c
+mimedir/mimedir-vcal.c
+mimedir/mimedir-vcard-address.c
+mimedir/mimedir-vcard-email.c
+mimedir/mimedir-vcard-phone.c
+mimedir/mimedir-vcard.c
+mimedir/mimedir-vcomponent.c

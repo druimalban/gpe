@@ -1,0 +1,10 @@
+                                  libmimedir
+                                  ==========
+
+libmimedir is a gobject-based implementation of RFC 2425 (MIME Directory
+Profile) and related RFCs like RFC 2426 (vCard MIME Directory Profile).
+
+Please see the file INSTALL for generic installing instructions.
+
+This project contains two major source directories: mimedir contains the
+library code, while bin contains some test and utility programs.

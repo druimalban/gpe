@@ -1,0 +1,13 @@
+Coding-Style
+------------
+
+Tab-indent (tab = eight spaces), spaces before parentheses, curly braces on
+same line.
+
+CVS Commits
+-----------
+
+Please ask any maintainer (see MAINTAINERS) before committing feature
+additions/changes to CVS. This is especially true for commits that change
+the API or ABI! Small or urgent bug fixes can be committed without prior
+consultation.

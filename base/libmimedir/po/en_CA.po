@@ -1,0 +1,1669 @@
+# English/Canada translation of libmimedir.
+# Copyright (C) 2004-2005 Adam Weinberger and the GNOME Foundation
+# This file is distributed under the same licence as the libmimedir package.
+# Adam Weinberger <adamw@gnome.org>, 2004, 2005.
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: libmimedir\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-11-04 15:32-0500\n"
+"PO-Revision-Date: 2005-09-06 02:01-0400\n"
+"Last-Translator: Adam Weinberger <adamw@gnome.org>\n"
+"Language-Team: Canadian English <adamw@gnome.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: bin/ical-dump.c:48
+#, c-format
+msgid "Usage: %s ICALFILE\n"
+msgstr "Usage: %s ICALFILE\n"
+
+#: bin/ical-dump.c:57
+msgid "secondly"
+msgstr "secondly"
+
+#: bin/ical-dump.c:59
+msgid "minutely"
+msgstr "minutely"
+
+#: bin/ical-dump.c:61
+msgid "hourly"
+msgstr "hourly"
+
+#: bin/ical-dump.c:63
+msgid "daily"
+msgstr "daily"
+
+#: bin/ical-dump.c:65
+msgid "weekly"
+msgstr "weekly"
+
+#: bin/ical-dump.c:67
+msgid "monthly"
+msgstr "monthly"
+
+#: bin/ical-dump.c:69
+msgid "yearly"
+msgstr "yearly"
+
+#: bin/ical-dump.c:71 bin/ical-dump.c:97
+msgid "unknown"
+msgstr "unknown"
+
+#: bin/ical-dump.c:81
+msgid "second"
+msgstr "second"
+
+#: bin/ical-dump.c:83
+msgid "minute"
+msgstr "minute"
+
+#: bin/ical-dump.c:85
+msgid "hour"
+msgstr "hour"
+
+#: bin/ical-dump.c:87
+msgid "day"
+msgstr "day"
+
+#: bin/ical-dump.c:89
+msgid "day of month"
+msgstr "day of month"
+
+#: bin/ical-dump.c:91
+msgid "day of year"
+msgstr "day of year"
+
+#: bin/ical-dump.c:93
+msgid "week number"
+msgstr "week number"
+
+#: bin/ical-dump.c:95
+msgid "month"
+msgstr "month"
+
+#: bin/ical-dump.c:118
+#, c-format
+msgid "  Recurrence:\n"
+msgstr "  Recurrence:\n"
+
+#: bin/ical-dump.c:120
+#, c-format
+msgid "    Frequency: %s\n"
+msgstr "    Frequency: %s\n"
+
+#: bin/ical-dump.c:123
+#, c-format
+msgid "    Until: %s\n"
+msgstr "    Until: %s\n"
+
+#: bin/ical-dump.c:128
+#, c-format
+msgid "    Count: %d\n"
+msgstr "    Count: %d\n"
+
+#: bin/ical-dump.c:131
+#, c-format
+msgid "    Interval: %d\n"
+msgstr "    Interval: %d\n"
+
+#: bin/ical-dump.c:134
+#, c-format
+msgid "    Unit: %s\n"
+msgstr "    Unit: %s\n"
+
+#: bin/ical-dump.c:137
+#, c-format
+msgid "    Units: %s\n"
+msgstr "    Units: %s\n"
+
+#: bin/ical-dump.c:152
+#, c-format
+msgid ""
+"Event:\n"
+"\n"
+msgstr ""
+"Event:\n"
+"\n"
+
+#: bin/ical-dump.c:154
+#, c-format
+msgid ""
+"Todo item:\n"
+"\n"
+msgstr ""
+"Todo item:\n"
+"\n"
+
+#: bin/ical-dump.c:156
+#, c-format
+msgid ""
+"Unknown component:\n"
+"\n"
+msgstr ""
+"Unknown component:\n"
+"\n"
+
+#: bin/ical-dump.c:177
+#, c-format
+msgid "  Summary: %s\n"
+msgstr "  Summary: %s\n"
+
+#: bin/ical-dump.c:182
+#, c-format
+msgid "  Categories: %s\n"
+msgstr "  Categories: %s\n"
+
+#: bin/ical-dump.c:188
+msgid "high"
+msgstr "high"
+
+#: bin/ical-dump.c:190
+msgid "low"
+msgstr "low"
+
+#: bin/ical-dump.c:192
+msgid "medium"
+msgstr "medium"
+
+#: bin/ical-dump.c:193
+#, c-format
+msgid "  Priority: %s (%d)\n"
+msgstr "  Priority: %s (%d)\n"
+
+#: bin/ical-dump.c:198
+#, c-format
+msgid "  Start date: %s\n"
+msgstr "  Start date: %s\n"
+
+#: bin/ical-dump.c:205
+#, c-format
+msgid "  End date: %s\n"
+msgstr "  End date: %s\n"
+
+#: bin/ical-dump.c:213
+#, c-format
+msgid "  Due date: %s\n"
+msgstr "  Due date: %s\n"
+
+#: bin/ical-dump.c:222
+#, c-format
+msgid "  Unique ID: %s\n"
+msgstr "  Unique ID: %s\n"
+
+#: bin/ical-dump.c:223
+#, c-format
+msgid "  Sequence: %u\n"
+msgstr "  Sequence: %u\n"
+
+#: bin/ical-dump.c:236
+#, c-format
+msgid "  All day event\n"
+msgstr "  All day event\n"
+
+#: bin/ical-dump.c:261 bin/vcard-dump.c:84 bin/vcard-normalize.c:68
+#, c-format
+msgid "%s: invalid number of arguments\n"
+msgstr "%s: invalid number of arguments\n"
+
+#: bin/vcard-dump.c:43 bin/vcard-normalize.c:43
+#, c-format
+msgid "Usage: %s VCARDFILE\n"
+msgstr "Usage: %s VCARDFILE\n"
+
+#: bin/vcard-normalize.c:79
+#, c-format
+msgid "%s: error reading card file: %s\n"
+msgstr "%s: error reading card file: %s\n"
+
+#: bin/vcard-normalize.c:96
+#, c-format
+msgid "%s: error writing card file: %s\n"
+msgstr "%s: error writing card file: %s\n"
+
+#: mimedir/mimedir-attribute.c:131 mimedir/mimedir-vcard.c:298
+msgid "Name"
+msgstr "Name"
+
+#: mimedir/mimedir-attribute.c:132
+msgid "The attribute's name"
+msgstr "The attribute's name"
+
+#: mimedir/mimedir-attribute.c:137
+msgid "Group"
+msgstr "Group"
+
+#: mimedir/mimedir-attribute.c:138
+msgid "The attribute's group"
+msgstr "The attribute's group"
+
+#: mimedir/mimedir-attribute.c:896
+msgid "missing parameter name"
+msgstr "missing parameter name"
+
+#: mimedir/mimedir-attribute.c:921
+msgid "missing closing quotation mark"
+msgstr "missing closing quotation mark"
+
+#: mimedir/mimedir-attribute.c:946
+msgid "wrong parameter syntax"
+msgstr "wrong parameter syntax"
+
+#: mimedir/mimedir-attribute.c:956
+msgid "no parameter value"
+msgstr "no parameter value"
+
+#: mimedir/mimedir-attribute.c:1049
+msgid "missing attribute name/group"
+msgstr "missing attribute name/group"
+
+#: mimedir/mimedir-attribute.c:1065
+msgid "no attribute name after group"
+msgstr "no attribute name after group"
+
+#: mimedir/mimedir-attribute.c:1081
+msgid "missing value delimiter"
+msgstr "missing value delimiter"
+
+#: mimedir/mimedir-attribute.c:1097
+msgid "invalid character"
+msgstr "invalid character"
+
+#: mimedir/mimedir-attribute.c:2468 mimedir/mimedir-attribute.c:2477
+msgid "illegal character"
+msgstr "illegal character"
+
+#: mimedir/mimedir-attribute.h:48
+#, c-format
+msgid "syntax error (%s)"
+msgstr "syntax error (%s)"
+
+#: mimedir/mimedir-attribute.h:49
+#, c-format
+msgid "illegal character 0x%02x for type \"%s\""
+msgstr "illegal character 0x%02x for type \"%s\""
+
+#: mimedir/mimedir-attribute.h:50
+#, c-format
+msgid "invalid format for type \"%s\" in attribute %s"
+msgstr "invalid format for type \"%s\" in attribute %s"
+
+#: mimedir/mimedir-attribute.h:51
+#, c-format
+msgid "attribute %s could not be decoded, since its encoding is unknown"
+msgstr "attribute %s could not be decoded, since its encoding is unknown"
+
+#: mimedir/mimedir-attribute.h:52
+#, c-format
+msgid "invalid value in attribute %s"
+msgstr "invalid value in attribute %s"
+
+#: mimedir/mimedir-attribute.h:53
+#, c-format
+msgid "parameter \"%s\" must not be used more than once in attribute %s"
+msgstr "parameter \"%s\" must not be used more than once in attribute %s"
+
+#: mimedir/mimedir-attribute.h:54
+msgid "invalid Base64 sequence"
+msgstr "invalid Base64 sequence"
+
+#: mimedir/mimedir-attribute.h:55
+msgid "invalid quoted-printable sequence"
+msgstr "invalid quoted-printable sequence"
+
+#: mimedir/mimedir-attribute.h:56
+#, c-format
+msgid "attribute list of %s is too short"
+msgstr "attribute list of %s is too short"
+
+#: mimedir/mimedir-attribute.h:57
+#, c-format
+msgid "attribute list of %s is too long"
+msgstr "attribute list of %s is too long"
+
+#: mimedir/mimedir-datetime.c:114 mimedir/mimedir-vcomponent.c:352
+msgid "Time zone identifier"
+msgstr "Time zone identifier"
+
+#: mimedir/mimedir-datetime.c:115
+msgid "Time zone identifying string"
+msgstr "Time zone identifying string"
+
+#. Translators: YYYY-MM-DD HH:MM:SS
+#: mimedir/mimedir-datetime.c:1081
+#, c-format
+msgid "%04d-%02d-%02d %02d:%02d:%02d"
+msgstr "%04d-%02d-%02d %02d:%02d:%02d"
+
+#. Translators: YYYY-MM-DD
+#: mimedir/mimedir-datetime.c:1086
+#, c-format
+msgid "%04d-%02d-%02d"
+msgstr "%04d-%02d-%02d"
+
+#. Translators: HH:MM:SS
+#: mimedir/mimedir-datetime.c:1090
+#, c-format
+msgid "%02d:%02d:%02d"
+msgstr "%02d:%02d:%02d"
+
+#: mimedir/mimedir-period.c:111
+msgid "Free/busy type"
+msgstr "Free/busy type"
+
+#: mimedir/mimedir-period.c:112
+msgid "Whether this object signifies a free or a busy period"
+msgstr "Whether this object signifies a free or a busy period"
+
+#: mimedir/mimedir-profile.c:114
+msgid "Profile name"
+msgstr "Profile name"
+
+#: mimedir/mimedir-profile.c:115
+msgid "The name (type) of the profile"
+msgstr "The name (type) of the profile"
+
+#: mimedir/mimedir-profile.c:121
+msgid "Character set"
+msgstr "Character set"
+
+#: mimedir/mimedir-profile.c:122
+msgid "Character set used to en-/decode this profile"
+msgstr "Character set used to encode/decode this profile"
+
+#: mimedir/mimedir-profile.h:40
+#, c-format
+msgid "attribute %s defined twice"
+msgstr "attribute %s defined twice"
+
+#: mimedir/mimedir-profile.h:41
+msgid "unexpected end of profile"
+msgstr "unexpected end of profile"
+
+#: mimedir/mimedir-profile.h:42
+#, c-format
+msgid "required attribute %s is missing"
+msgstr "required attribute %s is missing"
+
+#: mimedir/mimedir-profile.h:43
+msgid "unmatched END attribute"
+msgstr "unmatched END attribute"
+
+#: mimedir/mimedir-profile.h:44
+#, c-format
+msgid "wrong profile %s; expected %s"
+msgstr "wrong profile %s; expected %s"
+
+#: mimedir/mimedir-recurrence.c:221
+msgid "Frequency"
+msgstr "Frequency"
+
+#: mimedir/mimedir-recurrence.c:222
+msgid "Frequency type of this recurrency rule"
+msgstr "Frequency type of this recurrency rule"
+
+#: mimedir/mimedir-recurrence.c:229
+msgid "Date of last recurrence"
+msgstr "Date of last recurrence"
+
+#: mimedir/mimedir-recurrence.c:230
+msgid "The date of the last recurrence of an event"
+msgstr "The date of the last recurrence of an event"
+
+#: mimedir/mimedir-recurrence.c:235
+msgid "Number of recurrences"
+msgstr "Number of recurrences"
+
+#: mimedir/mimedir-recurrence.c:236
+msgid "The number of recurrences of an event"
+msgstr "The number of recurrences of an event"
+
+#: mimedir/mimedir-recurrence.c:243
+msgid "Recurrence interval"
+msgstr "Recurrence interval"
+
+#: mimedir/mimedir-recurrence.c:244
+msgid "The interval of recurrences of an event"
+msgstr "The interval of recurrences of an event"
+
+#: mimedir/mimedir-recurrence.c:251
+msgid "Recurrence unit"
+msgstr "Recurrence unit"
+
+#: mimedir/mimedir-recurrence.c:252
+msgid "By which unit a recurrence should be repeated"
+msgstr "By which unit a recurrence should be repeated"
+
+#: mimedir/mimedir-recurrence.c:259
+msgid "Recurrence units"
+msgstr "Recurrence units"
+
+#: mimedir/mimedir-recurrence.c:260
+msgid "List of units by which a recurrence should be repeated"
+msgstr "List of units by which a recurrence should be repeated"
+
+#: mimedir/mimedir-valarm.c:548
+#, c-format
+msgid ""
+"Reminder of your appointment:\n"
+"\n"
+"%s\n"
+"%s"
+msgstr ""
+"Reminder of your appointment:\n"
+"\n"
+"%s\n"
+"%s"
+
+#: mimedir/mimedir-vcal.c:148
+msgid "Method"
+msgstr "Method"
+
+#: mimedir/mimedir-vcal.c:149
+msgid "The vCalendar's method"
+msgstr "The vCalendar's method"
+
+#: mimedir/mimedir-vcal.c:154 mimedir/mimedir-vcard.c:505
+msgid "Product identifier"
+msgstr "Product identifier"
+
+#: mimedir/mimedir-vcal.c:155
+msgid ""
+"The product identifier of the vCalendar. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr ""
+"The product identifier of the vCalendar. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+
+#: mimedir/mimedir-vcal.c:384 mimedir/mimedir-vcard.c:2411
+#: mimedir/mimedir-vcomponent.c:2109
+#, c-format
+msgid "The profile contains the unsupported custom attribute %s.\n"
+msgstr "The profile contains the unsupported custom attribute %s.\n"
+
+#: mimedir/mimedir-vcal.c:387 mimedir/mimedir-vcard.c:2414
+#: mimedir/mimedir-vcomponent.c:2112
+#, c-format
+msgid "The profile contains the unknown attribute %s.\n"
+msgstr "The profile contains the unknown attribute %s.\n"
+
+#: mimedir/mimedir-vcal.c:432 mimedir/mimedir-vcal.c:454
+#: mimedir/mimedir-vcal.c:482 mimedir/mimedir-vcal.c:506
+#, c-format
+msgid "Error reading calendar file %s: %s!"
+msgstr "Error reading calendar file %s: %s!"
+
+#: mimedir/mimedir-vcard-address.c:167
+msgid "Title"
+msgstr "Title"
+
+#: mimedir/mimedir-vcard-address.c:168
+msgid "A one-line string with the most important address information"
+msgstr "A one-line string with the most important address information"
+
+#: mimedir/mimedir-vcard-address.c:174
+msgid "Freeform address"
+msgstr "Freeform address"
+
+#: mimedir/mimedir-vcard-address.c:175
+msgid "A freeform address string"
+msgstr "A freeform address string"
+
+#: mimedir/mimedir-vcard-address.c:180
+msgid "Post office box"
+msgstr "Post office box"
+
+#: mimedir/mimedir-vcard-address.c:181
+msgid "The addresses post office box"
+msgstr "The addresses post office box"
+
+#: mimedir/mimedir-vcard-address.c:186
+msgid "Extended address"
+msgstr "Extended address"
+
+#: mimedir/mimedir-vcard-address.c:187
+msgid "Extended address string"
+msgstr "Extended address string"
+
+#: mimedir/mimedir-vcard-address.c:192
+msgid "Street"
+msgstr "Street"
+
+#: mimedir/mimedir-vcard-address.c:193
+msgid "Street address"
+msgstr "Street address"
+
+#: mimedir/mimedir-vcard-address.c:198
+msgid "Locality"
+msgstr "Locality"
+
+#: mimedir/mimedir-vcard-address.c:199
+msgid "Locality (e.g. city, town, etc.)"
+msgstr "Locality (e.g. city, town, etc.)"
+
+#: mimedir/mimedir-vcard-address.c:204
+msgid "Region"
+msgstr "Region"
+
+#: mimedir/mimedir-vcard-address.c:205
+msgid "Region (e.g. state)"
+msgstr "Region (e.g. state)"
+
+#: mimedir/mimedir-vcard-address.c:210
+msgid "Postal code"
+msgstr "Postal code"
+
+#: mimedir/mimedir-vcard-address.c:211
+msgid "Postal code (freeform string)"
+msgstr "Postal code (freeform string)"
+
+#: mimedir/mimedir-vcard-address.c:216 mimedir/mimedir-vcard-address.c:217
+msgid "Country"
+msgstr "Country"
+
+#: mimedir/mimedir-vcard-address.c:222
+msgid "Domestic"
+msgstr "Domestic"
+
+#: mimedir/mimedir-vcard-address.c:223
+msgid "Whether this is a domestic address"
+msgstr "Whether this is a domestic address"
+
+#: mimedir/mimedir-vcard-address.c:228
+msgid "International"
+msgstr "International"
+
+#: mimedir/mimedir-vcard-address.c:229
+msgid "Whether this is an international address"
+msgstr "Whether this is an international address"
+
+#: mimedir/mimedir-vcard-address.c:234
+msgid "Postal"
+msgstr "Postal"
+
+#: mimedir/mimedir-vcard-address.c:235
+msgid "Whether this is a postal address"
+msgstr "Whether this is a postal address"
+
+#: mimedir/mimedir-vcard-address.c:240
+msgid "Parcel"
+msgstr "Parcel"
+
+#: mimedir/mimedir-vcard-address.c:241
+msgid "Whether parcels can be received at this address"
+msgstr "Whether parcels can be received at this address"
+
+#: mimedir/mimedir-vcard-address.c:246 mimedir/mimedir-vcard-email.c:163
+#: mimedir/mimedir-vcard-phone.c:160
+msgid "Home"
+msgstr "Home"
+
+#: mimedir/mimedir-vcard-address.c:247
+msgid "Whether this is a home address"
+msgstr "Whether this is a home address"
+
+#: mimedir/mimedir-vcard-address.c:252 mimedir/mimedir-vcard-email.c:169
+#: mimedir/mimedir-vcard-phone.c:166
+msgid "Work"
+msgstr "Work"
+
+#: mimedir/mimedir-vcard-address.c:253
+msgid "Whether this is a work address"
+msgstr "Whether this is a work address"
+
+#: mimedir/mimedir-vcard-address.c:258 mimedir/mimedir-vcard-email.c:157
+#: mimedir/mimedir-vcard-phone.c:232
+msgid "Preferred"
+msgstr "Preferred"
+
+#: mimedir/mimedir-vcard-address.c:259
+msgid "Whether this is the preferred address"
+msgstr "Whether this is the preferred address"
+
+#: mimedir/mimedir-vcard-address.c:572
+#, c-format
+msgid "The %s attribute contains too many elements.\n"
+msgstr "The %s attribute contains too many elements.\n"
+
+#: mimedir/mimedir-vcard-address.c:772
+#, c-format
+msgid "The address field is of unknown type %s.\n"
+msgstr "The address field is of unknown type %s.\n"
+
+#. Translators: pcode city
+#: mimedir/mimedir-vcard-address.c:864 mimedir/mimedir-vcard-address.c:873
+#, c-format
+msgid "%s %s"
+msgstr "%s %s"
+
+#. Translators: city, region
+#: mimedir/mimedir-vcard-address.c:871
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
+#: mimedir/mimedir-vcard-address.c:914 mimedir/mimedir-vcard-email.c:538
+#: mimedir/mimedir-vcard-phone.c:695
+msgid "preferred"
+msgstr "preferred"
+
+#: mimedir/mimedir-vcard-address.c:919
+msgid "domestic"
+msgstr "domestic"
+
+#: mimedir/mimedir-vcard-address.c:924
+msgid "international"
+msgstr "international"
+
+#: mimedir/mimedir-vcard-address.c:929
+msgid "postal"
+msgstr "postal"
+
+#: mimedir/mimedir-vcard-address.c:934
+msgid "parcel"
+msgstr "parcel"
+
+#: mimedir/mimedir-vcard-address.c:939 mimedir/mimedir-vcard-email.c:560
+#: mimedir/mimedir-vcard-phone.c:701
+msgid "home"
+msgstr "home"
+
+#: mimedir/mimedir-vcard-address.c:944 mimedir/mimedir-vcard-email.c:566
+#: mimedir/mimedir-vcard-phone.c:706
+msgid "work"
+msgstr "work"
+
+#. Translators: Short address format: "locality/street"
+#: mimedir/mimedir-vcard-address.c:996
+#, c-format
+msgid "%s/%s"
+msgstr "%s/%s"
+
+#: mimedir/mimedir-vcard-address.c:1002
+msgid "<unknown>"
+msgstr "<unknown>"
+
+#: mimedir/mimedir-vcard-email.c:142 mimedir/mimedir-vcard.c:368
+msgid "Address"
+msgstr "Address"
+
+#: mimedir/mimedir-vcard-email.c:143
+msgid "The e-mail address"
+msgstr "The e-mail address"
+
+#: mimedir/mimedir-vcard-email.c:149
+msgid "Type"
+msgstr "Type"
+
+#: mimedir/mimedir-vcard-email.c:150
+msgid "Type of this e-mail address"
+msgstr "Type of this e-mail address"
+
+#: mimedir/mimedir-vcard-email.c:158
+msgid "Whether this is the preferred e-mail address"
+msgstr "Whether this is the preferred e-mail address"
+
+#: mimedir/mimedir-vcard-email.c:164
+msgid "Whether is a home e-mail address"
+msgstr "Whether this is a home e-mail address"
+
+#: mimedir/mimedir-vcard-email.c:170
+msgid "Whether this is an e-mail address at work"
+msgstr "Whether this is an e-mail address at work"
+
+#: mimedir/mimedir-vcard-email.c:442
+#, c-format
+msgid "The email field is of unknown type %s.\n"
+msgstr "The email field is of unknown type %s.\n"
+
+#: mimedir/mimedir-vcard-email.c:548
+msgid "Internet"
+msgstr "Internet"
+
+#: mimedir/mimedir-vcard-email.c:553
+msgid "X.400"
+msgstr "X.400"
+
+#: mimedir/mimedir-vcard-phone.c:153
+msgid "Number"
+msgstr "Number"
+
+#: mimedir/mimedir-vcard-phone.c:154
+msgid "The telephone number (freeform string)"
+msgstr "The telephone number (freeform string)"
+
+#: mimedir/mimedir-vcard-phone.c:161
+msgid "Whether this is a home phone number"
+msgstr "Whether this is a home phone number"
+
+#: mimedir/mimedir-vcard-phone.c:167
+msgid "Whether this is a phone number at work"
+msgstr "Whether this is a phone number at work"
+
+#: mimedir/mimedir-vcard-phone.c:172
+msgid "Voice"
+msgstr "Voice"
+
+#: mimedir/mimedir-vcard-phone.c:173
+msgid "Whether this is a voice number"
+msgstr "Whether this is a voice number"
+
+#: mimedir/mimedir-vcard-phone.c:178
+msgid "Fax"
+msgstr "Fax"
+
+#: mimedir/mimedir-vcard-phone.c:179
+msgid "Whether this is a facsimile number"
+msgstr "Whether this is a facsimile number"
+
+#: mimedir/mimedir-vcard-phone.c:184 mimedir/mimedir-vcard-phone.c:721
+msgid "BBS"
+msgstr "BBS"
+
+#: mimedir/mimedir-vcard-phone.c:185
+msgid "Whether this is a bulletin board system number"
+msgstr "Whether this is a bulletin board system number"
+
+#: mimedir/mimedir-vcard-phone.c:190
+msgid "Modem"
+msgstr "Modem"
+
+#: mimedir/mimedir-vcard-phone.c:191
+msgid "Whether this is a modem number"
+msgstr "Whether this is a modem number"
+
+#: mimedir/mimedir-vcard-phone.c:196
+msgid "Pager"
+msgstr "Pager"
+
+#: mimedir/mimedir-vcard-phone.c:197
+msgid "Whether this is a pager number"
+msgstr "Whether this is a pager number"
+
+#: mimedir/mimedir-vcard-phone.c:202
+msgid "Video"
+msgstr "Video"
+
+#: mimedir/mimedir-vcard-phone.c:203
+msgid "Whether this is a video phone number"
+msgstr "Whether this is a video phone number"
+
+#: mimedir/mimedir-vcard-phone.c:208
+msgid "Cell"
+msgstr "Cell"
+
+#: mimedir/mimedir-vcard-phone.c:209
+msgid "Whether this is a cell (mobile) phone number"
+msgstr "Whether this is a cell (mobile) phone number"
+
+#: mimedir/mimedir-vcard-phone.c:214
+msgid "Car"
+msgstr "Car"
+
+#: mimedir/mimedir-vcard-phone.c:215
+msgid "Whether this is car phone number"
+msgstr "Whether this is car phone number"
+
+#: mimedir/mimedir-vcard-phone.c:220 mimedir/mimedir-vcard-phone.c:756
+msgid "ISDN"
+msgstr "ISDN"
+
+#: mimedir/mimedir-vcard-phone.c:221
+msgid "Whether this is a ISDN number"
+msgstr "Whether this is a ISDN number"
+
+#: mimedir/mimedir-vcard-phone.c:226 mimedir/mimedir-vcard-phone.c:761
+msgid "PCS"
+msgstr "PCS"
+
+#: mimedir/mimedir-vcard-phone.c:227
+msgid "Whether this is a PCS number"
+msgstr "Whether this is a PCS number"
+
+#: mimedir/mimedir-vcard-phone.c:233
+msgid "Whether this is the preferred number"
+msgstr "Whether this is the preferred number"
+
+#: mimedir/mimedir-vcard-phone.c:238
+msgid "Message"
+msgstr "Message"
+
+#: mimedir/mimedir-vcard-phone.c:239
+msgid "Whether this number has a voice recorder"
+msgstr "Whether this number has a voice recorder"
+
+#: mimedir/mimedir-vcard-phone.c:588
+#, c-format
+msgid "The phone field is of unknown type %s.\n"
+msgstr "The phone field is of unknown type %s.\n"
+
+#: mimedir/mimedir-vcard-phone.c:711
+msgid "voice"
+msgstr "voice"
+
+#: mimedir/mimedir-vcard-phone.c:716
+msgid "fax"
+msgstr "fax"
+
+#: mimedir/mimedir-vcard-phone.c:726
+msgid "modem"
+msgstr "modem"
+
+#: mimedir/mimedir-vcard-phone.c:731
+msgid "pager"
+msgstr "pager"
+
+#: mimedir/mimedir-vcard-phone.c:736
+msgid "video"
+msgstr "video"
+
+#: mimedir/mimedir-vcard-phone.c:741
+msgid "voice message"
+msgstr "voice message"
+
+#: mimedir/mimedir-vcard-phone.c:746
+msgid "cell phone"
+msgstr "cell phone"
+
+#: mimedir/mimedir-vcard-phone.c:751
+msgid "car phone"
+msgstr "car phone"
+
+#: mimedir/mimedir-vcard.c:299
+msgid "The spelled out name full name of this person"
+msgstr "The spelled out name full name of this person"
+
+#: mimedir/mimedir-vcard.c:304
+msgid "Family name"
+msgstr "Family name"
+
+#: mimedir/mimedir-vcard.c:305
+msgid "The family name of this person"
+msgstr "The family name of this person"
+
+#: mimedir/mimedir-vcard.c:310
+msgid "Given name"
+msgstr "Given name"
+
+#: mimedir/mimedir-vcard.c:311
+msgid "The given name of this person"
+msgstr "The given name of this person"
+
+#: mimedir/mimedir-vcard.c:316
+msgid "Middle name"
+msgstr "Middle name"
+
+#: mimedir/mimedir-vcard.c:317
+msgid "The middle name or middle initials of this person"
+msgstr "The middle name or middle initials of this person"
+
+#: mimedir/mimedir-vcard.c:322
+msgid "Prefix"
+msgstr "Prefix"
+
+#: mimedir/mimedir-vcard.c:323
+msgid "The name prefix (e.g. honorific prefix) of this person"
+msgstr "The name prefix (e.g. honorific prefix) of this person"
+
+#: mimedir/mimedir-vcard.c:328
+msgid "Suffix"
+msgstr "Suffix"
+
+#: mimedir/mimedir-vcard.c:329
+msgid "The name suffix of this person"
+msgstr "The name suffix of this person"
+
+#: mimedir/mimedir-vcard.c:334
+msgid "Nickname list"
+msgstr "Nickname list"
+
+#: mimedir/mimedir-vcard.c:335
+msgid ""
+"List of all nick names. This is a GList *, where the elements are of type "
+"const gchar *"
+msgstr ""
+"List of all nick names. This is a GList *, where the elements are of type "
+"const gchar *"
+
+#: mimedir/mimedir-vcard.c:339
+msgid "Nick name"
+msgstr "Nick name"
+
+#: mimedir/mimedir-vcard.c:340
+msgid "The first nick name"
+msgstr "The first nick name"
+
+#. FIXME: this is useless
+#: mimedir/mimedir-vcard.c:345
+msgid "Photo"
+msgstr "Photo"
+
+#: mimedir/mimedir-vcard.c:346
+msgid "Pointer to a byte stream, representing an image of the person"
+msgstr "Pointer to a byte stream, representing an image of the person"
+
+#: mimedir/mimedir-vcard.c:350
+msgid "Photo URI"
+msgstr "Photo URI"
+
+#: mimedir/mimedir-vcard.c:351
+msgid "URI to an image of this person"
+msgstr "URI to an image of this person"
+
+#: mimedir/mimedir-vcard.c:356
+msgid "Birthday"
+msgstr "Birthday"
+
+#: mimedir/mimedir-vcard.c:357
+msgid "The person's birthday"
+msgstr "The person's birthday"
+
+#: mimedir/mimedir-vcard.c:363
+msgid "Address list"
+msgstr "Address list"
+
+#: mimedir/mimedir-vcard.c:364
+msgid ""
+"List of all addresses. This is a GList *, where the elements are of type "
+"MIMEDirAddress *"
+msgstr ""
+"List of all addresses. This is a GList *, where the elements are of type "
+"MIMEDirAddress *"
+
+#: mimedir/mimedir-vcard.c:369
+msgid "The preferred address"
+msgstr "The preferred address"
+
+#: mimedir/mimedir-vcard.c:375
+msgid "Phone number list"
+msgstr "Phone number list"
+
+#: mimedir/mimedir-vcard.c:376
+msgid ""
+"List of all phone numbers. This is a GList *, where the elements are of type "
+"MIMEDirPhone *"
+msgstr ""
+"List of all phone numbers. This is a GList *, where the elements are of type "
+"MIMEDirPhone *"
+
+#: mimedir/mimedir-vcard.c:380
+msgid "Phone number"
+msgstr "Phone number"
+
+#: mimedir/mimedir-vcard.c:381
+msgid "The preferred phone number"
+msgstr "The preferred phone number"
+
+#: mimedir/mimedir-vcard.c:386
+msgid "E-mail address list"
+msgstr "E-mail address list"
+
+#: mimedir/mimedir-vcard.c:387
+msgid ""
+"List of all e-mail addresses. This is a GList *, where the elements are of "
+"type MIMEDirEmail *"
+msgstr ""
+"List of all e-mail addresses. This is a GList *, where the elements are of "
+"type MIMEDirEmail *"
+
+#: mimedir/mimedir-vcard.c:391
+msgid "E-mail address"
+msgstr "E-mail address"
+
+#: mimedir/mimedir-vcard.c:392
+msgid "The preferred e-mail address"
+msgstr "The preferred e-mail address"
+
+#: mimedir/mimedir-vcard.c:397
+msgid "Mailer"
+msgstr "Mailer"
+
+#: mimedir/mimedir-vcard.c:398
+msgid "The mailing program used by this person"
+msgstr "The mailing program used by this person"
+
+#: mimedir/mimedir-vcard.c:404
+msgid "Time zone"
+msgstr "Time zone"
+
+#: mimedir/mimedir-vcard.c:405
+msgid "The time zone this person lives in"
+msgstr "The time zone this person lives in"
+
+#: mimedir/mimedir-vcard.c:412
+msgid "Time zone string"
+msgstr "Time zone string"
+
+#: mimedir/mimedir-vcard.c:413
+msgid "The time zone this person lives in (deprecated string representation)"
+msgstr "The time zone this person lives in (deprecated string representation)"
+
+#: mimedir/mimedir-vcard.c:418
+msgid "Latitude"
+msgstr "Latitude"
+
+#: mimedir/mimedir-vcard.c:419
+msgid "Latitude of this person's residence"
+msgstr "Latitude of this person's residence"
+
+#: mimedir/mimedir-vcard.c:426
+msgid "Longitude"
+msgstr "Longitude"
+
+#: mimedir/mimedir-vcard.c:427
+msgid "Longitude of this person's residence"
+msgstr "Longitude of this person's residence"
+
+#: mimedir/mimedir-vcard.c:435
+msgid "Job title"
+msgstr "Job title"
+
+#: mimedir/mimedir-vcard.c:436
+msgid "The person's job title"
+msgstr "The person's job title"
+
+#: mimedir/mimedir-vcard.c:441
+msgid "Role"
+msgstr "Role"
+
+#: mimedir/mimedir-vcard.c:442
+msgid "The person's job role"
+msgstr "The person's job role"
+
+#. FIXME: useless
+#: mimedir/mimedir-vcard.c:447
+msgid "Logo"
+msgstr "Logo"
+
+#: mimedir/mimedir-vcard.c:448
+msgid "Pointer to a byte stream, representing the logo of the person's company"
+msgstr ""
+"Pointer to a byte stream, representing the logo of the person's company"
+
+#: mimedir/mimedir-vcard.c:452
+msgid "Logo URI"
+msgstr "Logo URI"
+
+#: mimedir/mimedir-vcard.c:453
+msgid "URI to the logo of this person's company"
+msgstr "URI to the logo of this person's company"
+
+#: mimedir/mimedir-vcard.c:458
+msgid "Agent"
+msgstr "Agent"
+
+#: mimedir/mimedir-vcard.c:459
+msgid "A person, acting for the person described in this card"
+msgstr "A person, acting for the person described in this card"
+
+#: mimedir/mimedir-vcard.c:464
+msgid "Agent URI"
+msgstr "Agent URI"
+
+#: mimedir/mimedir-vcard.c:465
+msgid ""
+"URI to the description of a person, acting for the person described in this "
+"card"
+msgstr ""
+"URI to the description of a person, acting for the person described in this "
+"card"
+
+#: mimedir/mimedir-vcard.c:470
+msgid "Agent string"
+msgstr "Agent string"
+
+#: mimedir/mimedir-vcard.c:471
+msgid ""
+"A person, acting for the person described in this card (deprecated string "
+"representation)"
+msgstr ""
+"A person, acting for the person described in this card (deprecated string "
+"representation)"
+
+#: mimedir/mimedir-vcard.c:476
+msgid "Organization list"
+msgstr "Organization list"
+
+#: mimedir/mimedir-vcard.c:477
+msgid ""
+"List of all organization this person belongs to. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr ""
+"List of all organization this person belongs to. This is a GList *, where "
+"the elements are gchar *'s"
+
+#: mimedir/mimedir-vcard.c:481
+msgid "Organization"
+msgstr "Organization"
+
+#: mimedir/mimedir-vcard.c:482
+msgid "The person's first organization"
+msgstr "The person's first organization"
+
+#: mimedir/mimedir-vcard.c:488 mimedir/mimedir-vcomponent.c:266
+msgid "Category list"
+msgstr "Category list"
+
+#: mimedir/mimedir-vcard.c:489
+msgid ""
+"List of all categories of this person. This is a GList *, where the elements "
+"are gchar *'s"
+msgstr ""
+"List of all categories of this person. This is a GList *, where the elements "
+"are gchar *'s"
+
+#: mimedir/mimedir-vcard.c:493
+msgid "Categories"
+msgstr "Categories"
+
+#: mimedir/mimedir-vcard.c:494
+msgid "String representation of this person's categories"
+msgstr "String representation of this person's categories"
+
+#: mimedir/mimedir-vcard.c:499
+msgid "Note"
+msgstr "Note"
+
+#: mimedir/mimedir-vcard.c:500
+msgid "Additional comments"
+msgstr "Additional comments"
+
+#: mimedir/mimedir-vcard.c:506
+msgid ""
+"The product identifier of the vCard. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr ""
+"The product identifier of the vCard. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+
+#: mimedir/mimedir-vcard.c:511
+msgid "Revision"
+msgstr "Revision"
+
+#: mimedir/mimedir-vcard.c:512
+msgid "Card's revision"
+msgstr "Card's revision"
+
+#: mimedir/mimedir-vcard.c:517
+msgid "Sort string"
+msgstr "Sort string"
+
+#: mimedir/mimedir-vcard.c:518
+msgid "String that defines this card's sort order"
+msgstr "String that defines this card's sort order"
+
+#. FIXME: useless
+#: mimedir/mimedir-vcard.c:523
+msgid "Sound"
+msgstr "Sound"
+
+#: mimedir/mimedir-vcard.c:524
+msgid "Pointer to a byte stream, representing a sound file"
+msgstr "Pointer to a byte stream, representing a sound file"
+
+#: mimedir/mimedir-vcard.c:528
+msgid "Sound URI"
+msgstr "Sound URI"
+
+#: mimedir/mimedir-vcard.c:529
+msgid "URI to a sound file"
+msgstr "URI to a sound file"
+
+#: mimedir/mimedir-vcard.c:534
+msgid "Unique Identifier"
+msgstr "Unique Identifier"
+
+#: mimedir/mimedir-vcard.c:535
+msgid "A unique identifier for this card"
+msgstr "A unique identifier for this card"
+
+#: mimedir/mimedir-vcard.c:540
+msgid "URL"
+msgstr "URL"
+
+#: mimedir/mimedir-vcard.c:541
+msgid "An alternate URL for this resource"
+msgstr "An alternate URL for this resource"
+
+#: mimedir/mimedir-vcard.c:547
+msgid "Classification"
+msgstr "Classification"
+
+#: mimedir/mimedir-vcard.c:548
+msgid "The security classfication of this card"
+msgstr "The security classfication of this card"
+
+#: mimedir/mimedir-vcard.c:553
+msgid "Public key list"
+msgstr "Public key list"
+
+#: mimedir/mimedir-vcard.c:554
+msgid ""
+"List of this person's public keys. This is a GList *, where the elements are "
+"MIMEDirVCardKeys"
+msgstr ""
+"List of this person's public keys. This is a GList *, where the elements are "
+"MIMEDirVCardKeys"
+
+#: mimedir/mimedir-vcard.c:558
+msgid "Public key"
+msgstr "Public key"
+
+#: mimedir/mimedir-vcard.c:559
+msgid "This person's first public key"
+msgstr "This person's first public key"
+
+#: mimedir/mimedir-vcard.c:564
+msgid "Key type"
+msgstr "Key type"
+
+#: mimedir/mimedir-vcard.c:565
+msgid "Type of the first public key"
+msgstr "Type of the first public key"
+
+#: mimedir/mimedir-vcard.c:1474 mimedir/mimedir-vcard.c:1496
+#: mimedir/mimedir-vcard.c:1524 mimedir/mimedir-vcard.c:1548
+#, c-format
+msgid "Error reading card file %s: %s!"
+msgstr "Error reading card file %s: %s!"
+
+#: mimedir/mimedir-vcard.c:1671
+#, c-format
+msgid "Error writing card file %s: %s!"
+msgstr "Error writing card file %s: %s!"
+
+#: mimedir/mimedir-vcard.c:3409
+#, c-format
+msgid "Name: %s\n"
+msgstr "Name: %s\n"
+
+#: mimedir/mimedir-vcard.c:3411
+msgid "Name\n"
+msgstr "Name\n"
+
+#: mimedir/mimedir-vcard.c:3413
+#, c-format
+msgid "  Prefix:     %s\n"
+msgstr "  Prefix:     %s\n"
+
+#: mimedir/mimedir-vcard.c:3415
+#, c-format
+msgid "  Given:      %s\n"
+msgstr "  Given:      %s\n"
+
+#: mimedir/mimedir-vcard.c:3417
+#, c-format
+msgid "  Additional: %s\n"
+msgstr "  Additional: %s\n"
+
+#: mimedir/mimedir-vcard.c:3419
+#, c-format
+msgid "  Family:     %s\n"
+msgstr "  Family:     %s\n"
+
+#: mimedir/mimedir-vcard.c:3421
+#, c-format
+msgid "  Suffix:     %s\n"
+msgstr "  Suffix:     %s\n"
+
+#: mimedir/mimedir-vcard.c:3427
+#, c-format
+msgid "Birth Date: %04d-%02d-%02d\n"
+msgstr "Birth Date: %04d-%02d-%02d\n"
+
+#: mimedir/mimedir-vcard.c:3452
+#, c-format
+msgid "Address label (%s):\n"
+msgstr "Address label (%s):\n"
+
+#: mimedir/mimedir-vcard.c:3472
+#, c-format
+msgid "Address (%s):\n"
+msgstr "Address (%s):\n"
+
+#: mimedir/mimedir-vcard.c:3486
+#, c-format
+msgid "  Postal Box:  %s\n"
+msgstr "  Postal Box:  %s\n"
+
+#: mimedir/mimedir-vcard.c:3488
+#, c-format
+msgid "  Extended:    %s\n"
+msgstr "  Extended:    %s\n"
+
+#: mimedir/mimedir-vcard.c:3490
+#, c-format
+msgid "  Street:      %s\n"
+msgstr "  Street:      %s\n"
+
+#: mimedir/mimedir-vcard.c:3492
+#, c-format
+msgid "  City:        %s\n"
+msgstr "  City:        %s\n"
+
+#: mimedir/mimedir-vcard.c:3494
+#, c-format
+msgid "  Region:      %s\n"
+msgstr "  Region:      %s\n"
+
+#: mimedir/mimedir-vcard.c:3496
+#, c-format
+msgid "  Postal Code: %s\n"
+msgstr "  Postal Code: %s\n"
+
+#: mimedir/mimedir-vcard.c:3498
+#, c-format
+msgid "  Country:     %s\n"
+msgstr "  Country:     %s\n"
+
+#: mimedir/mimedir-vcard.c:3518
+msgid "Telephone:\n"
+msgstr "Telephone:\n"
+
+#: mimedir/mimedir-vcard.c:3542
+#, c-format
+msgid "Telephone: %s (%s)\n"
+msgstr "Telephone: %s (%s)\n"
+
+#: mimedir/mimedir-vcard.c:3556
+msgid "E-mail:\n"
+msgstr "E-mail:\n"
+
+#: mimedir/mimedir-vcard.c:3580
+#, c-format
+msgid "E-mail: %s (%s)\n"
+msgstr "E-mail: %s (%s)\n"
+
+#: mimedir/mimedir-vcard.c:3602
+#, c-format
+msgid "Time zone: %c%02d:%02d\n"
+msgstr "Time zone: %c%02d:%02d\n"
+
+#: mimedir/mimedir-vcard.c:3611
+#, c-format
+msgid "Location: %.2f,%.2f\n"
+msgstr "Location: %.2f,%.2f\n"
+
+#: mimedir/mimedir-vcard.c:3620
+#, c-format
+msgid "Organization: %s\n"
+msgstr "Organization: %s\n"
+
+#: mimedir/mimedir-vcard.c:3625
+#, c-format
+msgid "Job title: %s\n"
+msgstr "Job title: %s\n"
+
+#: mimedir/mimedir-vcard.c:3628
+#, c-format
+msgid "Business role: %s\n"
+msgstr "Business role: %s\n"
+
+#: mimedir/mimedir-vcard.c:3638
+#, c-format
+msgid "Categories: %s\n"
+msgstr "Categories: %s\n"
+
+#: mimedir/mimedir-vcard.c:3643
+#, c-format
+msgid "Comment: %s\n"
+msgstr "Comment: %s\n"
+
+#: mimedir/mimedir-vcard.c:3646
+#, c-format
+msgid "Homepage: %s\n"
+msgstr "Homepage: %s\n"
+
+#: mimedir/mimedir-vcard.c:3649
+#, c-format
+msgid "Unique string: %s\n"
+msgstr "Unique string: %s\n"
+
+#: mimedir/mimedir-vcard.c:3659
+msgid "X.509"
+msgstr "X.509"
+
+#: mimedir/mimedir-vcard.c:3662
+msgid "PGP"
+msgstr "PGP"
+
+#: mimedir/mimedir-vcard.c:3665
+msgid "yes"
+msgstr "yes"
+
+#: mimedir/mimedir-vcard.c:3669
+#, c-format
+msgid "Public Key: %s\n"
+msgstr "Public Key: %s\n"
+
+#: mimedir/mimedir-vcomponent.c:267
+msgid ""
+"List of all categories of this component. This is a GList *, where the "
+"elements are gchar *'s"
+msgstr ""
+"List of all categories of this component. This is a GList *, where the "
+"elements are gchar *'s"
+
+#: mimedir/mimedir-vcomponent.c:271
+msgid "Comment list"
+msgstr "Comment list"
+
+#: mimedir/mimedir-vcomponent.c:272
+msgid ""
+"List of all additional comments for this component. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr ""
+"List of all additional comments for this component. This is a GList *, where "
+"the elements are gchar *'s"
+
+#: mimedir/mimedir-vcomponent.c:276
+msgid "Description"
+msgstr "Description"
+
+#: mimedir/mimedir-vcomponent.c:277
+msgid "Full description of this component"
+msgstr "Full description of this component"
+
+#: mimedir/mimedir-vcomponent.c:282
+msgid "Percent complete"
+msgstr "Percent complete"
+
+#: mimedir/mimedir-vcomponent.c:283
+msgid "Percentage of this task's completion"
+msgstr "Percentage of this task's completion"
+
+#: mimedir/mimedir-vcomponent.c:290
+msgid "Priority"
+msgstr "Priority"
+
+#: mimedir/mimedir-vcomponent.c:291
+msgid "This task's priority"
+msgstr "This task's priority"
+
+#. FIXME: whoops, this isn't handled
+#: mimedir/mimedir-vcomponent.c:296
+msgid "Resource list"
+msgstr "Resource list"
+
+#: mimedir/mimedir-vcomponent.c:297
+msgid "List of the resources assigned to this component"
+msgstr "List of the resources assigned to this component"
+
+#: mimedir/mimedir-vcomponent.c:301
+msgid "Status"
+msgstr "Status"
+
+#: mimedir/mimedir-vcomponent.c:302
+msgid "This task's completion status"
+msgstr "This task's completion status"
+
+#: mimedir/mimedir-vcomponent.c:309
+msgid "Summary"
+msgstr "Summary"
+
+#: mimedir/mimedir-vcomponent.c:310
+msgid "Component's short description"
+msgstr "Component's short description"
+
+#: mimedir/mimedir-vcomponent.c:316
+msgid "Date/time completed"
+msgstr "Date/time completed"
+
+#: mimedir/mimedir-vcomponent.c:317
+msgid "Date/time that this task was completed"
+msgstr "Date/time that this task was completed"
+
+#: mimedir/mimedir-vcomponent.c:322
+msgid "Date/time end"
+msgstr "Date/time end"
+
+#: mimedir/mimedir-vcomponent.c:323
+msgid "End date/time of this component"
+msgstr "End date/time of this component"
+
+#: mimedir/mimedir-vcomponent.c:328
+msgid "Due"
+msgstr "Due"
+
+#: mimedir/mimedir-vcomponent.c:329
+msgid "This task's due date"
+msgstr "This task's due date"
+
+#: mimedir/mimedir-vcomponent.c:334
+msgid "Date/time start"
+msgstr "Date/time start"
+
+#: mimedir/mimedir-vcomponent.c:335
+msgid "Start date/time of this component"
+msgstr "Start date/time of this component"
+
+#: mimedir/mimedir-vcomponent.c:340
+msgid "Duration"
+msgstr "Duration"
+
+#: mimedir/mimedir-vcomponent.c:341
+msgid "This date's duration"
+msgstr "This date's duration"
+
+#: mimedir/mimedir-vcomponent.c:346
+msgid "Free/busy"
+msgstr "Free/busy"
+
+#: mimedir/mimedir-vcomponent.c:347
+msgid "GList of free/busy objects"
+msgstr "GList of free/busy objects"
+
+#: mimedir/mimedir-vcomponent.c:353
+msgid "This component's time zone identifier"
+msgstr "This component's time zone identifier"
+
+#: mimedir/mimedir-vcomponent.c:358
+msgid "Time zone name list"
+msgstr "Time zone name list"
+
+#: mimedir/mimedir-vcomponent.c:359
+msgid "GList of time zone names"
+msgstr "GList of time zone names"
+
+#: mimedir/mimedir-vcomponent.c:363 mimedir/mimedir-vcomponent.c:364
+msgid "Time zone offset from"
+msgstr "Time zone offset from"
+
+#: mimedir/mimedir-vcomponent.c:371 mimedir/mimedir-vcomponent.c:372
+msgid "Time zone offset to"
+msgstr "Time zone offset to"
+
+#: mimedir/mimedir-vcomponent.c:379
+msgid "Time zone URL"
+msgstr "Time zone URL"
+
+#: mimedir/mimedir-vcomponent.c:380
+msgid "URL to a time zone description"
+msgstr "URL to a time zone description"
+
+#: mimedir/mimedir-vcomponent.c:386
+msgid "Contact"
+msgstr "Contact"
+
+#: mimedir/mimedir-vcomponent.c:387
+msgid "Contact information"
+msgstr "Contact information"
+
+#: mimedir/mimedir-vcomponent.c:393
+msgid "Unique identifier"
+msgstr "Unique identifier"
+
+#: mimedir/mimedir-vcomponent.c:394
+msgid "A unique identifier for this component"
+msgstr "A unique identifier for this component"
+
+#: mimedir/mimedir-vcomponent.c:400
+msgid "Recurrence object"
+msgstr "Recurrence object"
+
+#: mimedir/mimedir-vcomponent.c:401
+msgid "An object representing the RRULE tag"
+msgstr "An object representing the RRULE tag"
+
+#: mimedir/mimedir-vcomponent.c:407 mimedir/mimedir-vcomponent.c:408
+msgid "Action"
+msgstr "Action"
+
+#: mimedir/mimedir-vcomponent.c:413 mimedir/mimedir-vcomponent.c:414
+msgid "Repeat"
+msgstr "Repeat"
+
+#: mimedir/mimedir-vcomponent.c:419 mimedir/mimedir-vcomponent.c:420
+msgid "Trigger"
+msgstr "Trigger"
+
+#: mimedir/mimedir-vcomponent.c:425
+msgid "Trigger date/time"
+msgstr "Trigger date/time"
+
+#: mimedir/mimedir-vcomponent.c:426
+msgid "Date/time of the trigger"
+msgstr "Date/time of the trigger"
+
+#: mimedir/mimedir-vcomponent.c:431
+msgid "Trigger end"
+msgstr "Trigger end"
+
+#: mimedir/mimedir-vcomponent.c:432
+msgid "Whether the trigger is set at the end of the time interval"
+msgstr "Whether the trigger is set at the end of the time interval"
+
+#: mimedir/mimedir-vcomponent.c:438
+msgid "Created"
+msgstr "Created"
+
+#: mimedir/mimedir-vcomponent.c:439
+msgid "Date/time of the creation"
+msgstr "Date/time of the creation"
+
+#: mimedir/mimedir-vcomponent.c:444
+msgid "Date/time stamp"
+msgstr "Date/time stamp"
+
+#: mimedir/mimedir-vcomponent.c:445
+msgid "Date/time of the creation of the iCalendar object"
+msgstr "Date/time of the creation of the iCalendar object"
+
+#: mimedir/mimedir-vcomponent.c:450
+msgid "Last modified"
+msgstr "Last modified"
+
+#: mimedir/mimedir-vcomponent.c:451
+msgid "Date/time of the last modification"
+msgstr "Date/time of the last modification"
+
+#: mimedir/mimedir-vcomponent.c:456
+msgid "Sequence"
+msgstr "Sequence"
+
+#: mimedir/mimedir-vcomponent.c:457
+msgid "Sequence number"
+msgstr "Sequence number"

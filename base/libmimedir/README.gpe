@@ -1,0 +1,10 @@
+This directory contains a fork of the libmimedir from Gnome.  It was
+initialised from the Gnome SVN as at 20070330 and has been further
+developed within the GPE project.
+
+It is hoped that this fork is temporary and all these changes can be
+incorporated back into the Gnome version at some future date.
+
+--
+
+Graham Cobb, 30th March 2007

@@ -1,0 +1,1653 @@
+# translation of libmimedir.HEAD.ne.po to Nepali
+# translation of libmimedir.HEAD.po to Nepali
+# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
+# Pawan Chitrakar <pawan@mpp.org.np>, 2005.
+# Kapil Timilsina <lipak21@gmail.com>, 2005.
+# Mahesh subedi <submanesh@hotmail.com>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libmimedir.HEAD.ne\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-05-15 12:24+0200\n"
+"PO-Revision-Date: 2006-06-13 16:35+0545\n"
+"Last-Translator: Mahesh subedi <submanesh@hotmail.com>\n"
+"Language-Team: Nepali <info@mpp.org.np>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.10.2\n"
+"Plural-Forms: nplurals=2;plural=(n!=1)\n"
+
+#: ../bin/ical-dump.c:48
+#, c-format
+msgid "Usage: %s ICALFILE\n"
+msgstr "उपयोग %s ICALFILE\n"
+
+#: ../bin/ical-dump.c:57
+msgid "secondly"
+msgstr "सेकेण्ड अनुसार"
+
+#: ../bin/ical-dump.c:59
+msgid "minutely"
+msgstr "मिनेट अनुसार"
+
+#: ../bin/ical-dump.c:61
+msgid "hourly"
+msgstr "घण्टा अनुसार"
+
+#: ../bin/ical-dump.c:63
+msgid "daily"
+msgstr "दैनिक"
+
+#: ../bin/ical-dump.c:65
+msgid "weekly"
+msgstr "साप्ताहिक"
+
+#: ../bin/ical-dump.c:67
+msgid "monthly"
+msgstr "मासिक"
+
+#: ../bin/ical-dump.c:69
+msgid "yearly"
+msgstr "बार्षिक"
+
+#: ../bin/ical-dump.c:71 ../bin/ical-dump.c:97
+msgid "unknown"
+msgstr "अज्ञात"
+
+#: ../bin/ical-dump.c:81
+msgid "second"
+msgstr "सेकेण्ड"
+
+#: ../bin/ical-dump.c:83
+msgid "minute"
+msgstr "मिनेट"
+
+#: ../bin/ical-dump.c:85
+msgid "hour"
+msgstr "घण्टा"
+
+#: ../bin/ical-dump.c:87
+msgid "day"
+msgstr "दिन"
+
+#: ../bin/ical-dump.c:89
+msgid "day of month"
+msgstr "महिनाको दिन"
+
+#: ../bin/ical-dump.c:91
+msgid "day of year"
+msgstr "बर्षको दिन"
+
+#: ../bin/ical-dump.c:93
+msgid "week number"
+msgstr "हप्ताको सङ्ख्या"
+
+#: ../bin/ical-dump.c:95
+msgid "month"
+msgstr "महिना"
+
+#: ../bin/ical-dump.c:118
+#, c-format
+msgid "  Recurrence:\n"
+msgstr "  पुनरावृत्ति:\n"
+
+#: ../bin/ical-dump.c:120
+#, c-format
+msgid "    Frequency: %s\n"
+msgstr "  आवृती: %s\n"
+
+#: ../bin/ical-dump.c:123
+#, c-format
+msgid "    Until: %s\n"
+msgstr "    अझ सम्म: %s\n"
+
+#: ../bin/ical-dump.c:128
+#, c-format
+msgid "    Count: %d\n"
+msgstr "    गणना: %d\n"
+
+#: ../bin/ical-dump.c:131
+#, c-format
+msgid "    Interval: %d\n"
+msgstr "    अन्तराल: %d\n"
+
+#: ../bin/ical-dump.c:134
+#, c-format
+msgid "    Unit: %s\n"
+msgstr "    एकाइ: %s\n"
+
+#: ../bin/ical-dump.c:137
+#, c-format
+msgid "    Units: %s\n"
+msgstr "    एकाइहरू: %s\n"
+
+#: ../bin/ical-dump.c:152
+#, c-format
+msgid ""
+"Event:\n"
+"\n"
+msgstr ""
+"घटना:\n"
+"\n"
+
+#: ../bin/ical-dump.c:154
+#, c-format
+msgid ""
+"Todo item:\n"
+"\n"
+msgstr ""
+"गर्नुपर्ने वस्तु:\n"
+"\n"
+
+#: ../bin/ical-dump.c:156
+#, c-format
+msgid ""
+"Unknown component:\n"
+"\n"
+msgstr ""
+"अज्ञात अवयव:\n"
+"\n"
+
+#: ../bin/ical-dump.c:177
+#, c-format
+msgid "  Summary: %s\n"
+msgstr "  सारांश: %s\n"
+
+#: ../bin/ical-dump.c:182
+#, c-format
+msgid "  Categories: %s\n"
+msgstr "  कोटिहरू: %s\n"
+
+#: ../bin/ical-dump.c:188
+msgid "high"
+msgstr "उच्च"
+
+#: ../bin/ical-dump.c:190
+msgid "low"
+msgstr "कम"
+
+#: ../bin/ical-dump.c:192
+msgid "medium"
+msgstr "मध्यम"
+
+#: ../bin/ical-dump.c:193
+#, c-format
+msgid "  Priority: %s (%d)\n"
+msgstr "  प्राथमिकता: %s (%d)\n"
+
+#: ../bin/ical-dump.c:198
+#, c-format
+msgid "  Start date: %s\n"
+msgstr "  सुरु मिति: %s\n"
+
+#: ../bin/ical-dump.c:205
+#, c-format
+msgid "  End date: %s\n"
+msgstr "  अन्त मिति: %s\n"
+
+#: ../bin/ical-dump.c:213
+#, c-format
+msgid "  Due date: %s\n"
+msgstr "  पुरानो मिति: %s\n"
+
+#: ../bin/ical-dump.c:222
+#, c-format
+msgid "  Unique ID: %s\n"
+msgstr "  अद्धितिय आइडि: %s\n"
+
+#: ../bin/ical-dump.c:223
+#, c-format
+msgid "  Sequence: %u\n"
+msgstr "  अनुक्रम: %u\n"
+
+#: ../bin/ical-dump.c:236
+#, c-format
+msgid "  All day event\n"
+msgstr "  सबै दिन घटना\n"
+
+#: ../bin/ical-dump.c:261 ../bin/vcard-dump.c:84 ../bin/vcard-normalize.c:68
+#, c-format
+msgid "%s: invalid number of arguments\n"
+msgstr "%s: तर्कको अमान्य सङ्ख्या\n"
+
+#: ../bin/vcard-dump.c:43 ../bin/vcard-normalize.c:43
+#, c-format
+msgid "Usage: %s VCARDFILE\n"
+msgstr "प्रयोग गरिएको: %sभिकार्ड फाइल\n"
+
+#: ../bin/vcard-normalize.c:79
+#, c-format
+msgid "%s: error reading card file: %s\n"
+msgstr "%s: त्रुटि कार्ड फाइल पढ्दैछ: %s\n"
+
+#: ../bin/vcard-normalize.c:96
+#, c-format
+msgid "%s: error writing card file: %s\n"
+msgstr "%s: त्रुटि कार्ड फाइल लेख्दैछ:%s\n"
+
+#: ../mimedir/mimedir-attribute.c:131 ../mimedir/mimedir-vcard.c:298
+msgid "Name"
+msgstr "नाम"
+
+#: ../mimedir/mimedir-attribute.c:132
+msgid "The attribute's name"
+msgstr "बिशेषताको नाम"
+
+#: ../mimedir/mimedir-attribute.c:137
+msgid "Group"
+msgstr "समूह"
+
+#: ../mimedir/mimedir-attribute.c:138
+msgid "The attribute's group"
+msgstr "बिशेषताको समूह"
+
+#: ../mimedir/mimedir-attribute.c:933
+msgid "missing parameter name"
+msgstr "हराएको परिमितिको नाम"
+
+#: ../mimedir/mimedir-attribute.c:958
+msgid "missing closing quotation mark"
+msgstr "बन्द गर्ने उद्वरण चिन्ह छोडियो"
+
+#: ../mimedir/mimedir-attribute.c:983
+msgid "wrong parameter syntax"
+msgstr "गलत परिमिति वाक्य संरचना"
+
+#: ../mimedir/mimedir-attribute.c:993
+msgid "no parameter value"
+msgstr "परिमिति मान छैन"
+
+#: ../mimedir/mimedir-attribute.c:1086
+msgid "missing attribute name/group"
+msgstr "हराएको बिशेषताको नाम/समूह"
+
+#: ../mimedir/mimedir-attribute.c:1102
+msgid "no attribute name after group"
+msgstr "समूह पछि विशेषता नाम छैन"
+
+#: ../mimedir/mimedir-attribute.c:1118
+msgid "missing value delimiter"
+msgstr "हराएको मान डेलिमिटर"
+
+#: ../mimedir/mimedir-attribute.c:1134
+msgid "invalid character"
+msgstr "अमान्य क्यारेक्टर"
+
+#: ../mimedir/mimedir-attribute.c:2505 ../mimedir/mimedir-attribute.c:2514
+msgid "illegal character"
+msgstr "अमान्य क्यारेक्टर"
+
+#: ../mimedir/mimedir-attribute.h:48
+#, c-format
+msgid "syntax error (%s)"
+msgstr "सामान्य त्रुटि (%s)"
+
+#: ../mimedir/mimedir-attribute.h:49
+#, c-format
+msgid "illegal character 0x%02x for type \"%s\""
+msgstr "त्रुटि क्यारेक्टर 0x%02x प्रकारका लागि \"%s\""
+
+#: ../mimedir/mimedir-attribute.h:50
+#, c-format
+msgid "invalid format for type \"%s\" in attribute %s"
+msgstr "अमान्य ढाँचा प्रकारका लागि \"%s\" बिशेषतामा %s"
+
+#: ../mimedir/mimedir-attribute.h:51
+#, c-format
+msgid "attribute %s could not be decoded, since its encoding is unknown"
+msgstr "बिशेषता %s असङ्केतन हुन सक्दैन, यसको सङ्केतन अज्ञात छ"
+
+#: ../mimedir/mimedir-attribute.h:52
+#, c-format
+msgid "invalid value in attribute %s"
+msgstr "बिशेषतामा अवैध मान %s"
+
+#: ../mimedir/mimedir-attribute.h:53
+#, c-format
+msgid "parameter \"%s\" must not be used more than once in attribute %s"
+msgstr "बिशेषतामा परिमिति \"%s\" एक पटक भन्दा बढी प्रयोग गर्न मिल्दैन %s"
+
+#: ../mimedir/mimedir-attribute.h:54
+msgid "invalid Base64 sequence"
+msgstr "अवैध आधार६४ अनुक्रम"
+
+#: ../mimedir/mimedir-attribute.h:55
+msgid "invalid quoted-printable sequence"
+msgstr "अवैध कोटेड-प्रिन्ट गर्न मिल्ने अनुक्रम"
+
+#: ../mimedir/mimedir-attribute.h:56
+#, c-format
+msgid "attribute list of %s is too short"
+msgstr "बिशेषता सूची %s को अति छोटो छ"
+
+#: ../mimedir/mimedir-attribute.h:57
+#, c-format
+msgid "attribute list of %s is too long"
+msgstr "बिशेषता सूची %s को अति लामो छ"
+
+#: ../mimedir/mimedir-datetime.c:114 ../mimedir/mimedir-vcomponent.c:352
+msgid "Time zone identifier"
+msgstr "समय अञ्चल पहिचायक"
+
+#: ../mimedir/mimedir-datetime.c:115
+msgid "Time zone identifying string"
+msgstr "समय अञ्चल पहिचायक स्ट्रिङ"
+
+#. Translators: YYYY-MM-DD HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1081
+#, c-format
+msgid "%04d-%02d-%02d %02d:%02d:%02d"
+msgstr "%04d-%02d-%02d %02d:%02d:%02d"
+
+#. Translators: YYYY-MM-DD
+#: ../mimedir/mimedir-datetime.c:1086
+#, c-format
+msgid "%04d-%02d-%02d"
+msgstr "%04d-%02d-%02d"
+
+#. Translators: HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1090
+#, c-format
+msgid "%02d:%02d:%02d"
+msgstr "%02d:%02d:%02d"
+
+#: ../mimedir/mimedir-period.c:111
+msgid "Free/busy type"
+msgstr "स्वतन्त्र/ब्यस्त प्रकार"
+
+#: ../mimedir/mimedir-period.c:112
+msgid "Whether this object signifies a free or a busy period"
+msgstr "कि त यो वस्तुले खुला वा ब्यस्त अवधिलाई सिग्निफाइ गर्दछ"
+
+#: ../mimedir/mimedir-profile.c:114
+msgid "Profile name"
+msgstr "प्रोफाइल नाम"
+
+#: ../mimedir/mimedir-profile.c:115
+msgid "The name (type) of the profile"
+msgstr "प्रोफाइलको नाम (प्रकार)"
+
+#: ../mimedir/mimedir-profile.c:121
+msgid "Character set"
+msgstr "क्यारेक्टर सेट"
+
+#: ../mimedir/mimedir-profile.c:122
+msgid "Character set used to en-/decode this profile"
+msgstr "क्यारेक्टर यो प्रोफाइल सङ्केतन/असङ्केतन गर्न प्रयोग हुन्छ"
+
+#: ../mimedir/mimedir-profile.h:40
+#, c-format
+msgid "attribute %s defined twice"
+msgstr "बिशेषता %s दोहोरो परिभाषित"
+
+#: ../mimedir/mimedir-profile.h:41
+msgid "unexpected end of profile"
+msgstr "नसोचिएको प्रोफाइलको समाप्ति"
+
+#: ../mimedir/mimedir-profile.h:42
+#, c-format
+msgid "required attribute %s is missing"
+msgstr "आवश्यक विशेषता  %s छोडिएको छ"
+
+#: ../mimedir/mimedir-profile.h:43
+msgid "unmatched END attribute"
+msgstr "जोडा नमिल्ने समाप्ति बिशेषता"
+
+#: ../mimedir/mimedir-profile.h:44
+#, c-format
+msgid "wrong profile %s; expected %s"
+msgstr "गलत प्रोफाइल %s, सोचिएको %s"
+
+#: ../mimedir/mimedir-recurrence.c:221
+msgid "Frequency"
+msgstr "आवृती"
+
+#: ../mimedir/mimedir-recurrence.c:222
+msgid "Frequency type of this recurrency rule"
+msgstr "यो पुनरावृतिक नियमको आवृतिक प्रकार"
+
+#: ../mimedir/mimedir-recurrence.c:229
+msgid "Date of last recurrence"
+msgstr "अन्तिम पुनरावृतिको मिति"
+
+#: ../mimedir/mimedir-recurrence.c:230
+msgid "The date of the last recurrence of an event"
+msgstr "एउटा घटनाको अन्तिम पुनरावृतिको मिति"
+
+#: ../mimedir/mimedir-recurrence.c:235
+msgid "Number of recurrences"
+msgstr "पुनरावृतिको नम्बर"
+
+#: ../mimedir/mimedir-recurrence.c:236
+msgid "The number of recurrences of an event"
+msgstr "एउटा घटनाको पुनरावृतिको नम्बर"
+
+#: ../mimedir/mimedir-recurrence.c:243
+msgid "Recurrence interval"
+msgstr "पुनरावृति अन्तराल"
+
+#: ../mimedir/mimedir-recurrence.c:244
+msgid "The interval of recurrences of an event"
+msgstr "एउटा घटनाको पुनरावृतिको अन्तराल"
+
+#: ../mimedir/mimedir-recurrence.c:251
+msgid "Recurrence unit"
+msgstr "पुनरावृति एकाइ"
+
+#: ../mimedir/mimedir-recurrence.c:252
+msgid "By which unit a recurrence should be repeated"
+msgstr "जस द्धारा एकाइ एउटा पुनरावृति दोहोरिनु पर्दछ"
+
+#: ../mimedir/mimedir-recurrence.c:259
+msgid "Recurrence units"
+msgstr "पुनरावृती एकाइहरू"
+
+#: ../mimedir/mimedir-recurrence.c:260
+msgid "List of units by which a recurrence should be repeated"
+msgstr "एकाइहरूको सूची जसद्धारा एउटा पुनरावृती दोहोरिनु पर्दछ"
+
+#: ../mimedir/mimedir-valarm.c:548
+#, c-format
+msgid ""
+"Reminder of your appointment:\n"
+"\n"
+"%s\n"
+"%s"
+msgstr ""
+"तपाईँको भेट्ने निम्तो सम्झाउने:\n"
+"\n"
+"%s\n"
+"%s"
+
+#: ../mimedir/mimedir-vcal.c:148
+msgid "Method"
+msgstr "विधि"
+
+#: ../mimedir/mimedir-vcal.c:149
+msgid "The vCalendar's method"
+msgstr "भि पात्रो विधि"
+
+#: ../mimedir/mimedir-vcal.c:154 ../mimedir/mimedir-vcard.c:505
+msgid "Product identifier"
+msgstr "उत्पादन पहिचायक"
+
+#: ../mimedir/mimedir-vcal.c:155
+msgid ""
+"The product identifier of the vCalendar. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr ""
+"भिपात्रोको उत्पादन पहिचायक। नयाँ उत्पादन गरिएको वस्तुहरूको केसमा, यो लिबमिमेडिरको "
+"उत्पादन पहिचायक हो"
+
+#: ../mimedir/mimedir-vcal.c:384 ../mimedir/mimedir-vcard.c:2411
+#: ../mimedir/mimedir-vcomponent.c:2111
+#, c-format
+msgid "The profile contains the unsupported custom attribute %s.\n"
+msgstr "प्रोफाइलले समर्थन नगर्ने अनुकूलन विशेषता  समावेश गर्दछ %s\n"
+
+#: ../mimedir/mimedir-vcal.c:387 ../mimedir/mimedir-vcard.c:2414
+#: ../mimedir/mimedir-vcomponent.c:2114
+#, c-format
+msgid "The profile contains the unknown attribute %s.\n"
+msgstr "प्रोफाइलले अज्ञात विशेषता समावेश गर्दछ %s\n"
+
+#: ../mimedir/mimedir-vcal.c:432 ../mimedir/mimedir-vcal.c:454
+#: ../mimedir/mimedir-vcal.c:482 ../mimedir/mimedir-vcal.c:506
+#, c-format
+msgid "Error reading calendar file %s: %s!"
+msgstr "त्रुटि पात्रो फाइल पढ्दा %s: %s !"
+
+#: ../mimedir/mimedir-vcard-address.c:167
+msgid "Title"
+msgstr "शीर्षक"
+
+#: ../mimedir/mimedir-vcard-address.c:168
+msgid "A one-line string with the most important address information"
+msgstr "एक-रेखा स्ट्रिङ मूख्य महत्वपूर्ण ठेगाना सूचना सहित"
+
+#: ../mimedir/mimedir-vcard-address.c:174
+msgid "Freeform address"
+msgstr "स्वतन्त्र फारम ठेगाना"
+
+#: ../mimedir/mimedir-vcard-address.c:175
+msgid "A freeform address string"
+msgstr "एउटा स्वतन्त्र फारम ठेगाना स्ट्रिङ"
+
+#: ../mimedir/mimedir-vcard-address.c:180
+msgid "Post office box"
+msgstr "पोस्ट अफिस बक्स"
+
+#: ../mimedir/mimedir-vcard-address.c:181
+msgid "The addresses post office box"
+msgstr "ठेगानाको पोस्ट अफिस बक्स"
+
+#: ../mimedir/mimedir-vcard-address.c:186
+msgid "Extended address"
+msgstr "विस्तृत ठेगाना"
+
+#: ../mimedir/mimedir-vcard-address.c:187
+msgid "Extended address string"
+msgstr "विस्तृत ठेगाना स्ट्रिङ"
+
+#: ../mimedir/mimedir-vcard-address.c:192
+msgid "Street"
+msgstr "गल्ली"
+
+#: ../mimedir/mimedir-vcard-address.c:193
+msgid "Street address"
+msgstr "गल्ली ठेगाना"
+
+#: ../mimedir/mimedir-vcard-address.c:198
+msgid "Locality"
+msgstr "स्थानीयता"
+
+#: ../mimedir/mimedir-vcard-address.c:199
+msgid "Locality (e.g. city, town, etc.)"
+msgstr "स्थानीयता (उदाहरण. सहर, टोल, इत्यादि)"
+
+#: ../mimedir/mimedir-vcard-address.c:204
+msgid "Region"
+msgstr "क्षेत्र"
+
+#: ../mimedir/mimedir-vcard-address.c:205
+msgid "Region (e.g. state)"
+msgstr "क्षेत्र (उदाहरण राज्य)"
+
+#: ../mimedir/mimedir-vcard-address.c:210
+msgid "Postal code"
+msgstr "पोष्टल सङ्केत"
+
+#: ../mimedir/mimedir-vcard-address.c:211
+msgid "Postal code (freeform string)"
+msgstr "पोष्टल सङ्केत (फ्रिफर्म स्ट्रिङ)"
+
+#: ../mimedir/mimedir-vcard-address.c:216
+#: ../mimedir/mimedir-vcard-address.c:217
+msgid "Country"
+msgstr "देश"
+
+#: ../mimedir/mimedir-vcard-address.c:222
+msgid "Domestic"
+msgstr "घरेलू"
+
+#: ../mimedir/mimedir-vcard-address.c:223
+msgid "Whether this is a domestic address"
+msgstr "कतै यो घरेलू ठेगाना हो कि"
+
+#: ../mimedir/mimedir-vcard-address.c:228
+msgid "International"
+msgstr "अन्तर्राष्ट्रिय"
+
+#: ../mimedir/mimedir-vcard-address.c:229
+msgid "Whether this is an international address"
+msgstr "कतै यो अन्तराष्ट्रिय ठेगाना हो"
+
+#: ../mimedir/mimedir-vcard-address.c:234
+msgid "Postal"
+msgstr "पोस्टल"
+
+#: ../mimedir/mimedir-vcard-address.c:235
+msgid "Whether this is a postal address"
+msgstr "कतै यो पोष्टल ठेगाना हो"
+
+#: ../mimedir/mimedir-vcard-address.c:240
+msgid "Parcel"
+msgstr "पार्सल"
+
+#: ../mimedir/mimedir-vcard-address.c:241
+msgid "Whether parcels can be received at this address"
+msgstr "कतै पार्सल यो ठेगानामा प्राप्त गर्न सकिन्छ कि"
+
+#: ../mimedir/mimedir-vcard-address.c:246 ../mimedir/mimedir-vcard-email.c:163
+#: ../mimedir/mimedir-vcard-phone.c:160
+msgid "Home"
+msgstr "गृह"
+
+#: ../mimedir/mimedir-vcard-address.c:247
+msgid "Whether this is a home address"
+msgstr "कतै यो गृह ठेगाना हो कि"
+
+#: ../mimedir/mimedir-vcard-address.c:252 ../mimedir/mimedir-vcard-email.c:169
+#: ../mimedir/mimedir-vcard-phone.c:166
+msgid "Work"
+msgstr "काम"
+
+#: ../mimedir/mimedir-vcard-address.c:253
+msgid "Whether this is a work address"
+msgstr "कतै यो काम ठेगाना हो"
+
+#: ../mimedir/mimedir-vcard-address.c:258 ../mimedir/mimedir-vcard-email.c:157
+#: ../mimedir/mimedir-vcard-phone.c:232
+msgid "Preferred"
+msgstr "रुचाइएको"
+
+#: ../mimedir/mimedir-vcard-address.c:259
+msgid "Whether this is the preferred address"
+msgstr "कतै यो रुचाइएको ठेगाना हो कि"
+
+#: ../mimedir/mimedir-vcard-address.c:572
+#, c-format
+msgid "The %s attribute contains too many elements.\n"
+msgstr "बिशेषता %s अति धेरै तत्वहरू समावेश गर्दछ।\n"
+
+#: ../mimedir/mimedir-vcard-address.c:772
+#, c-format
+msgid "The address field is of unknown type %s.\n"
+msgstr "ठेगाना फाँट अज्ञात प्रकारको छ %s.\n"
+
+#. Translators: pcode city
+#: ../mimedir/mimedir-vcard-address.c:864
+#: ../mimedir/mimedir-vcard-address.c:873
+#, c-format
+msgid "%s %s"
+msgstr "%s %s"
+
+#. Translators: city, region
+#: ../mimedir/mimedir-vcard-address.c:871
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
+#: ../mimedir/mimedir-vcard-address.c:914 ../mimedir/mimedir-vcard-email.c:538
+#: ../mimedir/mimedir-vcard-phone.c:695
+msgid "preferred"
+msgstr "रुचाइएको"
+
+#: ../mimedir/mimedir-vcard-address.c:919
+msgid "domestic"
+msgstr "घरेलू"
+
+#: ../mimedir/mimedir-vcard-address.c:924
+msgid "international"
+msgstr "अन्तराष्ट्रिय"
+
+#: ../mimedir/mimedir-vcard-address.c:929
+msgid "postal"
+msgstr "पोस्टल"
+
+#: ../mimedir/mimedir-vcard-address.c:934
+msgid "parcel"
+msgstr "पार्सल"
+
+#: ../mimedir/mimedir-vcard-address.c:939 ../mimedir/mimedir-vcard-email.c:560
+#: ../mimedir/mimedir-vcard-phone.c:701
+msgid "home"
+msgstr "गृह"
+
+#: ../mimedir/mimedir-vcard-address.c:944 ../mimedir/mimedir-vcard-email.c:566
+#: ../mimedir/mimedir-vcard-phone.c:706
+msgid "work"
+msgstr "काम"
+
+#. Translators: Short address format: "locality/street"
+#: ../mimedir/mimedir-vcard-address.c:996
+#, c-format
+msgid "%s/%s"
+msgstr "%s/%s"
+
+#: ../mimedir/mimedir-vcard-address.c:1002
+msgid "<unknown>"
+msgstr "<unknown>"
+
+#: ../mimedir/mimedir-vcard-email.c:142 ../mimedir/mimedir-vcard.c:368
+msgid "Address"
+msgstr "ठेगाना"
+
+#: ../mimedir/mimedir-vcard-email.c:143
+msgid "The e-mail address"
+msgstr "इमेल ठेगाना"
+
+#: ../mimedir/mimedir-vcard-email.c:149
+msgid "Type"
+msgstr "प्रकार"
+
+#: ../mimedir/mimedir-vcard-email.c:150
+msgid "Type of this e-mail address"
+msgstr "यस इमेल ठेगानाको प्रकार"
+
+#: ../mimedir/mimedir-vcard-email.c:158
+msgid "Whether this is the preferred e-mail address"
+msgstr "कतै यो रोजिएको इमेल ठेगाना हो कि"
+
+#: ../mimedir/mimedir-vcard-email.c:164
+msgid "Whether is a home e-mail address"
+msgstr "कतै यो गृह इमेल ठेगाना हो कि"
+
+#: ../mimedir/mimedir-vcard-email.c:170
+msgid "Whether this is an e-mail address at work"
+msgstr "कतै यो काममा एउटा इमेल ठेगाना हो कि"
+
+#: ../mimedir/mimedir-vcard-email.c:442
+#, c-format
+msgid "The email field is of unknown type %s.\n"
+msgstr "इमेल फाँट अज्ञात प्रकारको छ %s.\n"
+
+#: ../mimedir/mimedir-vcard-email.c:548
+msgid "Internet"
+msgstr "इन्टरनेट"
+
+#: ../mimedir/mimedir-vcard-email.c:553
+msgid "X.400"
+msgstr "एक्स ४००"
+
+#: ../mimedir/mimedir-vcard-phone.c:153
+msgid "Number"
+msgstr "नम्बर"
+
+#: ../mimedir/mimedir-vcard-phone.c:154
+msgid "The telephone number (freeform string)"
+msgstr "टेलिफोन नम्बर (स्वतन्त्र फारम स्ट्रिङ)"
+
+#: ../mimedir/mimedir-vcard-phone.c:161
+msgid "Whether this is a home phone number"
+msgstr "कतै यो घरको फोन नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:167
+msgid "Whether this is a phone number at work"
+msgstr "कतै यो कामको फोन नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:172
+msgid "Voice"
+msgstr "स्वर"
+
+#: ../mimedir/mimedir-vcard-phone.c:173
+msgid "Whether this is a voice number"
+msgstr "कतै यो आवाज नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:178
+msgid "Fax"
+msgstr "फ्याक्स"
+
+#: ../mimedir/mimedir-vcard-phone.c:179
+msgid "Whether this is a facsimile number"
+msgstr "कतै यो फ्यासिमिल नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:184 ../mimedir/mimedir-vcard-phone.c:721
+msgid "BBS"
+msgstr "बि बि एस"
+
+#: ../mimedir/mimedir-vcard-phone.c:185
+msgid "Whether this is a bulletin board system number"
+msgstr "कतै यो बुलेटिन बोर्ड प्रणाली नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:190
+msgid "Modem"
+msgstr "मोडेम"
+
+#: ../mimedir/mimedir-vcard-phone.c:191
+msgid "Whether this is a modem number"
+msgstr "कतै यो मोडेम नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:196
+msgid "Pager"
+msgstr "पेजर"
+
+#: ../mimedir/mimedir-vcard-phone.c:197
+msgid "Whether this is a pager number"
+msgstr "कतै यो पेजर नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:202
+msgid "Video"
+msgstr "भिडियो"
+
+#: ../mimedir/mimedir-vcard-phone.c:203
+msgid "Whether this is a video phone number"
+msgstr "कतै यो भिडियो फोन नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:208
+msgid "Cell"
+msgstr "सेल"
+
+#: ../mimedir/mimedir-vcard-phone.c:209
+msgid "Whether this is a cell (mobile) phone number"
+msgstr "कतै यो सेल (मोबाइल) फोन नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:214
+msgid "Car"
+msgstr "कार"
+
+#: ../mimedir/mimedir-vcard-phone.c:215
+msgid "Whether this is car phone number"
+msgstr "कतै यो कार फोन नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:220 ../mimedir/mimedir-vcard-phone.c:756
+msgid "ISDN"
+msgstr "आई एस डि एन"
+
+#: ../mimedir/mimedir-vcard-phone.c:221
+msgid "Whether this is a ISDN number"
+msgstr "कतै यो आईएसडिएन नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:226 ../mimedir/mimedir-vcard-phone.c:761
+msgid "PCS"
+msgstr "पि सि एस"
+
+#: ../mimedir/mimedir-vcard-phone.c:227
+msgid "Whether this is a PCS number"
+msgstr "कतै यो पिसिएस नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:233
+msgid "Whether this is the preferred number"
+msgstr "कतै यो रोजिएको नम्बर हो कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:238
+msgid "Message"
+msgstr "सन्देश"
+
+#: ../mimedir/mimedir-vcard-phone.c:239
+msgid "Whether this number has a voice recorder"
+msgstr "कतै यो नम्बरमा स्वर रेकर्डर छ कि"
+
+#: ../mimedir/mimedir-vcard-phone.c:588
+#, c-format
+msgid "The phone field is of unknown type %s.\n"
+msgstr "फोन फाँट अज्ञात प्रकारको हो %s.\n"
+
+#: ../mimedir/mimedir-vcard-phone.c:711
+msgid "voice"
+msgstr "स्वर"
+
+#: ../mimedir/mimedir-vcard-phone.c:716
+msgid "fax"
+msgstr "फ्याक्स"
+
+#: ../mimedir/mimedir-vcard-phone.c:726
+msgid "modem"
+msgstr "मोडेम"
+
+#: ../mimedir/mimedir-vcard-phone.c:731
+msgid "pager"
+msgstr "पेजर"
+
+#: ../mimedir/mimedir-vcard-phone.c:736
+msgid "video"
+msgstr "भिडियो"
+
+#: ../mimedir/mimedir-vcard-phone.c:741
+msgid "voice message"
+msgstr "स्वर सन्देश"
+
+#: ../mimedir/mimedir-vcard-phone.c:746
+msgid "cell phone"
+msgstr "सेल फोन"
+
+#: ../mimedir/mimedir-vcard-phone.c:751
+msgid "car phone"
+msgstr "कार फोन"
+
+#: ../mimedir/mimedir-vcard.c:299
+msgid "The spelled out name full name of this person"
+msgstr "यो ब्यक्त्तिको पूरा नाम उच्चारण गर्नुहोस्"
+
+#: ../mimedir/mimedir-vcard.c:304
+msgid "Family name"
+msgstr "परिवार नाम"
+
+#: ../mimedir/mimedir-vcard.c:305
+msgid "The family name of this person"
+msgstr "यो ब्यक्त्तिको परिवार नाम"
+
+#: ../mimedir/mimedir-vcard.c:310
+msgid "Given name"
+msgstr "दिइएको नाम"
+
+#: ../mimedir/mimedir-vcard.c:311
+msgid "The given name of this person"
+msgstr "यो ब्यक्त्तिको दिइएको नाम"
+
+#: ../mimedir/mimedir-vcard.c:316
+msgid "Middle name"
+msgstr "मध्य नाम"
+
+#: ../mimedir/mimedir-vcard.c:317
+msgid "The middle name or middle initials of this person"
+msgstr "यो ब्यक्त्तिको मध्य नाम वा मध्य इनिसियल"
+
+#: ../mimedir/mimedir-vcard.c:322
+msgid "Prefix"
+msgstr "उपसर्ग"
+
+#: ../mimedir/mimedir-vcard.c:323
+msgid "The name prefix (e.g. honorific prefix) of this person"
+msgstr "यो ब्यक्त्तिको नाम उपसर्ग (उदाहरण होनोरिफिक उपसर्ग)"
+
+#: ../mimedir/mimedir-vcard.c:328
+msgid "Suffix"
+msgstr "प्रतत्य"
+
+#: ../mimedir/mimedir-vcard.c:329
+msgid "The name suffix of this person"
+msgstr "यो ब्यक्त्तिको नाम प्रतत्य"
+
+#: ../mimedir/mimedir-vcard.c:334
+msgid "Nickname list"
+msgstr "उपनाम सूची"
+
+#: ../mimedir/mimedir-vcard.c:335
+msgid ""
+"List of all nick names. This is a GList *, where the elements are of type "
+"const gchar *"
+msgstr "उपनामहरूको सबै सूची. यो जिसूची हो *,जहाँ तत्व अचल जिक्यारेक्टर प्रकारको हुन्छ *"
+
+#: ../mimedir/mimedir-vcard.c:339
+msgid "Nick name"
+msgstr "उपनाम"
+
+#: ../mimedir/mimedir-vcard.c:340
+msgid "The first nick name"
+msgstr "पहिलो उपनाम"
+
+#. FIXME: this is useless
+#: ../mimedir/mimedir-vcard.c:345
+msgid "Photo"
+msgstr "तस्वीर"
+
+#: ../mimedir/mimedir-vcard.c:346
+msgid "Pointer to a byte stream, representing an image of the person"
+msgstr "बाइट स्ट्रिममा सूचक, ब्यक्त्तिको छवि दर्साउँदछ"
+
+#: ../mimedir/mimedir-vcard.c:350
+msgid "Photo URI"
+msgstr "तस्वीर URIइ"
+
+#: ../mimedir/mimedir-vcard.c:351
+msgid "URI to an image of this person"
+msgstr "यो ब्यक्त्तिको एउटा छविमा युआरआइ"
+
+#: ../mimedir/mimedir-vcard.c:356
+msgid "Birthday"
+msgstr "जन्मदिन"
+
+#: ../mimedir/mimedir-vcard.c:357
+msgid "The person's birthday"
+msgstr "ब्यक्त्तिको जन्मदिन"
+
+#: ../mimedir/mimedir-vcard.c:363
+msgid "Address list"
+msgstr "ठेगाना सूची"
+
+#: ../mimedir/mimedir-vcard.c:364
+msgid ""
+"List of all addresses. This is a GList *, where the elements are of type "
+"MIMEDirAddress *"
+msgstr "सबै ठेगानाहरूको सूची. यो जिसूची हो *, जहाँ तत्व माइमडिर ठेगानाको प्रकार हुन्छ *"
+
+#: ../mimedir/mimedir-vcard.c:369
+msgid "The preferred address"
+msgstr "उपयुक्त्त ठेगाना"
+
+#: ../mimedir/mimedir-vcard.c:375
+msgid "Phone number list"
+msgstr "फोन नम्बर सूची"
+
+#: ../mimedir/mimedir-vcard.c:376
+msgid ""
+"List of all phone numbers. This is a GList *, where the elements are of type "
+"MIMEDirPhone *"
+msgstr "सबै फोन नम्बरहरूको सूची. यो जिसूची हो *, जहाँ तत्व माइमडिर फोन प्रकार हुन्छ *"
+
+#: ../mimedir/mimedir-vcard.c:380
+msgid "Phone number"
+msgstr "फोन नम्बर"
+
+#: ../mimedir/mimedir-vcard.c:381
+msgid "The preferred phone number"
+msgstr "उपयुक्त्त फोन नम्बर"
+
+#: ../mimedir/mimedir-vcard.c:386
+msgid "E-mail address list"
+msgstr "इमेल ठेगाना सूची"
+
+#: ../mimedir/mimedir-vcard.c:387
+msgid ""
+"List of all e-mail addresses. This is a GList *, where the elements are of "
+"type MIMEDirEmail *"
+msgstr "सबै इमेल ठेगानाहरूको सूची. यो जिसूची हो *, जहाँ तत्व माइमडिर इमेल प्रकारको हुन्छ *"
+
+#: ../mimedir/mimedir-vcard.c:391
+msgid "E-mail address"
+msgstr "इमेल ठेगाना"
+
+#: ../mimedir/mimedir-vcard.c:392
+msgid "The preferred e-mail address"
+msgstr "उपयुक्त्त इमेल ठेगाना"
+
+#: ../mimedir/mimedir-vcard.c:397
+msgid "Mailer"
+msgstr "प्रेषक"
+
+#: ../mimedir/mimedir-vcard.c:398
+msgid "The mailing program used by this person"
+msgstr "यो ब्यक्त्तिद्वारा प्रयोग गरिएको पत्राचार कार्यक्रम"
+
+#: ../mimedir/mimedir-vcard.c:404
+msgid "Time zone"
+msgstr "क्षेत्र समय"
+
+#: ../mimedir/mimedir-vcard.c:405
+msgid "The time zone this person lives in"
+msgstr "यो ब्यक्त्ति बस्ने क्षेत्र समय"
+
+#: ../mimedir/mimedir-vcard.c:412
+msgid "Time zone string"
+msgstr "क्षेत्र समय स्ट्रिङ"
+
+#: ../mimedir/mimedir-vcard.c:413
+msgid "The time zone this person lives in (deprecated string representation)"
+msgstr "यो ब्यक्त्ति बस्ने समय समय (डेप्रिकेटेड स्ट्रिङ प्रदर्शनी)"
+
+#: ../mimedir/mimedir-vcard.c:418
+msgid "Latitude"
+msgstr "अक्षांश"
+
+#: ../mimedir/mimedir-vcard.c:419
+msgid "Latitude of this person's residence"
+msgstr "यो ब्यक्त्तिको घरको अक्षांश"
+
+#: ../mimedir/mimedir-vcard.c:426
+msgid "Longitude"
+msgstr "देशान्तर"
+
+#: ../mimedir/mimedir-vcard.c:427
+msgid "Longitude of this person's residence"
+msgstr "यो ब्यक्त्तिको घरको देशान्तर"
+
+#: ../mimedir/mimedir-vcard.c:435
+msgid "Job title"
+msgstr "काम शीर्षक"
+
+#: ../mimedir/mimedir-vcard.c:436
+msgid "The person's job title"
+msgstr "ब्यक्त्तिको काम शीर्षक"
+
+#: ../mimedir/mimedir-vcard.c:441
+msgid "Role"
+msgstr "भुमिका"
+
+#: ../mimedir/mimedir-vcard.c:442
+msgid "The person's job role"
+msgstr "ब्यक्त्तिको कार्य भूमिका"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:447
+msgid "Logo"
+msgstr "लोगो"
+
+#: ../mimedir/mimedir-vcard.c:448
+msgid "Pointer to a byte stream, representing the logo of the person's company"
+msgstr "बाइट स्ट्रिममा सूचक, ब्यक्त्तिको कम्पनीको लोगो दर्साउँदछ"
+
+#: ../mimedir/mimedir-vcard.c:452
+msgid "Logo URI"
+msgstr "लोगो युआरआइ"
+
+#: ../mimedir/mimedir-vcard.c:453
+msgid "URI to the logo of this person's company"
+msgstr "यो ब्यक्त्तिको कम्पनीको युआरआइ लोगो"
+
+#: ../mimedir/mimedir-vcard.c:458
+msgid "Agent"
+msgstr "प्रतिनिधि"
+
+#: ../mimedir/mimedir-vcard.c:459
+msgid "A person, acting for the person described in this card"
+msgstr "ब्यक्त्ति, यस कार्डमा वर्णन गरिएको ब्यक्त्ति"
+
+#: ../mimedir/mimedir-vcard.c:464
+msgid "Agent URI"
+msgstr "प्रतिनिधि युआरआइ"
+
+#: ../mimedir/mimedir-vcard.c:465
+msgid ""
+"URI to the description of a person, acting for the person described in this "
+"card"
+msgstr "युआरआइ ब्यक्त्तिको वर्णनका लागि, यस कार्डमा वर्णन गरिएको ब्यक्त्ति"
+
+#: ../mimedir/mimedir-vcard.c:470
+msgid "Agent string"
+msgstr "प्रतिनिधि स्ट्रिङ"
+
+#: ../mimedir/mimedir-vcard.c:471
+msgid ""
+"A person, acting for the person described in this card (deprecated string "
+"representation)"
+msgstr "ब्यक्त्ति, यस कार्डमा वर्णन गरिएको ब्यक्त्ति (स्ट्रिङ प्रदर्शनी डेप्रिकेटेड )"
+
+#: ../mimedir/mimedir-vcard.c:476
+msgid "Organization list"
+msgstr "संस्था सूची"
+
+#: ../mimedir/mimedir-vcard.c:477
+msgid ""
+"List of all organization this person belongs to. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr "यस ब्यक्त्तिसँग सम्बन्धित सबै संस्थाको सूची। यो जिसूची हो *, जहाँ तत्व जिक्यारेक्टर हो *'s"
+
+#: ../mimedir/mimedir-vcard.c:481
+msgid "Organization"
+msgstr "संस्था"
+
+#: ../mimedir/mimedir-vcard.c:482
+msgid "The person's first organization"
+msgstr "ब्यक्त्तिको पहिलो संस्था"
+
+#: ../mimedir/mimedir-vcard.c:488 ../mimedir/mimedir-vcomponent.c:266
+msgid "Category list"
+msgstr "समूह सूची"
+
+#: ../mimedir/mimedir-vcard.c:489
+msgid ""
+"List of all categories of this person. This is a GList *, where the elements "
+"are gchar *'s"
+msgstr "यस ब्यक्त्तिको सबै कोटिहरू। यो जिसीची हो *, जहाँ तत्व जिक्यारेक्टर हुन्छ *'s"
+
+#: ../mimedir/mimedir-vcard.c:493
+msgid "Categories"
+msgstr "कोटिहरू"
+
+#: ../mimedir/mimedir-vcard.c:494
+msgid "String representation of this person's categories"
+msgstr "यो ब्यक्त्तिको कोटिहरूको स्ट्रिङ प्रदर्शनी"
+
+#: ../mimedir/mimedir-vcard.c:499
+msgid "Note"
+msgstr "द्रष्टव्य"
+
+#: ../mimedir/mimedir-vcard.c:500
+msgid "Additional comments"
+msgstr "थप टिप्पणीहरु"
+
+#: ../mimedir/mimedir-vcard.c:506
+msgid ""
+"The product identifier of the vCard. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr ""
+"भिकार्डको उत्पादन पहिचायक। नयाँ निर्माण गरिएको वस्तुहरूको केसमा, यो लिब्मेमिडिरको "
+"उत्पादन पहिचायक हो"
+
+#: ../mimedir/mimedir-vcard.c:511
+msgid "Revision"
+msgstr "पूर्वावलोकन"
+
+#: ../mimedir/mimedir-vcard.c:512
+msgid "Card's revision"
+msgstr "कार्डको पूर्वावलोकन"
+
+#: ../mimedir/mimedir-vcard.c:517
+msgid "Sort string"
+msgstr "क्रमबद्ध स्ट्रिङ"
+
+#: ../mimedir/mimedir-vcard.c:518
+msgid "String that defines this card's sort order"
+msgstr "यो कार्डको क्रमबद्व अर्डर परिभाषित गर्ने स्ट्रिङ"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:523
+msgid "Sound"
+msgstr "ध्वनि"
+
+#: ../mimedir/mimedir-vcard.c:524
+msgid "Pointer to a byte stream, representing a sound file"
+msgstr "बाइट स्ट्रिमका लागि सूचक, ध्वनि फाइल दर्साउने"
+
+#: ../mimedir/mimedir-vcard.c:528
+msgid "Sound URI"
+msgstr "ध्वनि युआरआइ"
+
+#: ../mimedir/mimedir-vcard.c:529
+msgid "URI to a sound file"
+msgstr "युआरआइ ध्वनि फाइलमा"
+
+#: ../mimedir/mimedir-vcard.c:534
+msgid "Unique Identifier"
+msgstr "अनौंठो पहिचायक"
+
+#: ../mimedir/mimedir-vcard.c:535
+msgid "A unique identifier for this card"
+msgstr "यो कार्डका लागि अनौंठो पहिचायक"
+
+#: ../mimedir/mimedir-vcard.c:540
+msgid "URL"
+msgstr "यू आर एल"
+
+#: ../mimedir/mimedir-vcard.c:541
+msgid "An alternate URL for this resource"
+msgstr "यो संसाधनका लागि वैकल्पिक यू आर एल"
+
+#: ../mimedir/mimedir-vcard.c:547
+msgid "Classification"
+msgstr "वर्गिकरण"
+
+#: ../mimedir/mimedir-vcard.c:548
+msgid "The security classfication of this card"
+msgstr "यो कार्डको सुरक्षित बर्गिकरण"
+
+#: ../mimedir/mimedir-vcard.c:553
+msgid "Public key list"
+msgstr "सार्वजनिक कुञ्जी सूची"
+
+#: ../mimedir/mimedir-vcard.c:554
+msgid ""
+"List of this person's public keys. This is a GList *, where the elements are "
+"MIMEDirVCardKeys"
+msgstr "यो ब्यक्त्तिको सार्वजनिक कुञ्जीहरू। यो जिसूची हो *, जहाँ तत्व माइमडिरभि कार्ड कुञ्जीहरू हुन्छन्"
+
+#: ../mimedir/mimedir-vcard.c:558
+msgid "Public key"
+msgstr "सार्वजनिक कुञ्जी"
+
+#: ../mimedir/mimedir-vcard.c:559
+msgid "This person's first public key"
+msgstr "यो ब्यक्त्तिको पहिलो सार्वजनिक कुञ्जी"
+
+#: ../mimedir/mimedir-vcard.c:564
+msgid "Key type"
+msgstr "कुञ्जी प्रकार"
+
+#: ../mimedir/mimedir-vcard.c:565
+msgid "Type of the first public key"
+msgstr "पहिलो सार्वजनिक कुञ्जीको प्रकार"
+
+#: ../mimedir/mimedir-vcard.c:1474 ../mimedir/mimedir-vcard.c:1496
+#: ../mimedir/mimedir-vcard.c:1524 ../mimedir/mimedir-vcard.c:1548
+#, c-format
+msgid "Error reading card file %s: %s!"
+msgstr "त्रुटि कार्ड फाइल पढ्दै %s: %s!"
+
+#: ../mimedir/mimedir-vcard.c:1671
+#, c-format
+msgid "Error writing card file %s: %s!"
+msgstr "त्रुटि कार्ड फाइल लेख्दै %s: %s!"
+
+#: ../mimedir/mimedir-vcard.c:3409
+#, c-format
+msgid "Name: %s\n"
+msgstr "नाम: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3411
+msgid "Name\n"
+msgstr "नाम\n"
+
+#: ../mimedir/mimedir-vcard.c:3413
+#, c-format
+msgid "  Prefix:     %s\n"
+msgstr "  उपसर्ग:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3415
+#, c-format
+msgid "  Given:      %s\n"
+msgstr "  दिइएको:      %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3417
+#, c-format
+msgid "  Additional: %s\n"
+msgstr "  थप: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3419
+#, c-format
+msgid "  Family:     %s\n"
+msgstr "  परिवार:      %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3421
+#, c-format
+msgid "  Suffix:     %s\n"
+msgstr "  प्रतत्य:      %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3427
+#, c-format
+msgid "Birth Date: %04d-%02d-%02d\n"
+msgstr "जन्म मिति: %04d-%02d-%02d\n"
+
+#: ../mimedir/mimedir-vcard.c:3452
+#, c-format
+msgid "Address label (%s):\n"
+msgstr "ठेगाना लेबुल (%s):\n"
+
+#: ../mimedir/mimedir-vcard.c:3472
+#, c-format
+msgid "Address (%s):\n"
+msgstr "ठेगाना (%s):\n"
+
+#: ../mimedir/mimedir-vcard.c:3486
+#, c-format
+msgid "  Postal Box:  %s\n"
+msgstr "  पत्र मञ्जुषा:  %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3488
+#, c-format
+msgid "  Extended:    %s\n"
+msgstr "  विस्तृत:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3490
+#, c-format
+msgid "  Street:      %s\n"
+msgstr "  गल्ली:       %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3492
+#, c-format
+msgid "  City:        %s\n"
+msgstr "  सहर:        %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3494
+#, c-format
+msgid "  Region:      %s\n"
+msgstr "  प्रदेश:        %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3496
+#, c-format
+msgid "  Postal Code: %s\n"
+msgstr "  पोष्टल सङ्केत: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3498
+#, c-format
+msgid "  Country:     %s\n"
+msgstr "  देश:      %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3518
+msgid "Telephone:\n"
+msgstr "टेलिफोन:\n"
+
+#: ../mimedir/mimedir-vcard.c:3542
+#, c-format
+msgid "Telephone: %s (%s)\n"
+msgstr "टेलिफोन: %s (%s)\n"
+
+#: ../mimedir/mimedir-vcard.c:3556
+msgid "E-mail:\n"
+msgstr "इमेल:\n"
+
+#: ../mimedir/mimedir-vcard.c:3580
+#, c-format
+msgid "E-mail: %s (%s)\n"
+msgstr "इमेल: %s (%s)\n"
+
+#: ../mimedir/mimedir-vcard.c:3602
+#, c-format
+msgid "Time zone: %c%02d:%02d\n"
+msgstr "क्षेत्र समय: %c%02d:%02d\n"
+
+#: ../mimedir/mimedir-vcard.c:3611
+#, c-format
+msgid "Location: %.2f,%.2f\n"
+msgstr "स्थान: %.2f,%.2f\n"
+
+#: ../mimedir/mimedir-vcard.c:3620
+#, c-format
+msgid "Organization: %s\n"
+msgstr "संस्था: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3625
+#, c-format
+msgid "Job title: %s\n"
+msgstr "काम शीर्षक: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3628
+#, c-format
+msgid "Business role: %s\n"
+msgstr "व्यापार भूमिका: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3638
+#, c-format
+msgid "Categories: %s\n"
+msgstr "कोटिहरू: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3643
+#, c-format
+msgid "Comment: %s\n"
+msgstr "टिप्पणि: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3646
+#, c-format
+msgid "Homepage: %s\n"
+msgstr "गृहपृष्ठ: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3649
+#, c-format
+msgid "Unique string: %s\n"
+msgstr "अनौंठो स्ट्रिङ: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3659
+msgid "X.509"
+msgstr "एक्स.५०९"
+
+#: ../mimedir/mimedir-vcard.c:3662
+msgid "PGP"
+msgstr "पिजिपि"
+
+#: ../mimedir/mimedir-vcard.c:3665
+msgid "yes"
+msgstr "हुन्छ"
+
+#: ../mimedir/mimedir-vcard.c:3669
+#, c-format
+msgid "Public Key: %s\n"
+msgstr "सार्वजनिक कुञ्जी: %s\n"
+
+#: ../mimedir/mimedir-vcomponent.c:267
+msgid ""
+"List of all categories of this component. This is a GList *, where the "
+"elements are gchar *'s"
+msgstr "यस अवयवका सबै कोटिहरूको सूची। यो जिसूची हो *, जहाँ तत्व जिक्यारेक्टर हुन्छ *'s"
+
+#: ../mimedir/mimedir-vcomponent.c:271
+msgid "Comment list"
+msgstr "टिप्पणि सूची"
+
+#: ../mimedir/mimedir-vcomponent.c:272
+msgid ""
+"List of all additional comments for this component. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr "यस अवयबका लागि सबै थप टिप्पणीहरू। यो जिसूची हो *, जहाँ तत्व जिक्यारेक्टर हुन्छ *'s"
+
+#: ../mimedir/mimedir-vcomponent.c:276
+msgid "Description"
+msgstr "वर्णन"
+
+#: ../mimedir/mimedir-vcomponent.c:277
+msgid "Full description of this component"
+msgstr "यस अवयवका लागि पूरा वर्णन"
+
+#: ../mimedir/mimedir-vcomponent.c:282
+msgid "Percent complete"
+msgstr "प्रतिशत सकियो"
+
+#: ../mimedir/mimedir-vcomponent.c:283
+msgid "Percentage of this task's completion"
+msgstr "यस कार्यभार प्रतिशत"
+
+#: ../mimedir/mimedir-vcomponent.c:290
+msgid "Priority"
+msgstr "प्राथमिकता"
+
+#: ../mimedir/mimedir-vcomponent.c:291
+msgid "This task's priority"
+msgstr "यस कार्यको प्राथमिकता"
+
+#. FIXME: whoops, this isn't handled
+#: ../mimedir/mimedir-vcomponent.c:296
+msgid "Resource list"
+msgstr "संसाधन सूची"
+
+#: ../mimedir/mimedir-vcomponent.c:297
+msgid "List of the resources assigned to this component"
+msgstr "यस अवयवमा मानाङ्कन गरिएको संसाधनको सूची"
+
+#: ../mimedir/mimedir-vcomponent.c:301
+msgid "Status"
+msgstr "वस्तुस्थिति"
+
+#: ../mimedir/mimedir-vcomponent.c:302
+msgid "This task's completion status"
+msgstr "यस कार्यभारको वस्तुस्थिति"
+
+#: ../mimedir/mimedir-vcomponent.c:309
+msgid "Summary"
+msgstr "सारांश"
+
+#: ../mimedir/mimedir-vcomponent.c:310
+msgid "Component's short description"
+msgstr "अवयवको छोटो वर्णन"
+
+#: ../mimedir/mimedir-vcomponent.c:316
+msgid "Date/time completed"
+msgstr "मिति/समय सकियो"
+
+#: ../mimedir/mimedir-vcomponent.c:317
+msgid "Date/time that this task was completed"
+msgstr "मिति/समय जुन यो कार्य सकियो"
+
+#: ../mimedir/mimedir-vcomponent.c:322
+msgid "Date/time end"
+msgstr "मिति/समय समाप्त"
+
+#: ../mimedir/mimedir-vcomponent.c:323
+msgid "End date/time of this component"
+msgstr "यो अवयवको अन्त मिति/समय"
+
+#: ../mimedir/mimedir-vcomponent.c:328
+msgid "Due"
+msgstr "पुरानो"
+
+#: ../mimedir/mimedir-vcomponent.c:329
+msgid "This task's due date"
+msgstr "यस कार्यको पुरानो मिति"
+
+#: ../mimedir/mimedir-vcomponent.c:334
+msgid "Date/time start"
+msgstr "मिति/समय सुरु"
+
+#: ../mimedir/mimedir-vcomponent.c:335
+msgid "Start date/time of this component"
+msgstr "यस अवयवको मिति/समय सुरु गर्नुहोस्"
+
+#: ../mimedir/mimedir-vcomponent.c:340
+msgid "Duration"
+msgstr "अवधी"
+
+#: ../mimedir/mimedir-vcomponent.c:341
+msgid "This date's duration"
+msgstr "यस गतेको अवधी"
+
+#: ../mimedir/mimedir-vcomponent.c:346
+msgid "Free/busy"
+msgstr "स्वतन्त्र/ब्यस्त"
+
+#: ../mimedir/mimedir-vcomponent.c:347
+msgid "GList of free/busy objects"
+msgstr "स्वतन्त्र/ब्यस्त वस्तुहरूको जिसूची"
+
+#: ../mimedir/mimedir-vcomponent.c:353
+msgid "This component's time zone identifier"
+msgstr "यस अवयवको क्षेत्र समय पहिचायक"
+
+#: ../mimedir/mimedir-vcomponent.c:358
+msgid "Time zone name list"
+msgstr "क्षेत्र समय नाम सूची"
+
+#: ../mimedir/mimedir-vcomponent.c:359
+msgid "GList of time zone names"
+msgstr "क्षेत्र समय नामहरूको जिसूची"
+
+#: ../mimedir/mimedir-vcomponent.c:363 ../mimedir/mimedir-vcomponent.c:364
+msgid "Time zone offset from"
+msgstr "क्षेत्र समय अफसेटबाट"
+
+#: ../mimedir/mimedir-vcomponent.c:371 ../mimedir/mimedir-vcomponent.c:372
+msgid "Time zone offset to"
+msgstr "क्षेत्र समय अफसेटलाई"
+
+#: ../mimedir/mimedir-vcomponent.c:379
+msgid "Time zone URL"
+msgstr "क्षेत्र समय यू आर एल"
+
+#: ../mimedir/mimedir-vcomponent.c:380
+msgid "URL to a time zone description"
+msgstr "क्षेत्र समय वर्णनका लागि यू आर एल"
+
+#: ../mimedir/mimedir-vcomponent.c:386
+msgid "Contact"
+msgstr "सम्पर्क"
+
+#: ../mimedir/mimedir-vcomponent.c:387
+msgid "Contact information"
+msgstr "सम्पर्क सूचना"
+
+#: ../mimedir/mimedir-vcomponent.c:393
+msgid "Unique identifier"
+msgstr "अनौठो परिचय"
+
+#: ../mimedir/mimedir-vcomponent.c:394
+msgid "A unique identifier for this component"
+msgstr "यस अवयवका लागि अनौंठो पहिचायक"
+
+#: ../mimedir/mimedir-vcomponent.c:400
+msgid "Recurrence object"
+msgstr "पुनरावृतिक वस्तु"
+
+#: ../mimedir/mimedir-vcomponent.c:401
+msgid "An object representing the RRULE tag"
+msgstr "RRULE ट्याबलाई प्रतिनिधित्व गर्ने एउटा वस्तु"
+
+#: ../mimedir/mimedir-vcomponent.c:407 ../mimedir/mimedir-vcomponent.c:408
+msgid "Action"
+msgstr "कार्य"
+
+#: ../mimedir/mimedir-vcomponent.c:413 ../mimedir/mimedir-vcomponent.c:414
+msgid "Repeat"
+msgstr "दोहोर्याउनुस्"
+
+#: ../mimedir/mimedir-vcomponent.c:419 ../mimedir/mimedir-vcomponent.c:420
+msgid "Trigger"
+msgstr "ट्रिगर"
+
+#: ../mimedir/mimedir-vcomponent.c:425
+msgid "Trigger date/time"
+msgstr "ट्रिगर मिति/समय"
+
+#: ../mimedir/mimedir-vcomponent.c:426
+msgid "Date/time of the trigger"
+msgstr "ट्रिगरको मिति/समय"
+
+#: ../mimedir/mimedir-vcomponent.c:431
+msgid "Trigger end"
+msgstr "ट्रिगर समाप्ती"
+
+#: ../mimedir/mimedir-vcomponent.c:432
+msgid "Whether the trigger is set at the end of the time interval"
+msgstr "कतै ट्रिगर समय अवधिको अन्तमा सेट हुन्छ"
+
+#: ../mimedir/mimedir-vcomponent.c:438
+msgid "Created"
+msgstr "सिर्जना गरियो"
+
+#: ../mimedir/mimedir-vcomponent.c:439
+msgid "Date/time of the creation"
+msgstr "सिर्जनाको मिति/समय"
+
+#: ../mimedir/mimedir-vcomponent.c:444
+msgid "Date/time stamp"
+msgstr "मिति/समय स्ट्याम्प"
+
+#: ../mimedir/mimedir-vcomponent.c:445
+msgid "Date/time of the creation of the iCalendar object"
+msgstr "आइ पात्रोको सिर्जनाको मिति/समय"
+
+#: ../mimedir/mimedir-vcomponent.c:450
+msgid "Last modified"
+msgstr "पछिल्लो परिमार्जन"
+
+#: ../mimedir/mimedir-vcomponent.c:451
+msgid "Date/time of the last modification"
+msgstr "पछिल्लो परिमार्जनको मिति/समय"
+
+#: ../mimedir/mimedir-vcomponent.c:456
+msgid "Sequence"
+msgstr "अनुक्रम"
+
+#: ../mimedir/mimedir-vcomponent.c:457
+msgid "Sequence number"
+msgstr "अनुक्रम सङ्ख्या"
+

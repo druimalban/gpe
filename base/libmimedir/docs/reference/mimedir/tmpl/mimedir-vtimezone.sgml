@@ -1,0 +1,85 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVTimeZone
+
+<!-- ##### SECTION Short_Description ##### -->
+iCalendar time zone object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirVTimeZone ##### -->
+<para>
+
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_vtimezone_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vtimezone_new_from_profile ##### -->
+<para>
+
+</para>
+
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vtimezone_read_from_profile ##### -->
+<para>
+
+</para>
+
+@vtimezone: 
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vtimezone_write_to_channel ##### -->
+<para>
+
+</para>
+
+@vtimezone: 
+@channel: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vtimezone_write_to_profile ##### -->
+<para>
+
+</para>
+
+@vtimezone: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vtimezone_write_to_string ##### -->
+<para>
+
+</para>
+
+@vtimezone: 
+@Returns: 
+
+

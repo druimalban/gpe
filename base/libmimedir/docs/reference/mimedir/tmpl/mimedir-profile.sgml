@@ -1,0 +1,169 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirProfile
+
+<!-- ##### SECTION Short_Description ##### -->
+MIME Directory Profile object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO MIMEDIR_PROFILE_ERROR ##### -->
+<para>
+Error domain for #MIMEDirProfile operations. Errors in this domain will be
+from the #MIMEDirProfileError enumeration. See GError for information on
+error domains.
+</para>
+
+
+
+<!-- ##### ENUM MIMEDirProfileError ##### -->
+<para>
+Error codes returned by #MIMEDirProfile operations.
+</para>
+
+@MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE: An unique attribute was
+specified twice.
+@MIMEDIR_PROFILE_ERROR_UNEXPECTED_END: The profile is missing a proper
+END attribute.
+@MIMEDIR_PROFILE_ERROR_ATTRIBUTE_MISSING: An attribute that is required
+for a specific profile type is missing from the profile.
+@MIMEDIR_PROFILE_ERROR_UNMATCHED_END: The profile has an END attribute,
+but no BEGIN attribute or the profile's END attribute doesn't match the
+BEGIN attribute.
+@MIMEDIR_PROFILE_ERROR_WRONG_PROFILE: The PROFILE attribute does not
+match the BEGIN attribute.
+
+<!-- ##### MACRO MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_PROFILE_ERROR_UNEXPECTED_END_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_PROFILE_ERROR_UNEXPECTED_END
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_PROFILE_ERROR_UNMATCHED_END_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_PROFILE_ERROR_UNMATCHED_END
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_PROFILE_ERROR_ATTRIBUTE_MISSING_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_PROFILE_ERROR_MISSING_STR
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_PROFILE_ERROR_WRONG_PROFILE_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_PROFILE_ERROR_WRONG_PROFILE
+error code.
+</para>
+
+
+
+<!-- ##### STRUCT MIMEDirProfile ##### -->
+<para>
+The #MIMEDirProfile-struct struct contains private data only, and
+should be accessed using the functions below.
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_profile_new ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_profile_write_to_channel ##### -->
+<para>
+
+</para>
+
+@profile: 
+@channel: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_profile_write_to_string ##### -->
+<para>
+
+</para>
+
+@profile: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_profile_append_attribute ##### -->
+<para>
+
+</para>
+
+@profile: 
+@attribute: 
+
+
+<!-- ##### FUNCTION mimedir_profile_get_attribute ##### -->
+<para>
+
+</para>
+
+@profile: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_profile_get_attribute_list ##### -->
+<para>
+
+</para>
+
+@profile: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_profile_append_subprofile ##### -->
+<para>
+
+</para>
+
+@profile: 
+@sub_profile: 
+
+
+<!-- ##### FUNCTION mimedir_profile_get_subprofiles ##### -->
+<para>
+
+</para>
+
+@profile: 
+@Returns: 
+
+

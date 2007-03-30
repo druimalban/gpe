@@ -1,0 +1,65 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirAttachment
+
+<!-- ##### SECTION Short_Description ##### -->
+vCard/iCalendar attachment object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirAttachment ##### -->
+<para>
+
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_attachment_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attachment_new_from_attribute ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attachment_read_from_attribute ##### -->
+<para>
+
+</para>
+
+@attachment: 
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attachment_write_to_attribute ##### -->
+<para>
+
+</para>
+
+@attachment: 
+@Returns: 
+
+

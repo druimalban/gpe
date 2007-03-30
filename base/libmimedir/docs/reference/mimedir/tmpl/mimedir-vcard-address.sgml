@@ -1,0 +1,95 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVCardAddress
+
+<!-- ##### SECTION Short_Description ##### -->
+vCard address object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The #MIMEDirVCardAddress object contains information about a particular
+address that can be found in vCards. It contains some special properties
+that relate to the type of address.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirVCardAddress ##### -->
+<para>
+The #MIMEDirVCardAddress-struct struct contains private data only, and
+should be accessed using the functions below.
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_vcard_address_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_address_new_from_attribute ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_address_set_from_attribute ##### -->
+<para>
+
+</para>
+
+@address: 
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_address_save_to_attribute ##### -->
+<para>
+
+</para>
+
+@address: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_address_get_as_string ##### -->
+<para>
+
+</para>
+
+@address: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_address_get_type_string ##### -->
+<para>
+
+</para>
+
+@address: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_address_get_title ##### -->
+<para>
+
+</para>
+
+@address: 
+@Returns: 
+
+

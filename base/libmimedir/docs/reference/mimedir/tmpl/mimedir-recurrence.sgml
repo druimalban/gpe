@@ -1,0 +1,35 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirRecurrence
+
+<!-- ##### SECTION Short_Description ##### -->
+iCalendar recurrence object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirRecurrence ##### -->
+<para>
+
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_recurrence_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+

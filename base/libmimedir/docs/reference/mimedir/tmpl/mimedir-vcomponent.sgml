@@ -1,0 +1,295 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVComponent
+
+<!-- ##### SECTION Short_Description ##### -->
+iCalendar base object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirVComponent ##### -->
+<para>
+
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### ENUM MIMEDirClassification ##### -->
+<para>
+Classification of an iCalendar component object, i.e. the "secrecy level".
+</para>
+
+@MIMEDIR_CLASS_PUBLIC: Public classification
+@MIMEDIR_CLASS_PRIVATE: Private classification
+@MIMEDIR_CLASS_CONFIDENTIAL: Confidential classification
+@MIMEDIR_CLASS_CUSTOM: Custom classification (string attached)
+
+<!-- ##### ENUM MIMEDirStatus ##### -->
+<para>
+
+</para>
+
+@MIMEDIR_STATUS_UNKNOWN: Unknown status
+@MIMEDIR_STATUS_CANCELLED: Cancelled appointment
+@MIMEDIR_STATUS_TENTATIVE: Tentative appointment
+@MIMEDIR_STATUS_CONFIRMED: Confirmed appointment
+@MIMEDIR_STATUS_NEEDS_ACTION: Needs action
+@MIMEDIR_STATUS_COMPLETED: Item completed
+@MIMEDIR_STATUS_IN_PROCESS: Item being worked on
+@MIMEDIR_STATUS_DRAFT: Preliminary item
+@MIMEDIR_STATUS_FINAL: Final item
+
+<!-- ##### MACRO MIMEDIR_VCOMPONENT_PERCENT_NONE ##### -->
+<para>
+Used to signify that a percentage is unknown or unset.
+</para>
+
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_read_from_profile ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_write_to_profile ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@profile_name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_categories_as_string ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_set_alarm_list ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_alarm_list ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_set_attendee_list ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_attendee_list ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_set_opaque ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@opaque: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_opaque ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_set_classification ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@classification: 
+@klass: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_classification ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@klass: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_set_location ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@location: 
+@uri: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_location ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@uri: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_set_geopos ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@latitude: 
+@longitude: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_geopos ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@latitude: 
+@longitude: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_set_recurrence ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@recurrence: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_recurrence ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_set_allday ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@allday: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_allday ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_does_recur ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_next_occurence ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@after: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_occurences_between ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@start: 
+@end: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_free_occurences ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_set_attachment_list ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_vcomponent_get_attachment_list ##### -->
+<para>
+
+</para>
+
+@vcomponent: 
+@Returns: 
+
+

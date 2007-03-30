@@ -1,0 +1,115 @@
+<chapter id="overview">
+  <title>Overview</title>
+
+  <sect1 id="overview-intro">
+    <title>Introduction</title>
+
+    <para>The <ProductName>MIME Directory Library</ProductName> (or
+    <Abbrev>libmimedir</Abbrev> in short) is a versatile
+    shared library for parsing and writing MIME Directory Information as
+    described in [<link linkend="bib-rfc2425">MIMEDIR</link>]. Additionally,
+    it contains classes for handling vCard (see
+    [<link linkend="bib-rfc2426">VCARD</link>]) and iCalendar (see
+    [<link linkend="bib-rfc2445">ICAL</link>]) files.</para>
+
+    <para><Abbrev>Libmimedir</Abbrev> is based on the GObject system and makes
+    heavy use of its property system. Nearly all attributes of vCards or
+    iCalendar components are accessible as properties, while some
+    convenience access functions are provided. Please see the API
+    description for more information.</para>
+
+  </sect1>
+
+  <sect1 id="overview-classes">
+    <title>Class Hierarchy</title>
+
+    <para>The core of libmimedir consists of two classes:
+    <link linkend="mimedir-MIMEDirAttribute">MIMEDirAttribute</link> and
+    <link linkend="mimedir-MIMEDirProfile">MIMEDirProfile</link>.
+    Each profile represents a collection of attributes that together form
+    a directory entry.</para>
+
+    <para>The classes
+    <link linkend="mimedir-MIMEDirVCard">MIMEDirVCard</link> and
+    <link linkend="mimedir-MIMEDirVCal">MIMEDirVCal</link> are built on
+    top of MIMEDirProfile. These classes use MIMEDirProfile to parse
+    an supplied file and interpret its contents as either a vCard or
+    an iCalendar file. They can also write these file types.</para>
+  </sect1>
+
+  <sect1 id="overview-example">
+    <title>Example</title>
+
+    <para>The following program will read a vCard file, iterate
+    over all vCards and print the name of all cards:</para>
+
+    <programlisting>#include &lt;stdio.h&gt;
+
+#include &lt;glib.h&gt;
+
+#include &lt;mimedir/mimedir.h&gt;
+
+int main (int argc, char *argv[])
+{
+    GError *error = NULL;
+    GList *list, *node;
+
+    if (argc != 2) {
+        fprintf (stderr, "Usage: %s FILENAME\n", argv[0]);
+        return 1;
+    }
+
+    mimedir_init ();
+
+    list = mimedir_vcard_read_list (argv[1], &amp;error);
+    if (error) {
+        fprintf (stderr, "Error while reading %s: %s\n",
+                 argv[1], error->message);
+        return 1;
+    }
+
+    for (node = list; node != NULL; node = g_list_next (node)) {
+        MIMEDirVCard *vcard;
+        gchar *name;
+
+        vcard = MIMEDIR_VCARD (node->data);
+
+        g_object_get (G_OBJECT (vcard),
+                      "name", &amp;name,
+                      NULL);
+
+        printf ("%s\n", name);
+    }
+
+    mimedir_vcard_free_list (list);
+
+    return 0;
+}</programlisting>
+  </sect1>
+
+  <sect1 id="overview-encoding">
+    <title>Encoding Issues</title>
+
+    <para>The current vCard and iCalendar standards
+    ([<link linkend="bib-rfc2426">VCARD</link>,
+    <link linkend="bib-rfc2445">ICAL</link>]) suggest the use of UTF-8
+    ([<link linkend="bib-rfc2279">UTF-8</link>]) as default encoding for
+    vCard and iCalendar files. Since UTF-8 is the only portable way to
+    store internationalized files, it is used by default by Libmimedir
+    when files are saved. On loading, an UTF-8 encoding is assumed, if
+    the encoding is not settable in the loading function. (The various
+    load_from_channel functions define the encoding implicitly through
+    the channel's encoding.) If the input is not in UTF-8, a conversion
+    error will be returned.</para>
+
+    <para>The two functions
+    <link linkend="mimedir-vcard-read-list">mimedir_vcard_read_list</link>()
+    and
+    <link linkend="mimedir-vcal-read-list">mimedir_vcal_read_list</link>()
+    are special cases; they open a file, first assuming it is in UTF-8
+    encoding. If the file contains invalid UTF-8 sequences, a second try is
+    employed, using the current locale. If this fails, too, a third and final
+    try is made, assuming the file is in ISO-8859-15 (aka ISO Latin 9)
+    encoding.</para>
+  </sect1>
+</chapter>

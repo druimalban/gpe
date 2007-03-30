@@ -1,0 +1,12 @@
+Makefile
+Makefile.in
+*stamp
+sgml
+html
+mimedir-decl-list.txt
+mimedir-decl.txt
+mimedir-undocumented.txt
+mimedir-unused.txt
+mimedir.args
+mimedir.hierarchy
+mimedir.signals

@@ -1,0 +1,33 @@
+ * Implement all functionality needed by GNOME-PIM
+ * Should the revision be updated when a file is read and is re-written to
+   disk?
+ * vCard: do the decode/convert/parse steps for text, text_list, and
+   structured_text in the same way. There's no need for multiple functions
+   that all return INVALID_CHAR errors
+
+--- Release 0.4.0
+
+ * Localization in Profiles
+ * String review
+
+--- Release 0.5.0
+
+ * vcal-dump and ical-dump should support all attributes
+ * Bug fixing
+ * FIXMEs
+ * docs: Intro sections, examples, etc.
+ * docs: Document object properties
+
+--- Release 0.6.0
+
+ * Check for compliance with RFCs
+ * "Be liberal in what you accept"
+ * FIXMEs
+
+--- Release 0.90.0
+
+ * Beta test
+
+--- Release 1.0.0
+
+ * Higher-level API

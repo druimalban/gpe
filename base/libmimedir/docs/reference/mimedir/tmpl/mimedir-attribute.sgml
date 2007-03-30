@@ -1,0 +1,532 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirAttribute
+
+<!-- ##### SECTION Short_Description ##### -->
+MIME Directory Attribute object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR ##### -->
+<para>
+Error domain for #MIMEDirAttribute operations. Errors in this domain will be
+from the #MIMEDirAttributeError enumeration. See #GError for information on
+error domains.
+</para>
+
+
+
+<!-- ##### ENUM MIMEDirAttributeError ##### -->
+<para>
+Error codes returned by #MIMEDirAttribute operations.
+</para>
+
+@MIMEDIR_ATTRIBUTE_ERROR_SYNTAX: There was a syntax error.
+@MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR: An illegal character was found in
+the input stream.
+@MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT: The format of an attribute value
+does not match the requested value type.
+@MIMEDIR_ATTRIBUTE_ERROR_UNKNOWN_ENCODING: The attribute value can not
+be decoded, since its encoding is unknown.
+@MIMEDIR_ATTRIBUTE_ERROR_INVALID_VALUE: The attribute value is out of
+range.
+@MIMEDIR_ATTRIBUTE_ERROR_PARAMETER_NOT_UNIQUE: A parameter that is
+required to be unique is not.
+@MIMEDIR_ATTRIBUTE_ERROR_INVALID_BASE64: Invalid Base64-encoded string.
+@MIMEDIR_ATTRIBUTE_ERROR_INVALID_QP: Invalid quoted-printable-encoded
+string.
+@MIMEDIR_ATTRIBUTE_ERROR_LIST_TOO_SHORT: The parameter list is too short.
+@MIMEDIR_ATTRIBUTE_ERROR_LIST_TOO_LONG: The parameter list is too long.
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_ATTRIBUTE_ERROR_SYNTAX
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR_UNKNOWN_ENCODING_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_ATTRIBUTE_ERROR_UNKNOWN_ENCODING
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR_INVALID_VALUE_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_ATTRIBUTE_ERROR_INVALID_VALUE
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR_PARAMETER_NOT_UNIQUE_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_ATTRIBUTE_ERROR_PARAMETER_NOT_UNIQUE
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR_INVALID_BASE64_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_ATTRIBUTE_ERROR_INVALID_BASE64
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR_INVALID_QP_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_ATTRIBUTE_ERROR_INVALID_QP
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR_LIST_TOO_SHORT_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_ATTRIBUTE_ERROR_LIST_TOO_SHORT
+error code.
+</para>
+
+
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR_LIST_TOO_LONG_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_ATTRIBUTE_ERROR_LIST_TOO_LONG
+error code.
+</para>
+
+
+
+<!-- ##### ENUM MIMEDirAttributeType ##### -->
+<para>
+The attribute's type.
+</para>
+
+@MIMEDIR_ATTRIBUTE_TYPE_UNKNOWN: Attribute type is unknown.
+@MIMEDIR_ATTRIBUTE_TYPE_URI: Attribute represents an URI as defined in
+[<link linkend="bib-rfc1738">RFC 1738</link>].
+@MIMEDIR_ATTRIBUTE_TYPE_TEXT: Attribute consists of a list of text string.
+@MIMEDIR_ATTRIBUTE_TYPE_DATE: Attribute consists of a list of dates.
+@MIMEDIR_ATTRIBUTE_TYPE_TIME: Attribute consists of a list of times.
+@MIMEDIR_ATTRIBUTE_TYPE_DATETIME: Attribute consists of list of dates and times.
+@MIMEDIR_ATTRIBUTE_TYPE_INTEGER: Attribute consists of a list of integer values.
+@MIMEDIR_ATTRIBUTE_TYPE_FLOAT: Attribute consists of a list of floating point values.
+@MIMEDIR_ATTRIBUTE_TYPE_BOOLEAN: Attribute is a boolean value.
+@MIMEDIR_ATTRIBUTE_TYPE_STRUCTURED_TEXT: Attribute is a structured text value.
+@MIMEDIR_ATTRIBUTE_TYPE_PARAMETERS: 
+
+<!-- ##### ENUM MIMEDirAttributeEncoding ##### -->
+<para>
+The encoding of the attribute's value.
+</para>
+
+@MIMEDIR_ATTRIBUTE_ENCODING_UNKNOWN: The encoding is unknown.
+@MIMEDIR_ATTRIBUTE_ENCODING_BASE64: The value is Base64-encoded.
+@MIMEDIR_ATTRIBUTE_ENCODING_QP: The value is encoded as a
+quoted-printable string. This encoding is read-only and must not be set.
+
+<!-- ##### MACRO MIMEDIR_ATTRIBUTE_ENCODING_NONE ##### -->
+<para>
+Alias for #MIMEDIR_ATTRIBUTE_ENCODING_UNKNOWN.
+</para>
+
+
+
+<!-- ##### STRUCT MIMEDirAttribute ##### -->
+<para>
+The #MIMEDirAttribute-struct struct contains private data only, and
+should be accessed using the functions below.
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_attribute_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_write_to_channel ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@channel: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_name ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_group ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@group: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_group ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_attribute_type ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@type: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_attribute_type ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_append_parameter ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@name: 
+@values: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_append_parameter_simple ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@name: 
+@value: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_has_parameter ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@parameter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_parameter_values ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@parameter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_parameter_value ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@parameter: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_free_parameter_values ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_uri ##### -->
+<para>
+Sets the attribute's value to the supplied URI argument. @uri must be a valid URI as
+described in [<link linkend="bib-rfc1738">URI</link>].
+</para>
+
+@attribute: a #MIMEDirAttribute
+@uri: the new URI
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_uri ##### -->
+<para>
+Tries to parse the value of @attribute as an URI as described in
+[<link linkend="bib-rfc1738">URI</link>]
+and returns it. The returned string should be freed with g_free(). If the attribute
+value can't be interpreted as an URI, @error will be set and %NULL will be returned.
+</para>
+
+@attribute: a #MIMEDirAttribute
+@error: error storage location or %NULL
+@Returns: the URI or %NULL
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_text ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@text: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_text ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_text_list ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_text_list ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### MACRO mimedir_attribute_free_text_list ##### -->
+<para>
+Frees a list of string pointers as returned by
+mimedir_attribute_get_value_text_list().
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_datetime ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@datetime: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_datetime ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_datetime_list ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_datetime_list ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_free_datetime_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_bool ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@b: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_bool ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_int ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@i: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_int ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_int_list ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_int_list ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_free_int_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_float_list ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_float_list ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_free_float_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_set_value_structured_text ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_get_value_structured_text ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attribute_free_structured_text_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+

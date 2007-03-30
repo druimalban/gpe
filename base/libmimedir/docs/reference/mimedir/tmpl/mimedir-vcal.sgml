@@ -1,0 +1,170 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVCal
+
+<!-- ##### SECTION Short_Description ##### -->
+main iCalendar object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO MIMEDIR_VCAL_ERROR ##### -->
+<para>
+Error domain for #MIMEDirAttribute operations. Errors in this domain
+will be from the #MIMEDirAttributeError enumeration. See #GError for
+information on error domains.
+</para>
+
+
+
+<!-- ##### ENUM MIMEDirVCalError ##### -->
+<para>
+Error codes returned by MIMEDirVCal operations.
+</para>
+
+@MIMEDIR_VCAL_ERROR_UNKNOWN_SCALE: The specified time scale is unknown.
+
+<!-- ##### MACRO MIMEDIR_VCAL_ERROR_UNKNOWN_SCALE_STR ##### -->
+<para>
+Default string representation of the #MIMEDIR_VAL_ERROR_UNKNOWN_SCALE
+error code.
+</para>
+
+
+
+<!-- ##### STRUCT MIMEDirVCal ##### -->
+<para>
+
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_vcal_free_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_new_from_profile ##### -->
+<para>
+
+</para>
+
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_read_from_profile ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_write_to_channel ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@channel: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_write_to_profile ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_write_to_string ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_get_component_list ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_get_event_list ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_get_todo_list ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_add_component ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@component: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_add_component_list ##### -->
+<para>
+
+</para>
+
+@vcal: 
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_vcal_free_component_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+

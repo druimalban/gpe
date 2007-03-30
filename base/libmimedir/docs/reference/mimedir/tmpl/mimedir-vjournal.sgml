@@ -1,0 +1,85 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVJournal
+
+<!-- ##### SECTION Short_Description ##### -->
+iCalendar journal object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirVJournal ##### -->
+<para>
+
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_vjournal_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vjournal_new_from_profile ##### -->
+<para>
+
+</para>
+
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vjournal_read_from_profile ##### -->
+<para>
+
+</para>
+
+@vjournal: 
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vjournal_write_to_channel ##### -->
+<para>
+
+</para>
+
+@vjournal: 
+@channel: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vjournal_write_to_profile ##### -->
+<para>
+
+</para>
+
+@vjournal: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vjournal_write_to_string ##### -->
+<para>
+
+</para>
+
+@vjournal: 
+@Returns: 
+
+

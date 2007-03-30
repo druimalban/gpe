@@ -1,0 +1,4 @@
+Changes in libmimedir 0.4.0
+===========================
+
+* CATEGORY_LIST only returned one category. (Martin Felis)

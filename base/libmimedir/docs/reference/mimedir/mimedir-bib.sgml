@@ -1,0 +1,123 @@
+<Bibliography id="bibliography">
+  <BiblioEntry id="bib-rfc1738">
+    <AuthorGroup>
+      <Author>
+        <FirstName>Tim</FirstName>
+        <Surname>Berners-Lee</Surname>
+        <Affiliation>
+          <OrgName>CERN</OrgName>
+          <OrgDiv>World-Wide Web project</OrgDiv>
+        </Affiliation>
+      </Author>
+      <Author>
+        <FirstName>Larry</FirstName>
+        <Surname>Masinter</Surname>
+        <Affiliation>
+          <OrgName>Xerox PARC</OrgName>
+        </Affiliation>
+      </Author>
+      <Author>
+        <FirstName>Mark</FirstName>
+        <Surname>McCahill</Surname>
+        <Affiliation>
+          <OrgName>University of Minnesota</OrgName>
+          <OrgDiv>Computer and Information Services</OrgDiv>
+        </Affiliation>
+      </Author>
+    </AuthorGroup>
+    <Date>December 1994</Date>
+    <Title>RFC 1738</Title>
+    <Subtitle>Uniform Resource Locators (URL)</Subtitle>
+  </BiblioEntry>
+
+  <BiblioEntry id="bib-rfc2279">
+    <AuthorGroup>
+      <Author>
+        <FirstName>F.</FirstName>
+        <Surname>Yergeau</Surname>
+        <Affiliation>
+          <OrgName>Alis Technologies</OrgName>
+        </Affiliation>
+      </Author>
+    </AuthorGroup>
+    <Date>January 1998</Date>
+    <Title>RFC 2279</Title>
+    <Subtitle>UTF8, a transformation format of ISO 10646</Subtitle>
+  </BiblioEntry>
+
+  <BiblioEntry id="bib-rfc2425">
+    <AuthorGroup>
+      <Author>
+        <FirstName>Tim</FirstName>
+        <Surname>Howes</Surname>
+        <Affiliation>
+          <OrgName>Netscape Communications Corp.</OrgName>
+        </Affiliation>
+      </Author>
+      <Author>
+        <FirstName>Mark</FirstName>
+        <Surname>Smith</Surname>
+        <Affiliation>
+          <OrgName>Netscape Communications Corp.</OrgName>
+        </Affiliation>
+      </Author>
+      <Author>
+        <FirstName>Frank</FirstName>
+        <Surname>Dawson</Surname>
+        <Affiliation>
+          <OrgName>Lotus Development Corporation</OrgName>
+        </Affiliation>
+      </Author>
+    </AuthorGroup>
+    <Date>September 1998</Date>
+    <Title>RFC 2425</Title>
+    <Subtitle>A MIME Content-Type for Directory Information</Subtitle>
+  </BiblioEntry>
+
+  <BiblioEntry id="bib-rfc2426">
+    <AuthorGroup>
+      <Author>
+        <FirstName>Frank</FirstName>
+        <Surname>Dawson</Surname>
+        <Affiliation>
+          <OrgName>Lotus Development Corporation</OrgName>
+        </Affiliation>
+      </Author>
+      <Author>
+        <FirstName>Tim</FirstName>
+        <Surname>Howes</Surname>
+        <Affiliation>
+          <OrgName>Netscape Communications Corp.</OrgName>
+        </Affiliation>
+      </Author>
+    </AuthorGroup>
+    <Date>September 1998</Date>
+    <Title>RFC 2426</Title>
+    <Subtitle>vCard MIME Directory Profile</Subtitle>
+  </BiblioEntry>
+
+  <BiblioEntry id="bib-rfc2445">
+    <AuthorGroup>
+      <Author>
+        <FirstName>Frank</FirstName>
+        <Surname>Dawson</Surname>
+        <Affiliation>
+          <OrgName>Lotus Development Corporation</OrgName>
+        </Affiliation>
+      </Author>
+      <Author>
+        <FirstName>D.</FirstName>
+        <Surname>Stenerson</Surname>
+        <Affiliation>
+          <OrgName>Microsoft Corporation</OrgName>
+        </Affiliation>
+      </Author>
+    </AuthorGroup>
+    <Date>November 1998</Date>
+    <Title>RFC 2445</Title>
+    <Subtitle>
+      Internet Calendaring and Scheduling Core Object Specification (iCalendar)
+    </Subtitle>
+  </BiblioEntry>
+
+</Bibliography>

@@ -1,0 +1,95 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVFreeBusy
+
+<!-- ##### SECTION Short_Description ##### -->
+iCalendar free/busy object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirVFreeBusy ##### -->
+<para>
+
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### ENUM MIMEDirVFreeBusyType ##### -->
+<para>
+
+</para>
+
+@MIMEDIR_VFREEBUSY_FREE: 
+@MIMEDIR_VFREEBUSY_BUSY: 
+@MIMEDIR_VFREEBUSY_BUSY_UNAVAILABLE: 
+@MIMEDIR_VFREEBUSY_BUSY_TENTATIVE: 
+
+<!-- ##### FUNCTION mimedir_vfreebusy_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vfreebusy_new_from_profile ##### -->
+<para>
+
+</para>
+
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vfreebusy_read_from_profile ##### -->
+<para>
+
+</para>
+
+@vfreebusy: 
+@profile: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vfreebusy_write_to_channel ##### -->
+<para>
+
+</para>
+
+@vfreebusy: 
+@channel: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vfreebusy_write_to_profile ##### -->
+<para>
+
+</para>
+
+@vfreebusy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vfreebusy_write_to_string ##### -->
+<para>
+
+</para>
+
+@vfreebusy: 
+@Returns: 
+
+

@@ -1,0 +1,2095 @@
+# translation of libmimedir to Kinyarwanda.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the libmimedir package.
+# Steve Murphy <murf@e-tools.com>, 2005
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005..
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libmimedir HEAD\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-09-04 15:04+0200\n"
+"PO-Revision-Date: 2005-03-31 20:55-0700\n"
+"Last-Translator: Steve Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"ULL NAME <EMAIL@ADDRESS>\n"
+
+#: ../bin/ical-dump.c:48
+#, c-format
+msgid "Usage: %s ICALFILE\n"
+msgstr ""
+
+#: ../bin/ical-dump.c:57
+msgid "secondly"
+msgstr ""
+
+#: ../bin/ical-dump.c:59
+msgid "minutely"
+msgstr ""
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.HomeCountry.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.PrivateAddress.Country.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.BusinessAddress.Country.text
+#: ../bin/ical-dump.c:61
+#, fuzzy
+msgid "hourly"
+msgstr "Igihugu"
+
+#: ../bin/ical-dump.c:63
+msgid "daily"
+msgstr ""
+
+#: ../bin/ical-dump.c:65
+msgid "weekly"
+msgstr ""
+
+#: ../bin/ical-dump.c:67
+msgid "monthly"
+msgstr ""
+
+#: ../bin/ical-dump.c:69
+msgid "yearly"
+msgstr ""
+
+#: ../bin/ical-dump.c:71 ../bin/ical-dump.c:97
+#, fuzzy
+msgid "unknown"
+msgstr "<Itazwi>"
+
+#: ../bin/ical-dump.c:81
+msgid "second"
+msgstr ""
+
+#: ../bin/ical-dump.c:83
+msgid "minute"
+msgstr ""
+
+#: ../bin/ical-dump.c:85
+msgid "hour"
+msgstr ""
+
+#: ../bin/ical-dump.c:87
+msgid "day"
+msgstr ""
+
+#: ../bin/ical-dump.c:89
+msgid "day of month"
+msgstr ""
+
+#: ../bin/ical-dump.c:91
+msgid "day of year"
+msgstr ""
+
+# VCARD_LDAP_PHONE_NUMBER
+# # @name VCARD_LDAP_PHONE_NUMBER
+# # @loc None
+#: ../bin/ical-dump.c:93
+#, fuzzy
+msgid "week number"
+msgstr "Nomero ya terefoni"
+
+#: ../bin/ical-dump.c:95
+msgid "month"
+msgstr ""
+
+#: ../bin/ical-dump.c:118
+#, c-format
+msgid "  Recurrence:\n"
+msgstr ""
+
+#: ../bin/ical-dump.c:120
+#, c-format
+msgid "    Frequency: %s\n"
+msgstr ""
+
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.JobTitle.text
+#: ../bin/ical-dump.c:123
+#, fuzzy, c-format
+msgid "    Until: %s\n"
+msgstr "Izina ry'Akazi"
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.HomeCountry.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.PrivateAddress.Country.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.BusinessAddress.Country.text
+#: ../bin/ical-dump.c:128
+#, fuzzy, c-format
+msgid "    Count: %d\n"
+msgstr "Igihugu"
+
+#: ../bin/ical-dump.c:131
+#, c-format
+msgid "    Interval: %d\n"
+msgstr ""
+
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Yearfrac.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Networkdays.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffWeeks.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffMonths.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffYears.4.text
+#: ../bin/ical-dump.c:134
+#, fuzzy, c-format
+msgid "    Unit: %s\n"
+msgstr "Itariki y'irangiza"
+
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Yearfrac.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Networkdays.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffWeeks.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffMonths.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffYears.4.text
+#: ../bin/ical-dump.c:137
+#, fuzzy, c-format
+msgid "    Units: %s\n"
+msgstr "Itariki y'irangiza"
+
+# #-#-#-#-#  sfx2.pot (PACKAGE VERSION)  #-#-#-#-#
+# sfx2/source\dialog\eventdlg.src:TP_CONFIG_EVENT.STR_EVENT.text
+# #-#-#-#-#  sfx2.pot (PACKAGE VERSION)  #-#-#-#-#
+# sfx2/source\dialog\macropg.src:RID_SFX_TP_MACROASSIGN.STR_EVENT.text
+#: ../bin/ical-dump.c:152
+#, fuzzy, c-format
+msgid ""
+"Event:\n"
+"\n"
+msgstr "Icyabaye"
+
+#: ../bin/ical-dump.c:154
+#, fuzzy, c-format
+msgid ""
+"Todo item:\n"
+"\n"
+msgstr "Ikintu"
+
+#: ../bin/ical-dump.c:156
+#, c-format
+msgid ""
+"Unknown component:\n"
+"\n"
+msgstr ""
+
+#: ../bin/ical-dump.c:177
+#, fuzzy, c-format
+msgid "  Summary: %s\n"
+msgstr "Inshamake"
+
+# #-#-#-#-#  sfx2.pot (PACKAGE VERSION)  #-#-#-#-#
+# sfx2/source\doc\doctdlg.src:DLG_DOC_TEMPLATE.FT_SECTION.text
+# #-#-#-#-#  sfx2.pot (PACKAGE VERSION)  #-#-#-#-#
+# sfx2/source\doc\new.src:DLG_NEW_FILE.FT_REGION.text
+#: ../bin/ical-dump.c:182
+#, fuzzy, c-format
+msgid "  Categories: %s\n"
+msgstr "Ibyiciro"
+
+# 2806
+#: ../bin/ical-dump.c:188
+#, fuzzy
+msgid "high"
+msgstr "kirekire"
+
+# sfx2/source\dialog\mailwindow.src:RID_MAIL_WINDOW.LB_MAILWIN_PRIO.4.text
+#: ../bin/ical-dump.c:190
+#, fuzzy
+msgid "low"
+msgstr "Byo hasi"
+
+# officecfg/registry\schema\org\openoffice\Office\Math.xcs:....FontFormat.Weight..6.text
+#: ../bin/ical-dump.c:192
+msgid "medium"
+msgstr "biringaniye"
+
+# sfx2/source\dialog\mailwindow.src:RID_MAIL_WINDOW.FT_MAILWIN_PRIO.text
+#: ../bin/ical-dump.c:193
+#, fuzzy, c-format
+msgid "  Priority: %s (%d)\n"
+msgstr "By'ibanze"
+
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Workday.2.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Yearfrac.2.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Edate.2.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Eomonth.2.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Networkdays.2.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffWeeks.2.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffMonths.2.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffYears.2.text
+#: ../bin/ical-dump.c:198
+#, fuzzy, c-format
+msgid "  Start date: %s\n"
+msgstr "Itariki y'itangira"
+
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Yearfrac.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Networkdays.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffWeeks.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffMonths.4.text
+# #-#-#-#-#  scaddins.pot (PACKAGE VERSION)  #-#-#-#-#
+# scaddins/source\datefunc\datefunc.src:RID_DATE_FUNCTION_DESCRIPTIONS.DATE_FUNCDESC_DiffYears.4.text
+#: ../bin/ical-dump.c:205
+#, fuzzy, c-format
+msgid "  End date: %s\n"
+msgstr "Itariki y'irangiza"
+
+#: ../bin/ical-dump.c:213
+#, fuzzy, c-format
+msgid "  Due date: %s\n"
+msgstr "Itariki"
+
+#: ../bin/ical-dump.c:222
+#, c-format
+msgid "  Unique ID: %s\n"
+msgstr ""
+
+#: ../bin/ical-dump.c:223
+#, c-format
+msgid "  Sequence: %u\n"
+msgstr ""
+
+#: ../bin/ical-dump.c:236
+#, fuzzy, c-format
+msgid "  All day event\n"
+msgstr "UMUNSI"
+
+#: ../bin/ical-dump.c:261 ../bin/vcard-dump.c:67 ../bin/vcard-normalize.c:68
+#, fuzzy, c-format
+msgid "%s: invalid number of arguments\n"
+msgstr "%s:Sibyo Umubare Bya"
+
+#: ../bin/vcard-dump.c:43 ../bin/vcard-normalize.c:43
+#, c-format
+msgid "Usage: %s VCARDFILE\n"
+msgstr ""
+
+#: ../bin/vcard-normalize.c:79
+#, fuzzy, c-format
+msgid "%s: error reading card file: %s\n"
+msgstr "%s:Ikosa IDOSIYE"
+
+#: ../bin/vcard-normalize.c:96
+#, fuzzy, c-format
+msgid "%s: error writing card file: %s\n"
+msgstr "%s:Ikosa IDOSIYE"
+
+#: ../mimedir/mimedir-attribute.c:131 ../mimedir/mimedir-vcard.c:298
+msgid "Name"
+msgstr "Izina"
+
+#: ../mimedir/mimedir-attribute.c:132
+#, fuzzy
+msgid "The attribute's name"
+msgstr "Izina:"
+
+# #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
+# sc/source\ui\src\globstr.src:RID_GLOBSTR.STR_UNDO_MAKEOUTLINE.text
+# #-#-#-#-#  sc.pot (PACKAGE VERSION)  #-#-#-#-#
+# sc/source\ui\src\miscdlgs.src:RID_SCDLG_GROUP.text
+#: ../mimedir/mimedir-attribute.c:137
+msgid "Group"
+msgstr "Itsinda"
+
+#: ../mimedir/mimedir-attribute.c:138
+#, fuzzy
+msgid "The attribute's group"
+msgstr "Itsinda"
+
+#: ../mimedir/mimedir-attribute.c:894
+#, fuzzy
+msgid "missing parameter name"
+msgstr "Ibuze Izina:"
+
+#: ../mimedir/mimedir-attribute.c:919
+#, fuzzy
+msgid "missing closing quotation mark"
+msgstr "Ibuze Gusubiramo ibyavuzwe Ikimenyetso"
+
+#: ../mimedir/mimedir-attribute.c:1040
+#, fuzzy
+msgid "missing attribute name/group"
+msgstr "Ibuze Ikiranga Izina: Itsinda"
+
+#: ../mimedir/mimedir-attribute.c:1056
+#, fuzzy
+msgid "no attribute name after group"
+msgstr "Oya Ikiranga Izina: Nyuma Itsinda"
+
+#: ../mimedir/mimedir-attribute.c:1072
+#, fuzzy
+msgid "missing value delimiter"
+msgstr "Ibuze Agaciro"
+
+#: ../mimedir/mimedir-attribute.c:1088
+#, fuzzy
+msgid "invalid character"
+msgstr "Sibyo Inyuguti"
+
+#: ../mimedir/mimedir-attribute.c:2459 ../mimedir/mimedir-attribute.c:2468
+#, fuzzy
+msgid "illegal character"
+msgstr "Inyuguti"
+
+#: ../mimedir/mimedir-attribute.h:48
+#, fuzzy, c-format
+msgid "syntax error (%s)"
+msgstr "Ikosa ry'imyandikire"
+
+#: ../mimedir/mimedir-attribute.h:49
+#, fuzzy, c-format
+msgid "illegal character 0x%02x for type \"%s\""
+msgstr "Inyuguti kugirango Ubwoko"
+
+#: ../mimedir/mimedir-attribute.h:50
+#, fuzzy, c-format
+msgid "invalid format for type \"%s\" in attribute %s"
+msgstr "Sibyo Imiterere kugirango Ubwoko in Ikiranga"
+
+#: ../mimedir/mimedir-attribute.h:51
+#, fuzzy, c-format
+msgid "attribute %s could not be decoded, since its encoding is unknown"
+msgstr "Ikiranga OYA guhera Imisobekere: ni Kitazwi"
+
+#: ../mimedir/mimedir-attribute.h:52
+#, fuzzy, c-format
+msgid "invalid value in attribute %s"
+msgstr "Sibyo Agaciro in Ikiranga"
+
+#: ../mimedir/mimedir-attribute.h:53
+#, fuzzy, c-format
+msgid "parameter \"%s\" must not be used more than once in attribute %s"
+msgstr "OYA Birenzeho Rimwe in Ikiranga"
+
+#: ../mimedir/mimedir-attribute.h:54
+#, fuzzy
+msgid "invalid Base64 sequence"
+msgstr "Sibyo"
+
+#: ../mimedir/mimedir-attribute.h:55
+#, fuzzy
+msgid "invalid quoted-printable sequence"
+msgstr "Sibyo Gicapika"
+
+#: ../mimedir/mimedir-attribute.h:56
+#, fuzzy, c-format
+msgid "attribute list of %s is too short"
+msgstr "Ikiranga Urutonde Bya ni"
+
+#: ../mimedir/mimedir-attribute.h:57
+#, fuzzy, c-format
+msgid "attribute list of %s is too long"
+msgstr "Ikiranga Urutonde Bya ni"
+
+#: ../mimedir/mimedir-datetime.c:114 ../mimedir/mimedir-vcomponent.c:350
+#, fuzzy
+msgid "Time zone identifier"
+msgstr "Ikiranga"
+
+#: ../mimedir/mimedir-datetime.c:115
+#, fuzzy
+msgid "Time zone identifying string"
+msgstr "Ikurikiranyanyuguti"
+
+#. Translators: YYYY-MM-DD HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1081
+#, fuzzy, c-format
+msgid "%04d-%02d-%02d %02d:%02d:%02d"
+msgstr "%04d-%02d-%02d%02d:%02d:%02d"
+
+# desktop/source\app\ssodlg.src:DLG_SSOLOGIN.text
+#. Translators: YYYY-MM-DD
+#: ../mimedir/mimedir-datetime.c:1086
+#, fuzzy, c-format
+msgid "%04d-%02d-%02d"
+msgstr "%04d-%02d-%02d"
+
+#. Translators: HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1090
+#, fuzzy, c-format
+msgid "%02d:%02d:%02d"
+msgstr "%02d:%02d:%02dCYOSE"
+
+#: ../mimedir/mimedir-period.c:111
+#, fuzzy
+msgid "Free/busy type"
+msgstr "Irahuze Ubwoko"
+
+#: ../mimedir/mimedir-period.c:112
+#, fuzzy
+msgid "Whether this object signifies a free or a busy period"
+msgstr "iyi Igikoresho a Kigenga Cyangwa a Irahuze Igihe"
+
+# setup2/source\ui\pages\pprofile.src:RESID_PAGE_PAGEPROFILE.FT_INFO2.text
+#: ../mimedir/mimedir-profile.c:114
+#, fuzzy
+msgid "Profile name"
+msgstr "Izina ry'ibijyana:"
+
+#: ../mimedir/mimedir-profile.c:115
+#, fuzzy
+msgid "The name (type) of the profile"
+msgstr "Izina: Ubwoko Bya i Ibijyana"
+
+#: ../mimedir/mimedir-profile.c:121
+msgid "Character set"
+msgstr "Ishyiraho ry'inyuguti"
+
+#: ../mimedir/mimedir-profile.c:122
+#, fuzzy
+msgid "Character set used to en-/decode this profile"
+msgstr "Gushyiraho Kuri iyi Ibijyana"
+
+#: ../mimedir/mimedir-profile.h:40
+#, fuzzy, c-format
+msgid "attribute %s defined twice"
+msgstr "Ikiranga"
+
+#: ../mimedir/mimedir-profile.h:41
+#, fuzzy
+msgid "unexpected end of profile"
+msgstr "Impera Bya Ibijyana"
+
+#: ../mimedir/mimedir-profile.h:42
+#, fuzzy, c-format
+msgid "required attribute %s is missing"
+msgstr "Bya ngombwa Ikiranga ni Ibuze"
+
+#: ../mimedir/mimedir-profile.h:43
+#, fuzzy
+msgid "unmatched END attribute"
+msgstr "Ikiranga"
+
+#: ../mimedir/mimedir-profile.h:44
+#, fuzzy, c-format
+msgid "wrong profile %s; expected %s"
+msgstr "Ibijyana Ikitezwe:"
+
+#: ../mimedir/mimedir-recurrence.c:221
+msgid "Frequency"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:222
+msgid "Frequency type of this recurrency rule"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:229
+msgid "Date of last recurrence"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:230
+msgid "The date of the last recurrence of an event"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:235
+msgid "Number of recurrences"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:236
+msgid "The numer of recurrences of an event"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:243
+msgid "Recurrence interval"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:244
+msgid "The interval of recurrences of an event"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:251
+#, fuzzy
+msgid "Recurrence unit"
+msgstr "Urutonde"
+
+#: ../mimedir/mimedir-recurrence.c:252
+msgid "By which unit a recurrence should be repeated"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:259
+#, fuzzy
+msgid "Recurrence units"
+msgstr "Urutonde"
+
+#: ../mimedir/mimedir-recurrence.c:260
+msgid "List of units by which a recurrence should be repeated"
+msgstr ""
+
+#: ../mimedir/mimedir-valarm.c:548
+#, fuzzy, c-format
+msgid ""
+"Reminder of your appointment:\n"
+"\n"
+"%s\n"
+"%s"
+msgstr "Bya"
+
+#: ../mimedir/mimedir-vcal.c:148
+msgid "Method"
+msgstr "Uburyo"
+
+#: ../mimedir/mimedir-vcal.c:149
+#, fuzzy
+msgid "The vCalendar's method"
+msgstr "Uburyo"
+
+#: ../mimedir/mimedir-vcal.c:154 ../mimedir/mimedir-vcard.c:505
+#, fuzzy
+msgid "Product identifier"
+msgstr "Ikiranga"
+
+#: ../mimedir/mimedir-vcal.c:155
+#, fuzzy
+msgid ""
+"The product identifier of the vCalendar. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr "IGIKUBO Ikiranga Bya i Bya Ibintu iyi ni IGIKUBO Ikiranga"
+
+#: ../mimedir/mimedir-vcal.c:384 ../mimedir/mimedir-vcard.c:2411
+#: ../mimedir/mimedir-vcomponent.c:2060
+#, fuzzy, c-format
+msgid "The profile contains the unsupported custom attribute %s.\n"
+msgstr "Ibijyana Kirimo i Kunoza Ikiranga"
+
+#: ../mimedir/mimedir-vcal.c:387 ../mimedir/mimedir-vcard.c:2414
+#: ../mimedir/mimedir-vcomponent.c:2063
+#, fuzzy, c-format
+msgid "The profile contains the unknown attribute %s.\n"
+msgstr "Ibijyana Kirimo i Kitazwi Ikiranga"
+
+#: ../mimedir/mimedir-vcal.c:432 ../mimedir/mimedir-vcal.c:454
+#: ../mimedir/mimedir-vcal.c:482 ../mimedir/mimedir-vcal.c:506
+#, fuzzy, c-format
+msgid "Error reading calendar file %s: %s!"
+msgstr "Kalindari IDOSIYE"
+
+#: ../mimedir/mimedir-vcard-address.c:167
+msgid "Title"
+msgstr "Umutwe"
+
+#: ../mimedir/mimedir-vcard-address.c:168
+#, fuzzy
+msgid "A one-line string with the most important address information"
+msgstr ""
+"A Umurongo Ikurikiranyanyuguti Na: i By'ingirakamaro Aderesi Ibisobanuro"
+
+#: ../mimedir/mimedir-vcard-address.c:174
+#, fuzzy
+msgid "Freeform address"
+msgstr "Aderesi"
+
+#: ../mimedir/mimedir-vcard-address.c:175
+#, fuzzy
+msgid "A freeform address string"
+msgstr "A Aderesi Ikurikiranyanyuguti"
+
+#: ../mimedir/mimedir-vcard-address.c:180
+#, fuzzy
+msgid "Post office box"
+msgstr "Ofise Agasanduku"
+
+#: ../mimedir/mimedir-vcard-address.c:181
+#, fuzzy
+msgid "The addresses post office box"
+msgstr "Amaderesi Iposita Ofise Agasanduku"
+
+#: ../mimedir/mimedir-vcard-address.c:186
+#, fuzzy
+msgid "Extended address"
+msgstr "Aderesi"
+
+#: ../mimedir/mimedir-vcard-address.c:187
+#, fuzzy
+msgid "Extended address string"
+msgstr "Aderesi Ikurikiranyanyuguti"
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.PrivateAddress.Street.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.BusinessAddress.Street.text
+#: ../mimedir/mimedir-vcard-address.c:192
+msgid "Street"
+msgstr "Umuhanda"
+
+#: ../mimedir/mimedir-vcard-address.c:193
+#, fuzzy
+msgid "Street address"
+msgstr "Aderesi"
+
+#: ../mimedir/mimedir-vcard-address.c:198
+msgid "Locality"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:199
+#, fuzzy
+msgid "Locality (e.g. city, town, etc.)"
+msgstr "g."
+
+#: ../mimedir/mimedir-vcard-address.c:204
+msgid "Region"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:205
+#, fuzzy
+msgid "Region (e.g. state)"
+msgstr "g."
+
+#: ../mimedir/mimedir-vcard-address.c:210
+#, fuzzy
+msgid "Postal code"
+msgstr "ITEGEKONGENGA"
+
+#: ../mimedir/mimedir-vcard-address.c:211
+#, fuzzy
+msgid "Postal code (freeform string)"
+msgstr "ITEGEKONGENGA Ikurikiranyanyuguti"
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.HomeCountry.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.PrivateAddress.Country.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.BusinessAddress.Country.text
+#: ../mimedir/mimedir-vcard-address.c:216
+#: ../mimedir/mimedir-vcard-address.c:217
+msgid "Country"
+msgstr "Igihugu"
+
+# VCARD_LDAP_DOM_TYPE
+# # @name VCARD_LDAP_DOM_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-address.c:222
+msgid "Domestic"
+msgstr "Byo murugo"
+
+#: ../mimedir/mimedir-vcard-address.c:223
+#, fuzzy
+msgid "Whether this is a domestic address"
+msgstr "iyi ni a Byo murugo Aderesi"
+
+# offmgr/source\offapp\dialog\treeopt.src:RID_OFADLG_OPTIONS_TREE_PAGES.SID_SC_EDITOPTIONS.4.text
+#: ../mimedir/mimedir-vcard-address.c:228
+msgid "International"
+msgstr "Mpuzamahanga"
+
+#: ../mimedir/mimedir-vcard-address.c:229
+#, fuzzy
+msgid "Whether this is an international address"
+msgstr "iyi ni Mpuzamahanga Aderesi"
+
+#: ../mimedir/mimedir-vcard-address.c:234
+msgid "Postal"
+msgstr "Iposita"
+
+#: ../mimedir/mimedir-vcard-address.c:235
+#, fuzzy
+msgid "Whether this is a postal address"
+msgstr "iyi ni a Iposita Aderesi"
+
+# VCARD_LDAP_PARCEL_TYPE
+# # @name VCARD_LDAP_PARCEL_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-address.c:240
+msgid "Parcel"
+msgstr "Ikibanza"
+
+#: ../mimedir/mimedir-vcard-address.c:241
+#, fuzzy
+msgid "Whether parcels can be received at this address"
+msgstr "BYAKIRIWE ku iyi Aderesi"
+
+#: ../mimedir/mimedir-vcard-address.c:246 ../mimedir/mimedir-vcard-phone.c:160
+msgid "Home"
+msgstr "Home"
+
+#: ../mimedir/mimedir-vcard-address.c:247
+#, fuzzy
+msgid "Whether this is a home address"
+msgstr "iyi ni a Ku Ntangiriro Aderesi"
+
+#: ../mimedir/mimedir-vcard-address.c:252 ../mimedir/mimedir-vcard-phone.c:166
+msgid "Work"
+msgstr "Akazi"
+
+#: ../mimedir/mimedir-vcard-address.c:253
+#, fuzzy
+msgid "Whether this is a work address"
+msgstr "iyi ni a Akazi Aderesi"
+
+# VCARD_LDAP_PREF_TYPE
+# # @name VCARD_LDAP_PREF_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-address.c:258 ../mimedir/mimedir-vcard-email.c:153
+#: ../mimedir/mimedir-vcard-phone.c:232
+msgid "Preferred"
+msgstr "Bikunzwe"
+
+#: ../mimedir/mimedir-vcard-address.c:259
+#, fuzzy
+msgid "Whether this is the preferred address"
+msgstr "iyi ni i Bikunzwe Aderesi"
+
+#: ../mimedir/mimedir-vcard-address.c:572
+#, fuzzy, c-format
+msgid "The %s attribute contains too many elements.\n"
+msgstr "Ikiranga Kirimo Ibintu"
+
+#: ../mimedir/mimedir-vcard-address.c:772
+#, fuzzy, c-format
+msgid "The address field is of unknown type %s."
+msgstr "Aderesi Umwanya ni Bya Kitazwi Ubwoko"
+
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+# #-#-#-#-#  dbaccess.pot (PACKAGE VERSION)  #-#-#-#-#
+#. Translators: pcode city
+#: ../mimedir/mimedir-vcard-address.c:864
+#: ../mimedir/mimedir-vcard-address.c:873
+#, fuzzy, c-format
+msgid "%s %s"
+msgstr "%s%s"
+
+# desktop/source\app\ssodlg.src:DLG_SSOLOGIN.text
+#. Translators: city, region
+#: ../mimedir/mimedir-vcard-address.c:871
+#, fuzzy, c-format
+msgid "%s, %s"
+msgstr "%s,%s"
+
+# VCARD_LDAP_PREF_TYPE
+# # @name VCARD_LDAP_PREF_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-address.c:914 ../mimedir/mimedir-vcard-email.c:504
+#: ../mimedir/mimedir-vcard-phone.c:695
+#, fuzzy
+msgid "preferred"
+msgstr "Bikunzwe"
+
+# VCARD_LDAP_DOM_TYPE
+# # @name VCARD_LDAP_DOM_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-address.c:919
+#, fuzzy
+msgid "domestic"
+msgstr "Byo murugo"
+
+# offmgr/source\offapp\dialog\treeopt.src:RID_OFADLG_OPTIONS_TREE_PAGES.SID_SC_EDITOPTIONS.4.text
+#: ../mimedir/mimedir-vcard-address.c:924
+#, fuzzy
+msgid "international"
+msgstr "Mpuzamahanga"
+
+#: ../mimedir/mimedir-vcard-address.c:929
+#, fuzzy
+msgid "postal"
+msgstr "Iposita"
+
+# VCARD_LDAP_PARCEL_TYPE
+# # @name VCARD_LDAP_PARCEL_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-address.c:934
+#, fuzzy
+msgid "parcel"
+msgstr "Ikibanza"
+
+# sfx2/source\dialog\dialog.src:BTN_STANDARD.text
+#: ../mimedir/mimedir-vcard-address.c:939 ../mimedir/mimedir-vcard-phone.c:701
+#, fuzzy
+msgid "home"
+msgstr "Ku Ntangiriro"
+
+#: ../mimedir/mimedir-vcard-address.c:944 ../mimedir/mimedir-vcard-phone.c:706
+#, fuzzy
+msgid "work"
+msgstr "Akazi"
+
+# desktop/source\app\ssodlg.src:DLG_SSOLOGIN.text
+#. Translators: Short address format: "locality/street"
+#: ../mimedir/mimedir-vcard-address.c:996
+#, fuzzy, c-format
+msgid "%s/%s"
+msgstr "%s/%s"
+
+#: ../mimedir/mimedir-vcard-address.c:1002
+#, fuzzy
+msgid "<unknown>"
+msgstr "<Itazwi>"
+
+# framework/source\services\logindialog.src:RID_DLG_LOGIN.RID_FT_SECURITYPROXYHOST.text
+#: ../mimedir/mimedir-vcard-email.c:138 ../mimedir/mimedir-vcard.c:368
+msgid "Address"
+msgstr "Aderesi"
+
+#: ../mimedir/mimedir-vcard-email.c:139
+#, fuzzy
+msgid "The e-mail address"
+msgstr "E Ubutumwa Aderesi"
+
+# filter/source\xsltdialog\xmlfilterdialogstrings.src:STR_COLUMN_HEADER_TYPE.text
+#: ../mimedir/mimedir-vcard-email.c:145
+msgid "Type"
+msgstr "Ubwoko"
+
+#: ../mimedir/mimedir-vcard-email.c:146
+#, fuzzy
+msgid "Type of this e-mail address"
+msgstr "Bya iyi E Ubutumwa Aderesi"
+
+#: ../mimedir/mimedir-vcard-email.c:154
+#, fuzzy
+msgid "Whether this is the preferred e-mail address"
+msgstr "iyi ni i Bikunzwe E Ubutumwa Aderesi"
+
+#: ../mimedir/mimedir-vcard-email.c:412
+#, fuzzy, c-format
+msgid "The email field is of unknown type %s."
+msgstr "imeli Umwanya ni Bya Kitazwi Ubwoko"
+
+# officecfg/registry\schema\org\openoffice\Office\Common.xcs:....Save.URL.Internet.text
+#: ../mimedir/mimedir-vcard-email.c:514
+msgid "Internet"
+msgstr "Interineti"
+
+#: ../mimedir/mimedir-vcard-email.c:519
+#, fuzzy
+msgid "X.400"
+msgstr "400"
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Common.xcs:....Image.Color.Grayscale.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Common.xcs:....Image.Color.PosterColor.text
+#: ../mimedir/mimedir-vcard-phone.c:153
+msgid "Number"
+msgstr "Umubare"
+
+#: ../mimedir/mimedir-vcard-phone.c:154
+#, fuzzy
+msgid "The telephone number (freeform string)"
+msgstr "terefoni Umubare Ikurikiranyanyuguti"
+
+#: ../mimedir/mimedir-vcard-phone.c:161
+#, fuzzy
+msgid "Whether this is a home phone number"
+msgstr "iyi ni a Ku Ntangiriro Telefone Umubare"
+
+#: ../mimedir/mimedir-vcard-phone.c:167
+#, fuzzy
+msgid "Whether this is a phone number at work"
+msgstr "iyi ni a Telefone Umubare ku Akazi"
+
+# VCARD_LDAP_VOICE_TYPE
+# # @name VCARD_LDAP_VOICE_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-phone.c:172
+msgid "Voice"
+msgstr "Ijwi"
+
+#: ../mimedir/mimedir-vcard-phone.c:173
+#, fuzzy
+msgid "Whether this is a voice number"
+msgstr "iyi ni a Ijwi Umubare"
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.FaxNumber.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\WriterWeb.xcs:....Print.Output.Fax.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Print.Output.Fax.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.PrivateAddress.Fax.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.BusinessAddress.Fax.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Fax.Recipient.FaxNumber.text
+#: ../mimedir/mimedir-vcard-phone.c:178
+msgid "Fax"
+msgstr "Fagisi"
+
+#: ../mimedir/mimedir-vcard-phone.c:179
+#, fuzzy
+msgid "Whether this is a facsimile number"
+msgstr "iyi ni a Umubare"
+
+# VCARD_LDAP_BBS_TYPE
+# # @name VCARD_LDAP_BBS_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-phone.c:184 ../mimedir/mimedir-vcard-phone.c:721
+msgid "BBS"
+msgstr "BBS"
+
+#: ../mimedir/mimedir-vcard-phone.c:185
+#, fuzzy
+msgid "Whether this is a bulletin board system number"
+msgstr "iyi ni a Sisitemu Umubare"
+
+# VCARD_LDAP_MODEM_TYPE
+# # @name VCARD_LDAP_MODEM_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-phone.c:190
+msgid "Modem"
+msgstr "Modemu"
+
+#: ../mimedir/mimedir-vcard-phone.c:191
+#, fuzzy
+msgid "Whether this is a modem number"
+msgstr "iyi ni a Modemu Umubare"
+
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.PagerNumber.text
+#: ../mimedir/mimedir-vcard-phone.c:196
+msgid "Pager"
+msgstr "Peja"
+
+#: ../mimedir/mimedir-vcard-phone.c:197
+#, fuzzy
+msgid "Whether this is a pager number"
+msgstr "iyi ni a Peja Umubare"
+
+# 6474
+#: ../mimedir/mimedir-vcard-phone.c:202
+msgid "Video"
+msgstr "inyerekanamashusho"
+
+#: ../mimedir/mimedir-vcard-phone.c:203
+#, fuzzy
+msgid "Whether this is a video phone number"
+msgstr "iyi ni a Videwo... Telefone Umubare"
+
+# offmgr/sdi\ofaslots.src:SID_TABLE_CELL.text
+#: ../mimedir/mimedir-vcard-phone.c:208
+msgid "Cell"
+msgstr "Akazu"
+
+#: ../mimedir/mimedir-vcard-phone.c:209
+#, fuzzy
+msgid "Whether this is a cell (mobile) phone number"
+msgstr "iyi ni a Akazu Igendanwa Telefone Umubare"
+
+# VCARD_LDAP_CAR_TYPE
+# # @name VCARD_LDAP_CAR_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-phone.c:214
+msgid "Car"
+msgstr "Imodoka"
+
+#: ../mimedir/mimedir-vcard-phone.c:215
+#, fuzzy
+msgid "Whether this is car phone number"
+msgstr "iyi ni Imodoka Telefone Umubare"
+
+# VCARD_LDAP_ISDN_TYPE
+# # @name VCARD_LDAP_ISDN_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-phone.c:220 ../mimedir/mimedir-vcard-phone.c:756
+msgid "ISDN"
+msgstr "ISDN"
+
+#: ../mimedir/mimedir-vcard-phone.c:221
+#, fuzzy
+msgid "Whether this is a ISDN number"
+msgstr "iyi ni a Umubare"
+
+#: ../mimedir/mimedir-vcard-phone.c:226 ../mimedir/mimedir-vcard-phone.c:761
+msgid "PCS"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:227
+#, fuzzy
+msgid "Whether this is a PCS number"
+msgstr "iyi ni a Umubare"
+
+#: ../mimedir/mimedir-vcard-phone.c:233
+#, fuzzy
+msgid "Whether this is the preferred number"
+msgstr "iyi ni i Bikunzwe Umubare"
+
+# sfx2/source\doc\doc.src:STR_DOCTYPENAME_MESSAGE.text
+#: ../mimedir/mimedir-vcard-phone.c:238
+msgid "Message"
+msgstr "Ubutumwa"
+
+#: ../mimedir/mimedir-vcard-phone.c:239
+#, fuzzy
+msgid "Whether this number has a voice recorder"
+msgstr "iyi Umubare a Ijwi"
+
+#: ../mimedir/mimedir-vcard-phone.c:588
+#, fuzzy, c-format
+msgid "The phone field is of unknown type %s."
+msgstr "Telefone Umwanya ni Bya Kitazwi Ubwoko"
+
+# VCARD_LDAP_VOICE_TYPE
+# # @name VCARD_LDAP_VOICE_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-phone.c:711
+#, fuzzy
+msgid "voice"
+msgstr "Ijwi"
+
+# #-#-#-#-#  sw.pot (PACKAGE VERSION)  #-#-#-#-#
+# sw/source\ui\wizard\wizfxdlg.src:TXT_DLG_Dok_Edit_AutoFN.text
+# #-#-#-#-#  sw.pot (PACKAGE VERSION)  #-#-#-#-#
+# sw/source\ui\wizard\wizfxdlg.src:TXT_DLG_Dok_Edit_VorNam.text
+#: ../mimedir/mimedir-vcard-phone.c:716
+msgid "fax"
+msgstr "fagisi"
+
+# VCARD_LDAP_MODEM_TYPE
+# # @name VCARD_LDAP_MODEM_TYPE
+# # @loc None
+#: ../mimedir/mimedir-vcard-phone.c:726
+#, fuzzy
+msgid "modem"
+msgstr "Modemu"
+
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.PagerNumber.text
+#: ../mimedir/mimedir-vcard-phone.c:731
+#, fuzzy
+msgid "pager"
+msgstr "Peja"
+
+# 6474
+#: ../mimedir/mimedir-vcard-phone.c:736
+#, fuzzy
+msgid "video"
+msgstr "inyerekanamashusho"
+
+#: ../mimedir/mimedir-vcard-phone.c:741
+#, fuzzy
+msgid "voice message"
+msgstr "Ijwi Ubutumwa"
+
+#: ../mimedir/mimedir-vcard-phone.c:746
+#, fuzzy
+msgid "cell phone"
+msgstr "Terefoni igendanwa:"
+
+#: ../mimedir/mimedir-vcard-phone.c:751
+#, fuzzy
+msgid "car phone"
+msgstr "Imodoka Telefone"
+
+#: ../mimedir/mimedir-vcard.c:299
+#, fuzzy
+msgid "The spelled out name full name of this person"
+msgstr "Inyuma Izina: Izina: Bya iyi"
+
+#: ../mimedir/mimedir-vcard.c:304
+#, fuzzy
+msgid "Family name"
+msgstr "Izina:"
+
+#: ../mimedir/mimedir-vcard.c:305
+#, fuzzy
+msgid "The family name of this person"
+msgstr "Izina: Bya iyi"
+
+#: ../mimedir/mimedir-vcard.c:310
+#, fuzzy
+msgid "Given name"
+msgstr "Izina:"
+
+#: ../mimedir/mimedir-vcard.c:311
+#, fuzzy
+msgid "The given name of this person"
+msgstr "Izina: Bya iyi"
+
+#: ../mimedir/mimedir-vcard.c:316
+#, fuzzy
+msgid "Middle name"
+msgstr "Izina ry'agati"
+
+#: ../mimedir/mimedir-vcard.c:317
+#, fuzzy
+msgid "The middle name or middle initials of this person"
+msgstr "Hagati Izina: Cyangwa Hagati Izibanza Bya iyi"
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Agenda.Save.AutoPrefix.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Letter.Save.AutoPrefix.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Fax.Save.AutoPrefix.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Memo.Save.AutoPrefix.text
+#: ../mimedir/mimedir-vcard.c:322
+msgid "Prefix"
+msgstr "Imbanziriza"
+
+#: ../mimedir/mimedir-vcard.c:323
+#, fuzzy
+msgid "The name prefix (e.g. honorific prefix) of this person"
+msgstr "g."
+
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Complex.6.text
+#: ../mimedir/mimedir-vcard.c:328
+msgid "Suffix"
+msgstr "Ingereka"
+
+#: ../mimedir/mimedir-vcard.c:329
+#, fuzzy
+msgid "The name suffix of this person"
+msgstr "Izina: Ingereka Bya iyi"
+
+#: ../mimedir/mimedir-vcard.c:334
+#, fuzzy
+msgid "Nickname list"
+msgstr "Urutonde"
+
+#: ../mimedir/mimedir-vcard.c:335
+#, fuzzy
+msgid ""
+"List of all nick names. This is a GList *, where the elements are of type "
+"const gchar *"
+msgstr "Bya Byose Amazina ni a i Ibintu Bya Ubwoko"
+
+#: ../mimedir/mimedir-vcard.c:339
+#, fuzzy
+msgid "Nick name"
+msgstr "Izina:"
+
+#: ../mimedir/mimedir-vcard.c:340
+#, fuzzy
+msgid "The first nick name"
+msgstr "Itangira Izina:"
+
+#. FIXME: this is useless
+#: ../mimedir/mimedir-vcard.c:345
+msgid "Photo"
+msgstr "Ifoto"
+
+#: ../mimedir/mimedir-vcard.c:346
+#, fuzzy
+msgid "Pointer to a byte stream, representing an image of the person"
+msgstr "Kuri a Bayite Ishusho Bya i"
+
+#: ../mimedir/mimedir-vcard.c:350
+msgid "Photo URI"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:351
+#, fuzzy
+msgid "URI to an image of this person"
+msgstr "Kuri Ishusho Bya iyi"
+
+#: ../mimedir/mimedir-vcard.c:356
+msgid "Birthday"
+msgstr "Umunsi wo kuvuka:"
+
+#: ../mimedir/mimedir-vcard.c:357
+#, fuzzy
+msgid "The person's birthday"
+msgstr "Umunsi wo kuvuka:"
+
+#: ../mimedir/mimedir-vcard.c:363
+#, fuzzy
+msgid "Address list"
+msgstr "Urutonde"
+
+#: ../mimedir/mimedir-vcard.c:364
+#, fuzzy
+msgid ""
+"List of all addresses. This is a GList *, where the elements are of type "
+"MIMEDirAddress *"
+msgstr "Bya Byose Amaderesi ni a i Ibintu Bya Ubwoko"
+
+#: ../mimedir/mimedir-vcard.c:369
+#, fuzzy
+msgid "The preferred address"
+msgstr "Bikunzwe Aderesi"
+
+#: ../mimedir/mimedir-vcard.c:375
+#, fuzzy
+msgid "Phone number list"
+msgstr "Umubare Urutonde"
+
+#: ../mimedir/mimedir-vcard.c:376
+#, fuzzy
+msgid ""
+"List of all phone numbers. This is a GList *, where the elements are of type "
+"MIMEDirPhone *"
+msgstr "Bya Byose Telefone Imibare ni a i Ibintu Bya Ubwoko"
+
+# VCARD_LDAP_PHONE_NUMBER
+# # @name VCARD_LDAP_PHONE_NUMBER
+# # @loc None
+#: ../mimedir/mimedir-vcard.c:380
+#, fuzzy
+msgid "Phone number"
+msgstr "Nomero ya terefoni"
+
+#: ../mimedir/mimedir-vcard.c:381
+#, fuzzy
+msgid "The preferred phone number"
+msgstr "Bikunzwe Telefone Umubare"
+
+#: ../mimedir/mimedir-vcard.c:386
+#, fuzzy
+msgid "E-mail address list"
+msgstr "E Ubutumwa Aderesi Urutonde"
+
+#: ../mimedir/mimedir-vcard.c:387
+#, fuzzy
+msgid ""
+"List of all e-mail addresses. This is a GList *, where the elements are of "
+"type MIMEDirEmail *"
+msgstr "Bya Byose E Ubutumwa Amaderesi ni a i Ibintu Bya Ubwoko"
+
+# 1974
+#: ../mimedir/mimedir-vcard.c:391
+msgid "E-mail address"
+msgstr "aderesi nterineti"
+
+#: ../mimedir/mimedir-vcard.c:392
+#, fuzzy
+msgid "The preferred e-mail address"
+msgstr "Bikunzwe E Ubutumwa Aderesi"
+
+# VCARD_LDAP_MAILER
+# # @name VCARD_LDAP_MAILER
+# # @loc None
+#: ../mimedir/mimedir-vcard.c:397
+msgid "Mailer"
+msgstr "Uwanditse"
+
+#: ../mimedir/mimedir-vcard.c:398
+#, fuzzy
+msgid "The mailing program used by this person"
+msgstr "Porogaramu ku iyi"
+
+# VCARD_LDAP_TZ
+# # @name VCARD_LDAP_TZ
+# # @loc None
+#: ../mimedir/mimedir-vcard.c:404
+#, fuzzy
+msgid "Time zone"
+msgstr "Igihe kya karere"
+
+#: ../mimedir/mimedir-vcard.c:405
+#, fuzzy
+msgid "The time zone this person lives in"
+msgstr "Igihe iyi in"
+
+#: ../mimedir/mimedir-vcard.c:412
+#, fuzzy
+msgid "Time zone string"
+msgstr "Ikurikiranyanyuguti"
+
+#: ../mimedir/mimedir-vcard.c:413
+#, fuzzy
+msgid "The time zone this person lives in (deprecated string representation)"
+msgstr "Igihe iyi in Bitemewe. Ikurikiranyanyuguti"
+
+#: ../mimedir/mimedir-vcard.c:418
+msgid "Latitude"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:419
+#, fuzzy
+msgid "Latitude of this person's residence"
+msgstr "Bya iyi"
+
+#: ../mimedir/mimedir-vcard.c:426
+msgid "Longitude"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:427
+#, fuzzy
+msgid "Longitude of this person's residence"
+msgstr "Bya iyi"
+
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.JobTitle.text
+#: ../mimedir/mimedir-vcard.c:435
+#, fuzzy
+msgid "Job title"
+msgstr "Izina ry'Akazi"
+
+#: ../mimedir/mimedir-vcard.c:436
+#, fuzzy
+msgid "The person's job title"
+msgstr "Umutwe"
+
+# VCARD_LDAP_ROLE
+# # @name VCARD_LDAP_ROLE
+# # @loc None
+#: ../mimedir/mimedir-vcard.c:441
+msgid "Role"
+msgstr "Inshingano"
+
+#: ../mimedir/mimedir-vcard.c:442
+#, fuzzy
+msgid "The person's job role"
+msgstr "Inshingano"
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Agenda.Logo.Visible.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Letter.Print.Logo.text
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:447
+msgid "Logo"
+msgstr "ikirango"
+
+#: ../mimedir/mimedir-vcard.c:448
+#, fuzzy
+msgid "Pointer to a byte stream, representing the logo of the person's company"
+msgstr "Kuri a Bayite i ikirango Bya i Isosiyeti"
+
+#: ../mimedir/mimedir-vcard.c:452
+msgid "Logo URI"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:453
+#, fuzzy
+msgid "URI to the logo of this person's company"
+msgstr "Kuri i ikirango Bya iyi Isosiyeti"
+
+#: ../mimedir/mimedir-vcard.c:458
+msgid "Agent"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:459
+#, fuzzy
+msgid "A person, acting for the person described in this card"
+msgstr "A kugirango i in iyi"
+
+#: ../mimedir/mimedir-vcard.c:464
+msgid "Agent URI"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:465
+#, fuzzy
+msgid ""
+"URI to the description of a person, acting for the person described in this "
+"card"
+msgstr "Kuri i Isobanuramiterere Bya a kugirango i in iyi"
+
+#: ../mimedir/mimedir-vcard.c:470
+#, fuzzy
+msgid "Agent string"
+msgstr "Ikurikiranyanyuguti"
+
+#: ../mimedir/mimedir-vcard.c:471
+#, fuzzy
+msgid ""
+"A person, acting for the person described in this card (deprecated string "
+"representation)"
+msgstr "A kugirango i in iyi Bitemewe. Ikurikiranyanyuguti"
+
+#: ../mimedir/mimedir-vcard.c:476
+#, fuzzy
+msgid "Organization list"
+msgstr "Urutonde"
+
+#: ../mimedir/mimedir-vcard.c:477
+#, fuzzy
+msgid ""
+"List of all organization this person belongs to. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr "Bya Byose Ihuzagahunda iyi Kuri ni a i Ibintu S"
+
+# sw/source\ui\utlui\initui.src:STR_AUTH_FIELD_ORGANIZATIONS.text
+#: ../mimedir/mimedir-vcard.c:481
+msgid "Organization"
+msgstr "Ishyirahamwe"
+
+#: ../mimedir/mimedir-vcard.c:482
+#, fuzzy
+msgid "The person's first organization"
+msgstr "Itangira Ihuzagahunda"
+
+#: ../mimedir/mimedir-vcard.c:488 ../mimedir/mimedir-vcomponent.c:264
+#, fuzzy
+msgid "Category list"
+msgstr "Urutonde"
+
+#: ../mimedir/mimedir-vcard.c:489
+#, fuzzy
+msgid ""
+"List of all categories of this person. This is a GList *, where the elements "
+"are gchar *'s"
+msgstr "Bya Byose Ibyiciro Bya iyi ni a i Ibintu S"
+
+#: ../mimedir/mimedir-vcard.c:493
+msgid "Categories"
+msgstr "Ibyiciro"
+
+#: ../mimedir/mimedir-vcard.c:494
+#, fuzzy
+msgid "String representation of this person's categories"
+msgstr "Bya iyi Ibyiciro"
+
+# sc/source\ui\pagedlg\hfedtdlg.src:RID_HFBASE.FL_INFO.text
+#: ../mimedir/mimedir-vcard.c:499
+msgid "Note"
+msgstr "Igisobanuro"
+
+#: ../mimedir/mimedir-vcard.c:500
+#, fuzzy
+msgid "Additional comments"
+msgstr "Ibisobanuro"
+
+#: ../mimedir/mimedir-vcard.c:506
+#, fuzzy
+msgid ""
+"The product identifier of the vCard. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr "IGIKUBO Ikiranga Bya i Bya Ibintu iyi ni IGIKUBO Ikiranga"
+
+# VCARD_LDAP_REVISION
+# # @name VCARD_LDAP_REVISION
+# # @loc None
+#: ../mimedir/mimedir-vcard.c:511
+msgid "Revision"
+msgstr "Isubiramo"
+
+#: ../mimedir/mimedir-vcard.c:512
+#, fuzzy
+msgid "Card's revision"
+msgstr "Isubiramo"
+
+#: ../mimedir/mimedir-vcard.c:517
+#, fuzzy
+msgid "Sort string"
+msgstr "Ikurikiranyanyuguti"
+
+#: ../mimedir/mimedir-vcard.c:518
+#, fuzzy
+msgid "String that defines this card's sort order"
+msgstr "iyi Ishungura Itondekanya"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:523
+msgid "Sound"
+msgstr "Ijwi"
+
+#: ../mimedir/mimedir-vcard.c:524
+#, fuzzy
+msgid "Pointer to a byte stream, representing a sound file"
+msgstr "Kuri a Bayite a Ijwi IDOSIYE"
+
+#: ../mimedir/mimedir-vcard.c:528
+msgid "Sound URI"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:529
+#, fuzzy
+msgid "URI to a sound file"
+msgstr "Kuri a Ijwi IDOSIYE"
+
+#: ../mimedir/mimedir-vcard.c:534
+msgid "Unique Identifier"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:535
+#, fuzzy
+msgid "A unique identifier for this card"
+msgstr "A Cyo nyine Ikiranga kugirango iyi"
+
+#: ../mimedir/mimedir-vcard.c:540
+msgid "URL"
+msgstr "URL"
+
+#: ../mimedir/mimedir-vcard.c:541
+#, fuzzy
+msgid "An alternate URL for this resource"
+msgstr "kugirango iyi"
+
+#: ../mimedir/mimedir-vcard.c:547
+msgid "Classification"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:548
+#, fuzzy
+msgid "The security classfication of this card"
+msgstr "Umutekano Bya iyi"
+
+#: ../mimedir/mimedir-vcard.c:553
+#, fuzzy
+msgid "Public key list"
+msgstr "Urufunguzo Urutonde"
+
+#: ../mimedir/mimedir-vcard.c:554
+#, fuzzy
+msgid ""
+"List of this person's public keys. This is a GList *, where the elements are "
+"MIMEDirVCardKeys"
+msgstr "Bya iyi Rusange Utubuto ni a i Ibintu"
+
+# VCARD_LDAP_KEY
+# # @name VCARD_LDAP_KEY
+# # @loc None
+#: ../mimedir/mimedir-vcard.c:558
+#, fuzzy
+msgid "Public key"
+msgstr "Ifunguzo ngenga"
+
+#: ../mimedir/mimedir-vcard.c:559
+#, fuzzy
+msgid "This person's first public key"
+msgstr "Itangira Rusange Urufunguzo"
+
+# #-#-#-#-#  sw.pot (PACKAGE VERSION)  #-#-#-#-#
+# sw/source\ui\index\cnttab.src:TP_TOX_SELECT.FT_SORTALG.text
+# #-#-#-#-#  sw.pot (PACKAGE VERSION)  #-#-#-#-#
+# sw/source\ui\misc\srtdlg.src:DLG_SORTING.FT_KEYTYP.text
+#: ../mimedir/mimedir-vcard.c:564
+msgid "Key type"
+msgstr "Ubwoko bw'agakandisho"
+
+#: ../mimedir/mimedir-vcard.c:565
+#, fuzzy
+msgid "Type of the first public key"
+msgstr "Bya i Itangira Rusange Urufunguzo"
+
+#: ../mimedir/mimedir-vcard.c:1474 ../mimedir/mimedir-vcard.c:1496
+#: ../mimedir/mimedir-vcard.c:1524 ../mimedir/mimedir-vcard.c:1548
+#, fuzzy, c-format
+msgid "Error reading card file %s: %s!"
+msgstr "IDOSIYE"
+
+#: ../mimedir/mimedir-vcard.c:1671
+#, fuzzy, c-format
+msgid "Error writing card file %s: %s!"
+msgstr "IDOSIYE"
+
+# basctl/source\basicide\moduldlg.src:RID_DLG_NEWLIB.RID_FT_NEWLIB.text
+#: ../mimedir/mimedir-vcard.c:3409
+#, fuzzy, c-format
+msgid "Name: %s\n"
+msgstr "Izina:"
+
+#: ../mimedir/mimedir-vcard.c:3411
+msgid "Name\n"
+msgstr ""
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Agenda.Save.AutoPrefix.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Letter.Save.AutoPrefix.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Fax.Save.AutoPrefix.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....Wizard.Memo.Save.AutoPrefix.text
+#: ../mimedir/mimedir-vcard.c:3413
+#, fuzzy, c-format
+msgid "  Prefix:     %s\n"
+msgstr "Imbanziriza"
+
+#: ../mimedir/mimedir-vcard.c:3415
+#, c-format
+msgid "  Given:      %s\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3417
+#, c-format
+msgid "  Additional: %s\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3419
+#, c-format
+msgid "  Family:     %s\n"
+msgstr ""
+
+# scaddins/source\analysis\analysis.src:RID_ANALYSIS_FUNCTION_DESCRIPTIONS.ANALYSIS_Complex.6.text
+#: ../mimedir/mimedir-vcard.c:3421
+#, fuzzy, c-format
+msgid "  Suffix:     %s\n"
+msgstr "Ingereka"
+
+#: ../mimedir/mimedir-vcard.c:3427
+#, c-format
+msgid "Birth Date: %04d-%02d-%02d\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3452
+#, fuzzy, c-format
+msgid "Address label (%s):\n"
+msgstr "Akarango"
+
+#: ../mimedir/mimedir-vcard.c:3472
+#, fuzzy, c-format
+msgid "Address (%s):\n"
+msgstr "Aderesi"
+
+#: ../mimedir/mimedir-vcard.c:3486
+#, c-format
+msgid "  Postal Box:  %s\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3488
+#, fuzzy, c-format
+msgid "  Extended:    %s\n"
+msgstr "Byongerewe..."
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.PrivateAddress.Street.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.BusinessAddress.Street.text
+#: ../mimedir/mimedir-vcard.c:3490
+#, fuzzy, c-format
+msgid "  Street:      %s\n"
+msgstr "Umuhanda"
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.HomeCity.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.PrivateAddress.City.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.BusinessAddress.City.text
+#: ../mimedir/mimedir-vcard.c:3492
+#, fuzzy, c-format
+msgid "  City:        %s\n"
+msgstr "Umujyi"
+
+#: ../mimedir/mimedir-vcard.c:3494
+#, c-format
+msgid "  Region:      %s\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3496
+#, c-format
+msgid "  Postal Code: %s\n"
+msgstr ""
+
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.HomeCountry.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.PrivateAddress.Country.text
+# #-#-#-#-#  officecfg.pot (PACKAGE VERSION)  #-#-#-#-#
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.BusinessAddress.Country.text
+#: ../mimedir/mimedir-vcard.c:3498
+#, fuzzy, c-format
+msgid "  Country:     %s\n"
+msgstr "Igihugu"
+
+# 6175
+#: ../mimedir/mimedir-vcard.c:3518
+#, fuzzy
+msgid "Telephone:\n"
+msgstr "terefoni"
+
+# 6175
+#: ../mimedir/mimedir-vcard.c:3542
+#, fuzzy, c-format
+msgid "Telephone: %s (%s)\n"
+msgstr "terefoni"
+
+# sw/source\ui\wizard\wizbmp.src:STR_Usr_ElektrMail.text
+#: ../mimedir/mimedir-vcard.c:3554
+#, fuzzy
+msgid "E-mail:\n"
+msgstr "Aderesi ya interineti:"
+
+#: ../mimedir/mimedir-vcard.c:3578
+#, fuzzy, c-format
+msgid "E-mail: %s (%s)\n"
+msgstr "Imeli"
+
+# VCARD_LDAP_TZ
+# # @name VCARD_LDAP_TZ
+# # @loc None
+#: ../mimedir/mimedir-vcard.c:3598
+#, fuzzy, c-format
+msgid "Time zone: %c%02d:%02d\n"
+msgstr "Igihe kya karere"
+
+#: ../mimedir/mimedir-vcard.c:3607
+#, c-format
+msgid "Location: %.2f,%.2f\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3616
+#, fuzzy, c-format
+msgid "Organization: %s\n"
+msgstr "Ihuzagahunda"
+
+# officecfg/registry\data\org\openoffice\Office\DataAccess.xcu:..DataAccess.DriverSettings.com.sun.star.comp.sdbc.MozabDriver.ColumnAliases.JobTitle.text
+#: ../mimedir/mimedir-vcard.c:3621
+#, fuzzy, c-format
+msgid "Job title: %s\n"
+msgstr "Izina ry'Akazi"
+
+#: ../mimedir/mimedir-vcard.c:3624
+#, fuzzy, c-format
+msgid "Business role: %s\n"
+msgstr "Inshingano"
+
+# #-#-#-#-#  sfx2.pot (PACKAGE VERSION)  #-#-#-#-#
+# sfx2/source\doc\doctdlg.src:DLG_DOC_TEMPLATE.FT_SECTION.text
+# #-#-#-#-#  sfx2.pot (PACKAGE VERSION)  #-#-#-#-#
+# sfx2/source\doc\new.src:DLG_NEW_FILE.FT_REGION.text
+#: ../mimedir/mimedir-vcard.c:3634
+#, fuzzy, c-format
+msgid "Categories: %s\n"
+msgstr "Ibyiciro"
+
+# padmin/source\padialog.src:RID_PADIALOG.RID_PA_TXT_COMMENT.text
+#: ../mimedir/mimedir-vcard.c:3639
+#, fuzzy, c-format
+msgid "Comment: %s\n"
+msgstr "Icyo wongeraho"
+
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....BusinessCard.PrivateAddress.WebAddress.text
+#: ../mimedir/mimedir-vcard.c:3642
+#, fuzzy, c-format
+msgid "Homepage: %s\n"
+msgstr "Ipajikwinjira"
+
+#: ../mimedir/mimedir-vcard.c:3645
+#, fuzzy, c-format
+msgid "Unique string: %s\n"
+msgstr "Ikurikiranyanyuguti"
+
+#: ../mimedir/mimedir-vcard.c:3655
+msgid "X.509"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3658
+msgid "PGP"
+msgstr ""
+
+# svx/source\svdraw\svdstr.src:STR_ItemValYES.text
+#: ../mimedir/mimedir-vcard.c:3661
+msgid "yes"
+msgstr "Yego"
+
+# VCARD_LDAP_KEY
+# # @name VCARD_LDAP_KEY
+# # @loc None
+#: ../mimedir/mimedir-vcard.c:3665
+#, fuzzy, c-format
+msgid "Public Key: %s\n"
+msgstr "Ifunguzo ngenga"
+
+#: ../mimedir/mimedir-vcomponent.c:265
+#, fuzzy
+msgid ""
+"List of all categories of this component. This is a GList *, where the "
+"elements are gchar *'s"
+msgstr "Bya Byose Ibyiciro Bya iyi ni a i Ibintu S"
+
+#: ../mimedir/mimedir-vcomponent.c:269
+#, fuzzy
+msgid "Comment list"
+msgstr "Urutonde"
+
+#: ../mimedir/mimedir-vcomponent.c:270
+#, fuzzy
+msgid ""
+"List of all additional comments for this component. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr "Bya Byose Ibisobanuro kugirango iyi ni a i Ibintu S"
+
+# #-#-#-#-#  basctl.pot (PACKAGE VERSION)  #-#-#-#-#
+# basctl/source\basicide\moptions.src:RID_MACROOPTIONS.RID_FT_DESCR.text
+# #-#-#-#-#  basctl.pot (PACKAGE VERSION)  #-#-#-#-#
+# basctl/source\basicide\moptions.src:RID_MACROOPTIONS.text
+#: ../mimedir/mimedir-vcomponent.c:274
+msgid "Description"
+msgstr "Isobanuramiterere"
+
+#: ../mimedir/mimedir-vcomponent.c:275
+#, fuzzy
+msgid "Full description of this component"
+msgstr "Isobanuramiterere Bya iyi"
+
+#: ../mimedir/mimedir-vcomponent.c:280
+#, fuzzy
+msgid "Percent complete"
+msgstr "Byuzuye"
+
+#: ../mimedir/mimedir-vcomponent.c:281
+#, fuzzy
+msgid "Percentage of this task's completion"
+msgstr "Bya iyi"
+
+# sw/source\ui\wizard\wizmmdlg.src:DLG_WIZARD_MM.DLG_MM2_Edit_Elem1.text
+#: ../mimedir/mimedir-vcomponent.c:288
+msgid "Priority"
+msgstr "Icyihutirwa"
+
+#: ../mimedir/mimedir-vcomponent.c:289
+#, fuzzy
+msgid "This task's priority"
+msgstr "By'ibanze"
+
+#. FIXME: whoops, this isn't handled
+#: ../mimedir/mimedir-vcomponent.c:294
+#, fuzzy
+msgid "Resource list"
+msgstr "Urutonde"
+
+#: ../mimedir/mimedir-vcomponent.c:295
+#, fuzzy
+msgid "List of the resources assigned to this component"
+msgstr "Bya i Kuri iyi"
+
+#: ../mimedir/mimedir-vcomponent.c:299
+msgid "Status"
+msgstr "Imimerere"
+
+#: ../mimedir/mimedir-vcomponent.c:300
+#, fuzzy
+msgid "This task's completion status"
+msgstr "Imimerere"
+
+#: ../mimedir/mimedir-vcomponent.c:307
+msgid "Summary"
+msgstr "Inshamake"
+
+#: ../mimedir/mimedir-vcomponent.c:308
+#, fuzzy
+msgid "Component's short description"
+msgstr "Isobanuramiterere"
+
+#: ../mimedir/mimedir-vcomponent.c:314
+#, fuzzy
+msgid "Date/time completed"
+msgstr "Igihe"
+
+#: ../mimedir/mimedir-vcomponent.c:315
+#, fuzzy
+msgid "Date/time that this task was completed"
+msgstr "Igihe iyi Igikorwa"
+
+#: ../mimedir/mimedir-vcomponent.c:320
+#, fuzzy
+msgid "Date/time end"
+msgstr "Igihe Impera"
+
+#: ../mimedir/mimedir-vcomponent.c:321
+#, fuzzy
+msgid "End date/time of this component"
+msgstr "Impera Itariki Igihe Bya iyi"
+
+#: ../mimedir/mimedir-vcomponent.c:326
+msgid "Due"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:327
+#, fuzzy
+msgid "This task's due date"
+msgstr "Itariki"
+
+#: ../mimedir/mimedir-vcomponent.c:332
+#, fuzzy
+msgid "Date/time start"
+msgstr "Igihe Gutangira"
+
+#: ../mimedir/mimedir-vcomponent.c:333
+#, fuzzy
+msgid "Start date/time of this component"
+msgstr "Gutangira Itariki Igihe Bya iyi"
+
+# officecfg/registry\schema\org\openoffice\Office\Writer.xcs:....AgendaType.Duration.text
+#: ../mimedir/mimedir-vcomponent.c:338
+msgid "Duration"
+msgstr "Igihe-ngombwa"
+
+#: ../mimedir/mimedir-vcomponent.c:339
+#, fuzzy
+msgid "This date's duration"
+msgstr "Igihe- ngombwa"
+
+#: ../mimedir/mimedir-vcomponent.c:344
+#, fuzzy
+msgid "Free/busy"
+msgstr "Irahuze"
+
+#: ../mimedir/mimedir-vcomponent.c:345
+#, fuzzy
+msgid "GList of free/busy objects"
+msgstr "Bya Kigenga Irahuze Ibintu"
+
+#: ../mimedir/mimedir-vcomponent.c:351
+#, fuzzy
+msgid "This component's time zone identifier"
+msgstr "Igihe Ikiranga"
+
+#: ../mimedir/mimedir-vcomponent.c:356
+#, fuzzy
+msgid "Time zone name list"
+msgstr "Izina: Urutonde"
+
+#: ../mimedir/mimedir-vcomponent.c:357
+#, fuzzy
+msgid "GList of time zone names"
+msgstr "Bya Igihe Amazina"
+
+#: ../mimedir/mimedir-vcomponent.c:361 ../mimedir/mimedir-vcomponent.c:362
+#, fuzzy
+msgid "Time zone offset from"
+msgstr "Nta- boneza Bivuye"
+
+#: ../mimedir/mimedir-vcomponent.c:369 ../mimedir/mimedir-vcomponent.c:370
+#, fuzzy
+msgid "Time zone offset to"
+msgstr "Nta- boneza Kuri"
+
+#: ../mimedir/mimedir-vcomponent.c:377
+msgid "Time zone URL"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:378
+#, fuzzy
+msgid "URL to a time zone description"
+msgstr "Kuri a Igihe Isobanuramiterere"
+
+# ***** BEGIN LICENSE BLOCK *****
+# Version: MPL 1.1/GPL 2.0/LGPL 2.1
+#
+# The contents of this file are subject to the Mozilla Public License Version
+# 1.1 (the "License"); you may not use this file except in compliance with
+# the License. You may obtain a copy of the License at
+# http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS IS" basis,
+# WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+# for the specific language governing rights and limitations under the
+# License.
+#
+# The Original Code is Mozilla Communicator client code, released
+# March 31, 1998.
+#
+# The Initial Developer of the Original Code is
+# Netscape Communications Corporation.
+# Portions created by the Initial Developer are Copyright (C) 1998-1999
+# the Initial Developer. All Rights Reserved.
+#
+# Contributor(s):
+#
+# Alternatively, the contents of this file may be used under the terms of
+# either of the GNU General Public License Version 2 or later (the "GPL"),
+# or the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+# in which case the provisions of the GPL or the LGPL are applicable instead
+# of those above. If you wish to allow use of your version of this file only
+# under the terms of either the GPL or the LGPL, and not to allow others to
+# use your version of this file under the terms of the MPL, indicate your
+# decision by deleting the provisions above and replace them with the notice
+# and other provisions required by the GPL or the LGPL. If you do not delete
+# the provisions above, a recipient may use your version of this file under
+# the terms of any one of the MPL, the GPL or the LGPL.
+#
+# ***** END LICENSE BLOCK *****
+# Box Headings
+#: ../mimedir/mimedir-vcomponent.c:384
+msgid "Contact"
+msgstr "Umuntu"
+
+#: ../mimedir/mimedir-vcomponent.c:385
+#, fuzzy
+msgid "Contact information"
+msgstr "Ibisobanuro"
+
+#: ../mimedir/mimedir-vcomponent.c:391
+#, fuzzy
+msgid "Unique identifier"
+msgstr "Ikiranga"
+
+#: ../mimedir/mimedir-vcomponent.c:392
+#, fuzzy
+msgid "A unique identifier for this component"
+msgstr "A Cyo nyine Ikiranga kugirango iyi"
+
+#: ../mimedir/mimedir-vcomponent.c:398
+msgid "Recurrence object"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:399
+msgid "An object representing the RRULE tag"
+msgstr ""
+
+# sc/source\ui\miscdlgs\acredlin.src:RID_POPUP_CHANGES.SC_SUB_SORT.SC_SORT_ACTION.text
+#: ../mimedir/mimedir-vcomponent.c:405 ../mimedir/mimedir-vcomponent.c:406
+msgid "Action"
+msgstr "Igikorwa"
+
+# sfx2/sdi\sfxslots.src:SID_REPEAT.text
+#: ../mimedir/mimedir-vcomponent.c:411 ../mimedir/mimedir-vcomponent.c:412
+msgid "Repeat"
+msgstr "Gusubiramo"
+
+#: ../mimedir/mimedir-vcomponent.c:417 ../mimedir/mimedir-vcomponent.c:418
+msgid "Trigger"
+msgstr "Imbarutso"
+
+#: ../mimedir/mimedir-vcomponent.c:423
+#, fuzzy
+msgid "Trigger date/time"
+msgstr "Itariki Igihe"
+
+#: ../mimedir/mimedir-vcomponent.c:424
+#, fuzzy
+msgid "Date/time of the trigger"
+msgstr "Igihe Bya i Imbarutso"
+
+#: ../mimedir/mimedir-vcomponent.c:429
+#, fuzzy
+msgid "Trigger end"
+msgstr "Impera"
+
+#: ../mimedir/mimedir-vcomponent.c:430
+#, fuzzy
+msgid "Whether the trigger is set at the end of the time interval"
+msgstr "i Imbarutso ni Gushyiraho ku i Impera Bya i Igihe Intera"
+
+# sc/source\ui\src\globstr.src:RID_GLOBSTR.STR_DOC_CREATED.text
+#: ../mimedir/mimedir-vcomponent.c:436
+msgid "Created"
+msgstr "Byaremwe"
+
+#: ../mimedir/mimedir-vcomponent.c:437
+#, fuzzy
+msgid "Date/time of the creation"
+msgstr "Igihe Bya i"
+
+#: ../mimedir/mimedir-vcomponent.c:442
+#, fuzzy
+msgid "Date/time stamp"
+msgstr "Igihe"
+
+#: ../mimedir/mimedir-vcomponent.c:443
+#, fuzzy
+msgid "Date/time of the last modification"
+msgstr "Igihe Bya i Iheruka"
+
+#: ../mimedir/mimedir-vcomponent.c:448
+msgid "Sequence"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:449
+#, fuzzy
+msgid "Sequence number"
+msgstr "Umubare"

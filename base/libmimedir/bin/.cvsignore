@@ -1,0 +1,5 @@
+Makefile
+Makefile.in
+ical-dump
+vcard-dump
+vcard-normalize

@@ -1,0 +1,86 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirVCardPhone
+
+<!-- ##### SECTION Short_Description ##### -->
+vCard phone object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+The MIMEDirVCardPhone object contains information about a particular
+telephone number that can be found in vCards. It contains some special
+propertiesthat relate to the type of telephone number.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirVCardPhone ##### -->
+<para>
+The #MIMEDirVCardPhone-struct struct contains private data only, and
+should be accessed using the functions below.
+</para>
+
+@parent: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_vcard_phone_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_phone_new_from_attribute ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_phone_set_from_attribute ##### -->
+<para>
+
+</para>
+
+@phone: 
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_phone_save_to_attribute ##### -->
+<para>
+
+</para>
+
+@phone: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_phone_get_as_string ##### -->
+<para>
+
+</para>
+
+@phone: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_vcard_phone_get_type_string ##### -->
+<para>
+
+</para>
+
+@phone: 
+@Returns: 
+
+

@@ -1,0 +1,1842 @@
+# Arabic translations for PACKAGE package.
+# Copyright (C) 2006 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Project\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-11-17 21:14+0000\n"
+"PO-Revision-Date: 2006-11-18 00:28+0100\n"
+"Last-Translator: Djihed Afifi <djihed@gmail.com>\n"
+"Language-Team: Arabic <doc@arabeyes.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n == 0 ? 0 : n == 1 ? 1 : n == 2 ? 2 : n >= 3 && n <= 10 ? 3 : n >= 11 && n <= 99 ? 4 : 5;\n"
+"X-Poedit-Language: Arabic\n"
+
+#: ../bin/ical-dump.c:48
+#, fuzzy, c-format
+msgid "Usage: %s ICALFILE\n"
+msgstr "الاستعمال:·%s:·[-D]·[-E]·[-a·accuracy]·"
+
+#: ../bin/ical-dump.c:57
+msgid "secondly"
+msgstr ""
+
+#: ../bin/ical-dump.c:59
+msgid "minutely"
+msgstr ""
+
+#: ../bin/ical-dump.c:61
+msgid "hourly"
+msgstr ""
+
+#: ../bin/ical-dump.c:63
+msgid "daily"
+msgstr ""
+
+#: ../bin/ical-dump.c:65
+msgid "weekly"
+msgstr ""
+
+#: ../bin/ical-dump.c:67
+msgid "monthly"
+msgstr ""
+
+#: ../bin/ical-dump.c:69
+msgid "yearly"
+msgstr ""
+
+#: ../bin/ical-dump.c:71
+#: ../bin/ical-dump.c:97
+#, fuzzy
+msgid "unknown"
+msgstr "مجهول"
+
+#: ../bin/ical-dump.c:81
+#, fuzzy
+msgid "second"
+msgstr "الثّاني"
+
+#: ../bin/ical-dump.c:83
+#, fuzzy
+msgid "minute"
+msgstr "دقيقة"
+
+#: ../bin/ical-dump.c:85
+#, fuzzy
+msgid "hour"
+msgstr "ساعة"
+
+#: ../bin/ical-dump.c:87
+#, fuzzy
+msgid "day"
+msgstr "اليوم"
+
+#: ../bin/ical-dump.c:89
+#, fuzzy
+msgid "day of month"
+msgstr "مشهد الشّهر"
+
+#: ../bin/ical-dump.c:91
+#, fuzzy
+msgid "day of year"
+msgstr "السّنة المنتقاة (%Y)"
+
+#: ../bin/ical-dump.c:93
+#, fuzzy
+msgid "week number"
+msgstr "رقم ال_حساب:"
+
+#: ../bin/ical-dump.c:95
+#, fuzzy
+msgid "month"
+msgstr "الشّهر"
+
+#: ../bin/ical-dump.c:118
+#, fuzzy, c-format
+msgid "  Recurrence:\n"
+msgstr "التّكرار"
+
+#: ../bin/ical-dump.c:120
+#, c-format
+msgid "    Frequency: %s\n"
+msgstr ""
+
+#: ../bin/ical-dump.c:123
+#, fuzzy, c-format
+msgid "    Until: %s\n"
+msgstr "حتّى"
+
+#: ../bin/ical-dump.c:128
+#, fuzzy, c-format
+msgid "    Count: %d\n"
+msgstr "عد الرموز "
+
+#: ../bin/ical-dump.c:131
+#, fuzzy, c-format
+msgid "    Interval: %d\n"
+msgstr "فترة ال_تحديث"
+
+#: ../bin/ical-dump.c:134
+#, fuzzy, c-format
+msgid "    Unit: %s\n"
+msgstr "الوحدة:"
+
+#: ../bin/ical-dump.c:137
+#, fuzzy, c-format
+msgid "    Units: %s\n"
+msgstr "الوحدات"
+
+#: ../bin/ical-dump.c:152
+#, fuzzy, c-format
+msgid ""
+"Event:\n"
+"\n"
+msgstr "حدث"
+
+#: ../bin/ical-dump.c:154
+#, fuzzy, c-format
+msgid ""
+"Todo item:\n"
+"\n"
+msgstr "عنصر _جديد"
+
+#: ../bin/ical-dump.c:156
+#, fuzzy, c-format
+msgid ""
+"Unknown component:\n"
+"\n"
+msgstr "مكوّن مضمّن"
+
+#: ../bin/ical-dump.c:177
+#, fuzzy, c-format
+msgid "  Summary: %s\n"
+msgstr "الملخّص:"
+
+#: ../bin/ical-dump.c:182
+#, fuzzy, c-format
+msgid "  Categories: %s\n"
+msgstr "الفئات"
+
+#: ../bin/ical-dump.c:188
+#, fuzzy
+msgid "high"
+msgstr "مرتفعة"
+
+#: ../bin/ical-dump.c:190
+#, fuzzy
+msgid "low"
+msgstr "منخفضة"
+
+#: ../bin/ical-dump.c:192
+#, fuzzy
+msgid "medium"
+msgstr "_متوسط"
+
+#: ../bin/ical-dump.c:193
+#, fuzzy, c-format
+msgid "  Priority: %s (%d)\n"
+msgstr "الأ_ولويّة:"
+
+#: ../bin/ical-dump.c:198
+#, fuzzy, c-format
+msgid "  Start date: %s\n"
+msgstr "تاريخ البدء:"
+
+#: ../bin/ical-dump.c:205
+#, fuzzy, c-format
+msgid "  End date: %s\n"
+msgstr "تاريخ الإنتهاء خاطئ"
+
+#: ../bin/ical-dump.c:213
+#, fuzzy, c-format
+msgid "  Due date: %s\n"
+msgstr "تاريخ الإستحقاق:"
+
+#: ../bin/ical-dump.c:222
+#, fuzzy, c-format
+msgid "  Unique ID: %s\n"
+msgstr "الهويّة الفريدة للمُصدر"
+
+#: ../bin/ical-dump.c:223
+#, fuzzy, c-format
+msgid "  Sequence: %u\n"
+msgstr "<b>متتالية</b>"
+
+#: ../bin/ical-dump.c:236
+#, fuzzy, c-format
+msgid "  All day event\n"
+msgstr "_حدث جديد يستغرق يوماً كاملاً"
+
+#: ../bin/ical-dump.c:261
+#: ../bin/vcard-dump.c:84
+#: ../bin/vcard-normalize.c:68
+#, fuzzy, c-format
+msgid "%s: invalid number of arguments\n"
+msgstr "رقم منفذ غير صحيح: %d."
+
+#: ../bin/vcard-dump.c:43
+#: ../bin/vcard-normalize.c:43
+#, fuzzy, c-format
+msgid "Usage: %s VCARDFILE\n"
+msgstr "الاستعمال:·%s:·[-D]·[-E]·[-a·accuracy]·"
+
+#: ../bin/vcard-normalize.c:79
+#, fuzzy, c-format
+msgid "%s: error reading card file: %s\n"
+msgstr "خطأ أثناء قراءة ملف البريد: %s"
+
+#: ../bin/vcard-normalize.c:96
+#, fuzzy, c-format
+msgid "%s: error writing card file: %s\n"
+msgstr "خطأ كتابة ملف الجلسة '%s': %s\n"
+
+#: ../mimedir/mimedir-attribute.c:131
+#: ../mimedir/mimedir-vcard.c:298
+#, fuzzy
+msgid "Name"
+msgstr "اسم"
+
+#: ../mimedir/mimedir-attribute.c:132
+#, fuzzy
+msgid "The attribute's name"
+msgstr "اسم الموصول"
+
+#: ../mimedir/mimedir-attribute.c:137
+#, fuzzy
+msgid "Group"
+msgstr "مجموعة"
+
+#: ../mimedir/mimedir-attribute.c:138
+#, fuzzy
+msgid "The attribute's group"
+msgstr "مجموعة الرُّزنامة"
+
+#: ../mimedir/mimedir-attribute.c:933
+#, fuzzy
+msgid "missing parameter name"
+msgstr "الاسم مطلوب"
+
+#: ../mimedir/mimedir-attribute.c:958
+msgid "missing closing quotation mark"
+msgstr ""
+
+#: ../mimedir/mimedir-attribute.c:983
+#, fuzzy
+msgid "wrong parameter syntax"
+msgstr "تفعيل إبراز بناء الجملة"
+
+#: ../mimedir/mimedir-attribute.c:993
+#, fuzzy
+msgid "no parameter value"
+msgstr "(لا قيمة ضبطت)"
+
+#: ../mimedir/mimedir-attribute.c:1086
+#, fuzzy
+msgid "missing attribute name/group"
+msgstr "اسم المجموعة خالٍ"
+
+#: ../mimedir/mimedir-attribute.c:1102
+#, fuzzy
+msgid "no attribute name after group"
+msgstr "لا صفة \"اسم\" على العنصر <%s>"
+
+#: ../mimedir/mimedir-attribute.c:1118
+#, fuzzy
+msgid "missing value delimiter"
+msgstr "قيمة التكبير المحلي"
+
+#: ../mimedir/mimedir-attribute.c:1134
+#, fuzzy
+msgid "invalid character"
+msgstr "محرفٌ غير سليم \"%c\" في التّعليق"
+
+#: ../mimedir/mimedir-attribute.c:2505
+#: ../mimedir/mimedir-attribute.c:2514
+#, fuzzy
+msgid "illegal character"
+msgstr "تشفيرة الرموز"
+
+#: ../mimedir/mimedir-attribute.h:48
+#, fuzzy, c-format
+msgid "syntax error (%s)"
+msgstr "خطأ صياغي، أمر غير معروف"
+
+#: ../mimedir/mimedir-attribute.h:49
+#, c-format
+msgid "illegal character 0x%02x for type \"%s\""
+msgstr ""
+
+#: ../mimedir/mimedir-attribute.h:50
+#, c-format
+msgid "invalid format for type \"%s\" in attribute %s"
+msgstr ""
+
+#: ../mimedir/mimedir-attribute.h:51
+#, c-format
+msgid "attribute %s could not be decoded, since its encoding is unknown"
+msgstr ""
+
+#: ../mimedir/mimedir-attribute.h:52
+#, fuzzy, c-format
+msgid "invalid value in attribute %s"
+msgstr "يو تي اف غير سليم في سلسلة القيمة عند '%s'"
+
+#: ../mimedir/mimedir-attribute.h:53
+#, c-format
+msgid "parameter \"%s\" must not be used more than once in attribute %s"
+msgstr ""
+
+#: ../mimedir/mimedir-attribute.h:54
+#, fuzzy
+msgid "invalid Base64 sequence"
+msgstr "سلسلة غير سليمة في مُدخلات التحويل"
+
+#: ../mimedir/mimedir-attribute.h:55
+#, fuzzy
+msgid "invalid quoted-printable sequence"
+msgstr "سلسلة غير سليمة في مُدخلات التحويل"
+
+#: ../mimedir/mimedir-attribute.h:56
+#, c-format
+msgid "attribute list of %s is too short"
+msgstr ""
+
+#: ../mimedir/mimedir-attribute.h:57
+#, fuzzy, c-format
+msgid "attribute list of %s is too long"
+msgstr "اسم المجموعة طويل جدا"
+
+#: ../mimedir/mimedir-datetime.c:114
+#: ../mimedir/mimedir-vcomponent.c:352
+#, fuzzy
+msgid "Time zone identifier"
+msgstr "اختر منطقة زمنيّة"
+
+#: ../mimedir/mimedir-datetime.c:115
+msgid "Time zone identifying string"
+msgstr ""
+
+#. Translators: YYYY-MM-DD HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1081
+#, fuzzy, c-format
+msgid "%04d-%02d-%02d %02d:%02d:%02d"
+msgstr "(%d:%02d:%d متبقيّة)"
+
+#. Translators: YYYY-MM-DD
+#: ../mimedir/mimedir-datetime.c:1086
+#, fuzzy, c-format
+msgid "%04d-%02d-%02d"
+msgstr "(%d:%02d:%d متبقيّة)"
+
+#. Translators: HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1090
+#, fuzzy, c-format
+msgid "%02d:%02d:%02d"
+msgstr "%d:%02d"
+
+#: ../mimedir/mimedir-period.c:111
+#, fuzzy
+msgid "Free/busy type"
+msgstr "معلومات متوفّر/مشغول"
+
+#: ../mimedir/mimedir-period.c:112
+msgid "Whether this object signifies a free or a busy period"
+msgstr ""
+
+#: ../mimedir/mimedir-profile.c:114
+#, fuzzy
+msgid "Profile name"
+msgstr "ا_سم اللمحة المختصرة:"
+
+#: ../mimedir/mimedir-profile.c:115
+#, fuzzy
+msgid "The name (type) of the profile"
+msgstr "يجب أن يحتوي التقويم اسم"
+
+#: ../mimedir/mimedir-profile.c:121
+#, fuzzy
+msgid "Character set"
+msgstr "مجموعة رموز مجهولة: %s"
+
+#: ../mimedir/mimedir-profile.c:122
+msgid "Character set used to en-/decode this profile"
+msgstr ""
+
+#: ../mimedir/mimedir-profile.h:40
+#, fuzzy, c-format
+msgid "attribute %s defined twice"
+msgstr "الخيار \"%s\" معطى مرتّان\n"
+
+#: ../mimedir/mimedir-profile.h:41
+#, fuzzy
+msgid "unexpected end of profile"
+msgstr "نهاية غير متوقّعة لبيانات صورة PNM"
+
+#: ../mimedir/mimedir-profile.h:42
+#, fuzzy, c-format
+msgid "required attribute %s is missing"
+msgstr "دليل الجلسة مفقود"
+
+#: ../mimedir/mimedir-profile.h:43
+#, fuzzy
+msgid "unmatched END attribute"
+msgstr "حدود قيم الصّفة"
+
+#: ../mimedir/mimedir-profile.h:44
+#, fuzzy, c-format
+msgid "wrong profile %s; expected %s"
+msgstr "ترقّب اللاعب القيم"
+
+#: ../mimedir/mimedir-recurrence.c:221
+msgid "Frequency"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:222
+msgid "Frequency type of this recurrency rule"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:229
+#, fuzzy
+msgid "Date of last recurrence"
+msgstr "تاريخ التّكرار غير صحيح"
+
+#: ../mimedir/mimedir-recurrence.c:230
+#, fuzzy
+msgid "The date of the last recurrence of an event"
+msgstr "تاريخ التّكرار غير صحيح"
+
+#: ../mimedir/mimedir-recurrence.c:235
+#, fuzzy
+msgid "Number of recurrences"
+msgstr "رقم ال_حساب:"
+
+#: ../mimedir/mimedir-recurrence.c:236
+#, fuzzy
+msgid "The number of recurrences of an event"
+msgstr "مظهر أحداث الأشهر"
+
+#: ../mimedir/mimedir-recurrence.c:243
+#, fuzzy
+msgid "Recurrence interval"
+msgstr "فترة ال_تحديث"
+
+#: ../mimedir/mimedir-recurrence.c:244
+#, fuzzy
+msgid "The interval of recurrences of an event"
+msgstr "مظهر أحداث الأشهر"
+
+#: ../mimedir/mimedir-recurrence.c:251
+#, fuzzy
+msgid "Recurrence unit"
+msgstr "الوحدة المؤسساتية:"
+
+#: ../mimedir/mimedir-recurrence.c:252
+msgid "By which unit a recurrence should be repeated"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:259
+#, fuzzy
+msgid "Recurrence units"
+msgstr "وحدات مساحة المستخدم"
+
+#: ../mimedir/mimedir-recurrence.c:260
+msgid "List of units by which a recurrence should be repeated"
+msgstr ""
+
+#: ../mimedir/mimedir-valarm.c:548
+#, fuzzy, c-format
+msgid ""
+"Reminder of your appointment:\n"
+"\n"
+"%s\n"
+"%s"
+msgstr "إنشاء موعد جديد"
+
+#: ../mimedir/mimedir-vcal.c:148
+#, fuzzy
+msgid "Method"
+msgstr "<b>ال_طريقة:</b>"
+
+#: ../mimedir/mimedir-vcal.c:149
+#, fuzzy
+msgid "The vCalendar's method"
+msgstr "طريقة NAT"
+
+#: ../mimedir/mimedir-vcal.c:154
+#: ../mimedir/mimedir-vcard.c:505
+#, fuzzy
+msgid "Product identifier"
+msgstr "مميّز الجسم (%s)"
+
+#: ../mimedir/mimedir-vcal.c:155
+msgid "The product identifier of the vCalendar. In case of newly generated objects, this is LibMIMEDir's product identifier"
+msgstr ""
+
+#: ../mimedir/mimedir-vcal.c:384
+#: ../mimedir/mimedir-vcard.c:2411
+#: ../mimedir/mimedir-vcomponent.c:2111
+#, c-format
+msgid "The profile contains the unsupported custom attribute %s.\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcal.c:387
+#: ../mimedir/mimedir-vcard.c:2414
+#: ../mimedir/mimedir-vcomponent.c:2114
+#, fuzzy, c-format
+msgid "The profile contains the unknown attribute %s.\n"
+msgstr "صفة مجهولة %s على عنصر <window>"
+
+#: ../mimedir/mimedir-vcal.c:432
+#: ../mimedir/mimedir-vcal.c:454
+#: ../mimedir/mimedir-vcal.c:482
+#: ../mimedir/mimedir-vcal.c:506
+#, fuzzy, c-format
+msgid "Error reading calendar file %s: %s!"
+msgstr "خطأ أثناء قراءة ملف البريد: %s"
+
+#: ../mimedir/mimedir-vcard-address.c:167
+#, fuzzy
+msgid "Title"
+msgstr "العنوان"
+
+#: ../mimedir/mimedir-vcard-address.c:168
+msgid "A one-line string with the most important address information"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:174
+#, fuzzy
+msgid "Freeform address"
+msgstr "عنوان البريد الإلكتروني"
+
+#: ../mimedir/mimedir-vcard-address.c:175
+#, fuzzy
+msgid "A freeform address string"
+msgstr "سلسلة هندسة غير سليمة \"%s\"\n"
+
+#: ../mimedir/mimedir-vcard-address.c:180
+#, fuzzy
+msgid "Post office box"
+msgstr "رسم حدود الصناديق"
+
+#: ../mimedir/mimedir-vcard-address.c:181
+msgid "The addresses post office box"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:186
+#, fuzzy
+msgid "Extended address"
+msgstr "عنوان البريد الإلكتروني"
+
+#: ../mimedir/mimedir-vcard-address.c:187
+#, fuzzy
+msgid "Extended address string"
+msgstr "سلسلة هندسة غير سليمة \"%s\"\n"
+
+#: ../mimedir/mimedir-vcard-address.c:192
+msgid "Street"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:193
+#, fuzzy
+msgid "Street address"
+msgstr "عنوان البريد الإلكتروني"
+
+#: ../mimedir/mimedir-vcard-address.c:198
+msgid "Locality"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:199
+msgid "Locality (e.g. city, town, etc.)"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:204
+msgid "Region"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:205
+#, fuzzy
+msgid "Region (e.g. state)"
+msgstr "ال_ولاية/المحافظة:"
+
+#: ../mimedir/mimedir-vcard-address.c:210
+#, fuzzy
+msgid "Postal code"
+msgstr "الرمز البريدي:"
+
+#: ../mimedir/mimedir-vcard-address.c:211
+msgid "Postal code (freeform string)"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:216
+#: ../mimedir/mimedir-vcard-address.c:217
+#, fuzzy
+msgid "Country"
+msgstr "كنتري"
+
+#: ../mimedir/mimedir-vcard-address.c:222
+msgid "Domestic"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:223
+#, fuzzy
+msgid "Whether this is a domestic address"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-address.c:228
+#, fuzzy
+msgid "International"
+msgstr "الولايات المتحدة عالمي"
+
+#: ../mimedir/mimedir-vcard-address.c:229
+#, fuzzy
+msgid "Whether this is an international address"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-address.c:234
+#, fuzzy
+msgid "Postal"
+msgstr "الرمز البريدي:"
+
+#: ../mimedir/mimedir-vcard-address.c:235
+#, fuzzy
+msgid "Whether this is a postal address"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-address.c:240
+msgid "Parcel"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:241
+msgid "Whether parcels can be received at this address"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:246
+#: ../mimedir/mimedir-vcard-email.c:163
+#: ../mimedir/mimedir-vcard-phone.c:160
+#, fuzzy
+msgid "Home"
+msgstr "المنزل"
+
+#: ../mimedir/mimedir-vcard-address.c:247
+#, fuzzy
+msgid "Whether this is a home address"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-address.c:252
+#: ../mimedir/mimedir-vcard-email.c:169
+#: ../mimedir/mimedir-vcard-phone.c:166
+#, fuzzy
+msgid "Work"
+msgstr "عمل"
+
+#: ../mimedir/mimedir-vcard-address.c:253
+#, fuzzy
+msgid "Whether this is a work address"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-address.c:258
+#: ../mimedir/mimedir-vcard-email.c:157
+#: ../mimedir/mimedir-vcard-phone.c:232
+#, fuzzy
+msgid "Preferred"
+msgstr "التطبيقات المفضّلة"
+
+#: ../mimedir/mimedir-vcard-address.c:259
+#, fuzzy
+msgid "Whether this is the preferred address"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-address.c:572
+#, c-format
+msgid "The %s attribute contains too many elements.\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:772
+#, c-format
+msgid "The address field is of unknown type %s.\n"
+msgstr ""
+
+#. Translators: pcode city
+#: ../mimedir/mimedir-vcard-address.c:864
+#: ../mimedir/mimedir-vcard-address.c:873
+#, fuzzy, c-format
+msgid "%s %s"
+msgstr "%s·%s"
+
+#. Translators: city, region
+#: ../mimedir/mimedir-vcard-address.c:871
+#, c-format
+msgid "%s, %s"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:914
+#: ../mimedir/mimedir-vcard-email.c:538
+#: ../mimedir/mimedir-vcard-phone.c:695
+#, fuzzy
+msgid "preferred"
+msgstr "التطبيقات المفضّلة"
+
+#: ../mimedir/mimedir-vcard-address.c:919
+msgid "domestic"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:924
+#, fuzzy
+msgid "international"
+msgstr "الولايات المتحدة عالمي"
+
+#: ../mimedir/mimedir-vcard-address.c:929
+#, fuzzy
+msgid "postal"
+msgstr "الرمز البريدي:"
+
+#: ../mimedir/mimedir-vcard-address.c:934
+msgid "parcel"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:939
+#: ../mimedir/mimedir-vcard-email.c:560
+#: ../mimedir/mimedir-vcard-phone.c:701
+#, fuzzy
+msgid "home"
+msgstr "home"
+
+#: ../mimedir/mimedir-vcard-address.c:944
+#: ../mimedir/mimedir-vcard-email.c:566
+#: ../mimedir/mimedir-vcard-phone.c:706
+#, fuzzy
+msgid "work"
+msgstr "عمل"
+
+#. Translators: Short address format: "locality/street"
+#: ../mimedir/mimedir-vcard-address.c:996
+#, c-format
+msgid "%s/%s"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-address.c:1002
+#, fuzzy
+msgid "<unknown>"
+msgstr "مجهول"
+
+#: ../mimedir/mimedir-vcard-email.c:142
+#: ../mimedir/mimedir-vcard.c:368
+#, fuzzy
+msgid "Address"
+msgstr "العنوان"
+
+#: ../mimedir/mimedir-vcard-email.c:143
+#, fuzzy
+msgid "The e-mail address"
+msgstr "عنواوين ال_بريد الالكتروني:"
+
+#: ../mimedir/mimedir-vcard-email.c:149
+#, fuzzy
+msgid "Type"
+msgstr "النّوع"
+
+#: ../mimedir/mimedir-vcard-email.c:150
+#, fuzzy
+msgid "Type of this e-mail address"
+msgstr "أدخل عنوان بريدك الالكتروني"
+
+#: ../mimedir/mimedir-vcard-email.c:158
+msgid "Whether this is the preferred e-mail address"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-email.c:164
+msgid "Whether is a home e-mail address"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-email.c:170
+msgid "Whether this is an e-mail address at work"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-email.c:442
+#, c-format
+msgid "The email field is of unknown type %s.\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-email.c:548
+#, fuzzy
+msgid "Internet"
+msgstr "إنترنت"
+
+#: ../mimedir/mimedir-vcard-email.c:553
+#, fuzzy
+msgid "X.400"
+msgstr "400%"
+
+#: ../mimedir/mimedir-vcard-phone.c:153
+#, fuzzy
+msgid "Number"
+msgstr "الرقم"
+
+#: ../mimedir/mimedir-vcard-phone.c:154
+msgid "The telephone number (freeform string)"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:161
+msgid "Whether this is a home phone number"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:167
+msgid "Whether this is a phone number at work"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:172
+#, fuzzy
+msgid "Voice"
+msgstr "صوت"
+
+#: ../mimedir/mimedir-vcard-phone.c:173
+#, fuzzy
+msgid "Whether this is a voice number"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-phone.c:178
+#, fuzzy
+msgid "Fax"
+msgstr "فاكس العمل"
+
+#: ../mimedir/mimedir-vcard-phone.c:179
+#, fuzzy
+msgid "Whether this is a facsimile number"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-phone.c:184
+#: ../mimedir/mimedir-vcard-phone.c:721
+msgid "BBS"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:185
+msgid "Whether this is a bulletin board system number"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:190
+#, fuzzy
+msgid "Modem"
+msgstr "مودم"
+
+#: ../mimedir/mimedir-vcard-phone.c:191
+#, fuzzy
+msgid "Whether this is a modem number"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-phone.c:196
+#, fuzzy
+msgid "Pager"
+msgstr "بيبر"
+
+#: ../mimedir/mimedir-vcard-phone.c:197
+#, fuzzy
+msgid "Whether this is a pager number"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-phone.c:202
+#, fuzzy
+msgid "Video"
+msgstr "الفيديو"
+
+#: ../mimedir/mimedir-vcard-phone.c:203
+msgid "Whether this is a video phone number"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:208
+#, fuzzy
+msgid "Cell"
+msgstr "خلية"
+
+#: ../mimedir/mimedir-vcard-phone.c:209
+msgid "Whether this is a cell (mobile) phone number"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:214
+#, fuzzy
+msgid "Car"
+msgstr "هاتف السّيارة"
+
+#: ../mimedir/mimedir-vcard-phone.c:215
+msgid "Whether this is car phone number"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:220
+#: ../mimedir/mimedir-vcard-phone.c:756
+#, fuzzy
+msgid "ISDN"
+msgstr "ISDN"
+
+#: ../mimedir/mimedir-vcard-phone.c:221
+#, fuzzy
+msgid "Whether this is a ISDN number"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-phone.c:226
+#: ../mimedir/mimedir-vcard-phone.c:761
+msgid "PCS"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:227
+#, fuzzy
+msgid "Whether this is a PCS number"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-phone.c:233
+#, fuzzy
+msgid "Whether this is the preferred number"
+msgstr "ما اذا يكون تركيز الإدخال ضمن GtkWindow الحالي"
+
+#: ../mimedir/mimedir-vcard-phone.c:238
+#, fuzzy
+msgid "Message"
+msgstr "رسالة"
+
+#: ../mimedir/mimedir-vcard-phone.c:239
+msgid "Whether this number has a voice recorder"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:588
+#, c-format
+msgid "The phone field is of unknown type %s.\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard-phone.c:711
+#, fuzzy
+msgid "voice"
+msgstr "<b>الصوت</b>"
+
+#: ../mimedir/mimedir-vcard-phone.c:716
+#, fuzzy
+msgid "fax"
+msgstr "فاكس العمل"
+
+#: ../mimedir/mimedir-vcard-phone.c:726
+#, fuzzy
+msgid "modem"
+msgstr "مودم"
+
+#: ../mimedir/mimedir-vcard-phone.c:731
+#, fuzzy
+msgid "pager"
+msgstr "بيبر"
+
+#: ../mimedir/mimedir-vcard-phone.c:736
+#, fuzzy
+msgid "video"
+msgstr "الفيديو"
+
+#: ../mimedir/mimedir-vcard-phone.c:741
+#, fuzzy
+msgid "voice message"
+msgstr "إر_سال رسالة"
+
+#: ../mimedir/mimedir-vcard-phone.c:746
+#, fuzzy
+msgid "cell phone"
+msgstr "هاتف المساعد"
+
+#: ../mimedir/mimedir-vcard-phone.c:751
+#, fuzzy
+msgid "car phone"
+msgstr "هاتف السّيارة"
+
+#: ../mimedir/mimedir-vcard.c:299
+msgid "The spelled out name full name of this person"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:304
+#, fuzzy
+msgid "Family name"
+msgstr "إسم العائلة"
+
+#: ../mimedir/mimedir-vcard.c:305
+#, fuzzy
+msgid "The family name of this person"
+msgstr "يجب أن تسمّي هذه المصفاة."
+
+#: ../mimedir/mimedir-vcard.c:310
+#, fuzzy
+msgid "Given name"
+msgstr "الإسم المعطى"
+
+#: ../mimedir/mimedir-vcard.c:311
+#, fuzzy
+msgid "The given name of this person"
+msgstr "يجب أن تسمّي هذه المصفاة."
+
+#: ../mimedir/mimedir-vcard.c:316
+#, fuzzy
+msgid "Middle name"
+msgstr "اسم الموصول"
+
+#: ../mimedir/mimedir-vcard.c:317
+msgid "The middle name or middle initials of this person"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:322
+#, fuzzy
+msgid "Prefix"
+msgstr "سابقة"
+
+#: ../mimedir/mimedir-vcard.c:323
+msgid "The name prefix (e.g. honorific prefix) of this person"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:328
+#, fuzzy
+msgid "Suffix"
+msgstr "ال_لّاحقة:"
+
+#: ../mimedir/mimedir-vcard.c:329
+#, fuzzy
+msgid "The name suffix of this person"
+msgstr "يجب أن تسمّي هذه المصفاة."
+
+#: ../mimedir/mimedir-vcard.c:334
+#, fuzzy
+msgid "Nickname list"
+msgstr "قائمة الحسابات"
+
+#: ../mimedir/mimedir-vcard.c:335
+msgid "List of all nick names. This is a GList *, where the elements are of type const gchar *"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:339
+#, fuzzy
+msgid "Nick name"
+msgstr "اسم الموصول"
+
+#: ../mimedir/mimedir-vcard.c:340
+#, fuzzy
+msgid "The first nick name"
+msgstr "أدخل اسمك الأول"
+
+#. FIXME: this is useless
+#: ../mimedir/mimedir-vcard.c:345
+#, fuzzy
+msgid "Photo"
+msgstr "صورة تسجيل الدخول"
+
+#: ../mimedir/mimedir-vcard.c:346
+msgid "Pointer to a byte stream, representing an image of the person"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:350
+#, fuzzy
+msgid "Photo URI"
+msgstr "عنوان غير صحيح"
+
+#: ../mimedir/mimedir-vcard.c:351
+msgid "URI to an image of this person"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:356
+msgid "Birthday"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:357
+#, fuzzy
+msgid "The person's birthday"
+msgstr "شخص مجهول"
+
+#: ../mimedir/mimedir-vcard.c:363
+#, fuzzy
+msgid "Address list"
+msgstr "قائمة الحسابات"
+
+#: ../mimedir/mimedir-vcard.c:364
+msgid "List of all addresses. This is a GList *, where the elements are of type MIMEDirAddress *"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:369
+#, fuzzy
+msgid "The preferred address"
+msgstr "عنوان البريد الإلكتروني"
+
+#: ../mimedir/mimedir-vcard.c:375
+#, fuzzy
+msgid "Phone number list"
+msgstr "لائحة كودكات الصوت"
+
+#: ../mimedir/mimedir-vcard.c:376
+msgid "List of all phone numbers. This is a GList *, where the elements are of type MIMEDirPhone *"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:380
+#, fuzzy
+msgid "Phone number"
+msgstr "_رقم الهاتف:"
+
+#: ../mimedir/mimedir-vcard.c:381
+#, fuzzy
+msgid "The preferred phone number"
+msgstr "رقم يحدد التيمة المحبذة."
+
+#: ../mimedir/mimedir-vcard.c:386
+#, fuzzy
+msgid "E-mail address list"
+msgstr "بريد (دفتر العناوين)"
+
+#: ../mimedir/mimedir-vcard.c:387
+msgid "List of all e-mail addresses. This is a GList *, where the elements are of type MIMEDirEmail *"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:391
+#, fuzzy
+msgid "E-mail address"
+msgstr "عنواوين ال_بريد الالكتروني:"
+
+#: ../mimedir/mimedir-vcard.c:392
+#, fuzzy
+msgid "The preferred e-mail address"
+msgstr "بريد (دفتر العناوين)"
+
+#: ../mimedir/mimedir-vcard.c:397
+#, fuzzy
+msgid "Mailer"
+msgstr "المرسِل"
+
+#: ../mimedir/mimedir-vcard.c:398
+msgid "The mailing program used by this person"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:404
+#, fuzzy
+msgid "Time zone"
+msgstr "المنطقة الزمنيّة"
+
+#: ../mimedir/mimedir-vcard.c:405
+msgid "The time zone this person lives in"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:412
+#, fuzzy
+msgid "Time zone string"
+msgstr "اختر منطقة زمنيّة"
+
+#: ../mimedir/mimedir-vcard.c:413
+msgid "The time zone this person lives in (deprecated string representation)"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:418
+msgid "Latitude"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:419
+msgid "Latitude of this person's residence"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:426
+msgid "Longitude"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:427
+msgid "Longitude of this person's residence"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:435
+#, fuzzy
+msgid "Job title"
+msgstr "المسمّى الوظيفي"
+
+#: ../mimedir/mimedir-vcard.c:436
+#, fuzzy
+msgid "The person's job title"
+msgstr "اللقب و_ العنوان"
+
+#: ../mimedir/mimedir-vcard.c:441
+#, fuzzy
+msgid "Role"
+msgstr "الدّور"
+
+#: ../mimedir/mimedir-vcard.c:442
+#, fuzzy
+msgid "The person's job role"
+msgstr "لا دور متوفر"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:447
+#, fuzzy
+msgid "Logo"
+msgstr "الشعار"
+
+#: ../mimedir/mimedir-vcard.c:448
+msgid "Pointer to a byte stream, representing the logo of the person's company"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:452
+#, fuzzy
+msgid "Logo URI"
+msgstr "عنوان غير صحيح"
+
+#: ../mimedir/mimedir-vcard.c:453
+msgid "URI to the logo of this person's company"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:458
+#, fuzzy
+msgid "Agent"
+msgstr "وكيل البريد"
+
+#: ../mimedir/mimedir-vcard.c:459
+msgid "A person, acting for the person described in this card"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:464
+#, fuzzy
+msgid "Agent URI"
+msgstr "عنوان غير صحيح"
+
+#: ../mimedir/mimedir-vcard.c:465
+msgid "URI to the description of a person, acting for the person described in this card"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:470
+#, fuzzy
+msgid "Agent string"
+msgstr "سلسلة البحث"
+
+#: ../mimedir/mimedir-vcard.c:471
+msgid "A person, acting for the person described in this card (deprecated string representation)"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:476
+#, fuzzy
+msgid "Organization list"
+msgstr "قائمة الحسابات"
+
+#: ../mimedir/mimedir-vcard.c:477
+msgid "List of all organization this person belongs to. This is a GList *, where the elements are gchar *'s"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:481
+#, fuzzy
+msgid "Organization"
+msgstr "المنظّمة"
+
+#: ../mimedir/mimedir-vcard.c:482
+#, fuzzy
+msgid "The person's first organization"
+msgstr "على اﻷول أصلاً"
+
+#: ../mimedir/mimedir-vcard.c:488
+#: ../mimedir/mimedir-vcomponent.c:266
+#, fuzzy
+msgid "Category list"
+msgstr "قائمة الحسابات"
+
+#: ../mimedir/mimedir-vcard.c:489
+msgid "List of all categories of this person. This is a GList *, where the elements are gchar *'s"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:493
+#, fuzzy
+msgid "Categories"
+msgstr "الفئات"
+
+#: ../mimedir/mimedir-vcard.c:494
+msgid "String representation of this person's categories"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:499
+#, fuzzy
+msgid "Note"
+msgstr "ملاحظة"
+
+#: ../mimedir/mimedir-vcard.c:500
+#, fuzzy
+msgid "Additional comments"
+msgstr "_تعليقات القرص:"
+
+#: ../mimedir/mimedir-vcard.c:506
+msgid "The product identifier of the vCard. In case of newly generated objects, this is LibMIMEDir's product identifier"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:511
+#, fuzzy
+msgid "Revision"
+msgstr "تاريخ التنقيح"
+
+#: ../mimedir/mimedir-vcard.c:512
+#, fuzzy
+msgid "Card's revision"
+msgstr "تاريخ التنقيح"
+
+#: ../mimedir/mimedir-vcard.c:517
+#, fuzzy
+msgid "Sort string"
+msgstr "سلسلة البحث"
+
+#: ../mimedir/mimedir-vcard.c:518
+msgid "String that defines this card's sort order"
+msgstr ""
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:523
+#, fuzzy
+msgid "Sound"
+msgstr "صوت"
+
+#: ../mimedir/mimedir-vcard.c:524
+msgid "Pointer to a byte stream, representing a sound file"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:528
+#, fuzzy
+msgid "Sound URI"
+msgstr "عنوان غير صحيح"
+
+#: ../mimedir/mimedir-vcard.c:529
+#, fuzzy
+msgid "URI to a sound file"
+msgstr "_تصدير علامات المواقع إلى ملف"
+
+#: ../mimedir/mimedir-vcard.c:534
+#, fuzzy
+msgid "Unique Identifier"
+msgstr "مميّز الجسم (%s)"
+
+#: ../mimedir/mimedir-vcard.c:535
+msgid "A unique identifier for this card"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:540
+#, fuzzy
+msgid "URL"
+msgstr "العنوان"
+
+#: ../mimedir/mimedir-vcard.c:541
+msgid "An alternate URL for this resource"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:547
+msgid "Classification"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:548
+msgid "The security classfication of this card"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:553
+#, fuzzy
+msgid "Public key list"
+msgstr "مفتاح الموضوع العام"
+
+#: ../mimedir/mimedir-vcard.c:554
+msgid "List of this person's public keys. This is a GList *, where the elements are MIMEDirVCardKeys"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:558
+#, fuzzy
+msgid "Public key"
+msgstr "مفتاح الموضوع العام"
+
+#: ../mimedir/mimedir-vcard.c:559
+msgid "This person's first public key"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:564
+#, fuzzy
+msgid "Key type"
+msgstr "نوع _مفتاح:"
+
+#: ../mimedir/mimedir-vcard.c:565
+#, fuzzy
+msgid "Type of the first public key"
+msgstr "معلومات مفتاح الموضوع العام"
+
+#: ../mimedir/mimedir-vcard.c:1474
+#: ../mimedir/mimedir-vcard.c:1496
+#: ../mimedir/mimedir-vcard.c:1524
+#: ../mimedir/mimedir-vcard.c:1548
+#, fuzzy, c-format
+msgid "Error reading card file %s: %s!"
+msgstr "خطأ أثناء قراءة ملف البريد: %s"
+
+#: ../mimedir/mimedir-vcard.c:1671
+#, fuzzy, c-format
+msgid "Error writing card file %s: %s!"
+msgstr "خطأ كتابة ملف الجلسة '%s': %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3409
+#, fuzzy, c-format
+msgid "Name: %s\n"
+msgstr "اسم"
+
+#: ../mimedir/mimedir-vcard.c:3411
+#, fuzzy
+msgid "Name\n"
+msgstr "اسم"
+
+#: ../mimedir/mimedir-vcard.c:3413
+#, fuzzy, c-format
+msgid "  Prefix:     %s\n"
+msgstr "سابقة"
+
+#: ../mimedir/mimedir-vcard.c:3415
+#, fuzzy, c-format
+msgid "  Given:      %s\n"
+msgstr "الإسم المعطى"
+
+#: ../mimedir/mimedir-vcard.c:3417
+#, fuzzy, c-format
+msgid "  Additional: %s\n"
+msgstr "بروتوكولات آمنة اضافية"
+
+#: ../mimedir/mimedir-vcard.c:3419
+#, fuzzy, c-format
+msgid "  Family:     %s\n"
+msgstr "ال_عائلة:"
+
+#: ../mimedir/mimedir-vcard.c:3421
+#, fuzzy, c-format
+msgid "  Suffix:     %s\n"
+msgstr "ال_لّاحقة:"
+
+#: ../mimedir/mimedir-vcard.c:3427
+#, c-format
+msgid "Birth Date: %04d-%02d-%02d\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3452
+#, fuzzy, c-format
+msgid "Address label (%s):\n"
+msgstr "نص العلامة."
+
+#: ../mimedir/mimedir-vcard.c:3472
+#, fuzzy, c-format
+msgid "Address (%s):\n"
+msgstr "العنوان"
+
+#: ../mimedir/mimedir-vcard.c:3486
+#, fuzzy, c-format
+msgid "  Postal Box:  %s\n"
+msgstr "_صندوق البريد:"
+
+#: ../mimedir/mimedir-vcard.c:3488
+#, fuzzy, c-format
+msgid "  Extended:    %s\n"
+msgstr "ممدّد"
+
+#: ../mimedir/mimedir-vcard.c:3490
+#, c-format
+msgid "  Street:      %s\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3492
+#, fuzzy, c-format
+msgid "  City:        %s\n"
+msgstr "المدينة:"
+
+#: ../mimedir/mimedir-vcard.c:3494
+#, c-format
+msgid "  Region:      %s\n"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3496
+#, fuzzy, c-format
+msgid "  Postal Code: %s\n"
+msgstr "الرمز البريدي:"
+
+#: ../mimedir/mimedir-vcard.c:3498
+#, fuzzy, c-format
+msgid "  Country:     %s\n"
+msgstr "كنتري"
+
+#: ../mimedir/mimedir-vcard.c:3518
+#, fuzzy
+msgid "Telephone:\n"
+msgstr "<b>الهاتف</b>"
+
+#: ../mimedir/mimedir-vcard.c:3542
+#, fuzzy, c-format
+msgid "Telephone: %s (%s)\n"
+msgstr "<b>الهاتف</b>"
+
+#: ../mimedir/mimedir-vcard.c:3556
+#, fuzzy
+msgid "E-mail:\n"
+msgstr "بريد"
+
+#: ../mimedir/mimedir-vcard.c:3580
+#, fuzzy, c-format
+msgid "E-mail: %s (%s)\n"
+msgstr "بريد"
+
+#: ../mimedir/mimedir-vcard.c:3602
+#, fuzzy, c-format
+msgid "Time zone: %c%02d:%02d\n"
+msgstr "اختر منطقة زمنيّة"
+
+#: ../mimedir/mimedir-vcard.c:3611
+#, fuzzy, c-format
+msgid "Location: %.2f,%.2f\n"
+msgstr "%.2ld:%.2ld:%.2ld  A:%.2f/%.2f   V:%.2f/%.2f"
+
+#: ../mimedir/mimedir-vcard.c:3620
+#, fuzzy, c-format
+msgid "Organization: %s\n"
+msgstr "المؤسسة:"
+
+#: ../mimedir/mimedir-vcard.c:3625
+#, fuzzy, c-format
+msgid "Job title: %s\n"
+msgstr "المسمّى الوظيفي"
+
+#: ../mimedir/mimedir-vcard.c:3628
+#, fuzzy, c-format
+msgid "Business role: %s\n"
+msgstr "دور التقديم"
+
+#: ../mimedir/mimedir-vcard.c:3638
+#, fuzzy, c-format
+msgid "Categories: %s\n"
+msgstr "الفئات"
+
+#: ../mimedir/mimedir-vcard.c:3643
+#, fuzzy, c-format
+msgid "Comment: %s\n"
+msgstr "تعليق:"
+
+#: ../mimedir/mimedir-vcard.c:3646
+#, fuzzy, c-format
+msgid "Homepage: %s\n"
+msgstr "صفحة الإنترنت و التبرعات"
+
+#: ../mimedir/mimedir-vcard.c:3649
+#, fuzzy, c-format
+msgid "Unique string: %s\n"
+msgstr "سلسلة البحث"
+
+#: ../mimedir/mimedir-vcard.c:3659
+msgid "X.509"
+msgstr ""
+
+#: ../mimedir/mimedir-vcard.c:3662
+#, fuzzy
+msgid "PGP"
+msgstr "تشفير باستعمال PGP"
+
+#: ../mimedir/mimedir-vcard.c:3665
+#, fuzzy
+msgid "yes"
+msgstr "نعم"
+
+#: ../mimedir/mimedir-vcard.c:3669
+#, fuzzy, c-format
+msgid "Public Key: %s\n"
+msgstr "مفتاح الموضوع العام"
+
+#: ../mimedir/mimedir-vcomponent.c:267
+msgid "List of all categories of this component. This is a GList *, where the elements are gchar *'s"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:271
+#, fuzzy
+msgid "Comment list"
+msgstr "قائمة الحسابات"
+
+#: ../mimedir/mimedir-vcomponent.c:272
+msgid "List of all additional comments for this component. This is a GList *, where the elements are gchar *'s"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:276
+#, fuzzy
+msgid "Description"
+msgstr "الوصف"
+
+#: ../mimedir/mimedir-vcomponent.c:277
+#, fuzzy
+msgid "Full description of this component"
+msgstr "وصف مصدر القاموس"
+
+#: ../mimedir/mimedir-vcomponent.c:282
+#, fuzzy
+msgid "Percent complete"
+msgstr "النّسبة المكتملة: %i"
+
+#: ../mimedir/mimedir-vcomponent.c:283
+#, fuzzy
+msgid "Percentage of this task's completion"
+msgstr "تم حذف هذه المهمّة."
+
+#: ../mimedir/mimedir-vcomponent.c:290
+#, fuzzy
+msgid "Priority"
+msgstr "الأولويّة"
+
+#: ../mimedir/mimedir-vcomponent.c:291
+#, fuzzy
+msgid "This task's priority"
+msgstr "تم حذف هذه المهمّة."
+
+#. FIXME: whoops, this isn't handled
+#: ../mimedir/mimedir-vcomponent.c:296
+#, fuzzy
+msgid "Resource list"
+msgstr "قائمة الحسابات"
+
+#: ../mimedir/mimedir-vcomponent.c:297
+msgid "List of the resources assigned to this component"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:301
+#, fuzzy
+msgid "Status"
+msgstr "الحالة"
+
+#: ../mimedir/mimedir-vcomponent.c:302
+#, fuzzy
+msgid "This task's completion status"
+msgstr "تم حذف هذه المهمّة."
+
+#: ../mimedir/mimedir-vcomponent.c:309
+#, fuzzy
+msgid "Summary"
+msgstr "الملخّص"
+
+#: ../mimedir/mimedir-vcomponent.c:310
+#, fuzzy
+msgid "Component's short description"
+msgstr "لا وجود لوصف."
+
+#: ../mimedir/mimedir-vcomponent.c:316
+#, fuzzy
+msgid "Date/time completed"
+msgstr "إدراج التاريخ/الوقت"
+
+#: ../mimedir/mimedir-vcomponent.c:317
+msgid "Date/time that this task was completed"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:322
+#, fuzzy
+msgid "Date/time end"
+msgstr "إدراج التاريخ/الوقت"
+
+#: ../mimedir/mimedir-vcomponent.c:323
+msgid "End date/time of this component"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:328
+#, fuzzy
+msgid "Due"
+msgstr " (مُستحق "
+
+#: ../mimedir/mimedir-vcomponent.c:329
+#, fuzzy
+msgid "This task's due date"
+msgstr "تاريخ الإستحقاق خاطئ"
+
+#: ../mimedir/mimedir-vcomponent.c:334
+#, fuzzy
+msgid "Date/time start"
+msgstr "إدراج التاريخ/الوقت"
+
+#: ../mimedir/mimedir-vcomponent.c:335
+msgid "Start date/time of this component"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:340
+#, fuzzy
+msgid "Duration"
+msgstr "المدّة"
+
+#: ../mimedir/mimedir-vcomponent.c:341
+#, fuzzy
+msgid "This date's duration"
+msgstr "بحسب _تاريخ التعديل"
+
+#: ../mimedir/mimedir-vcomponent.c:346
+#, fuzzy
+msgid "Free/busy"
+msgstr "معلومات متوفّر/مشغول"
+
+#: ../mimedir/mimedir-vcomponent.c:347
+#, fuzzy
+msgid "GList of free/busy objects"
+msgstr "رسالة متوفّر/مشغول رديئة"
+
+#: ../mimedir/mimedir-vcomponent.c:353
+msgid "This component's time zone identifier"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:358
+#, fuzzy
+msgid "Time zone name list"
+msgstr "انتقِ وقتاً من القائمة"
+
+#: ../mimedir/mimedir-vcomponent.c:359
+msgid "GList of time zone names"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:363
+#: ../mimedir/mimedir-vcomponent.c:364
+#, fuzzy
+msgid "Time zone offset from"
+msgstr "انتقِ وقتاً من القائمة"
+
+#: ../mimedir/mimedir-vcomponent.c:371
+#: ../mimedir/mimedir-vcomponent.c:372
+#, fuzzy
+msgid "Time zone offset to"
+msgstr "زمن نسبيّ للوقت الحالي"
+
+#: ../mimedir/mimedir-vcomponent.c:379
+#, fuzzy
+msgid "Time zone URL"
+msgstr "اختر منطقة زمنيّة"
+
+#: ../mimedir/mimedir-vcomponent.c:380
+msgid "URL to a time zone description"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:386
+#, fuzzy
+msgid "Contact"
+msgstr "المراسَل"
+
+#: ../mimedir/mimedir-vcomponent.c:387
+#, fuzzy
+msgid "Contact information"
+msgstr "عدّل معلومات الاتصال"
+
+#: ../mimedir/mimedir-vcomponent.c:393
+#, fuzzy
+msgid "Unique identifier"
+msgstr "مميّز الجسم (%s)"
+
+#: ../mimedir/mimedir-vcomponent.c:394
+msgid "A unique identifier for this component"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:400
+#, fuzzy
+msgid "Recurrence object"
+msgstr "مميّز الجسم (%s)"
+
+#: ../mimedir/mimedir-vcomponent.c:401
+msgid "An object representing the RRULE tag"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:407
+#: ../mimedir/mimedir-vcomponent.c:408
+#, fuzzy
+msgid "Action"
+msgstr "حدث"
+
+#: ../mimedir/mimedir-vcomponent.c:413
+#: ../mimedir/mimedir-vcomponent.c:414
+#, fuzzy
+msgid "Repeat"
+msgstr "إعادة"
+
+#: ../mimedir/mimedir-vcomponent.c:419
+#: ../mimedir/mimedir-vcomponent.c:420
+#, fuzzy
+msgid "Trigger"
+msgstr "الإجراء/المحفّز"
+
+#: ../mimedir/mimedir-vcomponent.c:425
+#, fuzzy
+msgid "Trigger date/time"
+msgstr "إدراج التاريخ/الوقت"
+
+#: ../mimedir/mimedir-vcomponent.c:426
+#, fuzzy
+msgid "Date/time of the trigger"
+msgstr "إدراج التاريخ/الوقت"
+
+#: ../mimedir/mimedir-vcomponent.c:431
+#, fuzzy
+msgid "Trigger end"
+msgstr "نهاية الموعد"
+
+#: ../mimedir/mimedir-vcomponent.c:432
+msgid "Whether the trigger is set at the end of the time interval"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:438
+#, fuzzy
+msgid "Created"
+msgstr "تاريخ الإنشاء"
+
+#: ../mimedir/mimedir-vcomponent.c:439
+#, fuzzy
+msgid "Date/time of the creation"
+msgstr "إظهار وقت الإنشاء"
+
+#: ../mimedir/mimedir-vcomponent.c:444
+#, fuzzy
+msgid "Date/time stamp"
+msgstr "إدراج التاريخ/الوقت"
+
+#: ../mimedir/mimedir-vcomponent.c:445
+msgid "Date/time of the creation of the iCalendar object"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:450
+#, fuzzy
+msgid "Last modified"
+msgstr "تاريخ التعديل:"
+
+#: ../mimedir/mimedir-vcomponent.c:451
+#, fuzzy
+msgid "Date/time of the last modification"
+msgstr "اظهار وقت آخر _وصول"
+
+#: ../mimedir/mimedir-vcomponent.c:456
+#, fuzzy
+msgid "Sequence"
+msgstr "<b>متتالية</b>"
+
+#: ../mimedir/mimedir-vcomponent.c:457
+#, fuzzy
+msgid "Sequence number"
+msgstr "العدد الأول للمتتالية"
+

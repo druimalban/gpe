@@ -1,0 +1,1645 @@
+# Translation of libmimedir to Croatiann
+# Copyright (C) Croatiann team
+# Translators: Antun Krasic <butch@gawab.com>,Automatski Prijevod <>,Boris Tudan <boris.tudan@ka.htnet.hr>,Denis Lackovic <delacko@fly.srk.fer.hr>,Ivan Knežević <kn3z@lycos.com>,pr pr <delacko@192.168.0.1>,Robert Sedak <robert.sedak@sk.tel.hr>,
+msgid ""
+msgstr ""
+"Project-Id-Version: libmimedir 0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-09-04 15:04+0200\n"
+"PO-Revision-Date: 2004-03-20 14:59+CET\n"
+"Last-Translator: auto\n"
+"Language-Team: Croatian <lokalizacija@linux.hr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: TransDict server\n"
+
+#: ../bin/ical-dump.c:48
+#, c-format
+msgid "Usage: %s ICALFILE\n"
+msgstr "Uporaba: %s ICALFILE\n"
+
+#: ../bin/ical-dump.c:57
+msgid "secondly"
+msgstr ""
+
+#: ../bin/ical-dump.c:59
+msgid "minutely"
+msgstr ""
+
+#: ../bin/ical-dump.c:61
+#, fuzzy
+msgid "hourly"
+msgstr "Zemlja"
+
+#: ../bin/ical-dump.c:63
+msgid "daily"
+msgstr ""
+
+#: ../bin/ical-dump.c:65
+msgid "weekly"
+msgstr ""
+
+#: ../bin/ical-dump.c:67
+msgid "monthly"
+msgstr ""
+
+#: ../bin/ical-dump.c:69
+msgid "yearly"
+msgstr ""
+
+#: ../bin/ical-dump.c:71 ../bin/ical-dump.c:97
+#, fuzzy
+msgid "unknown"
+msgstr "<nepoznato>"
+
+#: ../bin/ical-dump.c:81
+msgid "second"
+msgstr ""
+
+#: ../bin/ical-dump.c:83
+msgid "minute"
+msgstr ""
+
+#: ../bin/ical-dump.c:85
+msgid "hour"
+msgstr ""
+
+#: ../bin/ical-dump.c:87
+msgid "day"
+msgstr ""
+
+#: ../bin/ical-dump.c:89
+msgid "day of month"
+msgstr ""
+
+#: ../bin/ical-dump.c:91
+msgid "day of year"
+msgstr ""
+
+#: ../bin/ical-dump.c:93
+#, fuzzy
+msgid "week number"
+msgstr "Broj telefona"
+
+#: ../bin/ical-dump.c:95
+msgid "month"
+msgstr ""
+
+#: ../bin/ical-dump.c:118
+#, fuzzy, c-format
+msgid "  Recurrence:\n"
+msgstr "Poredak: %u\n"
+
+#: ../bin/ical-dump.c:120
+#, fuzzy, c-format
+msgid "    Frequency: %s\n"
+msgstr "Poredak: %u\n"
+
+#: ../bin/ical-dump.c:123
+#, fuzzy, c-format
+msgid "    Until: %s\n"
+msgstr "Jedinstveni ID: %s\n"
+
+#: ../bin/ical-dump.c:128
+#, fuzzy, c-format
+msgid "    Count: %d\n"
+msgstr "Država %s\n"
+
+#: ../bin/ical-dump.c:131
+#, c-format
+msgid "    Interval: %d\n"
+msgstr ""
+
+#: ../bin/ical-dump.c:134
+#, fuzzy, c-format
+msgid "    Unit: %s\n"
+msgstr "Jedinstveni ID: %s\n"
+
+#: ../bin/ical-dump.c:137
+#, fuzzy, c-format
+msgid "    Units: %s\n"
+msgstr "Jedinstveni ID: %s\n"
+
+#: ../bin/ical-dump.c:152
+#, c-format
+msgid ""
+"Event:\n"
+"\n"
+msgstr ""
+"Događaj:\n"
+"\n"
+
+#: ../bin/ical-dump.c:154
+#, c-format
+msgid ""
+"Todo item:\n"
+"\n"
+msgstr ""
+"Stavka koju treba napraviti:\n"
+"\n"
+
+#: ../bin/ical-dump.c:156
+#, c-format
+msgid ""
+"Unknown component:\n"
+"\n"
+msgstr ""
+"Nepoznata komponenta:\n"
+"\n"
+
+#: ../bin/ical-dump.c:177
+#, c-format
+msgid "  Summary: %s\n"
+msgstr "Sažetak:%s\n"
+
+#: ../bin/ical-dump.c:182
+#, c-format
+msgid "  Categories: %s\n"
+msgstr "Kategorije %s\n"
+
+#: ../bin/ical-dump.c:188
+msgid "high"
+msgstr "visok"
+
+#: ../bin/ical-dump.c:190
+msgid "low"
+msgstr "nisko"
+
+#: ../bin/ical-dump.c:192
+msgid "medium"
+msgstr "srednje"
+
+#: ../bin/ical-dump.c:193
+#, c-format
+msgid "  Priority: %s (%d)\n"
+msgstr "Prioritet: %s (%d)\n"
+
+#: ../bin/ical-dump.c:198
+#, c-format
+msgid "  Start date: %s\n"
+msgstr "Datum poletka: %s\n"
+
+#: ../bin/ical-dump.c:205
+#, c-format
+msgid "  End date: %s\n"
+msgstr "Datim završetka: %s\n"
+
+#: ../bin/ical-dump.c:213
+#, c-format
+msgid "  Due date: %s\n"
+msgstr "  Do datuma: %s\n"
+
+#: ../bin/ical-dump.c:222
+#, c-format
+msgid "  Unique ID: %s\n"
+msgstr "Jedinstveni ID: %s\n"
+
+#: ../bin/ical-dump.c:223
+#, c-format
+msgid "  Sequence: %u\n"
+msgstr "Poredak: %u\n"
+
+#: ../bin/ical-dump.c:236
+#, c-format
+msgid "  All day event\n"
+msgstr "Cjelodnevni događaj\n"
+
+#: ../bin/ical-dump.c:261 ../bin/vcard-dump.c:67 ../bin/vcard-normalize.c:68
+#, c-format
+msgid "%s: invalid number of arguments\n"
+msgstr "%s: neispravan broj argumenata\n"
+
+#: ../bin/vcard-dump.c:43 ../bin/vcard-normalize.c:43
+#, c-format
+msgid "Usage: %s VCARDFILE\n"
+msgstr "Uporaba: %s VCARDFILE\n"
+
+#: ../bin/vcard-normalize.c:79
+#, c-format
+msgid "%s: error reading card file: %s\n"
+msgstr "%s: greška u čitanju datoteke s karticom: %s\n"
+
+#: ../bin/vcard-normalize.c:96
+#, c-format
+msgid "%s: error writing card file: %s\n"
+msgstr "%s: greška pri pisanju datoteke s karticom: %s\n"
+
+#: ../mimedir/mimedir-attribute.c:131 ../mimedir/mimedir-vcard.c:298
+msgid "Name"
+msgstr "Ime"
+
+#: ../mimedir/mimedir-attribute.c:132
+msgid "The attribute's name"
+msgstr "Ime atributa"
+
+#: ../mimedir/mimedir-attribute.c:137
+msgid "Group"
+msgstr "Grupa"
+
+#: ../mimedir/mimedir-attribute.c:138
+msgid "The attribute's group"
+msgstr "Grupa atributa"
+
+#: ../mimedir/mimedir-attribute.c:894
+msgid "missing parameter name"
+msgstr "nedostaje ime parametra"
+
+#: ../mimedir/mimedir-attribute.c:919
+msgid "missing closing quotation mark"
+msgstr "nedostaje završni navodnik"
+
+#: ../mimedir/mimedir-attribute.c:1040
+msgid "missing attribute name/group"
+msgstr "nedostaje ime/grupa atributa"
+
+#: ../mimedir/mimedir-attribute.c:1056
+msgid "no attribute name after group"
+msgstr "nedostaje ime atributa poslije grupe"
+
+#: ../mimedir/mimedir-attribute.c:1072
+msgid "missing value delimiter"
+msgstr "nedostaje razdvojnik vrijednosti"
+
+#: ../mimedir/mimedir-attribute.c:1088
+msgid "invalid character"
+msgstr "neispravni znak"
+
+#: ../mimedir/mimedir-attribute.c:2459 ../mimedir/mimedir-attribute.c:2468
+msgid "illegal character"
+msgstr "nedozvoljeni znak"
+
+#: ../mimedir/mimedir-attribute.h:48
+#, c-format
+msgid "syntax error (%s)"
+msgstr "sintaksna greška (%s)"
+
+#: ../mimedir/mimedir-attribute.h:49
+#, c-format
+msgid "illegal character 0x%02x for type \"%s\""
+msgstr "nedozvoljeni znak 0x%02x za tip \"%s\""
+
+#: ../mimedir/mimedir-attribute.h:50
+#, c-format
+msgid "invalid format for type \"%s\" in attribute %s"
+msgstr "neispravni za tip \"%s\" u atributu %s"
+
+#: ../mimedir/mimedir-attribute.h:51
+#, c-format
+msgid "attribute %s could not be decoded, since its encoding is unknown"
+msgstr "attribute %s could not be decoded, since its encoding is unknownFIXME"
+
+#: ../mimedir/mimedir-attribute.h:52
+#, c-format
+msgid "invalid value in attribute %s"
+msgstr "neispravna vrijednost u atributu %s"
+
+#: ../mimedir/mimedir-attribute.h:53
+#, c-format
+msgid "parameter \"%s\" must not be used more than once in attribute %s"
+msgstr "parametar \"%s\" se ne smije upotrebiti više puta u atributu %s"
+
+#: ../mimedir/mimedir-attribute.h:54
+msgid "invalid Base64 sequence"
+msgstr "neispravni Base64 slijed"
+
+#: ../mimedir/mimedir-attribute.h:55
+msgid "invalid quoted-printable sequence"
+msgstr "neispravni \"quoted-printable\" slijed"
+
+#: ../mimedir/mimedir-attribute.h:56
+#, c-format
+msgid "attribute list of %s is too short"
+msgstr "popis atributa %s je prekratak"
+
+#: ../mimedir/mimedir-attribute.h:57
+#, c-format
+msgid "attribute list of %s is too long"
+msgstr "popis atributa %s je predugačak"
+
+#: ../mimedir/mimedir-datetime.c:114 ../mimedir/mimedir-vcomponent.c:350
+msgid "Time zone identifier"
+msgstr "Identifikator vremenske zone"
+
+#: ../mimedir/mimedir-datetime.c:115
+msgid "Time zone identifying string"
+msgstr "Niz koji identificira vremensku zonu"
+
+#. Translators: YYYY-MM-DD HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1081
+#, c-format
+msgid "%04d-%02d-%02d %02d:%02d:%02d"
+msgstr "%04d-%02d-%02d %02d:%02d:%02d"
+
+#. Translators: YYYY-MM-DD
+#: ../mimedir/mimedir-datetime.c:1086
+#, c-format
+msgid "%04d-%02d-%02d"
+msgstr "%04d-%02d-%02d"
+
+#. Translators: HH:MM:SS
+#: ../mimedir/mimedir-datetime.c:1090
+#, c-format
+msgid "%02d:%02d:%02d"
+msgstr "%02d:%02d:%02d"
+
+#: ../mimedir/mimedir-period.c:111
+msgid "Free/busy type"
+msgstr "Slobodna/zauzeta klasa"
+
+#: ../mimedir/mimedir-period.c:112
+msgid "Whether this object signifies a free or a busy period"
+msgstr "Da li ovaj objekt označava slobodno ili zauzeto razdoblje"
+
+#: ../mimedir/mimedir-profile.c:114
+msgid "Profile name"
+msgstr "Ime profila"
+
+#: ../mimedir/mimedir-profile.c:115
+msgid "The name (type) of the profile"
+msgstr "Naziv (vrsta) skupa postavki"
+
+#: ../mimedir/mimedir-profile.c:121
+#, fuzzy
+msgid "Character set"
+msgstr "Popis kategorija"
+
+#: ../mimedir/mimedir-profile.c:122
+msgid "Character set used to en-/decode this profile"
+msgstr ""
+
+#: ../mimedir/mimedir-profile.h:40
+#, c-format
+msgid "attribute %s defined twice"
+msgstr "atribut %s je dvaputa definiran"
+
+#: ../mimedir/mimedir-profile.h:41
+msgid "unexpected end of profile"
+msgstr "neočekivani završetak skupa postavki"
+
+#: ../mimedir/mimedir-profile.h:42
+#, c-format
+msgid "required attribute %s is missing"
+msgstr "nedostaje potrebni atribut %s"
+
+#: ../mimedir/mimedir-profile.h:43
+msgid "unmatched END attribute"
+msgstr "neupareni END atribut"
+
+#: ../mimedir/mimedir-profile.h:44
+#, c-format
+msgid "wrong profile %s; expected %s"
+msgstr "pogrešan skup postavki %s; očekuje se %s"
+
+#: ../mimedir/mimedir-recurrence.c:221
+#, fuzzy
+msgid "Frequency"
+msgstr "Slijed"
+
+#: ../mimedir/mimedir-recurrence.c:222
+msgid "Frequency type of this recurrency rule"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:229
+msgid "Date of last recurrence"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:230
+msgid "The date of the last recurrence of an event"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:235
+msgid "Number of recurrences"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:236
+msgid "The numer of recurrences of an event"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:243
+msgid "Recurrence interval"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:244
+msgid "The interval of recurrences of an event"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:251
+#, fuzzy
+msgid "Recurrence unit"
+msgstr "Popis izvora"
+
+#: ../mimedir/mimedir-recurrence.c:252
+msgid "By which unit a recurrence should be repeated"
+msgstr ""
+
+#: ../mimedir/mimedir-recurrence.c:259
+#, fuzzy
+msgid "Recurrence units"
+msgstr "Popis izvora"
+
+#: ../mimedir/mimedir-recurrence.c:260
+msgid "List of units by which a recurrence should be repeated"
+msgstr ""
+
+#: ../mimedir/mimedir-valarm.c:548
+#, c-format
+msgid ""
+"Reminder of your appointment:\n"
+"\n"
+"%s\n"
+"%s"
+msgstr ""
+"Podsjetnik za vaš sastanak:\n"
+"\n"
+"%s\n"
+"%s"
+
+#: ../mimedir/mimedir-vcal.c:148
+msgid "Method"
+msgstr "Metoda"
+
+#: ../mimedir/mimedir-vcal.c:149
+msgid "The vCalendar's method"
+msgstr "Metoda za vCalendar"
+
+#: ../mimedir/mimedir-vcal.c:154 ../mimedir/mimedir-vcard.c:505
+msgid "Product identifier"
+msgstr "Oznaka proizvoda"
+
+#: ../mimedir/mimedir-vcal.c:155
+msgid ""
+"The product identifier of the vCalendar. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr ""
+"Identifikator proizvoda za vCalendar. U slučaju novostvorenih objekta "
+"pripada mu LibMIMEDir identifikator proizvoda."
+
+#: ../mimedir/mimedir-vcal.c:384 ../mimedir/mimedir-vcard.c:2411
+#: ../mimedir/mimedir-vcomponent.c:2060
+#, c-format
+msgid "The profile contains the unsupported custom attribute %s.\n"
+msgstr "Skup postavki sadrži nepodržani prilagođeni atribut %s.\n"
+
+#: ../mimedir/mimedir-vcal.c:387 ../mimedir/mimedir-vcard.c:2414
+#: ../mimedir/mimedir-vcomponent.c:2063
+#, c-format
+msgid "The profile contains the unknown attribute %s.\n"
+msgstr "Skup postavki sadrži nepoznati atribut %s.\n"
+
+#: ../mimedir/mimedir-vcal.c:432 ../mimedir/mimedir-vcal.c:454
+#: ../mimedir/mimedir-vcal.c:482 ../mimedir/mimedir-vcal.c:506
+#, c-format
+msgid "Error reading calendar file %s: %s!"
+msgstr "Greška u čitanju datoteke kalendara %s: %s!"
+
+#: ../mimedir/mimedir-vcard-address.c:167
+msgid "Title"
+msgstr "Naslov"
+
+#: ../mimedir/mimedir-vcard-address.c:168
+msgid "A one-line string with the most important address information"
+msgstr "Niz od jedne linije s najvažnijim podacima o adresi"
+
+#: ../mimedir/mimedir-vcard-address.c:174
+msgid "Freeform address"
+msgstr "Adresa slobodnog oblika"
+
+#: ../mimedir/mimedir-vcard-address.c:175
+msgid "A freeform address string"
+msgstr "Niz adrese slobodnog oblika"
+
+#: ../mimedir/mimedir-vcard-address.c:180
+msgid "Post office box"
+msgstr "Poštanski pretinac"
+
+#: ../mimedir/mimedir-vcard-address.c:181
+msgid "The addresses post office box"
+msgstr "Poštanski sandučić primatelja"
+
+#: ../mimedir/mimedir-vcard-address.c:186
+msgid "Extended address"
+msgstr "Produžena adresa"
+
+#: ../mimedir/mimedir-vcard-address.c:187
+msgid "Extended address string"
+msgstr "Produženi niz adrese"
+
+#: ../mimedir/mimedir-vcard-address.c:192
+msgid "Street"
+msgstr "Ulica"
+
+#: ../mimedir/mimedir-vcard-address.c:193
+msgid "Street address"
+msgstr "Adresa ulice"
+
+#: ../mimedir/mimedir-vcard-address.c:198
+msgid "Locality"
+msgstr "Lokacija"
+
+#: ../mimedir/mimedir-vcard-address.c:199
+msgid "Locality (e.g. city, town, etc.)"
+msgstr "Mjesto (npr. grad, selo itd.)"
+
+#: ../mimedir/mimedir-vcard-address.c:204
+msgid "Region"
+msgstr "Regija"
+
+#: ../mimedir/mimedir-vcard-address.c:205
+msgid "Region (e.g. state)"
+msgstr "Područje (npr. županija)"
+
+#: ../mimedir/mimedir-vcard-address.c:210
+msgid "Postal code"
+msgstr "Poštanski broj"
+
+#: ../mimedir/mimedir-vcard-address.c:211
+msgid "Postal code (freeform string)"
+msgstr "Poštanski broj (niz slobodnog oblika)"
+
+#: ../mimedir/mimedir-vcard-address.c:216
+#: ../mimedir/mimedir-vcard-address.c:217
+msgid "Country"
+msgstr "Zemlja"
+
+#: ../mimedir/mimedir-vcard-address.c:222
+msgid "Domestic"
+msgstr "Domaće"
+
+#: ../mimedir/mimedir-vcard-address.c:223
+msgid "Whether this is a domestic address"
+msgstr "Je li ovo adresa kućna adresa"
+
+#: ../mimedir/mimedir-vcard-address.c:228
+msgid "International"
+msgstr "Međunarodno"
+
+#: ../mimedir/mimedir-vcard-address.c:229
+msgid "Whether this is an international address"
+msgstr "Da li se radi o adresi u međunarodnoj pošti"
+
+#: ../mimedir/mimedir-vcard-address.c:234
+msgid "Postal"
+msgstr "Poštanski"
+
+#: ../mimedir/mimedir-vcard-address.c:235
+msgid "Whether this is a postal address"
+msgstr "Da li se radi o poštanskoj adresi"
+
+#: ../mimedir/mimedir-vcard-address.c:240
+msgid "Parcel"
+msgstr "Pošiljka"
+
+#: ../mimedir/mimedir-vcard-address.c:241
+msgid "Whether parcels can be received at this address"
+msgstr "Da li se pošiljke mogu primiti na ovu adresu"
+
+#: ../mimedir/mimedir-vcard-address.c:246 ../mimedir/mimedir-vcard-phone.c:160
+msgid "Home"
+msgstr "Polazno"
+
+#: ../mimedir/mimedir-vcard-address.c:247
+msgid "Whether this is a home address"
+msgstr "Je li ovo kućna adresa"
+
+#: ../mimedir/mimedir-vcard-address.c:252 ../mimedir/mimedir-vcard-phone.c:166
+msgid "Work"
+msgstr "Posao"
+
+#: ../mimedir/mimedir-vcard-address.c:253
+msgid "Whether this is a work address"
+msgstr "Je li ovo adresa na poslu"
+
+#: ../mimedir/mimedir-vcard-address.c:258 ../mimedir/mimedir-vcard-email.c:153
+#: ../mimedir/mimedir-vcard-phone.c:232
+msgid "Preferred"
+msgstr "Željeno"
+
+#: ../mimedir/mimedir-vcard-address.c:259
+msgid "Whether this is the preferred address"
+msgstr "Je li ovo preferirana adresa"
+
+#: ../mimedir/mimedir-vcard-address.c:572
+#, c-format
+msgid "The %s attribute contains too many elements.\n"
+msgstr "Atribut %s sadrži previše elemenata.\n"
+
+#: ../mimedir/mimedir-vcard-address.c:772
+#, c-format
+msgid "The address field is of unknown type %s."
+msgstr "Nepoznata vrsta polja za adresu %s."
+
+#. Translators: pcode city
+#: ../mimedir/mimedir-vcard-address.c:864
+#: ../mimedir/mimedir-vcard-address.c:873
+#, c-format
+msgid "%s %s"
+msgstr "%s %s"
+
+#. Translators: city, region
+#: ../mimedir/mimedir-vcard-address.c:871
+#, c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
+#: ../mimedir/mimedir-vcard-address.c:914 ../mimedir/mimedir-vcard-email.c:504
+#: ../mimedir/mimedir-vcard-phone.c:695
+msgid "preferred"
+msgstr "željeno"
+
+#: ../mimedir/mimedir-vcard-address.c:919
+msgid "domestic"
+msgstr "domaće"
+
+#: ../mimedir/mimedir-vcard-address.c:924
+msgid "international"
+msgstr "međunarodno"
+
+#: ../mimedir/mimedir-vcard-address.c:929
+msgid "postal"
+msgstr "poštanski"
+
+#: ../mimedir/mimedir-vcard-address.c:934
+msgid "parcel"
+msgstr "pošiljka"
+
+#: ../mimedir/mimedir-vcard-address.c:939 ../mimedir/mimedir-vcard-phone.c:701
+msgid "home"
+msgstr "home"
+
+#: ../mimedir/mimedir-vcard-address.c:944 ../mimedir/mimedir-vcard-phone.c:706
+msgid "work"
+msgstr "posao"
+
+#. Translators: Short address format: "locality/street"
+#: ../mimedir/mimedir-vcard-address.c:996
+#, c-format
+msgid "%s/%s"
+msgstr "%s/%s"
+
+#: ../mimedir/mimedir-vcard-address.c:1002
+msgid "<unknown>"
+msgstr "<nepoznato>"
+
+#: ../mimedir/mimedir-vcard-email.c:138 ../mimedir/mimedir-vcard.c:368
+msgid "Address"
+msgstr "Adresa"
+
+#: ../mimedir/mimedir-vcard-email.c:139
+msgid "The e-mail address"
+msgstr "Adresa e-pošte"
+
+#: ../mimedir/mimedir-vcard-email.c:145
+msgid "Type"
+msgstr "Tip"
+
+#: ../mimedir/mimedir-vcard-email.c:146
+msgid "Type of this e-mail address"
+msgstr "Vrsta e-pošte"
+
+#: ../mimedir/mimedir-vcard-email.c:154
+msgid "Whether this is the preferred e-mail address"
+msgstr "Je li ovo preferirana adresa e-pošte"
+
+#: ../mimedir/mimedir-vcard-email.c:412
+#, c-format
+msgid "The email field is of unknown type %s."
+msgstr "Nepoznata vrsta polja za e-poštu %s."
+
+#: ../mimedir/mimedir-vcard-email.c:514
+msgid "Internet"
+msgstr "Internet"
+
+#: ../mimedir/mimedir-vcard-email.c:519
+msgid "X.400"
+msgstr "X.400"
+
+#: ../mimedir/mimedir-vcard-phone.c:153
+msgid "Number"
+msgstr "Broj"
+
+#: ../mimedir/mimedir-vcard-phone.c:154
+msgid "The telephone number (freeform string)"
+msgstr "Telefonski broj (niz slobodnog oblika)"
+
+#: ../mimedir/mimedir-vcard-phone.c:161
+msgid "Whether this is a home phone number"
+msgstr "Je li ovo kućni telefonski broj"
+
+#: ../mimedir/mimedir-vcard-phone.c:167
+msgid "Whether this is a phone number at work"
+msgstr "Je li ovo telefonski broj na poslu"
+
+#: ../mimedir/mimedir-vcard-phone.c:172
+msgid "Voice"
+msgstr "Glas"
+
+#: ../mimedir/mimedir-vcard-phone.c:173
+msgid "Whether this is a voice number"
+msgstr "Je li ovo broj govorne pošte"
+
+#: ../mimedir/mimedir-vcard-phone.c:178
+msgid "Fax"
+msgstr "Fax"
+
+#: ../mimedir/mimedir-vcard-phone.c:179
+msgid "Whether this is a facsimile number"
+msgstr "Je li ovo broj faksa"
+
+#: ../mimedir/mimedir-vcard-phone.c:184 ../mimedir/mimedir-vcard-phone.c:721
+msgid "BBS"
+msgstr "BBS"
+
+#: ../mimedir/mimedir-vcard-phone.c:185
+msgid "Whether this is a bulletin board system number"
+msgstr "Je li ovo BBS broj"
+
+#: ../mimedir/mimedir-vcard-phone.c:190
+msgid "Modem"
+msgstr "Modem"
+
+#: ../mimedir/mimedir-vcard-phone.c:191
+msgid "Whether this is a modem number"
+msgstr "Je li ovo broj modema"
+
+#: ../mimedir/mimedir-vcard-phone.c:196
+msgid "Pager"
+msgstr "Dojavljivač"
+
+#: ../mimedir/mimedir-vcard-phone.c:197
+msgid "Whether this is a pager number"
+msgstr "Je li ovo broj pagera"
+
+#: ../mimedir/mimedir-vcard-phone.c:202
+msgid "Video"
+msgstr "Video"
+
+#: ../mimedir/mimedir-vcard-phone.c:203
+msgid "Whether this is a video phone number"
+msgstr "Je li ovo broj videofona"
+
+#: ../mimedir/mimedir-vcard-phone.c:208
+msgid "Cell"
+msgstr "Ćelija"
+
+#: ../mimedir/mimedir-vcard-phone.c:209
+msgid "Whether this is a cell (mobile) phone number"
+msgstr "Je li ovo broj mobilnog telefona"
+
+#: ../mimedir/mimedir-vcard-phone.c:214
+msgid "Car"
+msgstr "Automobil"
+
+#: ../mimedir/mimedir-vcard-phone.c:215
+msgid "Whether this is car phone number"
+msgstr "Je li ovo broj telefona u automobilu"
+
+#: ../mimedir/mimedir-vcard-phone.c:220 ../mimedir/mimedir-vcard-phone.c:756
+msgid "ISDN"
+msgstr "ISDN"
+
+#: ../mimedir/mimedir-vcard-phone.c:221
+msgid "Whether this is a ISDN number"
+msgstr "Je li ovo ISDN broj"
+
+#: ../mimedir/mimedir-vcard-phone.c:226 ../mimedir/mimedir-vcard-phone.c:761
+msgid "PCS"
+msgstr "PCS"
+
+#: ../mimedir/mimedir-vcard-phone.c:227
+msgid "Whether this is a PCS number"
+msgstr "Je li ovo PCS broj"
+
+#: ../mimedir/mimedir-vcard-phone.c:233
+msgid "Whether this is the preferred number"
+msgstr "Je li ovo preferirani broj"
+
+#: ../mimedir/mimedir-vcard-phone.c:238
+msgid "Message"
+msgstr "Poruka"
+
+#: ../mimedir/mimedir-vcard-phone.c:239
+msgid "Whether this number has a voice recorder"
+msgstr "Da li ovaj broj ima uređaj za snimanje glasa"
+
+#: ../mimedir/mimedir-vcard-phone.c:588
+#, c-format
+msgid "The phone field is of unknown type %s."
+msgstr "Nepoznata vrsta polja za telefon %s."
+
+#: ../mimedir/mimedir-vcard-phone.c:711
+msgid "voice"
+msgstr "glas"
+
+#: ../mimedir/mimedir-vcard-phone.c:716
+msgid "fax"
+msgstr "fax"
+
+#: ../mimedir/mimedir-vcard-phone.c:726
+msgid "modem"
+msgstr "modem"
+
+#: ../mimedir/mimedir-vcard-phone.c:731
+msgid "pager"
+msgstr "dojavljivač"
+
+#: ../mimedir/mimedir-vcard-phone.c:736
+msgid "video"
+msgstr "video"
+
+#: ../mimedir/mimedir-vcard-phone.c:741
+msgid "voice message"
+msgstr "glasovna poruka"
+
+#: ../mimedir/mimedir-vcard-phone.c:746
+msgid "cell phone"
+msgstr "mobilni telefon"
+
+#: ../mimedir/mimedir-vcard-phone.c:751
+msgid "car phone"
+msgstr "telefon u autu"
+
+#: ../mimedir/mimedir-vcard.c:299
+msgid "The spelled out name full name of this person"
+msgstr "Puno ime i prezime osobe"
+
+#: ../mimedir/mimedir-vcard.c:304
+msgid "Family name"
+msgstr "Obiteljsko ime"
+
+#: ../mimedir/mimedir-vcard.c:305
+msgid "The family name of this person"
+msgstr "Prezime osobe"
+
+#: ../mimedir/mimedir-vcard.c:310
+msgid "Given name"
+msgstr "Dano ime"
+
+#: ../mimedir/mimedir-vcard.c:311
+msgid "The given name of this person"
+msgstr "Ime osobe"
+
+#: ../mimedir/mimedir-vcard.c:316
+msgid "Middle name"
+msgstr "Srednje ime"
+
+#: ../mimedir/mimedir-vcard.c:317
+msgid "The middle name or middle initials of this person"
+msgstr "Srednje ime ili srednji inicijali osobe"
+
+#: ../mimedir/mimedir-vcard.c:322
+msgid "Prefix"
+msgstr "Prefiks"
+
+#: ../mimedir/mimedir-vcard.c:323
+msgid "The name prefix (e.g. honorific prefix) of this person"
+msgstr "Prefiks imena (npr. titula) osobe"
+
+#: ../mimedir/mimedir-vcard.c:328
+msgid "Suffix"
+msgstr "Sufiks"
+
+#: ../mimedir/mimedir-vcard.c:329
+msgid "The name suffix of this person"
+msgstr "Sufiks imena osobe"
+
+#: ../mimedir/mimedir-vcard.c:334
+msgid "Nickname list"
+msgstr "Popis nadimaka"
+
+#: ../mimedir/mimedir-vcard.c:335
+msgid ""
+"List of all nick names. This is a GList *, where the elements are of type "
+"const gchar *"
+msgstr "Popis svih nadimaka. Ovo jr GPopis *, elementi su klase const gchar *"
+
+#: ../mimedir/mimedir-vcard.c:339
+msgid "Nick name"
+msgstr "Nadimak"
+
+#: ../mimedir/mimedir-vcard.c:340
+msgid "The first nick name"
+msgstr "Prvi nadimak"
+
+#. FIXME: this is useless
+#: ../mimedir/mimedir-vcard.c:345
+msgid "Photo"
+msgstr "Slika"
+
+#: ../mimedir/mimedir-vcard.c:346
+msgid "Pointer to a byte stream, representing an image of the person"
+msgstr "Pokazivač na bajt tok koji predstavlja sliku ove osobe"
+
+#: ../mimedir/mimedir-vcard.c:350
+msgid "Photo URI"
+msgstr "URI fotografije"
+
+#: ../mimedir/mimedir-vcard.c:351
+msgid "URI to an image of this person"
+msgstr "URI za sliku osobe"
+
+#: ../mimedir/mimedir-vcard.c:356
+msgid "Birthday"
+msgstr "Rođendan"
+
+#: ../mimedir/mimedir-vcard.c:357
+msgid "The person's birthday"
+msgstr "Rođendan osobe"
+
+#: ../mimedir/mimedir-vcard.c:363
+msgid "Address list"
+msgstr "Popis adresa"
+
+#: ../mimedir/mimedir-vcard.c:364
+msgid ""
+"List of all addresses. This is a GList *, where the elements are of type "
+"MIMEDirAddress *"
+msgstr "Popis svih adresa. Ovo je GPopis *, elementi su klase MIMEDirAddress *"
+
+#: ../mimedir/mimedir-vcard.c:369
+msgid "The preferred address"
+msgstr "Preferirana adresa"
+
+#: ../mimedir/mimedir-vcard.c:375
+msgid "Phone number list"
+msgstr "Popis telefonskih brojeva"
+
+#: ../mimedir/mimedir-vcard.c:376
+msgid ""
+"List of all phone numbers. This is a GList *, where the elements are of type "
+"MIMEDirPhone *"
+msgstr ""
+"Popis telefonskih brojeva. Ovo je GPopis *, gdje su elementi klase "
+"MIMEDirPhone *"
+
+#: ../mimedir/mimedir-vcard.c:380
+msgid "Phone number"
+msgstr "Broj telefona"
+
+#: ../mimedir/mimedir-vcard.c:381
+msgid "The preferred phone number"
+msgstr "Preferirani telefonski broj"
+
+#: ../mimedir/mimedir-vcard.c:386
+msgid "E-mail address list"
+msgstr "Popis adresa e-pošte"
+
+#: ../mimedir/mimedir-vcard.c:387
+msgid ""
+"List of all e-mail addresses. This is a GList *, where the elements are of "
+"type MIMEDirEmail *"
+msgstr ""
+"Popis svih adresa e-pošte. ovo je GPopis *, elementi su klase MIMEDirEmail *"
+
+#: ../mimedir/mimedir-vcard.c:391
+msgid "E-mail address"
+msgstr "Adresa e-pošte"
+
+#: ../mimedir/mimedir-vcard.c:392
+msgid "The preferred e-mail address"
+msgstr "Preferirana e-pošta"
+
+#: ../mimedir/mimedir-vcard.c:397
+msgid "Mailer"
+msgstr "Program e-pošte"
+
+#: ../mimedir/mimedir-vcard.c:398
+msgid "The mailing program used by this person"
+msgstr "Program koji ova osoba koristi za e-poštu"
+
+#: ../mimedir/mimedir-vcard.c:404
+msgid "Time zone"
+msgstr "Vremenska zona"
+
+#: ../mimedir/mimedir-vcard.c:405
+msgid "The time zone this person lives in"
+msgstr "Vremenska zona u kojoj ososba živi"
+
+#: ../mimedir/mimedir-vcard.c:412
+msgid "Time zone string"
+msgstr "Znakovni niz vremenske zone"
+
+#: ../mimedir/mimedir-vcard.c:413
+msgid "The time zone this person lives in (deprecated string representation)"
+msgstr "Vremenska zona u kojoj osoba živi (zastarjeli format)"
+
+#: ../mimedir/mimedir-vcard.c:418
+msgid "Latitude"
+msgstr "Geografska širina"
+
+#: ../mimedir/mimedir-vcard.c:419
+msgid "Latitude of this person's residence"
+msgstr "Zemljopisna širina boravišta"
+
+#: ../mimedir/mimedir-vcard.c:426
+msgid "Longitude"
+msgstr "Geografska dužina"
+
+#: ../mimedir/mimedir-vcard.c:427
+msgid "Longitude of this person's residence"
+msgstr "Geografska dužina mjesta prebivališta osobe"
+
+#: ../mimedir/mimedir-vcard.c:435
+msgid "Job title"
+msgstr "Naziv posla"
+
+#: ../mimedir/mimedir-vcard.c:436
+msgid "The person's job title"
+msgstr "Zanimanje osobe"
+
+#: ../mimedir/mimedir-vcard.c:441
+msgid "Role"
+msgstr "Uloga"
+
+#: ../mimedir/mimedir-vcard.c:442
+msgid "The person's job role"
+msgstr "Uloga osobe na radnom mjestu"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:447
+msgid "Logo"
+msgstr "Logotip"
+
+#: ../mimedir/mimedir-vcard.c:448
+msgid "Pointer to a byte stream, representing the logo of the person's company"
+msgstr "Pokazivač na bajt tok koji predstavlja logotip tvrtke ove osobe"
+
+#: ../mimedir/mimedir-vcard.c:452
+msgid "Logo URI"
+msgstr "URI logotipa"
+
+#: ../mimedir/mimedir-vcard.c:453
+msgid "URI to the logo of this person's company"
+msgstr "URI do zaštitnog logotipa tvrtke osobe"
+
+#: ../mimedir/mimedir-vcard.c:458
+msgid "Agent"
+msgstr "Agent"
+
+#: ../mimedir/mimedir-vcard.c:459
+msgid "A person, acting for the person described in this card"
+msgstr "Osoba koja zastupa osubu opisanu u karti"
+
+#: ../mimedir/mimedir-vcard.c:464
+msgid "Agent URI"
+msgstr "Agent URI"
+
+#: ../mimedir/mimedir-vcard.c:465
+msgid ""
+"URI to the description of a person, acting for the person described in this "
+"card"
+msgstr "URI do opisa osobe koja zastupa osobu predstavljenu na ovoj kartici"
+
+#: ../mimedir/mimedir-vcard.c:470
+msgid "Agent string"
+msgstr "Niz agenta"
+
+#: ../mimedir/mimedir-vcard.c:471
+msgid ""
+"A person, acting for the person described in this card (deprecated string "
+"representation)"
+msgstr ""
+"Osoba koja zastupa osubu opisanu u karti (zastarjelo prikazivanje niza)"
+
+#: ../mimedir/mimedir-vcard.c:476
+msgid "Organization list"
+msgstr "Popis organizacija"
+
+#: ../mimedir/mimedir-vcard.c:477
+msgid ""
+"List of all organization this person belongs to. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr ""
+"Popis svih organizacija kojima osoba pripada. Ovo je GPopis *, elementi su "
+"gchar *"
+
+#: ../mimedir/mimedir-vcard.c:481
+msgid "Organization"
+msgstr "Organizacija"
+
+#: ../mimedir/mimedir-vcard.c:482
+msgid "The person's first organization"
+msgstr "Prva organizacija osobe"
+
+#: ../mimedir/mimedir-vcard.c:488 ../mimedir/mimedir-vcomponent.c:264
+msgid "Category list"
+msgstr "Popis kategorija"
+
+#: ../mimedir/mimedir-vcard.c:489
+msgid ""
+"List of all categories of this person. This is a GList *, where the elements "
+"are gchar *'s"
+msgstr ""
+"Popis svih kategorija za ovu osobu.  Ovo je GPopis *, elementi su gchar *"
+
+#: ../mimedir/mimedir-vcard.c:493
+msgid "Categories"
+msgstr "Kategorije"
+
+#: ../mimedir/mimedir-vcard.c:494
+msgid "String representation of this person's categories"
+msgstr "Niz koji predstavljanje kategorije za ovu osobu"
+
+#: ../mimedir/mimedir-vcard.c:499
+msgid "Note"
+msgstr "Bilješka"
+
+#: ../mimedir/mimedir-vcard.c:500
+msgid "Additional comments"
+msgstr "Dodatni komentari"
+
+#: ../mimedir/mimedir-vcard.c:506
+msgid ""
+"The product identifier of the vCard. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr ""
+"Identifikator proizvoda za vCard. U slučaju novostvorenih objekta pripada mu "
+"LibMIMEDir identifikator proizvoda."
+
+#: ../mimedir/mimedir-vcard.c:511
+msgid "Revision"
+msgstr "Revizija"
+
+#: ../mimedir/mimedir-vcard.c:512
+msgid "Card's revision"
+msgstr "Revizija karte"
+
+#: ../mimedir/mimedir-vcard.c:517
+msgid "Sort string"
+msgstr "Niz za razvrstavanje"
+
+#: ../mimedir/mimedir-vcard.c:518
+msgid "String that defines this card's sort order"
+msgstr "Niz koji određuje poredak ove kartice"
+
+#. FIXME: useless
+#: ../mimedir/mimedir-vcard.c:523
+msgid "Sound"
+msgstr "Zvuk"
+
+#: ../mimedir/mimedir-vcard.c:524
+msgid "Pointer to a byte stream, representing a sound file"
+msgstr "Pokazivač na bajt tok koji predstavlja datoteku s zvukom"
+
+#: ../mimedir/mimedir-vcard.c:528
+msgid "Sound URI"
+msgstr "URI zvuka"
+
+#: ../mimedir/mimedir-vcard.c:529
+msgid "URI to a sound file"
+msgstr "URI  do datoteke s zvukom"
+
+#: ../mimedir/mimedir-vcard.c:534
+msgid "Unique Identifier"
+msgstr "Jedinstvena oznaka"
+
+#: ../mimedir/mimedir-vcard.c:535
+msgid "A unique identifier for this card"
+msgstr "Jedinstveni označivač za ovu kartu"
+
+#: ../mimedir/mimedir-vcard.c:540
+msgid "URL"
+msgstr "URL"
+
+#: ../mimedir/mimedir-vcard.c:541
+msgid "An alternate URL for this resource"
+msgstr "Drugi URL za ovaj izvor"
+
+#: ../mimedir/mimedir-vcard.c:547
+msgid "Classification"
+msgstr "Klasifikacija"
+
+#: ../mimedir/mimedir-vcard.c:548
+msgid "The security classfication of this card"
+msgstr "Sigurnosno razvrstanje ove kartice"
+
+#: ../mimedir/mimedir-vcard.c:553
+msgid "Public key list"
+msgstr "Popis javnih ključeva"
+
+#: ../mimedir/mimedir-vcard.c:554
+msgid ""
+"List of this person's public keys. This is a GList *, where the elements are "
+"MIMEDirVCardKeys"
+msgstr ""
+"Popis javnih ključeva ove osobe. Ovo je GPopis*, elementi su MIMEDirVCardKeys"
+
+#: ../mimedir/mimedir-vcard.c:558
+msgid "Public key"
+msgstr "Javni ključ"
+
+#: ../mimedir/mimedir-vcard.c:559
+msgid "This person's first public key"
+msgstr "Prvi javni ključ ove osobe"
+
+#: ../mimedir/mimedir-vcard.c:564
+msgid "Key type"
+msgstr "Tip tipke"
+
+#: ../mimedir/mimedir-vcard.c:565
+msgid "Type of the first public key"
+msgstr "Vrsta prvog javnog ključa"
+
+#: ../mimedir/mimedir-vcard.c:1474 ../mimedir/mimedir-vcard.c:1496
+#: ../mimedir/mimedir-vcard.c:1524 ../mimedir/mimedir-vcard.c:1548
+#, c-format
+msgid "Error reading card file %s: %s!"
+msgstr "Greška u čitanju datoteke karte %s: %s!"
+
+#: ../mimedir/mimedir-vcard.c:1671
+#, c-format
+msgid "Error writing card file %s: %s!"
+msgstr "Greška pri pisanju datoteke s karticom %s: %s!"
+
+#: ../mimedir/mimedir-vcard.c:3409
+#, c-format
+msgid "Name: %s\n"
+msgstr "Ime: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3411
+msgid "Name\n"
+msgstr "Ime\n"
+
+#: ../mimedir/mimedir-vcard.c:3413
+#, c-format
+msgid "  Prefix:     %s\n"
+msgstr "Prefiks %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3415
+#, c-format
+msgid "  Given:      %s\n"
+msgstr "Dato%s\n"
+
+#: ../mimedir/mimedir-vcard.c:3417
+#, c-format
+msgid "  Additional: %s\n"
+msgstr "  Dodatno: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3419
+#, c-format
+msgid "  Family:     %s\n"
+msgstr "Obitelj %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3421
+#, c-format
+msgid "  Suffix:     %s\n"
+msgstr "Sufiks:      %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3427
+#, c-format
+msgid "Birth Date: %04d-%02d-%02d\n"
+msgstr "Datum Rođenja: %04d-%02d-%02d\n"
+
+#: ../mimedir/mimedir-vcard.c:3452
+#, c-format
+msgid "Address label (%s):\n"
+msgstr "Oznaka adrese (%s):\n"
+
+#: ../mimedir/mimedir-vcard.c:3472
+#, c-format
+msgid "Address (%s):\n"
+msgstr "Adresa (%s):\n"
+
+#: ../mimedir/mimedir-vcard.c:3486
+#, c-format
+msgid "  Postal Box:  %s\n"
+msgstr "Poštanski sandučić %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3488
+#, c-format
+msgid "  Extended:    %s\n"
+msgstr "Produženo: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3490
+#, c-format
+msgid "  Street:      %s\n"
+msgstr "Ulica:     %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3492
+#, c-format
+msgid "  City:        %s\n"
+msgstr "Grad %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3494
+#, c-format
+msgid "  Region:      %s\n"
+msgstr "Regija %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3496
+#, c-format
+msgid "  Postal Code: %s\n"
+msgstr "Poštanski broj %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3498
+#, c-format
+msgid "  Country:     %s\n"
+msgstr "Država %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3518
+msgid "Telephone:\n"
+msgstr "Telefon:\n"
+
+#: ../mimedir/mimedir-vcard.c:3542
+#, c-format
+msgid "Telephone: %s (%s)\n"
+msgstr "Telefon: %s (%s)\n"
+
+#: ../mimedir/mimedir-vcard.c:3554
+msgid "E-mail:\n"
+msgstr "E-pošta:\n"
+
+#: ../mimedir/mimedir-vcard.c:3578
+#, c-format
+msgid "E-mail: %s (%s)\n"
+msgstr "E-pošta: %s (%s)\n"
+
+#: ../mimedir/mimedir-vcard.c:3598
+#, c-format
+msgid "Time zone: %c%02d:%02d\n"
+msgstr "Vremenska zona: %c%02d:%02d\n"
+
+#: ../mimedir/mimedir-vcard.c:3607
+#, c-format
+msgid "Location: %.2f,%.2f\n"
+msgstr "Lokacija: %.2f,%.2f\n"
+
+#: ../mimedir/mimedir-vcard.c:3616
+#, c-format
+msgid "Organization: %s\n"
+msgstr "Organizacija: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3621
+#, c-format
+msgid "Job title: %s\n"
+msgstr "Posao: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3624
+#, c-format
+msgid "Business role: %s\n"
+msgstr "Poslovna uloga: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3634
+#, c-format
+msgid "Categories: %s\n"
+msgstr "Kategorije: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3639
+#, c-format
+msgid "Comment: %s\n"
+msgstr "Komentar: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3642
+#, c-format
+msgid "Homepage: %s\n"
+msgstr "Početna stranica: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3645
+#, c-format
+msgid "Unique string: %s\n"
+msgstr "Jedinstveni niz: %s\n"
+
+#: ../mimedir/mimedir-vcard.c:3655
+msgid "X.509"
+msgstr "X.509"
+
+#: ../mimedir/mimedir-vcard.c:3658
+msgid "PGP"
+msgstr "PGP"
+
+#: ../mimedir/mimedir-vcard.c:3661
+msgid "yes"
+msgstr "da"
+
+#: ../mimedir/mimedir-vcard.c:3665
+#, c-format
+msgid "Public Key: %s\n"
+msgstr "Javni ključ: %s\n"
+
+#: ../mimedir/mimedir-vcomponent.c:265
+msgid ""
+"List of all categories of this component. This is a GList *, where the "
+"elements are gchar *'s"
+msgstr ""
+"Popis kategorija za ovu komponentu. Ovo je GPopis *, elementi su gchar *"
+
+#: ../mimedir/mimedir-vcomponent.c:269
+msgid "Comment list"
+msgstr "Lista komentara"
+
+#: ../mimedir/mimedir-vcomponent.c:270
+msgid ""
+"List of all additional comments for this component. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr ""
+"Popis dodatnih komentara za ovaj element. Ovo je GPopis *, a elementi su "
+"gchar *"
+
+#: ../mimedir/mimedir-vcomponent.c:274
+msgid "Description"
+msgstr "Opis"
+
+#: ../mimedir/mimedir-vcomponent.c:275
+msgid "Full description of this component"
+msgstr "Potpuni opis ovog elementa"
+
+#: ../mimedir/mimedir-vcomponent.c:280
+msgid "Percent complete"
+msgstr "Postotak završenost"
+
+#: ../mimedir/mimedir-vcomponent.c:281
+msgid "Percentage of this task's completion"
+msgstr "Postotak završenosti ovog zadatka"
+
+#: ../mimedir/mimedir-vcomponent.c:288
+msgid "Priority"
+msgstr "Prioritet"
+
+#: ../mimedir/mimedir-vcomponent.c:289
+msgid "This task's priority"
+msgstr "Prioritet ovog zadatka"
+
+#. FIXME: whoops, this isn't handled
+#: ../mimedir/mimedir-vcomponent.c:294
+msgid "Resource list"
+msgstr "Popis izvora"
+
+#: ../mimedir/mimedir-vcomponent.c:295
+msgid "List of the resources assigned to this component"
+msgstr "Popis svih resursa dodjeljenih ovoj komponenti"
+
+#: ../mimedir/mimedir-vcomponent.c:299
+msgid "Status"
+msgstr "Status"
+
+#: ../mimedir/mimedir-vcomponent.c:300
+msgid "This task's completion status"
+msgstr "Stanje završenosti ovog zadatka"
+
+#: ../mimedir/mimedir-vcomponent.c:307
+msgid "Summary"
+msgstr "Sažetak"
+
+#: ../mimedir/mimedir-vcomponent.c:308
+msgid "Component's short description"
+msgstr "Kratki opis elementa"
+
+#: ../mimedir/mimedir-vcomponent.c:314
+msgid "Date/time completed"
+msgstr "Datum/vrijeme završetka"
+
+#: ../mimedir/mimedir-vcomponent.c:315
+msgid "Date/time that this task was completed"
+msgstr "Datum/vrijeme završetka zadatka"
+
+#: ../mimedir/mimedir-vcomponent.c:320
+msgid "Date/time end"
+msgstr "Datum/vrijeme završetka"
+
+#: ../mimedir/mimedir-vcomponent.c:321
+msgid "End date/time of this component"
+msgstr "Završni datum/vrijeme ovog elementa"
+
+#: ../mimedir/mimedir-vcomponent.c:326
+msgid "Due"
+msgstr "Krajnji rok"
+
+#: ../mimedir/mimedir-vcomponent.c:327
+msgid "This task's due date"
+msgstr "Rok za ovaj zadatak"
+
+#: ../mimedir/mimedir-vcomponent.c:332
+msgid "Date/time start"
+msgstr "Datum/vrijeme početka"
+
+#: ../mimedir/mimedir-vcomponent.c:333
+msgid "Start date/time of this component"
+msgstr "Početni datum/vrijeme ove komponente"
+
+#: ../mimedir/mimedir-vcomponent.c:338
+msgid "Duration"
+msgstr "Trajanje"
+
+#: ../mimedir/mimedir-vcomponent.c:339
+msgid "This date's duration"
+msgstr "Trajanje ovog datuma"
+
+#: ../mimedir/mimedir-vcomponent.c:344
+msgid "Free/busy"
+msgstr "Slobodan/zauzet"
+
+#: ../mimedir/mimedir-vcomponent.c:345
+msgid "GList of free/busy objects"
+msgstr "GPopis slobodnih/zauzetih objekata"
+
+#: ../mimedir/mimedir-vcomponent.c:351
+msgid "This component's time zone identifier"
+msgstr "Identifikator vremenske zone ove komponente"
+
+#: ../mimedir/mimedir-vcomponent.c:356
+msgid "Time zone name list"
+msgstr "Popis naziva vremenskih zona"
+
+#: ../mimedir/mimedir-vcomponent.c:357
+msgid "GList of time zone names"
+msgstr "GPopis imena vremenskih zona"
+
+#: ../mimedir/mimedir-vcomponent.c:361 ../mimedir/mimedir-vcomponent.c:362
+msgid "Time zone offset from"
+msgstr "Pomak vremenske zone od"
+
+#: ../mimedir/mimedir-vcomponent.c:369 ../mimedir/mimedir-vcomponent.c:370
+msgid "Time zone offset to"
+msgstr "Pomak vremenske zone do"
+
+#: ../mimedir/mimedir-vcomponent.c:377
+msgid "Time zone URL"
+msgstr "URL vremenske zone"
+
+#: ../mimedir/mimedir-vcomponent.c:378
+msgid "URL to a time zone description"
+msgstr "URL do opisa vremenske zone"
+
+#: ../mimedir/mimedir-vcomponent.c:384
+msgid "Contact"
+msgstr "Kontakt"
+
+#: ../mimedir/mimedir-vcomponent.c:385
+msgid "Contact information"
+msgstr "Informacije o kontaktu"
+
+#: ../mimedir/mimedir-vcomponent.c:391
+msgid "Unique identifier"
+msgstr "Jedinstvena oznaka"
+
+#: ../mimedir/mimedir-vcomponent.c:392
+msgid "A unique identifier for this component"
+msgstr "Jedinstveni označivač za ovaj element"
+
+#: ../mimedir/mimedir-vcomponent.c:398
+msgid "Recurrence object"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:399
+msgid "An object representing the RRULE tag"
+msgstr ""
+
+#: ../mimedir/mimedir-vcomponent.c:405 ../mimedir/mimedir-vcomponent.c:406
+msgid "Action"
+msgstr "Akcija"
+
+#: ../mimedir/mimedir-vcomponent.c:411 ../mimedir/mimedir-vcomponent.c:412
+msgid "Repeat"
+msgstr "Ponovi"
+
+#: ../mimedir/mimedir-vcomponent.c:417 ../mimedir/mimedir-vcomponent.c:418
+msgid "Trigger"
+msgstr "Okidač"
+
+#: ../mimedir/mimedir-vcomponent.c:423
+msgid "Trigger date/time"
+msgstr "Datum/vrijeme pokretanja"
+
+#: ../mimedir/mimedir-vcomponent.c:424
+msgid "Date/time of the trigger"
+msgstr "Datum/vrijeme aktivacije"
+
+#: ../mimedir/mimedir-vcomponent.c:429
+msgid "Trigger end"
+msgstr "Završetak pokretača"
+
+#: ../mimedir/mimedir-vcomponent.c:430
+msgid "Whether the trigger is set at the end of the time interval"
+msgstr "Je li pokretač podešen na kraj vremenskog intervala"
+
+#: ../mimedir/mimedir-vcomponent.c:436
+msgid "Created"
+msgstr "Napravljeno"
+
+#: ../mimedir/mimedir-vcomponent.c:437
+msgid "Date/time of the creation"
+msgstr "Datum/vrijeme početka"
+
+#: ../mimedir/mimedir-vcomponent.c:442
+msgid "Date/time stamp"
+msgstr "Datum/vrijeme štambilja"
+
+#: ../mimedir/mimedir-vcomponent.c:443
+msgid "Date/time of the last modification"
+msgstr "Datum/vrijeme zadnje promjene"
+
+#: ../mimedir/mimedir-vcomponent.c:448
+msgid "Sequence"
+msgstr "Slijed"
+
+#: ../mimedir/mimedir-vcomponent.c:449
+msgid "Sequence number"
+msgstr "Broj slijeda"
+
+#~ msgid "%s: error reading calendar file: %s\n"
+#~ msgstr "%s: greška u čitanju datoteke s kalendarom: %s\n"
+
+#~ msgid "Can not open temporary file %s: %s\n"
+#~ msgstr "Ne mogu otvoriti privremenu datoteku %s: %s\n"
+
+#~ msgid "Error writing calendar file %s: %s!"
+#~ msgstr "Greška u pisanju u datoteku kalendara %s: %s!"

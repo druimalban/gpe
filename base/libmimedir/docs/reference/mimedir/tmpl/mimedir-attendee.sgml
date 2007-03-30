@@ -1,0 +1,66 @@
+<!-- ##### SECTION Title ##### -->
+MIMEDirAttendee
+
+<!-- ##### SECTION Short_Description ##### -->
+iCalendar attendee object
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT MIMEDirAttendee ##### -->
+<para>
+
+</para>
+
+@parent: 
+@uri: 
+@priv: 
+
+<!-- ##### FUNCTION mimedir_attendee_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attendee_new_from_attribute ##### -->
+<para>
+
+</para>
+
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attendee_read_from_attribute ##### -->
+<para>
+
+</para>
+
+@attendee: 
+@attribute: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_attendee_write_to_attribute ##### -->
+<para>
+
+</para>
+
+@attendee: 
+@Returns: 
+
+

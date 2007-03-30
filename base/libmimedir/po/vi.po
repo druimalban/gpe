@@ -1,0 +1,1641 @@
+# Vietnamese translation for LibMIMEDir.
+# Copyright © 2006 Gnome i18n Project for Vietnamese.
+# Clytie Siddall <clytie@riverland.net.au>, 2006.
+# 
+msgid ""
+""
+msgstr "Project-Id-Version: libmimedir HEADn"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-02-06 12:35+0100\n"
+"PO-Revision-Date: 2006-02-09 22:58+1030\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: LocFactoryEditor 1.6b36\n"
+
+#:../bin/ical-dump.c:48
+#,c-format
+msgid "Usage: %s ICALFILE\n"
+msgstr "Cách sử dụng: %s TẬP_TIN_ICAL\n"
+
+#:../bin/ical-dump.c:57
+msgid "secondly"
+msgstr "từng giây"
+
+#:../bin/ical-dump.c:59
+msgid "minutely"
+msgstr "từng phút"
+
+#:../bin/ical-dump.c:61
+msgid "hourly"
+msgstr "từng giờ"
+
+#:../bin/ical-dump.c:63
+msgid "daily"
+msgstr "từng ngày"
+
+#:../bin/ical-dump.c:65
+msgid "weekly"
+msgstr "từng tuần"
+
+#:../bin/ical-dump.c:67
+msgid "monthly"
+msgstr "từng tháng"
+
+#:../bin/ical-dump.c:69
+msgid "yearly"
+msgstr "từng năm"
+
+#:../bin/ical-dump.c:71 ../bin/ical-dump.c:97
+msgid "unknown"
+msgstr "không rõ"
+
+#:../bin/ical-dump.c:81
+msgid "second"
+msgstr "giây"
+
+#:../bin/ical-dump.c:83
+msgid "minute"
+msgstr "phút"
+
+#:../bin/ical-dump.c:85
+msgid "hour"
+msgstr "giờ"
+
+#:../bin/ical-dump.c:87
+msgid "day"
+msgstr "ngày"
+
+#:../bin/ical-dump.c:89
+msgid "day of month"
+msgstr "ngày trong tháng"
+
+#:../bin/ical-dump.c:91
+msgid "day of year"
+msgstr "ngày trong năm"
+
+#:../bin/ical-dump.c:93
+msgid "week number"
+msgstr "số thứ tự tuần"
+
+#:../bin/ical-dump.c:95
+msgid "month"
+msgstr "tháng"
+
+#:../bin/ical-dump.c:118
+#,c-format
+msgid "  Recurrence:\n"
+msgstr "  Lặp:\n"
+
+#:../bin/ical-dump.c:120
+#,c-format
+msgid "    Frequency: %s\n"
+msgstr "    Tần số : %s\n"
+
+#:../bin/ical-dump.c:123
+#,c-format
+msgid "    Until: %s\n"
+msgstr "    Đến: %s\n"
+
+#:../bin/ical-dump.c:128
+#,c-format
+msgid "    Count: %d\n"
+msgstr "    Số : %d\n"
+
+#:../bin/ical-dump.c:131
+#,c-format
+msgid "    Interval: %d\n"
+msgstr "    Khoảng: %d\n"
+
+#:../bin/ical-dump.c:134
+#,c-format
+msgid "    Unit: %s\n"
+msgstr "     Đơn vị: %s\n"
+
+#:../bin/ical-dump.c:137
+#,c-format
+msgid "    Units: %s\n"
+msgstr "    Đơn vị: %s\n"
+
+#:../bin/ical-dump.c:152
+#,c-format
+msgid ""
+"Event:\n"
+"\n"
+msgstr "Sự kiện:\n"
+"\n"
+
+#:../bin/ical-dump.c:154
+#,c-format
+msgid ""
+"Todo item:\n"
+"\n"
+msgstr "Mục Cần làm:\n"
+"\n"
+
+#:../bin/ical-dump.c:156
+#,c-format
+msgid ""
+"Unknown component:\n"
+"\n"
+msgstr "Không biết thành phần:\n"
+"\n"
+
+#:../bin/ical-dump.c:177
+#,c-format
+msgid "  Summary: %s\n"
+msgstr "  Tóm tắt: %s\n"
+
+#:../bin/ical-dump.c:182
+#,c-format
+msgid "  Categories: %s\n"
+msgstr "  Phân loại: %s\n"
+
+#:../bin/ical-dump.c:188
+msgid "high"
+msgstr "cao"
+
+#:../bin/ical-dump.c:190
+msgid "low"
+msgstr "thấp"
+
+#:../bin/ical-dump.c:192
+msgid "medium"
+msgstr "vừa"
+
+#:../bin/ical-dump.c:193
+#,c-format
+msgid "  Priority: %s (%d)\n"
+msgstr "  Ưu tiên: %s (%d)\n"
+
+#:../bin/ical-dump.c:198
+#,c-format
+msgid "  Start date: %s\n"
+msgstr "  Ngày đầu : %s\n"
+
+#:../bin/ical-dump.c:205
+#,c-format
+msgid "  End date: %s\n"
+msgstr "  Ngày cuối : %s\n"
+
+#:../bin/ical-dump.c:213
+#,c-format
+msgid "  Due date: %s\n"
+msgstr "  Ngày tới hạn : %s\n"
+
+#:../bin/ical-dump.c:222
+#,c-format
+msgid "  Unique ID: %s\n"
+msgstr "  ID duy nhất: %s\n"
+
+#:../bin/ical-dump.c:223
+#,c-format
+msgid "  Sequence: %u\n"
+msgstr "  Dây: %u\n"
+
+#:../bin/ical-dump.c:236
+#,c-format
+msgid "  All day event\n"
+msgstr "  Sự kiện nguyên ngày\n"
+
+#:../bin/ical-dump.c:261 ../bin/vcard-dump.c:84 ../bin/vcard-normalize.c:68
+#,c-format
+msgid "%s: invalid number of arguments\n"
+msgstr "%s: số đối số không hợp lệ\n"
+
+#:../bin/vcard-dump.c:43 ../bin/vcard-normalize.c:43
+#,c-format
+msgid "Usage: %s VCARDFILE\n"
+msgstr "Cách sử dụng: %s TẬP_TIN_VCARD\n"
+
+#:../bin/vcard-normalize.c:79
+#,c-format
+msgid "%s: error reading card file: %s\n"
+msgstr "%s: gặp lỗi khi đọc tập tin thẻ: %s\n"
+
+#:../bin/vcard-normalize.c:96
+#,c-format
+msgid "%s: error writing card file: %s\n"
+msgstr "%s: gặp lỗi khi ghi tập tin thẻ: %s\n"
+
+#:../mimedir/mimedir-attribute.c:131 ../mimedir/mimedir-vcard.c:298
+msgid "Name"
+msgstr "Tên"
+
+#:../mimedir/mimedir-attribute.c:132
+msgid "The attribute's name"
+msgstr "Tên thuộc tính"
+
+#:../mimedir/mimedir-attribute.c:137
+msgid "Group"
+msgstr "Nhóm"
+
+#:../mimedir/mimedir-attribute.c:138
+msgid "The attribute's group"
+msgstr "Nhóm thuộc tính"
+
+#:../mimedir/mimedir-attribute.c:933
+msgid "missing parameter name"
+msgstr "thiếu tên tham số"
+
+#:../mimedir/mimedir-attribute.c:958
+msgid "missing closing quotation mark"
+msgstr "thiếu dấu trích dẫn đóng"
+
+#:../mimedir/mimedir-attribute.c:983
+msgid "wrong parameter syntax"
+msgstr "cú pháp tham số không đúng"
+
+#:../mimedir/mimedir-attribute.c:993
+msgid "no parameter value"
+msgstr "không có giá trị tham số"
+
+#:../mimedir/mimedir-attribute.c:1086
+msgid "missing attribute name/group"
+msgstr "thiếu tên/nhóm thuộc tính"
+
+#:../mimedir/mimedir-attribute.c:1102
+msgid "no attribute name after group"
+msgstr "không có tên thuộc tính đằng sau nhóm"
+
+#:../mimedir/mimedir-attribute.c:1118
+msgid "missing value delimiter"
+msgstr "thiếu dấu giới hạn giá trị"
+
+#:../mimedir/mimedir-attribute.c:1134
+msgid "invalid character"
+msgstr "ký tự không hợp lệ"
+
+#:../mimedir/mimedir-attribute.c:2505 ../mimedir/mimedir-attribute.c:2514
+msgid "illegal character"
+msgstr "ký tự không được phép"
+
+#:../mimedir/mimedir-attribute.h:48
+#,c-format
+msgid "syntax error (%s)"
+msgstr "lỗi cú pháp (%s)"
+
+#:../mimedir/mimedir-attribute.h:49
+#,c-format
+msgid "illegal character 0x%02x for type \"%s\""
+msgstr "ký tự không được phép 0x%02x cho kiểu « %s »"
+
+#:../mimedir/mimedir-attribute.h:50
+#,c-format
+msgid "invalid format for type \"%s\" in attribute %s"
+msgstr "dạng thức không hợp lệ cho kiểu « %s » trong thuộc tính %s"
+
+#:../mimedir/mimedir-attribute.h:51
+#,c-format
+msgid "attribute %s could not be decoded, since its encoding is unknown"
+msgstr "không thể giải mã thuộc tính %s vì không biết cách mã hoá nó"
+
+#:../mimedir/mimedir-attribute.h:52
+#,c-format
+msgid "invalid value in attribute %s"
+msgstr "giá trị không hợp lệ trong thuộc tính %s"
+
+#:../mimedir/mimedir-attribute.h:53
+#,c-format
+msgid "parameter \"%s\" must not be used more than once in attribute %s"
+msgstr "không cho phép sử dụng tham số « %s » nhiều lần trong thuộc tính %s"
+
+#:../mimedir/mimedir-attribute.h:54
+msgid "invalid Base64 sequence"
+msgstr "dây Base64 không hợp lệ"
+
+#:../mimedir/mimedir-attribute.h:55
+msgid "invalid quoted-printable sequence"
+msgstr "dây quoted-printable (đã trích dẫn - có thể in) không hợp lệ"
+
+#:../mimedir/mimedir-attribute.h:56
+#,c-format
+msgid "attribute list of %s is too short"
+msgstr "danh sách thuộc tính của %s quá ngắn"
+
+#:../mimedir/mimedir-attribute.h:57
+#,c-format
+msgid "attribute list of %s is too long"
+msgstr "danh sách thuộc tính của %s quá dài"
+
+#:../mimedir/mimedir-datetime.c:114 ../mimedir/mimedir-vcomponent.c:352
+msgid "Time zone identifier"
+msgstr "Bộ nhận diện múi giờ"
+
+#:../mimedir/mimedir-datetime.c:115
+msgid "Time zone identifying string"
+msgstr "Chuỗi nhận diện múi giờ"
+
+#.Translators: YYYY-MM-DD HH:MM:SS
+#:../mimedir/mimedir-datetime.c:1081
+#,c-format
+msgid "%04d-%02d-%02d %02d:%02d:%02d"
+msgstr "%04d-%02d-%02d %02d:%02d:%02d"
+
+#.Translators: YYYY-MM-DD
+#:../mimedir/mimedir-datetime.c:1086
+#,c-format
+msgid "%04d-%02d-%02d"
+msgstr "%04d-%02d-%02d"
+
+#.Translators: HH:MM:SS
+#:../mimedir/mimedir-datetime.c:1090
+#,c-format
+msgid "%02d:%02d:%02d"
+msgstr "%02d:%02d:%02d"
+
+#:../mimedir/mimedir-period.c:111
+msgid "Free/busy type"
+msgstr "Kiểu Rảnh/Bận"
+
+#:../mimedir/mimedir-period.c:112
+msgid "Whether this object signifies a free or a busy period"
+msgstr "Đối tượng này ngụ ý thời gian rảnh hay bận"
+
+#:../mimedir/mimedir-profile.c:114
+msgid "Profile name"
+msgstr "Tên hồ sơ"
+
+#:../mimedir/mimedir-profile.c:115
+msgid "The name (type) of the profile"
+msgstr "Tên (kiểu) của hồ sơ"
+
+#:../mimedir/mimedir-profile.c:121
+msgid "Character set"
+msgstr "Bộ ký tự"
+
+#:../mimedir/mimedir-profile.c:122
+msgid "Character set used to en-/decode this profile"
+msgstr "Bộ ký tự dùng để mã hoá/giải mã hồ sơ này"
+
+#:../mimedir/mimedir-profile.h:40
+#,c-format
+msgid "attribute %s defined twice"
+msgstr "định nghĩa thuộc tính %s hai lần"
+
+#:../mimedir/mimedir-profile.h:41
+msgid "unexpected end of profile"
+msgstr "gặp kết thúc hồ sơ bất thường"
+
+#:../mimedir/mimedir-profile.h:42
+#,c-format
+msgid "required attribute %s is missing"
+msgstr "thiếu thuộc tính %s bắt buộc"
+
+#:../mimedir/mimedir-profile.h:43
+msgid "unmatched END attribute"
+msgstr "chưa khớp thuộc tính END (cuối)"
+
+#:../mimedir/mimedir-profile.h:44
+#,c-format
+msgid "wrong profile %s; expected %s"
+msgstr "hồ sơ không đúng %s, còn ngờ %s"
+
+#:../mimedir/mimedir-recurrence.c:221
+msgid "Frequency"
+msgstr "Tần số"
+
+#:../mimedir/mimedir-recurrence.c:222
+msgid "Frequency type of this recurrency rule"
+msgstr "Kiểu tần số của quy tắc lặp này"
+
+#:../mimedir/mimedir-recurrence.c:229
+msgid "Date of last recurrence"
+msgstr "Ngày lặp cuối cùng"
+
+#:../mimedir/mimedir-recurrence.c:230
+msgid "The date of the last recurrence of an event"
+msgstr "Ngày sự kiện lặp cuối cùng"
+
+#:../mimedir/mimedir-recurrence.c:235
+msgid "Number of recurrences"
+msgstr "Số lần lặp"
+
+#:../mimedir/mimedir-recurrence.c:236
+msgid "The number of recurrences of an event"
+msgstr "Số lần sự kiện lặp"
+
+#:../mimedir/mimedir-recurrence.c:243
+msgid "Recurrence interval"
+msgstr "Khoảng lặp"
+
+#:../mimedir/mimedir-recurrence.c:244
+msgid "The interval of recurrences of an event"
+msgstr "Khoảng giữa hai lần sự kiện lặp"
+
+#:../mimedir/mimedir-recurrence.c:251
+msgid "Recurrence unit"
+msgstr "Đơn vị lặp"
+
+#:../mimedir/mimedir-recurrence.c:252
+msgid "By which unit a recurrence should be repeated"
+msgstr "Lặp theo đơn vị này"
+
+#:../mimedir/mimedir-recurrence.c:259
+msgid "Recurrence units"
+msgstr "Đơn vị lặp"
+
+#:../mimedir/mimedir-recurrence.c:260
+msgid "List of units by which a recurrence should be repeated"
+msgstr "Danh sách các đơn vị sự kiện lặp"
+
+#:../mimedir/mimedir-valarm.c:548
+#,c-format
+msgid ""
+"Reminder of your appointment:\n"
+"\n"
+"%s\n"
+"%s"
+msgstr "Nhắc nhở bạn có cuộc hẹn:\n"
+"\n"
+"%s\n"
+"%s"
+
+#:../mimedir/mimedir-vcal.c:148
+msgid "Method"
+msgstr "Phương pháp"
+
+#:../mimedir/mimedir-vcal.c:149
+msgid "The vCalendar's method"
+msgstr "Phương pháp của vCalendar (lịch ảo)"
+
+#:../mimedir/mimedir-vcal.c:154 ../mimedir/mimedir-vcard.c:505
+msgid "Product identifier"
+msgstr "Bộ nhận diện sản phẩm"
+
+#:../mimedir/mimedir-vcal.c:155
+msgid ""
+"The product identifier of the vCalendar. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr "Bộ nhận diện sản phẩm của vCalendar (lịch ảo). Cho đối tượng mới tạo ra, giá trị này là bộ nhận diện sản phẩm của trình LibMIMEDir."
+
+#:../mimedir/mimedir-vcal.c:384 ../mimedir/mimedir-vcard.c:2411
+#:../mimedir/mimedir-vcomponent.c:2111
+#, c-format
+msgid "The profile contains the unsupported custom attribute %s.\n"
+msgstr "Hồ sơ chứa thuộc tính riêng không được hỗ trợ %s.\n"
+
+#:../mimedir/mimedir-vcal.c:387 ../mimedir/mimedir-vcard.c:2414
+#:../mimedir/mimedir-vcomponent.c:2114
+#,c-format
+msgid "The profile contains the unknown attribute %s.\n"
+msgstr "Hồ sơ chứa thuộc tính không rõ %s.\n"
+
+#:../mimedir/mimedir-vcal.c:432 ../mimedir/mimedir-vcal.c:454
+#:../mimedir/mimedir-vcal.c:482 ../mimedir/mimedir-vcal.c:506
+#,c-format
+msgid "Error reading calendar file %s: %s!"
+msgstr "Gặp lỗi khi đọc tập tin lịch %s: %s !"
+
+#:../mimedir/mimedir-vcard-address.c:167
+msgid "Title"
+msgstr "Tựa"
+
+#:../mimedir/mimedir-vcard-address.c:168
+msgid "A one-line string with the most important address information"
+msgstr "Chuỗi đơn dòng chứa thông tin địa chỉ quan trọng nhất"
+
+#:../mimedir/mimedir-vcard-address.c:174
+msgid "Freeform address"
+msgstr "Địa chỉ dạng tự do"
+
+#:../mimedir/mimedir-vcard-address.c:175
+msgid "A freeform address string"
+msgstr "Chuỗi địa chỉ dạng tự do"
+
+#:../mimedir/mimedir-vcard-address.c:180
+msgid "Post office box"
+msgstr "Hộp bưu điện"
+
+#:../mimedir/mimedir-vcard-address.c:181
+msgid "The addresses post office box"
+msgstr "Hộp bưu điện của địa chỉ"
+
+#:../mimedir/mimedir-vcard-address.c:186
+msgid "Extended address"
+msgstr "Địa chỉ đã mở rộng"
+
+#:../mimedir/mimedir-vcard-address.c:187
+msgid "Extended address string"
+msgstr "Chuỗi địa chỉ đã mở rộng"
+
+#:../mimedir/mimedir-vcard-address.c:192
+msgid "Street"
+msgstr "Đường"
+
+#:../mimedir/mimedir-vcard-address.c:193
+msgid "Street address"
+msgstr "Địa chỉ đường"
+
+#:../mimedir/mimedir-vcard-address.c:198
+msgid "Locality"
+msgstr "Phố"
+
+#:../mimedir/mimedir-vcard-address.c:199
+msgid "Locality (e.g. city, town, etc.)"
+msgstr "Thành phố"
+
+#:../mimedir/mimedir-vcard-address.c:204
+msgid "Region"
+msgstr "Tỉnh"
+
+#:../mimedir/mimedir-vcard-address.c:205
+msgid "Region (e.g. state)"
+msgstr "Tỉnh / tiểu bang"
+
+#:../mimedir/mimedir-vcard-address.c:210
+msgid "Postal code"
+msgstr "Mã bưu điện"
+
+#:../mimedir/mimedir-vcard-address.c:211
+msgid "Postal code (freeform string)"
+msgstr "Mã bưu điện (chuỗi dạng tự do)"
+
+#:../mimedir/mimedir-vcard-address.c:216
+#:../mimedir/mimedir-vcard-address.c:217
+msgid "Country"
+msgstr "Quốc gia"
+
+#:../mimedir/mimedir-vcard-address.c:222
+msgid "Domestic"
+msgstr "Trong nước"
+
+#:../mimedir/mimedir-vcard-address.c:223
+msgid "Whether this is a domestic address"
+msgstr "Có nên nó là địa chỉ trong nước hay không."
+
+#:../mimedir/mimedir-vcard-address.c:228
+msgid "International"
+msgstr "Quốc tế"
+
+#:../mimedir/mimedir-vcard-address.c:229
+msgid "Whether this is an international address"
+msgstr "Có nên nó là địa chỉ quốc tế hay không."
+
+#:../mimedir/mimedir-vcard-address.c:234
+msgid "Postal"
+msgstr "Bưu điện"
+
+#:../mimedir/mimedir-vcard-address.c:235
+msgid "Whether this is a postal address"
+msgstr "Có nên nó là địa chỉ bưu điện hay không."
+
+#:../mimedir/mimedir-vcard-address.c:240
+msgid "Parcel"
+msgstr "Bưu kiện"
+
+#:../mimedir/mimedir-vcard-address.c:241
+msgid "Whether parcels can be received at this address"
+msgstr "Có nên địa chỉ này nhận được bưu kiện hay không"
+
+#:../mimedir/mimedir-vcard-address.c:246 ../mimedir/mimedir-vcard-email.c:163
+#:../mimedir/mimedir-vcard-phone.c:160
+msgid "Home"
+msgstr "Nhà"
+
+#:../mimedir/mimedir-vcard-address.c:247
+msgid "Whether this is a home address"
+msgstr "Có nên nó là địa chỉ nhà hay không."
+
+#:../mimedir/mimedir-vcard-address.c:252 ../mimedir/mimedir-vcard-email.c:169
+#:../mimedir/mimedir-vcard-phone.c:166
+msgid "Work"
+msgstr "Chỗ làm"
+
+#:../mimedir/mimedir-vcard-address.c:253
+msgid "Whether this is a work address"
+msgstr "Có nên nó là địa chỉ việc làm hay không."
+
+#:../mimedir/mimedir-vcard-address.c:258 ../mimedir/mimedir-vcard-email.c:157
+#:../mimedir/mimedir-vcard-phone.c:232
+msgid "Preferred"
+msgstr "Ưa thích"
+
+#:../mimedir/mimedir-vcard-address.c:259
+msgid "Whether this is the preferred address"
+msgstr "Có nên nó là địa chỉ ưa thích hay không."
+
+#:../mimedir/mimedir-vcard-address.c:572
+#,c-format
+msgid "The %s attribute contains too many elements.\n"
+msgstr "Thuộc tính %s chứa quá nhiều yếu tố.\n"
+
+#:../mimedir/mimedir-vcard-address.c:772
+#,c-format
+msgid "The address field is of unknown type %s.\n"
+msgstr "Trường địa chỉ có kiểu không rõ %s.\n"
+
+#.Translators: pcode city
+#:../mimedir/mimedir-vcard-address.c:864
+#:../mimedir/mimedir-vcard-address.c:873
+#,c-format
+msgid "%s %s"
+msgstr "%s %s"
+
+#.Translators: city, region
+#:../mimedir/mimedir-vcard-address.c:871
+#,c-format
+msgid "%s, %s"
+msgstr "%s, %s"
+
+#:../mimedir/mimedir-vcard-address.c:914 ../mimedir/mimedir-vcard-email.c:538
+#:../mimedir/mimedir-vcard-phone.c:695
+msgid "preferred"
+msgstr "ưa thích"
+
+#:../mimedir/mimedir-vcard-address.c:919
+msgid "domestic"
+msgstr "trong nước"
+
+#:../mimedir/mimedir-vcard-address.c:924
+msgid "international"
+msgstr "quốc tế"
+
+#:../mimedir/mimedir-vcard-address.c:929
+msgid "postal"
+msgstr "bưu điện"
+
+#:../mimedir/mimedir-vcard-address.c:934
+msgid "parcel"
+msgstr "bưu kiện"
+
+#:../mimedir/mimedir-vcard-address.c:939 ../mimedir/mimedir-vcard-email.c:560
+#:../mimedir/mimedir-vcard-phone.c:701
+msgid "home"
+msgstr "nhà"
+
+#:../mimedir/mimedir-vcard-address.c:944 ../mimedir/mimedir-vcard-email.c:566
+#:../mimedir/mimedir-vcard-phone.c:706
+msgid "work"
+msgstr "chỗ làm"
+
+#.Translators: Short address format: "locality/street"
+#:../mimedir/mimedir-vcard-address.c:996
+#,c-format
+msgid "%s/%s"
+msgstr "%s/%s"
+
+#:../mimedir/mimedir-vcard-address.c:1002
+msgid "<unknown>"
+msgstr "<không rõ>"
+
+#:../mimedir/mimedir-vcard-email.c:142 ../mimedir/mimedir-vcard.c:368
+msgid "Address"
+msgstr "Địa chỉ"
+
+#:../mimedir/mimedir-vcard-email.c:143
+msgid "The e-mail address"
+msgstr "Địa chỉ thư điện tử"
+
+#:../mimedir/mimedir-vcard-email.c:149
+msgid "Type"
+msgstr "Kiểu"
+
+#:../mimedir/mimedir-vcard-email.c:150
+msgid "Type of this e-mail address"
+msgstr "Kiểu của địa chỉ thư điện tử"
+
+#:../mimedir/mimedir-vcard-email.c:158
+msgid "Whether this is the preferred e-mail address"
+msgstr "Nó là địa chỉ thư điện tử ưa thích hay không."
+
+#:../mimedir/mimedir-vcard-email.c:164
+msgid "Whether is a home e-mail address"
+msgstr "Nó là địa chỉ thư điện tử ở nhà hay không."
+
+#:../mimedir/mimedir-vcard-email.c:170
+msgid "Whether this is an e-mail address at work"
+msgstr "Nó là địa chỉ thư điện tử ở chỗ làm hay không."
+
+#:../mimedir/mimedir-vcard-email.c:442
+#,c-format
+msgid "The email field is of unknown type %s.\n"
+msgstr "Trường địa chỉ thư điện tử có kiểu không rõ %s.\n"
+
+#:../mimedir/mimedir-vcard-email.c:548
+msgid "Internet"
+msgstr "Mạng"
+
+#:../mimedir/mimedir-vcard-email.c:553
+msgid "X.400"
+msgstr "X.400"
+
+#:../mimedir/mimedir-vcard-phone.c:153
+msgid "Number"
+msgstr "Số"
+
+#:../mimedir/mimedir-vcard-phone.c:154
+msgid "The telephone number (freeform string)"
+msgstr "Số điện thoại (chuỗi dạng tự do)"
+
+#:../mimedir/mimedir-vcard-phone.c:161
+msgid "Whether this is a home phone number"
+msgstr "Nó là số điện thoại ở nhà hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:167
+msgid "Whether this is a phone number at work"
+msgstr "Nó là số điện thoại ở chỗ làm hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:172
+msgid "Voice"
+msgstr "Tiếng nói"
+
+#:../mimedir/mimedir-vcard-phone.c:173
+msgid "Whether this is a voice number"
+msgstr "Nó là số điện thoại tiếng nói hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:178
+msgid "Fax"
+msgstr "Điện thư"
+
+#:../mimedir/mimedir-vcard-phone.c:179
+msgid "Whether this is a facsimile number"
+msgstr "Nó là số điện thoại điện thư (fax) hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:184 ../mimedir/mimedir-vcard-phone.c:721
+msgid "BBS"
+msgstr "BBS"
+
+#:../mimedir/mimedir-vcard-phone.c:185
+msgid "Whether this is a bulletin board system number"
+msgstr "Nó là số điện thoại hệ thống bảng công báo hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:190
+msgid "Modem"
+msgstr "Bộ điều giải"
+
+#:../mimedir/mimedir-vcard-phone.c:191
+msgid "Whether this is a modem number"
+msgstr "Nó là số điện thoại bộ điều giải hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:196
+msgid "Pager"
+msgstr "Máy nhắn tin"
+
+#:../mimedir/mimedir-vcard-phone.c:197
+msgid "Whether this is a pager number"
+msgstr "Nó là số điện thoại máy nhắn tin hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:202
+msgid "Video"
+msgstr "Ảnh động"
+
+#:../mimedir/mimedir-vcard-phone.c:203
+msgid "Whether this is a video phone number"
+msgstr "Nó là số điện thoại ảnh động hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:208
+msgid "Cell"
+msgstr "Di động"
+
+#:../mimedir/mimedir-vcard-phone.c:209
+msgid "Whether this is a cell (mobile) phone number"
+msgstr "Nó là số điện thoại di động hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:214
+msgid "Car"
+msgstr "Xe"
+
+#:../mimedir/mimedir-vcard-phone.c:215
+msgid "Whether this is car phone number"
+msgstr "Nó là số điện thoại xe hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:220 ../mimedir/mimedir-vcard-phone.c:756
+msgid "ISDN"
+msgstr "ISDN"
+
+#:../mimedir/mimedir-vcard-phone.c:221
+msgid "Whether this is a ISDN number"
+msgstr "Nó là số điện thoại ISDN hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:226 ../mimedir/mimedir-vcard-phone.c:761
+msgid "PCS"
+msgstr "PCS"
+
+#:../mimedir/mimedir-vcard-phone.c:227
+msgid "Whether this is a PCS number"
+msgstr "Nó là số điện thoại PCS hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:233
+msgid "Whether this is the preferred number"
+msgstr "Nó là số điện thoại ưa thích hay không."
+
+#:../mimedir/mimedir-vcard-phone.c:238
+msgid "Message"
+msgstr "Tin nhẳn"
+
+#:../mimedir/mimedir-vcard-phone.c:239
+msgid "Whether this number has a voice recorder"
+msgstr "Số điện thoại này có bộ thu tiếng nói hay không"
+
+#:../mimedir/mimedir-vcard-phone.c:588
+#,c-format
+msgid "The phone field is of unknown type %s.\n"
+msgstr "Trường số điện thoại có kiểu không rõ %s.\n"
+
+#:../mimedir/mimedir-vcard-phone.c:711
+msgid "voice"
+msgstr "tiếng nói"
+
+#:../mimedir/mimedir-vcard-phone.c:716
+msgid "fax"
+msgstr "điện thư"
+
+#:../mimedir/mimedir-vcard-phone.c:726
+msgid "modem"
+msgstr "bộ điều giải"
+
+#:../mimedir/mimedir-vcard-phone.c:731
+msgid "pager"
+msgstr "máy nhắn tin"
+
+#:../mimedir/mimedir-vcard-phone.c:736
+msgid "video"
+msgstr "ảnh động"
+
+#:../mimedir/mimedir-vcard-phone.c:741
+msgid "voice message"
+msgstr "tin nhẳn nói"
+
+#:../mimedir/mimedir-vcard-phone.c:746
+msgid "cell phone"
+msgstr "điện thoại di động"
+
+#:../mimedir/mimedir-vcard-phone.c:751
+msgid "car phone"
+msgstr "điện thoại xe"
+
+#:../mimedir/mimedir-vcard.c:299
+msgid "The spelled out name full name of this person"
+msgstr "Họ tên của người này, được nói từng chữ"
+
+#:../mimedir/mimedir-vcard.c:304
+msgid "Family name"
+msgstr "Họ"
+
+#:../mimedir/mimedir-vcard.c:305
+msgid "The family name of this person"
+msgstr "Họ của người này"
+
+#:../mimedir/mimedir-vcard.c:310
+msgid "Given name"
+msgstr "Tên được cho"
+
+#:../mimedir/mimedir-vcard.c:311
+msgid "The given name of this person"
+msgstr "Tên được cho của người này"
+
+#:../mimedir/mimedir-vcard.c:316
+msgid "Middle name"
+msgstr "Tên đệm"
+
+#:../mimedir/mimedir-vcard.c:317
+msgid "The middle name or middle initials of this person"
+msgstr "Tên đệm hoặc tên đệm tắt của người này"
+
+#:../mimedir/mimedir-vcard.c:322
+msgid "Prefix"
+msgstr "Tiền tố"
+
+#:../mimedir/mimedir-vcard.c:323
+msgid "The name prefix (e.g. honorific prefix) of this person"
+msgstr "Tiền tố lẽ phép của người này"
+
+#:../mimedir/mimedir-vcard.c:328
+msgid "Suffix"
+msgstr "Hậu tố"
+
+#:../mimedir/mimedir-vcard.c:329
+msgid "The name suffix of this person"
+msgstr "Hậu tố lẽ phép của người này"
+
+#:../mimedir/mimedir-vcard.c:334
+msgid "Nickname list"
+msgstr "Danh sách tên hiệu"
+
+#:../mimedir/mimedir-vcard.c:335
+msgid ""
+"List of all nick names. This is a GList *, where the elements are of type "
+"const gchar *"
+msgstr "Danh sách các tên hiệu. Đây là một GLIst*, mà các yếu tố có kiểu « const gchar * »."
+
+#:../mimedir/mimedir-vcard.c:339
+msgid "Nick name"
+msgstr "Tên hiệu"
+
+#:../mimedir/mimedir-vcard.c:340
+msgid "The first nick name"
+msgstr "Tên hiệu thứ nhất"
+
+#.FIXME: this is useless
+#:../mimedir/mimedir-vcard.c:345
+msgid "Photo"
+msgstr "Ảnh"
+
+#:../mimedir/mimedir-vcard.c:346
+msgid "Pointer to a byte stream, representing an image of the person"
+msgstr "Bộ trỏ tới luồng byte, miêu tả ảnh của người này"
+
+#:../mimedir/mimedir-vcard.c:350
+msgid "Photo URI"
+msgstr "URI ảnh"
+
+#:../mimedir/mimedir-vcard.c:351
+msgid "URI to an image of this person"
+msgstr "Địa điểm URI tới ảnh của người này"
+
+#:../mimedir/mimedir-vcard.c:356
+msgid "Birthday"
+msgstr "Ngày sinh"
+
+#:../mimedir/mimedir-vcard.c:357
+msgid "The person's birthday"
+msgstr "Ngày sinh nhật của người này"
+
+#:../mimedir/mimedir-vcard.c:363
+msgid "Address list"
+msgstr "Danh sách địa chỉ"
+
+#:../mimedir/mimedir-vcard.c:364
+msgid ""
+"List of all addresses. This is a GList *, where the elements are of type "
+"MIMEDirAddress *"
+msgstr "Danh sách các địa chỉ. Đây là một GLIst*, mà các yếu tố có kiểu « MIMEDirAddress * »."
+
+#:../mimedir/mimedir-vcard.c:369
+msgid "The preferred address"
+msgstr "Địa chỉ ưa thích"
+
+#:../mimedir/mimedir-vcard.c:375
+msgid "Phone number list"
+msgstr "Danh sách số điện thoại:"
+
+#:../mimedir/mimedir-vcard.c:376
+msgid ""
+"List of all phone numbers. This is a GList *, where the elements are of type "
+"MIMEDirPhone *"
+msgstr "Danh sách các địa chỉ. Đây là một GLIst*, mà các yếu tố có kiểu « MIMEDirPhone * »."
+
+#:../mimedir/mimedir-vcard.c:380
+msgid "Phone number"
+msgstr "Số điện thoại"
+
+#:../mimedir/mimedir-vcard.c:381
+msgid "The preferred phone number"
+msgstr "Số điện thoại ưa thích"
+
+#:../mimedir/mimedir-vcard.c:386
+msgid "E-mail address list"
+msgstr "Danh sách địa chỉ thư điện tử"
+
+#:../mimedir/mimedir-vcard.c:387
+msgid ""
+"List of all e-mail addresses. This is a GList *, where the elements are of "
+"type MIMEDirEmail *"
+msgstr "Danh sách các địa chỉ. Đây là một GLIst*, mà các yếu tố có kiểu « MIMEDirEmail * »."
+
+#:../mimedir/mimedir-vcard.c:391
+msgid "E-mail address"
+msgstr "Địa chỉ thư điện tử"
+
+#:../mimedir/mimedir-vcard.c:392
+msgid "The preferred e-mail address"
+msgstr "Địa chỉ thư điện tử ưa thích"
+
+#:../mimedir/mimedir-vcard.c:397
+msgid "Mailer"
+msgstr "Trình thư"
+
+#:../mimedir/mimedir-vcard.c:398
+msgid "The mailing program used by this person"
+msgstr "Chương trình được dùng bởi người này"
+
+#:../mimedir/mimedir-vcard.c:404
+msgid "Time zone"
+msgstr "Múi giờ"
+
+#:../mimedir/mimedir-vcard.c:405
+msgid "The time zone this person lives in"
+msgstr "Múi giờ nơi người này ở"
+
+#:../mimedir/mimedir-vcard.c:412
+msgid "Time zone string"
+msgstr "Chuỗi múi giờ"
+
+#:../mimedir/mimedir-vcard.c:413
+msgid "The time zone this person lives in (deprecated string representation)"
+msgstr "Múi giờ nơi người này ở (cách miêu tả chuỗi bị phản đối)"
+
+#:../mimedir/mimedir-vcard.c:418
+msgid "Latitude"
+msgstr "Độ vĩ"
+
+#:../mimedir/mimedir-vcard.c:419
+msgid "Latitude of this person's residence"
+msgstr "Độ vĩ của nhà người này"
+
+#:../mimedir/mimedir-vcard.c:426
+msgid "Longitude"
+msgstr "Độ kinh:"
+
+#:../mimedir/mimedir-vcard.c:427
+msgid "Longitude of this person's residence"
+msgstr "Độ kinh của nhà người này"
+
+#:../mimedir/mimedir-vcard.c:435
+msgid "Job title"
+msgstr "Chức vụ"
+
+#:../mimedir/mimedir-vcard.c:436
+msgid "The person's job title"
+msgstr "Chức vụ của người này"
+
+#:../mimedir/mimedir-vcard.c:441
+msgid "Role"
+msgstr "Vai trò"
+
+#:../mimedir/mimedir-vcard.c:442
+msgid "The person's job role"
+msgstr "Vai trò việc làm của người này"
+
+#.FIXME: useless
+#:../mimedir/mimedir-vcard.c:447
+msgid "Logo"
+msgstr "Biểu hình"
+
+#:../mimedir/mimedir-vcard.c:448
+msgid "Pointer to a byte stream, representing the logo of the person's company"
+msgstr "Bộ trỏ tới luồng byte miêu tả biểu hình của công ty của người này"
+
+#:../mimedir/mimedir-vcard.c:452
+msgid "Logo URI"
+msgstr "URI biểu hình"
+
+#:../mimedir/mimedir-vcard.c:453
+msgid "URI to the logo of this person's company"
+msgstr "Địa điểm URI tới công ty của người này"
+
+#:../mimedir/mimedir-vcard.c:458
+msgid "Agent"
+msgstr "Đại lý"
+
+#:../mimedir/mimedir-vcard.c:459
+msgid "A person, acting for the person described in this card"
+msgstr "Đại lý đại diện cho người được diễn tả trên thẻ này"
+
+#:../mimedir/mimedir-vcard.c:464
+msgid "Agent URI"
+msgstr "URI đại lý"
+
+#:../mimedir/mimedir-vcard.c:465
+msgid ""
+"URI to the description of a person, acting for the person described in this "
+"card"
+msgstr "Địa điểm URI tới mô tả người đại diện cho người được diễn tả trên thẻ này"
+
+#:../mimedir/mimedir-vcard.c:470
+msgid "Agent string"
+msgstr "Chuỗi đại lý"
+
+#:../mimedir/mimedir-vcard.c:471
+msgid ""
+"A person, acting for the person described in this card (deprecated string "
+"representation)"
+msgstr "Đại lý đại diện cho người được diễn tả trên thẻ này (cách miêu tả chuỗi bị phản đối)"
+
+#:../mimedir/mimedir-vcard.c:476
+msgid "Organization list"
+msgstr "Danh sách tổ chức"
+
+#:../mimedir/mimedir-vcard.c:477
+msgid ""
+"List of all organization this person belongs to. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr "Danh sách các tổ chức của người này. Đây là một GLIst*, mà các yếu tố có kiểu nhiều « gchar * »."
+
+#:../mimedir/mimedir-vcard.c:481
+msgid "Organization"
+msgstr "Tổ chức"
+
+#:../mimedir/mimedir-vcard.c:482
+msgid "The person's first organization"
+msgstr "Tổ chức chính của người này"
+
+#:../mimedir/mimedir-vcard.c:488 ../mimedir/mimedir-vcomponent.c:266
+msgid "Category list"
+msgstr "Danh sách phân loại"
+
+#:../mimedir/mimedir-vcard.c:489
+msgid ""
+"List of all categories of this person. This is a GList *, where the elements "
+"are gchar *'s"
+msgstr "Danh sách các phân loại của người này. Đây là một GLIst*, mà các yếu tố có kiểu nhiều « gchar * »."
+
+#:../mimedir/mimedir-vcard.c:493
+msgid "Categories"
+msgstr "Phân loại"
+
+#:../mimedir/mimedir-vcard.c:494
+msgid "String representation of this person's categories"
+msgstr "Chuỗi miêu tả các phân loại của người này"
+
+#:../mimedir/mimedir-vcard.c:499
+msgid "Note"
+msgstr "Ghi chú"
+
+#:../mimedir/mimedir-vcard.c:500
+msgid "Additional comments"
+msgstr "Chú thích thêm"
+
+#:../mimedir/mimedir-vcard.c:506
+msgid ""
+"The product identifier of the vCard. In case of newly generated objects, "
+"this is LibMIMEDir's product identifier"
+msgstr "Bộ nhận diện sản phẩm của vCard (thẻ ảo). Đối với đối tượng mới tạo ra, nó là bộ nhận diện sản phẩm của LibMIMEDir."
+
+#:../mimedir/mimedir-vcard.c:511
+msgid "Revision"
+msgstr "Bản sửa đổi"
+
+#:../mimedir/mimedir-vcard.c:512
+msgid "Card's revision"
+msgstr "Bản sửa đổi thẻ"
+
+#:../mimedir/mimedir-vcard.c:517
+msgid "Sort string"
+msgstr "Chuỗi sắp xếp"
+
+#:../mimedir/mimedir-vcard.c:518
+msgid "String that defines this card's sort order"
+msgstr "Chuỗi định nghĩa thứ tự sắp xếp của thẻ này"
+
+#.FIXME: useless
+#:../mimedir/mimedir-vcard.c:523
+msgid "Sound"
+msgstr "Âm thanh"
+
+#:../mimedir/mimedir-vcard.c:524
+msgid "Pointer to a byte stream, representing a sound file"
+msgstr "Bộ trỏ tới luồng byte miêu tả tập tin âm thanh"
+
+#:../mimedir/mimedir-vcard.c:528
+msgid "Sound URI"
+msgstr "URI âm thanh"
+
+#:../mimedir/mimedir-vcard.c:529
+msgid "URI to a sound file"
+msgstr "Địa điểm URI tới tập tin âm thanh"
+
+#:../mimedir/mimedir-vcard.c:534
+msgid "Unique Identifier"
+msgstr "Bộ nhận diện duy nhất"
+
+#:../mimedir/mimedir-vcard.c:535
+msgid "A unique identifier for this card"
+msgstr "Bộ nhận diện duy nhất cho thẻ này"
+
+#:../mimedir/mimedir-vcard.c:540
+msgid "URL"
+msgstr "URL"
+
+#:../mimedir/mimedir-vcard.c:541
+msgid "An alternate URL for this resource"
+msgstr "Địa chỉ Mạng (URL) xen kẽ cho tài nguyên này"
+
+#:../mimedir/mimedir-vcard.c:547
+msgid "Classification"
+msgstr "Sự phân loại"
+
+#:../mimedir/mimedir-vcard.c:548
+msgid "The security classfication of this card"
+msgstr "Cách phân loại bảo mật của thẻ này"
+
+#:../mimedir/mimedir-vcard.c:553
+msgid "Public key list"
+msgstr "Danh sách khoá công"
+
+#:../mimedir/mimedir-vcard.c:554
+msgid ""
+"List of this person's public keys. This is a GList *, where the elements are "
+"MIMEDirVCardKeys"
+msgstr "Danh sách các khoá công cộng của người này. Đây là một GLIst*, mà các yếu tố có kiểu « MIMEDirVCardKeys »."
+
+#:../mimedir/mimedir-vcard.c:558
+msgid "Public key"
+msgstr "Khoá công"
+
+#:../mimedir/mimedir-vcard.c:559
+msgid "This person's first public key"
+msgstr "Khoá công chính của người này"
+
+#:../mimedir/mimedir-vcard.c:564
+msgid "Key type"
+msgstr "Kiểu khoá"
+
+#:../mimedir/mimedir-vcard.c:565
+msgid "Type of the first public key"
+msgstr "Kiểu cũa khoá công chính"
+
+#:../mimedir/mimedir-vcard.c:1474 ../mimedir/mimedir-vcard.c:1496
+#:../mimedir/mimedir-vcard.c:1524 ../mimedir/mimedir-vcard.c:1548
+#,c-format
+msgid "Error reading card file %s: %s!"
+msgstr "Gặp lỗi khi đọc tập tin thẻ %s: %s !"
+
+#:../mimedir/mimedir-vcard.c:1671
+#,c-format
+msgid "Error writing card file %s: %s!"
+msgstr "Gặp lỗi khi ghi tập tin thẻ %s: %s !"
+
+#:../mimedir/mimedir-vcard.c:3409
+#,c-format
+msgid "Name: %s\n"
+msgstr "Tên: %s\n"
+
+#:../mimedir/mimedir-vcard.c:3411
+msgid "Name\n"
+msgstr "Tên\n"
+
+#:../mimedir/mimedir-vcard.c:3413
+#,c-format
+msgid "  Prefix:     %s\n"
+msgstr "  Tiền tố :    %s\n"
+
+#:../mimedir/mimedir-vcard.c:3415
+#,c-format
+msgid "  Given:      %s\n"
+msgstr "  Đã cho :      %s\n"
+
+#:../mimedir/mimedir-vcard.c:3417
+#,c-format
+msgid "  Additional: %s\n"
+msgstr "  Thêm: %s\n"
+
+#:../mimedir/mimedir-vcard.c:3419
+#,c-format
+msgid "  Family:     %s\n"
+msgstr "  Họ :    %s\n"
+
+#:../mimedir/mimedir-vcard.c:3421
+#,c-format
+msgid "  Suffix:     %s\n"
+msgstr "  Hệu tố :     %s\n"
+
+#:../mimedir/mimedir-vcard.c:3427
+#,c-format
+msgid "Birth Date: %04d-%02d-%02d\n"
+msgstr "Ngày sinh: %04d-%02d-%02d\n"
+
+#:../mimedir/mimedir-vcard.c:3452
+#,c-format
+msgid "Address label (%s):\n"
+msgstr "Nhãn địa chỉ (%s):\n"
+
+#:../mimedir/mimedir-vcard.c:3472
+#,c-format
+msgid "Address (%s):\n"
+msgstr "Địa chỉ (%s):\n"
+
+#:../mimedir/mimedir-vcard.c:3486
+#,c-format
+msgid "  Postal Box:  %s\n"
+msgstr "  Hộp bưu điện: %s\n"
+
+#:../mimedir/mimedir-vcard.c:3488
+#,c-format
+msgid "  Extended:    %s\n"
+msgstr "  Đã mở rộng:    %s\n"
+
+#:../mimedir/mimedir-vcard.c:3490
+#,c-format
+msgid "  Street:      %s\n"
+msgstr "  Đường:      %s\n"
+
+#:../mimedir/mimedir-vcard.c:3492
+#,c-format
+msgid "  City:        %s\n"
+msgstr "  Phố :        %s\n"
+
+#:../mimedir/mimedir-vcard.c:3494
+#,c-format
+msgid "  Region:      %s\n"
+msgstr "  Tỉnh:      %s\n"
+
+#:../mimedir/mimedir-vcard.c:3496
+#,c-format
+msgid "  Postal Code: %s\n"
+msgstr "  Mã bưu điện: %s\n"
+
+#:../mimedir/mimedir-vcard.c:3498
+#,c-format
+msgid "  Country:     %s\n"
+msgstr "  Quốc gia:     %s\n"
+
+#:../mimedir/mimedir-vcard.c:3518
+msgid "Telephone:\n"
+msgstr "Điện thoại:\n"
+
+#:../mimedir/mimedir-vcard.c:3542
+#,c-format
+msgid "Telephone: %s (%s)\n"
+msgstr "Điện thoại: %s (%s)\n"
+
+#:../mimedir/mimedir-vcard.c:3556
+msgid "E-mail:\n"
+msgstr "Thư điện tử :\n"
+
+#:../mimedir/mimedir-vcard.c:3580
+#,c-format
+msgid "E-mail: %s (%s)\n"
+msgstr "Thư điện tử : %s (%s)\n"
+
+#:../mimedir/mimedir-vcard.c:3602
+#,c-format
+msgid "Time zone: %c%02d:%02d\n"
+msgstr "Múi giờ: %c%02d:%02d\n"
+
+#:../mimedir/mimedir-vcard.c:3611
+#,c-format
+msgid "Location: %.2f,%.2f\n"
+msgstr "Địa điểm: %.2f,%.2f\n"
+
+#:../mimedir/mimedir-vcard.c:3620
+#,c-format
+msgid "Organization: %s\n"
+msgstr "Tổ chức: %s\n"
+
+#:../mimedir/mimedir-vcard.c:3625
+#,c-format
+msgid "Job title: %s\n"
+msgstr "Chức vụ : %s\n"
+
+#:../mimedir/mimedir-vcard.c:3628
+#,c-format
+msgid "Business role: %s\n"
+msgstr "Vai trò kinh doanh: %s\n"
+
+#:../mimedir/mimedir-vcard.c:3638
+#,c-format
+msgid "Categories: %s\n"
+msgstr "Phân loại: %s\n"
+
+#:../mimedir/mimedir-vcard.c:3643
+#,c-format
+msgid "Comment: %s\n"
+msgstr "Ghi chú : %s\n"
+
+#:../mimedir/mimedir-vcard.c:3646
+#,c-format
+msgid "Homepage: %s\n"
+msgstr "Trang chủ : %s\n"
+
+#:../mimedir/mimedir-vcard.c:3649
+#,c-format
+msgid "Unique string: %s\n"
+msgstr "Chuỗi duy nhất: %s\n"
+
+#:../mimedir/mimedir-vcard.c:3659
+msgid "X.509"
+msgstr "X.509"
+
+# Name: don't translate / Tên: đừng dịch
+#:../mimedir/mimedir-vcard.c:3662
+msgid "PGP"
+msgstr "PGP"
+
+#:../mimedir/mimedir-vcard.c:3665
+msgid "yes"
+msgstr "có"
+
+#:../mimedir/mimedir-vcard.c:3669
+#,c-format
+msgid "Public Key: %s\n"
+msgstr "Khoá công: %s\n"
+
+#:../mimedir/mimedir-vcomponent.c:267
+msgid ""
+"List of all categories of this component. This is a GList *, where the "
+"elements are gchar *'s"
+msgstr "Danh sách các phân loại của thành phần này. Đây là một GLIst*, mà các yếu tố có kiểu nhiều « gchar * »."
+
+#:../mimedir/mimedir-vcomponent.c:271
+msgid "Comment list"
+msgstr "Danh sách chú thích"
+
+#:../mimedir/mimedir-vcomponent.c:272
+msgid ""
+"List of all additional comments for this component. This is a GList *, where "
+"the elements are gchar *'s"
+msgstr "Danh sách các chú thích thêm về thành phần này. Đây là một GLIst*, mà các yếu tố có kiểu nhiều « gchar * »."
+
+#:../mimedir/mimedir-vcomponent.c:276
+msgid "Description"
+msgstr "Mô tả"
+
+#:../mimedir/mimedir-vcomponent.c:277
+msgid "Full description of this component"
+msgstr "Mô tả đầy đủ của thành phần này"
+
+#:../mimedir/mimedir-vcomponent.c:282
+msgid "Percent complete"
+msgstr "Phần trăm hoàn tất"
+
+#:../mimedir/mimedir-vcomponent.c:283
+msgid "Percentage of this task's completion"
+msgstr "Phần trăm tác vụ đã hoàn tất"
+
+#:../mimedir/mimedir-vcomponent.c:290
+msgid "Priority"
+msgstr "Ưu tiên"
+
+#:../mimedir/mimedir-vcomponent.c:291
+msgid "This task's priority"
+msgstr "Ưu tiên của tác vụ này"
+
+#.FIXME: whoops, this isn't handled
+#:../mimedir/mimedir-vcomponent.c:296
+msgid "Resource list"
+msgstr "Danh sách tài nguyên"
+
+#:../mimedir/mimedir-vcomponent.c:297
+msgid "List of the resources assigned to this component"
+msgstr "Danh sách các tài nguyên được gán cho thành phần này"
+
+#:../mimedir/mimedir-vcomponent.c:301
+msgid "Status"
+msgstr "Trạng thái"
+
+#:../mimedir/mimedir-vcomponent.c:302
+msgid "This task's completion status"
+msgstr "Trạng thái hoàn tất của tác vụ này"
+
+#:../mimedir/mimedir-vcomponent.c:309
+msgid "Summary"
+msgstr "Tóm tắt"
+
+#:../mimedir/mimedir-vcomponent.c:310
+msgid "Component's short description"
+msgstr "Mô tả ngắn cũa thành phần"
+
+#:../mimedir/mimedir-vcomponent.c:316
+msgid "Date/time completed"
+msgstr "Ngày/giờ hoàn tất"
+
+#:../mimedir/mimedir-vcomponent.c:317
+msgid "Date/time that this task was completed"
+msgstr "Ngày/giờ tác vụ đã hoàn tất"
+
+#:../mimedir/mimedir-vcomponent.c:322
+msgid "Date/time end"
+msgstr "Ngày/giờ cuối"
+
+#:../mimedir/mimedir-vcomponent.c:323
+msgid "End date/time of this component"
+msgstr "Ngày/giờ cuối cùng của thành phần này"
+
+#:../mimedir/mimedir-vcomponent.c:328
+msgid "Due"
+msgstr "Tới hạn"
+
+#:../mimedir/mimedir-vcomponent.c:329
+msgid "This task's due date"
+msgstr "Ngày tới hạn của tác vụ này"
+
+#:../mimedir/mimedir-vcomponent.c:334
+msgid "Date/time start"
+msgstr "Ngày/giờ đầu"
+
+#:../mimedir/mimedir-vcomponent.c:335
+msgid "Start date/time of this component"
+msgstr "Ngày/giờ bắt đầu của thành phần này"
+
+#:../mimedir/mimedir-vcomponent.c:340
+msgid "Duration"
+msgstr "Thời lượng"
+
+#:../mimedir/mimedir-vcomponent.c:341
+msgid "This date's duration"
+msgstr "Thời lượng của ngày này"
+
+#:../mimedir/mimedir-vcomponent.c:346
+msgid "Free/busy"
+msgstr "Rảnh/Bận"
+
+#:../mimedir/mimedir-vcomponent.c:347
+msgid "GList of free/busy objects"
+msgstr "Danh sách GList của các đối tượng Rảnh/Bận"
+
+#:../mimedir/mimedir-vcomponent.c:353
+msgid "This component's time zone identifier"
+msgstr "Bộ nhận diện múi giờ của thành phần này"
+
+#:../mimedir/mimedir-vcomponent.c:358
+msgid "Time zone name list"
+msgstr "Danh sách tên múi giờ"
+
+#:../mimedir/mimedir-vcomponent.c:359
+msgid "GList of time zone names"
+msgstr "Danh sách các tên múi giờ"
+
+#:../mimedir/mimedir-vcomponent.c:363 ../mimedir/mimedir-vcomponent.c:364
+msgid "Time zone offset from"
+msgstr "Hiệu số múi giờ cộng"
+
+#:../mimedir/mimedir-vcomponent.c:371 ../mimedir/mimedir-vcomponent.c:372
+msgid "Time zone offset to"
+msgstr "Hiệu số múi giờ trừ"
+
+#:../mimedir/mimedir-vcomponent.c:379
+msgid "Time zone URL"
+msgstr "URL múi giờ"
+
+#:../mimedir/mimedir-vcomponent.c:380
+msgid "URL to a time zone description"
+msgstr "Địa chỉ Mạng (URL) tới mô tả múi giờ"
+
+#:../mimedir/mimedir-vcomponent.c:386
+msgid "Contact"
+msgstr "Liên lạc"
+
+#:../mimedir/mimedir-vcomponent.c:387
+msgid "Contact information"
+msgstr "Thông tin lien lạc"
+
+#:../mimedir/mimedir-vcomponent.c:393
+msgid "Unique identifier"
+msgstr "Bộ nhận diện duy nhất"
+
+#:../mimedir/mimedir-vcomponent.c:394
+msgid "A unique identifier for this component"
+msgstr "Bộ nhận diện duy nhất cho thành phần này"
+
+#:../mimedir/mimedir-vcomponent.c:400
+msgid "Recurrence object"
+msgstr "Đối tượng lặp"
+
+#:../mimedir/mimedir-vcomponent.c:401
+msgid "An object representing the RRULE tag"
+msgstr "Một đối tượng miêu tả thẻ RRULE"
+
+#:../mimedir/mimedir-vcomponent.c:407 ../mimedir/mimedir-vcomponent.c:408
+msgid "Action"
+msgstr "Hành động"
+
+#:../mimedir/mimedir-vcomponent.c:413 ../mimedir/mimedir-vcomponent.c:414
+msgid "Repeat"
+msgstr "Lặp lại"
+
+#:../mimedir/mimedir-vcomponent.c:419 ../mimedir/mimedir-vcomponent.c:420
+msgid "Trigger"
+msgstr "Bộ gây nên"
+
+#:../mimedir/mimedir-vcomponent.c:425
+msgid "Trigger date/time"
+msgstr "Ngày/giờ bộ gây nên"
+
+#:../mimedir/mimedir-vcomponent.c:426
+msgid "Date/time of the trigger"
+msgstr "Ngày/giờ của bộ gây nên"
+
+#:../mimedir/mimedir-vcomponent.c:431
+msgid "Trigger end"
+msgstr "Bộ gây nên cuối"
+
+#:../mimedir/mimedir-vcomponent.c:432
+msgid "Whether the trigger is set at the end of the time interval"
+msgstr "Có nên đặt bộ tây nên tại cuối khoảng thời gian hay không"
+
+#:../mimedir/mimedir-vcomponent.c:438
+msgid "Created"
+msgstr "Đã tạo"
+
+#:../mimedir/mimedir-vcomponent.c:439
+msgid "Date/time of the creation"
+msgstr "Ngày/giờ tạo"
+
+#:../mimedir/mimedir-vcomponent.c:444
+msgid "Date/time stamp"
+msgstr "Nhãn ngày/giờ"
+
+#:../mimedir/mimedir-vcomponent.c:445
+msgid "Date/time of the creation of the iCalendar object"
+msgstr "Ngày/giờ tạo đối tượng iCalendar"
+
+#:../mimedir/mimedir-vcomponent.c:450
+msgid "Last modified"
+msgstr "Sửa đổi cuối cùng"
+
+#:../mimedir/mimedir-vcomponent.c:451
+msgid "Date/time of the last modification"
+msgstr "Ngày/giờ sửa đổi cuối cùng"
+
+#:../mimedir/mimedir-vcomponent.c:456
+msgid "Sequence"
+msgstr "Dãy"
+
+#:../mimedir/mimedir-vcomponent.c:457
+msgid "Sequence number"
+msgstr "Số dây"

@@ -1,0 +1,152 @@
+<!-- ##### SECTION Title ##### -->
+mimedir-utils
+
+<!-- ##### SECTION Short_Description ##### -->
+
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION mimedir_utils_strcat_list ##### -->
+<para>
+
+</para>
+
+@list: 
+@separator: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_utils_is_safe ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_utils_is_qsafe ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_utils_is_token_char ##### -->
+<para>
+
+</para>
+
+@c: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_utils_is_token ##### -->
+<para>
+
+</para>
+
+@string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_utils_compare_tokens ##### -->
+<para>
+
+</para>
+
+@token1: 
+@token2: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_utils_copy_string_list ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_utils_free_string_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_utils_copy_string_slist ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_utils_free_string_slist ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_utils_copy_object_list ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_utils_free_object_list ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_utils_copy_object_slist ##### -->
+<para>
+
+</para>
+
+@list: 
+@Returns: 
+
+
+<!-- ##### FUNCTION mimedir_utils_free_object_slist ##### -->
+<para>
+
+</para>
+
+@list: 
+
+
+<!-- ##### FUNCTION mimedir_utils_set_property_string ##### -->
+<para>
+
+</para>
+
+@dest: 
+@value: 
+
+
