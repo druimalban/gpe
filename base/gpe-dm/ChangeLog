@@ -1,3 +1,8 @@
+2007-04-01  Florian Boor  <florian@kernelconcepts.de>
+
+	* Release Version 0.50
+	* Convert to use autotools
+	
 2006-04-15 Alberto Garcia Hierro <skyhusker@handhelds.org>
 	* gpe-dm.c: Fix some warnings.
 	* gpe-dm.c: Add pidfile creation.
