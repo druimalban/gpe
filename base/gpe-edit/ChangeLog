@@ -1,3 +1,8 @@
+2007-04-01  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Release Version 0.40
+    * Use autotools
+    
 2006-08-23  Florian Boor <florian.boor@kernelconcepts.de>
 
     * Release Version 0.32
