@@ -1,4 +1,0 @@
-
-021009:
-	Rtcd could become unnecessary in the near furture. The alarm
-	framework will use atd as RTC monitoring daemon. (NF)
