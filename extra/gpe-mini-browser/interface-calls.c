@@ -46,6 +46,8 @@
 #include "gpe-mini-browser.h"
 
 //#define DEBUG /* uncomment this if you want debug output*/
+static int loading_error=0;		/* is used to avoid a huge number of error boxes to pop up in case of webpage parsing errors */
+
 
 /* ======================================================== */
 
@@ -190,6 +192,8 @@ destroy_status_window (Webi * html, gpointer * status_data)
       data->exists = FALSE;
       /* set pbar to NULL for testing in activate_statusbar (we do not want to access a destroyed widget) */
       data->pbar = NULL;
+      /* reset the loading_error variable in case we get loading issues in the next page */
+      loading_error = 0;
       gtk_widget_destroy (GTK_WIDGET (data->statusbox));
     }
 }
@@ -210,9 +214,10 @@ activate_statusbar (Webi * html, WebiLoadStatus * status,
   data = (struct status_data *) status_data;
 
   /* test if an error occured */
-  if (status->status == WEBI_LOADING_ERROR)
+  if ((status->status == WEBI_LOADING_ERROR) && !loading_error)
     {
-      gpe_error_box (_("An error occured loading the webpage! Check your connection or proxy settings."));
+      gpe_error_box (_("An error occured loading the webpage! Either the page contains errors or you need to check your connection or proxy settings."));
+      loading_error = 1;
     }
 
   /* copied from the reference implementation of osb-browser, needs to be improved for this app */

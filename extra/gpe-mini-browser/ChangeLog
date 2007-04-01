@@ -1,3 +1,8 @@
+v0.21 -               -            - Philippe De Swert
+
+* Added some functionality to remove the excessive amount of warning pop-ups on load errors (as this needs to
+  be improved in gtk-webcore)
+
 v0.20 - Satyr release - 22/12/2006 - Philippe De Swert
 
 * Small typo fixes in documentation and code comments

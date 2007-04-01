@@ -36,11 +36,17 @@
 
 #include <glib.h>
 
+#ifndef __GPEBROWSER_H__
+#define __GPEBROWSER_H__
+
+G_BEGIN_DECLS
+
 /*** Generic defines ***/
 struct html_render_settings {
   gboolean javascript_enabled;
   gboolean java_enabled;
   gboolean plugins_enabled;
+  gboolean cookies_enabled;
   gboolean autoload_images;
   int minimum_font_size;
   int default_font_size;
@@ -149,3 +155,7 @@ gboolean html_render_find(GtkWidget *renderer, const gchar *text, gboolean case_
 
 /* get the currently selected text */
 const gchar * html_render_get_selected_text(GtkWidget *renderer);
+
+G_END_DECLS
+
+#endif /* __GPEBROWSER_H__ */
