@@ -1,5 +1,9 @@
 2007-04-01  Florian Boor <florian@kernelconcepts.de>
 
+	* Convert to autotools
+	
+2007-04-01  Florian Boor <florian@kernelconcepts.de>
+
 	* Apply patch to call xtscal instead of script. (by Koen Kooi)
 
 2007-03-16  Florian Boor <florian@kernelconcepts.de>

@@ -1,0 +1,54 @@
+#! /usr/bin/env python
+
+#--Arguments:
+import sys
+
+if len(sys.argv) != 3:
+    print >> sys.stderr, "ERROR arguments are: <postats> <package>"
+    sys.exit(1)
+
+po_status_file = sys.argv[1]
+package_name   = sys.argv[2]
+
+#--Load the repository ('postats' file):
+import pickle
+postat = pickle.load( open(po_status_file) )
+
+# key:
+#     key[0] textual domaine   gpe-go
+#     key[1] revision          0.05
+#     key[2] lingua            pt_BR
+#--------------------------------------
+# value: dict[key]
+#     dict[key][0] translator name
+#     dict[key][1] translator email
+#     dict[key][2] stat translated strings
+#     dict[key][3] stat total # of strings
+#     dict[key][4] stat chars in translation (?)
+#     dict[key][5] stat chars in original    (?)
+#     dict[key][6] timestamp
+#--------------------------------------
+#
+# http://www.iro.umontreal.ca/translation/teams/PO/ro/gpe-go-0.05.ro.po
+#
+# ==> PO_URL/LANG/TEXTUAL_DOMAIN-REVISION.LANG.po
+
+package_stats = {}
+
+for key in postat.keys():
+    if key[0] == package_name:
+        if package_stats.has_key(key[2]):
+            if  package_stats[key[2]] < key[1]:
+                package_stats[key[2]] = key[1]
+        else:
+            package_stats[key[2]] = key[1] # lang = last_revision
+
+PO_URL = "http://www.iro.umontreal.ca/translation/teams/PO"
+
+import os
+for key in package_stats.keys():
+    s = "wget --quiet %s/%s/%s-%s.%s.po --output-document=%s.po" % (
+        PO_URL, key,
+        package_name, package_stats[key], key, key)
+    print s
+    os.system(s)
