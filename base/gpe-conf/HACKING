@@ -15,8 +15,6 @@ You are welcome to participate at gpe and gpe-conf.
 * Add config wizzard to network config tool.
 * Add translation support to definition files.
 
-* Introduce an easy to use API for applications to retrieve settings instantly.
-  e.g. proxy changes.
 
 -> Here are some instruction to add a new module (Applet) to gpe-conf.
 
