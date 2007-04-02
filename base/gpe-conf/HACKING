@@ -8,10 +8,6 @@ You are welcome to participate at gpe and gpe-conf.
 
 
 -> What is missing?
-
-* Replace hardcoded device list. (in progress)
-  - add dummy entry before reading file
-  - allow strings for features
   
 * Adaption to other hardware platforms than iPAQ. 
   - Button configuration files for several platforms.
