@@ -3,7 +3,7 @@
 AC_INIT(MIME Directory Library, 0.4.0, mailto:srittau@jroger.in-berlin.de, libmimedir)
 AC_PREREQ(2.53)
 AC_CONFIG_SRCDIR(mimedir/mimedir-attribute.c)
-AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+AM_INIT_AUTOMAKE(libmimedir, AC_PACKAGE_VERSION)
 AC_PROG_INTLTOOL
 AM_CONFIG_HEADER(config.h)
 

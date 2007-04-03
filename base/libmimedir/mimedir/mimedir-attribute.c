@@ -1420,7 +1420,7 @@ mimedir_attribute_get_parameter_value (MIMEDirAttribute *attribute, const gchar 
 	g_return_val_if_fail (parameter != NULL, FALSE);
 
 	p = mimedir_attribute_get_parameter (attribute, parameter);
-	if (p)
+	if (p && p->values)
 		return (gchar *) p->values->data;
 	else
 		return NULL;

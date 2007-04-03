@@ -3028,7 +3028,7 @@ mimedir_vcomponent_set_location (MIMEDirVComponent *vcomponent, const gchar *loc
 	g_free (priv->location);
 	g_free (priv->location_alt);
 	priv->location     = g_strdup (location);
-	priv->location_alt = g_strdup (uri);
+	priv->location_alt = uri ? g_strdup (uri) : NULL;
 }
 
 /**
