@@ -82,7 +82,11 @@ case `module_id` in
 		ARGS="$ARGS -dpi 100 -screen 480x640" ;;
 	# This is a fallback for PCs
 	"")
-		ARGS="$ARGS -dpi 100 -mode 0x0117"
+		if [ -f /usr/bin/Xvesa ]; then
+			ARGS="$ARGS -dpi 100 -mode 0x0117"
+		else
+			ARGS="$ARGS -dpi 100"
+		fi
 esac
 
 exec $XSERVER $ARGS $*
