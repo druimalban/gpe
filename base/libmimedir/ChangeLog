@@ -1,3 +1,8 @@
+2007-04-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* Undo broken change in revision 9093 which references
+	mimedir-recurrence-rule.c but does not provide the file
+
 2007-03-29  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-attribute.c (escape): escape semi-colons

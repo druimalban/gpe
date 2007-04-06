@@ -26,7 +26,6 @@ libmimedir_la_SOURCES =	\
 	mimedir-period.c		\
 	mimedir-profile.c		\
 	mimedir-recurrence.c		\
-	mimedir-recurrence-rule.c       \
 	mimedir-utils.c			\
 	mimedir-utils.h			\
 	mimedir-valarm.c		\
@@ -53,7 +52,6 @@ include_HEADERS = \
 	mimedir-period.h		\
 	mimedir-profile.h		\
 	mimedir-recurrence.h		\
-	mimedir-recurrence-rule.h       \
 	mimedir-valarm.h		\
 	mimedir-vcal.h			\
 	mimedir-vcard.h			\
