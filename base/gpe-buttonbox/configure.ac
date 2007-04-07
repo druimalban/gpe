@@ -23,5 +23,5 @@ PKG_CHECK_MODULES(BUTTONBOX, gtk+-2.0 libgpewidget libgpelaunch)
 
 AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "$prefix/share/locale/$PACKAGE_NAME", [Directory for locale files])
 
-AC_CONFIG_FILES([Makefile apps/gpe-buttonbox.desktop.in apps/gpe-buttonbox-config.desktop.in])
+AC_CONFIG_FILES([Makefile apps/gpe-buttonbox.desktop.in apps/gpe-buttonbox-config.desktop.in po/Makefile.in])
 AC_OUTPUT
