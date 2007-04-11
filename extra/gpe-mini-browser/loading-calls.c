@@ -141,8 +141,7 @@ handle_cookie (Webi * html, WebiCookie * cookie, gpointer * data)
 #ifdef DEBUG
   printf ("Site %s wants to set a cookie.\n", cookie->domain);
 #endif
-  /* accept all cookies by default for the moment */
-  cookie->out_accept_cookie = TRUE;
+  /* TODO: implement handling */
 }
 
 /* makes the engine go forward one page */
