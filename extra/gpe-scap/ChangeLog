@@ -1,3 +1,8 @@
+2007-04-13  Florian Boor <fb@kernelconcepts.de>
+
+	* gpe-scap.glade: Make acceptign button default. 
+        This allows us to operate without pointer device.
+
 2006-12-19  Florian Boor <fb@kernelconcepts.de>
 	
 	* Release 1.2
