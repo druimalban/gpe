@@ -121,9 +121,6 @@ main(int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (PACKAGE, "UTF-8");
   textdomain (PACKAGE);
-  
-  atexit (remove_pidfile); 
-  create_pidfile ();
 
   dpyname = ":0";
 
@@ -138,6 +135,9 @@ main(int argc, char *argv[])
   if (! nodaemon)
     daemon (0, 0);
 
+  atexit (remove_pidfile); 
+  create_pidfile ();
+  
   openlog ("gpe-dm", 0, 0);
 
   start_server (FALSE);
