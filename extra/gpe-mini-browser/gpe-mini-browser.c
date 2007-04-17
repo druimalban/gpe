@@ -158,7 +158,8 @@ main (int argc, char *argv[])
 
   /* get+set proxy and set settings to default if there are no previous ones*/
   set_proxy(WEBI (html), &s); 
-  if(parse_settings_file(WEBI (html), &s))
+  /* settings parsing returns 1 on error */
+  if(parse_settings_file(WEBI (html), &s)) 
   	set_default_settings (WEBI (html), &s);
 
   /* set rendering mode depending on screen size (when working in gtk-webcore) 

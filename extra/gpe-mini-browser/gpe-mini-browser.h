@@ -27,6 +27,7 @@
 #define COMPLETION "/.gpe/gpe-mini-browser/browser-completion"
 #define DB_NAME "/.gpe/gpe-mini-browser/bookmarks"
 #define CONF_NAME "/.gpe/gpe-mini-browser/gpe-mini-browser.conf"
+#define GPE_MINI_BROWSER_UA " gpe-mini-browser 0.20"
 
 /*internationalisation */
 #include <libintl.h>

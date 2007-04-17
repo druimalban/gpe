@@ -99,6 +99,7 @@ set_default_settings (Webi * html, WebiSettings * ks)
   ks->standard_font_family = "sans";
   ks->autoload_images = 1;
   ks->javascript_enabled = 1;
+  ks->user_agent_string = g_strconcat(webi_get_engine_user_agent_string(), GPE_MINI_BROWSER_UA, NULL);
 
   webi_set_settings (WEBI (html), ks);
 }
@@ -146,7 +147,7 @@ parse_settings_file (Webi *html, WebiSettings * ks)
   filename = get_conf_file();
   if(filename == 0)
     {
-      gpe_error_box (_("Could not save settings! Make sure HOME is set in your environment"));
+      gpe_error_box (_("Could not read settings! Make sure HOME is set in your environment"));
       free (filename);
       return 1;
     }
@@ -182,6 +183,11 @@ parse_settings_file (Webi *html, WebiSettings * ks)
       {
         ks->default_font_size = g_key_file_get_integer(settingsfile, "Config", *keys, NULL);
         ks->default_fixed_font_size = g_key_file_get_integer(settingsfile, "Config", *keys, NULL);
+	goto loopend;
+      }
+      if(!strcmp(*keys, "UserAgent"))
+      {
+       ks->user_agent_string = g_key_file_get_string(settingsfile, "Config", *keys, NULL); 
       }
 loopend:      ++keys;
     } 
@@ -223,6 +229,7 @@ write_settings_to_file (WebiSettings * ks)
 			  ks->javascript_enabled);
   g_key_file_set_integer (settingsfile, "Config", "Fontsize",
 			  ks->default_font_size);
+  g_key_file_set_string (settingsfile, "Config", "UserAgent", ks->user_agent_string);
 
   output = g_key_file_to_data (settingsfile, NULL, NULL);
   fprintf (outfile, output);
