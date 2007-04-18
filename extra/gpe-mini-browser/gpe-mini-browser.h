@@ -24,6 +24,7 @@
 
 /* General Defines */
 #define HOME_PAGE "file:///usr/share/doc/gpe/mini-browser-index.html"
+#define HOMEPAGE_SIZE 60
 #define COMPLETION "/.gpe/gpe-mini-browser/browser-completion"
 #define DB_NAME "/.gpe/gpe-mini-browser/bookmarks"
 #define CONF_NAME "/.gpe/gpe-mini-browser/gpe-mini-browser.conf"

@@ -165,7 +165,7 @@ get_bookmark_home (char *home)
 {
   char *err;
 
-  if (sqlite_exec
+  if(sqlite_exec
       (db, "select * from bookmarks where home=1", return_bookmark_home, home,
        &err))
     {
@@ -187,7 +187,7 @@ return_bookmark_home (void *home, int argc, char **argv, char **columnNames)
   if (*argv != NULL)
     {
       n = strlen (*argv);
-      if (n > 60)
+      if (n > (HOMEPAGE_SIZE -1))
 	return 1;
       strncpy ((char *) home, *argv, n + 1);
       return 0;

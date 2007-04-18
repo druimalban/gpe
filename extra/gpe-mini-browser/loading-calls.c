@@ -173,21 +173,20 @@ home_func (GtkWidget * home, GtkWidget * html)
 {
   char *homepage = NULL;
 
-  homepage = malloc (sizeof (char) * 60);
+  homepage = malloc (sizeof (char) * HOMEPAGE_SIZE);
+  /* set to default here  as get_bookmark_home does not change
+     the homepage variable if there is no homepage set in the db.
+  */
   strncpy (homepage, "gpe.linuxtogo.org", 18);
 
   start_db ();
 
-  if (!get_bookmark_home (homepage))
-    {
-      homepage = (char *) parse_url (homepage);
-      fetch_url (homepage, GTK_WIDGET (html));
-    }
-  else
-    {
-      homepage = (char *) parse_url (homepage);
-      fetch_url (homepage, GTK_WIDGET (html));
-    }
+  /* get_bookmark_home returns 0 on success and checks if the string 
+     is smaller than HOMEPAGE_SIZE
+  */
+  get_bookmark_home (homepage);
+  homepage = (char *) parse_url (homepage);
+  fetch_url (homepage, GTK_WIDGET (html));
 
   stop_db ();
   free (homepage);
