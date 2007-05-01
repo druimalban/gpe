@@ -1,3 +1,7 @@
+2007-05-01  Florian Boor  <florian@kernelconcepts.de>
+
+	* Release Version 0.51
+
 2007-04-15  Florian Boor  <florian@kernelconcepts.de>
 
 	* gpe-dm.c: Change initialisation order to get the correct PID.
