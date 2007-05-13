@@ -44,16 +44,12 @@ journal_list_add_line(time_t tstart, time_t tstop,
   char duration[24];
 
   tm = malloc(sizeof(char)*26);
-  stoptm = malloc(sizeof(char)*24);
-  starttm = malloc(sizeof(char)*24);
 
   tm = ctime_r(&tstart, tm);
-  strncpy(starttm,tm,24);
-  *(starttm+24) = 0;
+  starttm = g_strndup(tm, 24);
 
   tm = ctime_r(&tstop, tm);
-  stoptm = strncpy(stoptm,tm,24);
-  *(starttm+24) = 0;
+  stoptm = g_strndup (tm, 24);
 
   icon_start = gpe_find_icon("media_play");
   icon_stop = gpe_find_icon("media_stop");
