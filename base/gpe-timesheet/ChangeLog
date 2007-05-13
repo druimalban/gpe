@@ -1,3 +1,13 @@
+2007-05-13 Philippe De Swert <philippedeswert@scarlet.be>
+
+	* Apply patches from bugzilla submitted by Neil Williams
+		- http://bugs.linuxtogo.org/show_bug.cgi?id=47
+		- http://bugs.linuxtogo.org/show_bug.cgi?id=48
+		- http://bugs.linuxtogo.org/show_bug.cgi?id=49
+		- http://bugs.linuxtogo.org/show_bug.cgi?id=50
+	* Remove debian subdir for easier maintance in debian
+		Closes: http://bugs.linuxtogo.org/show_bug.cgi?id=51
+
 2006-07-11  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release version 0.31
