@@ -563,6 +563,7 @@ ui_edit_journal (GtkWidget *w, gpointer user_data)
       tstop = mktime (&curr_time);
       text_stop = gtk_entry_get_text(GTK_ENTRY(stop_note));
       /* prepare start_time string for visualization*/
+      start_time = g_malloc(sizeof(char)*26);
       start_time = ctime_r(&tstart, start_time);
       *(start_time+24) = 0;
 
