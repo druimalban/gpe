@@ -48,5 +48,5 @@ static void start_timing (GtkWidget *w, gpointer data);
 static void stop_timing (GtkWidget *w, gpointer data);
 void prepare_onscreen_journal (GtkTreeSelection *selection, gpointer data);
 static void toggle_toolbar(GtkCheckMenuItem *menuitem, gpointer user_data);
-
+GtkWidget * create_interface(GtkWidget *main_window);
 
