@@ -312,7 +312,7 @@ ui_edit_journal (GtkWidget *w, gpointer user_data)
   gchar *start_notes = g_malloc (sizeof(char)*80);
   gchar *stop_notes = g_malloc (sizeof(char)*80);
   char duration[25];
-
+  gint time_int;
   struct tm curr_time;
   struct task *t;
 
@@ -413,6 +413,8 @@ ui_edit_journal (GtkWidget *w, gpointer user_data)
       gtk_widget_show (stop_frame);
 
       /* preparing start log datas */
+      time_int = (gint)tstart;
+      tstart = (time_t)time_int;
       localtime_r (&tstart, &curr_time);
       start_date = gtk_date_combo_new();
       gtk_date_combo_set_date(GTK_DATE_COMBO(start_date),
@@ -434,6 +436,8 @@ ui_edit_journal (GtkWidget *w, gpointer user_data)
       gtk_entry_set_text(GTK_ENTRY(start_note),start_notes);
 
       /*preparing stop log datas */
+      time_int = (gint)tstop;
+      tstop = (time_t)time_int;
       localtime_r (&tstop, &curr_time);
       stop_date = gtk_date_combo_new();
       gtk_date_combo_set_date(GTK_DATE_COMBO(stop_date),
