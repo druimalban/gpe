@@ -1,3 +1,8 @@
+2007-05-13	Philippe De Swert <philippedeswert@scarlet.be>
+	
+	* sysinfo.c: Apply patch by Manuel Teira to fix wireless compilation problem.
+	Fixes http://bugs.openembedded.org/show_bug.cgi?id=2095
+
 2007-03-28      Florian Boor <florian.boor@kernelconcepts.de>
 
         * brightness.c: Apply patch by Manuel Teira to fix display power reading.

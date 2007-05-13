@@ -28,6 +28,8 @@
 #include <sys/utsname.h>
 
 #include <sys/socket.h>
+#include <linux/types.h>
+#include <linux/if.h>
 #include <linux/wireless.h>
 #include <sys/ioctl.h> 
 	
