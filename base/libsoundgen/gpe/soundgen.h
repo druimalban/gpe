@@ -40,4 +40,7 @@ void soundgen_pause(int snddev, unsigned int duration);
  */
 int soundgen_final(int snddev);
 
+int soundgen_alarm_stop ();
+int soundgen_alarm_start ();
+
 #endif

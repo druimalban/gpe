@@ -1,17 +1,23 @@
 PREFIX = /usr/local
 DEBUG = no
-VERSION = 0.3
+VERSION = 0.5
 CVSBUILD = yes
 PACKAGE = libsoundgen
 
 MEMBERS = soundgen
 SONAME = libsoundgen.so.1
 
+ifeq ($(DEBUG),yes)
+PACKAGE_CPPFLAGS += -g -pg -I./gpe
+PACKAGE_CFLAGS += -g -pg -I./gpe $(GPECFLAGS) `pkg-config --cflags gthread-2.0`  -fPIC
+PACKAGE_LDFLAGS += -g -pg $(GPELIBS) `pkg-config --libs gthread-2.0` -lm -lesd
+else
 PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -I./gpe
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) -fPIC
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) -lm -lesd
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags gthread-2.0`  -fPIC
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) `pkg-config --libs gthread-2.0` -lm -lesd
+endif
 
-HEADERS = soundgen.h
+HEADERS = soundgen.h buzzer.h
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 DEPS = $(patsubst %,%.d,$(MEMBERS))
@@ -34,6 +40,10 @@ $(SONAME): $(OBJS)
 install-program: $(SONAME)
 	install -d $(DESTDIR)$(PREFIX)/lib
 	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	install $(PACKAGE).pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/$(PACKAGE).pc
+	install -d $(DESTDIR)$(PREFIX)/include/gpe
+	for i in $(HEADERS); do install -m 644 gpe/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
+	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libsoundgen.so
 
 install-devel: install-program
 	install -d $(DESTDIR)$(PREFIX)/include/gpe
