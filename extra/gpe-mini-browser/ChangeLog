@@ -1,7 +1,10 @@
 v0.21 -               -            - Philippe De Swert
 
-* Added some functionality to remove the excessive amount of warning pop-ups on load errors (as this needs to
-  be improved in gtk-webcore)
+* Added option to configure (the now customized) User Agent through the configfile
+* Fixed possible overflow bug and tuned homepage query
+* Fixed cookie handling to adhere to new gtk-webcore API
+* Added some functionality to remove the excessive amount of warning pop-ups on load 
+  errors (as this needs to be improved in gtk-webcore)
 
 v0.20 - Satyr release - 22/12/2006 - Philippe De Swert
 
