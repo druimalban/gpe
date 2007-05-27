@@ -97,7 +97,7 @@ open_bookmarks (GtkWidget * button, gpointer * data)
   struct tree_action *open_data;
   GtkTreeSelection *selection;
   GtkTreeModel *model;
-  GtkTreeIter iter, iter2;
+  GtkTreeIter iter;
   gchar *url;
 
   open_data = (struct tree_action *) data;
@@ -114,8 +114,7 @@ open_bookmarks (GtkWidget * button, gpointer * data)
       printf ("The selected url = %s\n", url);
 #endif
       /* add to history */
-      gtk_list_store_insert (completion_store, &iter2, 0);
-      gtk_list_store_set (completion_store, &iter2, 0, url, -1);
+      add_history (url);
 
       fetch_url (url, GTK_WIDGET (open_data->html));
       g_free (url);
@@ -407,4 +406,53 @@ set_as_homepage (GtkWidget * button, gpointer * data)
     {
       gpe_error_box (_("No bookmark selected!"));
     }
+}
+
+/*==============================================*/
+
+void 
+add_history (gchar *url)
+{
+  GtkTreeIter iter, hist_iter;
+  int count = 0;
+  gchar *buffer;
+
+  if (!gtk_tree_model_get_iter_first
+      (GTK_TREE_MODEL (completion_store), &iter))
+  {
+#ifdef DEBUG
+   printf("get first iter for history failed\n");
+#endif 
+  }
+  else
+  { 
+   while (count < 100)
+     {
+      gtk_tree_model_get (GTK_TREE_MODEL (completion_store), &iter, 0,
+                          &buffer, -1);
+      count++;
+      if(strcmp (buffer, url)== 0)
+	{
+#ifdef DEBUG
+	 printf ("url: %s already in history!\n", url);
+#endif 
+      	 g_free (buffer);
+	 return;
+	}
+      if (!gtk_tree_model_iter_next
+          (GTK_TREE_MODEL (completion_store), &iter))
+	{
+	 break;
+        }
+     }
+   /* in case the list is 100 items long, remove the last one to make room for a new one */
+   if(count == 100)
+	 gtk_list_store_remove (completion_store, &iter);
+   g_free (buffer);
+  }
+  
+  gtk_list_store_insert (completion_store, &hist_iter, 0);
+  gtk_list_store_set (completion_store, &hist_iter, 0, url, -1);
+
+  return;
 }

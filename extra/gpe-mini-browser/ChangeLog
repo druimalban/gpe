@@ -5,6 +5,7 @@ v0.21 -               -            - Philippe De Swert
 * Fixed cookie handling to adhere to new gtk-webcore API
 * Added some functionality to remove the excessive amount of warning pop-ups on load 
   errors (as this needs to be improved in gtk-webcore)
+* Improved history handling, trying to avoid duplicates and limiting the list to 100 items 
 
 v0.20 - Satyr release - 22/12/2006 - Philippe De Swert
 

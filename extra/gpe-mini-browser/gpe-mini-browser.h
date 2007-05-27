@@ -259,6 +259,8 @@ void clear_history(GtkWidget *button);
 void set_fullscreen (GtkWidget *button, gpointer *fullscreen_info);
 /* set selected bookmark as homepage */
 void set_as_homepage (GtkWidget *button, gpointer *data);
+/* add new entry to history if it does not exist yet */
+void add_history (gchar *url);
 
 
 /******************************************************
