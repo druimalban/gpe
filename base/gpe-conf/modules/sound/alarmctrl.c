@@ -22,8 +22,8 @@
 #include "soundctrl.h"
 
 static const char *FILE_SETTINGS = NULL;
-static int enabled = 1;
-static int automatic = 1;
+static gboolean enabled = TRUE;
+static gboolean automatic = TRUE;
 static int level = 80;
 static int old_enabled;
 static int old_automatic;
@@ -45,49 +45,76 @@ void
 alarm_save_settings(void)
 {
 	FILE *cfgfile;
+	GKeyFile *alarmfile;
+	
+	alarmfile = g_key_file_new();
+	
+	g_key_file_set_boolean (alarmfile, "Settings", "enabled", enabled);
+	g_key_file_set_boolean (alarmfile, "Settings", "automatic", automatic);
+	g_key_file_set_integer (alarmfile, "Settings", "level", level);
 	
 	cfgfile = fopen(FILE_SETTINGS, "w");
 	if (cfgfile)
 	{
 		fprintf(cfgfile, 
 		        "# alarm settings - file created by gpe-conf\n\n");
-		fprintf(cfgfile, "enabled %d\n", enabled);
-		fprintf(cfgfile, "automatic %d\n", automatic);
-		fprintf(cfgfile, "level %d\n", level);
+		fprintf(cfgfile, "%s\n", g_key_file_to_data (alarmfile, NULL, NULL));
 		fclose(cfgfile);
 	}
+	if (alarmfile)
+		g_key_file_free (alarmfile);
 }
 
 
 void 
 alarm_load_settings(void)
 {
-	FILE *cfgfile;
+	GKeyFile *alarmfile;
+	GError *err = NULL;
+	gint i;
 	
-	cfgfile = fopen(FILE_SETTINGS, "r");
-	if (cfgfile)
+	alarmfile = g_key_file_new();
+	
+	if (!g_key_file_load_from_file (alarmfile, FILE_SETTINGS,
+                                    G_KEY_FILE_NONE, &err))
 	{
-		int val = -1, ret;
-		char buf[128];
-		while (fgets(buf, 128, cfgfile))
-		{
-			ret = sscanf(buf, "enabled %d", &val);
-			if (ret)
-				enabled = val;
-			
-			ret = sscanf(buf, "automatic %d", &val);
-			if (ret)
-				automatic = val;
-			
-			ret = sscanf(buf, "level %d", &val);			
-			if (ret)
-			{
-				if ((val >= 0) && (val <=100))
-					level = val;
-			}
-		}
-		fclose(cfgfile);
+		g_printerr ("%s\n", err->message);
+		g_error_free(err);
+		if (alarmfile)
+			g_key_file_free (alarmfile);
+		return;
 	}
+	
+	i = g_key_file_get_boolean (alarmfile, "Settings", "enabled", &err);
+	if (err) 
+	{
+		g_error_free(err);
+		err = NULL;
+	}
+	else
+		enabled = i;
+	
+	i = g_key_file_get_boolean (alarmfile, "Settings", "automatic", &err);
+	if (err) 
+	{
+		g_error_free(err);
+		err = NULL;
+	}
+	else
+		automatic = i;
+	
+	i = g_key_file_get_integer (alarmfile, "Settings", "level", &err);
+	if (err) 
+	{
+		g_error_free(err);
+		err = NULL;
+	}
+	else
+		if ((i >= 0) && (i <=100))
+			level = i;
+	
+	if (alarmfile)
+		g_key_file_free (alarmfile);
 }
 
 

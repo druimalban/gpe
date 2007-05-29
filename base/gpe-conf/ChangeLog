@@ -1,3 +1,7 @@
+2007-05-27      Florian Boor <florian.boor@kernelconcepts.de>
+
+	* alarmctl.c: Use GKeyFile instead of own parser.
+
 2007-05-13	Philippe De Swert <philippedeswert@scarlet.be>
 	
 	* sysinfo.c: Apply patch by Manuel Teira to fix wireless compilation problem.
