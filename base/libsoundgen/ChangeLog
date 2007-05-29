@@ -1,3 +1,7 @@
+2007-05-27  Florian Boor <florian@linuxtogo.org>
+
+* soundgen.c: Use GKeyFile for settings like gpe-conf does now.
+
 2007-05-22  Florian Boor <florian@linuxtogo.org>
 
 * Apply patch by Joseph J. McCarthy <mccarthy@granular.che.pitt.edu>

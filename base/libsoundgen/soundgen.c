@@ -90,42 +90,65 @@ void soundgen_buzzer_off (int sig)
 int soundgen_get_config (void)
 {
 	int result = CFG_AUTOMATIC;
-	char *filename = g_strdup_printf("%s/.gpe/alarm.conf", g_get_home_dir());
+	gchar *filename = g_strdup_printf("%s/.gpe/alarm.conf", g_get_home_dir());
 	FILE *cfgfile;
-	int enabled = 1;
-	int automatic = 1;
-	int level = 0;
+	gboolean enabled = TRUE;
+	gboolean automatic = TRUE;
+	gint level = 0;
+	GKeyFile *alarmfile;
+	GError *err = NULL;
+	gint i;
 	
-	cfgfile = fopen(filename, "r");
-	if (cfgfile)
+	alarmfile = g_key_file_new();
+	
+	if (!g_key_file_load_from_file (alarmfile, filename,
+                                    G_KEY_FILE_NONE, &err))
 	{
-		int val = -1, ret;
-		char buf[128];
-		while (fgets(buf, 128, cfgfile))
-		{
-			ret = sscanf(buf, "enabled %d", &val);
-			if (ret)
-				enabled = val;
-			
-			ret = sscanf(buf, "automatic %d", &val);
-			if (ret)
-				automatic = val;
-			
-			ret = sscanf(buf, "level %d", &val);			
-			if (ret)
-			{
-				if ((val >= 0) && (val <=100))
-					level = val;
-			}
-		}
-		fclose(cfgfile);
-		
-		if (!enabled) 
-			result = CFG_NOSOUND;
-		else
-			if (!automatic)
-				result = level;
+		g_printerr ("%s\n", err->message);
+		g_error_free(err);
+		if (alarmfile)
+			g_key_file_free (alarmfile);
 	}
+	else
+	{
+		i = g_key_file_get_boolean (alarmfile, "Settings", "enabled", &err);
+		if (err) 
+		{
+			g_error_free(err);
+			err = NULL;
+		}
+		else
+			enabled = i;
+		
+		i = g_key_file_get_boolean (alarmfile, "Settings", "automatic", &err);
+		if (err) 
+		{
+			g_error_free(err);
+			err = NULL;
+		}
+		else
+			automatic = i;
+	
+		i = g_key_file_get_integer (alarmfile, "Settings", "level", &err);
+		if (err) 
+		{
+			g_error_free(err);
+			err = NULL;
+		}
+		else
+			if ((i >= 0) && (i <=100))
+				level = i;
+		}
+		if (alarmfile)
+			g_key_file_free (alarmfile);
+		
+	}
+	if (!enabled) 
+		result = CFG_NOSOUND;
+	else
+		if (!automatic)
+			result = level;
+		
 	g_free(filename);
 	
 	return result;	
