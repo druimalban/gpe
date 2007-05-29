@@ -14,7 +14,8 @@ desktopdir = $(datadir)/applications
 desktop_in_files = gpe-synctool.desktop.in
 
 pixmapsdir = $(datadir)/gpe/pixmaps/default
-pixmaps_DATA = pixmaps/opensync.png
+pixmaps_DATA = pixmaps/sync-on.png \
+               pixmaps/sync-off.png
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@

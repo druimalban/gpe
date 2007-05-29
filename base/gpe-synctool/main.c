@@ -3,7 +3,7 @@
  *
  * Synchronisation tool for gpesyncd.
  * 
- * (c) 2006 Florian Boor  <florian@linuxtogo.org>
+ * (c) 2006, 2007 Florian Boor  <florian@linuxtogo.org>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,15 +37,15 @@
 #define _(x) gettext(x)
 
 #define DAEMON_DEFAULT_PORT  6446
-#define COMMAND_DAEMON_START "gpesyncd -D"
+#define COMMAND_DAEMON_START "gpesyncd"
 #define COMMAND_APP          "gpe-conf"
 #define COMMAND_CONFIG       COMMAND_APP " sync"  
 
 
 struct gpe_icon my_icons[] = {
-  {"gpe-synctool", "opensync"},
-  {"sync-on",      "opensync"},
-  {"sync-off",     "opensync"},
+  {"gpe-synctool", "sync-on"},
+  {"sync-on",      "sync-on"},
+  {"sync-off",     "sync-off"},
   {NULL}
 };
 
@@ -61,6 +61,7 @@ static GtkWidget *menu;
 static GtkWidget *icon;
 
 static sync_active = FALSE;
+static GPid daemon_pid = -1;
 
 static void
 update_icon (gint size)
@@ -92,22 +93,37 @@ cancel_message (gpointer data)
 static void
 sync_daemon_stop (void)
 {
-
+  if (daemon_pid > 0)
+    kill (daemon_pid, SIGTERM);
 }
 
 static void
 sync_daemon_start (void)
 {
-
+  gchar *params;
+  gchar *argv[] = { COMMAND_DAEMON_START, params, NULL };
+	
+  params = g_strdup_printf ("-D %i", DAEMON_DEFAULT_PORT);
+  g_spawn_async (NULL, argv, NULL, G_SPAWN_SEARCH_PATH,
+                 NULL, NULL, &daemon_pid, NULL);
+  g_free (params);
 }
+
 
 static void
 do_sync_toggle (GtkCheckMenuItem *item, gpointer userdata)
 {
   if (gtk_check_menu_item_get_active (item))
-    sync_daemon_start ();
+    {
+      sync_daemon_start ();
+      sync_active = TRUE;
+    }
   else
-    sync_daemon_stop ();
+    {
+      sync_daemon_stop ();
+      sync_active = FALSE;
+    }
+  update_icon (-1);
 }
 
 static void
@@ -200,7 +216,6 @@ main (int argc, char *argv[])
 		    G_CALLBACK (do_sync_config), NULL);
   g_signal_connect (G_OBJECT (menu_remove), "activate",
 		    G_CALLBACK (app_shutdown), NULL);
-
 
   gtk_menu_append (GTK_MENU (menu), menu_toggle);
   gtk_menu_append (GTK_MENU (menu), menu_config);

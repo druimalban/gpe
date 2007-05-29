@@ -4,5 +4,5 @@ _Name=Sync Applet
 _Comment=Syncronisation control panel applet.
 Exec=gpe-synctool
 Type=PanelApp
-Icon=@prefix@/share/gpe/pixmaps/default/opensync.png
+Icon=@prefix@/share/gpe/pixmaps/default/sync-on.png
 Categories=Panel;Utility;GPE;

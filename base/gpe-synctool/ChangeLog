@@ -1,3 +1,8 @@
+2007-05-29  Florian Boor <florian@kernernelconcepts.de>
+
+    * Implement daemon startup shutdown.
+    * Change icon depending on status.
+
 2006-12-03  Florian Boor <florian@kernernelconcepts.de>
 
     * Some fixes to make it build.
