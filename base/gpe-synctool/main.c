@@ -41,6 +41,25 @@
 #define COMMAND_APP          "gpe-conf"
 #define COMMAND_CONFIG       COMMAND_APP " sync"  
 
+#define INFO_TEXT _("Information about setting up PIM data synchronisation " \
+                  "for GPE \n\n" \
+                  "gpe-synctools is intended to be used for PIM data syncronisation " \
+                  "in trusted networks. It provides sync access to your device "\
+                  "without the need of setting up a SSH connection. To set up syncronising " \
+                  "just follow these steps:\n" \
+                  "1. Set up a network connection between your PC and your device running GPE."\
+                 "  or example you can use WiFi or USB for this purpose.\n"\
+                  "2. Create a file 'gpesyncd.allow' in the '.gpe' directory "\
+                  " in your home directory on your device."\
+                  " The file needs to contain the IP address of your PC (or "\
+                  " one each line if you intend to use multiple PCs).\n"\
+                  "3. Configure the synchronisation software of your PC to connect to  1234 "\
+                  " port 6446 of your device directly (not using ssh).\n"\
+                  "4. Turn on sync access using this tool and start the sync process"\
+                  " on your PC.\n" \
+                  "In untrusted networks it is highly recommended to use ssh for "\
+                  "sync access to your device. Please refer to the OpenSync GPE "\
+                  "plugin documentation for setting up this.")
 
 struct gpe_icon my_icons[] = {
   {"gpe-synctool", "sync-on"},
@@ -101,11 +120,14 @@ static void
 sync_daemon_start (void)
 {
   gchar *params;
-  gchar *argv[] = { COMMAND_DAEMON_START, params, NULL };
+
+  params = g_strdup_printf ("%i", DAEMON_DEFAULT_PORT);
+  gchar *argv[]  = { COMMAND_DAEMON_START, "-D", params, NULL };
 	
-  params = g_strdup_printf ("-D %i", DAEMON_DEFAULT_PORT);
-  g_spawn_async (NULL, argv, NULL, G_SPAWN_SEARCH_PATH,
-                 NULL, NULL, &daemon_pid, NULL);
+  if (!g_spawn_async (NULL, argv, NULL, G_SPAWN_SEARCH_PATH,
+                 NULL, NULL, &daemon_pid, NULL))
+    gpe_error_box (_("Unable to start gpesyncd."));
+  
   g_free (params);
 }
 
@@ -137,6 +159,36 @@ do_sync_config (void)
       g_printerr ("Err gpe-synctool: %s\n", err->message);
       g_error_free (err);
     }
+}
+
+static void
+do_sync_info (void)
+{
+  GtkWidget *dialog, *text, *sw;
+  GtkTextBuffer *buf;
+    
+  dialog = gtk_dialog_new_with_buttons (_("Sync Information"), 
+                                        GTK_WINDOW (window), 
+                                        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                        GTK_STOCK_OK, GTK_RESPONSE_OK, NULL);
+  gtk_window_set_default_size (GTK_WINDOW (dialog), 220, 320);
+    
+  sw = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw), 
+                                  GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  
+  text = gtk_text_view_new ();
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (text), GTK_WRAP_WORD);
+  buf = gtk_text_view_get_buffer (GTK_TEXT_VIEW (text));
+  gtk_text_buffer_set_text (buf, INFO_TEXT, -1);
+  gtk_container_add (GTK_CONTAINER (sw), text);
+  gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), sw, 
+                      TRUE, TRUE, 0); 
+  g_signal_connect_swapped (dialog, "response", 
+                             G_CALLBACK (gtk_widget_destroy),
+                             dialog);
+  gtk_widget_show_all (dialog);
+  gtk_dialog_run (GTK_DIALOG(dialog));
 }
 
 static void
@@ -172,7 +224,7 @@ external_event (GtkWindow * window, GdkEventConfigure * event,
 
   if (event->type == GDK_CONFIGURE)
     {
-      size = (event->width < event->height) ? event->height : event->width;
+      size = (event->width > event->height) ? event->height : event->width;
       update_icon (size);
     }
   return FALSE;
@@ -185,7 +237,8 @@ main (int argc, char *argv[])
   Display *dpy;
   GtkWidget *menu_toggle;
   GtkWidget *menu_remove;
-  GtkWidget *menu_config;
+  GtkWidget *menu_config, *menu_info;
+  GtkWidget *menu_sep1, *menu_sep2;
   GtkTooltips *tooltips;
 
   if (gpe_application_init (&argc, &argv) == FALSE)
@@ -208,18 +261,29 @@ main (int argc, char *argv[])
   menu = gtk_menu_new ();
   menu_toggle = gtk_check_menu_item_new_with_label (_("Enable sync access"));
   menu_config = gtk_menu_item_new_with_label (_("Configure Syncing"));
+  menu_info   = gtk_menu_item_new_with_label (_("Setup information"));
   menu_remove = gtk_menu_item_new_with_label (_("Remove from dock"));
+  menu_sep1 = gtk_separator_menu_item_new ();
+  menu_sep2 = gtk_separator_menu_item_new ();
 
   g_signal_connect (G_OBJECT (menu_toggle), "activate",
 		    G_CALLBACK (do_sync_toggle), NULL);
   g_signal_connect (G_OBJECT (menu_config), "activate",
 		    G_CALLBACK (do_sync_config), NULL);
+  g_signal_connect (G_OBJECT (menu_info), "activate",
+		    G_CALLBACK (do_sync_info), NULL);
   g_signal_connect (G_OBJECT (menu_remove), "activate",
 		    G_CALLBACK (app_shutdown), NULL);
 
   gtk_menu_append (GTK_MENU (menu), menu_toggle);
+  gtk_menu_append (GTK_MENU (menu), menu_sep1);
+  gtk_menu_append (GTK_MENU (menu), menu_info);
   gtk_menu_append (GTK_MENU (menu), menu_config);
+  gtk_menu_append (GTK_MENU (menu), menu_sep2);
   gtk_menu_append (GTK_MENU (menu), menu_remove);
+
+  /*fixme: not yet available */
+  gtk_widget_set_sensitive (menu_config, FALSE);
 
   gtk_widget_show_all (menu);
   

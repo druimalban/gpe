@@ -1,8 +1,4 @@
-Menu: Run config tool
-Menu: Enable
-Menu: Disable
-Menu: Show status
-Icon: Show status
-Add help file explaining sync setup.
 Add maemo UI support.
 Make menu items insensitive if external app not present.
+Implement setup
+Show useful information (e.g. IP)
