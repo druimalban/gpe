@@ -169,7 +169,8 @@ EXTRA_DIST = $(sysgpe_DATA) \
              $(desktop_in_files) \
              intltool-extract.in \
              intltool-merge.in \
-             intltool-update.in
+             intltool-update.in \
+             po/gpe-conf.pot
 
 
 DISTCLEANFILES = intltool-extract \

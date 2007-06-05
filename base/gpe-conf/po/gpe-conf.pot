@@ -8,174 +8,306 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-17 02:08+0100\n"
+"POT-Creation-Date: 2007-06-05 16:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:91 timeanddate.c:542
+#: ../applets.c:413
+msgid "Root access"
+msgstr ""
+
+#: ../applets.c:427
+msgid ""
+"Some options are only\n"
+"accessible for user root.\n"
+"Please enter password."
+msgstr ""
+
+#: ../applets.c:474 ../modules/screen/calibrate.c:32
+msgid "Sorry, wrong password."
+msgstr ""
+
+#: ../modules/battery.c:186 ../modules/battery.c:247
+msgid "unknown"
+msgstr ""
+
+#: ../modules/battery.c:195 ../modules/battery.c:255 ../modules/battery.c:356
+msgid "Status: high"
+msgstr ""
+
+#: ../modules/battery.c:198 ../modules/battery.c:258 ../modules/battery.c:360
+msgid "Status: low"
+msgstr ""
+
+#: ../modules/battery.c:201 ../modules/battery.c:261 ../modules/battery.c:364
+msgid "Status: critical"
+msgstr ""
+
+#: ../modules/battery.c:204 ../modules/battery.c:264 ../modules/battery.c:368
+msgid "Status: charging"
+msgstr ""
+
+#: ../modules/battery.c:207 ../modules/battery.c:267
+msgid "Status: charge main"
+msgstr ""
+
+#: ../modules/battery.c:210
+msgid "Status: dead"
+msgstr ""
+
+#: ../modules/battery.c:213 ../modules/battery.c:273 ../modules/battery.c:354
+msgid "Status: full"
+msgstr ""
+
+#: ../modules/battery.c:216 ../modules/battery.c:276
+msgid "Status: no battery"
+msgstr ""
+
+#: ../modules/battery.c:219 ../modules/battery.c:279 ../modules/battery.c:297
+#: ../modules/battery.c:371
+msgid "Status: unknown"
+msgstr ""
+
+#: ../modules/battery.c:224
+msgid "learning"
+msgstr ""
+
+#: ../modules/battery.c:228 ../modules/battery.c:283
+msgid "Voltage"
+msgstr ""
+
+#: ../modules/battery.c:232 ../modules/battery.c:287 ../modules/battery.c:388
+msgid "AC connected"
+msgstr ""
+
+#: ../modules/battery.c:234 ../modules/battery.c:289 ../modules/battery.c:390
+msgid "Lifetime"
+msgstr ""
+
+#: ../modules/battery.c:270
+msgid "Status: not installed"
+msgstr ""
+
+#: ../modules/battery.c:296
+msgid "not installed"
+msgstr ""
+
+#: ../modules/battery.c:298
+msgid "Voltage: unknown"
+msgstr ""
+
+#: ../modules/battery.c:299
+msgid "Lifetime: unknown"
+msgstr ""
+
+#: ../modules/battery.c:346
+msgid "No battery"
+msgstr ""
+
+#: ../modules/battery.c:451
+msgid "Internal battery"
+msgstr ""
+
+#: ../modules/battery.c:455
+msgid "Jacket battery"
+msgstr ""
+
+#: ../modules/cfgfile.c:919
+msgid "No write access to network configuration."
+msgstr ""
+
+#: ../main-info.c:67
+#, c-format
+msgid "usage: gpe-info [page]\n"
+msgstr ""
+
+#: ../main-info.c:68
+#, c-format
+msgid "    Where page may be \"global\" (default)\n"
+msgstr ""
+
+#: ../main-info.c:78 ../desktop/gpe-conf-sysinfo.desktop.in.h:2
+msgid "System Information"
+msgstr ""
+
+#: ../main.c:89 ../modules/timeanddate.c:489
 msgid "Time"
 msgstr ""
 
-#: main.c:91
+#: ../main.c:89
 msgid "Time and Date Setup"
 msgstr ""
 
-#: main.c:93
+#: ../main.c:91
 msgid "Screen"
 msgstr ""
 
-#: main.c:93 gpe-conf-screen.desktop.in.h:1
+#: ../main.c:91 ../desktop/gpe-conf-screen.desktop.in.h:1
 msgid "Screen Setup"
 msgstr ""
 
-#: main.c:95
+#: ../main.c:93
 msgid "Keys & Buttons"
 msgstr ""
 
-#: main.c:95
+#: ../main.c:93
 msgid "Keys and Buttons Setup"
 msgstr ""
 
-#: main.c:97 timeanddate.c:558
+#: ../main.c:95 ../modules/timeanddate.c:502
 msgid "Network"
 msgstr ""
 
-#: main.c:97 gpe-conf-network.desktop.in.h:1
+#: ../main.c:95 ../desktop/gpe-conf-network.desktop.in.h:1
 msgid "Network Setup"
 msgstr ""
 
-#: main.c:99 theme.c:1145
+#: ../main.c:97 ../modules/theme.c:985
 msgid "Theme"
 msgstr ""
 
-#: main.c:99 theme.c:1147 gpe-conf-theme.desktop.in.h:2
+#: ../main.c:97 ../modules/theme.c:987
+#: ../desktop/gpe-conf-theme.desktop.in.h:2
 msgid "Look and Feel"
 msgstr ""
 
-#: main.c:101
+#: ../main.c:99
 msgid "Power"
 msgstr ""
 
-#: main.c:101
+#: ../main.c:99
 msgid "Configure Power Saving"
 msgstr ""
 
-#: main.c:103
+#: ../main.c:101
 msgid "Owner"
 msgstr ""
 
-#: main.c:103 gpe-conf-ownerinfo.desktop.in.h:1
+#: ../main.c:101 ../desktop/gpe-conf-ownerinfo.desktop.in.h:1
 msgid "Owner Information"
 msgstr ""
 
-#: main.c:105
+#: ../main.c:103
 msgid "Login"
 msgstr ""
 
-#: main.c:105 gpe-conf-login-setup.desktop.in.h:1
+#: ../main.c:103 ../desktop/gpe-conf-login-setup.desktop.in.h:1
 msgid "Login Setup"
 msgstr ""
 
-#: main.c:107
+#: ../main.c:105
 msgid "Users"
 msgstr ""
 
-#: main.c:107
+#: ../main.c:105
 msgid "User Administration"
 msgstr ""
 
-#: main.c:109
+#: ../main.c:107
 msgid "GPE"
 msgstr ""
 
-#: main.c:109
+#: ../main.c:107
 msgid "GPE Conf Administration"
 msgstr ""
 
-#: main.c:111 gpe-conf-serial.desktop.in.h:2
+#: ../main.c:109 ../desktop/gpe-conf-serial.desktop.in.h:2
 msgid "Serial Ports"
 msgstr ""
 
-#: main.c:111
+#: ../main.c:109
 msgid "Serial Port Configuration"
 msgstr ""
 
-#: main.c:113
+#: ../main.c:111
 msgid "USB"
 msgstr ""
 
-#: main.c:113
+#: ../main.c:111
 msgid "USB Configuration"
 msgstr ""
 
-#: main.c:115
+#: ../main.c:113
 msgid "PCMCIA/CF Cards"
 msgstr ""
 
-#: main.c:115
+#: ../main.c:113
 msgid "PCMCIA/CF Card Info and Config"
 msgstr ""
 
-#: main.c:117
+#: ../main.c:115
 msgid "Sound"
 msgstr ""
 
-#: main.c:117
+#: ../main.c:115
 msgid "Sound Setup"
 msgstr ""
 
-#: main.c:119
+#: ../main.c:117
 msgid "Task nameserver"
 msgstr ""
 
-#: main.c:119
+#: ../main.c:117
 msgid "Task for changing nameserver"
 msgstr ""
 
-#: main.c:121
+#: ../main.c:119
 msgid "Task sound"
 msgstr ""
 
-#: main.c:121
+#: ../main.c:119
 msgid "Command line task saving/restoring sound settings."
 msgstr ""
 
-#: main.c:123
+#: ../main.c:121
 msgid "Task background image"
 msgstr ""
 
-#: main.c:123
+#: ../main.c:121
 msgid "Only select background image."
 msgstr ""
 
-#: main.c:144
+#: ../main.c:123
+msgid "Task backlight setting"
+msgstr ""
+
+#: ../main.c:123
+msgid "Change backlight power and brightness."
+msgstr ""
+
+#: ../main.c:144
 msgid "Settings saved"
 msgstr ""
 
-#: main.c:336
+#: ../main.c:339
+#, c-format
+msgid "'task_backlight' supports zero, one and two arguments.\n"
+msgstr ""
+
+#: ../main.c:358
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
 msgstr ""
 
-#: main.c:354
+#: ../main.c:376
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
 msgstr ""
 
-#: main.c:422
+#: ../main.c:444
 msgid "Warning: PCMCIA init failed."
 msgstr ""
 
-#: main.c:454
+#: ../main.c:476
 #, c-format
 msgid "This mode is disabled, please try:\n"
 msgstr ""
 
-#: main.c:455
+#: ../main.c:477
 #, c-format
 msgid ""
 "\n"
@@ -183,12 +315,12 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 
-#: main.c:471
+#: ../main.c:493
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr ""
 
-#: main.c:472
+#: ../main.c:494
 #, c-format
 msgid ""
 "\n"
@@ -197,1882 +329,1748 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 
-#: applets.c:413
-msgid "Root access"
+#: ../tools/interface.c:315 ../tools/interface.c:515 ../tools/interface.c:531
+#: ../tools/interface.c:651
+msgid "[NONE SET]"
 msgstr ""
 
-#: applets.c:427
-msgid ""
-"Some options are only\n"
-"accessible for user root.\n"
-"Please enter password."
+#: ../tools/interface.c:706 ../tools/interface.c:1704
+msgid "UNSPEC"
 msgstr ""
 
-#: applets.c:474 screen/calibrate.c:32
-msgid "Sorry, wrong password."
+#: ../tools/interface.c:708
+msgid "UNIX Domain"
 msgstr ""
 
-#: timeanddate.c:424
+#: ../tools/interface.c:711
+msgid "DARPA Internet"
+msgstr ""
+
+#: ../tools/interface.c:714
+msgid "IPv6"
+msgstr ""
+
+#: ../tools/interface.c:717 ../tools/interface.c:1725
+msgid "AMPR AX.25"
+msgstr ""
+
+#: ../tools/interface.c:720 ../tools/interface.c:1731
+msgid "AMPR NET/ROM"
+msgstr ""
+
+#: ../tools/interface.c:723
+msgid "Novell IPX"
+msgstr ""
+
+#: ../tools/interface.c:726
+msgid "Appletalk DDP"
+msgstr ""
+
+#: ../tools/interface.c:729 ../tools/interface.c:1766
+msgid "Econet"
+msgstr ""
+
+#: ../tools/interface.c:732
+msgid "CCITT X.25"
+msgstr ""
+
+#: ../tools/interface.c:735 ../tools/interface.c:1728
+msgid "AMPR ROSE"
+msgstr ""
+
+#: ../tools/interface.c:738 ../tools/interface.c:1716
+msgid "Ash"
+msgstr ""
+
+#: ../tools/interface.c:765
+#, c-format
+msgid "Too many address family arguments.\n"
+msgstr ""
+
+#: ../tools/interface.c:776
+#, c-format
+msgid "Unknown address family '%s'.\n"
+msgstr ""
+
+#: ../tools/interface.c:839
+#, c-format
+msgid "Please don't supply more than one address family.\n"
+msgstr ""
+
+#: ../tools/interface.c:966
+#, c-format
+msgid "No usable address families found.\n"
+msgstr ""
+
+#: ../tools/interface.c:1036
+#, c-format
+msgid "Warning: no inet socket available: %s\n"
+msgstr ""
+
+#: ../tools/interface.c:1188
+#, c-format
+msgid "Warning: cannot open %s (%s). Limited output.\n"
+msgstr ""
+
+#. Give better error message for this case.
+#: ../tools/interface.c:1431
+msgid "Device not found"
+msgstr ""
+
+#: ../tools/interface.c:1435
+#, c-format
+msgid "%s: error fetching interface information: %s\n"
+msgstr ""
+
+#: ../tools/interface.c:1609
+#, c-format
+msgid "You cannot start PPP with this program.\n"
+msgstr ""
+
+#: ../tools/interface.c:1703
+msgid "Local Loopback"
+msgstr ""
+
+#: ../tools/interface.c:1706
+msgid "Serial Line IP"
+msgstr ""
+
+#: ../tools/interface.c:1707
+msgid "VJ Serial Line IP"
+msgstr ""
+
+#: ../tools/interface.c:1708
+msgid "6-bit Serial Line IP"
+msgstr ""
+
+#: ../tools/interface.c:1709
+msgid "VJ 6-bit Serial Line IP"
+msgstr ""
+
+#: ../tools/interface.c:1710
+msgid "Adaptive Serial Line IP"
+msgstr ""
+
+#: ../tools/interface.c:1713
+msgid "Ethernet"
+msgstr ""
+
+#: ../tools/interface.c:1719
+msgid "Fiber Distributed Data Interface"
+msgstr ""
+
+#: ../tools/interface.c:1722
+msgid "HIPPI"
+msgstr ""
+
+#: ../tools/interface.c:1734
+msgid "generic X.25"
+msgstr ""
+
+#: ../tools/interface.c:1737
+msgid "IPIP Tunnel"
+msgstr ""
+
+#: ../tools/interface.c:1740
+msgid "Point-to-Point Protocol"
+msgstr ""
+
+#: ../tools/interface.c:1743
+msgid "(Cisco)-HDLC"
+msgstr ""
+
+#: ../tools/interface.c:1744
+msgid "LAPB"
+msgstr ""
+
+#: ../tools/interface.c:1747
+msgid "ARCnet"
+msgstr ""
+
+#: ../tools/interface.c:1750
+msgid "Frame Relay DLCI"
+msgstr ""
+
+#: ../tools/interface.c:1751
+msgid "Frame Relay Access Device"
+msgstr ""
+
+#: ../tools/interface.c:1754
+msgid "IPv6-in-IPv4"
+msgstr ""
+
+#: ../tools/interface.c:1757
+msgid "IrLAP"
+msgstr ""
+
+#: ../tools/interface.c:1760
+msgid "16/4 Mbps Token Ring"
+msgstr ""
+
+#: ../tools/interface.c:1762
+msgid "16/4 Mbps Token Ring (New)"
+msgstr ""
+
+#: ../tools/interface.c:1874
+msgid "Interface:"
+msgstr ""
+
+#: ../tools/interface.c:1875
+#, c-format
+msgid "Type: %s"
+msgstr ""
+
+#: ../tools/interface.c:1884
+#, c-format
+msgid "Media: %s"
+msgstr ""
+
+#: ../tools/interface.c:1889
+#, c-format
+msgid "(auto)"
+msgstr ""
+
+#: ../tools/interface.c:1901
+#, c-format
+msgid "Address: %s\n"
+msgstr ""
+
+#: ../tools/interface.c:1906
+#, c-format
+msgid "P-t-P: %s\n"
+msgstr ""
+
+#: ../tools/interface.c:1910
+#, c-format
+msgid "Netmask: %s\n"
+msgstr ""
+
+#: ../tools/interface.c:1914
+#, c-format
+msgid "Broadcast: %s\n"
+msgstr ""
+
+#: ../tools/interface.c:1926
+#, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr ""
+
+#: ../tools/interface.c:1956
+#, c-format
+msgid "IPv6 Address: %s/%d\n"
+msgstr ""
+
+#: ../tools/interface.c:1959
+#, c-format
+msgid "Scope: "
+msgstr ""
+
+#: ../tools/interface.c:1964
+#, c-format
+msgid "Global"
+msgstr ""
+
+#: ../tools/interface.c:1967
+#, c-format
+msgid "Link"
+msgstr ""
+
+#: ../tools/interface.c:1970
+#, c-format
+msgid "Site"
+msgstr ""
+
+#: ../tools/interface.c:1973
+#, c-format
+msgid "Compat"
+msgstr ""
+
+#: ../tools/interface.c:1976
+#, c-format
+msgid "Host"
+msgstr ""
+
+#: ../tools/interface.c:1979
+#, c-format
+msgid "Unknown"
+msgstr ""
+
+#: ../device.c:215
+msgid "Unknown Device"
+msgstr ""
+
+#: ../modules/logread.c:116
+msgid "Can't find circular buffer, is syslog running?\n"
+msgstr ""
+
+#: ../modules/logread.c:123
+msgid "Can't get access to syslogd's circular buffer."
+msgstr ""
+
+#: ../modules/logread.c:130
+msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
+msgstr ""
+
+#: ../modules/logread.c:156
+msgid "<empty syslog>"
+msgstr ""
+
+#: ../modules/logread.c:227 ../modules/logread.c:243
+msgid "System Log"
+msgstr ""
+
+#: ../modules/logread.c:252 ../modules/logread.c:268
+msgid "Session Log"
+msgstr ""
+
+#: ../modules/logread.c:275
+msgid "Could not open X session log.\n"
+msgstr ""
+
+#: ../modules/usb.c:80
+msgid "Choose backing file"
+msgstr ""
+
+#: ../modules/usb.c:240
+msgid "USB Peripheral Mode"
+msgstr ""
+
+#: ../modules/usb.c:247
+msgid "Ethernet Networking"
+msgstr ""
+
+#: ../modules/usb.c:252 ../modules/sysinfo.c:645
+msgid "Storage"
+msgstr ""
+
+#: ../modules/usb.c:258 ../modules/serial.c:573
+msgid "Serial Port"
+msgstr ""
+
+#: ../modules/usb.c:267
+msgid "Storage Behaviour"
+msgstr ""
+
+#: ../modules/usb.c:274
+msgid "CF/SD Card Reader"
+msgstr ""
+
+#: ../modules/usb.c:280
+msgid "File-backed"
+msgstr ""
+
+#: ../modules/usb.c:290
+msgid "Select"
+msgstr ""
+
+#: ../modules/usb.c:298
+msgid "Allow write access"
+msgstr ""
+
+#: ../modules/usb.c:307
+msgid "Serial Settings"
+msgstr ""
+
+#: ../modules/usb.c:314
+msgid "Use CDC ACM"
+msgstr ""
+
+#: ../modules/theme.c:234
+msgid "Choose backgound image"
+msgstr ""
+
+#: ../modules/theme.c:248
+msgid "You are not allowed to read this file, choose another."
+msgstr ""
+
+#: ../modules/theme.c:269
+msgid "Succesfully changed background image."
+msgstr ""
+
+#: ../modules/theme.c:270
+msgid "Use \"Look and Feel\" setup tool to change details."
+msgstr ""
+
+#: ../modules/theme.c:781 ../modules/theme.c:859
+msgid "You don't have read access to selected background image!"
+msgstr ""
+
+#: ../modules/theme.c:997
+msgid "Desktop Theme"
+msgstr ""
+
+#: ../modules/theme.c:1009
+msgid "Name"
+msgstr ""
+
+#: ../modules/theme.c:1023
+msgid "Icon Size"
+msgstr ""
+
+#: ../modules/theme.c:1038
+msgid "Visual Effects"
+msgstr ""
+
+#: ../modules/theme.c:1044
+msgid "Enable Visual Effects"
+msgstr ""
+
+#. Background tab
+#: ../modules/theme.c:1051
+msgid "Background"
+msgstr ""
+
+#: ../modules/theme.c:1065 ../modules/theme.c:1067
+msgid "Background Settings"
+msgstr ""
+
+#: ../modules/theme.c:1077 ../modules/theme.c:1088
+msgid "Theme Default"
+msgstr ""
+
+#: ../modules/theme.c:1096
+msgid "Solid colour"
+msgstr ""
+
+#: ../modules/theme.c:1110
+msgid "Horizontal"
+msgstr ""
+
+#: ../modules/theme.c:1114
+msgid "Vertical"
+msgstr ""
+
+#: ../modules/theme.c:1119 ../modules/theme.c:1138 ../modules/theme.c:1312
+#: ../modules/theme.c:1318
+msgid "Colour"
+msgstr ""
+
+#: ../modules/theme.c:1129
+msgid "Colour gradient"
+msgstr ""
+
+#: ../modules/theme.c:1148
+msgid "Image"
+msgstr ""
+
+#: ../modules/theme.c:1174
+msgid "Center"
+msgstr ""
+
+#: ../modules/theme.c:1178
+msgid "Tile"
+msgstr ""
+
+#: ../modules/theme.c:1181
+msgid "Stretch"
+msgstr ""
+
+#: ../modules/theme.c:1188
+msgid "Toolbars"
+msgstr ""
+
+#: ../modules/theme.c:1200 ../modules/theme.c:1202
+msgid "Toolbar Style"
+msgstr ""
+
+#: ../modules/theme.c:1211 ../modules/theme.c:1235
+msgid "Icons"
+msgstr ""
+
+#: ../modules/theme.c:1216 ../modules/theme.c:1239
+msgid "Text"
+msgstr ""
+
+#: ../modules/theme.c:1221 ../modules/theme.c:1242
+msgid "Both"
+msgstr ""
+
+#: ../modules/theme.c:1249
+msgid "Toolbar Icon Size"
+msgstr ""
+
+#: ../modules/theme.c:1265
+msgid "Fonts"
+msgstr ""
+
+#: ../modules/theme.c:1274 ../modules/theme.c:1294
+msgid "Desktop Font"
+msgstr ""
+
+#: ../modules/theme.c:1281 ../modules/theme.c:1340 ../modules/theme.c:1375
+#: ../modules/theme.c:1425
+msgid "Family"
+msgstr ""
+
+#: ../modules/theme.c:1301 ../modules/theme.c:1360 ../modules/theme.c:1395
+#: ../modules/theme.c:1445
+msgid "Size"
+msgstr ""
+
+#: ../modules/theme.c:1329 ../modules/theme.c:1331 ../modules/theme.c:1353
+#: ../modules/theme.c:1388
+msgid "Application Font"
+msgstr ""
+
+#. terminal tab
+#: ../modules/theme.c:1409
+msgid "Terminal"
+msgstr ""
+
+#: ../modules/theme.c:1418
+msgid "Font"
+msgstr ""
+
+#: ../modules/theme.c:1438
+msgid "Terminal Font"
+msgstr ""
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: ../modules/sysinfo.c:195
+msgid "Familiar"
+msgstr ""
+
+#. TRANSLATORS: "OpenZaurus" is the name of a linux distribution.
+#: ../modules/sysinfo.c:206
+msgid "OpenZaurus"
+msgstr ""
+
+#. TRANSLATORS: "Debian" is the name of a linux distribution.
+#: ../modules/sysinfo.c:215
+msgid "Debian"
+msgstr ""
+
+#. TRANSLATORS: "Ångström" is the name of a linux distribution.
+#: ../modules/sysinfo.c:226
+msgid "Ångström"
+msgstr ""
+
+#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
+#: ../modules/sysinfo.c:235
+msgid "OpenEmbedded"
+msgstr ""
+
+#: ../modules/sysinfo.c:277 ../modules/sysinfo.c:279
+msgid "Build"
+msgstr ""
+
+#: ../modules/sysinfo.c:381
+msgid "Network Status"
+msgstr ""
+
+#. split string into long and short lines
+#: ../modules/sysinfo.c:395 ../modules/sysinfo.c:398
+msgid "HWaddr (MAC)"
+msgstr ""
+
+#: ../modules/sysinfo.c:409 ../modules/sysinfo.c:410
+#, c-format
+msgid "Wireless"
+msgstr ""
+
+#: ../modules/sysinfo.c:437
+msgid "Default Gateway"
+msgstr ""
+
+#: ../modules/sysinfo.c:480
+msgid "System information"
+msgstr ""
+
+#: ../modules/sysinfo.c:490
+msgid "Version"
+msgstr ""
+
+#: ../modules/sysinfo.c:522
+msgid "Distribution"
+msgstr ""
+
+#: ../modules/sysinfo.c:547
+msgid "System"
+msgstr ""
+
+#: ../modules/sysinfo.c:556
+msgid "Device information"
+msgstr ""
+
+#: ../modules/sysinfo.c:568
+msgid "Device Name"
+msgstr ""
+
+#: ../modules/sysinfo.c:587
+msgid "Manufacturer:"
+msgstr ""
+
+#: ../modules/sysinfo.c:600
+msgid "RAM:"
+msgstr ""
+
+#. TRANSLATORS: MB == Mega Bytes
+#: ../modules/sysinfo.c:606 ../modules/sysinfo.c:622 ../modules/storage.c:176
+#: ../modules/storage.c:183 ../modules/storage.c:329 ../modules/storage.c:340
+#: ../modules/storage.c:445 ../modules/storage.c:458
+msgid "MB"
+msgstr ""
+
+#: ../modules/sysinfo.c:616
+msgid "Storage:"
+msgstr ""
+
+#: ../modules/sysinfo.c:628
+msgid "Hardware"
+msgstr ""
+
+#: ../modules/sysinfo.c:638
+msgid "Battery"
+msgstr ""
+
+#: ../modules/sysinfo.c:652
+msgid "Networks"
+msgstr ""
+
+#: ../modules/sysinfo.c:659
+msgid "Log Display"
+msgstr ""
+
+#: ../modules/timeanddate.c:222
 msgid "Time adjusted from network."
 msgstr ""
 
-#: timeanddate.c:426
+#: ../modules/timeanddate.c:224
 msgid "Adjusting time from network failed."
 msgstr ""
 
-#: timeanddate.c:506
+#: ../modules/timeanddate.c:458
 msgid "Time & Date"
 msgstr ""
 
-#: timeanddate.c:522
+#: ../modules/timeanddate.c:470
 msgid "Date"
 msgstr ""
 
-#: timeanddate.c:537
+#: ../modules/timeanddate.c:486
 msgid "Enter current date here or use button to select."
 msgstr ""
 
-#: timeanddate.c:576
+#: ../modules/timeanddate.c:521
 msgid "Select the timeserver to use to set the clock."
 msgstr ""
 
-#: timeanddate.c:578
+#: ../modules/timeanddate.c:523
 msgid "Get time from network"
 msgstr ""
 
-#: timeanddate.c:585
+#: ../modules/timeanddate.c:531
 msgid ""
 "If connected to the Internet, you may press this button to set the time on "
 "this device using the timeserver above."
 msgstr ""
 
-#: timeanddate.c:590 timeanddate.c:599
+#. root_mode
+#: ../modules/timeanddate.c:534 ../modules/timeanddate.c:544
 msgid "Timezone"
 msgstr ""
 
-#: timeanddate.c:622
+#: ../modules/timeanddate.c:588
+msgid "Area"
+msgstr ""
+
+#: ../modules/timeanddate.c:603
+msgid ""
+"Select your current timezone area here. The setting will apply after the "
+"next login."
+msgstr ""
+
+#: ../modules/timeanddate.c:610
+msgid "Zone"
+msgstr ""
+
+#: ../modules/timeanddate.c:635
 msgid ""
 "Select your current timezone here. The setting applies after the next login."
 msgstr ""
 
-#: timeanddate.c:630
-msgid "Daylight Saving"
-msgstr ""
-
-#: timeanddate.c:637
-msgid "Use daylight saving time"
-msgstr ""
-
-#: timeanddate.c:644
-msgid ""
-"Check this box if you want your device to handle daylight saving time for "
-"you."
-msgstr ""
-
-#: timeanddate.c:646
-msgid "Offset:"
-msgstr ""
-
-#: timeanddate.c:655
-msgid "Default"
-msgstr ""
-
-#: timeanddate.c:662
-msgid "Use default DST offset of one hour?"
-msgstr ""
-
-#: timeanddate.c:667
-msgid "Hours"
-msgstr ""
-
-#: timeanddate.c:670
-msgid "Select daylight saving time offset hours here."
-msgstr ""
-
-#: timeanddate.c:675
-msgid "Minutes"
-msgstr ""
-
-#: timeanddate.c:678
-msgid "Select daylight saving time offset minutes here."
-msgstr ""
-
-#: timeanddate.c:787
+#: ../modules/timeanddate.c:698
 msgid ""
 "To make timezone settings take effect, you'll need to log out and log in "
 "again."
 msgstr ""
 
-#: screen/main.c:74
-msgid "Portrait"
-msgstr ""
-
-#: screen/main.c:75
-msgid "Landscape (left)"
-msgstr ""
-
-#: screen/main.c:76
-msgid "Inverted"
-msgstr ""
-
-#: screen/main.c:77
-msgid "Landscape (right)"
-msgstr ""
-
-#: screen/main.c:104
-msgid "Light"
-msgstr ""
-
-#: screen/main.c:110
-msgid "Brightness"
-msgstr ""
-
-#: screen/main.c:152
-msgid "Display"
-msgstr ""
-
-#: screen/main.c:156
-msgid "Rotation"
-msgstr ""
-
-#: screen/main.c:176
-msgid "Touchscreen"
-msgstr ""
-
-#: screen/main.c:180
-msgid "Calibrate"
-msgstr ""
-
-#: screen/main.c:182
-msgid "Start"
-msgstr ""
-
-#: screen/main.c:298 sleep/callbacks.c:39
-msgid "min"
-msgstr ""
-
-#: screen/main.c:301 sleep/callbacks.c:42
-msgid "sec"
-msgstr ""
-
-#: keys/kbd.c:142
-msgid "Keyboard Geometry / Layout"
-msgstr ""
-
-#: keys/kbd.c:182
-msgid "User defined"
-msgstr ""
-
-#: network.c:103
-msgid "Current Config"
-msgstr ""
-
-#: network.c:246 ownerinfo.c:237
-msgid "Name:"
-msgstr ""
-
-#: network.c:252
-msgid "New Interface"
-msgstr ""
-
-#: network.c:261
-msgid "This interface definition already exists!"
-msgstr ""
-
-#: network.c:339
-msgid "Do you want to delete this interface?"
-msgstr ""
-
-#: network.c:339 users/callbacks.c:138
-msgid "Question"
-msgstr ""
-
-#: network.c:588
-msgid "WiFi config"
-msgstr ""
-
-#: network.c:627
-#, c-format
-msgid "WiFi config for %s"
-msgstr ""
-
-#: network.c:639
-msgid "ESSID"
-msgstr ""
-
-#: network.c:661
-msgid "Mode"
-msgstr ""
-
-#: network.c:671
-msgid "managed"
-msgstr ""
-
-#: network.c:683
-msgid "ad-hoc"
-msgstr ""
-
-#: network.c:700
-msgid "Channel"
-msgstr ""
-
-#: network.c:721
-msgid "WEP"
-msgstr ""
-
-#: network.c:731
-msgid "off"
-msgstr ""
-
-#: network.c:743
-msgid "open"
-msgstr ""
-
-#: network.c:755
-msgid "restricted"
-msgstr ""
-
-#: network.c:771
-msgid "Key 1"
-msgstr ""
-
-#: network.c:799
-msgid "Key 2"
-msgstr ""
-
-#: network.c:827
-msgid "Key 3"
-msgstr ""
-
-#: network.c:857
-msgid "Key 4"
-msgstr ""
-
-#: network.c:1011 network.c:1138 network.c:1255
-msgid "Interface"
-msgstr ""
-
-#: network.c:1061
-msgid "Address"
-msgstr ""
-
-#: network.c:1063
-msgid "Enter your IP address here, e.g. 192.168.1.2"
-msgstr ""
-
-#: network.c:1064
-msgid "Netmask"
-msgstr ""
-
-#: network.c:1066
-msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
-msgstr ""
-
-#: network.c:1068
-msgid "Broadcast"
-msgstr ""
-
-#: network.c:1070
-msgid ""
-"Enter your broadcast address here, usually the same like your IP with 255 as "
-"last number."
-msgstr ""
-
-#: network.c:1072
-msgid "Gateway"
-msgstr ""
-
-#: network.c:1074
-msgid "Enter the IP Address of your default gateway here."
-msgstr ""
-
-#: network.c:1083 network.c:1197
-msgid "WiFi device"
-msgstr ""
-
-#: network.c:1091 network.c:1205
-msgid "Configure"
-msgstr ""
-
-#: network.c:1188
-msgid "Hostname"
-msgstr ""
-
-#: network.c:1190
-msgid "Enter your desired hostname here. This parameter is optional."
-msgstr ""
-
-#: network.c:1305
-msgid "Provider"
-msgstr ""
-
-#: network.c:1307
-msgid ""
-"Here you need to enter the name of the provider configuration to use for "
-"this interface."
-msgstr ""
-
-#: network.c:1330
-msgid "Global Settings"
-msgstr ""
-
-#: network.c:1371
-msgid "Proxy"
-msgstr ""
-
-#: network.c:1372
-msgid ""
-"If you want/need to use a proxy, enter it here. (This only applies to dillo "
-"for now.)"
-msgstr ""
-
-#: network.c:1378
-msgid "No proxy for"
-msgstr ""
-
-#: network.c:1380
-msgid ""
-"Here you should enter your local domain for that you don't want to use a "
-"proxy."
-msgstr ""
-
-#: network.c:1387
-msgid "DNS server"
-msgstr ""
-
-#: network.c:1389
-msgid "Enter the IP of the DNS(name-) server to use here."
-msgstr ""
-
-#: network.c:1569
-msgid ""
-"Here you may change the basic configuration type of your device.\n"
-"Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and "
-"\"ppp\" to make the device a point-to-point device."
-msgstr ""
-
-#: network.c:1575
-msgid "Enable this option if your device is a WiFi device"
-msgstr ""
-
-#: network.c:1577
-msgid "Click to set the wireless options for this device"
-msgstr ""
-
-#: network.c:1579
-msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
-msgstr ""
-
-#: network.c:1582
-msgid ""
-"Set the enrcyption mode: off for no WEP encryption, open for open system and "
-"restricted for resticted WEP connections only."
-msgstr ""
-
-#: network.c:1587
-msgid "Enter the essid of your WiFi network here."
-msgstr ""
-
-#: network.c:1590
-msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
-msgstr ""
-
-#: network.c:1593
-msgid "Select the WEP key to use."
-msgstr ""
-
-#: network.c:1596
-msgid ""
-"Enter the channel number or frequency if needed. If not needed leave this "
-"field blank."
-msgstr ""
-
-#: network.c:1612
-msgid "Remove current Interface"
-msgstr ""
-
-#: network.c:1622
-msgid "Add a new Interface"
-msgstr ""
-
-#: network.c:1629
-msgid "Info"
-msgstr ""
-
-#: network.c:1633
-msgid "Show current configuration."
-msgstr ""
-
-#: network.c:1651
-msgid "Couldn't read network configuration."
-msgstr ""
-
-#: network.c:1658
-msgid "global"
-msgstr ""
-
-#: theme.c:238
-msgid "Choose backgound image"
-msgstr ""
-
-#: theme.c:252
-msgid "You are not allowed to read this file, choose another."
-msgstr ""
-
-#: theme.c:273
-msgid "Succesfully changed background image."
-msgstr ""
-
-#: theme.c:274
-msgid "Use \"Look and Feel\" setup tool to change details."
-msgstr ""
-
-#: theme.c:598
-msgid "Red"
-msgstr ""
-
-#: theme.c:603
-msgid "Green"
-msgstr ""
-
-#: theme.c:608
-msgid "Blue"
-msgstr ""
-
-#: theme.c:915
-msgid "Select colour"
-msgstr ""
-
-#: theme.c:941 theme.c:1018
-msgid "You don't have read access to selected background image!"
-msgstr ""
-
-#: theme.c:1157
-msgid "Desktop Theme"
-msgstr ""
-
-#: theme.c:1169
-msgid "Name"
-msgstr ""
-
-#: theme.c:1183
-msgid "Icon Size"
-msgstr ""
-
-#: theme.c:1198
-msgid "Visual Effects"
-msgstr ""
-
-#: theme.c:1204
-msgid "Enable Visual Effects"
-msgstr ""
-
-#: theme.c:1211
-msgid "Background"
-msgstr ""
-
-#: theme.c:1225 theme.c:1227
-msgid "Background Settings"
-msgstr ""
-
-#: theme.c:1237 theme.c:1248
-msgid "Theme Default"
-msgstr ""
-
-#: theme.c:1256
-msgid "Solid colour"
-msgstr ""
-
-#: theme.c:1270
-msgid "Horizontal"
-msgstr ""
-
-#: theme.c:1274
-msgid "Vertical"
-msgstr ""
-
-#: theme.c:1279 theme.c:1298 theme.c:1473 theme.c:1479
-msgid "Colour"
-msgstr ""
-
-#: theme.c:1289
-msgid "Colour gradient"
-msgstr ""
-
-#: theme.c:1308
-msgid "Image"
-msgstr ""
-
-#: theme.c:1334
-msgid "Center"
-msgstr ""
-
-#: theme.c:1338
-msgid "Tile"
-msgstr ""
-
-#: theme.c:1341
-msgid "Stretch"
-msgstr ""
-
-#: theme.c:1348
-msgid "Toolbars"
-msgstr ""
-
-#: theme.c:1360 theme.c:1362
-msgid "Toolbar Style"
-msgstr ""
-
-#: theme.c:1371 theme.c:1395
-msgid "Icons"
-msgstr ""
-
-#: theme.c:1376 theme.c:1399
-msgid "Text"
-msgstr ""
-
-#: theme.c:1381 theme.c:1402
-msgid "Both"
-msgstr ""
-
-#: theme.c:1409
-msgid "Toolbar Icon Size"
-msgstr ""
-
-#: theme.c:1425
-msgid "Fonts"
-msgstr ""
-
-#: theme.c:1434 theme.c:1454
-msgid "Desktop Font"
-msgstr ""
-
-#: theme.c:1441 theme.c:1501 theme.c:1536 theme.c:1586
-msgid "Family"
-msgstr ""
-
-#: theme.c:1461 theme.c:1521 theme.c:1556 theme.c:1606
-msgid "Size"
-msgstr ""
-
-#: theme.c:1490 theme.c:1492 theme.c:1514 theme.c:1549
-msgid "Application Font"
-msgstr ""
-
-#: theme.c:1570
-msgid "Terminal"
-msgstr ""
-
-#: theme.c:1579
-msgid "Font"
-msgstr ""
-
-#: theme.c:1599
-msgid "Terminal Font"
-msgstr ""
-
-#: keys/keyctl.c:178
-msgid "Button layout file is missing a global section."
-msgstr ""
-
-#: keys/keyctl.c:554
-msgid "Critical: Can't open keylaunchrc for writing!"
-msgstr ""
-
-#: keys/keyctl.c:577
-msgid "Could not restart key handler!"
-msgstr ""
-
-#: keys/keyctl.c:600
-msgid "The file you selected is not executable."
-msgstr ""
-
-#: ownerinfo.c:210
-msgid "Information about the Owner"
-msgstr ""
-
-#: ownerinfo.c:218
-msgid "Only the user 'root' is allowed to change this information"
-msgstr ""
-
-#: ownerinfo.c:252
-msgid "E-Mail:"
-msgstr ""
-
-#: ownerinfo.c:267
-msgid "Phone:"
-msgstr ""
-
-#: ownerinfo.c:282
-msgid "Address:"
-msgstr ""
-
-#: ownerinfo.c:308
-msgid "Photofile:"
-msgstr ""
-
-#: login-setup.c:160
+#: ../modules/login-setup.c:160
 msgid "Some of these settings can only be changed by the user 'root'."
 msgstr ""
 
-#: login-setup.c:183 gpe-admin.c:85
+#: ../modules/login-setup.c:183 ../modules/gpe-admin.c:85
 msgid "General"
 msgstr ""
 
-#: login-setup.c:200
+#: ../modules/login-setup.c:200
 msgid "Show owner information at login."
 msgstr ""
 
-#: login-setup.c:204
+#: ../modules/login-setup.c:204
 msgid "Lock display on suspend."
 msgstr ""
 
-#: login-setup.c:208
+#: ../modules/login-setup.c:208
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
 msgstr ""
 
-#: login-setup.c:213
+#: ../modules/login-setup.c:213
 msgid ""
 "Automatic login. \n"
 "  (without password)"
 msgstr ""
 
-#: sleep/interface.c:64
-msgid "Auto sleep"
+#: ../modules/ownerinfo.c:210
+msgid "Information about the Owner"
 msgstr ""
 
-#: sleep/interface.c:74 sleep/interface.c:105
-msgid "enabled"
+#: ../modules/ownerinfo.c:218
+msgid "Only the user 'root' is allowed to change this information"
 msgstr ""
 
-#: sleep/interface.c:92
-msgid "sleep timeout"
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:237 ../modules/network.c:246
+msgid "Name:"
 msgstr ""
 
-#: sleep/interface.c:95
-msgid "Auto dim"
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:252
+msgid "E-Mail:"
 msgstr ""
 
-#: sleep/interface.c:122
-msgid "backlight dim timeout"
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:267
+msgid "Phone:"
 msgstr ""
 
-#: sleep/interface.c:124
-msgid "Auto dim level"
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:282
+msgid "Address:"
 msgstr ""
 
-#: sleep/interface.c:144
-msgid "Advanced Controls"
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:308
+msgid "Photofile:"
 msgstr ""
 
-#: sleep/interface.c:154
-msgid "CPU"
+#: ../modules/storage.c:166 ../modules/storage.c:423
+msgid "System Memory"
 msgstr ""
 
-#: sleep/interface.c:160
-msgid "Sleep on cpu less than load"
+#. TRANSLATORS: MB == Mega Bytes
+#: ../modules/storage.c:174 ../modules/storage.c:443
+msgid "Free memory"
 msgstr ""
 
-#: sleep/interface.c:164
-msgid "load below"
+#: ../modules/storage.c:181 ../modules/storage.c:328 ../modules/storage.c:456
+msgid "Total:"
 msgstr ""
 
-#: sleep/interface.c:180
-msgid "APM"
+#: ../modules/storage.c:292
+msgid "Internal Flash"
 msgstr ""
 
-#: sleep/interface.c:186
-msgid "Sleep on AC"
+#: ../modules/storage.c:298
+msgid "MMC"
 msgstr ""
 
-#: sleep/interface.c:188
-msgid "probe IRQs"
+#: ../modules/storage.c:304
+msgid "Compact Flash"
 msgstr ""
 
-#: sleep/interface.c:194
-msgid "Check IRQ activity"
+#: ../modules/storage.c:310
+msgid "Network Filesystem"
 msgstr ""
 
-#: users/interface.c:214
-msgid "User Name"
+#: ../modules/storage.c:330
+msgid "Mounted at "
 msgstr ""
 
-#: users/interface.c:215
-msgid "User Info"
+#: ../modules/storage.c:338
+msgid "Free space"
 msgstr ""
 
-#: users/interface.c:216
-msgid "Home"
-msgstr ""
-
-#: users/interface.c:226
-msgid "Password"
-msgstr ""
-
-#: users/interface.c:235
-msgid "Delete User"
-msgstr ""
-
-#: users/interface.c:244
-msgid "Edit User"
-msgstr ""
-
-#: users/interface.c:253
-msgid "New User"
-msgstr ""
-
-#: users/interface.c:327
-msgid "User settings"
-msgstr ""
-
-#: users/interface.c:341
-msgid "User Name:"
-msgstr ""
-
-#: users/interface.c:357
-msgid "Password:"
-msgstr ""
-
-#: users/interface.c:365
-msgid "User Info:"
-msgstr ""
-
-#: users/interface.c:381
-msgid "Shell:"
-msgstr ""
-
-#: users/interface.c:400
-msgid "Home:"
-msgstr ""
-
-#: users/interface.c:419
-msgid "Change"
-msgstr ""
-
-#: users/interface.c:420
-msgid "Set"
-msgstr ""
-
-#: users/interface.c:484
-msgid "Change Password"
-msgstr ""
-
-#: users/interface.c:510
-msgid "Old Password:"
-msgstr ""
-
-#: users/interface.c:517
-msgid "New Password:"
-msgstr ""
-
-#: users/interface.c:525
-msgid "Confirm:"
-msgstr ""
-
-#: users/callbacks.c:107
-msgid "You need at least one user account!"
-msgstr ""
-
-#: users/callbacks.c:131
-msgid "You can't remove this user!"
-msgstr ""
-
-#: users/callbacks.c:136
-msgid ""
-"You can't remove\n"
-" system users!"
-msgstr ""
-
-#: users/callbacks.c:138
-msgid ""
-"Delete user and all its data?\n"
-"This action is not revertable\n"
-"and is executed instantly."
-msgstr ""
-
-#: users/callbacks.c:173
-msgid "Please choose a user name."
-msgstr ""
-
-#: users/callbacks.c:191
-msgid "Please choose a home directory."
-msgstr ""
-
-#: users/callbacks.c:279
-msgid ""
-"The two new pass are different!\n"
-" Please try again!"
-msgstr ""
-
-#: users/callbacks.c:282
-msgid ""
-"Wrong password\n"
-" Please try again!"
-msgstr ""
-
-#: cfgfile.c:919
-msgid "No write access to network configuration."
-msgstr ""
-
-#: gpe-admin.c:92
-msgid "Allow users to configure everything"
-msgstr ""
-
-#: serial.c:423 serial.c:429
+#: ../modules/serial.c:428 ../modules/serial.c:434
 msgid ""
 "Simple interface to serial port configuration. Disabled components are not "
 "installed."
 msgstr ""
 
-#: serial.c:426
+#: ../modules/serial.c:431
 msgid "Port A"
 msgstr ""
 
-#: serial.c:433
+#: ../modules/serial.c:438
 msgid "Serial port default usage"
 msgstr ""
 
-#: serial.c:438
+#: ../modules/serial.c:443
 msgid "Select desired software to use serial port here."
 msgstr ""
 
-#: serial.c:441
+#: ../modules/serial.c:446
 msgid "Console"
 msgstr ""
 
-#: serial.c:444
+#: ../modules/serial.c:449
 msgid "This option runs console on serial port. (default)"
 msgstr ""
 
-#: serial.c:452
+#: ../modules/serial.c:457
 msgid "GPS Daemon"
 msgstr ""
 
-#: serial.c:457
+#: ../modules/serial.c:462
 msgid "GPS Daemon (needs 'gpsd')"
 msgstr ""
 
-#: serial.c:462
+#: ../modules/serial.c:467
 msgid ""
 "This option enables the start of GPSD, which provides data from a GPS "
 "reciver to applications."
 msgstr ""
 
-#: serial.c:469
+#: ../modules/serial.c:474
 msgid "Nothing (free)"
 msgstr ""
 
-#: serial.c:472
+#: ../modules/serial.c:477
 msgid "Don't start any software that uses the serial port."
 msgstr ""
 
-#: serial.c:509 serial.c:516
+#: ../modules/serial.c:514 ../modules/serial.c:521
 msgid "This page configures the GPS receiver software."
 msgstr ""
 
-#: serial.c:513
+#: ../modules/serial.c:518
 msgid "GPS Receiver"
 msgstr ""
 
-#: serial.c:520
+#: ../modules/serial.c:525
 msgid "GPS settings"
 msgstr ""
 
-#: serial.c:526
+#: ../modules/serial.c:531
 msgid "Receiver Type"
 msgstr ""
 
-#: serial.c:531
+#: ../modules/serial.c:536
 msgid "NMEA"
 msgstr ""
 
-#: serial.c:536
+#: ../modules/serial.c:541
 msgid ""
 "The GPS receiver sends NMEA data (default, no need to change for most "
 "receivers)."
 msgstr ""
 
-#: serial.c:542
+#: ../modules/serial.c:547
 msgid "Earthmate"
 msgstr ""
 
-#: serial.c:548
+#: ../modules/serial.c:553
 msgid "GPS receiver is an Earthmate GPS."
 msgstr ""
 
-#: serial.c:552
+#: ../modules/serial.c:557
 msgid "Baud Rate"
 msgstr ""
 
-#: serial.c:568 usb.c:258
-msgid "Serial Port"
-msgstr ""
-
-#: usb.c:80
-msgid "Choose backing file"
-msgstr ""
-
-#: usb.c:240
-msgid "USB Peripheral Mode"
-msgstr ""
-
-#: usb.c:247
-msgid "Ethernet Networking"
-msgstr ""
-
-#: usb.c:252 sysinfo.c:719
-msgid "Storage"
-msgstr ""
-
-#: usb.c:267
-msgid "Storage Behaviour"
-msgstr ""
-
-#: usb.c:274
-msgid "CF/SD Card Reader"
-msgstr ""
-
-#: usb.c:280
-msgid "File-backed"
-msgstr ""
-
-#: usb.c:290
-msgid "Select"
-msgstr ""
-
-#: usb.c:298
-msgid "Allow write access"
-msgstr ""
-
-#: usb.c:307
-msgid "Serial Settings"
-msgstr ""
-
-#: usb.c:314
-msgid "Use CDC ACM"
-msgstr ""
-
-#: cardinfo.c:103
+#: ../modules/cardinfo.c:103
 msgid "/_Card"
 msgstr ""
 
-#: cardinfo.c:104
+#: ../modules/cardinfo.c:104
 msgid "/Card/_Insert"
 msgstr ""
 
-#: cardinfo.c:105
+#: ../modules/cardinfo.c:105
 msgid "/Card/_Eject"
 msgstr ""
 
-#: cardinfo.c:106
+#: ../modules/cardinfo.c:106
 msgid "/Card/_Suspend"
 msgstr ""
 
-#: cardinfo.c:107
+#: ../modules/cardinfo.c:107
 msgid "/Card/_Resume"
 msgstr ""
 
-#: cardinfo.c:108
+#: ../modules/cardinfo.c:108
 msgid "/Card/_Reset"
 msgstr ""
 
-#: cardinfo.c:109
+#: ../modules/cardinfo.c:109
 msgid "/Card/s1"
 msgstr ""
 
-#: cardinfo.c:110
+#: ../modules/cardinfo.c:110
 msgid "/Card/_Assign Driver"
 msgstr ""
 
-#: cardinfo.c:111
+#: ../modules/cardinfo.c:111
 msgid "/Card/s2"
 msgstr ""
 
-#: cardinfo.c:112
+#: ../modules/cardinfo.c:112
 msgid "/Card/_Close"
 msgstr ""
 
-#: cardinfo.c:113
+#: ../modules/cardinfo.c:113
 msgid "/_Help"
 msgstr ""
 
-#: cardinfo.c:114
+#: ../modules/cardinfo.c:114
 msgid "/_Help/Index"
 msgstr ""
 
-#: cardinfo.c:115
+#: ../modules/cardinfo.c:115
 msgid "/_Help/About"
 msgstr ""
 
-#: cardinfo.c:175 cardinfo.c:848
+#: ../modules/cardinfo.c:175 ../modules/cardinfo.c:848
 msgid "card not recognized"
 msgstr ""
 
-#: cardinfo.c:277 cardinfo.c:348
+#: ../modules/cardinfo.c:277 ../modules/cardinfo.c:348
 msgid "Could not write to temporal config file."
 msgstr ""
 
-#: cardinfo.c:554
+#: ../modules/cardinfo.c:554
 msgid "Could not open pidfile:"
 msgstr ""
 
-#: cardinfo.c:560
+#: ../modules/cardinfo.c:560
 msgid "Could not read pidfile"
 msgstr ""
 
-#: cardinfo.c:564
+#: ../modules/cardinfo.c:564
 msgid "Could not signal cardmgr:"
 msgstr ""
 
-#: cardinfo.c:638
+#: ../modules/cardinfo.c:638
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr ""
 
-#: cardinfo.c:656
+#: ../modules/cardinfo.c:656
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr ""
 
-#: cardinfo.c:659
+#: ../modules/cardinfo.c:659
 msgid "Could not open '/proc/devices'"
 msgstr ""
 
-#: cardinfo.c:671
+#: ../modules/cardinfo.c:671
 msgid "No sockets found\n"
 msgstr ""
 
-#: cardinfo.c:835
+#: ../modules/cardinfo.c:835
 msgid "flock(stabfile) failed"
 msgstr ""
 
-#: cardinfo.c:854
+#: ../modules/cardinfo.c:854
 #, c-format
 msgid "no driver loaded"
 msgstr ""
 
-#: cardinfo.c:963
+#: ../modules/cardinfo.c:963
 msgid "ready"
 msgstr ""
 
-#: cardinfo.c:981
+#: ../modules/cardinfo.c:981
 msgid "not ready"
 msgstr ""
 
-#: cardinfo.c:996
+#: ../modules/cardinfo.c:996
 msgid "suspended"
 msgstr ""
 
-#: cardinfo.c:1188
+#: ../modules/cardinfo.c:1188
 msgid "Assign Driver"
 msgstr ""
 
-#: cardinfo.c:1197
+#: ../modules/cardinfo.c:1197
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
 
-#: cardinfo.c:1207
+#: ../modules/cardinfo.c:1207
 msgid "Your current card identifies itself as:"
 msgstr ""
 
-#: cardinfo.c:1221 cardinfo.c:1227
+#: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
 msgid "Manuf. Id"
 msgstr ""
 
-#: cardinfo.c:1221 cardinfo.c:1227
+#: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
 msgid "Class"
 msgstr ""
 
-#: cardinfo.c:1327 cardinfo.c:1340
+#: ../modules/cardinfo.c:1327 ../modules/cardinfo.c:1340
 msgid "PC/CF card socket information."
 msgstr ""
 
-#: cardinfo.c:1335
+#: ../modules/cardinfo.c:1335
 msgid "Socket"
 msgstr ""
 
-#: cardinfo.c:1366
+#: ../modules/cardinfo.c:1366
 msgid "Information for socket"
 msgstr ""
 
-#: cardinfo.c:1375
+#. fields
+#: ../modules/cardinfo.c:1375
 msgid "State:"
 msgstr ""
 
-#: cardinfo.c:1376
+#: ../modules/cardinfo.c:1376
 msgid "Device:"
 msgstr ""
 
-#: cardinfo.c:1377
+#: ../modules/cardinfo.c:1377
 msgid "Driver:"
 msgstr ""
 
-#: cardinfo.c:1378
+#: ../modules/cardinfo.c:1378
 msgid "Type:"
 msgstr ""
 
-#: cardinfo.c:1379
+#: ../modules/cardinfo.c:1379
 msgid "I/O:"
 msgstr ""
 
-#: cardinfo.c:1380
+#: ../modules/cardinfo.c:1380
 msgid "IRQ:"
 msgstr ""
 
-#: cardinfo.c:1387
+#: ../modules/cardinfo.c:1387
 msgid "Flags:"
 msgstr ""
 
-#: cardinfo.c:1404
+#: ../modules/cardinfo.c:1404
 msgid "PCMCIA initialisation failed"
 msgstr ""
 
-#: tools/interface.c:315 tools/interface.c:515 tools/interface.c:531
-#: tools/interface.c:651
-msgid "[NONE SET]"
+#: ../modules/gpe-admin.c:92
+msgid "Allow users to configure everything"
 msgstr ""
 
-#: tools/interface.c:706 tools/interface.c:1704
-msgid "UNSPEC"
+#: ../modules/users/ucallbacks.c:107
+msgid "You need at least one user account!"
 msgstr ""
 
-#: tools/interface.c:708
-msgid "UNIX Domain"
+#: ../modules/users/ucallbacks.c:131
+msgid "You can't remove this user!"
 msgstr ""
 
-#: tools/interface.c:711
-msgid "DARPA Internet"
+#: ../modules/users/ucallbacks.c:136
+msgid ""
+"You can't remove\n"
+" system users!"
 msgstr ""
 
-#: tools/interface.c:714
-msgid "IPv6"
+#: ../modules/users/ucallbacks.c:138
+msgid ""
+"Delete user and all its data?\n"
+"This action is not revertable\n"
+"and is executed instantly."
 msgstr ""
 
-#: tools/interface.c:717 tools/interface.c:1725
-msgid "AMPR AX.25"
+#: ../modules/users/ucallbacks.c:138 ../modules/network.c:343
+msgid "Question"
 msgstr ""
 
-#: tools/interface.c:720 tools/interface.c:1731
-msgid "AMPR NET/ROM"
+#: ../modules/users/ucallbacks.c:173
+msgid "Please choose a user name."
 msgstr ""
 
-#: tools/interface.c:723
-msgid "Novell IPX"
+#: ../modules/users/ucallbacks.c:191
+msgid "Please choose a home directory."
 msgstr ""
 
-#: tools/interface.c:726
-msgid "Appletalk DDP"
+#: ../modules/users/ucallbacks.c:279
+msgid ""
+"The two new pass are different!\n"
+" Please try again!"
 msgstr ""
 
-#: tools/interface.c:729 tools/interface.c:1766
-msgid "Econet"
+#: ../modules/users/ucallbacks.c:282
+msgid ""
+"Wrong password\n"
+" Please try again!"
 msgstr ""
 
-#: tools/interface.c:732
-msgid "CCITT X.25"
+#: ../modules/users/uinterface.c:214
+msgid "User Name"
 msgstr ""
 
-#: tools/interface.c:735 tools/interface.c:1728
-msgid "AMPR ROSE"
+#: ../modules/users/uinterface.c:215
+msgid "User Info"
 msgstr ""
 
-#: tools/interface.c:738 tools/interface.c:1716
-msgid "Ash"
+#: ../modules/users/uinterface.c:216
+msgid "Home"
 msgstr ""
 
-#: tools/interface.c:765
-#, c-format
-msgid "Too many address family arguments.\n"
+#: ../modules/users/uinterface.c:226
+msgid "Password"
 msgstr ""
 
-#: tools/interface.c:776
-#, c-format
-msgid "Unknown address family '%s'.\n"
+#: ../modules/users/uinterface.c:235
+msgid "Delete User"
 msgstr ""
 
-#: tools/interface.c:839
-#, c-format
-msgid "Please don't supply more than one address family.\n"
+#: ../modules/users/uinterface.c:244
+msgid "Edit User"
 msgstr ""
 
-#: tools/interface.c:966
-#, c-format
-msgid "No usable address families found.\n"
+#: ../modules/users/uinterface.c:253
+msgid "New User"
 msgstr ""
 
-#: tools/interface.c:1036
-#, c-format
-msgid "Warning: no inet socket available: %s\n"
+#: ../modules/users/uinterface.c:327
+msgid "User settings"
 msgstr ""
 
-#: tools/interface.c:1188
-#, c-format
-msgid "Warning: cannot open %s (%s). Limited output.\n"
+#: ../modules/users/uinterface.c:341
+msgid "User Name:"
 msgstr ""
 
-#: tools/interface.c:1431
-msgid "Device not found"
+#: ../modules/users/uinterface.c:357
+msgid "Password:"
 msgstr ""
 
-#: tools/interface.c:1435
-#, c-format
-msgid "%s: error fetching interface information: %s\n"
+#: ../modules/users/uinterface.c:365
+msgid "User Info:"
 msgstr ""
 
-#: tools/interface.c:1609
-#, c-format
-msgid "You cannot start PPP with this program.\n"
+#: ../modules/users/uinterface.c:381
+msgid "Shell:"
 msgstr ""
 
-#: tools/interface.c:1703
-msgid "Local Loopback"
+#: ../modules/users/uinterface.c:400
+msgid "Home:"
 msgstr ""
 
-#: tools/interface.c:1706
-msgid "Serial Line IP"
+#: ../modules/users/uinterface.c:419
+msgid "Change"
 msgstr ""
 
-#: tools/interface.c:1707
-msgid "VJ Serial Line IP"
+#: ../modules/users/uinterface.c:420
+msgid "Set"
 msgstr ""
 
-#: tools/interface.c:1708
-msgid "6-bit Serial Line IP"
+#: ../modules/users/uinterface.c:484
+msgid "Change Password"
 msgstr ""
 
-#: tools/interface.c:1709
-msgid "VJ 6-bit Serial Line IP"
+#. 2nd column:
+#: ../modules/users/uinterface.c:510
+msgid "Old Password:"
 msgstr ""
 
-#: tools/interface.c:1710
-msgid "Adaptive Serial Line IP"
+#: ../modules/users/uinterface.c:517
+msgid "New Password:"
 msgstr ""
 
-#: tools/interface.c:1713
-msgid "Ethernet"
+#: ../modules/users/uinterface.c:525
+msgid "Confirm:"
 msgstr ""
 
-#: tools/interface.c:1719
-msgid "Fiber Distributed Data Interface"
-msgstr ""
-
-#: tools/interface.c:1722
-msgid "HIPPI"
-msgstr ""
-
-#: tools/interface.c:1734
-msgid "generic X.25"
-msgstr ""
-
-#: tools/interface.c:1737
-msgid "IPIP Tunnel"
-msgstr ""
-
-#: tools/interface.c:1740
-msgid "Point-to-Point Protocol"
-msgstr ""
-
-#: tools/interface.c:1743
-msgid "(Cisco)-HDLC"
-msgstr ""
-
-#: tools/interface.c:1744
-msgid "LAPB"
-msgstr ""
-
-#: tools/interface.c:1747
-msgid "ARCnet"
-msgstr ""
-
-#: tools/interface.c:1750
-msgid "Frame Relay DLCI"
-msgstr ""
-
-#: tools/interface.c:1751
-msgid "Frame Relay Access Device"
-msgstr ""
-
-#: tools/interface.c:1754
-msgid "IPv6-in-IPv4"
-msgstr ""
-
-#: tools/interface.c:1757
-msgid "IrLAP"
-msgstr ""
-
-#: tools/interface.c:1760
-msgid "16/4 Mbps Token Ring"
-msgstr ""
-
-#: tools/interface.c:1762
-msgid "16/4 Mbps Token Ring (New)"
-msgstr ""
-
-#: tools/interface.c:1874
-msgid "Interface:"
-msgstr ""
-
-#: tools/interface.c:1875
-#, c-format
-msgid "Type: %s"
-msgstr ""
-
-#: tools/interface.c:1884
-#, c-format
-msgid "Media: %s"
-msgstr ""
-
-#: tools/interface.c:1889
-#, c-format
-msgid "(auto)"
-msgstr ""
-
-#: tools/interface.c:1901
-#, c-format
-msgid "Address: %s\n"
-msgstr ""
-
-#: tools/interface.c:1906
-#, c-format
-msgid "P-t-P: %s\n"
-msgstr ""
-
-#: tools/interface.c:1910
-#, c-format
-msgid "Netmask: %s\n"
-msgstr ""
-
-#: tools/interface.c:1914
-#, c-format
-msgid "Broadcast: %s\n"
-msgstr ""
-
-#: tools/interface.c:1926
-#, c-format
-msgid "HWaddr (MAC): %s\n"
-msgstr ""
-
-#: tools/interface.c:1956
-#, c-format
-msgid "IPv6 Address: %s/%d\n"
-msgstr ""
-
-#: tools/interface.c:1959
-#, c-format
-msgid "Scope: "
-msgstr ""
-
-#: tools/interface.c:1964
-#, c-format
-msgid "Global"
-msgstr ""
-
-#: tools/interface.c:1967
-#, c-format
-msgid "Link"
-msgstr ""
-
-#: tools/interface.c:1970
-#, c-format
-msgid "Site"
-msgstr ""
-
-#: tools/interface.c:1973
-#, c-format
-msgid "Compat"
-msgstr ""
-
-#: tools/interface.c:1976
-#, c-format
-msgid "Host"
-msgstr ""
-
-#: tools/interface.c:1979
-#, c-format
-msgid "Unknown"
-msgstr ""
-
-#: sound/sound.c:250
+#: ../modules/sound/sound.c:250
 msgid "Audio Settings"
 msgstr ""
 
-#: sound/sound.c:257
+#: ../modules/sound/sound.c:257
 msgid "Mute Everything"
 msgstr ""
 
-#: sound/sound.c:298
+#: ../modules/sound/sound.c:298
 msgid "Alarm Settings"
 msgstr ""
 
-#: sound/sound.c:305
+#: ../modules/sound/sound.c:305
 msgid "Enable Alarm Sound"
 msgstr ""
 
-#: sound/sound.c:312
+#: ../modules/sound/sound.c:312
 msgid "Automatic Volume (rising)"
 msgstr ""
 
-#: sound/sound.c:322 sound/soundctrl.c:298
+#: ../modules/sound/sound.c:322 ../modules/sound/soundctrl.c:258
 msgid "Volume"
 msgstr ""
 
-#: sound/sound.c:329
+#: ../modules/sound/sound.c:329
 msgid "Test"
 msgstr ""
 
-#: keys/keyboard.c:75
+#: ../modules/keys/keyboard.c:76
 msgid "none"
 msgstr ""
 
-#: keys/keyboard.c:76
+#: ../modules/keys/keyboard.c:77
 msgid "Foldable"
 msgstr ""
 
-#: keys/keyboard.c:77
+#: ../modules/keys/keyboard.c:78
 msgid "SnapNType"
 msgstr ""
 
-#: keys/keyboard.c:78
+#: ../modules/keys/keyboard.c:79
 msgid "Stowaway"
 msgstr ""
 
-#: keys/keyboard.c:79
+#: ../modules/keys/keyboard.c:80
 msgid "StowawayXT"
 msgstr ""
 
-#: keys/keyboard.c:80
+#: ../modules/keys/keyboard.c:81
 msgid "HP Slim"
 msgstr ""
 
-#: keys/keyboard.c:81
+#: ../modules/keys/keyboard.c:82
 msgid "Smart BT"
 msgstr ""
 
-#: keys/keyboard.c:82
+#: ../modules/keys/keyboard.c:83
 msgid "LIRC"
 msgstr ""
 
-#: keys/keyboard.c:83
+#: ../modules/keys/keyboard.c:84
 msgid "Belkin IR"
 msgstr ""
 
-#: keys/keyboard.c:84
+#: ../modules/keys/keyboard.c:85
 msgid "Flexis"
 msgstr ""
 
-#: keys/keyboard.c:85
+#: ../modules/keys/keyboard.c:86
 msgid "Benq Gamepad"
 msgstr ""
 
-#: keys/keyboard.c:86
+#: ../modules/keys/keyboard.c:87
 msgid "Pocketvik"
 msgstr ""
 
-#: keys/keyboard.c:87
+#: ../modules/keys/keyboard.c:88
 msgid "Micro Foldaway"
 msgstr ""
 
-#: keys/keyboard.c:88
+#: ../modules/keys/keyboard.c:89
 msgid "Micro Datapad"
 msgstr ""
 
-#: keys/keyboard.c:252
+#: ../modules/keys/keyboard.c:255
 msgid "External keyboard configuration."
 msgstr ""
 
-#: keys/keyboard.c:255
+#: ../modules/keys/keyboard.c:258
 msgid "External Keyboard Port"
 msgstr ""
 
-#: keys/keyboard.c:262
+#: ../modules/keys/keyboard.c:265
 msgid "Here you may select your external keyboard model."
 msgstr ""
 
-#: keys/keyboard.c:283
+#: ../modules/keys/keyboard.c:288
 msgid "External Keyboard Type"
 msgstr ""
 
-#: keys/keys.c:79
+#: ../modules/keys/kbd.c:142
+msgid "Keyboard Geometry / Layout"
+msgstr ""
+
+#: ../modules/keys/kbd.c:182
+msgid "User defined"
+msgstr ""
+
+#: ../modules/keys/keyctl.c:195
+msgid "Button layout file is missing a global section."
+msgstr ""
+
+#: ../modules/keys/keyctl.c:411
+msgid "No button configuration available for this device."
+msgstr ""
+
+#: ../modules/keys/keyctl.c:583
+msgid "Critical: Can't open keylaunchrc for writing!"
+msgstr ""
+
+#: ../modules/keys/keyctl.c:606
+msgid "Could not restart key handler!"
+msgstr ""
+
+#: ../modules/keys/keyctl.c:629
+msgid "The file you selected is not executable."
+msgstr ""
+
+#: ../modules/keys/keys.c:79
 msgid "Buttons"
 msgstr ""
 
-#: keys/keys.c:83
+#: ../modules/keys/keys.c:83
 msgid "Virtual Keyb."
 msgstr ""
 
-#: keys/keys.c:87
+#: ../modules/keys/keys.c:87
 msgid "External Keyb."
 msgstr ""
 
-#: main-info.c:67
+#: ../modules/screen/screen.c:73
+msgid "Portrait"
+msgstr ""
+
+#: ../modules/screen/screen.c:74
+msgid "Landscape (left)"
+msgstr ""
+
+#: ../modules/screen/screen.c:75
+msgid "Landscape (right)"
+msgstr ""
+
+#: ../modules/screen/screen.c:79
+msgid "Landscape"
+msgstr ""
+
+#: ../modules/screen/screen.c:80
+msgid "Portrait (left)"
+msgstr ""
+
+#: ../modules/screen/screen.c:81
+msgid "Portrait (right)"
+msgstr ""
+
+#: ../modules/screen/screen.c:84
+msgid "Inverted"
+msgstr ""
+
+#: ../modules/screen/screen.c:111
+msgid "Light"
+msgstr ""
+
+#: ../modules/screen/screen.c:117
+msgid "Brightness"
+msgstr ""
+
+#: ../modules/screen/screen.c:129
+msgid "Display"
+msgstr ""
+
+#: ../modules/screen/screen.c:133
+msgid "Rotation"
+msgstr ""
+
+#: ../modules/screen/screen.c:153
+msgid "Touchscreen"
+msgstr ""
+
+#: ../modules/screen/screen.c:157
+msgid "Calibrate"
+msgstr ""
+
+#: ../modules/screen/screen.c:159
+msgid "Start"
+msgstr ""
+
+#: ../modules/screen/screen.c:275 ../modules/sleep/scallbacks.c:39
+msgid "min"
+msgstr ""
+
+#: ../modules/screen/screen.c:278 ../modules/sleep/scallbacks.c:42
+msgid "sec"
+msgstr ""
+
+#: ../modules/network.c:103
+msgid "Current Config"
+msgstr ""
+
+#: ../modules/network.c:252
+msgid "New Interface"
+msgstr ""
+
+#: ../modules/network.c:261
+msgid "This interface definition already exists!"
+msgstr ""
+
+#: ../modules/network.c:343
+msgid "Do you want to delete this interface?"
+msgstr ""
+
+#: ../modules/network.c:592
+msgid "WiFi config"
+msgstr ""
+
+#: ../modules/network.c:631
 #, c-format
-msgid "usage: gpe-info [page]\n"
+msgid "WiFi config for %s"
 msgstr ""
 
-#: main-info.c:68
-#, c-format
-msgid "    Where page may be \"global\" (default)\n"
+#. page items
+#: ../modules/network.c:643
+msgid "ESSID"
 msgstr ""
 
-#: main-info.c:78 gpe-conf-sysinfo.desktop.in.h:2
-msgid "System Information"
+#: ../modules/network.c:665
+msgid "Mode"
 msgstr ""
 
-#: storage.c:166 storage.c:423
-msgid "System Memory"
+#: ../modules/network.c:675
+msgid "managed"
 msgstr ""
 
-#. TRANSLATORS: MB == Mega Bytes
-#: storage.c:174 storage.c:443
-msgid "Free memory"
+#: ../modules/network.c:687
+msgid "ad-hoc"
 msgstr ""
 
-#. TRANSLATORS: MB == Mega Bytes
-#: storage.c:176 storage.c:183 storage.c:329 storage.c:340 storage.c:445
-#: storage.c:458 sysinfo.c:680 sysinfo.c:696
-msgid "MB"
+#: ../modules/network.c:704
+msgid "Channel"
 msgstr ""
 
-#: storage.c:181 storage.c:328 storage.c:456
-msgid "Total:"
+#: ../modules/network.c:725
+msgid "WEP"
 msgstr ""
 
-#: storage.c:292
-msgid "Internal Flash"
+#: ../modules/network.c:735
+msgid "off"
 msgstr ""
 
-#: storage.c:298
-msgid "MMC"
+#: ../modules/network.c:747
+msgid "open"
 msgstr ""
 
-#: storage.c:304
-msgid "Compact Flash"
+#: ../modules/network.c:759
+msgid "restricted"
 msgstr ""
 
-#: storage.c:310
-msgid "Network Filesystem"
+#: ../modules/network.c:775
+msgid "Key 1"
 msgstr ""
 
-#: storage.c:330
-msgid "Mounted at "
+#: ../modules/network.c:803
+msgid "Key 2"
 msgstr ""
 
-#: storage.c:338
-msgid "Free space"
+#: ../modules/network.c:831
+msgid "Key 3"
 msgstr ""
 
-#: logread.c:116
-msgid "Can't find circular buffer, is syslog running?\n"
+#: ../modules/network.c:861
+msgid "Key 4"
 msgstr ""
 
-#: logread.c:123
-msgid "Can't get access to syslogd's circular buffer."
+#: ../modules/network.c:1015 ../modules/network.c:1142
+#: ../modules/network.c:1259
+msgid "Interface"
 msgstr ""
 
-#: logread.c:130
-msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
+#. page items
+#: ../modules/network.c:1065
+msgid "Address"
 msgstr ""
 
-#: logread.c:156
-msgid "<empty syslog>"
+#: ../modules/network.c:1067
+msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr ""
 
-#: logread.c:227 logread.c:243
-msgid "System Log"
+#: ../modules/network.c:1068
+msgid "Netmask"
 msgstr ""
 
-#: logread.c:252 logread.c:268
-msgid "Session Log"
+#: ../modules/network.c:1070
+msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr ""
 
-#: logread.c:275
-msgid "Could not open X session log.\n"
+#: ../modules/network.c:1072
+msgid "Broadcast"
 msgstr ""
 
-#: battery.c:189 battery.c:250
-msgid "unknown"
+#: ../modules/network.c:1074
+msgid ""
+"Enter your broadcast address here, usually the same like your IP with 255 as "
+"last number."
 msgstr ""
 
-#: battery.c:198 battery.c:258 battery.c:357
-msgid "Status: high"
+#: ../modules/network.c:1076
+msgid "Gateway"
 msgstr ""
 
-#: battery.c:201 battery.c:261 battery.c:361
-msgid "Status: low"
+#: ../modules/network.c:1078
+msgid "Enter the IP Address of your default gateway here."
 msgstr ""
 
-#: battery.c:204 battery.c:264 battery.c:365
-msgid "Status: critical"
+#: ../modules/network.c:1087 ../modules/network.c:1201
+msgid "WiFi device"
 msgstr ""
 
-#: battery.c:207 battery.c:267 battery.c:369
-msgid "Status: charging"
+#: ../modules/network.c:1095 ../modules/network.c:1209
+msgid "Configure"
 msgstr ""
 
-#: battery.c:210 battery.c:270
-msgid "Status: charge main"
+#. page items
+#: ../modules/network.c:1192 ../modules/network.c:1419
+msgid "Hostname"
 msgstr ""
 
-#: battery.c:213
-msgid "Status: dead"
+#: ../modules/network.c:1194
+msgid "Enter your desired hostname here. This parameter is optional."
 msgstr ""
 
-#: battery.c:216 battery.c:276 battery.c:355
-msgid "Status: full"
+#. page items
+#: ../modules/network.c:1309
+msgid "Provider"
 msgstr ""
 
-#: battery.c:219 battery.c:279
-msgid "Status: no battery"
+#: ../modules/network.c:1311
+msgid ""
+"Here you need to enter the name of the provider configuration to use for "
+"this interface."
 msgstr ""
 
-#: battery.c:222 battery.c:282 battery.c:300 battery.c:372
-msgid "Status: unknown"
+#: ../modules/network.c:1334
+msgid "Global Settings"
 msgstr ""
 
-#: battery.c:227
-msgid "learning"
+#: ../modules/network.c:1375
+msgid "Proxy"
 msgstr ""
 
-#: battery.c:231 battery.c:286
-msgid "Voltage"
+#: ../modules/network.c:1376
+msgid ""
+"If you want/need to use a proxy, enter it here. (This only applies to dillo "
+"for now.)"
 msgstr ""
 
-#: battery.c:235 battery.c:290 battery.c:389
-msgid "AC connected"
+#: ../modules/network.c:1382
+msgid "No proxy for"
 msgstr ""
 
-#: battery.c:237 battery.c:292 battery.c:391
-msgid "Lifetime"
+#: ../modules/network.c:1384
+msgid ""
+"Here you should enter your local domain for that you don't want to use a "
+"proxy."
 msgstr ""
 
-#: battery.c:273
-msgid "Status: not installed"
+#: ../modules/network.c:1391
+msgid "DNS server"
 msgstr ""
 
-#: battery.c:299
-msgid "not installed"
+#: ../modules/network.c:1393
+msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr ""
 
-#: battery.c:301
-msgid "Voltage: unknown"
+#: ../modules/network.c:1421
+msgid "Enter the Hostname to use for this machine"
 msgstr ""
 
-#: battery.c:302
-msgid "Lifetime: unknown"
+#: ../modules/network.c:1612
+msgid ""
+"Here you may change the basic configuration type of your device.\n"
+"Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and "
+"\"ppp\" to make the device a point-to-point device."
 msgstr ""
 
-#: battery.c:347
-msgid "No battery"
+#: ../modules/network.c:1618
+msgid "Enable this option if your device is a WiFi device"
 msgstr ""
 
-#: battery.c:452
-msgid "Internal battery"
+#: ../modules/network.c:1620
+msgid "Click to set the wireless options for this device"
 msgstr ""
 
-#: battery.c:456
-msgid "Jacket battery"
+#: ../modules/network.c:1622
+msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
 msgstr ""
 
-#: sysinfo.c:238
-msgid "ARM"
+#: ../modules/network.c:1625
+msgid ""
+"Set the enrcyption mode: off for no WEP encryption, open for open system and "
+"restricted for resticted WEP connections only."
 msgstr ""
 
-#: sysinfo.c:241
-msgid "Intel x86 or compatible"
+#: ../modules/network.c:1630
+msgid "Enter the essid of your WiFi network here."
 msgstr ""
 
-#: sysinfo.c:242
-msgid "IBM type PC"
+#: ../modules/network.c:1633
+msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
 msgstr ""
 
-#: sysinfo.c:245
-msgid "Mips"
+#: ../modules/network.c:1636
+msgid "Select the WEP key to use."
 msgstr ""
 
-#: sysinfo.c:247
-msgid "Silicon Graphics Machine"
+#: ../modules/network.c:1639
+msgid ""
+"Enter the channel number or frequency if needed. If not needed leave this "
+"field blank."
 msgstr ""
 
-#: sysinfo.c:251
-msgid "IBM Power or PowerPC"
+#: ../modules/network.c:1655
+msgid "Remove current Interface"
 msgstr ""
 
-#. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: sysinfo.c:280
-msgid "Familiar"
+#: ../modules/network.c:1665
+msgid "Add a new Interface"
 msgstr ""
 
-#. TRANSLATORS: "OpenZaurus" is the name of a linux distribution.
-#: sysinfo.c:291
-msgid "OpenZaurus"
+#: ../modules/network.c:1672
+msgid "Info"
 msgstr ""
 
-#. TRANSLATORS: "Debian" is the name of a linux distribution.
-#: sysinfo.c:300
-msgid "Debian"
+#: ../modules/network.c:1676
+msgid "Show current configuration."
 msgstr ""
 
-#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
-#: sysinfo.c:309
-msgid "OpenEmbedded"
+#: ../modules/network.c:1694
+msgid "Couldn't read network configuration."
 msgstr ""
 
-#: sysinfo.c:351 sysinfo.c:353
-msgid "Build"
+#: ../modules/network.c:1701
+msgid "global"
 msgstr ""
 
-#: sysinfo.c:455
-msgid "Network Status"
+#: ../modules/sleep/sinterface.c:64
+msgid "Auto sleep"
 msgstr ""
 
-#: sysinfo.c:469 sysinfo.c:472
-msgid "HWaddr (MAC)"
+#: ../modules/sleep/sinterface.c:74 ../modules/sleep/sinterface.c:105
+msgid "enabled"
 msgstr ""
 
-#: sysinfo.c:483 sysinfo.c:484
-#, c-format
-msgid "Wireless"
+#: ../modules/sleep/sinterface.c:92
+msgid "sleep timeout"
 msgstr ""
 
-#: sysinfo.c:511
-msgid "Default Gateway"
+#: ../modules/sleep/sinterface.c:95
+msgid "Auto dim"
 msgstr ""
 
-#: sysinfo.c:554
-msgid "System information"
+#: ../modules/sleep/sinterface.c:122
+msgid "backlight dim timeout"
 msgstr ""
 
-#: sysinfo.c:564
-msgid "Version"
+#: ../modules/sleep/sinterface.c:124
+msgid "Auto dim level"
 msgstr ""
 
-#: sysinfo.c:596
-msgid "Distribution"
+#: ../modules/sleep/sinterface.c:144
+msgid "Advanced Controls"
 msgstr ""
 
-#: sysinfo.c:621
-msgid "System"
+#: ../modules/sleep/sinterface.c:154
+msgid "CPU"
 msgstr ""
 
-#: sysinfo.c:630
-msgid "Device information"
+#: ../modules/sleep/sinterface.c:160
+msgid "Sleep on cpu less than load"
 msgstr ""
 
-#: sysinfo.c:642
-msgid "Device Name"
+#: ../modules/sleep/sinterface.c:164
+msgid "load below"
 msgstr ""
 
-#: sysinfo.c:661
-msgid "CPU:"
+#: ../modules/sleep/sinterface.c:180
+msgid "APM"
 msgstr ""
 
-#: sysinfo.c:674
-msgid "RAM:"
+#: ../modules/sleep/sinterface.c:186
+msgid "Sleep on AC"
 msgstr ""
 
-#: sysinfo.c:690
-msgid "Storage:"
+#: ../modules/sleep/sinterface.c:188
+msgid "probe IRQs"
 msgstr ""
 
-#: sysinfo.c:702
-msgid "Hardware"
+#: ../modules/sleep/sinterface.c:194
+msgid "Check IRQ activity"
 msgstr ""
 
-#: sysinfo.c:712
-msgid "Battery"
-msgstr ""
-
-#: sysinfo.c:726
-msgid "Networks"
-msgstr ""
-
-#: sysinfo.c:733
-msgid "Log Display"
-msgstr ""
-
-#: gpe-conf.desktop.in.h:1
-msgid "Control Panel"
-msgstr ""
-
-#: gpe-conf-admin.desktop.in.h:1
+#: ../desktop/gpe-conf-admin.desktop.in.h:1
 msgid "User Access"
 msgstr ""
 
-#: gpe-conf-admin.desktop.in.h:2
+#: ../desktop/gpe-conf-admin.desktop.in.h:2
 msgid "User access administration"
 msgstr ""
 
-#: gpe-conf-cardinfo.desktop.in.h:1
+#: ../desktop/gpe-conf-cardinfo.desktop.in.h:1
 msgid "PC/CF Cards"
 msgstr ""
 
-#: gpe-conf-cardinfo.desktop.in.h:2
+#: ../desktop/gpe-conf-cardinfo.desktop.in.h:2
 msgid "PC/CF Cards info and config"
 msgstr ""
 
-#: gpe-conf-keys.desktop.in.h:1
+#: ../desktop/gpe-conf.desktop.in.h:1
+msgid "Control Panel"
+msgstr ""
+
+#: ../desktop/gpe-conf-keys.desktop.in.h:1
 msgid "Keyboard and Button Setup"
 msgstr ""
 
-#: gpe-conf-keys.desktop.in.h:2
+#: ../desktop/gpe-conf-keys.desktop.in.h:2
 msgid "Keys and Buttons"
 msgstr ""
 
-#: gpe-conf-ownerinfo.desktop.in.h:2
+#: ../desktop/gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
 msgstr ""
 
-#: gpe-conf-serial.desktop.in.h:1
+#: ../desktop/gpe-conf-serial.desktop.in.h:1
 msgid "Serial Port Settings"
 msgstr ""
 
-#: gpe-conf-sleep.desktop.in.h:1
+#: ../desktop/gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"
 msgstr ""
 
-#: gpe-conf-sleep.desktop.in.h:2
+#: ../desktop/gpe-conf-sleep.desktop.in.h:2
 msgid "Sleep Configuration"
 msgstr ""
 
-#: gpe-conf-theme.desktop.in.h:1
-msgid "Global Appearance Setup"
-msgstr ""
-
-#: gpe-conf-time.desktop.in.h:1
-msgid "Date/Time Setup"
-msgstr ""
-
-#: gpe-conf-time.desktop.in.h:2
-msgid "Setup Date and Time"
-msgstr ""
-
-#: gpe-conf-users.desktop.in.h:1
-msgid "Manage local users"
-msgstr ""
-
-#: gpe-conf-users.desktop.in.h:2
-msgid "User Manager"
-msgstr ""
-
-#: gpe-conf-sysinfo.desktop.in.h:1
-msgid "System Info"
-msgstr ""
-
-#: gpe-conf-usb.desktop.in.h:1
-msgid "Change USB settings"
-msgstr ""
-
-#: gpe-conf-usb.desktop.in.h:2
-msgid "USB Settings"
-msgstr ""
-
-#: gpe-conf-sound.desktop.in.h:1
+#: ../desktop/gpe-conf-sound.desktop.in.h:1
 msgid "Sound Settings"
 msgstr ""
 
-#: gpe-conf-sound.desktop.in.h:2
+#: ../desktop/gpe-conf-sound.desktop.in.h:2
 msgid "Sound defaults and setup"
+msgstr ""
+
+#: ../desktop/gpe-conf-sysinfo.desktop.in.h:1
+msgid "System Info"
+msgstr ""
+
+#: ../desktop/gpe-conf-theme.desktop.in.h:1
+msgid "Global Appearance Setup"
+msgstr ""
+
+#: ../desktop/gpe-conf-time.desktop.in.h:1
+msgid "Date/Time Setup"
+msgstr ""
+
+#: ../desktop/gpe-conf-time.desktop.in.h:2
+msgid "Setup Date and Time"
+msgstr ""
+
+#: ../desktop/gpe-conf-usb.desktop.in.h:1
+msgid "Change USB settings"
+msgstr ""
+
+#: ../desktop/gpe-conf-usb.desktop.in.h:2
+msgid "USB Settings"
+msgstr ""
+
+#: ../desktop/gpe-conf-users.desktop.in.h:1
+msgid "Manage local users"
+msgstr ""
+
+#: ../desktop/gpe-conf-users.desktop.in.h:2
+msgid "User Manager"
 msgstr ""

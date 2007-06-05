@@ -1,3 +1,4 @@
+[encoding: UTF-8]
 applets.c
 modules/battery.c
 modules/cfgfile.c
@@ -33,7 +34,7 @@ modules/keys/keys.c
 modules/screen/brightness.c
 modules/screen/calibrate.c
 modules/screen/callbacks.c
-modules/screen/main.c
+modules/screen/screen.c
 modules/screen/rotation.c
 modules/screen/xset.c
 modules/network.c

@@ -1,6 +1,8 @@
 2007-06-05      Florian Boor <florian.boor@kernelconcepts.de>
 
 	* timeanddate.c: Remove hh.org timeserver.
+	* POTFILES.in: Use UTF8, update file name.
+	* Makefile.am: Package gpe-conf.pot
 
 2007-05-27      Florian Boor <florian.boor@kernelconcepts.de>
 
