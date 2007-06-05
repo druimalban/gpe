@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *	             2003 - 2006  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2006, 2007  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,7 +49,6 @@
 
 gchar *Ntpservers[6]=  {
 	"pool.ntp.org", 
-	"time.handhelds.org",
 	"time.apple.com",
 	"ptbtime1.ptb.de",
 	"ntp2c.mcc.ac.uk",
