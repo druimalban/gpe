@@ -25,7 +25,8 @@ EXTRA_DIST = $(desktop_DATA) \
              $(pixmaps_DATA) \
              intltool-extract.in \
              intltool-merge.in \
-             intltool-update.in
+             intltool-update.in \
+             po/gpe-synctool.pot
 			 
 DISTCLEANFILES = intltool-extract \
                  intltool-merge \
