@@ -1,3 +1,11 @@
+2007-06-07  Florian Boor  <florian@linuxtogo.org>
+
+	* Release 0.2
+	* Rename configure.in to configure.ac like in all other bits.
+	* Update i18n support in build tools to work with desktop file 
+        and to pass distcheck.
+	* refresh POTFILES.in
+
 2007-02-25  Neal H. Walfield  <neal@gnu.org>
 
 	* src/playlist.c (meta_data_reader): If possible, just set to

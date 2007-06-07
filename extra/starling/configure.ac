@@ -1,4 +1,4 @@
-AC_INIT(starling, 0.1,[skyhusker@handhelds.org])
+AC_INIT(starling, 0.2,[skyhusker@handhelds.org])
 AC_CONFIG_SRCDIR([src/main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AC_PROG_INSTALL
@@ -47,7 +47,7 @@ AC_CONFIG_FILES([
 po/Makefile.in
 Makefile
 data/Makefile
-data/starling.desktop
+data/starling.desktop.in
 src/Makefile
 hildon/starling.desktop
 hildon/com.nokia.starling.service

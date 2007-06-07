@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Media Player
+_Name=Media Player
 Exec=@prefix@/bin/starling
 Terminal=0
 Type=Application
