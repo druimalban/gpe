@@ -16,6 +16,9 @@ libmimedir.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION vtodo_from_tags ##### -->
 <para>
 Creates a mimedir vTodo object from a given list of tags.

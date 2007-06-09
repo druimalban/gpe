@@ -17,21 +17,6 @@ libmimedir.
 
 </para>
 
-<!-- ##### FUNCTION vevent_from_tags ##### -->
-<para>
-Creates a mimedir vEvent object from a given list of tags.
-</para>
-
-@tags: List of tag-value pairs.
-@Returns: New mimedir vEvent object.
-
-
-<!-- ##### FUNCTION vevent_to_tags ##### -->
-<para>
-Creates a list of tags and values from a mimedir vEvent object.
-</para>
-
-@vevent: vEvent object to convert to a tag-value list.
-@Returns: New allocated list of tags and values.
+<!-- ##### SECTION Stability_Level ##### -->
 
 

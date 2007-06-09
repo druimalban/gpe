@@ -16,6 +16,9 @@ dealing with GPE tag-value lists.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION gpe_tag_list_free ##### -->
 <para>
 You guessed it: This function frees a complete list of tags.

@@ -1,40 +1,198 @@
+<MACRO>
+<NAME>_</NAME>
+#define _(x) gettext (x)
+</MACRO>
+<MACRO>
+<NAME>ERROR_DOMAIN</NAME>
+#define ERROR_DOMAIN() g_quark_from_static_string ("gpevtype")
+</MACRO>
+<MACRO>
+<NAME>ERROR_PROPAGATE</NAME>
+#define ERROR_PROPAGATE(error, e) \
+  do \
+    { \
+      g_set_error (error, ERROR_DOMAIN (), 0, "%s: %s", __func__, \
+                   e->message); \
+      g_error_free (e); \
+    } \
+  while (0)
+</MACRO>
 <FUNCTION>
-<NAME>gpe_tag_list_free</NAME>
-<RETURNS>void  </RETURNS>
-GSList *tags
-</FUNCTION>
-<FUNCTION>
-<NAME>gpe_tag_list_prepend</NAME>
-<RETURNS>GSList  *</RETURNS>
-GSList *data, const char *tag, const char *value
-</FUNCTION>
-<FUNCTION>
-<NAME>vcard_from_tags</NAME>
-<RETURNS>MIMEDirVCard  *</RETURNS>
-GSList *tags
-</FUNCTION>
-<FUNCTION>
-<NAME>vcard_to_tags</NAME>
-<RETURNS>GSList  *</RETURNS>
-MIMEDirVCard *vcard
-</FUNCTION>
-<FUNCTION>
-<NAME>vevent_from_tags</NAME>
-<RETURNS>MIMEDirVEvent  *</RETURNS>
-GSList *tags
-</FUNCTION>
-<FUNCTION>
-<NAME>vevent_to_tags</NAME>
-<RETURNS>GSList  *</RETURNS>
-MIMEDirVEvent *vevent
+<NAME>todo_import_from_vtodo</NAME>
+<RETURNS>gboolean </RETURNS>
+MIMEDirVTodo *todo, GError **error
 </FUNCTION>
 <FUNCTION>
 <NAME>vtodo_from_tags</NAME>
-<RETURNS>MIMEDirVTodo  *</RETURNS>
+<RETURNS>MIMEDirVTodo *</RETURNS>
 GSList *tags
 </FUNCTION>
 <FUNCTION>
 <NAME>vtodo_to_tags</NAME>
-<RETURNS>GSList  *</RETURNS>
+<RETURNS>GSList *</RETURNS>
 MIMEDirVTodo *vtodo
+</FUNCTION>
+<FUNCTION>
+<NAME>gpe_tag_list_free</NAME>
+<RETURNS>void </RETURNS>
+GSList *tags
+</FUNCTION>
+<FUNCTION>
+<NAME>gpe_tag_list_prepend</NAME>
+<RETURNS>GSList *</RETURNS>
+GSList *data, const char *tag, const char *value
+</FUNCTION>
+<FUNCTION>
+<NAME>vcard_from_tags</NAME>
+<RETURNS>MIMEDirVCard *</RETURNS>
+GSList *tags
+</FUNCTION>
+<FUNCTION>
+<NAME>vcard_to_tags</NAME>
+<RETURNS>GSList *</RETURNS>
+MIMEDirVCard *vcard
+</FUNCTION>
+<FUNCTION>
+<NAME>event_import_from_vevent</NAME>
+<RETURNS>gboolean </RETURNS>
+EventCalendar *ec,MIMEDirVEvent *event,Event **new_ev, GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>event_export_as_vevent</NAME>
+<RETURNS>MIMEDirVEvent *</RETURNS>
+Event *ev
+</FUNCTION>
+<FUNCTION>
+<NAME>event_export_as_string</NAME>
+<RETURNS>char *</RETURNS>
+Event *ev
+</FUNCTION>
+<FUNCTION>
+<NAME>event_export_to_file</NAME>
+<RETURNS>gboolean </RETURNS>
+Event *ev, const gchar *filename,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>cal_import_from_channel</NAME>
+<RETURNS>gboolean </RETURNS>
+EventCalendar *ec,GIOChannel *channel,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>cal_import_from_vmimedir</NAME>
+<RETURNS>gboolean </RETURNS>
+EventCalendar *ec,GList *callist,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>cal_export_as_string</NAME>
+<RETURNS>char *</RETURNS>
+EventCalendar *ec
+</FUNCTION>
+<FUNCTION>
+<NAME>cal_export_to_file</NAME>
+<RETURNS>gboolean </RETURNS>
+EventCalendar *ec,const gchar *filename,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>list_export_to_file</NAME>
+<RETURNS>gboolean </RETURNS>
+GSList *things, const gchar *filename,GError **error
+</FUNCTION>
+<MACRO>
+<NAME>_</NAME>
+#define _(x) gettext (x)
+</MACRO>
+<MACRO>
+<NAME>ERROR_DOMAIN</NAME>
+#define ERROR_DOMAIN() g_quark_from_static_string ("gpevtype")
+</MACRO>
+<MACRO>
+<NAME>ERROR_PROPAGATE</NAME>
+#define ERROR_PROPAGATE(error, e) \
+  do \
+    { \
+      g_set_error (error, ERROR_DOMAIN (), 0, "%s: %s", __func__, \
+                   e->message); \
+      g_error_free (e); \
+    } \
+  while (0)
+</MACRO>
+<FUNCTION>
+<NAME>cal_import_from_channel</NAME>
+<RETURNS>gboolean </RETURNS>
+EventCalendar *ec,GIOChannel *channel,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>cal_import_from_vmimedir</NAME>
+<RETURNS>gboolean </RETURNS>
+EventCalendar *ec,GList *callist,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>cal_export_as_string</NAME>
+<RETURNS>char *</RETURNS>
+EventCalendar *ec
+</FUNCTION>
+<FUNCTION>
+<NAME>cal_export_to_file</NAME>
+<RETURNS>gboolean </RETURNS>
+EventCalendar *ec,const gchar *filename,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>list_export_to_file</NAME>
+<RETURNS>gboolean </RETURNS>
+GSList *things, const gchar *filename,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>gpe_tag_list_free</NAME>
+<RETURNS>void </RETURNS>
+GSList *tags
+</FUNCTION>
+<FUNCTION>
+<NAME>gpe_tag_list_prepend</NAME>
+<RETURNS>GSList *</RETURNS>
+GSList *data, const char *tag, const char *value
+</FUNCTION>
+<FUNCTION>
+<NAME>event_import_from_vevent</NAME>
+<RETURNS>gboolean </RETURNS>
+EventCalendar *ec,MIMEDirVEvent *event,Event **new_ev, GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>event_export_as_vevent</NAME>
+<RETURNS>MIMEDirVEvent *</RETURNS>
+Event *ev
+</FUNCTION>
+<FUNCTION>
+<NAME>event_export_as_string</NAME>
+<RETURNS>char *</RETURNS>
+Event *ev
+</FUNCTION>
+<FUNCTION>
+<NAME>event_export_to_file</NAME>
+<RETURNS>gboolean </RETURNS>
+Event *ev, const gchar *filename,GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>todo_import_from_vtodo</NAME>
+<RETURNS>gboolean </RETURNS>
+MIMEDirVTodo *todo, GError **error
+</FUNCTION>
+<FUNCTION>
+<NAME>vtodo_from_tags</NAME>
+<RETURNS>MIMEDirVTodo *</RETURNS>
+GSList *tags
+</FUNCTION>
+<FUNCTION>
+<NAME>vtodo_to_tags</NAME>
+<RETURNS>GSList *</RETURNS>
+MIMEDirVTodo *vtodo
+</FUNCTION>
+<FUNCTION>
+<NAME>vcard_from_tags</NAME>
+<RETURNS>MIMEDirVCard *</RETURNS>
+GSList *tags
+</FUNCTION>
+<FUNCTION>
+<NAME>vcard_to_tags</NAME>
+<RETURNS>GSList *</RETURNS>
+MIMEDirVCard *vcard
 </FUNCTION>

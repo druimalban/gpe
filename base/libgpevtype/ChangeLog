@@ -1,3 +1,11 @@
+2007-06-08  Florian Boor  <florian@linuxtogo.org>
+
+	* Release version 0.50
+	* libeventdb-docs.sgml: Update org, license and version.
+	* gtk-doc.make: update
+	* doc/Makefile.am: Fix warnings
+	* autogen.sh: Do not run unused intltoolize.
+
 2007-03-29  Graham Cobb  <g+770@cobb.uk.net>
 
 	* vevent.c (event_import_from_vevent): more fixes for alarm triggers

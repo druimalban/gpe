@@ -1,0 +1,13 @@
+ERROR_DOMAIN
+ERROR_PROPAGATE
+_
+cal_export_as_string
+cal_export_to_file
+cal_import_from_channel
+cal_import_from_vmimedir
+event_export_as_string
+event_export_as_vevent
+event_export_to_file
+event_import_from_vevent
+list_export_to_file
+todo_import_from_vtodo

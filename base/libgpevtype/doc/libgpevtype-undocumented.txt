@@ -1,6 +1,8 @@
 100% symbol docs coverage.
-8 symbols documented.
+14 symbols documented.
+0 symbols incomplete.
 0 not documented.
+
 
 
 

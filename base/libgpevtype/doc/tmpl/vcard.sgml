@@ -16,6 +16,9 @@ libmimedir.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### FUNCTION vcard_from_tags ##### -->
 <para>
 Create a mimedir vCard object from tag list.
