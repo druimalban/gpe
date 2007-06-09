@@ -1,3 +1,9 @@
+2007-06-08  Florian Boor  <florian@linuxtogo.org>
+
+	* Release 0.1
+	* po: New directory.
+	* configure.ac: Update version and address.
+
 2006-05-08  Neal H. Walfield  <neal@gnu.org>
 
 	* ChangeLog: New file mentioning itself in this line.
