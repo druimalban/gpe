@@ -32,8 +32,8 @@ extra_files = style.css
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed if your app/lib
 # contains GtkObjects/GObjects and you want to document signals and properties.
-GTKDOC_CFLAGS =
-GTKDOC_LIBS =
+CFLAGS = @EVENTDB_CFLAGS@
+LDFLAGS = @EVENTDB_LIBS@ -leventdb
 
 # If you need to override some of the declarations, place them in this file
 # and uncomment this line.
@@ -46,5 +46,6 @@ all-local:
 	@echo "Use \"configure --enable-gtk-doc\" to enable documentation"
 	@echo
 endif
+
 
 include gtk-doc.make

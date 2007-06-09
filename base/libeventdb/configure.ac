@@ -11,8 +11,10 @@ AC_PROG_CC
 AC_PROG_LIBTOOL
 
 PKG_CHECK_MODULES(EVENTDB, gobject-2.0 glib-2.0 sqlite)
+AC_SUBST(EVENTDB_CFLAGS)
+AC_SUBST(EVENTDB_LIBS)
 
-#gtk-doc for documentation, currently unused
+#gtk-doc for documentation
 GTK_DOC_CHECK(1.2)
 
 AC_CONFIG_FILES([Makefile doc/Makefile libeventdb.pc])

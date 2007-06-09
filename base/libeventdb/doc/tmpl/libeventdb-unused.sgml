@@ -1,7 +1,209 @@
+<!-- ##### MACRO EVENT_DB_USE_MEMCHUNK ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO FLAG_ALARM ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO FLAG_CLONE ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO FLAG_RECUR ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO FLAG_TENTATIVE ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO FLAG_UNTIMED ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT calendar_time_s ##### -->
+<para>
+
+</para>
+
+@date: 
+@time: 
+
+<!-- ##### TYPEDEF calendar_time_t ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO event_db__alloc_event ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO event_db__alloc_recur ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO event_db__free_event ##### -->
+<para>
+
+</para>
+
+@_x: 
+
+<!-- ##### MACRO event_db__free_recur ##### -->
+<para>
+
+</para>
+
+@_x: 
+
+<!-- ##### FUNCTION event_db_add ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+@Param1: 
+
+<!-- ##### FUNCTION event_db_alloc_details ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+@Param1: 
+
 <!-- ##### FUNCTION event_db_clear_recurrence ##### -->
 <para>
 
 </para>
 
 @ev: 
+
+<!-- ##### FUNCTION event_db_clone ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+@Param1: 
+
+<!-- ##### FUNCTION event_db_destroy ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Param1: 
+
+<!-- ##### FUNCTION event_db_flush ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION event_db_forget_details ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Param1: 
+
+<!-- ##### FUNCTION event_db_get_details ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+@Param1: 
+
+<!-- ##### FUNCTION event_db_get_recurrence ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+<!-- ##### FUNCTION event_db_list_destroy ##### -->
+<para>
+
+</para>
+
+@l: 
+@Param1: 
+
+<!-- ##### FUNCTION event_db_list_for_future ##### -->
+<para>
+
+</para>
+
+@start: 
+@max: 
+@Returns: 
+
+<!-- ##### FUNCTION event_db_refresh ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION event_db_remove ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+@Param1: 
+
+<!-- ##### FUNCTION event_db_start ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION event_db_stop ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### ENUM recur_type_t ##### -->
+<para>
+
+</para>
+
+@RECUR_NONE: 
+@RECUR_DAILY: 
+@RECUR_WEEKLY: 
+@RECUR_MONTHLY: 
+@RECUR_YEARLY: 
 

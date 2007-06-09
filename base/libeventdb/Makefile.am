@@ -2,7 +2,7 @@ SUBDIRS = doc
 
 lib_LTLIBRARIES = libeventdb.la
 
-AM_CPPFLAGS = @EVENTDB_CFLAGS@ -D_XOPEN_SOURCE -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\" -D_GNU_SOURCE
+INCLUDES = @EVENTDB_CFLAGS@ -D_XOPEN_SOURCE -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\" -D_GNU_SOURCE
 
 libeventdb_la_LDFLAGS = @EVENTDB_LIBS@ -version-info 2:0:0
 
@@ -27,10 +27,15 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-gtk-doc
 check_PROGRAMS = test-event-list test-recur-daily test-recur-weekly	\
 	test-recur-weekly-2 test-recur-monthly test-alarms test-eventid \
 	test-find-by-uid
-TESTS_ENVIRONMENT = /bin/sh $(srcdir)/test.sh
+TESTS_ENVIRONMENT = $(SHELL) $(top_srcdir)/test.sh
 TESTS = test-event-list test-recur-daily test-recur-weekly	\
 	test-recur-weekly-2 test-recur-monthly test-alarms test-eventid \
 	test-find-by-uid
+
+TESTS_EXPECTED = test-event-list.expected test-recur-daily.expected \
+                 test-recur-weekly.expected test-recur-weekly-2.expected \
+                 test-recur-monthly.expected test-alarms.expected \
+                 test-eventid.expected test-find-by-uid.expected
 
 test_event_list_SOURCES = test-event-list.c gpe/event-db.h test-skeleton.h
 test_event_list_LDADD = libeventdb.la
@@ -50,5 +55,13 @@ test_eventid_SOURCES = test-eventid.c gpe/event-db.h test-skeleton.h
 test_eventid_LDADD = libeventdb.la
 test_find_by_uid_SOURCES = test-find-by-uid.c gpe/event-db.h test-skeleton.h
 test_find_by_uid_LDADD = libeventdb.la
+
+
+
+EXTRA_DIST = test.sh \
+             $(TESTS_EXPECTED)
+
+distclean-local:
+	$(RM) -f *.output
 
 include gpe-dist.am

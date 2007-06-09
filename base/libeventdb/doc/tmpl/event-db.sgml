@@ -1,19 +1,20 @@
 <!-- ##### SECTION Title ##### -->
-Event Database
+event-db
 
 <!-- ##### SECTION Short_Description ##### -->
 
-Event database programmers interface.
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
 
 </para>
 
+
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
+
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -74,104 +75,67 @@ Event database programmers interface.
 
 
 
-<!-- ##### ENUM recur_type_t ##### -->
-<para>
-
-</para>
-
-@RECUR_NONE: 
-@RECUR_DAILY: 
-@RECUR_WEEKLY: 
-@RECUR_MONTHLY: 
-@RECUR_YEARLY: 
-
-<!-- ##### MACRO FLAG_UNTIMED ##### -->
+<!-- ##### MACRO TYPE_EVENT ##### -->
 <para>
 
 </para>
 
 
 
-<!-- ##### MACRO FLAG_ALARM ##### -->
+<!-- ##### MACRO EVENT ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO EVENT_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO IS_EVENT ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO IS_EVENT_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO EVENT_GET_CLASS ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### STRUCT EventClass ##### -->
+<para>
+
+</para>
+
+@gobject_class: 
+
+<!-- ##### STRUCT Event ##### -->
 <para>
 
 </para>
 
 
-
-<!-- ##### MACRO FLAG_TENTATIVE ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO FLAG_CLONE ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO FLAG_RECUR ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### STRUCT calendar_time_s ##### -->
-<para>
-
-</para>
-
-@date: 
-@time: 
-
-<!-- ##### TYPEDEF calendar_time_t ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### MACRO EVENT_DB_USE_MEMCHUNK ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO event_db__alloc_event ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO event_db__alloc_recur ##### -->
-<para>
-
-</para>
-
-
-
-<!-- ##### MACRO event_db__free_event ##### -->
-<para>
-
-</para>
-
-@_x: 
-
-
-<!-- ##### MACRO event_db__free_recur ##### -->
-<para>
-
-</para>
-
-@_x: 
-
-
-<!-- ##### FUNCTION event_db_start ##### -->
+<!-- ##### FUNCTION event_get_type ##### -->
 <para>
 
 </para>
@@ -179,7 +143,60 @@ Event database programmers interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION event_db_refresh ##### -->
+<!-- ##### STRUCT EventCalendar ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO TYPE_EVENT_CALENDAR ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO EVENT_CALENDAR ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO EVENT_CALENDAR_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO IS_EVENT_CALENDAR ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO IS_EVENT_CALENDAR_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO EVENT_CALENDAR_GET_CLASS ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### FUNCTION event_calendar_get_type ##### -->
 <para>
 
 </para>
@@ -187,7 +204,220 @@ Event database programmers interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION event_db_stop ##### -->
+<!-- ##### STRUCT EventDB ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SIGNAL EventDB::alarm-fired ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::calendar-changed ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::calendar-deleted ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::calendar-modified ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::calendar-new ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::calendar-reparented ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::error ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::event-modified ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::event-new ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::event-removed ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::alarm-fired ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::calendar-changed ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::calendar-deleted ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::calendar-modified ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::calendar-new ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::calendar-reparented ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::error ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::event-modified ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::event-new ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### SIGNAL EventDB::event-removed ##### -->
+<para>
+
+</para>
+
+@: 
+@: 
+
+<!-- ##### MACRO TYPE_EVENT_DB ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO EVENT_DB ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO EVENT_DB_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO IS_EVENT_DB ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### MACRO IS_EVENT_DB_CLASS ##### -->
+<para>
+
+</para>
+
+@klass: 
+
+
+<!-- ##### MACRO EVENT_DB_GET_CLASS ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+
+<!-- ##### FUNCTION event_db_get_type ##### -->
 <para>
 
 </para>
@@ -195,46 +425,31 @@ Event database programmers interface.
 @Returns: 
 
 
-<!-- ##### FUNCTION event_db_add ##### -->
+<!-- ##### USER_FUNCTION EventDBAlarmFiredFunc ##### -->
 <para>
 
 </para>
 
-@ev: 
-@Returns: 
-<!-- # Unused Parameters # -->
 @Param1: 
+@Param2: 
 
 
-<!-- ##### FUNCTION event_db_remove ##### -->
+<!-- ##### USER_FUNCTION EventDBError ##### -->
 <para>
 
 </para>
 
-@ev: 
-@Returns: 
-<!-- # Unused Parameters # -->
 @Param1: 
+@Param2: 
 
 
-<!-- ##### FUNCTION event_db_flush ##### -->
+<!-- ##### FUNCTION event_db_error_punt ##### -->
 <para>
 
 </para>
 
-@ev: 
-@Returns: 
-
-
-<!-- ##### FUNCTION event_db_clone ##### -->
-<para>
-
-</para>
-
-@ev: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@Param1: 
+@edb: 
+@error: 
 
 
 <!-- ##### FUNCTION event_db_new ##### -->
@@ -242,58 +457,20 @@ Event database programmers interface.
 
 </para>
 
+@filename: 
+@error: 
 @Returns: 
 
 
-<!-- ##### FUNCTION event_db_find_by_uid ##### -->
+<!-- ##### FUNCTION event_db_next_alarm ##### -->
 <para>
 
 </para>
 
-@uid: 
+@edb: 
+@now: 
+@error: 
 @Returns: 
-
-
-<!-- ##### FUNCTION event_db_destroy ##### -->
-<para>
-
-</para>
-
-@ev: 
-<!-- # Unused Parameters # -->
-@Param1: 
-
-
-<!-- ##### FUNCTION event_db_alloc_details ##### -->
-<para>
-
-</para>
-
-@ev: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@Param1: 
-
-
-<!-- ##### FUNCTION event_db_get_details ##### -->
-<para>
-
-</para>
-
-@ev: 
-@Returns: 
-<!-- # Unused Parameters # -->
-@Param1: 
-
-
-<!-- ##### FUNCTION event_db_forget_details ##### -->
-<para>
-
-</para>
-
-@ev: 
-<!-- # Unused Parameters # -->
-@Param1: 
 
 
 <!-- ##### FUNCTION event_db_list_for_period ##### -->
@@ -301,8 +478,10 @@ Event database programmers interface.
 
 </para>
 
+@evd: 
 @start: 
 @end: 
+@error: 
 @Returns: 
 
 
@@ -311,18 +490,10 @@ Event database programmers interface.
 
 </para>
 
+@evd: 
 @start: 
 @end: 
-@Returns: 
-
-
-<!-- ##### FUNCTION event_db_list_for_future ##### -->
-<para>
-
-</para>
-
-@start: 
-@max: 
+@error: 
 @Returns: 
 
 
@@ -331,28 +502,993 @@ Event database programmers interface.
 
 </para>
 
+@evd: 
 @start: 
 @end: 
-@yes: 
+@error: 
 @Returns: 
 
 
-<!-- ##### FUNCTION event_db_list_destroy ##### -->
+<!-- ##### FUNCTION event_db_list_unacknowledged_alarms ##### -->
 <para>
 
 </para>
 
-@l: 
-<!-- # Unused Parameters # -->
-@Param1: 
+@edb: 
+@error: 
+@Returns: 
 
 
-<!-- ##### FUNCTION event_db_get_recurrence ##### -->
+<!-- ##### FUNCTION event_db_find_by_uid ##### -->
+<para>
+
+</para>
+
+@edb: 
+@uid: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_db_find_by_eventid ##### -->
+<para>
+
+</para>
+
+@edb: 
+@eventid: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_db_find_calendar_by_uid ##### -->
+<para>
+
+</para>
+
+@edb: 
+@uid: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_db_find_calendar_by_name ##### -->
+<para>
+
+</para>
+
+@edb: 
+@name: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_db_list_event_calendars ##### -->
+<para>
+
+</para>
+
+@edb: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_db_get_default_calendar ##### -->
+<para>
+
+</para>
+
+@edb: 
+@title: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_db_set_default_calendar ##### -->
+<para>
+
+</para>
+
+@edb: 
+@ec: 
+@error: 
+
+
+<!-- ##### USER_FUNCTION EventCalendarNew ##### -->
+<para>
+
+</para>
+
+@edb: 
+@ec: 
+
+
+<!-- ##### USER_FUNCTION EventCalendarDeleted ##### -->
+<para>
+
+</para>
+
+@edb: 
+@ec: 
+
+
+<!-- ##### USER_FUNCTION EventCalendarReparented ##### -->
+<para>
+
+</para>
+
+@edb: 
+@ec: 
+
+
+<!-- ##### USER_FUNCTION EventCalendarChanged ##### -->
+<para>
+
+</para>
+
+@edb: 
+@ec: 
+
+
+<!-- ##### USER_FUNCTION EventCalendarModified ##### -->
+<para>
+
+</para>
+
+@edb: 
+@ec: 
+
+
+<!-- ##### FUNCTION event_calendar_get_event_db ##### -->
 <para>
 
 </para>
 
 @ev: 
 @Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_new ##### -->
+<para>
+
+</para>
+
+@edb: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_new_full ##### -->
+<para>
+
+</para>
+
+@edb: 
+@parent: 
+@visible: 
+@title: 
+@description: 
+@url: 
+@color: 
+@mode: 
+@sync_interval: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_delete ##### -->
+<para>
+
+</para>
+
+@event_calendar: 
+@delete_events: 
+@new_parent: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_uid ##### -->
+<para>
+
+</para>
+
+@ec: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_get_visible ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_visible ##### -->
+<para>
+
+</para>
+
+@ec: 
+@visible: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_valid_parent ##### -->
+<para>
+
+</para>
+
+@ec: 
+@new_parent: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_get_parent ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_parent ##### -->
+<para>
+
+</para>
+
+@ec: 
+@p: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_title ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_title ##### -->
+<para>
+
+</para>
+
+@ec: 
+@title: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_description ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_description ##### -->
+<para>
+
+</para>
+
+@ec: 
+@description: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_url ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_url ##### -->
+<para>
+
+</para>
+
+@ec: 
+@url: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_username ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_username ##### -->
+<para>
+
+</para>
+
+@ec: 
+@username: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_password ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_password ##### -->
+<para>
+
+</para>
+
+@ec: 
+@password: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_mode ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_mode ##### -->
+<para>
+
+</para>
+
+@ec: 
+@mode: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_color ##### -->
+<para>
+
+</para>
+
+@ec: 
+@color: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_color ##### -->
+<para>
+
+</para>
+
+@ec: 
+@color: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_sync_interval ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_sync_interval ##### -->
+<para>
+
+</para>
+
+@ec: 
+@sync_interval: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_last_pull ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_last_pull ##### -->
+<para>
+
+</para>
+
+@ec: 
+@last_pull: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_last_push ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_set_last_push ##### -->
+<para>
+
+</para>
+
+@ec: 
+@last_push: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_get_last_modification ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_list_events ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_list_events_modified_between ##### -->
+<para>
+
+</para>
+
+@ec: 
+@start: 
+@end: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_list_deleted ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_calendar_flush_deleted ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+
+
+<!-- ##### FUNCTION event_calendar_list_calendars ##### -->
+<para>
+
+</para>
+
+@ec: 
+@error: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION EventNew ##### -->
+<para>
+
+</para>
+
+@edb: 
+@ev: 
+
+
+<!-- ##### USER_FUNCTION EventRemoved ##### -->
+<para>
+
+</para>
+
+@edb: 
+@ev: 
+
+
+<!-- ##### USER_FUNCTION EventModified ##### -->
+<para>
+
+</para>
+
+@edb: 
+@ev: 
+
+
+<!-- ##### FUNCTION event_compare_func ##### -->
+<para>
+
+</para>
+
+@a: 
+@b: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_alarm_compare_func ##### -->
+<para>
+
+</para>
+
+@a: 
+@b: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_new ##### -->
+<para>
+
+</para>
+
+@edb: 
+@ec: 
+@eventid: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_flush ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_remove ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_list_unref ##### -->
+<para>
+
+</para>
+
+@l: 
+
+
+<!-- ##### FUNCTION event_get_event_db ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_get_calendar ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_calendar ##### -->
+<para>
+
+</para>
+
+@ev: 
+@ec: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_color ##### -->
+<para>
+
+</para>
+
+@ev: 
+@color: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_get_visible ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_get_start ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_get_duration ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_duration ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Param2: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_alarm ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_alarm ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Param2: 
+@error: 
+
+
+<!-- ##### FUNCTION event_acknowledge ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_sequence ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_sequence ##### -->
+<para>
+
+</para>
+
+@ev: 
+@sequence: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_last_modification ##### -->
+<para>
+
+</para>
+
+@event: 
+@Returns: 
+
+
+<!-- ##### MACRO event_is_recurrence ##### -->
+<para>
+
+</para>
+
+@ev: 
+
+
+<!-- ##### FUNCTION event_get_recurrence_type ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_recurrence_type ##### -->
+<para>
+
+</para>
+
+@ev: 
+@type: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_recurrence_start ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_recurrence_start ##### -->
+<para>
+
+</para>
+
+@ev: 
+@start: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_recurrence_end ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_recurrence_end ##### -->
+<para>
+
+</para>
+
+@ev: 
+@end: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_recurrence_count ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_recurrence_count ##### -->
+<para>
+
+</para>
+
+@ev: 
+@count: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_recurrence_increment ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_recurrence_increment ##### -->
+<para>
+
+</para>
+
+@ev: 
+@increment: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_recurrence_byday ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_recurrence_byday ##### -->
+<para>
+
+</para>
+
+@event: 
+@list: 
+@error: 
+
+
+<!-- ##### FUNCTION event_add_recurrence_exception ##### -->
+<para>
+
+</para>
+
+@ev: 
+@start: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_untimed ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_untimed ##### -->
+<para>
+
+</para>
+
+@ev: 
+@value: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_uid ##### -->
+<para>
+
+</para>
+
+@ev: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_get_eventid ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_get_summary ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_summary ##### -->
+<para>
+
+</para>
+
+@ev: 
+@summary: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_description ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_description ##### -->
+<para>
+
+</para>
+
+@ev: 
+@description: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_location ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_set_location ##### -->
+<para>
+
+</para>
+
+@ev: 
+@location: 
+@error: 
+
+
+<!-- ##### FUNCTION event_get_categories ##### -->
+<para>
+
+</para>
+
+@ev: 
+@error: 
+@Returns: 
+
+
+<!-- ##### FUNCTION event_add_category ##### -->
+<para>
+
+</para>
+
+@ev: 
+@category: 
+@error: 
+
+
+<!-- ##### FUNCTION event_set_categories ##### -->
+<para>
+
+</para>
+
+@ev: 
+@categories: 
+@error: 
 
 
