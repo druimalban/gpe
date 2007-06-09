@@ -91,7 +91,6 @@ int soundgen_get_config (void)
 {
 	int result = CFG_AUTOMATIC;
 	gchar *filename = g_strdup_printf("%s/.gpe/alarm.conf", g_get_home_dir());
-	FILE *cfgfile;
 	gboolean enabled = TRUE;
 	gboolean automatic = TRUE;
 	gint level = 0;
@@ -138,10 +137,9 @@ int soundgen_get_config (void)
 		else
 			if ((i >= 0) && (i <=100))
 				level = i;
-		}
+			
 		if (alarmfile)
 			g_key_file_free (alarmfile);
-		
 	}
 	if (!enabled) 
 		result = CFG_NOSOUND;

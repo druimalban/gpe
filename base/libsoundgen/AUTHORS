@@ -3,3 +3,6 @@ Code by
 
 Transformation into libsoundgen and esd support by
 	Joe McCarthy <mccarthy@engrng.pitt.edu>
+
+Autotools build framework and new configfile format by
+	Florian Boor <florian@linuxtogo.org>

@@ -1,3 +1,10 @@
+2007-06-08  Florian Boor <florian@linuxtogo.org>
+
+* Release 0.50
+* Autotools support
+* soundgen.c: Fix typo
+* include pc file
+
 2007-05-27  Florian Boor <florian@linuxtogo.org>
 
 * soundgen.c: Use GKeyFile for settings like gpe-conf does now.
