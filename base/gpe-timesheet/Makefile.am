@@ -59,17 +59,11 @@ EXTRA_DIST = gpe-timesheet.desktop.in hildon/gpe-timesheet.desktop.in \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \
-             debian/changelog \
-             debian/compat \
-             debian/copyright \
-             debian/control \
-             debian/rules \
-             debian/docs \
-             debian/dirs \
              gpe-timesheet.desktop.in.in \
              hildon/gpe-timesheet.desktop.in.in \
              hildon/com.nokia.gpe-timesheet.service.in \
-             hildon/gpe-timesheet.png
+             hildon/gpe-timesheet.png \
+             po/gpe-timesheet.pot
 			 
 
 DISTCLEANFILES = intltool-extract \

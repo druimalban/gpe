@@ -1,3 +1,9 @@
+2007-06-08  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release version 0.32
+	* Remove debian directory from distribution.
+	* Add pot file to distribution.
+
 2007-05-13 Philippe De Swert <philippedeswert@scarlet.be>
 
 	* Apply patches from bugzilla submitted by Neil Williams
