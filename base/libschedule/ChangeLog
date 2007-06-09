@@ -1,3 +1,8 @@
+2007-06-08  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Release version 0.17
+	* doc/libschedule-docs.sgml: Update email and org.
+
 2006-12-14  Joseph J. McCarthy  <mccarthy@granular.che.pitt.edu>
 
         * atd.c : small redirect change 

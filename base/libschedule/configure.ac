@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libschedule, 0.16, gpe@handhelds.org)
+AC_INIT(libschedule, 0.17, gpe-list@linuxtogo.org)
 AC_CONFIG_SRCDIR([atd.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
