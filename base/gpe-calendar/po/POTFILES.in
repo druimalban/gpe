@@ -1,5 +1,7 @@
 gpe-calendar.desktop.in.in
 hildon/gpe-calendar.desktop.in.in
+gpe-calendar.desktop.in
+hildon/gpe-calendar.desktop.in
 alarm-dialog.c
 calendar-delete-dialog.c
 calendar-edit-dialog.c
@@ -12,13 +14,10 @@ event-cal.c
 event-list.c
 event-menu.c
 event-ui.c
-export-vcal.c
 gtkdatesel.c
-import-vcal.c
 main.c
 month_view.c
 util.c
 view.c
 week_view.c
 xsettings.c
-year_view.c
