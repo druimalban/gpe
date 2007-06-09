@@ -1,3 +1,8 @@
+2007-06-08  Florian Boor <florian@kernelconcepts.de>
+
+        * Version 0.11 released.
+	* doc/libtododb-docs.sgml: Update org, email and version.
+
 2007-03-13  Graham Cobb <g+gpe@cobb.uk.net>
 
 	* debian/control: fix Depends clause to us shlibs
