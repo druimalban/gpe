@@ -1,3 +1,9 @@
+2007-06-08  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Release version 0.47
+    * configure.ac: Update contact and version.
+    * POTFILES.in: Add more files.
+
 2007-03-15  Graham Cobb  <g+gpe@cobb.uk.net>
 
     * debian/control: add gpe-icons to dependencies

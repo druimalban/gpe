@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-04 01:58+0200\n"
+"POT-Creation-Date: 2007-06-08 18:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,31 +109,31 @@ msgstr ""
 msgid "My VCard"
 msgstr ""
 
-#: ../editing.c:135 ../main.c:1346
+#: ../editing.c:135 ../main.c:1440
 msgid "Details"
 msgstr ""
 
-#: ../editing.c:367
+#: ../editing.c:368
 msgid "no year"
 msgstr ""
 
-#: ../editing.c:426
+#: ../editing.c:427
 msgid "Image"
 msgstr ""
 
-#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:540 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr ""
 
-#: ../editing.c:540 ../namedetail.c:64
+#: ../editing.c:541 ../namedetail.c:64
 msgid "OK"
 msgstr ""
 
-#: ../editing.c:650 ../main.c:502 ../main.c:629
+#: ../editing.c:651 ../main.c:561 ../main.c:688
 msgid "Categories"
 msgstr ""
 
-#: ../editing.c:1431
+#: ../editing.c:1439
 msgid "Select image"
 msgstr ""
 
@@ -151,7 +151,7 @@ msgstr ""
 msgid "Search for:"
 msgstr ""
 
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1376
 #: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
 msgstr ""
@@ -180,92 +180,91 @@ msgstr ""
 msgid "New Contact"
 msgstr ""
 
-#: ../main.c:513
+#: ../main.c:572
 msgid "No contact selected."
 msgstr ""
 
 #. create and set up dialog
-#. * detail section *
-#: ../main.c:585 ../main.c:1418 ../main.c:1490
+#: ../main.c:644 ../main.c:1512 ../main.c:1585
 msgid "Contact"
 msgstr ""
 
-#: ../main.c:1202
+#: ../main.c:1295
 msgid "Choose file"
 msgstr ""
 
-#: ../main.c:1230
+#: ../main.c:1323
 msgid "Import of"
 msgstr ""
 
-#: ../main.c:1230
+#: ../main.c:1323
 msgid "files failed:"
 msgstr ""
 
-#: ../main.c:1234
+#: ../main.c:1327
 msgid "Import successful"
 msgstr ""
 
-#: ../main.c:1299
+#: ../main.c:1393
 msgid "Tap this button to add a new contact."
 msgstr ""
 
-#: ../main.c:1308
+#: ../main.c:1402
 msgid "Tap here to edit the selected contact."
 msgstr ""
 
-#: ../main.c:1318
+#: ../main.c:1412
 msgid "Tap here to delete the selected contact."
 msgstr ""
 
-#: ../main.c:1338
+#: ../main.c:1432
 msgid "Find a contact by searching for any data."
 msgstr ""
 
-#: ../main.c:1348
+#: ../main.c:1442
 msgid "Tap here to show contacts details."
 msgstr ""
 
-#: ../main.c:1358
+#: ../main.c:1452
 msgid "Tap here to configure this program."
 msgstr ""
 
-#: ../main.c:1366
+#: ../main.c:1460
 msgid "Import"
 msgstr ""
 
-#: ../main.c:1368
+#: ../main.c:1462
 msgid "Open file to import a contact from it."
 msgstr ""
 
-#: ../main.c:1381
+#: ../main.c:1475
 msgid "Tap here to exit gpe-contacts."
 msgstr ""
 
 #. * find and categories section *
-#: ../main.c:1447
+#: ../main.c:1541
 msgid "Find:"
 msgstr ""
 
-#: ../main.c:1454
+#: ../main.c:1548
 msgid "in"
 msgstr ""
 
-#: ../main.c:1587
+#: ../main.c:1694
 #, c-format
 msgid "Could not import file %s."
 msgstr ""
 
-#: ../main.c:1592
+#: ../main.c:1699
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr ""
 
-#: ../main.c:1618
+#: ../main.c:1725
 msgid "My Card"
 msgstr ""
 
-#: ../main.c:1621
+#: ../main.c:1728
 msgid "Saving vcard failed"
 msgstr ""
 

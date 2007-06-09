@@ -8,3 +8,6 @@ main.c
 namedetail.c
 structure.c
 hildon/gpe-contacts.desktop.in.in
+edit-vcard.desktop.in
+gpe-contacts.desktop.in
+hildon/gpe-contacts.desktop.in
