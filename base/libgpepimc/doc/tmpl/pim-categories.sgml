@@ -1,67 +1,66 @@
 <!-- ##### SECTION Title ##### -->
-PIM Categories
+pim-categories
 
 <!-- ##### SECTION Short_Description ##### -->
-API functions for PIM categories.
+
 
 <!-- ##### SECTION Long_Description ##### -->
 <para>
-Set of API functions to handle GPE PIM category data.
 
-NOTE: currently all categories are global.
 </para>
+
 
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
+
 <!-- ##### SECTION Stability_Level ##### -->
 
 
 <!-- ##### STRUCT gpe_pim_category ##### -->
 <para>
-A category
+
 </para>
 
-@name: Name of the category
-@id:   Id of the category
-@colour: Colour assigned to identify this category in GUI applications
+@name: 
+@id: 
+@colour: 
 
 <!-- ##### FUNCTION gpe_pim_categories_init ##### -->
 <para>
-Initializes the category management framework.
+
 </para>
 
-@Returns: TRUE if initialisation succeed, FALSE otherwise.
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_pim_categories_list ##### -->
 <para>
-Returns a list of registered categories. The elements of the list are of
-type #gpe_pim_category
+
 </para>
 
-@Returns: A list of registered categories.
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_pim_category_new ##### -->
 <para>
-Adds a new category. @id 
+
 </para>
 
-@title: Name of the category to be added.
-@id: Pointer to a gint to host the new category id. Must be allocated.
-@Returns: TRUE if the category is added, FALSE otherwise.
+@title: 
+@id: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_pim_category_name ##### -->
 <para>
-Returns the name of the category with specified @id.
+
 </para>
 
-@id: the id of the category
-@Returns: the name of the category
+@id: 
+@Returns: 
 
 
 <!-- ##### FUNCTION gpe_pim_category_rename ##### -->

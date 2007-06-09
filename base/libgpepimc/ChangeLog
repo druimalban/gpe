@@ -1,3 +1,12 @@
+2007-06-08  Florian Boor  <florian@kernelconcepts.de>
+
+	* Release version 0.9
+	* remove unused file
+	* doc/libgpepimc-docs.shtml: Fix address, org and update version.
+	* configure.ac: push version and update email.
+	* Remove debian stuff from distribution
+	* Package pot file
+
 2007-03-13  Graham Cobb <g+gpe@cobb.uk.net>
 
 	* debian/control: fix Depends: clause

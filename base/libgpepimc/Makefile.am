@@ -22,14 +22,7 @@ pkgconfig_DATA = libgpepimc.pc
 EXTRA_DIST = intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \
-			 libtool-cross.patch \
-			 debian/changelog \
-			 debian/compat \
-			 debian/copyright \
-			 debian/control \
-			 debian/rules \
-			 debian/libgpepimc0.files \
-			 debian/libgpepimc-dev.files
+             po/libgpepimc.pot
  
 deb: dist
 	-mkdir $(top_builddir)/debian-build

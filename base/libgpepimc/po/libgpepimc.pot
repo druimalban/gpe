@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-28 16:27+0100\n"
+"POT-Creation-Date: 2007-06-08 18:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,58 +16,86 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../ui.c:38
+#: ../ui.c:131
 msgid "Category name must not be blank"
 msgstr ""
 
-#: ../ui.c:49
+#: ../ui.c:150
 msgid "A category by that name already exists"
 msgstr ""
 
-#: ../ui.c:85
+#: ../ui.c:219
+msgid "Name"
+msgstr ""
+
+#: ../ui.c:223
+msgid "Color"
+msgstr ""
+
+#: ../ui.c:232
 msgid "Name:"
 msgstr ""
 
-#: ../ui.c:92 ../ui.c:428
+#: ../ui.c:234
+msgid "Colour:"
+msgstr ""
+
+#: ../ui.c:290 ../ui.c:748
 msgid "OK"
 msgstr ""
 
-#: ../ui.c:93 ../ui.c:429
+#: ../ui.c:291 ../ui.c:749
 msgid "Cancel"
 msgstr ""
 
-#: ../ui.c:124 ../ui.c:356
+#: ../ui.c:311 ../ui.c:667
 msgid "New category"
 msgstr ""
 
-#: ../ui.c:357
+#: ../ui.c:327
+msgid "Edit category"
+msgstr ""
+
+#: ../ui.c:668
 msgid "Tap here to add a new category."
 msgstr ""
 
-#: ../ui.c:361
+#: ../ui.c:672
+msgid "Modify category"
+msgstr ""
+
+#: ../ui.c:673
+msgid "Tap here to modify the selected category."
+msgstr ""
+
+#: ../ui.c:677
 msgid "Delete category"
 msgstr ""
 
-#: ../ui.c:362
+#: ../ui.c:678
 msgid "Tap here to delete the selected category."
 msgstr ""
 
-#: ../ui.c:433
+#: ../ui.c:753
 msgid "Close"
 msgstr ""
 
-#: ../ui.c:434
+#: ../ui.c:754
 msgid "New"
 msgstr ""
 
-#: ../ui.c:435
+#: ../ui.c:755
+msgid "Edit"
+msgstr ""
+
+#: ../ui.c:756
 msgid "Delete"
 msgstr ""
 
-#: ../ui.c:454 ../ui.c:468
+#: ../ui.c:781 ../ui.c:796
 msgid "Select categories"
 msgstr ""
 
-#: ../ui.c:460
+#: ../ui.c:787
 msgid "Edit categories"
 msgstr ""
