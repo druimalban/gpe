@@ -1,6 +1,5 @@
 TODO:
 
-* support multiple windows
 * improve progressbar display
 * some sort of status indication if clicking on links with infoprint or equivalent
 * categories to order bookmarks & bookmark sort
@@ -36,6 +35,8 @@ DONE:
 * Put application specific info in the install file (document --disable-bookmarks and --enable-hildon)
 * config file to keep zoom/font settings 
 * create configuration screen
+* history management (clean up history, button to remove it, avoid doubles (well most :-))
+* support multiple windows
 
 POSTPONED / PARTIALLY DONE:
 
@@ -43,4 +44,3 @@ POSTPONED / PARTIALLY DONE:
 -> provisions are in the code, however not yet implemented in gtk-webcore
 * cookie support. Working cookie support is in. However gtk-webcore does not handle
   them gracefully yet.
-* history management (clean up history, button to remove it, avoid doubles)

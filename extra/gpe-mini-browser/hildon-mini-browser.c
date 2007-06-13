@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.20
+ * gpe-mini-browser v0.21
  *
  * Basic web browser based on gtk-webcore.
  * Hildon interface version for Maemo / Nokia 770
@@ -112,7 +112,7 @@ main (int argc, char *argv[])
   WebiSettings s = { 0, };
 
   /* osso stuff  */
-  context = osso_initialize ("gpe-mini-browser", "0.20", TRUE, NULL);
+  context = osso_initialize ("gpe-mini-browser", "0.21", TRUE, NULL);
   if (context == NULL)
     {
       fprintf (stderr, "osso_initialize failed.\n");
@@ -128,13 +128,13 @@ main (int argc, char *argv[])
 	case 'v':
 	  printf
 	    (_
-	     ("GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"));
+	     ("GPE-mini-browser version 0.21. (C)2005-2007, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
 	  printf
 	    (_
-	     ("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
+	     ("GPE-mini-browser, basic web browser application. (c)2005-2007, Philippe De Swert\n"));
 	  printf (_("Usage: gpe-mini-browser <URL>\n"));
 	  printf (_("Use -v for version info.\n"));
 	  exit (0);
@@ -308,6 +308,9 @@ main (int argc, char *argv[])
 
   g_signal_connect (GTK_OBJECT (history_button), "clicked",
 		    G_CALLBACK (show_history), html);
+
+  g_signal_connect (G_OBJECT(html), "req_new_window", 
+		    G_CALLBACK(new_window), html);
 
   /* save completion list when we exit the program */
   g_signal_connect (GTK_OBJECT (app), "destroy",

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(gpe-mini-browser, 0.20, philippedeswert@scarlet.be)
+AC_INIT(gpe-mini-browser, 0.21, philippedeswert@scarlet.be)
 AC_CONFIG_SRCDIR([gpe-mini-browser.c])
 AM_INIT_AUTOMAKE([foreign])
  
@@ -58,7 +58,7 @@ AC_SUBST(ENABLE_BOOKMARK)
 
 AM_CONDITIONAL(BOOKMARK, test x$ENABLE_BOOKMARK = xtrue)
 
-PKG_CHECK_MODULES(MINIBROWSER, gtk+-2.0 libgpewidget osb-nrcit $HILDON_DEPS $BOOKMARK_DEPS)
+PKG_CHECK_MODULES(MINIBROWSER, gtk+-2.0 libgpewidget gtk-webcore-nrcit $HILDON_DEPS $BOOKMARK_DEPS)
 
 DEFINES="-DG_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 DEFINES="$DEFINES -DNDEBUG"

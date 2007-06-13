@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.20
+ * gpe-mini-browser v0.21
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -209,6 +209,13 @@ void show_add_dialog (GtkWidget *button, gpointer *data);
  * @param html engine in which the eventually selected history item will be rendered
  */
 void show_history(GtkWidget *button, Webi *html);
+
+/* open a new window when requested
+ * @param url url from the clicked link
+ * @param view engine which has the link that requested a new window
+ * @data misc data (not used)
+*/
+GtkWidget * new_window(Webi * view, char const * url, gpointer data);
 
 /********************************************************
 	       url loading and handling

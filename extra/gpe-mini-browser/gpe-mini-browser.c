@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.20
+ * gpe-mini-browser v0.21
  *
  * Basic web browser based on gtk-webcore 
  *
@@ -105,13 +105,13 @@ main (int argc, char *argv[])
 	case 'v':
 	  printf
 	    (_
-	     ("GPE-mini-browser version 0.20. (C)2005, Philippe De Swert\n"));
+	     ("GPE-mini-browser version 0.21. (C)2005-2007, Philippe De Swert\n"));
 	  exit (0);
 
 	default:
 	  printf
 	    (_
-	     ("GPE-mini-browser, basic web browser application. (c)2005, Philippe De Swert\n"));
+	     ("GPE-mini-browser, basic web browser application. (c)2005-2007, Philippe De Swert\n"));
 	  printf (_("Usage: gpe-mini-browser <URL>\n"));
 	  printf (_("Use -v for version info.\n"));
 	  exit (0);
@@ -288,6 +288,8 @@ main (int argc, char *argv[])
 
   g_signal_connect (G_OBJECT (html), "key_press_event",
                     G_CALLBACK (main_window_key_press_event), html);
+  g_signal_connect (G_OBJECT(html), "req_new_window", 
+		    G_CALLBACK(new_window), html);
 
   /* save completion list when we exit the program */
   g_signal_connect (GTK_OBJECT (app), "destroy",
@@ -332,7 +334,7 @@ main (int argc, char *argv[])
   if (base != NULL)
     fetch_url (base, html);
 
-  g_free ((gpointer *) base);
+  //g_free ((gpointer *) base);
 
   //make everything viewable
   gtk_widget_show_all (toolbar);

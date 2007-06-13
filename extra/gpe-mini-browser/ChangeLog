@@ -1,4 +1,4 @@
-v0.21 -               -            - Philippe De Swert
+v0.21 - Gonosz release  - 13/06/2007  - Philippe De Swert
 
 * Added option to configure (the now customized) User Agent through the configfile
 * Fixed possible overflow bug and tuned homepage query
@@ -6,6 +6,8 @@ v0.21 -               -            - Philippe De Swert
 * Added some functionality to remove the excessive amount of warning pop-ups on load 
   errors (as this needs to be improved in gtk-webcore)
 * Improved history handling, trying to avoid duplicates and limiting the list to 100 items 
+* Opens new windows if we click on links that open in a new window
+* Fixed crash related to about dialog
 
 v0.20 - Satyr release - 22/12/2006 - Philippe De Swert
 

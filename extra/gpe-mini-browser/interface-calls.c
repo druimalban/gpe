@@ -1,5 +1,5 @@
 /*
- * gpe-mini-browser v0.20
+ * gpe-mini-browser v0.21
  *
  * Basic web browser based on gtk-webcore 
  * 
@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -724,4 +725,26 @@ show_history (GtkWidget * button, Webi * html)
   gtk_container_add (GTK_CONTAINER (history_dialog), vbox);
   gtk_widget_show_all (GTK_WIDGET (history_dialog));
 
+}
+
+
+/* ======================================================== */
+
+GtkWidget * new_window(Webi * view, char const * url, gpointer data)
+{
+/*
+  const char *command[256];
+  
+  g_snprintf((gchar *)command, 256, "gpe-mini-browser %s &", url);
+  system(command);
+*/
+if (fork())
+  return NULL;
+else
+ {
+  printf("url = %s\n", url);
+  execlp("gpe-mini-browser", "gpe-mini-browser", url);
+ }
+
+  return NULL;
 }
