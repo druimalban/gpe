@@ -1287,7 +1287,7 @@ alarm_fired (EventDB *edb, Event *ev)
   alarm_dialog_required ();
 
   alarm_dialog_add_event (alarm_dialog, ev);
-
+  soundgen_alarm_start();
   gtk_window_present (GTK_WINDOW (alarm_dialog));
 }
 
@@ -1403,6 +1403,12 @@ static void
 gpe_cal_iconify (void)
 {
   gtk_window_iconify (GTK_WINDOW (main_window));
+}
+
+static void
+gpe_cal_deiconify (void)
+{
+  gtk_window_deiconify (GTK_WINDOW (main_window));
 }
 
 #ifdef IS_HILDON
@@ -1622,6 +1628,7 @@ handoff_callback (Handoff *handoff, char *data)
     else
 	  g_warning ("%s: Unknown command: %s", __func__, var);
     }
+    gpe_cal_deiconify();
 }
 
 /* Serialize our state: another instance will take over (e.g. on

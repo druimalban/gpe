@@ -303,6 +303,7 @@ alarm_dialog_show (GtkWidget *widget)
   consider_no_alarm_label (alarm_dialog);
 
   GTK_WIDGET_CLASS (alarm_dialog_parent_class)->show (widget);
+  
 }
 
 static gboolean
@@ -341,6 +342,7 @@ ack_event_clicked (GtkWidget *button, gpointer d)
   gtk_container_remove (GTK_CONTAINER (data->alarm_dialog->event_container),
 			data->container);
   event_acknowledge (data->event, NULL);
+  soundgen_alarm_stop();
   g_object_unref (data->event);
   g_free (data);
 

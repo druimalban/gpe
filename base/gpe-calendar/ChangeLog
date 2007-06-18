@@ -1,3 +1,11 @@
+2007-06-18  Joe McCarthy <mccarthy@granular.che.pitt.edu>
+
+	* main.c: add gpe_cal_deiconify to play nice with the new default of iconifying rather than actually closing (needed for alarms), also to add soundgen_alarm_start() where necessary
+	* alarm-dialog.h: add libsoundgen stuff
+	* event-ui.c: change alarm defaults to something more reasonable
+	* alarm-dialog.c: add audible alarms where necessary (soundgen_alarm_stop() when acknowledged)
+	* configure.ac: depend on libsoundgen
+
 2007-06-08  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release version 0.90

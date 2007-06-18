@@ -896,6 +896,7 @@ build_alarm_page (struct edit_state *s)
   GtkWidget *spin = gtk_spin_button_new_with_range (1, 1000, 1);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spin), TRUE);
   gtk_spin_button_set_digits (GTK_SPIN_BUTTON (spin), 0);
+  gtk_spin_button_set_value (GTK_SPIN_BUTTON (spin), 10);
   g_signal_connect (G_OBJECT (spin), "value-changed",
 		    G_CALLBACK (set_toggle), s->alarmbutton);
 #endif
@@ -909,7 +910,7 @@ build_alarm_page (struct edit_state *s)
   gtk_combo_box_append_text (s->alarm_units, _("hours"));
   gtk_combo_box_append_text (s->alarm_units, _("days"));
   gtk_combo_box_append_text (s->alarm_units, _("weeks"));
-  gtk_combo_box_set_active (s->alarm_units, 1);
+  gtk_combo_box_set_active (s->alarm_units, 0);
   g_signal_connect (G_OBJECT (s->alarm_units), "changed",
 		    G_CALLBACK (set_toggle), s->alarmbutton);
   gtk_box_pack_start (hbox, GTK_WIDGET (s->alarm_units), FALSE, TRUE, 0);
