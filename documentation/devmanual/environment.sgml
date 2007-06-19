@@ -343,7 +343,7 @@
   <para>
       The first thing to know about GPE sources is the location of the GPE main  
       source repository. This one is located here:
-      <ulink url="http://gpe.linuxtogo.org/download/source/">http://gpe.linuxtogo.org/download/source/<ulink>
+      <ulink url="http://gpe.linuxtogo.org/download/source/">http://gpe.linuxtogo.org/download/source/</ulink>
       It contains the release packages of all pieces of GPE. As long as there is
       no good reason not to do so please choose the latest version of a package
       if you intend to use it.
