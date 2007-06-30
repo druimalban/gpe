@@ -1,0 +1,32 @@
+AC_INIT(gpe-memo, 0.1,[skyhusker@rm-fr.net])
+AC_CONFIG_SRCDIR([src/main.c])
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
+AC_PROG_INSTALL
+AC_PROG_CC
+AC_LANG(C)
+
+dnl Check for libgsm
+AC_CHECK_HEADER(gsm/gsm.h, [AC_DEFINE(HAVE_GSM_GSM_H)],
+[AC_CHECK_HEADER(gsm.h,[AC_DEFINE(HAVE_GSM_H)],AC_MSG_ERROR(Can't find gsm.h))])
+
+dnl Check for GTK+
+PKG_CHECK_MODULES(GTK, gtk+-2.0)
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
+
+dnl Check for GPE
+PKG_CHECK_MODULES(GPE, libgpewidget >= 0.102)
+AC_SUBST(GPE_CFLAGS)
+AC_SUBST(GPE_LIBS)
+
+dnl Check for eSound
+PKG_CHECK_MODULES(ESD, esound)
+AC_SUBST(ESD_CFLAGS)
+AC_SUBST(ESD_LIBS)
+
+dnl Generate the output files.
+AC_CONFIG_FILES([
+Makefile
+src/Makefile
+])
+AC_OUTPUT
