@@ -31,7 +31,6 @@ extern gboolean stop;
 static void
 sigint_handler (int signum)
 {
-    
     stop = TRUE;
 }
 
@@ -80,10 +79,8 @@ sound_flow (int infd, int outfd, int (*filter) (int,int))
             close (infd);
             close (outfd);
             exit (0);
-            child = 0;
             break;
         default:
-            printf("child %d\n", child);
             break;
     }
 

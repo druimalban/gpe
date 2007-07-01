@@ -288,52 +288,7 @@ populate_store (GtkListStore *store)
 static void
 button_new_clicked_cb (GtkWidget *w, gpointer data)
 {
-    GtkWidget *dialog;
-    GtkWidget *pbar;
-    GtkWidget *label;
-    GTimer *timer;
-    Interface *in = data;
-    guint source_id_pbar;
-    guint source_id_label;
-    gint response;
-    gchar *filename;
-    gboolean recording;
-
-    dialog = dialog_audio_new (ACTION_RECORD, in->main_window, _("Recording"));
-    label = g_object_get_data (G_OBJECT (dialog), "label");
-    pbar = g_object_get_data (G_OBJECT (dialog), "pbar");
-
-    timer = g_timer_new ();
-    g_object_set_data (G_OBJECT (label), "timer", timer);
-    
-    source_id_pbar = g_timeout_add (100, progress_bar_pulse_cb, pbar);
-    source_id_label = g_timeout_add (500, label_update_time_cb, label);
-
-    filename = filename_cook ();
-    recording = start_recording (filename);
-    
-    /* Reset the timer */
-    g_timer_start (timer);
-
-    if (recording) {
-        response = gtk_dialog_run (GTK_DIALOG (dialog));
-        sound_stop();
-    } else {
-        response = GTK_RESPONSE_ACCEPT;
-    }
-
-    g_source_remove (source_id_pbar);
-    g_source_remove (source_id_label);
-
-    gtk_widget_destroy (dialog);
-
-    if (GTK_RESPONSE_ACCEPT != response) {
-        g_unlink (filename);
-    } else {
-        populate_store (in->store);
-    }
-    
-    g_free (filename);
+    interface_record ((Interface*) data, NULL);
 }
 
 static void
