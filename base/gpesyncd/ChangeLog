@@ -1,3 +1,8 @@
+2007-07-07  Florian Boor <florian@linuxtogo.org>
+
+	* Release version 2.0
+	* configure.ac, gpe-dist.am: Use GPE source distribution bits.
+
 2007-03-21  Graham Cobb <g+gpe@cobb.uk.net>
 
 	* src/export.c, src/import.c, src/main.c: eliminate
