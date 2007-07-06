@@ -42,6 +42,7 @@
 	      <property name="focus_on_click">True</property>
 	      <property name="response_id">0</property>
 	      <signal name="clicked" handler="on_button1_clicked" last_modification_time="Wed, 07 Sep 2005 20:47:53 GMT"/>
+              <accelerator key="Escape" modifiers="0" signal="clicked"/>
 	    </widget>
 	  </child>
 

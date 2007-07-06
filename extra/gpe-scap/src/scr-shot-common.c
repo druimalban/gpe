@@ -1,6 +1,6 @@
 /* GPE SCAP
  * Copyright (C) 2005  Rene Wagner <rw@handhelds.org>
- * Copyright (C) 2006  Florian Boor <florian@linuxtogo.org>
+ * Copyright (C) 2006, 2007  Florian Boor <florian@linuxtogo.org>
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 #include "scr-shot.h"
 #include "scr-i18n.h"
 
-#define SEP "--2643816081578981947558109727"
+#define SEP "-----------------------------2135846832443781641022605706"
 
 #define FAMILIAR_VINFO 	"/etc/familiar-version"
 #define OPENZAURUS_VINFO 	"/etc/openzaurus-version"
@@ -185,24 +185,28 @@ scr_shot_upload_from_file (const gchar * path, const gchar * url,
   soup_message_add_header (message->request_headers, "User-Agent", "gpe-scap/" VERSION);
   soup_message_add_header (message->request_headers, "Accept",
 			   "text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5");
-
+/*  soup_message_add_header (message->request_headers, "Accept-Charset", "Accept-Charset=ISO-8859-1,utf-8;q=0.7,*;q=0.7");
+  soup_message_add_header (message->request_headers, "Keep-Alive", "100");
+  soup_message_add_header (message->request_headers, "Connection", "keep-alive");
+  soup_message_wire	add_header (message->request_headers, "Accept-Encoding", "gzip,deflate");
+*/
   /* build message body */
-  cmd = g_strdup_printf("--" SEP "\nContent-Disposition: form-data; name=\"model\"\n\n%s"
-       "\n" "--" SEP "\nContent-Disposition: form-data; name=\"text\"\n\n%s" 
-    "\n" "--" SEP "\nContent-Disposition: form-data; name=\"key\"\n\nsecret"
-    "\n" "--" SEP "\nContent-Disposition: form-data; name=\"submit\"\n\nUpload" 
-    "\n" "--" SEP "\nContent-Disposition: form-data; name=\"file\"; filename=\"/tmp/screenshot.png\""
-    "\nContent-Type: image/png\nContent-Transfer-Encoding: binary\n\n",model, description);
+  cmd = g_strdup_printf("--" SEP "\r\nContent-Disposition: form-data; name=\"model\"\r\n\r\n%s"
+       "\r\n--" SEP "\r\nContent-Disposition: form-data; name=\"text\"\r\n\r\n%s" 
+    "\r\n--" SEP "\r\nContent-Disposition: form-data; name=\"key\"\r\n\r\nsecret"
+    "\r\n--" SEP "\r\nContent-Disposition: form-data; name=\"submit\"\r\n\r\nUpload"
+	"\r\n--"SEP "\r\nContent-Disposition: form-data; name=\"file\"; filename=\"/tmp/screenshot.png\""
+    "\r\nContent-Type: image/png\r\n\r\n",model, description);
 
-  tail = "\n" SEP "--";
-
+  tail =  "\r\n--" SEP "--";
   content_len = strlen (tail) + strlen (cmd) + len;
+
   body = g_malloc (content_len);
   memcpy (body, cmd, strlen (cmd));
   memcpy (body + strlen (cmd), sdata, len);
   memcpy (body + strlen (cmd) + len, tail, strlen (tail));
 
-  soup_message_set_request (message, "multipart/form-data; boundary=" SEP,
+  soup_message_set_request (message, "multipart/form-data; boundary="SEP,
                             SOUP_BUFFER_SYSTEM_OWNED, body, content_len);
 
   soup_session_send_message (session, message);
