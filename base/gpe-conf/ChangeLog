@@ -1,3 +1,8 @@
+
+2007-07-11      Florian Boor <florian.boor@kernelconcepts.de>
+
+	* theme.c: Support icon sizes up to 96px.
+
 2007-06-07      Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Relase version 0.2.6

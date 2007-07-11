@@ -1027,7 +1027,7 @@ Theme_Build_Objects ()
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
   
-  self.slIconSize = gtk_hscale_new_with_range(16.0,64.0,2.0);
+  self.slIconSize = gtk_hscale_new_with_range(16.0,96.0,2.0);
   gtk_table_attach (GTK_TABLE (table), self.slIconSize, 0, 4, 3, 4,
 		    (GtkAttachOptions) (table_attach_left_col_x),
 		    (GtkAttachOptions) (table_attach_left_col_y), 0, 0);
