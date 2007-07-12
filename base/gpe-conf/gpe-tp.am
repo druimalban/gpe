@@ -1,13 +1,14 @@
 DIR_PO = po
 DIR_TP = tp
+TRANSLATION_SITE = http://translationproject.org/latest
 
 #-- Fetch .po files from TP
-freshen-po: linguas
+freshen-po: 
 	rm -rf tmp-po
 	mkdir tmp-po
-#	cd tmp-po; for LANG in $(LINGUAS); do wget $(TRANSLATION_SITE)/$(PACKAGE)/$$LANG.po; done
-	cd tmp-po; ../$(DIR_TP)/po-wget-last ../$(DIR_TP)/postats $(PACKAGE)
-	for LANG in $$(cat linguas); do if [ ! -f $(DIR_PO)/$$LANG.po ] || ! cmp -s $(DIR_PO)/$$LANG.po tmp-po/$$LANG.po ; then mv tmp-po/$$LANG.po $(DIR_PO)/$$LANG.po; echo "Updated $$LANG translation"; fi; done
+	cd tmp-po; for LANG in $(ALL_LINGUAS); do wget $(TRANSLATION_SITE)/$(PACKAGE)/$$LANG.po; done
+#	cd tmp-po; ../$(DIR_TP)/po-wget-last ../$(DIR_TP)/postats $(PACKAGE)
+	for LANG in $(ALL_LINGUAS); do if [ ! -f $(DIR_PO)/$$LANG.po ] || ! cmp -s $(DIR_PO)/$$LANG.po tmp-po/$$LANG.po ; then mv tmp-po/$$LANG.po $(DIR_PO)/$$LANG.po; echo "Updated $$LANG translation"; fi; done
 	rm -rf tmp-po
 
 #-- Extract LINGUAS from TP stat file

@@ -1,3 +1,8 @@
+2007-07-12      Florian Boor <florian.boor@kernelconcepts.de>
+
+	* gpe-tp.am: Preliminary fix for new translation project location.
+          Makefile.am: Add Japanese translation contributed by Takeshi
+	  Hamasaki.
 
 2007-07-11      Florian Boor <florian.boor@kernelconcepts.de>
 

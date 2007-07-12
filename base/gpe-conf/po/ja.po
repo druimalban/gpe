@@ -1,25 +1,26 @@
-# Swedish messages for gpe-conf.
-# Copyright (C) 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
-# Daniel Nylander <po@danielnylander.se>, 2006, 2007.
-# Christian Rose <menthos@menthos.com>, 2003, 2004.
-#
-# Applet ska nog vara panelprogram.
+# Japanese translations for gpe-conf package
+# gpe-conf パッケージに対する和訳.
+# Copyright (C) 2007 THE gpe-conf'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gpe-conf package.
+# Takeshi Hamasaki <hma@syd.odn.ne.jp>, 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf 0.2.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-05 16:51+0200\n"
-"PO-Revision-Date: 2007-06-24 20:07+0200\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
-"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"PO-Revision-Date: 2007-07-13 02:33+0900\n"
+"Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Japanese\n"
+"X-Poedit-Country: JAPAN\n"
 
 #: ../applets.c:413
 msgid "Root access"
-msgstr "Rootåtkomst"
+msgstr "Root アクセス"
 
 #: ../applets.c:427
 msgid ""
@@ -27,190 +28,191 @@ msgid ""
 "accessible for user root.\n"
 "Please enter password."
 msgstr ""
-"En del alternativ är endast\n"
-"tillgängliga för användaren\n"
-"root. Ange lösenord."
+"root ユーザのみがアクセスできる\n"
+"オプションがあります。\n"
+"パスワードを入力してください。"
 
 #: ../applets.c:474 ../modules/screen/calibrate.c:32
 msgid "Sorry, wrong password."
-msgstr "Tyvärr, fel lösenord."
+msgstr "すみませんが、パスワードが違います。"
 
 #: ../modules/battery.c:186 ../modules/battery.c:247
 msgid "unknown"
-msgstr "okänd"
+msgstr "不明"
 
 #: ../modules/battery.c:195 ../modules/battery.c:255 ../modules/battery.c:356
 msgid "Status: high"
-msgstr "Status: hög"
+msgstr "状態: 高"
 
 #: ../modules/battery.c:198 ../modules/battery.c:258 ../modules/battery.c:360
 msgid "Status: low"
-msgstr "Status: låg"
+msgstr "状態: 低"
 
 #: ../modules/battery.c:201 ../modules/battery.c:261 ../modules/battery.c:364
 msgid "Status: critical"
-msgstr "Status: kritiskt"
+msgstr "状態: 致命的"
 
 #: ../modules/battery.c:204 ../modules/battery.c:264 ../modules/battery.c:368
 msgid "Status: charging"
-msgstr "Status: laddar"
+msgstr "状態: 充電中"
 
 #: ../modules/battery.c:207 ../modules/battery.c:267
 msgid "Status: charge main"
-msgstr "Status: ladda huvud"
+msgstr "状態: メインバッテリを充電中"
 
 #: ../modules/battery.c:210
 msgid "Status: dead"
-msgstr "Status: dött"
+msgstr "状態: 使用不可能"
 
 #: ../modules/battery.c:213 ../modules/battery.c:273 ../modules/battery.c:354
 msgid "Status: full"
-msgstr "Status: fullt"
+msgstr "状態: 充電完了"
 
 #: ../modules/battery.c:216 ../modules/battery.c:276
 msgid "Status: no battery"
-msgstr "Status: inget batteri"
+msgstr "状態: バッテリーがありません"
 
 #: ../modules/battery.c:219 ../modules/battery.c:279 ../modules/battery.c:297
 #: ../modules/battery.c:371
 msgid "Status: unknown"
-msgstr "Status: okänd"
+msgstr "状態: 不明"
 
 #: ../modules/battery.c:224
 msgid "learning"
-msgstr "lär"
+msgstr "調査中"
 
 #: ../modules/battery.c:228 ../modules/battery.c:283
 msgid "Voltage"
-msgstr "Spänning"
+msgstr "電圧"
 
 #: ../modules/battery.c:232 ../modules/battery.c:287 ../modules/battery.c:388
 msgid "AC connected"
-msgstr "Nätspänning ansluten"
+msgstr "AC電源が接続されています"
 
 #: ../modules/battery.c:234 ../modules/battery.c:289 ../modules/battery.c:390
 msgid "Lifetime"
-msgstr "Livslängd"
+msgstr "使用可能時間"
 
 #: ../modules/battery.c:270
 msgid "Status: not installed"
-msgstr "Status: inte installerat"
+msgstr "状態: インストールされていません"
 
 #: ../modules/battery.c:296
 msgid "not installed"
-msgstr "inte installerat"
+msgstr "インストールされていません"
 
 #: ../modules/battery.c:298
 msgid "Voltage: unknown"
-msgstr "Spänning: okänd"
+msgstr "電圧: 不明"
 
 #: ../modules/battery.c:299
 msgid "Lifetime: unknown"
-msgstr "Livslängd: okänd"
+msgstr "使用可能時間: 不明"
 
 #: ../modules/battery.c:346
 msgid "No battery"
-msgstr "Inget batteri"
+msgstr "バッテリーなし"
 
 #: ../modules/battery.c:451
 msgid "Internal battery"
-msgstr "Internt batteri"
+msgstr "内蔵バッテリー"
 
-# Osäker
 #: ../modules/battery.c:455
+#, fuzzy
 msgid "Jacket battery"
-msgstr "Batteripaket"
+msgstr "バッテリーのレベル"
 
 #: ../modules/cfgfile.c:919
 msgid "No write access to network configuration."
-msgstr "Ingen skrivåtkomst till nätverkskonfiguration."
+msgstr "ネットワーク設定を書き込むための権限がありません。"
 
 #: ../main-info.c:67
 #, c-format
 msgid "usage: gpe-info [page]\n"
-msgstr "användning: gpe-info [sida]\n"
+msgstr "使用法: gpe-info [page]\n"
 
 #: ../main-info.c:68
 #, c-format
 msgid "    Where page may be \"global\" (default)\n"
-msgstr "    Där sida kan vara \"global\" (standard)\n"
+msgstr ""
 
 #: ../main-info.c:78 ../desktop/gpe-conf-sysinfo.desktop.in.h:2
 msgid "System Information"
-msgstr "Systeminformation"
+msgstr "システム情報"
 
 #: ../main.c:89 ../modules/timeanddate.c:489
 msgid "Time"
-msgstr "Tid"
+msgstr "時刻"
 
 #: ../main.c:89
 msgid "Time and Date Setup"
-msgstr "Tid- och datuminställning"
+msgstr "時刻と日付の設定"
 
 #: ../main.c:91
 msgid "Screen"
-msgstr "Skärm"
+msgstr "画面"
 
 #: ../main.c:91 ../desktop/gpe-conf-screen.desktop.in.h:1
 msgid "Screen Setup"
-msgstr "Konfiguration av skärm"
+msgstr "画面設定"
 
 #: ../main.c:93
 msgid "Keys & Buttons"
-msgstr "Tangenter & knappar"
+msgstr "キーとボタン"
 
 #: ../main.c:93
 msgid "Keys and Buttons Setup"
-msgstr "Konfiguration av tangenter och knappar"
+msgstr "キーとボタンの設定"
 
 #: ../main.c:95 ../modules/timeanddate.c:502
 msgid "Network"
-msgstr "Nätverk"
+msgstr "ネットワーク"
 
 #: ../main.c:95 ../desktop/gpe-conf-network.desktop.in.h:1
 msgid "Network Setup"
-msgstr "Nätverkskonfiguration"
+msgstr "ネットワーク設定"
 
 #: ../main.c:97 ../modules/theme.c:985
 msgid "Theme"
-msgstr "Tema"
+msgstr "テーマ"
 
 #: ../main.c:97 ../modules/theme.c:987
 #: ../desktop/gpe-conf-theme.desktop.in.h:2
+#, fuzzy
 msgid "Look and Feel"
-msgstr "Utseende och känsla"
+msgstr "アクション -%c (--%s) と -%c (--%s) が競合します"
 
 #: ../main.c:99
 msgid "Power"
-msgstr "Ström"
+msgstr "電源"
 
 #: ../main.c:99
 msgid "Configure Power Saving"
-msgstr "Konfigurera strömspar"
+msgstr "電源節約のための設定"
 
 #: ../main.c:101
 msgid "Owner"
-msgstr "Ägare"
+msgstr "所有者"
 
 #: ../main.c:101 ../desktop/gpe-conf-ownerinfo.desktop.in.h:1
 msgid "Owner Information"
-msgstr "Ägarinformation"
+msgstr "所有者情報"
 
 #: ../main.c:103
 msgid "Login"
-msgstr "Inloggning"
+msgstr "ログイン"
 
 #: ../main.c:103 ../desktop/gpe-conf-login-setup.desktop.in.h:1
 msgid "Login Setup"
-msgstr "Inloggningskonfiguration"
+msgstr "ログイン設定"
 
 #: ../main.c:105
 msgid "Users"
-msgstr "Användare"
+msgstr "ユーザ"
 
 #: ../main.c:105
 msgid "User Administration"
-msgstr "Användaradministration"
+msgstr "ユーザ管理"
 
 #: ../main.c:107
 msgid "GPE"
@@ -218,15 +220,15 @@ msgstr "GPE"
 
 #: ../main.c:107
 msgid "GPE Conf Administration"
-msgstr "GPE Conf-administration"
+msgstr "GPE Conf の設定"
 
 #: ../main.c:109 ../desktop/gpe-conf-serial.desktop.in.h:2
 msgid "Serial Ports"
-msgstr "Serieportar"
+msgstr "シリアルポート"
 
 #: ../main.c:109
 msgid "Serial Port Configuration"
-msgstr "Konfiguration av serieport"
+msgstr "シリアルポート設定"
 
 #: ../main.c:111
 msgid "USB"
@@ -234,83 +236,90 @@ msgstr "USB"
 
 #: ../main.c:111
 msgid "USB Configuration"
-msgstr "USB-konfiguration"
+msgstr "USB の設定"
 
 #: ../main.c:113
 msgid "PCMCIA/CF Cards"
-msgstr "PCMCIA/CF-kort"
+msgstr "PCMCIA/CF カード"
 
 #: ../main.c:113
 msgid "PCMCIA/CF Card Info and Config"
-msgstr "PCMCIA/CF-kortinfo och konfiguration"
+msgstr "PCMCIA/CF カードの情報と設定"
 
 #: ../main.c:115
 msgid "Sound"
-msgstr "Ljud"
+msgstr "サウンド"
 
 #: ../main.c:115
 msgid "Sound Setup"
-msgstr "Ljudinställning"
+msgstr "サウンド設定"
 
 #: ../main.c:117
+#, fuzzy
 msgid "Task nameserver"
-msgstr "Uppgiftsnamnserver"
+msgstr "ネームサーバのエラーです"
 
 #: ../main.c:117
+#, fuzzy
 msgid "Task for changing nameserver"
-msgstr "Uppgift för ändring av namnserver"
+msgstr "%sの期限情報を変更中\n"
 
 #: ../main.c:119
+#, fuzzy
 msgid "Task sound"
-msgstr "Uppgiftsljud"
+msgstr "文字とサウンド"
 
 #: ../main.c:119
 msgid "Command line task saving/restoring sound settings."
-msgstr "Kommandoradsuppgift för spara/återställa ljudinställningar."
+msgstr ""
 
 #: ../main.c:121
+#, fuzzy
 msgid "Task background image"
-msgstr "Uppgiftsbakgrundsbild"
+msgstr "元画像を背景として残す"
 
 #: ../main.c:121
+#, fuzzy
 msgid "Only select background image."
-msgstr "Välj endast bakgrundsbild."
+msgstr "画像からの形状選択"
 
 #: ../main.c:123
+#, fuzzy
 msgid "Task backlight setting"
-msgstr ""
+msgstr "不正なデフォルト設定です!"
 
 #: ../main.c:123
 msgid "Change backlight power and brightness."
-msgstr "Ändra ljusstyrka och bakbelysning"
+msgstr "バックライトの電力と明るさを調整します。"
 
 #: ../main.c:144
+#, fuzzy
 msgid "Settings saved"
-msgstr "Inställningar sparade"
+msgstr "`%s' として保存"
 
 #: ../main.c:339
 #, c-format
 msgid "'task_backlight' supports zero, one and two arguments.\n"
-msgstr "\"task_backlight\" har stöd för noll, ett och två argument.\n"
+msgstr ""
 
 #: ../main.c:358
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
-msgstr "\"task_nameserver\" behöver en ny (och endast en) namnserver som argument.\n"
+msgstr ""
 
 #: ../main.c:376
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
-msgstr "\"task_sound\" behöver (s)para/åte(r)ställ som argument.\n"
+msgstr ""
 
 #: ../main.c:444
 msgid "Warning: PCMCIA init failed."
-msgstr "Varning: PCMCIA-initiering misslyckades."
+msgstr "警告: PCMCIA の初期化に失敗。"
 
 #: ../main.c:476
 #, c-format
 msgid "This mode is disabled, please try:\n"
-msgstr "Detta läge är inaktiverat, försök istället med:\n"
+msgstr "このモードは無効化されています。こちらを試してください:\n"
 
 #: ../main.c:477
 #, c-format
@@ -320,13 +329,13 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 "\n"
-"gpe-conf [panelprogramsnamn]\n"
-"där panelprogramsnamn är i:\n"
+"gpe-conf [AppletName]\n"
+"AppletName は以下のどれか:\n"
 
 #: ../main.c:493
-#, c-format
+#, fuzzy, c-format
 msgid "Applet %s unknown!\n"
-msgstr "Panelprogrammet %s är okänt!\n"
+msgstr "%s: 不明なオプション `%s'"
 
 #: ../main.c:494
 #, c-format
@@ -338,37 +347,40 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Användning: gpe-conf [panelprogramsnamn]\n"
-"där panelprogramsnamn är i:\n"
+"使用法: gpe-conf [AppletName]\n"
+"AppletName は以下のどれか:\n"
 
 #: ../tools/interface.c:315 ../tools/interface.c:515 ../tools/interface.c:531
 #: ../tools/interface.c:651
+#, fuzzy
 msgid "[NONE SET]"
-msgstr "[INGEN INSTÄLLD]"
+msgstr "[未設定]"
 
 #: ../tools/interface.c:706 ../tools/interface.c:1704
 msgid "UNSPEC"
-msgstr "UNSPEC"
+msgstr ""
 
 #: ../tools/interface.c:708
 msgid "UNIX Domain"
-msgstr "UNIX-domän"
+msgstr "UNIX ドメイン"
 
 #: ../tools/interface.c:711
 msgid "DARPA Internet"
-msgstr "DARPA Internet"
+msgstr "DARPA インターネット"
 
 #: ../tools/interface.c:714
 msgid "IPv6"
 msgstr "IPv6"
 
 #: ../tools/interface.c:717 ../tools/interface.c:1725
+#, fuzzy
 msgid "AMPR AX.25"
-msgstr "AMPR AX.25"
+msgstr "/表示/ズーム/25%"
 
 #: ../tools/interface.c:720 ../tools/interface.c:1731
+#, fuzzy
 msgid "AMPR NET/ROM"
-msgstr "AMPR NET/ROM"
+msgstr "ゲームボーイの ROM"
 
 #: ../tools/interface.c:723
 msgid "Novell IPX"
@@ -376,11 +388,11 @@ msgstr "Novell IPX"
 
 #: ../tools/interface.c:726
 msgid "Appletalk DDP"
-msgstr "Appletalk DDP"
+msgstr ""
 
 #: ../tools/interface.c:729 ../tools/interface.c:1766
 msgid "Econet"
-msgstr "Econet"
+msgstr ""
 
 #: ../tools/interface.c:732
 msgid "CCITT X.25"
@@ -388,104 +400,104 @@ msgstr "CCITT X.25"
 
 #: ../tools/interface.c:735 ../tools/interface.c:1728
 msgid "AMPR ROSE"
-msgstr "AMPR ROSE"
+msgstr ""
 
 #: ../tools/interface.c:738 ../tools/interface.c:1716
 msgid "Ash"
-msgstr "Ash"
+msgstr ""
 
 #: ../tools/interface.c:765
-#, c-format
+#, fuzzy, c-format
 msgid "Too many address family arguments.\n"
-msgstr "För många adressfamiljsargument.\n"
+msgstr "関数に対して引数が多すぎます"
 
 #: ../tools/interface.c:776
 #, c-format
 msgid "Unknown address family '%s'.\n"
-msgstr "Okänd adressfamilj \"%s\".\n"
+msgstr "未知のアドレスファミリ '%s'.\n"
 
 #: ../tools/interface.c:839
 #, c-format
 msgid "Please don't supply more than one address family.\n"
-msgstr "Ange inte fler än en adressfamilj.\n"
+msgstr "2つ以上のアドレスファミリを指定しないでください。\n"
 
 #: ../tools/interface.c:966
 #, c-format
 msgid "No usable address families found.\n"
-msgstr "Inga användbara adressfamiljer hittades.\n"
+msgstr "使用できるアドレスファミリが見つかりません。\n"
 
 #: ../tools/interface.c:1036
 #, c-format
 msgid "Warning: no inet socket available: %s\n"
-msgstr "Varning: inget inet-uttag tillgängligt: %s\n"
+msgstr "警告: 有効な inet ソケットがありません: %s\n"
 
 #: ../tools/interface.c:1188
 #, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
-msgstr "Varning: kan inte öppna %s (%s). Begränsad utdata.\n"
+msgstr "警告: %s (%s) を開けません。出力が限定されます。\n"
 
 #. Give better error message for this case.
 #: ../tools/interface.c:1431
 msgid "Device not found"
-msgstr "Enheten hittades inte"
+msgstr "デバイスが見つかりません"
 
 #: ../tools/interface.c:1435
-#, c-format
+#, fuzzy, c-format
 msgid "%s: error fetching interface information: %s\n"
-msgstr "%s: fel vid hämtning av gränssnittsinformation: %s\n"
+msgstr "'%s' の情報を取得する際にエラー: %s"
 
 #: ../tools/interface.c:1609
 #, c-format
 msgid "You cannot start PPP with this program.\n"
-msgstr "Du kan inte starta PPP med detta program.\n"
+msgstr "このプログラムから PPP を開始することはできません。\n"
 
 #: ../tools/interface.c:1703
 msgid "Local Loopback"
-msgstr "Lokal vändslinga"
+msgstr "ローカル ループバック"
 
 #: ../tools/interface.c:1706
 msgid "Serial Line IP"
-msgstr "SLIP (Serial Line IP)"
+msgstr "シリアル線 IP"
 
 #: ../tools/interface.c:1707
 msgid "VJ Serial Line IP"
-msgstr "VJ SLIP (VJ Serial Line IP)"
+msgstr ""
 
 #: ../tools/interface.c:1708
 msgid "6-bit Serial Line IP"
-msgstr "6-bitars SLIP (Serial Line IP)"
+msgstr ""
 
 #: ../tools/interface.c:1709
 msgid "VJ 6-bit Serial Line IP"
-msgstr "6-bitars VJ SLIP (VJ Serial Line IP)"
+msgstr ""
 
 #: ../tools/interface.c:1710
 msgid "Adaptive Serial Line IP"
-msgstr "Adaptiv SLIP (Serial Line IP)"
+msgstr ""
 
 #: ../tools/interface.c:1713
 msgid "Ethernet"
-msgstr "Ethernet"
+msgstr "イーサネット"
 
 #: ../tools/interface.c:1719
 msgid "Fiber Distributed Data Interface"
-msgstr "Fiberdistribuerat datagränssnitt (FDDI)"
+msgstr ""
 
 #: ../tools/interface.c:1722
 msgid "HIPPI"
-msgstr "HIPPI"
+msgstr ""
 
 #: ../tools/interface.c:1734
 msgid "generic X.25"
-msgstr "vanlig X.25"
+msgstr "一般的な X.25"
 
 #: ../tools/interface.c:1737
 msgid "IPIP Tunnel"
-msgstr "IPIP-tunnel"
+msgstr "IPIPトンネル"
 
 #: ../tools/interface.c:1740
 msgid "Point-to-Point Protocol"
-msgstr "Punkt-till-punktprotokoll (PPP)"
+msgstr "Point-to-Point プロトコル(PPP)"
 
 #: ../tools/interface.c:1743
 msgid "(Cisco)-HDLC"
@@ -493,351 +505,355 @@ msgstr "(Cisco)-HDLC"
 
 #: ../tools/interface.c:1744
 msgid "LAPB"
-msgstr "LAPB"
+msgstr ""
 
 #: ../tools/interface.c:1747
 msgid "ARCnet"
-msgstr "ARCnet"
+msgstr ""
 
 #: ../tools/interface.c:1750
 msgid "Frame Relay DLCI"
-msgstr "Frame Relay-DLCI"
+msgstr "フレームリレー DLCI"
 
 #: ../tools/interface.c:1751
 msgid "Frame Relay Access Device"
-msgstr "Frame Relay-åtkomstenhet"
+msgstr ""
 
 #: ../tools/interface.c:1754
+#, fuzzy
 msgid "IPv6-in-IPv4"
-msgstr "IPv6-i-IPv4"
+msgstr "フォーマットエラー"
 
 #: ../tools/interface.c:1757
 msgid "IrLAP"
-msgstr "IrLAP"
+msgstr ""
 
 #: ../tools/interface.c:1760
 msgid "16/4 Mbps Token Ring"
-msgstr "16/4 Mb/s Token Ring"
+msgstr ""
 
 #: ../tools/interface.c:1762
 msgid "16/4 Mbps Token Ring (New)"
-msgstr "16/4 Mb/s Token Ring (Nytt)"
+msgstr ""
 
 #: ../tools/interface.c:1874
 msgid "Interface:"
-msgstr "Gränssnitt:"
+msgstr "インタフェース:"
 
 #: ../tools/interface.c:1875
-#, c-format
+#, fuzzy, c-format
 msgid "Type: %s"
-msgstr "Typ: %s"
+msgstr "  タイプ:                            %s\n"
 
 #: ../tools/interface.c:1884
-#, c-format
+#, fuzzy, c-format
 msgid "Media: %s"
-msgstr "Media: %s"
+msgstr "メディア:"
 
 #: ../tools/interface.c:1889
 #, c-format
 msgid "(auto)"
-msgstr "(auto)"
+msgstr "（自動）"
 
 #: ../tools/interface.c:1901
 #, c-format
 msgid "Address: %s\n"
-msgstr "Adress: %s\n"
+msgstr "アドレス: %s\n"
 
 #: ../tools/interface.c:1906
 #, c-format
 msgid "P-t-P: %s\n"
-msgstr "P-t-P: %s\n"
+msgstr ""
 
 #: ../tools/interface.c:1910
 #, c-format
 msgid "Netmask: %s\n"
-msgstr "Nätmask: %s\n"
+msgstr "ネットマスク: %s\n"
 
 #: ../tools/interface.c:1914
 #, c-format
 msgid "Broadcast: %s\n"
-msgstr "Broadcast: %s\n"
+msgstr "ブロードキャスト: %s\n"
 
 #: ../tools/interface.c:1926
 #, c-format
 msgid "HWaddr (MAC): %s\n"
-msgstr "HV-adress (MAC): %s\n"
+msgstr "ハードウェアアドレス (MAC): %s\n"
 
 #: ../tools/interface.c:1956
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
-msgstr "IPv6-adress: %s/%d\n"
+msgstr "IPv6 アドレス: %s/%d\n"
 
 #: ../tools/interface.c:1959
-#, c-format
+#, fuzzy, c-format
 msgid "Scope: "
-msgstr "Omfattning: "
+msgstr "クラスのスコープにする"
 
 #: ../tools/interface.c:1964
-#, c-format
+#, fuzzy, c-format
 msgid "Global"
-msgstr "Global"
+msgstr "   1 (*大 域*)    "
 
 #: ../tools/interface.c:1967
 #, c-format
 msgid "Link"
-msgstr "Länk"
+msgstr "リンク"
 
 #: ../tools/interface.c:1970
-#, c-format
+#, fuzzy, c-format
 msgid "Site"
-msgstr "Plats"
+msgstr "_FTP サイト"
 
 #: ../tools/interface.c:1973
-#, c-format
+#, fuzzy, c-format
 msgid "Compat"
-msgstr "Kompatibilitet"
+msgstr "\t-W compat\t\t--compat\n"
 
 #: ../tools/interface.c:1976
 #, c-format
 msgid "Host"
-msgstr "Värd"
+msgstr "ホスト"
 
 #: ../tools/interface.c:1979
 #, c-format
 msgid "Unknown"
-msgstr "Okänd"
+msgstr "不明"
 
 #: ../device.c:215
 msgid "Unknown Device"
-msgstr "Okänd enhet"
+msgstr "不明なデバイス"
 
 #: ../modules/logread.c:116
 msgid "Can't find circular buffer, is syslog running?\n"
-msgstr "Kan inte hitta cirkulär buffert. Kör syslog?\n"
+msgstr ""
 
 #: ../modules/logread.c:123
 msgid "Can't get access to syslogd's circular buffer."
-msgstr "Kan inte få åtkomst till syslogd:s cirkulära buffert."
+msgstr ""
 
 #: ../modules/logread.c:130
 msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
-msgstr "Kan inte få åtkomst till semafor(er) för syslogd:s cirkulära buffert."
+msgstr ""
 
 #: ../modules/logread.c:156
 msgid "<empty syslog>"
-msgstr "<tom syslogg>"
+msgstr "<syslog は空です>"
 
 #: ../modules/logread.c:227 ../modules/logread.c:243
 msgid "System Log"
-msgstr "Systemlogg"
+msgstr "システム・ログ"
 
 #: ../modules/logread.c:252 ../modules/logread.c:268
 msgid "Session Log"
-msgstr "Sessionslogg"
+msgstr "セッション・ログ"
 
 #: ../modules/logread.c:275
 msgid "Could not open X session log.\n"
-msgstr "Kunde inte öppna X-sessionslogg.\n"
+msgstr "X セッションログを開けませんでした。\n"
 
 #: ../modules/usb.c:80
+#, fuzzy
 msgid "Choose backing file"
-msgstr ""
+msgstr "ファイル毎に指定(_F)"
 
 #: ../modules/usb.c:240
 msgid "USB Peripheral Mode"
-msgstr "USB-kringutrustningsläge"
+msgstr "USB 周辺機器モード"
 
 #: ../modules/usb.c:247
 msgid "Ethernet Networking"
-msgstr "Ethernet-nätverk"
+msgstr "イーサネット ネットワーク"
 
 #: ../modules/usb.c:252 ../modules/sysinfo.c:645
 msgid "Storage"
-msgstr "Lagring"
+msgstr "記憶装置"
 
 #: ../modules/usb.c:258 ../modules/serial.c:573
 msgid "Serial Port"
-msgstr "Serieport"
+msgstr "シリアルポート"
 
 #: ../modules/usb.c:267
 msgid "Storage Behaviour"
-msgstr "Lagringsbeteende"
+msgstr "記憶装置の種類"
 
 #: ../modules/usb.c:274
 msgid "CF/SD Card Reader"
-msgstr "CF/SD-kortläsare"
+msgstr "CF/SD カードリーダ"
 
 #: ../modules/usb.c:280
+#, fuzzy
 msgid "File-backed"
 msgstr ""
+"\n"
+"設定ファイル `%s'"
 
 #: ../modules/usb.c:290
 msgid "Select"
-msgstr "Välj"
+msgstr "選択"
 
 #: ../modules/usb.c:298
 msgid "Allow write access"
-msgstr "Tillåt skrivåtkomst"
+msgstr "書き込みを許可する"
 
 #: ../modules/usb.c:307
 msgid "Serial Settings"
-msgstr "Inställningar för serieport"
+msgstr "シリアル設定"
 
 #: ../modules/usb.c:314
 msgid "Use CDC ACM"
-msgstr "Använd CDC ACM"
+msgstr "CDC ACM を使用する"
 
 #: ../modules/theme.c:234
 msgid "Choose backgound image"
-msgstr "Välj bakgrundsbild"
+msgstr "背景画像を選んでください"
 
 #: ../modules/theme.c:248
 msgid "You are not allowed to read this file, choose another."
-msgstr "Du får inte lov att läsa denna fil, välj en annan."
+msgstr "このファイルを読む権限がありません。他のファイルを選択してください。"
 
 #: ../modules/theme.c:269
 msgid "Succesfully changed background image."
-msgstr "Lyckades ändra bakgrundsbilden."
+msgstr "背景画像が変更されました。"
 
 #: ../modules/theme.c:270
 msgid "Use \"Look and Feel\" setup tool to change details."
-msgstr "Använd konfigurationsverktyget \"Utseende och känsla\" för att ändra detaljer."
+msgstr ""
 
 #: ../modules/theme.c:781 ../modules/theme.c:859
 msgid "You don't have read access to selected background image!"
-msgstr "Du har inte läsåtkomst till den valda bakgrundsbilden!"
+msgstr ""
 
 #: ../modules/theme.c:997
 msgid "Desktop Theme"
-msgstr "Skrivbordstema"
+msgstr "デスクトップ・テーマ"
 
 #: ../modules/theme.c:1009
 msgid "Name"
-msgstr "Namn"
+msgstr "名前"
 
 #: ../modules/theme.c:1023
 msgid "Icon Size"
-msgstr "Ikonstorlek"
+msgstr "アイコンのサイズ"
 
 #: ../modules/theme.c:1038
 msgid "Visual Effects"
-msgstr "Visuella effekter"
+msgstr "視覚効果"
 
 #: ../modules/theme.c:1044
 msgid "Enable Visual Effects"
-msgstr "Aktivera visuella effekter"
+msgstr "視覚効果を有効にする"
 
 #. Background tab
 #: ../modules/theme.c:1051
 msgid "Background"
-msgstr "Bakgrund"
+msgstr "背景"
 
 #: ../modules/theme.c:1065 ../modules/theme.c:1067
 msgid "Background Settings"
-msgstr "Bakgrundsinställningar"
+msgstr "背景設定"
 
 #: ../modules/theme.c:1077 ../modules/theme.c:1088
 msgid "Theme Default"
-msgstr "Temastandard"
+msgstr "テーマのデフォルト"
 
 #: ../modules/theme.c:1096
 msgid "Solid colour"
-msgstr "Enfärgad"
+msgstr "単色"
 
 #: ../modules/theme.c:1110
 msgid "Horizontal"
-msgstr "Horisontell"
+msgstr "水平"
 
 #: ../modules/theme.c:1114
 msgid "Vertical"
-msgstr "Vertikal"
+msgstr "垂直"
 
 #: ../modules/theme.c:1119 ../modules/theme.c:1138 ../modules/theme.c:1312
 #: ../modules/theme.c:1318
 msgid "Colour"
-msgstr "Färg"
+msgstr "色"
 
 #: ../modules/theme.c:1129
 msgid "Colour gradient"
-msgstr "Färgtoning"
+msgstr "グラデーション"
 
 #: ../modules/theme.c:1148
 msgid "Image"
-msgstr "Bild"
+msgstr "画像"
 
 #: ../modules/theme.c:1174
 msgid "Center"
-msgstr "Centrerad"
+msgstr "中央"
 
 #: ../modules/theme.c:1178
 msgid "Tile"
-msgstr "Sida-vid-sida"
+msgstr "並べる"
 
 #: ../modules/theme.c:1181
 msgid "Stretch"
-msgstr "Utsträckt"
+msgstr "拡大"
 
 #: ../modules/theme.c:1188
 msgid "Toolbars"
-msgstr "Verktygsrader"
+msgstr "ツールバー"
 
 #: ../modules/theme.c:1200 ../modules/theme.c:1202
 msgid "Toolbar Style"
-msgstr "Stil på verktygsrader"
+msgstr "ツールバーのスタイル"
 
 #: ../modules/theme.c:1211 ../modules/theme.c:1235
 msgid "Icons"
-msgstr "Ikoner"
+msgstr "アイコン"
 
 #: ../modules/theme.c:1216 ../modules/theme.c:1239
 msgid "Text"
-msgstr "Text"
+msgstr "テキスト"
 
 #: ../modules/theme.c:1221 ../modules/theme.c:1242
 msgid "Both"
-msgstr "Både och"
+msgstr "両方"
 
 #: ../modules/theme.c:1249
 msgid "Toolbar Icon Size"
-msgstr "Storlek på verktygsradsikoner"
+msgstr "ツールバーのアイコンのサイズ"
 
 #: ../modules/theme.c:1265
 msgid "Fonts"
-msgstr "Typsnitt"
+msgstr "フォント"
 
 #: ../modules/theme.c:1274 ../modules/theme.c:1294
 msgid "Desktop Font"
-msgstr "Skrivbordstypsnitt"
+msgstr "デスクトップのフォント"
 
 #: ../modules/theme.c:1281 ../modules/theme.c:1340 ../modules/theme.c:1375
 #: ../modules/theme.c:1425
 msgid "Family"
-msgstr "Familj"
+msgstr "ファミリ"
 
 #: ../modules/theme.c:1301 ../modules/theme.c:1360 ../modules/theme.c:1395
 #: ../modules/theme.c:1445
 msgid "Size"
-msgstr "Storlek"
+msgstr "サイズ"
 
 #: ../modules/theme.c:1329 ../modules/theme.c:1331 ../modules/theme.c:1353
 #: ../modules/theme.c:1388
 msgid "Application Font"
-msgstr "Programtypsnitt"
+msgstr "アプリケーションのフォント"
 
 #. terminal tab
 #: ../modules/theme.c:1409
 msgid "Terminal"
-msgstr "Terminal"
+msgstr "端末"
 
 #: ../modules/theme.c:1418
 msgid "Font"
-msgstr "Typsnitt"
+msgstr "フォント"
 
 #: ../modules/theme.c:1438
 msgid "Terminal Font"
-msgstr "Terminaltypsnitt"
+msgstr "端末のフォント"
 
-# Verkar inte som om det ska översättas (namn)...
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
 #: ../modules/sysinfo.c:195
 msgid "Familiar"
@@ -858,7 +874,6 @@ msgstr "Debian"
 msgid "Ångström"
 msgstr "Ångström"
 
-# Verkar inte som om det ska översättas (namn)...
 #. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
 #: ../modules/sysinfo.c:235
 msgid "OpenEmbedded"
@@ -866,57 +881,57 @@ msgstr "OpenEmbedded"
 
 #: ../modules/sysinfo.c:277 ../modules/sysinfo.c:279
 msgid "Build"
-msgstr "Bygge"
+msgstr "ビルド"
 
 #: ../modules/sysinfo.c:381
 msgid "Network Status"
-msgstr "Nätverksstatus"
+msgstr "ネットワークの状態"
 
 #. split string into long and short lines
 #: ../modules/sysinfo.c:395 ../modules/sysinfo.c:398
 msgid "HWaddr (MAC)"
-msgstr "HV-adress (MAC)"
+msgstr "ハードウェアアドレス (MAC)"
 
 #: ../modules/sysinfo.c:409 ../modules/sysinfo.c:410
 #, c-format
 msgid "Wireless"
-msgstr "Trådlöst"
+msgstr "無線"
 
 #: ../modules/sysinfo.c:437
 msgid "Default Gateway"
-msgstr "Standardgateway"
+msgstr "デフォルト ゲートウェイ"
 
 #: ../modules/sysinfo.c:480
 msgid "System information"
-msgstr "Systeminformation"
+msgstr "システム情報"
 
 #: ../modules/sysinfo.c:490
 msgid "Version"
-msgstr "Version"
+msgstr "バージョン"
 
 #: ../modules/sysinfo.c:522
 msgid "Distribution"
-msgstr "Distribution"
+msgstr "ディストリビューション"
 
 #: ../modules/sysinfo.c:547
 msgid "System"
-msgstr "System"
+msgstr "システム"
 
 #: ../modules/sysinfo.c:556
 msgid "Device information"
-msgstr "Enhetsinformation"
+msgstr "デバイス情報"
 
 #: ../modules/sysinfo.c:568
 msgid "Device Name"
-msgstr "Enhetsnamn"
+msgstr "デバイス名"
 
 #: ../modules/sysinfo.c:587
 msgid "Manufacturer:"
-msgstr "Tillverkare:"
+msgstr "製造者:"
 
 #: ../modules/sysinfo.c:600
 msgid "RAM:"
-msgstr "RAM-minne:"
+msgstr "RAM:"
 
 #. TRANSLATORS: MB == Mega Bytes
 #: ../modules/sysinfo.c:606 ../modules/sysinfo.c:622 ../modules/storage.c:176
@@ -927,162 +942,163 @@ msgstr "MB"
 
 #: ../modules/sysinfo.c:616
 msgid "Storage:"
-msgstr "Lagring:"
+msgstr "記憶装置:"
 
 #: ../modules/sysinfo.c:628
 msgid "Hardware"
-msgstr "Hårdvara"
+msgstr "ハードウェア"
 
 #: ../modules/sysinfo.c:638
 msgid "Battery"
-msgstr "Batteri"
+msgstr "バッテリ"
 
 #: ../modules/sysinfo.c:652
 msgid "Networks"
-msgstr "Nätverk"
+msgstr "ネットワーク"
 
 #: ../modules/sysinfo.c:659
 msgid "Log Display"
-msgstr "Loggdisplay"
+msgstr "ログ表示"
 
 #: ../modules/timeanddate.c:222
 msgid "Time adjusted from network."
-msgstr "Tid justerad från nätverket."
+msgstr "ネットワークを使用して時刻を調整しました。"
 
 #: ../modules/timeanddate.c:224
 msgid "Adjusting time from network failed."
-msgstr "Justering av tid från nätverket misslyckades."
+msgstr "ネットワークを使用した時刻調整に失敗しました。"
 
 #: ../modules/timeanddate.c:458
 msgid "Time & Date"
-msgstr "Tid och datum"
+msgstr "時刻と日付"
 
 #: ../modules/timeanddate.c:470
 msgid "Date"
-msgstr "Datum"
+msgstr "日付"
 
 #: ../modules/timeanddate.c:486
 msgid "Enter current date here or use button to select."
-msgstr "Ange aktuellt datum här eller använd knappen för att välja."
+msgstr "現在の日付を入力するかボタンを使って選択してください。"
 
 #: ../modules/timeanddate.c:521
 msgid "Select the timeserver to use to set the clock."
-msgstr "Välj den tidsserver som ska användas för att ställa klockan."
+msgstr "時計の調整に使用する時刻サーバを選んでください。"
 
 #: ../modules/timeanddate.c:523
 msgid "Get time from network"
-msgstr "Hämta tid från nätverket"
+msgstr "ネットワークから時刻を取得する"
 
 #: ../modules/timeanddate.c:531
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
-msgstr "Om enheten är ansluten till Internet kan du trycka på denna knapp för att ställa tiden på denna enhet genom att använda tidsservern ovan."
+msgstr ""
 
 #. root_mode
 #: ../modules/timeanddate.c:534 ../modules/timeanddate.c:544
 msgid "Timezone"
-msgstr "Tidszon"
+msgstr "タイムゾーン"
 
 #: ../modules/timeanddate.c:588
 msgid "Area"
-msgstr "Område"
+msgstr "地方"
 
 #: ../modules/timeanddate.c:603
 msgid "Select your current timezone area here. The setting will apply after the next login."
-msgstr "Välj din aktuella tidszon här. Inställningen börjar gälla efter nästa inloggning."
+msgstr "おおまかな地域を選んでください。設定は次回のログインで反映されます。"
 
 #: ../modules/timeanddate.c:610
 msgid "Zone"
-msgstr "Zon"
+msgstr "地域"
 
 #: ../modules/timeanddate.c:635
 msgid "Select your current timezone here. The setting applies after the next login."
-msgstr "Välj din aktuella tidszon här. Inställningen börjar gälla efter nästa inloggning."
+msgstr "現在の時間帯を選んでください。設定は次回のログインで反映されます。"
 
 #: ../modules/timeanddate.c:698
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
-msgstr "För att tidszonsinställningarna ska börja gälla måste du logga ut och logga in igen."
+msgstr "タイムゾーンの設定を反映するには、一度ログアウトしてログインし直す必要があります。"
 
 #: ../modules/login-setup.c:160
 msgid "Some of these settings can only be changed by the user 'root'."
-msgstr "En del av dessa inställningar kan endast ändras av användaren \"root\"."
+msgstr ""
 
 #: ../modules/login-setup.c:183 ../modules/gpe-admin.c:85
 msgid "General"
-msgstr "Allmänt"
+msgstr "一般"
 
 #: ../modules/login-setup.c:200
 msgid "Show owner information at login."
-msgstr "Visa ägarinformation vid inloggning."
+msgstr "ログイン画面に所有者情報を表示する。"
 
 #: ../modules/login-setup.c:204
 msgid "Lock display on suspend."
-msgstr "Lås display vid viloläge."
+msgstr "サスペンドしたらディスプレイをロックする"
 
 #: ../modules/login-setup.c:208
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
 msgstr ""
-"Lås display vid viloläge.\n"
-"  (kräver lösenord)"
+"サスペンドしたらディスプレイをロックする。\n"
+"（解除にはパスワードが必要です）"
 
 #: ../modules/login-setup.c:213
 msgid ""
 "Automatic login. \n"
 "  (without password)"
 msgstr ""
-"Automatisk inloggning. \n"
-"  (utan lösenord)"
+"自動的にログインする。\n"
+"（パスワード不要）"
 
 #: ../modules/ownerinfo.c:210
 msgid "Information about the Owner"
-msgstr "Information om ägaren"
+msgstr "所有者の情報"
 
 #: ../modules/ownerinfo.c:218
+#, fuzzy
 msgid "Only the user 'root' is allowed to change this information"
-msgstr "Endast användaren \"root\" har tillåtelse att ändra denna information"
+msgstr "root ユーザのみがこの情報を変更できる"
 
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:237 ../modules/network.c:246
 msgid "Name:"
-msgstr "Namn:"
+msgstr "名前:"
 
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:252
 msgid "E-Mail:"
-msgstr "E-post:"
+msgstr "Eメール:"
 
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:267
 msgid "Phone:"
-msgstr "Telefon:"
+msgstr "電話番号:"
 
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:282
 msgid "Address:"
-msgstr "Adress:"
+msgstr "住所:"
 
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:308
 msgid "Photofile:"
-msgstr "Bildfil:"
+msgstr "写真ファイル:"
 
 #: ../modules/storage.c:166 ../modules/storage.c:423
 msgid "System Memory"
-msgstr "Systemminne"
+msgstr "空きメモリ"
 
 #. TRANSLATORS: MB == Mega Bytes
 #: ../modules/storage.c:174 ../modules/storage.c:443
 msgid "Free memory"
-msgstr "Ledigt minne"
+msgstr "空きメモリ"
 
 #: ../modules/storage.c:181 ../modules/storage.c:328 ../modules/storage.c:456
 msgid "Total:"
-msgstr "Totalt:"
+msgstr "合計:"
 
 #: ../modules/storage.c:292
 msgid "Internal Flash"
-msgstr "Internt flashminne"
+msgstr "内蔵フラッシュメモリ"
 
 #: ../modules/storage.c:298
 msgid "MMC"
@@ -1090,79 +1106,79 @@ msgstr "MMC"
 
 #: ../modules/storage.c:304
 msgid "Compact Flash"
-msgstr "Compact Flash"
+msgstr "コンパクト・フラッシュ"
 
 #: ../modules/storage.c:310
 msgid "Network Filesystem"
-msgstr "Nätverksfilsystem"
+msgstr "ネットワーク ファイルシステム"
 
 #: ../modules/storage.c:330
 msgid "Mounted at "
-msgstr "Monterad på "
+msgstr "マウントポイント"
 
 #: ../modules/storage.c:338
 msgid "Free space"
-msgstr "Ledigt utrymme"
+msgstr "空き容量"
 
 #: ../modules/serial.c:428 ../modules/serial.c:434
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
-msgstr "Enkelt gränssnitt för serieportskonfiguration. Inaktiverade komponenter är inte installerade."
+msgstr ""
 
 #: ../modules/serial.c:431
 msgid "Port A"
-msgstr "Port A"
+msgstr "ポート A"
 
 #: ../modules/serial.c:438
 msgid "Serial port default usage"
-msgstr "Standardanvändning av serieport"
+msgstr "シリアルポートのデフォルトの使用法"
 
 #: ../modules/serial.c:443
 msgid "Select desired software to use serial port here."
-msgstr "Välj önskad programvara för att använda serieporten här."
+msgstr ""
 
 #: ../modules/serial.c:446
 msgid "Console"
-msgstr "Konsoll"
+msgstr "コンソール"
 
 #: ../modules/serial.c:449
 msgid "This option runs console on serial port. (default)"
-msgstr "Detta alternativ kör konsoll på serieport (standard)."
+msgstr ""
 
 #: ../modules/serial.c:457
 msgid "GPS Daemon"
-msgstr "GPS-demon"
+msgstr "GPS デーモン"
 
 #: ../modules/serial.c:462
 msgid "GPS Daemon (needs 'gpsd')"
-msgstr "GPS-demon (kräver \"gpsd\")"
+msgstr "GPS デーモン (gpsd が必要)"
 
 #: ../modules/serial.c:467
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
-msgstr "Detta alternativ aktiverar starten av GPSD, som tillhandahåller data från en GPS-mottagare till program."
+msgstr ""
 
 #: ../modules/serial.c:474
 msgid "Nothing (free)"
-msgstr "Ingenting (ledig)"
+msgstr "使用しない"
 
 #: ../modules/serial.c:477
 msgid "Don't start any software that uses the serial port."
-msgstr "Starta inte någon programvara som använder serieporten."
+msgstr "シリアルポートを使用するソフトを起動しないでください。"
 
 #: ../modules/serial.c:514 ../modules/serial.c:521
 msgid "This page configures the GPS receiver software."
-msgstr "Denna sida konfigurerar programvaran för GPS-mottagaren."
+msgstr ""
 
 #: ../modules/serial.c:518
 msgid "GPS Receiver"
-msgstr "GPS-mottagare"
+msgstr "GPS 受信機"
 
 #: ../modules/serial.c:525
 msgid "GPS settings"
-msgstr "GPS-inställningar"
+msgstr "GPS設定"
 
 #: ../modules/serial.c:531
 msgid "Receiver Type"
-msgstr "Mottagartyp"
+msgstr "受信機の型"
 
 #: ../modules/serial.c:536
 msgid "NMEA"
@@ -1170,7 +1186,7 @@ msgstr "NMEA"
 
 #: ../modules/serial.c:541
 msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
-msgstr "GPS-mottagaren skickar NMEA-data (standard, behöver inte ändras för de flesta mottagare)."
+msgstr ""
 
 #: ../modules/serial.c:547
 msgid "Earthmate"
@@ -1178,124 +1194,132 @@ msgstr "Earthmate"
 
 #: ../modules/serial.c:553
 msgid "GPS receiver is an Earthmate GPS."
-msgstr "GPS-mottagaren är en Earthrate-GPS."
+msgstr "GPS 受信機は Eathmate GPS です。"
 
 #: ../modules/serial.c:557
 msgid "Baud Rate"
-msgstr "Baudhastighet"
+msgstr "ボーレート"
 
 #: ../modules/cardinfo.c:103
 msgid "/_Card"
-msgstr "/_Kort"
+msgstr "/カード(_C)"
 
 #: ../modules/cardinfo.c:104
 msgid "/Card/_Insert"
-msgstr "/Kort/Mata _in"
+msgstr "/カード/挿入(_I)"
 
 #: ../modules/cardinfo.c:105
 msgid "/Card/_Eject"
-msgstr "/Kort/Mata _ut"
+msgstr "/カード/イジェクト(_E)"
 
 #: ../modules/cardinfo.c:106
 msgid "/Card/_Suspend"
-msgstr "/Kort/_Försätt i viloläge"
+msgstr "/カード/サスペンド(_S)"
 
 #: ../modules/cardinfo.c:107
 msgid "/Card/_Resume"
-msgstr "/Kort/_Återuppta"
+msgstr "/カード/復帰(_R)"
 
 #: ../modules/cardinfo.c:108
 msgid "/Card/_Reset"
-msgstr "/Kort/_Återställ"
+msgstr "/カード/リセット(_R)"
 
 #: ../modules/cardinfo.c:109
 msgid "/Card/s1"
-msgstr "/Kort/s1"
+msgstr "/カード/s1"
 
 #: ../modules/cardinfo.c:110
 msgid "/Card/_Assign Driver"
-msgstr "/Kort/_Tilldela drivrutin"
+msgstr "/カード/ドライバ(_A)設定"
 
 #: ../modules/cardinfo.c:111
 msgid "/Card/s2"
-msgstr "/Kort/s2"
+msgstr "/カード/s2"
 
 #: ../modules/cardinfo.c:112
 msgid "/Card/_Close"
-msgstr "/Kort/S_täng"
+msgstr "/カード/閉じる(_C)"
 
 #: ../modules/cardinfo.c:113
 msgid "/_Help"
-msgstr "/_Hjälp"
+msgstr "/ヘルプ(_H)"
 
 #: ../modules/cardinfo.c:114
 msgid "/_Help/Index"
-msgstr "/_Hjälp/Index"
+msgstr "/ヘルプ(_H)/見出し"
 
 #: ../modules/cardinfo.c:115
 msgid "/_Help/About"
-msgstr "/_Hjälp/Om"
+msgstr "/ヘルプ(_H)/情報"
 
 #: ../modules/cardinfo.c:175 ../modules/cardinfo.c:848
 msgid "card not recognized"
-msgstr "okänt kort"
+msgstr "カードが認識できません"
 
 #: ../modules/cardinfo.c:277 ../modules/cardinfo.c:348
+#, fuzzy
 msgid "Could not write to temporal config file."
-msgstr "Kunde inte skriva till temporär konfigurationsfil."
+msgstr "svndiff を一時ファイルに書き込めませんでした"
 
 #: ../modules/cardinfo.c:554
 msgid "Could not open pidfile:"
-msgstr "Kunde inte öppna pidfil:"
+msgstr "pidファイルを開くことができませんでした:"
 
 #: ../modules/cardinfo.c:560
 msgid "Could not read pidfile"
-msgstr "Kunde inte läsa pidfil"
+msgstr "pidファイルを読むことができませんでした:"
 
 #: ../modules/cardinfo.c:564
+#, fuzzy
 msgid "Could not signal cardmgr:"
-msgstr "Kunde inte signalera korthanterare:"
+msgstr "%s: %s を %s にバックアップできませんでした: %s"
 
 #: ../modules/cardinfo.c:638
 msgid "gpe-conf must be setuid root to use cardinfo feature."
-msgstr "gpe-conf måste vara setuid root för att använda kortinformationsfunktionen."
+msgstr "カード情報を得るには、gpe-conf を root に setuid する必要があります。"
 
 #: ../modules/cardinfo.c:656
 msgid "No PCMCIA driver in '/proc/devices'"
-msgstr "Ingen PCMCIA-drivrutin i \"/proc/devices\""
+msgstr "/proc/devices に PCMCIA ドライバがありません"
 
 #: ../modules/cardinfo.c:659
+#, fuzzy
 msgid "Could not open '/proc/devices'"
-msgstr "Kunde inte öppna \"/proc/devices\""
+msgstr "`control' コンポーネントをオープンできません"
 
 #: ../modules/cardinfo.c:671
 msgid "No sockets found\n"
-msgstr "Inga uttag hittades\n"
+msgstr "ソケットが見つかりません\n"
 
 #: ../modules/cardinfo.c:835
+#, fuzzy
 msgid "flock(stabfile) failed"
-msgstr "flock(stabfile) misslyckades"
+msgstr "apt-extracttemplates に失敗しました: %s"
 
 #: ../modules/cardinfo.c:854
-#, c-format
+#, fuzzy, c-format
 msgid "no driver loaded"
-msgstr "ingen drivrutin inläst"
+msgstr "--driver は最早サポートされません"
 
 #: ../modules/cardinfo.c:963
+#, fuzzy
 msgid "ready"
-msgstr "redo"
+msgstr "準備完了"
 
 #: ../modules/cardinfo.c:981
+#, fuzzy
 msgid "not ready"
-msgstr "inte redo"
+msgstr "準備未完了"
 
 #: ../modules/cardinfo.c:996
+#, fuzzy
 msgid "suspended"
-msgstr "försatt i viloläge"
+msgstr "一時停止(_S)"
 
 #: ../modules/cardinfo.c:1188
+#, fuzzy
 msgid "Assign Driver"
-msgstr "Tilldela drivrutin"
+msgstr "DRIVER 名        : %s\n"
 
 #: ../modules/cardinfo.c:1197
 msgid ""
@@ -1303,50 +1327,49 @@ msgid ""
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
-"Detta dialogfönster låter dig välja/\n"
-"ändra drivrutinstilldelningen för\n"
-"ett PCMCIA- eller CF-kort."
 
 #: ../modules/cardinfo.c:1207
 msgid "Your current card identifies itself as:"
-msgstr "Ditt nuvarande kort identifierar sig som:"
+msgstr ""
 
 #: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
+#, fuzzy
 msgid "Manuf. Id"
-msgstr "Tillverkar-id"
+msgstr "ID リソース"
 
 #: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
 msgid "Class"
-msgstr "Klass"
+msgstr "クラス"
 
 #: ../modules/cardinfo.c:1327 ../modules/cardinfo.c:1340
 msgid "PC/CF card socket information."
-msgstr "Uttagsinformation för PC/CF-kort."
+msgstr "PC/CF カードソケット情報"
 
 #: ../modules/cardinfo.c:1335
 msgid "Socket"
-msgstr "Uttag"
+msgstr "ソケット"
 
 #: ../modules/cardinfo.c:1366
+#, fuzzy
 msgid "Information for socket"
-msgstr "Information för uttag"
+msgstr "マスターソケット用ソケット"
 
 #. fields
 #: ../modules/cardinfo.c:1375
 msgid "State:"
-msgstr "Tillstånd:"
+msgstr "状態:"
 
 #: ../modules/cardinfo.c:1376
 msgid "Device:"
-msgstr "Enhet:"
+msgstr "デバイス："
 
 #: ../modules/cardinfo.c:1377
 msgid "Driver:"
-msgstr "Drivrutin:"
+msgstr "ドライバ:"
 
 #: ../modules/cardinfo.c:1378
 msgid "Type:"
-msgstr "Typ:"
+msgstr "タイプ:"
 
 #: ../modules/cardinfo.c:1379
 msgid "I/O:"
@@ -1358,31 +1381,34 @@ msgstr "IRQ:"
 
 #: ../modules/cardinfo.c:1387
 msgid "Flags:"
-msgstr "Flaggor:"
+msgstr "フラグ:"
 
 #: ../modules/cardinfo.c:1404
 msgid "PCMCIA initialisation failed"
-msgstr "PCMCIA-initiering misslyckades"
+msgstr "PCMCIA の初期化に失敗しました"
 
 #: ../modules/gpe-admin.c:92
+#, fuzzy
 msgid "Allow users to configure everything"
-msgstr "Tillåt användare att konfigurera allt"
+msgstr "全てのユーザからのコンタクトを許可する"
 
 #: ../modules/users/ucallbacks.c:107
+#, fuzzy
 msgid "You need at least one user account!"
-msgstr "Du behöver åtminstone ett användarkonto!"
+msgstr "ユーザーIDを少なくともひとつ選択してください。\n"
 
 #: ../modules/users/ucallbacks.c:131
+#, fuzzy
 msgid "You can't remove this user!"
-msgstr "Du kan inte ta bort denna användare!"
+msgstr "このユーザーIDを本当に削除しますか? (y/N) "
 
 #: ../modules/users/ucallbacks.c:136
 msgid ""
 "You can't remove\n"
 " system users!"
 msgstr ""
-"Du kan inte ta bort\n"
-" systemanvändare!"
+"システムユーザを削除する\n"
+"ことはできません!"
 
 #: ../modules/users/ucallbacks.c:138
 msgid ""
@@ -1390,343 +1416,370 @@ msgid ""
 "This action is not revertable\n"
 "and is executed instantly."
 msgstr ""
-"Ta bort användaren och alla dess data?\n"
-"Denna åtgärd kan inte återställas\n"
-"och verkställs omedelbart."
 
 #: ../modules/users/ucallbacks.c:138 ../modules/network.c:343
+#, fuzzy
 msgid "Question"
-msgstr "Fråga"
+msgstr "質問"
 
 #: ../modules/users/ucallbacks.c:173
+#, fuzzy
 msgid "Please choose a user name."
-msgstr "Välj ett användarnamn."
+msgstr ""
+"現在のユーザの名前を表示.\n"
+"\n"
 
 #: ../modules/users/ucallbacks.c:191
+#, fuzzy
 msgid "Please choose a home directory."
-msgstr "Välj en hemkatalog."
+msgstr "HOME ディレクトリが見つかりません"
 
 #: ../modules/users/ucallbacks.c:279
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
 msgstr ""
-"De två nya lösenorden är olika!\n"
-" Försök igen!"
 
 #: ../modules/users/ucallbacks.c:282
 msgid ""
 "Wrong password\n"
 " Please try again!"
 msgstr ""
-"Fel lösenord\n"
-" Försök igen!"
+"パスワードが違います\n"
+"再入力してください"
 
 #: ../modules/users/uinterface.c:214
 msgid "User Name"
-msgstr "Användarnamn"
+msgstr "ユーザ名"
 
 #: ../modules/users/uinterface.c:215
 msgid "User Info"
-msgstr "Användarinformation"
+msgstr "ユーザ情報"
 
 #: ../modules/users/uinterface.c:216
 msgid "Home"
-msgstr "Hem"
+msgstr "ホームディレクトリ"
 
 #: ../modules/users/uinterface.c:226
 msgid "Password"
-msgstr "Lösenord"
+msgstr "パスワード"
 
 #: ../modules/users/uinterface.c:235
 msgid "Delete User"
-msgstr "Ta bort användare"
+msgstr "ユーザを削除"
 
 #: ../modules/users/uinterface.c:244
 msgid "Edit User"
-msgstr "Redigera användare"
+msgstr "ユーザを編集"
 
 #: ../modules/users/uinterface.c:253
 msgid "New User"
-msgstr "Ny användare"
+msgstr "新しいユーザ"
 
 #: ../modules/users/uinterface.c:327
+#, fuzzy
 msgid "User settings"
-msgstr "Användarinställningar"
+msgstr "ユーザ設定の統合"
 
 #: ../modules/users/uinterface.c:341
 msgid "User Name:"
-msgstr "Användarnamn:"
+msgstr "ユーザ名:"
 
 #: ../modules/users/uinterface.c:357
 msgid "Password:"
-msgstr "Lösenord:"
+msgstr "パスワード:"
 
 #: ../modules/users/uinterface.c:365
 msgid "User Info:"
-msgstr "Användarinformation:"
+msgstr "ユーザ情報:"
 
 #: ../modules/users/uinterface.c:381
 msgid "Shell:"
-msgstr "Skal:"
+msgstr "シェル: "
 
 #: ../modules/users/uinterface.c:400
 msgid "Home:"
-msgstr "Hem:"
+msgstr "ホームディレクトリ:"
 
 #: ../modules/users/uinterface.c:419
+#, fuzzy
 msgid "Change"
-msgstr "Byt"
+msgstr "変更"
 
 #: ../modules/users/uinterface.c:420
+#, fuzzy
 msgid "Set"
-msgstr "Ställ in"
+msgstr "設定(_S)"
 
 #: ../modules/users/uinterface.c:484
 msgid "Change Password"
-msgstr "Byt lösenord"
+msgstr "パスワードの変更"
 
 #. 2nd column:
 #: ../modules/users/uinterface.c:510
 msgid "Old Password:"
-msgstr "Gammalt lösenord:"
+msgstr "古いパスワード: "
 
 #: ../modules/users/uinterface.c:517
 msgid "New Password:"
-msgstr "Nytt lösenord:"
+msgstr "新規パスワード: "
 
 #: ../modules/users/uinterface.c:525
 msgid "Confirm:"
-msgstr "Bekräfta:"
+msgstr "新規パスワード再入力:"
 
 #: ../modules/sound/sound.c:250
+#, fuzzy
 msgid "Audio Settings"
-msgstr "Ljudinställningar"
+msgstr "サーバー設定"
 
 #: ../modules/sound/sound.c:257
+#, fuzzy
 msgid "Mute Everything"
-msgstr "Tysta allt"
+msgstr "Á´¤Æ¤ò³ÈÂç½Ì¾®"
 
 #: ../modules/sound/sound.c:298
+#, fuzzy
 msgid "Alarm Settings"
-msgstr "Alarminställningar"
+msgstr "サーバー設定"
 
 #: ../modules/sound/sound.c:305
+#, fuzzy
 msgid "Enable Alarm Sound"
-msgstr "Aktivera alarmljud"
+msgstr "起動時にサウンドを有効にする"
 
 #: ../modules/sound/sound.c:312
+#, fuzzy
 msgid "Automatic Volume (rising)"
-msgstr "Automatisk volym (stigande)"
+msgstr "ボリューム番号がオーバーフローしました"
 
 #: ../modules/sound/sound.c:322 ../modules/sound/soundctrl.c:258
 msgid "Volume"
-msgstr "Volym"
+msgstr "音量"
 
 #: ../modules/sound/sound.c:329
 msgid "Test"
-msgstr "Testa"
+msgstr "テスト"
 
 #: ../modules/keys/keyboard.c:76
+#, fuzzy
 msgid "none"
-msgstr "ingen"
+msgstr "なし"
 
 #: ../modules/keys/keyboard.c:77
 msgid "Foldable"
-msgstr "Vikbar"
+msgstr ""
 
 #: ../modules/keys/keyboard.c:78
 msgid "SnapNType"
-msgstr "SnapNType"
+msgstr ""
 
 #: ../modules/keys/keyboard.c:79
 msgid "Stowaway"
-msgstr "Stowaway"
+msgstr ""
 
 #: ../modules/keys/keyboard.c:80
 msgid "StowawayXT"
-msgstr "StowawayXT"
+msgstr ""
 
 #: ../modules/keys/keyboard.c:81
+#, fuzzy
 msgid "HP Slim"
-msgstr "HP Slim"
+msgstr "HP Mini"
 
 #: ../modules/keys/keyboard.c:82
+#, fuzzy
 msgid "Smart BT"
-msgstr "Smart BT"
+msgstr "スマート・メディア"
 
 #: ../modules/keys/keyboard.c:83
+#, fuzzy
 msgid "LIRC"
-msgstr "LIRC"
+msgstr "LIRCを再読み込み(_R)"
 
 #: ../modules/keys/keyboard.c:84
 msgid "Belkin IR"
-msgstr "Belkin IR"
+msgstr ""
 
 #: ../modules/keys/keyboard.c:85
 msgid "Flexis"
-msgstr "Flexis"
+msgstr ""
 
 #: ../modules/keys/keyboard.c:86
 msgid "Benq Gamepad"
-msgstr "Benq Gamepad"
+msgstr ""
 
 #: ../modules/keys/keyboard.c:87
 msgid "Pocketvik"
-msgstr "Pocketvik"
+msgstr ""
 
 #: ../modules/keys/keyboard.c:88
+#, fuzzy
 msgid "Micro Foldaway"
-msgstr "Micro Foldaway"
+msgstr "小休止"
 
 #: ../modules/keys/keyboard.c:89
+#, fuzzy
 msgid "Micro Datapad"
-msgstr "Micro Datapad"
+msgstr "小休止"
 
 #: ../modules/keys/keyboard.c:255
+#, fuzzy
 msgid "External keyboard configuration."
-msgstr "Extern tangentbordskonfiguration."
+msgstr "ロード設定ディレクトリ"
 
 #: ../modules/keys/keyboard.c:258
+#, fuzzy
 msgid "External Keyboard Port"
-msgstr "Externt tangentbordsport"
+msgstr "ユーザ名                ポート   最近のログイン\n"
 
 #: ../modules/keys/keyboard.c:265
 msgid "Here you may select your external keyboard model."
-msgstr "Här kan du välja din externa tangentbordsmodell."
+msgstr ""
 
 #: ../modules/keys/keyboard.c:288
+#, fuzzy
 msgid "External Keyboard Type"
-msgstr "Extern tangentbordstyp"
+msgstr "`%s' は不明な圧縮形式です!"
 
 #: ../modules/keys/kbd.c:142
+#, fuzzy
 msgid "Keyboard Geometry / Layout"
-msgstr "Tangentbordsgeometri/-layout"
+msgstr "ハングルキーボードのレイアウト"
 
 #: ../modules/keys/kbd.c:182
+#, fuzzy
 msgid "User defined"
-msgstr "Användardefinierad"
+msgstr "ユーザ定義シグナル 1"
 
 #: ../modules/keys/keyctl.c:195
 msgid "Button layout file is missing a global section."
-msgstr "Knapplayoutfil saknar en global sektion."
+msgstr ""
 
 #: ../modules/keys/keyctl.c:411
+#, fuzzy
 msgid "No button configuration available for this device."
-msgstr "Ingen knappkonfiguration tillgänglig för den här enheten."
+msgstr "指定の PCM を使用できません: 設定がありません"
 
 #: ../modules/keys/keyctl.c:583
 msgid "Critical: Can't open keylaunchrc for writing!"
-msgstr "Kritiskt: Kan inte öppna keylaunchrc för skrivning!"
+msgstr "致命的: keylaunchrc を書き込みのためにオープンできません!"
 
 #: ../modules/keys/keyctl.c:606
+#, fuzzy
 msgid "Could not restart key handler!"
-msgstr "Kunde inte starta om tangenthanteraren!"
+msgstr "公開鍵を読み込めませんでした"
 
 #: ../modules/keys/keyctl.c:629
+#, fuzzy
 msgid "The file you selected is not executable."
-msgstr "Filen du valde är inte körbar."
+msgstr "選択したファイルは Bluefish で編集されています."
 
 #: ../modules/keys/keys.c:79
 msgid "Buttons"
-msgstr "Knappar"
+msgstr "ボタン"
 
 #: ../modules/keys/keys.c:83
+#, fuzzy
 msgid "Virtual Keyb."
-msgstr "Virtuellt tbord"
+msgstr "仮想デバイス"
 
 #: ../modules/keys/keys.c:87
+#, fuzzy
 msgid "External Keyb."
-msgstr "Externt tbord"
+msgstr "/起動/ブラウザ"
 
 #: ../modules/screen/screen.c:73
 msgid "Portrait"
-msgstr "Stående"
+msgstr "縦長"
 
 #: ../modules/screen/screen.c:74
 msgid "Landscape (left)"
-msgstr "Liggande (vänster)"
+msgstr "横長（左）"
 
 #: ../modules/screen/screen.c:75
 msgid "Landscape (right)"
-msgstr "Liggande (höger)"
+msgstr "横長（右）"
 
 #: ../modules/screen/screen.c:79
 msgid "Landscape"
-msgstr "Liggande"
+msgstr "横長"
 
 #: ../modules/screen/screen.c:80
 msgid "Portrait (left)"
-msgstr "Stående (vänster)"
+msgstr "縦長（左）"
 
 #: ../modules/screen/screen.c:81
 msgid "Portrait (right)"
-msgstr "Stående (höger)"
+msgstr "縦長（右）"
 
 #: ../modules/screen/screen.c:84
+#, fuzzy
 msgid "Inverted"
-msgstr "Inverterad"
+msgstr "反転する"
 
 #: ../modules/screen/screen.c:111
+#, fuzzy
 msgid "Light"
-msgstr "Ljus"
+msgstr "光源"
 
 #: ../modules/screen/screen.c:117
 msgid "Brightness"
-msgstr "Ljusstyrka"
+msgstr "明るさ"
 
 #: ../modules/screen/screen.c:129
+#, fuzzy
 msgid "Display"
-msgstr "Display"
+msgstr "ディスプレイ"
 
 #: ../modules/screen/screen.c:133
 msgid "Rotation"
-msgstr "Rotering"
+msgstr "回転"
 
 #: ../modules/screen/screen.c:153
 msgid "Touchscreen"
-msgstr "Pekskärm"
+msgstr "タッチスクリーン"
 
 #: ../modules/screen/screen.c:157
 msgid "Calibrate"
-msgstr "Kalibrera"
+msgstr "再調整"
 
 #: ../modules/screen/screen.c:159
 msgid "Start"
-msgstr "Starta"
+msgstr "開始"
 
 #: ../modules/screen/screen.c:275 ../modules/sleep/scallbacks.c:39
 msgid "min"
-msgstr "min"
+msgstr "分"
 
 #: ../modules/screen/screen.c:278 ../modules/sleep/scallbacks.c:42
 msgid "sec"
-msgstr "sek"
+msgstr "秒"
 
 #: ../modules/network.c:103
 msgid "Current Config"
-msgstr "Aktuell konfiguration"
+msgstr "現在の構成"
 
 #: ../modules/network.c:252
 msgid "New Interface"
-msgstr "Nytt gränssnitt"
+msgstr "新規インターフェース"
 
 #: ../modules/network.c:261
 msgid "This interface definition already exists!"
-msgstr "Denna gränssnittsdefinition finns redan!"
+msgstr "このインタフェースの定義はすでに存在します!"
 
 #: ../modules/network.c:343
 msgid "Do you want to delete this interface?"
-msgstr "Vill du ta bort detta gränssnitt?"
+msgstr "このインタフェースを本当に削除しますか?"
 
 #: ../modules/network.c:592
 msgid "WiFi config"
-msgstr "WiFi-konfiguration"
+msgstr "WiFi 設定"
 
 #: ../modules/network.c:631
 #, c-format
 msgid "WiFi config for %s"
-msgstr "WiFi-konfiguration för %s"
+msgstr "%s のWiFi 設定"
 
 #. page items
 #: ../modules/network.c:643
@@ -1735,12 +1788,11 @@ msgstr "ESSID"
 
 #: ../modules/network.c:665
 msgid "Mode"
-msgstr "Läge"
+msgstr "モード"
 
-# Syftar på "läge" tror jag.
 #: ../modules/network.c:675
 msgid "managed"
-msgstr "hanterat"
+msgstr ""
 
 #: ../modules/network.c:687
 msgid "ad-hoc"
@@ -1748,242 +1800,251 @@ msgstr "ad-hoc"
 
 #: ../modules/network.c:704
 msgid "Channel"
-msgstr "Kanal"
+msgstr "チャネル"
 
 #: ../modules/network.c:725
 msgid "WEP"
 msgstr "WEP"
 
 #: ../modules/network.c:735
+#, fuzzy
 msgid "off"
-msgstr "av"
+msgstr "オフ"
 
-# Syftar på "krypteringsläge" tror jag
 #: ../modules/network.c:747
+#, fuzzy
 msgid "open"
-msgstr "öppen"
+msgstr "開く(_O)"
 
-# Syftar på "krypteringsläge" tror jag
 #: ../modules/network.c:759
+#, fuzzy
 msgid "restricted"
-msgstr "begränsat"
+msgstr "制限付き XML"
 
 #: ../modules/network.c:775
 msgid "Key 1"
-msgstr "Nyckel 1"
+msgstr "キー1"
 
 #: ../modules/network.c:803
 msgid "Key 2"
-msgstr "Nyckel 2"
+msgstr "キー2"
 
 #: ../modules/network.c:831
 msgid "Key 3"
-msgstr "Nyckel 3"
+msgstr "キー3"
 
 #: ../modules/network.c:861
 msgid "Key 4"
-msgstr "Nyckel 4"
+msgstr "キー4"
 
 #: ../modules/network.c:1015 ../modules/network.c:1142
 #: ../modules/network.c:1259
 msgid "Interface"
-msgstr "Gränssnitt"
+msgstr "インタフェース"
 
 #. page items
 #: ../modules/network.c:1065
 msgid "Address"
-msgstr "Adress"
+msgstr "アドレス"
 
 #: ../modules/network.c:1067
 msgid "Enter your IP address here, e.g. 192.168.1.2"
-msgstr "Ange din IP-adress här, t.ex. 192.168.1.2"
+msgstr "IPアドレスを入力してください。 例) 192.168.1.2"
 
 #: ../modules/network.c:1068
 msgid "Netmask"
-msgstr "Nätmask"
+msgstr "ネットマスク"
 
 #: ../modules/network.c:1070
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
-msgstr "Ange din nätmask här, t.ex. 255.255.255.0 i de flesta fall"
+msgstr "ネットマスクを入力してください。大抵は 255.255.255.0 です。"
 
 #: ../modules/network.c:1072
 msgid "Broadcast"
-msgstr "Broadcast"
+msgstr "ブロードキャスト"
 
 #: ../modules/network.c:1074
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
-msgstr "Ange din broadcastadress här. Vanligtvis är det samma som ditt IP fast med 255 som sista tal."
+msgstr "ブロードキャストアドレスを入力してください。大抵は IP アドレスの最後の番号を 255 に変えたものです。"
 
 #: ../modules/network.c:1076
 msgid "Gateway"
-msgstr "Gateway"
+msgstr "ゲートウェイ"
 
 #: ../modules/network.c:1078
 msgid "Enter the IP Address of your default gateway here."
-msgstr "Ange IP-adressen för din standardgateway här."
+msgstr "デフォルトゲートウェイの IP アドレスを入力してください。"
 
 #: ../modules/network.c:1087 ../modules/network.c:1201
 msgid "WiFi device"
-msgstr "WiFi-enhet"
+msgstr "WiFi デバイス"
 
 #: ../modules/network.c:1095 ../modules/network.c:1209
 msgid "Configure"
-msgstr "Konfigurera"
+msgstr "構成"
 
 #. page items
 #: ../modules/network.c:1192 ../modules/network.c:1419
 msgid "Hostname"
-msgstr "Värdnamn"
+msgstr "ホスト名"
 
 #: ../modules/network.c:1194
 msgid "Enter your desired hostname here. This parameter is optional."
-msgstr "Ange ditt önskade värdnamn här. Denna parameter är valfri."
+msgstr "ホスト名を入力してください。なくても構いせません。"
 
 #. page items
 #: ../modules/network.c:1309
 msgid "Provider"
-msgstr "Leverantör"
+msgstr "プロバイダ名"
 
 #: ../modules/network.c:1311
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
-msgstr "Här kan du ange namnet för leverantörskonfigurationen som ska användas för detta gränssnitt."
+msgstr ""
 
 #: ../modules/network.c:1334
 msgid "Global Settings"
-msgstr "Globala inställningar"
+msgstr "全体設定"
 
 #: ../modules/network.c:1375
 msgid "Proxy"
-msgstr "Proxyserver"
+msgstr "プロキシ"
 
 #: ../modules/network.c:1376
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
-msgstr "Om du vill/måste använda en proxyserver anger du den här (detta gäller endast dillo just nu)."
+msgstr ""
 
 #: ../modules/network.c:1382
+#, fuzzy
 msgid "No proxy for"
-msgstr "Ingen proxyserver för"
+msgstr "%s の alternatives がありません。"
 
-# Knepigt
 #: ../modules/network.c:1384
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
-msgstr "Här bör du ange din lokala domän som du inte vill använda en proxyserver för."
+msgstr ""
 
 #: ../modules/network.c:1391
 msgid "DNS server"
-msgstr "DNS-server"
+msgstr "DNS サーバ"
 
 #: ../modules/network.c:1393
 msgid "Enter the IP of the DNS(name-) server to use here."
-msgstr "Ange IP till den DNS-server som ska användas här."
+msgstr ""
 
 #: ../modules/network.c:1421
 msgid "Enter the Hostname to use for this machine"
-msgstr "Ange värdnamnet att använda för den här maskinen"
+msgstr ""
 
 #: ../modules/network.c:1612
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
 msgstr ""
-"Här kan du ändra den grundläggande konfigurationstypen för din enhet.\n"
-"Använd \"static\" för manuell gränssnittskonfiguration, \"dhcp\" för att använda DHCP och \"ppp\" för att göra enheten till en punkt-till-punkt-enhet."
 
 #: ../modules/network.c:1618
 msgid "Enable this option if your device is a WiFi device"
-msgstr "Aktivera detta alternativ om din enhet är en WiFi-enhet"
+msgstr ""
 
 #: ../modules/network.c:1620
 msgid "Click to set the wireless options for this device"
-msgstr "Klicka för att ställa in de alternativen för trådlöst nätverk för denna enhet"
+msgstr ""
 
 #: ../modules/network.c:1622
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
-msgstr "Ställ in det läge som ditt WiFi-kort ska fungera i (hanterat eller ad-hoc)."
+msgstr ""
 
 #: ../modules/network.c:1625
 msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
-msgstr "Ställ in krypteringsläget: av för ingen WEP-kryptering, öppet för öppet system och begränsat för endast begränsade WEP-anslutningar."
+msgstr ""
 
 #: ../modules/network.c:1630
 msgid "Enter the essid of your WiFi network here."
-msgstr "Ange essid:et för ditt WiFi-nätverk här."
+msgstr ""
 
 #: ../modules/network.c:1633
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
-msgstr "Ange din WEP-nyckel här i (iwconfig-format), t.ex.: \"s:12345\""
+msgstr ""
 
 #: ../modules/network.c:1636
 msgid "Select the WEP key to use."
-msgstr "Välj WEP-nyckeln att använda."
+msgstr "使用するWEPキーを選んでください。"
 
 #: ../modules/network.c:1639
 msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
-msgstr "Ange kanalnumret eller frekvensen om så behövs. Om detta inte behövs bör du lämna detta fält tomt."
+msgstr ""
 
 #: ../modules/network.c:1655
 msgid "Remove current Interface"
-msgstr "Ta bort aktuellt gränssnitt"
+msgstr "インタフェースを削除"
 
 #: ../modules/network.c:1665
 msgid "Add a new Interface"
-msgstr "Lägg till ett nytt gränssnitt"
+msgstr "新しいインタフェースを追加"
 
 #: ../modules/network.c:1672
 msgid "Info"
-msgstr "Info"
+msgstr "情報"
 
 #: ../modules/network.c:1676
 msgid "Show current configuration."
-msgstr "Visa aktuell konfiguration."
+msgstr "現在の構成を表示する"
 
 #: ../modules/network.c:1694
+#, fuzzy
 msgid "Couldn't read network configuration."
-msgstr "Kunde inte läsa nätverkskonfiguration."
+msgstr "ネットワークの読み込み / 書き込みエラーです"
 
 #: ../modules/network.c:1701
+#, fuzzy
 msgid "global"
-msgstr "global"
+msgstr "   1 (*大 域*)    "
 
 #: ../modules/sleep/sinterface.c:64
+#, fuzzy
 msgid "Auto sleep"
-msgstr "Automatisk insomning"
+msgstr "スリープ設定"
 
 #: ../modules/sleep/sinterface.c:74 ../modules/sleep/sinterface.c:105
+#, fuzzy
 msgid "enabled"
-msgstr "aktiverad"
+msgstr "有効"
 
 #: ../modules/sleep/sinterface.c:92
+#, fuzzy
 msgid "sleep timeout"
-msgstr "insomningstidsgräns"
+msgstr "タイムアウトです"
 
 #: ../modules/sleep/sinterface.c:95
+#, fuzzy
 msgid "Auto dim"
-msgstr "Förmörka automatiskt"
+msgstr "人工重力"
 
 #: ../modules/sleep/sinterface.c:122
+#, fuzzy
 msgid "backlight dim timeout"
-msgstr "dim-timeout för bakgrundsbelysning"
+msgstr "%s:%d からクライアントタイムアウト。"
 
 #: ../modules/sleep/sinterface.c:124
+#, fuzzy
 msgid "Auto dim level"
-msgstr "Automatisk förmörkningsnivå"
+msgstr "`%s' のトップレベルの宣言が `auto' を指定します"
 
 #: ../modules/sleep/sinterface.c:144
+#, fuzzy
 msgid "Advanced Controls"
-msgstr "Avancerade kontroller"
+msgstr "<b>ビデオ コントロール</b>"
 
 #: ../modules/sleep/sinterface.c:154
 msgid "CPU"
-msgstr "Processor"
+msgstr "CPU"
 
 #: ../modules/sleep/sinterface.c:160
 msgid "Sleep on cpu less than load"
-msgstr "Sov då processor mindre än belastning"
+msgstr ""
 
 #: ../modules/sleep/sinterface.c:164
+#, fuzzy
 msgid "load below"
-msgstr "last under"
+msgstr "On_Load:"
 
 #: ../modules/sleep/sinterface.c:180
 msgid "APM"
@@ -1991,669 +2052,103 @@ msgstr "APM"
 
 #: ../modules/sleep/sinterface.c:186
 msgid "Sleep on AC"
-msgstr "Sov då växelspänning"
+msgstr "ACアダプタで稼働していてもスリープする"
 
 #: ../modules/sleep/sinterface.c:188
 msgid "probe IRQs"
-msgstr "undersök IRQ:er"
+msgstr ""
 
 #: ../modules/sleep/sinterface.c:194
+#, fuzzy
 msgid "Check IRQ activity"
-msgstr "Kontrollera IRQ-aktivitet"
+msgstr "データ識別子"
 
 #: ../desktop/gpe-conf-admin.desktop.in.h:1
+#, fuzzy
 msgid "User Access"
-msgstr "Användaråtkomst"
+msgstr "ユーザアクセス"
 
 #: ../desktop/gpe-conf-admin.desktop.in.h:2
+#, fuzzy
 msgid "User access administration"
-msgstr "Administration av användaråtkomst"
+msgstr ""
+"\n"
+"%*s ユーザ     PID アクセス コマンド\n"
 
 #: ../desktop/gpe-conf-cardinfo.desktop.in.h:1
 msgid "PC/CF Cards"
-msgstr "PC/CF-kort"
+msgstr "PC/CF カード"
 
 #: ../desktop/gpe-conf-cardinfo.desktop.in.h:2
 msgid "PC/CF Cards info and config"
-msgstr "Information och konfiguration av PC/CF-kort"
+msgstr "PCMCIA/CF カードの情報と設定"
 
 #: ../desktop/gpe-conf.desktop.in.h:1
 msgid "Control Panel"
-msgstr "Kontrollpanel"
+msgstr "コントロールパネル"
 
 #: ../desktop/gpe-conf-keys.desktop.in.h:1
 msgid "Keyboard and Button Setup"
-msgstr "Tangentbord och tangentkonfiguration"
+msgstr "キーボードとボタンの設定"
 
 #: ../desktop/gpe-conf-keys.desktop.in.h:2
 msgid "Keys and Buttons"
-msgstr "Tangenter och knappar"
+msgstr "キーとボタン"
 
 #: ../desktop/gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
-msgstr "Ställ in ägarinformation"
+msgstr "所有者情報"
 
 #: ../desktop/gpe-conf-serial.desktop.in.h:1
 msgid "Serial Port Settings"
-msgstr "Inställningar för serieport"
+msgstr "シリアルポート設定"
 
 #: ../desktop/gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"
-msgstr "Konfiguration av viloläge"
+msgstr "スリープ設定"
 
 #: ../desktop/gpe-conf-sleep.desktop.in.h:2
 msgid "Sleep Configuration"
-msgstr "Konfiguration av viloläge"
+msgstr "スリープ設定"
 
 #: ../desktop/gpe-conf-sound.desktop.in.h:1
 msgid "Sound Settings"
-msgstr "Ljudinställningar"
+msgstr "サウンド設定"
 
 #: ../desktop/gpe-conf-sound.desktop.in.h:2
+#, fuzzy
 msgid "Sound defaults and setup"
-msgstr "Ljud-standardalternativ och -konfiguration"
+msgstr "キーボードとボタンの設定"
 
 #: ../desktop/gpe-conf-sysinfo.desktop.in.h:1
 msgid "System Info"
-msgstr "Systeminformation"
+msgstr "システム情報"
 
 #: ../desktop/gpe-conf-theme.desktop.in.h:1
+#, fuzzy
 msgid "Global Appearance Setup"
-msgstr "Konfiguration av globalt utseende"
+msgstr "接続の設定"
 
 #: ../desktop/gpe-conf-time.desktop.in.h:1
 msgid "Date/Time Setup"
-msgstr "Konfiguration av datum/tid"
+msgstr "日付と時刻の設定"
 
 #: ../desktop/gpe-conf-time.desktop.in.h:2
 msgid "Setup Date and Time"
-msgstr "Konfigurera datum och tid"
+msgstr "日付と時刻を設定します"
 
 #: ../desktop/gpe-conf-usb.desktop.in.h:1
 msgid "Change USB settings"
-msgstr "Ändra USB-inställningar"
+msgstr "USB 設定を変更します"
 
 #: ../desktop/gpe-conf-usb.desktop.in.h:2
 msgid "USB Settings"
-msgstr "USB-inställningar"
+msgstr "USB 設定"
 
 #: ../desktop/gpe-conf-users.desktop.in.h:1
 msgid "Manage local users"
-msgstr "Hantera lokala användare"
+msgstr "ローカルユーザの管理"
 
 #: ../desktop/gpe-conf-users.desktop.in.h:2
 msgid "User Manager"
-msgstr "Användarhanterare"
-
-#~ msgid "Power safe Configuration"
-#~ msgstr "Konfiguration av strömspar"
-
-#~ msgid "Aborted"
-#~ msgstr "Avbröts"
-
-#~ msgid "Daylight Saving"
-#~ msgstr "Sommartid"
-
-#~ msgid "Use daylight saving time"
-#~ msgstr "Använd sommartid"
-
-#~ msgid "Check this box if you want your device to handle daylight saving time for you."
-#~ msgstr "Kryssa för denna ruta om du vill att din enhet ska hantera sommartid åt dig."
-
-#~ msgid "Offset:"
-#~ msgstr "Avstånd:"
-
-#~ msgid "Default"
-#~ msgstr "Standard"
-
-#~ msgid "Use default DST offset of one hour?"
-#~ msgstr "Använd standardsommartidsavståndet om en timme?"
-
-#~ msgid "Hours"
-#~ msgstr "timmar"
-
-#~ msgid "Select daylight saving time offset hours here."
-#~ msgstr "Välj antalet sommartidsavståndstimmar här."
-
-#~ msgid "Minutes"
-#~ msgstr "minuter"
-
-#~ msgid "Select daylight saving time offset minutes here."
-#~ msgstr "Välj antalet sommartidsavståndsminuter här."
-
-#~ msgid "Add Interface"
-#~ msgstr "Lägg till gränssnitt"
-
-#~ msgid "Remove Interface"
-#~ msgstr "Ta bort gränssnitt"
-
-#~ msgid "Information"
-#~ msgstr "Information"
-
-#~ msgid "Red"
-#~ msgstr "Röd"
-
-#~ msgid "Green"
-#~ msgstr "Grön"
-
-#~ msgid "Blue"
-#~ msgstr "Blå"
-
-#~ msgid "Select colour"
-#~ msgstr "Välj färg"
-
-# Osäker
-#~ msgid "Both H"
-#~ msgstr "Både H"
-
-#~ msgid "Both (icon above text)"
-#~ msgstr "Både och (ikon över text)"
-
-#~ msgid "Both (icon left of text)"
-#~ msgstr "Både och (ikon till vänster om text)"
-
-#~ msgid "Add user"
-#~ msgstr "Lägg till användare"
-
-#~ msgid "Add a new user"
-#~ msgstr "Lägg till en ny användare"
-
-#~ msgid "Edit existing user"
-#~ msgstr "Redigera befintlig användare"
-
-#~ msgid "Delete existing user"
-#~ msgstr "Ta bort befintlig användare"
-
-#~ msgid "Change password"
-#~ msgstr "Byt lösenord"
-
-#~ msgid "Card Services release does not match!"
-#~ msgstr "Utgåva av Card Services stämmer inte överens!"
-
-#~ msgid "Could not get CS revision info!\n"
-#~ msgstr "Kunde inte få tag i CS-revisionsinformation!\n"
-
-#~ msgid "ARM"
-#~ msgstr "ARM"
-
-#~ msgid "Intel x86 or compatible"
-#~ msgstr "Intel x86 eller kompatibel"
-
-#~ msgid "IBM type PC"
-#~ msgstr "PC av IBM-typ"
-
-#~ msgid "Mips"
-#~ msgstr "Mips"
-
-#~ msgid "Silicon Graphics Machine"
-#~ msgstr "Silicon Graphics-maskin"
-
-#~ msgid "IBM Power or PowerPC"
-#~ msgstr "IBM Power eller PowerPC"
-
-#~ msgid "CPU:"
-#~ msgstr "Processor:"
-
-#~ msgid "To make timezone settings take effect,you'll need to log out and log in again."
-#~ msgstr "För att tidszonsinställningarna ska börja gälla måste du logga ut och logga in igen."
-
-#~ msgid "<b>WiFi config for %s</b>"
-#~ msgstr "<b>WiFi-konfiguration för %s</b>"
-
-#~ msgid "Reset button config to default?"
-#~ msgstr "Återställ knappkonfigurationen till standardläget?"
-
-#~ msgid "User Defined"
-#~ msgstr "Användardefinierad"
-
-#~ msgid "Record Memo"
-#~ msgstr "Spela in anteckning"
-
-#~ msgid "Calendar"
-#~ msgstr "Kalender"
-
-#~ msgid "Contacts"
-#~ msgstr "Kontakter"
-
-#~ msgid "Audio Player"
-#~ msgstr "Ljudspelare"
-
-#~ msgid "Web Browser"
-#~ msgstr "Webbläsare"
-
-#~ msgid "To-do List"
-#~ msgstr "Att-göra-lista"
-
-#~ msgid "Toggle Desktop"
-#~ msgstr "Växla skrivbord"
-
-#~ msgid "Defaults"
-#~ msgstr "Standardalternativ"
-
-#~ msgid "%"
-#~ msgstr "%"
-
-#~ msgid ""
-#~ "<b>Interface %s</b>\n"
-#~ "Type: %s\n"
-#~ msgstr ""
-#~ "<b>Gränssnitt %s</b>\n"
-#~ "Typ: %s\n"
-
-#~ msgid "could not open touchscreen device '%s'\n"
-#~ msgstr "kunde inte pekskärmsenheten \"%s\"\n"
-
-#~ msgid "Virtual Keyboard Setup"
-#~ msgstr "Konfiguration av virtuellt tangentbord"
-
-#~ msgid "Button Configuration"
-#~ msgstr "Knappkonfiguration"
-
-#~ msgid "Set the encryption mode: off for no WEP encryption, open for open system and restricted for restricted WEP connections only."
-#~ msgstr "Ställ in krypteringsläget: av för ingen WEP-kryptering, öppet för öppet system och begränsat för endast begränsade WEP-anslutningar."
-
-#~ msgid "Enter your WEP key here in iwconfig format, e.g.: \"s:12345\""
-#~ msgstr "Ange din WEP-nyckel här i iwconfig-format, t.ex.: \"s:12345\""
-
-#~ msgid "Successfully changed background image."
-#~ msgstr "Lyckades ändra bakgrundsbilden."
-
-#~ msgid "Select color"
-#~ msgstr "Välj färg"
-
-#~ msgid "Solid color"
-#~ msgstr "Enfärgad"
-
-#~ msgid "Solid Color"
-#~ msgstr "Enfärgad"
-
-#~ msgid "Color"
-#~ msgstr "Färg"
-
-#~ msgid "Color gradient"
-#~ msgstr "Färgtoning"
-
-#~ msgid "Can't find circular buffer, is syslog running?"
-#~ msgstr "Kan inte hitta cirkulär buffert. Kör syslog?"
-
-#~ msgid "Could not open X session log."
-#~ msgstr "Kunde inte öppna X-sessionslogg."
-
-#~ msgid "RAM"
-#~ msgstr "RAM-minne"
-
-#~ msgid "State"
-#~ msgstr "Tillstånd"
-
-#~ msgid "Screensaver"
-#~ msgstr "Skärmsläckare"
-
-#~ msgid "Delay until start"
-#~ msgstr "Fördröjning innan start"
-
-#~ msgid "Orientation"
-#~ msgstr "Orientering"
-
-#~ msgid "Couldn't read screen settings!"
-#~ msgstr "Kunde inte läsa skärminställningar!"
-
-#~ msgid "Use DHCP in any case (usually not needed)."
-#~ msgstr "Använd DHCP oavsett vilket (behövs normalt inte)."
-
-#~ msgid "yes"
-#~ msgstr "ja"
-
-#~ msgid "Close"
-#~ msgstr "Stäng"
-
-#~ msgid "Close network tool"
-#~ msgstr "Stäng nätverksverktyget"
-
-#~ msgid "Image:"
-#~ msgstr "Bild:"
-
-#~ msgid "idle(sec)"
-#~ msgstr "tomgång(sek)"
-
-#~ msgid "load"
-#~ msgstr "belastning"
-
-#~ msgid "Couldn't find default runlevel!"
-#~ msgstr "Kunde inte hitta standardkörnivå!"
-
-#~ msgid "Address:\t\t%s\n"
-#~ msgstr "Adress:\t\t%s\n"
-
-#~ msgid "P-t-P:\t\t%s\n"
-#~ msgstr "P-t-P:\t\t%s\n"
-
-#~ msgid "Netmask:\t\t%s\n"
-#~ msgstr "Nätmask:\t\t%s\n"
-
-#~ msgid "Broadcast:\t%s\n"
-#~ msgstr "Broadcast:\t%s\n"
-
-#~ msgid "Familiar Version"
-#~ msgstr "Familjär version"
-
-#~ msgid "Flash"
-#~ msgstr "Flash"
-
-#~ msgid "Syslog"
-#~ msgstr "Syslog"
-
-#~ msgid "Toolbar"
-#~ msgstr "Verktygsrad"
-
-#~ msgid "Icon"
-#~ msgstr "Ikon"
-
-#~ msgid "Show 'All' group"
-#~ msgstr "Visa gruppen \"Alla\""
-
-#~ msgid "Auto-hide group labels"
-#~ msgstr "Dölj automatiskt gruppetiketter"
-
-#~ msgid "Show 'Recent' tab"
-#~ msgstr "Visa fliken \"Senaste\""
-
-#~ msgid "Do not launch at startup"
-#~ msgstr "Starta inte vid uppstart"
-
-#~ msgid "Tab View"
-#~ msgstr "Flikvy"
-
-#~ msgid "List"
-#~ msgstr "Lista"
-
-#~ msgid "Changes will take effect after relog"
-#~ msgstr "Ändringarna kommer att börja gälla efter ominloggning"
-
-#~ msgid "Can't interpret output from xrandr!"
-#~ msgstr "Kan inte tolka utdata från xrandr!"
-
-#~ msgid "Can't set rotation on an x86."
-#~ msgstr "Kan inte ställa in rotation på en x86."
-
-#~ msgid "<b>Information about  the Owner</b>"
-#~ msgstr "<b>Information om ägaren</b>"
-
-#~ msgid "<b>General</b>"
-#~ msgstr "<b>Allmänt</b>"
-
-#~ msgid "Manage local users "
-#~ msgstr "Hantera lokala användare "
-
-#~ msgid "minutes"
-#~ msgstr "minuter"
-
-#~ msgid "seconds"
-#~ msgstr "sekunder"
-
-#~ msgid "Themes"
-#~ msgstr "Teman"
-
-#~ msgid "Contact"
-#~ msgstr "Kontakt"
-
-#~ msgid "<b>Information about the Owner</b>"
-#~ msgstr "<b>Information om ägaren</b>"
-
-#~ msgid "Information about  the Owner"
-#~ msgstr "Information om ägaren"
-
-#~ msgid "Information about the owner"
-#~ msgstr "Information om ägaren"
-
-#~ msgid "_Assign Driver"
-#~ msgstr "_Tilldela drivrutin"
-
-#~ msgid "_Help"
-#~ msgstr "_Hjälp"
-
-#~ msgid "Help"
-#~ msgstr "Hjälp"
-
-#~ msgid "Activated"
-#~ msgstr "Aktiverad"
-
-#~ msgid "Off"
-#~ msgstr "Av"
-
-#~ msgid "Could not read keyboard definition file."
-#~ msgstr "Kunde inte läsa tangentbordsdefinitionsfil."
-
-#~ msgid "Error reading keyboard definition."
-#~ msgstr "Fel vid inläsning av tangentbordsdefinition."
-
-#~ msgid "External keyboard configuration. Model support packages not installed if inactive."
-#~ msgstr "Konfiguration av externt tangentbord. Modellstödspaket inte installerade om inaktivt."
-
-#~ msgid "Here you may select your external keyboard model. To install software support, connect your device to the internet and click the \"Install\" button."
-#~ msgstr "Här kan du välja modellen på ditt externa tangentbord. För att installera programvarustöd ansluter du din enhet till Internet och klickar på knappen \"Installera\"."
-
-#~ msgid "Install"
-#~ msgstr "Installera"
-
-#~ msgid "Click here to install support for this keyboard."
-#~ msgstr "Klicka här för att installera stöd för detta tangentbord."
-
-#~ msgid ""
-#~ "You don't have read access\n"
-#~ "to selected background image!"
-#~ msgstr ""
-#~ "Du har inte läsåtkomst till\n"
-#~ "den valda bakgrundsbilden!"
-
-#~ msgid "Choose IRQs"
-#~ msgstr "Välj IRQ:er"
-
-#~ msgid "Couldn't get filesystem info!"
-#~ msgstr "Kunde inte få tag i filsystemsinformation!"
-
-#~ msgid "The GPS receiver is a sends NMEA data. (default, no need to change for most receivers)"
-#~ msgstr "GPS-mottagaren är en skickar NMEA-data (standard, behöver inte ändras för de flesta mottagare)."
-
-#~ msgid "Can't get access to semaphone(s) for circular buffer from syslogd."
-#~ msgstr "Kan inte få åtkomst till semafon(er) för cirkulär buffert från syslogd."
-
-#~ msgid "Removing package"
-#~ msgstr "Tar bort paket"
-
-#~ msgid "Installing package"
-#~ msgstr "Installerar paket"
-
-#~ msgid "Update finished. Please check log messages for errors."
-#~ msgstr "Uppdatering slutförd. Kontrollera loggmeddelanden för eventuella fel."
-
-#~ msgid "Remove"
-#~ msgstr "Ta bort"
-
-#~ msgid "Install/Removal finished. Please check log messages for errors."
-#~ msgstr "Installation/Borttagning slutförd. Kontrollera loggmeddelanden för eventuella fel."
-
-#~ msgid "Update using \"ipkg upgrade\" started.\n"
-#~ msgstr "Uppdatering som använder \"ipkg upgrade\" startad.\n"
-
-#~ msgid "Running..."
-#~ msgstr "Kör..."
-
-#~ msgid "Update"
-#~ msgstr "Uppdatera"
-
-#~ msgid "Update from network"
-#~ msgstr "Uppdatera från nätverket"
-
-#~ msgid "Update entire system over an internet connection."
-#~ msgstr "Uppdatera hela systemet över en Internetanslutning."
-
-#~ msgid "Activity log"
-#~ msgstr "Aktivitetslogg"
-
-#~ msgid "This window shows all output from the packet manager that performs the update."
-#~ msgstr "Detta fönster visar all utdata från pakethanteraren som utför uppdateringen."
-
-#~ msgid "Install/Remove"
-#~ msgstr "Installera/Ta bort"
-
-#~ msgid "Install/Remove a package"
-#~ msgstr "Installera/Ta bort ett paket"
-
-#~ msgid "Enter name of package to be installed here."
-#~ msgstr "Ange namnet på paketet som ska installeras här."
-
-#~ msgid "Install a package from a configured source."
-#~ msgstr "Installera ett paket från en konfigurerad källa."
-
-#~ msgid "Remove the package."
-#~ msgstr "Ta bort paketet."
-
-#~ msgid "This window shows all output from the packet manager installing the package."
-#~ msgstr "Detta fönster visar all utdata från pakethanteraren vid installation av paketet."
-
-#~ msgid "Insert Card"
-#~ msgstr "Sätt in kort"
-
-#~ msgid "Click here to start card insertion manually."
-#~ msgstr "Klicka här för att starta kortinsättningen manuellt."
-
-#~ msgid "Eject Card"
-#~ msgstr "Mata ut kort"
-
-#~ msgid "Click here to eject card manually."
-#~ msgstr "Klicka här gör att mata ut kortet manuellt."
-
-#~ msgid "Suspend Card"
-#~ msgstr "Försätt kort i viloläge"
-
-#~ msgid "Click here to suspend current card."
-#~ msgstr "Klicka här för att försätta det aktuella kortet i viloläge."
-
-#~ msgid "Resume Card"
-#~ msgstr "Återuppta kort"
-
-#~ msgid "Click here to resume current card."
-#~ msgstr "Klicka här för att återuppta det aktuella kortet."
-
-#~ msgid "Reset Card"
-#~ msgstr "Återställ kort"
-
-#~ msgid "Click here to reset current card."
-#~ msgstr "Klicka här för att återställa det aktuella kortet."
-
-#~ msgid "Reset Card Manager"
-#~ msgstr "Återställ korthanteraren"
-
-#~ msgid "Click here to reset card manager. This commits all updates to pcmcia config files."
-#~ msgstr "Klicka här för att återställa korthanteraren. Detta verkställer alla uppdateringar i pcmcia-konfigurationsfiler."
-
-#~ msgid "Click here to assign a driver to this card / change current driver assignment."
-#~ msgstr "Klicka här för att tilldela en drivrutin till detta kort / ändra drivrutinstilldelningen."
-
-#~ msgid "Exit applet"
-#~ msgstr "Avsluta panelprogram"
-
-#~ msgid "Battery Information"
-#~ msgstr "Batteriinformation"
-
-#~ msgid "Accesss System Log "
-#~ msgstr "Kom åt systemlogg"
-
-#~ msgid "Show Logs"
-#~ msgstr "Visa loggar"
-
-#~ msgid " Update Manager"
-#~ msgstr "Uppdateringshanterare"
-
-#~ msgid "Update installed packages"
-#~ msgstr "Uppdatera installerade paket"
-
-#~ msgid " Serial Ports"
-#~ msgstr "Serieportar"
-
-#~ msgid "Global Look"
-#~ msgstr "Globalt utseende"
-
-#~ msgid "Access"
-#~ msgstr "Åtkomst"
-
-#~ msgid "Yes"
-#~ msgstr "Ja"
-
-#~ msgid "No"
-#~ msgstr "Nej"
-
-#~ msgid "Mounted at"
-#~ msgstr "Monterad på"
-
-#~ msgid "Access System Log"
-#~ msgstr "Kom åt systemlogg"
-
-#~ msgid "Show System Log"
-#~ msgstr "Visa systemlogg"
-
-#~ msgid "Show Log"
-#~ msgstr "Visa logg"
-
-#~ msgid "Update Manager"
-#~ msgstr "Uppdateringshanterare"
-
-#~ msgid "Manage local Users"
-#~ msgstr "Hantera lokala användare"
-
-#~ msgid "Use advanced settings"
-#~ msgstr "Använd avancerade inställningar"
-
-#~ msgid "Check this if you want to use the advanced settings below."
-#~ msgstr "Kryssa för detta om du vill använda de avancerade inställningarna nedan."
-
-#~ msgid "External keyboard configuration. Disabled buttons \t\t\t\t\tare currently not installed."
-#~ msgstr "Konfiguration av externt tangentbord. Inaktiverade knappar \t\t\t\t\tär inte installerade för tillfället."
-
-#~ msgid "Here you may select your external keyboard model. \t\t\t\t  To install software support connect your device to \t\t\t\t  internet and click the \"Install\" button."
-#~ msgstr "Här kan du välja modellen på ditt externa tangentbord. \t\t\t\t  För att installera programvarustöd ansluter du din enhet till \t\t\t\t  Internet och klickar på knappen \"Installera\"."
-
-#~ msgid "Enter name of new interface"
-#~ msgstr "Ange namnet på nya gränssnittet"
-
-#~ msgid "Here you need to enter the name if the provider configuration to use for this interface."
-#~ msgstr "Här kan du ange namnet för leverantörskonfigurationen som ska användas för detta gränssnitt."
-
-#~ msgid "Close  network tool"
-#~ msgstr "Stäng nätverksverktyget"
-
-#~ msgid "System memory"
-#~ msgstr "Systemminne"
-
-#~ msgid "Simple"
-#~ msgstr "Enkelt"
-
-#~ msgid "flock(stabfile) failed)"
-#~ msgstr "flock(stabfile) misslyckades)"
-
-#~ msgid "rresolve: unsupport address family %d !\n"
-#~ msgstr "rresolve: adressfamiljen %d stöds inte!\n"
-
-#~ msgid "warning: no inet socket available: %s\n"
-#~ msgstr "varning: inget inet-uttag tillgängligt: %s\n"
-
-#~ msgid "in_ether(%s): invalid ether address!\n"
-#~ msgstr "in_ether(%s): ogiltig ether-adress!\n"
-
-#~ msgid "in_ether(%s): trailing : ignored!\n"
-#~ msgstr "in_ether(%s): eftersläpande : ignorerat!\n"
-
-#~ msgid "in_ether(%s): trailing junk!\n"
-#~ msgstr "in_ether(%s): eftersläpande skräp!\n"
-
-#~ msgid "Removing packages"
-#~ msgstr "Tar bort paket"
-
-#~ msgid "rresolve: unsupported address family %d!\n"
-#~ msgstr "rresolve: adressfamiljen %d stöds inte!\n"
-
-#~ msgid "On"
-#~ msgstr "På"
-
-#~ msgid "Scope:"
-#~ msgstr "Omfattning:"
+msgstr "ユーザ マネージャ"

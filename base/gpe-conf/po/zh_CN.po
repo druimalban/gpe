@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf 0.1.21\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-23 02:20+0200\n"
+"POT-Creation-Date: 2004-10-31 22:33+0100\n"
 "PO-Revision-Date: 2004-11-06 00:28+0800\n"
 "Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
 "Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
@@ -15,159 +15,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Basepath: D:\\MSYS\\source\\gpe-conf-0.1.21\n"
-
-#: main.c:90 timeanddate.c:542
-msgid "Time"
-msgstr "时间"
-
-#: main.c:90
-#, fuzzy
-msgid "Time and Date Setup"
-msgstr "时间和日期"
-
-#: main.c:92
-#, fuzzy
-msgid "Screen"
-msgstr "绿"
-
-#: main.c:92 gpe-conf-screen.desktop.in.h:1
-msgid "Screen Setup"
-msgstr "屏幕设置"
-
-#: main.c:94
-msgid "Keys & Buttons"
-msgstr ""
-
-#: main.c:94
-msgid "Keys and Buttons Setup"
-msgstr ""
-
-#: main.c:96 timeanddate.c:558
-msgid "Network"
-msgstr "网络"
-
-#: main.c:96 gpe-conf-network.desktop.in.h:1
-msgid "Network Setup"
-msgstr "网络设置"
-
-#: main.c:98 theme.c:1144
-msgid "Theme"
-msgstr "主题"
-
-#: main.c:98 theme.c:1146 gpe-conf-theme.desktop.in.h:2
-msgid "Look and Feel"
-msgstr "视觉感观"
-
-#: main.c:100
-#, fuzzy
-msgid "Power"
-msgstr "提供商"
-
-#: main.c:100
-#, fuzzy
-msgid "Power safe Configuration"
-msgstr "休眠配置"
-
-#: main.c:102
-msgid "Owner"
-msgstr ""
-
-#: main.c:102 gpe-conf-ownerinfo.desktop.in.h:1
-msgid "Owner Information"
-msgstr "所有者信息"
-
-#: main.c:104
-#, fuzzy
-msgid "Login"
-msgstr "连接"
-
-#: main.c:104 gpe-conf-login-setup.desktop.in.h:1
-msgid "Login Setup"
-msgstr "登录设置"
-
-#: main.c:106
-#, fuzzy
-msgid "Users"
-msgstr "用户权限"
-
-#: main.c:106
-#, fuzzy
-msgid "User Administration"
-msgstr "用户权限管理"
-
-#: main.c:108
-msgid "GPE"
-msgstr ""
-
-#: main.c:108
-#, fuzzy
-msgid "GPE Conf Administration"
-msgstr "用户权限管理"
-
-#: main.c:110 gpe-conf-serial.desktop.in.h:2
-msgid "Serial Ports"
-msgstr "串行口"
-
-#: main.c:110
-#, fuzzy
-msgid "Serial Port Configuration"
-msgstr "休眠配置"
-
-#: main.c:112
-#, fuzzy
-msgid "PCMCIA/CF Cards"
-msgstr "PC/CF 卡"
-
-#: main.c:112
-#, fuzzy
-msgid "PCMCIA/CF Card Info and Config"
-msgstr "PC/CF 卡信息和配置"
-
-#: main.c:114
-msgid "Sound"
-msgstr ""
-
-#: main.c:114
-#, fuzzy
-msgid "Sound Setup"
-msgstr "登录设置"
-
-#: main.c:116
-#, fuzzy
-msgid "Task nameserver"
-msgstr "任务管理器"
-
-#: main.c:116
-msgid "Task for changing nameserver"
-msgstr ""
-
-#: main.c:118
-#, fuzzy
-msgid "Task sound"
-msgstr "背景"
-
-#: main.c:118
-msgid "Command line task saving/restoring sound settings."
-msgstr ""
-
-#: main.c:120
-#, fuzzy
-msgid "Task background image"
-msgstr "选择背景图片"
-
-#: main.c:120
-#, fuzzy
-msgid "Only select background image."
-msgstr "选择背景图片"
-
-#: main.c:146
-#, fuzzy
-msgid "Settings saved"
-msgstr "GPS 设置"
-
-#: main.c:162
-msgid "Aborted"
-msgstr ""
 
 #: main.c:335
 #, c-format
@@ -217,11 +64,11 @@ msgstr ""
 "用法：gpg-conf [小程序名]\n"
 "“小程序名”是以下之一：\n"
 
-#: applets.c:445
+#: applets.c:356
 msgid "Root access"
 msgstr "Root 权限"
 
-#: applets.c:459
+#: applets.c:370
 msgid ""
 "Some options are only\n"
 "accessible for user root.\n"
@@ -231,7 +78,7 @@ msgstr ""
 "用户操作。\n"
 "请输入密码。"
 
-#: applets.c:506 screen/calibrate.c:32
+#: applets.c:417 screen/calibrate.c:32
 msgid "Sorry, wrong password."
 msgstr "抱歉，错误的密码。"
 
@@ -251,73 +98,80 @@ msgstr "时间和日期"
 msgid "Date"
 msgstr "日期"
 
-#: timeanddate.c:537
+#: timeanddate.c:536
 msgid "Enter current date here or use button to select."
 msgstr "输入当前日期，或使用按钮选择。"
 
-#: timeanddate.c:576
+#: timeanddate.c:541
+msgid "Time"
+msgstr "时间"
+
+#: timeanddate.c:555
+msgid "Network"
+msgstr "网络"
+
+#: timeanddate.c:573
 msgid "Select the timeserver to use to set the clock."
 msgstr "选择用以校准时钟的时间服务器"
 
-#: timeanddate.c:578
+#: timeanddate.c:575
 msgid "Get time from network"
 msgstr "从网络获取时间"
 
-#: timeanddate.c:585
+#: timeanddate.c:582
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
 msgstr "如已连通互联网，您可以按此按钮以根据以上时间服务器校准这个设备的时间。"
 
-#: timeanddate.c:590 timeanddate.c:599
+#: timeanddate.c:587 timeanddate.c:596
 msgid "Timezone"
 msgstr "时区"
 
-#: timeanddate.c:622
+#: timeanddate.c:619
 msgid "Select your current timezone here. The setting applies after the next login."
 msgstr "在这里选择您的当前时区。设置将在下一次登录后有效。"
 
-#: timeanddate.c:630
+#: timeanddate.c:627
 msgid "Daylight Saving"
 msgstr "夏令时"
 
-#: timeanddate.c:637
+#: timeanddate.c:634
 msgid "Use daylight saving time"
 msgstr "使用夏令时"
 
-#: timeanddate.c:644
+#: timeanddate.c:641
 msgid "Check this box if you want your device to handle daylight saving time for you."
 msgstr "如您希望您的设备处理夏令时，请复选此框。"
 
-#: timeanddate.c:646
+#: timeanddate.c:643
 msgid "Offset:"
 msgstr "时间差："
 
-#: timeanddate.c:655
+#: timeanddate.c:652
 msgid "Default"
 msgstr "默认"
 
-#: timeanddate.c:662
+#: timeanddate.c:659
 msgid "Use default DST offset of one hour?"
 msgstr "使用默认的夏令时时间差(与冬令时相差 1 小时)？"
 
-#: timeanddate.c:667
+#: timeanddate.c:664
 msgid "Hours"
 msgstr "小时"
 
-#: timeanddate.c:670
+#: timeanddate.c:667
 msgid "Select daylight saving time offset hours here."
 msgstr "选择夏令时与冬令时的时间差小时数。"
 
-#: timeanddate.c:675
+#: timeanddate.c:672
 msgid "Minutes"
 msgstr "分钟"
 
-#: timeanddate.c:678
+#: timeanddate.c:675
 msgid "Select daylight saving time offset minutes here."
 msgstr "选择夏令时与冬令时的时间差分钟数。"
 
-#: timeanddate.c:783
-#, fuzzy
-msgid "To make timezone settings take effect, you'll need to log out and log in again."
+#: timeanddate.c:780
+msgid "To make timezone settings take effect,you'll need to log out and log in again."
 msgstr "要使时区设置生效，您必须先注销，然后再重新登录。"
 
 #: screen/main.c:74
@@ -364,192 +218,192 @@ msgstr "校准"
 msgid "Start"
 msgstr "开始"
 
-#: screen/main.c:304 sleep/callbacks.c:39
+#: screen/main.c:304 sleep/callbacks.c:47
 msgid "min"
 msgstr "分"
 
-#: screen/main.c:307 sleep/callbacks.c:42
+#: screen/main.c:307 sleep/callbacks.c:50
 msgid "sec"
 msgstr "秒"
 
-#: keys/kbd.c:142
+#: kbd.c:146
 msgid "Keyboard Geometry / Layout"
 msgstr "键盘布局"
 
-#: keys/kbd.c:182
+#: kbd.c:186
 msgid "User defined"
 msgstr "用户自定义"
 
-#: network.c:104
+#: network.c:106
 msgid "Current Config"
 msgstr "当前配置"
 
-#: network.c:233 ownerinfo.c:237
+#: network.c:235 ownerinfo.c:237
 msgid "Name:"
 msgstr "姓名："
 
-#: network.c:239
+#: network.c:241
 msgid "New Interface"
 msgstr "新接口"
 
-#: network.c:248
+#: network.c:250
 msgid "This interface definition already exists!"
 msgstr "此接口定义已存在！"
 
-#: network.c:326
+#: network.c:324
 msgid "Do you want to delete this interface?"
 msgstr "您确认要删除这个接口吗？"
 
-#: network.c:326 users/callbacks.c:138
+#: network.c:324 keyctl.c:230 users/callbacks.c:115
 msgid "Question"
 msgstr "问题"
 
-#: network.c:575
+#: network.c:570
 msgid "WiFi config"
 msgstr "WiFi 配置"
 
-#: network.c:606
-#, fuzzy, c-format
-msgid "WiFi config for %s"
+#: network.c:600
+#, c-format
+msgid "<b>WiFi config for %s</b>"
 msgstr "%s 的 WiFi 配置"
 
-#: network.c:618
+#: network.c:610
 msgid "ESSID"
 msgstr "ESSID"
 
-#: network.c:640
+#: network.c:632
 msgid "Mode"
 msgstr "模式"
 
-#: network.c:650
+#: network.c:642
 msgid "managed"
 msgstr "受管的"
 
-#: network.c:662
+#: network.c:654
 msgid "ad-hoc"
 msgstr "ad-hoc"
 
-#: network.c:679
+#: network.c:671
 msgid "Channel"
 msgstr "取消"
 
-#: network.c:700
+#: network.c:693
 msgid "WEP"
 msgstr "WEP"
 
-#: network.c:710
+#: network.c:703
 msgid "off"
 msgstr "关闭"
 
-#: network.c:722
+#: network.c:715
 msgid "open"
 msgstr "开放"
 
-#: network.c:734
+#: network.c:727
 msgid "restricted"
 msgstr "受限"
 
-#: network.c:750
+#: network.c:743
 msgid "Key 1"
 msgstr "密钥 1"
 
-#: network.c:778
+#: network.c:771
 msgid "Key 2"
 msgstr "密钥 2"
 
-#: network.c:806
+#: network.c:799
 msgid "Key 3"
 msgstr "密钥 3"
 
-#: network.c:835
+#: network.c:828
 msgid "Key 4"
 msgstr "密钥 4"
 
-#: network.c:1040
+#: network.c:1030
 msgid "Address"
 msgstr "地址"
 
-#: network.c:1043
+#: network.c:1033
 msgid "Enter your IP address here, e.g. 192.168.1.2"
 msgstr "在这里输入您的 IP 地址，形如 192.168.1.2"
 
-#: network.c:1045
+#: network.c:1035
 msgid "Netmask"
 msgstr "掩码"
 
-#: network.c:1048
+#: network.c:1038
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
 msgstr "在这里输入您的子网掩码，最常见的是 255.255.255.0"
 
-#: network.c:1050
+#: network.c:1040
 msgid "Broadcast"
 msgstr "广播"
 
-#: network.c:1053
+#: network.c:1043
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
 msgstr "在这里输入您的广播地址，一般来说这与您的 IP 地址前三段相同，最后一段是 255"
 
-#: network.c:1055
+#: network.c:1045
 msgid "Gateway"
 msgstr "网关"
 
-#: network.c:1058
+#: network.c:1048
 msgid "Enter the IP Address of your default gateway here."
 msgstr "在这里输入您的默认网关的 IP 地址。"
 
-#: network.c:1069 network.c:1186
+#: network.c:1059 network.c:1176
 msgid "WiFi device"
 msgstr "WiFi 设备"
 
-#: network.c:1077 network.c:1194
+#: network.c:1067 network.c:1184
 msgid "Configure"
 msgstr "配置"
 
-#: network.c:1174
+#: network.c:1164
 msgid "Hostname"
 msgstr "主机名"
 
-#: network.c:1177
+#: network.c:1167
 msgid "Enter your desired hostname here. This parameter is optional."
 msgstr "在这里输入您想要的主机名。此参数可选。"
 
-#: network.c:1294
+#: network.c:1284
 msgid "Provider"
 msgstr "提供商"
 
-#: network.c:1296
+#: network.c:1286
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
 msgstr "您需要在这里输入网络服务提供商的名称，您的接口将使用相应的配置。"
 
-#: network.c:1319
+#: network.c:1309
 msgid "Global Settings"
 msgstr "全局设置"
 
-#: network.c:1361
+#: network.c:1350
 msgid "Proxy"
 msgstr "代理"
 
-#: network.c:1362
+#: network.c:1351
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
 msgstr "如果您希望或需要使用代理服务器，在此输入。(目前这一设置只对 dillo 有效。)"
 
-#: network.c:1368
+#: network.c:1357
 msgid "No proxy for"
 msgstr "以下不使用代理"
 
-#: network.c:1370
+#: network.c:1359
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
 msgstr "您需要在这里输入本地域名，访问本地域的站点时不使用代理"
 
-#: network.c:1377
+#: network.c:1366
 msgid "DNS server"
 msgstr "域名服务器"
 
-#: network.c:1380
+#: network.c:1369
 msgid "Enter the IP of the DNS(name-) server to use here."
 msgstr "在这里输入您要使用的域名(DNS)服务器的 IP 地址。"
 
-#: network.c:1551
+#: network.c:1540
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
@@ -557,260 +411,291 @@ msgstr ""
 "您可以在这里改变您的设备的基本配置类型。\n"
 "手动配置接口请使用“static”，动态分配 IP 请使用“DHCP”，点对点设备请使用“ppp”。"
 
-#: network.c:1557
+#: network.c:1546
 msgid "Enable this option if your device is a WiFi device"
 msgstr "如果您的设备是一个 WiFi 设备，请启用这一选项"
 
-#: network.c:1559
+#: network.c:1548
 msgid "Click to set the wireless options for this device"
 msgstr "单击以设置此设备的无线选项"
 
-#: network.c:1561
+#: network.c:1550
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
 msgstr "设置您的 WiFi 卡的工作模式。(受管的或 ad-hoc)。"
 
-#: network.c:1564
+#: network.c:1553
 msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
 msgstr "设置加密模式：关闭意味着不使用 WEP 加密，开放意味着使用开放系统，受限意味着仅使用受限制的 WEP 连接。"
 
-#: network.c:1569
+#: network.c:1558
 msgid "Enter the essid of your WiFi network here."
 msgstr "在这里输您的 WiFi 网络的 ESSID。"
 
-#: network.c:1572
+#: network.c:1561
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
 msgstr "在此输入您的 WEP 密钥(以 iwconfig 的格式)，例如：“s:12345”"
 
-#: network.c:1575
+#: network.c:1564
 msgid "Select the WEP key to use."
 msgstr "选择要使用的 WEP 密钥。"
 
-#: network.c:1578
+#: network.c:1567
 msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
 msgstr "如果需要，输入频道号或频率。如果不需要，将此段留空。"
 
-#: network.c:1601
+#: network.c:1590
 msgid "Add Interface"
 msgstr "添加接口"
 
-#: network.c:1602
+#: network.c:1591
 msgid "Add a new Interface"
 msgstr "添加一个新接口"
 
-#: network.c:1612
+#: network.c:1601
 msgid "Remove Interface"
 msgstr "删除接口"
 
-#: network.c:1613
+#: network.c:1602
 msgid "Remove current Interface"
 msgstr "删除当前接口"
 
-#: network.c:1627
+#: network.c:1616
 msgid "Information"
 msgstr "信息"
 
-#: network.c:1628
+#: network.c:1617
 msgid "Show current configuration."
 msgstr "显示当前配置"
 
-#: network.c:1647
+#: network.c:1635
 msgid "Couldn't read network configuration."
 msgstr "无法读取网络配置。"
 
-#: network.c:1654
+#: network.c:1642
 msgid "global"
 msgstr "全局"
 
-#: theme.c:238
+#: theme.c:140
 msgid "Choose backgound image"
 msgstr "选择背景图片"
 
-#: theme.c:252
+#: theme.c:154
 msgid "You are not allowed to read this file, choose another."
 msgstr "您不允许读取这个文件，请选择另一个。"
 
-#: theme.c:273
+#: theme.c:175
 msgid "Succesfully changed background image."
 msgstr "成功改变背景图片。"
 
-#: theme.c:274
+#: theme.c:176
 msgid "Use \"Look and Feel\" setup tool to change details."
 msgstr "使用“视觉感观”设置工具来改变细节。"
 
-#: theme.c:598
+#: theme.c:500
 msgid "Red"
 msgstr "红"
 
-#: theme.c:603
+#: theme.c:505
 msgid "Green"
 msgstr "绿"
 
-#: theme.c:608
+#: theme.c:510
 msgid "Blue"
 msgstr "蓝"
 
-#: theme.c:918
+#: theme.c:820
 msgid "Select colour"
 msgstr "选择颜色"
 
-#: theme.c:944 theme.c:1018
+#: theme.c:846 theme.c:920
 msgid "You don't have read access to selected background image!"
 msgstr "您没有读取权限来选择背景图片！"
 
-#: theme.c:1156
+#: theme.c:1040
+msgid "Theme"
+msgstr "主题"
+
+#: theme.c:1042 gpe-conf-theme.desktop.in.h:2
+msgid "Look and Feel"
+msgstr "视觉感观"
+
+#: theme.c:1052
 msgid "Desktop Theme"
 msgstr "桌面主题"
 
-#: theme.c:1168
+#: theme.c:1064
 msgid "Name"
 msgstr "名称"
 
-#: theme.c:1185
+#: theme.c:1081
 msgid "Icon Size"
 msgstr "图标大小"
 
-#: theme.c:1200
+#: theme.c:1096
 msgid "Visual Effects"
 msgstr "视觉效果"
 
-#: theme.c:1206
+#: theme.c:1102
 msgid "Enable Visual Effects"
 msgstr "使用视觉效果"
 
-#: theme.c:1213
+#: theme.c:1109
 msgid "Background"
 msgstr "背景"
 
-#: theme.c:1227 theme.c:1229
+#: theme.c:1123 theme.c:1125
 msgid "Background Settings"
 msgstr "背景设置"
 
-#: theme.c:1239 theme.c:1250
+#: theme.c:1135 theme.c:1146
 msgid "Theme Default"
 msgstr "默认主题"
 
-#: theme.c:1258
+#: theme.c:1154
 msgid "Solid colour"
 msgstr "单色"
 
-#: theme.c:1272
+#: theme.c:1168
 msgid "Horizontal"
 msgstr "水平"
 
-#: theme.c:1276
+#: theme.c:1172
 msgid "Vertical"
 msgstr "垂直"
 
-#: theme.c:1281 theme.c:1300 theme.c:1483 theme.c:1489
+#: theme.c:1177 theme.c:1196 theme.c:1379 theme.c:1385
 msgid "Colour"
 msgstr "颜色"
 
-#: theme.c:1291
+#: theme.c:1187
 msgid "Colour gradient"
 msgstr "渐变色"
 
-#: theme.c:1310
+#: theme.c:1206
 msgid "Image"
 msgstr "图片"
 
-#: theme.c:1336
+#: theme.c:1232
 msgid "Centered"
 msgstr "居中"
 
-#: theme.c:1340
+#: theme.c:1236
 msgid "Tiled"
 msgstr "拉伸"
 
-#: theme.c:1343
+#: theme.c:1239
 msgid "Stretched"
 msgstr "平铺"
 
-#: theme.c:1350
+#: theme.c:1246
 msgid "Toolbars"
 msgstr "工具栏"
 
-#: theme.c:1362 theme.c:1364
+#: theme.c:1258 theme.c:1260
 msgid "Toolbar Style"
 msgstr "工具栏风格"
 
-#: theme.c:1373 theme.c:1402
+#: theme.c:1269 theme.c:1298
 msgid "Icons"
 msgstr "图标"
 
-#: theme.c:1378 theme.c:1406
+#: theme.c:1274 theme.c:1302
 msgid "Text"
 msgstr "文本"
 
-#: theme.c:1383
+#: theme.c:1279
 msgid "Both"
 msgstr "两者(宽)"
 
-#: theme.c:1388
+#: theme.c:1284
 msgid "Both H"
 msgstr "两者(紧)"
 
-#: theme.c:1409
+#: theme.c:1305
 msgid "Both (icon above text)"
 msgstr "两者(图标在文本上方)"
 
-#: theme.c:1412
+#: theme.c:1308
 msgid "Both (icon left of text)"
 msgstr "两者(图标在文本左侧)"
 
-#: theme.c:1419
+#: theme.c:1315
 msgid "Toolbar Icon Size"
 msgstr "工具栏图标大小"
 
-#: theme.c:1435
+#: theme.c:1331
 msgid "Fonts"
 msgstr "字体"
 
-#: theme.c:1444 theme.c:1464
+#: theme.c:1340 theme.c:1360
 msgid "Desktop Font"
 msgstr "桌面字体"
 
-#: theme.c:1451 theme.c:1511 theme.c:1546 theme.c:1596
+#: theme.c:1347 theme.c:1407 theme.c:1442
 msgid "Family"
 msgstr "字体"
 
-#: theme.c:1471 theme.c:1531 theme.c:1566 theme.c:1616
+#: theme.c:1367 theme.c:1427 theme.c:1462
 msgid "Size"
 msgstr "字号"
 
-#: theme.c:1500 theme.c:1502 theme.c:1524 theme.c:1559
+#: theme.c:1396 theme.c:1398 theme.c:1420 theme.c:1455
 msgid "Application Font"
 msgstr "应用程序字体"
 
-#: theme.c:1580
-#, fuzzy
-msgid "Terminal"
-msgstr "垂直"
+#: keyctl.c:230
+msgid "Reset button config to default?"
+msgstr "重置按钮配置为默认值吗？"
 
-#: theme.c:1589
-#, fuzzy
-msgid "Font"
-msgstr "字体"
+#: keyctl.c:248
+msgid "User Defined"
+msgstr "用户自定义"
 
-#: theme.c:1609
-#, fuzzy
-msgid "Terminal Font"
-msgstr "串行口"
+#: keyctl.c:249
+msgid "Record Memo"
+msgstr "录制备忘录"
 
-#: keys/keyctl.c:178
-msgid "Button layout file is missing a global section."
-msgstr ""
+#: keyctl.c:250
+msgid "Calendar"
+msgstr "日历"
 
-#: keys/keyctl.c:549
-#, fuzzy
-msgid "Critical: Can't open keylaunchrc for writing!"
+#: keyctl.c:251
+msgid "Contacts"
+msgstr "联系人"
+
+#: keyctl.c:252
+msgid "Taskmanager"
+msgstr "任务管理器"
+
+#: keyctl.c:253
+msgid "Audio Player"
+msgstr "音频播放器"
+
+#: keyctl.c:254
+msgid "Web Browser"
+msgstr "网页浏览器"
+
+#: keyctl.c:255
+msgid "To-do List"
+msgstr "待办事项列表"
+
+#: keyctl.c:256
+msgid "Toggle Desktop"
+msgstr "切换桌面"
+
+#: keyctl.c:277
+msgid "Defaults"
+msgstr "默认"
+
+#: keyctl.c:442
+msgid "Critical: Can't open keylaunchrc for writing!\n"
 msgstr "严重警告：无法打开 keylaunchrc 以写入！\n"
 
-#: keys/keyctl.c:572
-#, fuzzy
-msgid "Could not restart key handler!"
+#: keyctl.c:464
+msgid "Could not restart key handler!\n"
 msgstr "无法重新启动按键处理程序！\n"
 
-#: keys/keyctl.c:595
+#: keyctl.c:486
 msgid "The file you selected is not executable."
 msgstr "您选择的不是可执行文件。"
 
@@ -838,23 +723,23 @@ msgstr "地址："
 msgid "Photofile:"
 msgstr "照片："
 
-#: login-setup.c:160
+#: login-setup.c:118
 msgid "Some of these settings can only be changed by the user 'root'."
 msgstr "这些设置中的一部分只能由 root 用户改变。"
 
-#: login-setup.c:183 gpe-admin.c:85
+#: login-setup.c:141 gpe-admin.c:86
 msgid "General"
 msgstr "常规"
 
-#: login-setup.c:200
+#: login-setup.c:158
 msgid "Show owner information at login."
 msgstr "登录时显示所有者信息。"
 
-#: login-setup.c:204
+#: login-setup.c:162
 msgid "Lock display on suspend."
 msgstr "挂起时锁定显示。"
 
-#: login-setup.c:208
+#: login-setup.c:166
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
@@ -862,67 +747,65 @@ msgstr ""
 "挂起时锁定显示。\n"
 " (需要密码)"
 
-#: login-setup.c:213
-msgid ""
-"Automatic login. \n"
-"  (without password)"
-msgstr ""
-
-#: sleep/interface.c:65
+#: sleep/interface.c:67
 msgid "Auto sleep"
 msgstr "自动休眠"
 
-#: sleep/interface.c:75 sleep/interface.c:106
+#: sleep/interface.c:77 sleep/interface.c:116
 msgid "enabled"
 msgstr "启用"
 
-#: sleep/interface.c:93
+#: sleep/interface.c:95
 msgid "sleep timeout"
 msgstr "休眠延时"
 
-#: sleep/interface.c:96
+#: sleep/interface.c:106
 msgid "Auto dim"
 msgstr "自动变暗"
 
-#: sleep/interface.c:123
+#: sleep/interface.c:133
 msgid "backlight dim timeout"
 msgstr "背光变暗延时"
 
-#: sleep/interface.c:125
+#: sleep/interface.c:142
 msgid "Auto dim level"
 msgstr "自动变暗级别"
 
-#: sleep/interface.c:145
+#: sleep/interface.c:162
 msgid "Advanced Controls"
 msgstr "高级控制"
 
-#: sleep/interface.c:155
+#: sleep/interface.c:172
 msgid "CPU"
 msgstr "CPU"
 
-#: sleep/interface.c:161
+#: sleep/interface.c:178
 msgid "Sleep on cpu less than load"
 msgstr "CPU 占用率小于此值时休眠"
 
-#: sleep/interface.c:165
+#: sleep/interface.c:182
 msgid "load below"
 msgstr "占用率小于"
 
-#: sleep/interface.c:181
+#: sleep/interface.c:198
 msgid "APM"
 msgstr "APM"
 
-#: sleep/interface.c:187
+#: sleep/interface.c:204
 msgid "Sleep on AC"
 msgstr "使用交流供电时也允许休眠"
 
-#: sleep/interface.c:189
+#: sleep/interface.c:206
 msgid "probe IRQs"
 msgstr "检测中断活动"
 
-#: sleep/interface.c:195
+#: sleep/interface.c:212
 msgid "Check IRQ activity"
 msgstr "检查中断活动"
+
+#: sleep/callbacks.c:59
+msgid "%"
+msgstr "%"
 
 #: users/interface.c:215
 msgid "User Name"
@@ -1016,18 +899,7 @@ msgstr "新密码："
 msgid "Confirm:"
 msgstr "确认："
 
-#: users/callbacks.c:107
-msgid "You need at least one user account!"
-msgstr ""
-
-#: users/callbacks.c:131
-#, fuzzy
-msgid "You can't remove this user!"
-msgstr ""
-"您不能删除\n"
-" 系统用户！"
-
-#: users/callbacks.c:136
+#: users/callbacks.c:113
 msgid ""
 "You can't remove\n"
 " system users!"
@@ -1035,7 +907,7 @@ msgstr ""
 "您不能删除\n"
 " 系统用户！"
 
-#: users/callbacks.c:138
+#: users/callbacks.c:115
 msgid ""
 "Delete user and all its data?\n"
 "This action is not revertable\n"
@@ -1044,15 +916,15 @@ msgstr ""
 "删除用户及其所有数据？\n"
 "此操作不可逆且立刻生效。"
 
-#: users/callbacks.c:173
+#: users/callbacks.c:151
 msgid "Please choose a user name."
 msgstr "请选择一个用户名："
 
-#: users/callbacks.c:191
+#: users/callbacks.c:169
 msgid "Please choose a home directory."
 msgstr "请选择一个主文件夹。"
 
-#: users/callbacks.c:279
+#: users/callbacks.c:256
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
@@ -1060,7 +932,7 @@ msgstr ""
 "两个密码不一致！\n"
 " 请重试！"
 
-#: users/callbacks.c:282
+#: users/callbacks.c:259
 msgid ""
 "Wrong password\n"
 " Please try again!"
@@ -1068,11 +940,11 @@ msgstr ""
 "错误的密码\n"
 " 请重试！"
 
-#: cfgfile.c:919
+#: cfgfile.c:891
 msgid "No write access to network configuration."
 msgstr "网络配置没有写权限"
 
-#: gpe-admin.c:92
+#: gpe-admin.c:93
 msgid "Allow users to configure everything"
 msgstr "允许用户修改所有配置"
 
@@ -1160,128 +1032,128 @@ msgstr "波特率"
 msgid "Serial Port"
 msgstr "串行口"
 
-#: cardinfo.c:103
+#: cardinfo.c:105
 msgid "/_Card"
 msgstr "/卡(_C)"
 
-#: cardinfo.c:104
+#: cardinfo.c:106
 msgid "/Card/_Insert"
 msgstr "/卡/插入(_I)"
 
-#: cardinfo.c:105
+#: cardinfo.c:107
 msgid "/Card/_Eject"
 msgstr "/卡/弹出(_E)"
 
-#: cardinfo.c:106
+#: cardinfo.c:108
 msgid "/Card/_Suspend"
 msgstr "/卡/挂起(_S)"
 
-#: cardinfo.c:107
+#: cardinfo.c:109
 msgid "/Card/_Resume"
 msgstr "/卡/恢复(_R)"
 
-#: cardinfo.c:108
+#: cardinfo.c:110
 msgid "/Card/_Reset"
 msgstr "/卡/重置(_R)"
 
-#: cardinfo.c:109
+#: cardinfo.c:111
 msgid "/Card/s1"
 msgstr "/卡/接口 1"
 
-#: cardinfo.c:110
+#: cardinfo.c:112
 msgid "/Card/_Assign Driver"
 msgstr "/卡/分配驱动程序(_A)"
 
-#: cardinfo.c:111
+#: cardinfo.c:113
 msgid "/Card/s2"
 msgstr "/卡/接口 2"
 
-#: cardinfo.c:112
+#: cardinfo.c:114
 msgid "/Card/_Close"
 msgstr "/卡/关闭(_C)"
 
-#: cardinfo.c:113
+#: cardinfo.c:115
 msgid "/_Help"
 msgstr "/帮助(_H)"
 
-#: cardinfo.c:114
+#: cardinfo.c:116
 msgid "/_Help/Index"
 msgstr "/帮助(_I)/索引"
 
-#: cardinfo.c:115
+#: cardinfo.c:117
 msgid "/_Help/About"
 msgstr "/帮助(_I)/关于"
 
-#: cardinfo.c:175 cardinfo.c:863
+#: cardinfo.c:177 cardinfo.c:865
 msgid "card not recognized"
 msgstr "卡无法识别"
 
-#: cardinfo.c:277 cardinfo.c:348
+#: cardinfo.c:279 cardinfo.c:350
 msgid "Could not write to temporal config file."
 msgstr "无法写入临时配置文件。"
 
-#: cardinfo.c:554
+#: cardinfo.c:556
 msgid "Could not open pidfile:"
 msgstr "无法打开 PID 文件："
 
-#: cardinfo.c:560
+#: cardinfo.c:562
 msgid "Could not read pidfile"
 msgstr "无法读取 PID 文件"
 
-#: cardinfo.c:564
+#: cardinfo.c:566
 msgid "Could not signal cardmgr:"
 msgstr "无法向 cardmgr 发送信号："
 
-#: cardinfo.c:639
+#: cardinfo.c:641
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "必须先将 gpe-conf 设置为 setuid 程序，才能使用外接卡信息。"
 
-#: cardinfo.c:658
+#: cardinfo.c:660
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr "‘/proc/devices’中没有 PCMCIA 驱动程序"
 
-#: cardinfo.c:661
+#: cardinfo.c:663
 msgid "Could not open '/proc/devices'"
 msgstr "无法打开‘/proc/devices’"
 
-#: cardinfo.c:673
+#: cardinfo.c:675
 msgid "No sockets found\n"
 msgstr "找不到插槽\n"
 
-#: cardinfo.c:682
+#: cardinfo.c:684
 msgid "Card Services release does not match!"
 msgstr "外接卡服务发行版不匹配！"
 
-#: cardinfo.c:687
+#: cardinfo.c:689
 msgid "Could not get CS revision info!\n"
 msgstr "无法获取外接卡服务修订版本信息！\n"
 
-#: cardinfo.c:850
+#: cardinfo.c:852
 msgid "flock(stabfile) failed"
 msgstr "flock(stabfile) 失败"
 
-#: cardinfo.c:869
+#: cardinfo.c:871
 #, c-format
 msgid "no driver loaded"
 msgstr "未加载驱动程序"
 
-#: cardinfo.c:978
+#: cardinfo.c:980
 msgid "ready"
 msgstr "就绪"
 
-#: cardinfo.c:996
+#: cardinfo.c:998
 msgid "not ready"
 msgstr "尚未就绪"
 
-#: cardinfo.c:1011
+#: cardinfo.c:1013
 msgid "suspended"
 msgstr "挂起"
 
-#: cardinfo.c:1203
+#: cardinfo.c:1205
 msgid "Assign Driver"
 msgstr "分配驱动程序"
 
-#: cardinfo.c:1212
+#: cardinfo.c:1214
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1290,59 +1162,59 @@ msgstr ""
 "此对话框允许您选择或改变 PCMCIA\n"
 "卡或 CF 卡的驱动程序分配。"
 
-#: cardinfo.c:1222
+#: cardinfo.c:1224
 msgid "Your current card identifies itself as:"
 msgstr "您当前的卡提供的识别信息如下："
 
-#: cardinfo.c:1236 cardinfo.c:1242
+#: cardinfo.c:1238 cardinfo.c:1244
 msgid "Manuf. Id"
 msgstr "制造商 ID"
 
-#: cardinfo.c:1236 cardinfo.c:1242
+#: cardinfo.c:1238 cardinfo.c:1244
 msgid "Class"
 msgstr "类别"
 
-#: cardinfo.c:1340 cardinfo.c:1353
+#: cardinfo.c:1342 cardinfo.c:1355
 msgid "PC/CF card socket information."
 msgstr "PC/CF 卡插槽信息"
 
-#: cardinfo.c:1348
+#: cardinfo.c:1350
 msgid "Socket"
 msgstr "插槽"
 
-#: cardinfo.c:1379
+#: cardinfo.c:1381
 msgid "Information for socket"
 msgstr "插槽信息"
 
-#: cardinfo.c:1388
+#: cardinfo.c:1390
 msgid "State:"
 msgstr "状态："
 
-#: cardinfo.c:1389
+#: cardinfo.c:1391
 msgid "Device:"
 msgstr "设备："
 
-#: cardinfo.c:1390
+#: cardinfo.c:1392
 msgid "Driver:"
 msgstr "驱动程序："
 
-#: cardinfo.c:1391
+#: cardinfo.c:1393
 msgid "Type:"
 msgstr "类型："
 
-#: cardinfo.c:1392
+#: cardinfo.c:1394
 msgid "I/O:"
 msgstr "I/O:"
 
-#: cardinfo.c:1393
+#: cardinfo.c:1395
 msgid "IRQ:"
 msgstr "中断号："
 
-#: cardinfo.c:1400
+#: cardinfo.c:1402
 msgid "Flags:"
 msgstr "标记："
 
-#: cardinfo.c:1417
+#: cardinfo.c:1419
 msgid "PCMCIA initialisation failed"
 msgstr "PCMCIA 初始化失败。"
 
@@ -1527,210 +1399,117 @@ msgstr "16/4 Mbps 令牌环"
 msgid "16/4 Mbps Token Ring (New)"
 msgstr "16/4 Mbps 令牌环(新)"
 
-#: tools/interface.c:1875
-#, fuzzy, c-format
-msgid "Interface %s"
-msgstr "添加接口"
+#: tools/interface.c:1871
+#, c-format
+msgid ""
+"<b>Interface %s</b>\n"
+"Type: %s\n"
+msgstr ""
+"<b>接口 %s</b>\n"
+"类型：%s\n"
 
-#: tools/interface.c:1876
-#, fuzzy, c-format
-msgid "Type: %s"
-msgstr "类型："
-
-#: tools/interface.c:1885
+#: tools/interface.c:1877
 #, c-format
 msgid "Media: %s"
 msgstr "介质：%s"
 
-#: tools/interface.c:1890
+#: tools/interface.c:1882
 #, c-format
 msgid "(auto)"
 msgstr "(自动)"
 
-#: tools/interface.c:1902
+#: tools/interface.c:1894
 #, c-format
 msgid "Address: %s\n"
 msgstr "地址：%s\n"
 
-#: tools/interface.c:1907
+#: tools/interface.c:1899
 #, c-format
 msgid "P-t-P: %s\n"
 msgstr "点对点：%s\n"
 
-#: tools/interface.c:1911
+#: tools/interface.c:1903
 #, c-format
 msgid "Netmask: %s\n"
 msgstr "掩码：%s\n"
 
-#: tools/interface.c:1915
+#: tools/interface.c:1907
 #, c-format
 msgid "Broadcast: %s\n"
 msgstr "广播：%s\n"
 
-#: tools/interface.c:1927
+#: tools/interface.c:1919
 #, c-format
 msgid "HWaddr (MAC): %s\n"
 msgstr "MAC 地址：%s\n"
 
-#: tools/interface.c:1957
+#: tools/interface.c:1949
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
 msgstr "IPv6 地址：%s/%d\n"
 
-#: tools/interface.c:1960
+#: tools/interface.c:1952
 #, c-format
 msgid "Scope: "
 msgstr "范围："
 
-#: tools/interface.c:1965
+#: tools/interface.c:1957
 #, c-format
 msgid "Global"
 msgstr "全局"
 
-#: tools/interface.c:1968
+#: tools/interface.c:1960
 #, c-format
 msgid "Link"
 msgstr "连接"
 
-#: tools/interface.c:1971
+#: tools/interface.c:1963
 #, c-format
 msgid "Site"
 msgstr "站点"
 
-#: tools/interface.c:1974
+#: tools/interface.c:1966
 #, c-format
 msgid "Compat"
 msgstr "兼容"
 
-#: tools/interface.c:1977
+#: tools/interface.c:1969
 #, c-format
 msgid "Host"
 msgstr "主机"
 
-#: tools/interface.c:1980
+#: tools/interface.c:1972
 #, c-format
 msgid "Unknown"
 msgstr "未知"
 
-#: sound/sound.c:250
+#: sound/sound.c:252
 msgid "Audio Settings"
 msgstr "音频设置"
 
-#: sound/sound.c:257
+#: sound/sound.c:259
 msgid "Mute Everything"
 msgstr "全部静音"
 
-#: sound/sound.c:298
+#: sound/sound.c:300
 msgid "Alarm Settings"
 msgstr "警铃设置"
 
-#: sound/sound.c:305
+#: sound/sound.c:307
 msgid "Enable Alarm Sound"
 msgstr "启用警铃声"
 
-#: sound/sound.c:312
+#: sound/sound.c:314
 msgid "Automatic Volume (rising)"
 msgstr "自动音量(升高)"
 
-#: sound/sound.c:322 sound/soundctrl.c:298
+#: sound/sound.c:324 sound/soundctrl.c:283
 msgid "Volume"
 msgstr "音量"
 
-#: sound/sound.c:329
+#: sound/sound.c:331
 msgid "Test"
 msgstr "测试"
-
-#: keys/keyboard.c:75
-#, fuzzy
-msgid "none"
-msgstr "Econet"
-
-#: keys/keyboard.c:76
-msgid "Foldable"
-msgstr ""
-
-#: keys/keyboard.c:77
-msgid "SnapNType"
-msgstr ""
-
-#: keys/keyboard.c:78
-msgid "Stowaway"
-msgstr ""
-
-#: keys/keyboard.c:79
-msgid "StowawayXT"
-msgstr ""
-
-#: keys/keyboard.c:80
-msgid "HP Slim"
-msgstr ""
-
-#: keys/keyboard.c:81
-#, fuzzy
-msgid "Smart BT"
-msgstr "开始"
-
-#: keys/keyboard.c:82
-msgid "LIRC"
-msgstr ""
-
-#: keys/keyboard.c:83
-msgid "Belkin IR"
-msgstr ""
-
-#: keys/keyboard.c:84
-msgid "Flexis"
-msgstr ""
-
-#: keys/keyboard.c:85
-msgid "Benq Gamepad"
-msgstr ""
-
-#: keys/keyboard.c:86
-#, fuzzy
-msgid "Pocketvik"
-msgstr "插槽"
-
-#: keys/keyboard.c:87
-msgid "Micro Foldaway"
-msgstr ""
-
-#: keys/keyboard.c:88
-msgid "Micro Datapad"
-msgstr ""
-
-#: keys/keyboard.c:252
-#, fuzzy
-msgid "External keyboard configuration."
-msgstr "无法读取网络配置。"
-
-#: keys/keyboard.c:255
-#, fuzzy
-msgid "External Keyboard Port"
-msgstr "虚拟键盘设置"
-
-#: keys/keyboard.c:262
-msgid "Here you may select your external keyboard model."
-msgstr ""
-
-#: keys/keyboard.c:283
-#, fuzzy
-msgid "External Keyboard Type"
-msgstr "虚拟键盘设置"
-
-#: keys/keys.c:79
-#, fuzzy
-msgid "Buttons"
-msgstr "按钮配置"
-
-#: keys/keys.c:83
-msgid "Virtual Keyboard"
-msgstr "虚拟键盘"
-
-#: keys/keys.c:87
-#, fuzzy
-msgid "External Keyboard"
-msgstr "虚拟键盘"
 
 #: main-info.c:67
 #, c-format
@@ -1746,46 +1525,46 @@ msgstr "   “页数”可以是“global”(即全局，这是默认值)\n"
 msgid "System Information"
 msgstr "系统信息"
 
-#: storage.c:166 storage.c:423
+#: storage.c:167 storage.c:424
 msgid "System Memory"
 msgstr "系统内存"
 
 #. TRANSLATORS: MB == Mega Bytes
-#: storage.c:174 storage.c:443
+#: storage.c:175 storage.c:444
 msgid "Free memory"
 msgstr "剩余内存"
 
 #. TRANSLATORS: MB == Mega Bytes
-#: storage.c:176 storage.c:183 storage.c:329 storage.c:340 storage.c:445
-#: storage.c:458 sysinfo.c:663 sysinfo.c:679
+#: storage.c:177 storage.c:184 storage.c:330 storage.c:341 storage.c:446
+#: storage.c:459 sysinfo.c:664 sysinfo.c:680
 msgid "MB"
 msgstr "MB"
 
-#: storage.c:181 storage.c:328 storage.c:456
+#: storage.c:182 storage.c:329 storage.c:457
 msgid "Total:"
 msgstr "合计："
 
-#: storage.c:292
+#: storage.c:293
 msgid "Internal Flash"
 msgstr "内部闪存"
 
-#: storage.c:298
+#: storage.c:299
 msgid "MMC"
 msgstr "MMC"
 
-#: storage.c:304
+#: storage.c:305
 msgid "Compact Flash"
 msgstr "Compact Flash"
 
-#: storage.c:310
+#: storage.c:311
 msgid "Network Filesystem"
 msgstr "网络文件系统"
 
-#: storage.c:330
+#: storage.c:331
 msgid "Mounted at "
 msgstr "挂载于"
 
-#: storage.c:338
+#: storage.c:339
 msgid "Free space"
 msgstr "剩余空间"
 
@@ -1817,199 +1596,199 @@ msgstr "会话日志"
 msgid "Could not open X session log.\n"
 msgstr "无法打开 X 会话日志。\n"
 
-#: battery.c:190 battery.c:251
-#, fuzzy
-msgid "unknown"
-msgstr "未知"
+#: battery.c:86
+#, c-format
+msgid "could not open touchscreen device '%s'\n"
+msgstr "无法打开触摸屏设备‘%s’\n"
 
-#: battery.c:199 battery.c:259 battery.c:358
+#: battery.c:143 battery.c:200 battery.c:319
 msgid "Status: high"
 msgstr "状态：电量高"
 
-#: battery.c:202 battery.c:262 battery.c:362
+#: battery.c:146 battery.c:203 battery.c:323
 msgid "Status: low"
 msgstr "状态：电量低"
 
-#: battery.c:205 battery.c:265 battery.c:366
+#: battery.c:149 battery.c:206 battery.c:327
 msgid "Status: critical"
 msgstr "状态：电量严重不足"
 
-#: battery.c:208 battery.c:268 battery.c:370
+#: battery.c:152 battery.c:209 battery.c:331
 msgid "Status: charging"
 msgstr "状态：充电"
 
-#: battery.c:211 battery.c:271
+#: battery.c:155 battery.c:212
 msgid "Status: charge main"
 msgstr "状态：为主电池充电"
 
-#: battery.c:214
+#: battery.c:158
 msgid "Status: dead"
 msgstr "状态：电量耗尽"
 
-#: battery.c:217 battery.c:277 battery.c:356
+#: battery.c:161 battery.c:218 battery.c:317
 msgid "Status: full"
 msgstr "状态：充满"
 
-#: battery.c:220 battery.c:280
+#: battery.c:164 battery.c:221
 msgid "Status: no battery"
 msgstr "状态：没有电池"
 
-#: battery.c:223 battery.c:283 battery.c:301 battery.c:373
+#: battery.c:167 battery.c:224 battery.c:243 battery.c:334
 msgid "Status: unknown"
 msgstr "状态：未知"
 
-#: battery.c:228
+#: battery.c:172
 msgid "learning"
 msgstr "正在检测"
 
-#: battery.c:232 battery.c:287
+#: battery.c:176 battery.c:228
 msgid "Voltage"
 msgstr "电压"
 
-#: battery.c:236 battery.c:291 battery.c:390
+#: battery.c:180 battery.c:232 battery.c:348
 msgid "AC connected"
 msgstr "连接到交流电源"
 
-#: battery.c:238 battery.c:293 battery.c:392
+#: battery.c:182 battery.c:234 battery.c:350
 msgid "Lifetime"
 msgstr "剩余电量"
 
-#: battery.c:274
+#: battery.c:215
 msgid "Status: not installed"
 msgstr "状态：未安装"
 
-#: battery.c:300
+#: battery.c:241
 msgid "not installed"
 msgstr "未安装"
 
-#: battery.c:302
+#: battery.c:245
 msgid "Voltage: unknown"
 msgstr "电压：未知"
 
-#: battery.c:303
+#: battery.c:247
 msgid "Lifetime: unknown"
 msgstr "剩余电量：未知"
 
-#: battery.c:348
+#: battery.c:309
 msgid "No battery"
 msgstr "没有电池"
 
-#: battery.c:453
+#: battery.c:409
 msgid "Internal battery"
 msgstr "内部电池"
 
-#: battery.c:457
+#: battery.c:413
 msgid "Jacket battery"
 msgstr "外部电池"
 
-#: sysinfo.c:236
+#: sysinfo.c:237
 msgid "ARM"
 msgstr "ARM"
 
-#: sysinfo.c:239
+#: sysinfo.c:240
 msgid "Intel x86 or compatible"
 msgstr "Intel x86 或兼容"
 
-#: sysinfo.c:240
+#: sysinfo.c:241
 msgid "IBM type PC"
 msgstr "IBM PC"
 
-#: sysinfo.c:243
+#: sysinfo.c:244
 msgid "Mips"
 msgstr "Mips"
 
-#: sysinfo.c:245
+#: sysinfo.c:246
 msgid "Silicon Graphics Machine"
 msgstr "Silicon Graphics Machine"
 
-#: sysinfo.c:249
+#: sysinfo.c:250
 msgid "IBM Power or PowerPC"
 msgstr "IBM Power or PowerPC"
 
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: sysinfo.c:278
+#: sysinfo.c:279
 msgid "Familiar"
 msgstr "Familiar"
 
-#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
-#: sysinfo.c:292
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: sysinfo.c:293
 msgid "OpenEmbedded"
 msgstr "OpenEmbedded"
 
-#: sysinfo.c:334 sysinfo.c:336
+#: sysinfo.c:335 sysinfo.c:337
 msgid "Build"
 msgstr "编译版本"
 
-#: sysinfo.c:438
+#: sysinfo.c:439
 msgid "Network Status"
 msgstr "网络状态"
 
-#: sysinfo.c:452 sysinfo.c:455
+#: sysinfo.c:453 sysinfo.c:456
 msgid "HWaddr (MAC)"
 msgstr "MAC 地址"
 
-#: sysinfo.c:466 sysinfo.c:467
+#: sysinfo.c:467 sysinfo.c:468
 #, c-format
 msgid "Wireless"
 msgstr "无线"
 
-#: sysinfo.c:494
+#: sysinfo.c:495
 msgid "Default Gateway"
 msgstr "默认网关"
 
-#: sysinfo.c:537
+#: sysinfo.c:538
 msgid "System information"
 msgstr "系统信息"
 
-#: sysinfo.c:547
+#: sysinfo.c:548
 msgid "Version"
 msgstr "版本"
 
-#: sysinfo.c:579
+#: sysinfo.c:580
 msgid "Distribution"
 msgstr "分发版本"
 
-#: sysinfo.c:604
+#: sysinfo.c:605
 msgid "System"
 msgstr "系统"
 
-#: sysinfo.c:613
+#: sysinfo.c:614
 msgid "Device information"
 msgstr "设备信息"
 
-#: sysinfo.c:625
+#: sysinfo.c:626
 msgid "Device Name"
 msgstr "设备名"
 
-#: sysinfo.c:644
+#: sysinfo.c:645
 msgid "CPU:"
 msgstr "CPU："
 
-#: sysinfo.c:657
+#: sysinfo.c:658
 msgid "RAM:"
 msgstr "RAM："
 
-#: sysinfo.c:673
+#: sysinfo.c:674
 msgid "Storage:"
 msgstr "存储："
 
-#: sysinfo.c:685
+#: sysinfo.c:686
 msgid "Hardware"
 msgstr "硬件"
 
-#: sysinfo.c:695
+#: sysinfo.c:696
 msgid "Battery"
 msgstr "电池"
 
-#: sysinfo.c:702
+#: sysinfo.c:703
 msgid "Storage"
 msgstr "存储"
 
-#: sysinfo.c:709
+#: sysinfo.c:710
 msgid "Networks"
 msgstr "网络"
 
-#: sysinfo.c:716
+#: sysinfo.c:717
 msgid "Log Display"
 msgstr "显示日志"
 
@@ -2033,13 +1812,37 @@ msgstr "PC/CF 卡"
 msgid "PC/CF Cards info and config"
 msgstr "PC/CF 卡信息和配置"
 
-#: gpe-conf-keys.desktop.in.h:1
-msgid "Keyboard and Button Setup"
-msgstr ""
+#: gpe-conf-screen.desktop.in.h:1
+msgid "Screen Setup"
+msgstr "屏幕设置"
 
-#: gpe-conf-keys.desktop.in.h:2
-msgid "Keys and Buttons"
-msgstr ""
+#: gpe-conf-kbd.desktop.in.h:1
+msgid "Virtual Keyboard"
+msgstr "虚拟键盘"
+
+#: gpe-conf-kbd.desktop.in.h:2
+msgid "Virtual Keyboard Setup"
+msgstr "虚拟键盘设置"
+
+#: gpe-conf-keyctl.desktop.in.h:1
+msgid "Button Config"
+msgstr "按钮配置"
+
+#: gpe-conf-keyctl.desktop.in.h:2
+msgid "Button Configuration"
+msgstr "按钮配置"
+
+#: gpe-conf-login-setup.desktop.in.h:1
+msgid "Login Setup"
+msgstr "登录设置"
+
+#: gpe-conf-network.desktop.in.h:1
+msgid "Network Setup"
+msgstr "网络设置"
+
+#: gpe-conf-ownerinfo.desktop.in.h:1
+msgid "Owner Information"
+msgstr "所有者信息"
 
 #: gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
@@ -2048,6 +1851,10 @@ msgstr "设置所有者信息"
 #: gpe-conf-serial.desktop.in.h:1
 msgid "Serial Port Settings"
 msgstr "串行口设置"
+
+#: gpe-conf-serial.desktop.in.h:2
+msgid "Serial Ports"
+msgstr "串行口"
 
 #: gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"
@@ -2088,49 +1895,3 @@ msgstr "声音设置"
 #: gpe-conf-sound.desktop.in.h:2
 msgid "Sound defaults and setup"
 msgstr "声音默认值和设置"
-
-#~ msgid "Reset button config to default?"
-#~ msgstr "重置按钮配置为默认值吗？"
-
-#~ msgid "User Defined"
-#~ msgstr "用户自定义"
-
-#~ msgid "Record Memo"
-#~ msgstr "录制备忘录"
-
-#~ msgid "Calendar"
-#~ msgstr "日历"
-
-#~ msgid "Contacts"
-#~ msgstr "联系人"
-
-#~ msgid "Audio Player"
-#~ msgstr "音频播放器"
-
-#~ msgid "Web Browser"
-#~ msgstr "网页浏览器"
-
-#~ msgid "To-do List"
-#~ msgstr "待办事项列表"
-
-#~ msgid "Toggle Desktop"
-#~ msgstr "切换桌面"
-
-#~ msgid "Defaults"
-#~ msgstr "默认"
-
-#~ msgid "%"
-#~ msgstr "%"
-
-#~ msgid ""
-#~ "<b>Interface %s</b>\n"
-#~ "Type: %s\n"
-#~ msgstr ""
-#~ "<b>接口 %s</b>\n"
-#~ "类型：%s\n"
-
-#~ msgid "could not open touchscreen device '%s'\n"
-#~ msgstr "无法打开触摸屏设备‘%s’\n"
-
-#~ msgid "Button Configuration"
-#~ msgstr "按钮配置"
