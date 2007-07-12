@@ -1,3 +1,7 @@
+2007-07-12  Florian Boor <florian@kernelconcepts.de>
+
+	* run-calibrate.sh: Support both ts_calibrate and xtscal.
+
 2007-04-05  Florian Boor <florian@kernelconcepts.de>
 
 	* Release 1.16
