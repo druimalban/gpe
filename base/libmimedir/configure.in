@@ -1,6 +1,6 @@
 # $Id: configure.in,v 1.37 2006/12/19 04:18:07 pgeyleg Exp $
 
-AC_INIT(MIME Directory Library, 0.4.0, mailto:srittau@jroger.in-berlin.de, libmimedir)
+AC_INIT(MIME Directory Library, 0.4.2, mailto:gpe-list@linuxtogo.org, libmimedir)
 AC_PREREQ(2.53)
 AC_CONFIG_SRCDIR(mimedir/mimedir-attribute.c)
 AM_INIT_AUTOMAKE(libmimedir, AC_PACKAGE_VERSION)
