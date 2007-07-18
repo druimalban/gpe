@@ -1,2 +1,4 @@
 usr/lib/lib*.so.*
 usr/share/pixmaps/*png
+etc
+

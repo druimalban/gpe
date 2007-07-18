@@ -1,3 +1,10 @@
+2007-07-18  Graham Cobb  <g+770@cobb.uk.net>
+
+	* debian/libgpewidget1.files: add etc so that Maemo backup
+	configuration is included.  Note that if --prefix=/usr is
+	specified in ./configure command, --sysconfdir=/etc must also be
+	specified.
+
 2007-03-28  Florian Boor <florian@kernelconcepts.de>
 
     * Release 0.115
