@@ -1,6 +1,6 @@
 /*
  *  Copyright (C) 2005 Martin Felis <martin@silef.de>
- *  Copyright (C) 2006 Graham Cobb <g+gpe@cobb.uk.net>
+ *  Copyright (C) 2006, 2007 Graham Cobb <g+gpe@cobb.uk.net>
  *  Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
  *  
  *  This program is free software; you can redistribute it and/or
@@ -163,8 +163,7 @@ add_event (gpesyncd_context * ctx, guint *uid, gchar * data,
   int res = event_import_from_vevent (ec, vevent, &ev, error);
 
   g_object_unref(ec);
-  // BUG: mimedir_vcal_get_event_list does not increment ref count:
-  // g_object_unref (vevent);
+  g_object_unref (vevent);
   g_slist_free (events);
   g_object_unref (vcal);
 
@@ -251,7 +250,7 @@ add_todo (gpesyncd_context * ctx, guint *uid, gchar * data,
 
   /* Convert the VTODO to tags */
   tags = vtodo_to_tags (vtodo);
-  // BUG: mimedir_vcal_get_todo_list does not increment ref count: g_object_unref (vtodo);
+  g_object_unref (vtodo);
   g_slist_free (todos);
   g_object_unref (vcal);
 
