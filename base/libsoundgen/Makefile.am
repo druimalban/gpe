@@ -8,6 +8,10 @@ libsoundgen_la_LDFLAGS = -version-info 0:0:0
 
 libsoundgen_la_SOURCES = soundgen.c
 
+gpeincludedir = $(includedir)/gpe
+gpeinclude_HEADERS = gpe/soundgen.h gpe/buzzer.h
+
+# GRC - remove the following lie once we have checked it will cause no problems
 include_HEADERS = gpe/soundgen.h gpe/buzzer.h
 
 pkgconfigdir = $(libdir)/pkgconfig
