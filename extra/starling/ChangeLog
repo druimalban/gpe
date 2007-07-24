@@ -1,3 +1,10 @@
+2007-07-23  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mkinstalldirs: add file
+
+	* debian/rules: add options for maemo builds
+	(this assumes the debian directory is not used for anything else)
+
 2007-06-07  Florian Boor  <florian@linuxtogo.org>
 
 	* Release 0.2
