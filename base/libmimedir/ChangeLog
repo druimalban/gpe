@@ -1,3 +1,8 @@
+2007-07-26  Florian Boor <florian@kernelconcepts.de>
+
+	* docs/reference/mimedir/Makefile.am: Update with more recent
+	  gtk-doc bits.
+
 2007-07-18  Graham Cobb  <g+770@cobb.uk.net>
 
 	* Preparation for release 0.4.2...
