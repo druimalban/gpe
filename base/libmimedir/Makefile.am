@@ -9,3 +9,5 @@ EXTRA_DIST = \
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = mimedir-1.0.pc
+
+include gpe-dist.am

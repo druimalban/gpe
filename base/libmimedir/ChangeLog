@@ -1,3 +1,8 @@
+2007-07-18  Graham Cobb  <g+770@cobb.uk.net>
+
+	* Preparation for release 0.4.2...
+	* Add gpe-dist.am for GPE release process
+
 2007-04-07  Graham Cobb  <g+770@cobb.uk.net>
 
 	* Undo broken change in revision 9093 which references
