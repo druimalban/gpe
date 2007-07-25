@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = gpe-filemanager
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.25
+VERSION = 0.26
 MIME_PIXMAPS = `cd pixmaps/document-icons && ls *.png`
 
 LINGUAS = es sl sv vi ko ja
@@ -17,9 +17,15 @@ else
 BUILD = build
 endif
 
-PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags dbus-glib-1 gnome-vfs-2.0 gtk+-2.0 gnome-vfs-module-2.0` 
-PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DDBUS_API_SUBJECT_TO_CHANGE -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -DVERSION=\"$(VERSION)\"
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) `pkg-config --libs dbus-glib-1 gtk+-2.0` -pthread -Wl --export-dynamic -lgnomevfs-2 -lgobject-2.0 -lgthread-2.0  
+ifneq (,$(shell pkg-config hildon-libs --modversion 2>/dev/null))
+HILDON_CFLAGS += `pkg-config hildon-libs libossomime libosso --cflags`
+HILDON_CPPFLAGS += -DUSE_HILDON
+HILDON_LDFLAGS += `pkg-config hildon-libs libossomime libosso --libs`
+HILDON_INSTALL_SUFFIX = "hildon/"
+endif
+PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags dbus-glib-1 gnome-vfs-2.0 gtk+-2.0 gnome-vfs-module-2.0 libgpewidget` $(HILDON_CFLAGS)
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -DDBUS_API_SUBJECT_TO_CHANGE -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -DVERSION=\"$(VERSION)\" $(HILDON_CPPFLAGS)
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) `pkg-config --libs dbus-glib-1 gtk+-2.0 gnome-vfs-2.0 gthread-2.0 libgpewidget` -Wl --export-dynamic $(HILDON_LDFLAGS)
 
 OBJS = $(patsubst %,%.o,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
@@ -34,8 +40,10 @@ install-program: all
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -s gpe-filemanager $(DESTDIR)$(PREFIX)/bin/gpe-filemanager
 	install -D -m 644 gpe-filemanager.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe-filemanager.png
-	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
-	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/
+	mkdir -p $(DESTDIR)$(PREFIX)/share/applications/$(HILDON_INSTALL_SUFFIX)
+	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(HILDON_INSTALL_SUFFIX)
+	mkdir -p $(DESTDIR)$(PREFIX)/share/dbus-1/services
+	install -m 644 $(PACKAGE).service $(DESTDIR)$(PREFIX)/share/dbus-1/services/
 	for i in $(MIME_PIXMAPS); do install -D -m 644 pixmaps/document-icons/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/filemanager/document-icons/$$i; done
 
 uninstall:

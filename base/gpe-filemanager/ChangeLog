@@ -1,3 +1,8 @@
+2007-07-25  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Merge in Maemo patch by Santtu Lakkala <inz@inz.fi>
+    * Several bugfixes and cleanups.
+
 2006-08-23  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Add Korean and Japanese translations by Soohyung Cho 

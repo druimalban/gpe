@@ -1,6 +1,6 @@
  /*
  * Copyright (C) 2001, 2002 Damien Tanner <dctanner@magenet.com>
- *               2004, 2005 Florian Boor <florian.boor@kernelconcepts.de>
+ *               2004, 2005, 2007 Florian Boor <florian@linuxtogo.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,13 +35,22 @@
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
-#include <gpe/picturebutton.h>
 #include <gpe/question.h>
 #include <gpe/gpeiconlistview.h>
 #include <gpe/spacing.h>
 #include <gpe/gpehelp.h>
-#include <X11/Xlib.h>
 #include <gpe/infoprint.h>
+
+#ifdef USE_HILDON
+#include <hildon-widgets/hildon-program.h>
+#include <hildon-widgets/hildon-window.h>
+#include <hildon-widgets/hildon-defines.h>
+#include <libosso.h>
+#include <osso-mime.h>
+#include <hildon-widgets/hildon-banner.h>
+#define gpe_popup_infoprint(x, y) \
+	hildon_banner_show_information(window, NULL, y)
+#endif
 
 #include "main.h"
 #include "fileops.h"
@@ -55,8 +64,19 @@
 
 #define DEFAULT_TERMINAL "rxvt -e"
 #define FILEMANAGER_ICON_PATH "/share/gpe/pixmaps/default/filemanager/document-icons"
-#define DEFAULT_ICON_PATH "/pixmaps"
 #define ZOOM_INCREMENT 8
+
+#ifdef IS_HILDON
+#define DEFAULT_ICON_PATH "gpe/pixmaps/default"
+#else
+#define DEFAULT_ICON_PATH "/pixmaps"
+
+struct gpe_icon my_icons[] = {
+  { "icon", PREFIX "/share/pixmaps/gpe-filemanager.png" },
+  {NULL, NULL}
+};
+
+#endif
 
 #define MAX_SYM_DEPTH 256
 
@@ -64,7 +84,7 @@
 
 #define HELPMESSAGE "GPE-Filemanager\nVersion " VERSION \
 		"\nGPE File Manager\n\ndctanner@magenet.com"\
-		"\nflorian@handhelds.org"
+		"\nflorian@linuxtogo.org"
 
 #define NOHELPMESSAGE N_("Help for this application is not installed.")
 
@@ -147,25 +167,9 @@ static gboolean initialized = FALSE;
 
 FileInformation *current_popup_file;
 
-struct gpe_icon my_icons[] = {
-  { "left", "left" },
-  { "right", "right" },
-  { "up", "up" },
-  { "refresh", "refresh" },
-  { "stop", "stop" },
-  { "home", "home" },
-  { "open", "open" },
-  { "dir-up", "dir-up" },
-  { "ok", "ok" },
-  { "cancel", "cancel" },
-  { "question", "question" },
-  { "error", "error" },
-  { "list-view" },
-  { "icon-view" },
-  { "icon", PREFIX "/share/pixmaps/gpe-filemanager.png" },
-  {NULL, NULL}
-};
-
+#ifdef USE_HILDON
+static gboolean is_fullscreen = FALSE;
+#endif
 
 /* some forward declarations */
 
@@ -188,6 +192,12 @@ void on_myfiles_setting_changed(GtkCheckMenuItem *menuitem, gpointer user_data);
 void do_select_all(GtkWidget *w, gpointer d);
 static void view_icons (GtkWidget *widget);
 static void view_list (GtkWidget *widget);
+#ifdef USE_HILDON
+static GtkWidget *menubar_to_menu (GtkWidget *widget);
+static gchar *get_icon_name (const gchar *mime_type);
+static gboolean window_key_press(GtkWindow *window, GdkEventKey *event,
+		gpointer data);
+#endif
 
 
 /* items of the context menu */
@@ -525,38 +535,22 @@ static void
 open_with (GnomeVFSMimeApplication *application, 
            FileInformation *file_info)
 {
-  pid_t pid;
+#ifdef USE_HILDON
+  DBusConnection *conn = dbus_bus_get(DBUS_BUS_SESSION, NULL);
+  osso_mime_open_file(conn, file_info->filename);
+  dbus_connection_unref(conn);
+#else
     
   if (application)
-  {
-    gchar *msg = g_strdup_printf("%s %s",_("Starting"),application->name);
-    Display *dpy = GDK_DISPLAY();
-      
-    gpe_popup_infoprint(dpy, msg);
-    g_free(msg);
-      
-	pid = fork();
-	switch (pid)
-	{
-		case -1: 
-			return; /* failed */
-		break;
-		case  0: 
-          if (application->requires_terminal)
-               execlp(DEFAULT_TERMINAL,DEFAULT_TERMINAL,
-                      application->command,
-                      file_info->filename);
-          else
-               execlp(application->command,
-                      application->command,
-                      file_info->filename,
-                      NULL);
-          exit(-1); /* die in case of failing to exec */
-		break;
-		default: 
-		break;
-	} 
-  }
+    {
+      gchar *msg = g_strdup_printf("%s %s",_("Starting"), application->name);
+      gchar *commandline = g_strdup_printf ("%s %s", application->command, file_info->filename);
+	        
+      gpe_popup_infoprint(GDK_DISPLAY(), msg);
+      g_free(msg);
+      g_spawn_command_line_async (commandline, NULL);
+    }
+#endif
 }
 
 
@@ -1030,8 +1024,13 @@ get_pixbuf (const gchar *filename)
   }
   else
   {
+#ifdef USE_HILDON
+    GtkIconTheme *theme = gtk_icon_theme_get_default();
+    pixbuf = gtk_icon_theme_load_icon(theme, filename, 24, 0, NULL);
+#else
     pixbuf = gdk_pixbuf_new_from_file (filename, NULL);
-    g_hash_table_insert (loaded_icons, (gpointer) filename, (gpointer) pixbuf);
+#endif
+    g_hash_table_insert (loaded_icons, (gpointer) g_strdup(filename), (gpointer) pixbuf);
     return pixbuf;
   }
 }
@@ -1040,22 +1039,39 @@ void
 add_icon (FileInformation *file_info)
 {
   GdkPixbuf *pixbuf = NULL;
-  gchar *mime_icon;
+  gchar *mime_icon = NULL;
   
   if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY)
+#ifdef USE_HILDON
+    mime_icon = g_strdup("qgn_list_filesys_common_fldr");
+#else
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/directory.png");
+#endif
   else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_REGULAR || file_info->vfs->type == GNOME_VFS_FILE_TYPE_UNKNOWN)
   {
    file_info->vfs->mime_type = gnome_vfs_get_mime_type (file_info->filename);
     if (file_info->vfs->mime_type)
+#ifdef USE_HILDON
+      mime_icon = get_icon_name(file_info->vfs->mime_type);
+#else
       mime_icon = find_icon_path (file_info->vfs->mime_type);
+#endif
     else
+#ifdef USE_HILDON
+      mime_icon = g_strdup("qgn_list_gene_unknown_file");
+#else
       mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
+#endif
   }
+#ifndef USE_HILDON
   else if (file_info->vfs->type == GNOME_VFS_FILE_TYPE_SYMBOLIC_LINK)
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/symlink.png");
   else
     mime_icon = g_strdup (PREFIX FILEMANAGER_ICON_PATH "/regular.png");
+#else
+  if (mime_icon == NULL)
+    mime_icon = g_strdup("qgn_list_gene_unknown_file");
+#endif
 
   pixbuf = get_pixbuf (mime_icon);
   g_free(mime_icon);
@@ -1064,18 +1080,29 @@ add_icon (FileInformation *file_info)
   if ((directory_browser) && (file_info->vfs->type == GNOME_VFS_FILE_TYPE_DIRECTORY))
     { /* add to directory browser */
 		GtkTreeIter iter;
+#ifndef USE_HILDON
 		GdkPixbuf *pb;
+#endif
 		  
 		gtk_tree_store_append (dirstore, &iter, NULL);
+#ifndef USE_HILDON
 		pb = gdk_pixbuf_scale_simple(pixbuf,24,24,GDK_INTERP_BILINEAR);
+#endif
 		
 		gtk_tree_store_set (dirstore, 
 		                    &iter,
-		                    COL_DIRICON, pb,
+		                    COL_DIRICON,
+#ifndef USE_HILDON
+				    pb,
+#else
+				    pixbuf,
+#endif
 			                COL_DIRNAME, file_info->vfs->name,
 			                COL_DIRDATA, (gpointer) file_info,
 			                -1);
+#ifndef USE_HILDON
 		gdk_pixbuf_unref(pb);
+#endif
     }
   else
     { /* add to iconlist or normal browser */
@@ -1086,11 +1113,15 @@ add_icon (FileInformation *file_info)
 	  else
 	  {
 		GtkTreeIter iter;
+#ifndef USE_HILDON
 		GdkPixbuf *pb;
+#endif
 		gchar *size;
 		gchar *time;
 		  
+#ifndef USE_HILDON
 		pb = gdk_pixbuf_scale_simple(pixbuf,24,24,GDK_INTERP_BILINEAR);
+#endif
 		size = gnome_vfs_format_file_size_for_display(file_info->vfs->size); 
 		time = g_strdup(ctime(&file_info->vfs->ctime));
 		time[strlen(time)-1] = 0; /* strip newline */
@@ -1101,12 +1132,18 @@ add_icon (FileInformation *file_info)
 			COL_NAME, file_info->vfs->name,
 			COL_SIZE, size,
 			COL_CHANGED, time,
+#ifndef USE_HILDON
 			COL_ICON, pb,
+#else
+			COL_ICON, pixbuf,
+#endif
 			COL_DATA, (gpointer) file_info,
 			-1);
 		g_free(size);
 		g_free(time);
+#ifndef USE_HILDON
 		gdk_pixbuf_unref(pb);
+#endif
 	  }
   }  
 }
@@ -1336,12 +1373,29 @@ browse_directory (gchar *directory)
   if (!ishome)
     {
        if (strlen(strrchr(directory, '/')) > 1)
+       {
          msg = g_strdup_printf("%s %s",_("Opening"), strrchr(directory, '/') + 1);
+#ifdef USE_HILDON
+         gtk_window_set_title(GTK_WINDOW(window), strrchr(directory, '/') + 1);
+#endif
+       }
        else /* should only happen for "/" */
+       {
          msg = g_strdup_printf("%s %s",_("Opening"), strrchr(directory, '/'));
+#ifdef USE_HILDON
+         gtk_window_set_title(GTK_WINDOW(window), strrchr(directory, '/'));
+#endif
+       }
        gpe_popup_infoprint(GDK_DISPLAY(), msg);
        g_free(msg);
+    } 
+	else 
+	{
+#ifdef USE_HILDON
+      gtk_window_set_title(GTK_WINDOW(window), _("My Documents"));
+#endif
     }
+      
   
   add_history (g_strdup(directory));
   gtk_entry_set_text (GTK_ENTRY (GTK_COMBO (combo)->entry), directory);
@@ -1722,12 +1776,25 @@ main (int argc, char *argv[])
   GtkToolItem *item;
   GtkAccelGroup *accel_group;
   GtkWidget *storage_menu;
-  int size_x, size_y, arg;
+  gint size_x, size_y, arg;
+#ifdef USE_HILDON
+  HildonProgram *program;
+  osso_context_t *osso;
+#endif
 
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
+
+#ifdef USE_HILDON
+  if ((osso = osso_initialize("org.handhelds.gpe_filemanager",
+	  VERSION,
+	  FALSE,
+	  NULL)) == NULL)
+    exit(1);
+#else
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
+#endif
 
   setlocale (LC_ALL, "");
 
@@ -1738,6 +1805,8 @@ main (int argc, char *argv[])
   bluetooth_init ();
 
   gnome_vfs_init ();
+
+  gtk_icon_theme_get_default();
   
   /* init tree storage stuff */
   store = gtk_tree_store_new (N_COLUMNS,
@@ -1764,12 +1833,23 @@ main (int argc, char *argv[])
   if (size_x < 240) size_x = 240;
   if (size_y < 320) size_y = 320;
   
+#ifdef USE_HILDON
+  window = hildon_window_new ();
+  program = hildon_program_get_instance();
+  hildon_program_add_window(program, HILDON_WINDOW(window));
+
+  g_signal_connect(window, "key-release-event", G_CALLBACK(window_key_press),
+		  NULL);
+#else
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gpe_set_window_icon(window, "icon");
   gtk_window_set_title (GTK_WINDOW (window),_("Filemanager"));
+#endif
+
+  g_set_prgname(_("Filemanager"));
   gtk_window_set_default_size (GTK_WINDOW (window), size_x, size_y);
   gtk_signal_connect (GTK_OBJECT (window), "delete-event",
 		      GTK_SIGNAL_FUNC (gtk_exit), NULL);
-  gpe_set_window_icon(window,"icon");
 
   gtk_widget_realize (window);
 
@@ -1781,7 +1861,12 @@ main (int argc, char *argv[])
 
   /* main menu */ 
   mMain = create_mMain(window);
+#ifdef USE_HILDON
+  mMain = menubar_to_menu(mMain);
+  hildon_window_set_menu(HILDON_WINDOW(window), GTK_MENU(mMain));
+#else
   gtk_box_pack_start(GTK_BOX(vbox), mMain, FALSE, TRUE, 0);
+#endif
   
   /* location stuff */
   combo = gtk_combo_new ();
@@ -1873,7 +1958,11 @@ main (int argc, char *argv[])
   GTK_WIDGET_UNSET_FLAGS(pw, GTK_CAN_FOCUS);
 
   gtk_container_add (GTK_CONTAINER (window), GTK_WIDGET (vbox));
+#ifndef USE_HILDON
   gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 0);
+#else
+  hildon_window_add_toolbar(HILDON_WINDOW(window), GTK_TOOLBAR(toolbar));
+#endif
   if (directory_browser)
     gtk_box_pack_start (GTK_BOX (vbox), storage_menu, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
@@ -1881,7 +1970,6 @@ main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (hbox), toolbar2, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), main_paned, TRUE, TRUE, 0);
 
-  gpe_set_window_icon (window, "icon");
 
   accel_group = gtk_accel_group_new ();
   item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
@@ -1964,3 +2052,66 @@ main (int argc, char *argv[])
 
   return 0;
 }
+
+#ifdef USE_HILDON
+static GtkWidget *menubar_to_menu (GtkWidget *widget)
+{
+  GtkWidget *retval = gtk_menu_new();
+
+  gtk_container_foreach(GTK_CONTAINER(widget),
+      (GtkCallback)gtk_widget_reparent, retval);
+
+  gtk_object_sink(GTK_OBJECT(widget));
+
+  return retval;
+}
+
+static gchar *get_icon_name (const gchar *mime_type)
+{
+  gchar **names = osso_mime_get_icon_names(
+      mime_type,
+      NULL);
+  gchar *retval = NULL;
+  guint i = 0;
+  GtkIconTheme *theme = gtk_icon_theme_get_default();
+
+  for (i = 0; names[i]; i++) {
+    if (gtk_icon_theme_has_icon(theme, names[i])) {
+      retval = g_strdup(names[i]);
+      break;
+    }
+  }
+  g_strfreev(names);
+
+  return retval;
+}
+
+static gboolean window_key_press(GtkWindow *window, GdkEventKey *event,
+		gpointer data)
+{
+  if (event->type == GDK_KEY_RELEASE) {
+    switch (event->keyval) {
+      case HILDON_HARDKEY_FULLSCREEN:
+	if (is_fullscreen)
+	  gtk_window_unfullscreen(window);
+	else
+	  gtk_window_fullscreen(window);
+	is_fullscreen = !is_fullscreen;
+	return TRUE;
+	break;
+
+      case HILDON_HARDKEY_INCREASE:
+	view_icons(NULL);
+	return TRUE;
+	break;
+      case HILDON_HARDKEY_DECREASE:
+	view_list(NULL);
+	return TRUE;
+	break;
+      default:
+	break;
+    }
+  }
+  return FALSE;
+}
+#endif
