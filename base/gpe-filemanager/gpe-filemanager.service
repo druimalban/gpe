@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.handhelds.gpe_filemanager
+Exec=/usr/bin/gpe-filemanager
