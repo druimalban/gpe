@@ -683,7 +683,8 @@ delete_plugin(gpointer data, gpointer udata)
     
 }
 
-void panel_stop(panel *p)
+void 
+panel_stop(panel *p)
 {
     ENTER;
 

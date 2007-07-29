@@ -9,7 +9,7 @@ remove unused code
 code cleanup
 consistent icon sizes
 depend on folder package
-cleanup of menu plugin
+cleanup of menu plugin (done)
 fix wincmd plugin behaviour on mouse over
 make sure session is saved correctly (done)
 dock area needs to expand itself (done)
