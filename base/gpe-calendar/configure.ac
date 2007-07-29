@@ -11,7 +11,7 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
 DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 libgpepimc \
-             libgpevtype >= 0.50 libeventdb >= 0.90 \
+             libgpevtype >= 0.50 libeventdb >= 0.90 esound \
 	     libxsettings-client libhandoff libsoup-2.2 libsoundgen >= 0.5"
 
 # i8n stuff

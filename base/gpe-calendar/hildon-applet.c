@@ -82,7 +82,32 @@ hildon_home_applet_lib_initialize (void *state_data,
 				   int *state_size,
 				   GtkWidget **widget)
 {
-  printf ("%s:%s (%d)\n", __FILE__, __func__, getpid ());
+  const gchar *home_dir = g_get_home_dir ();
+	
+  if (home_dir[0] && strcmp (home_dir, "/"))
+    {
+      fn = g_strdup_printf ("%s/.gpe", home_dir);
+      if (stat (fn, &buf) != 0)
+	{
+	  if (mkdir (fn, 0700) != 0)
+	    {
+	      gpe_perror_box ("Cannot create ~/.gpe");
+	      g_free (fn);
+	      return FALSE;
+	    }
+	} 
+      else 
+	{
+	  if (!S_ISDIR (buf.st_mode))
+	    {
+	      gpe_error_box ("ERROR: ~/.gpe is not a directory!");
+	      g_free (fn);
+	      return FALSE;
+	    }
+	}
+  
+      g_free (fn);
+    }
 
   osso = osso_initialize ("gpe_calendar_home", "0.1", FALSE, NULL);
   if (! osso)

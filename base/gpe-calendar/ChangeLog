@@ -1,3 +1,9 @@
+2007-07-29  Florian Boor <florian.boor@kernelconcepts.de>
+
+	* hildon-applet.c: Make sure the .gpe directory is crated. Fixes
+	  #55.
+	* configure.ac: Add esound dependency.
+
 2007-06-18  Joe McCarthy <mccarthy@granular.che.pitt.edu>
 
 	* main.c: add gpe_cal_deiconify to play nice with the new default of iconifying rather than actually closing (needed for alarms), also to add soundgen_alarm_start() where necessary
