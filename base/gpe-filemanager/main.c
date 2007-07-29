@@ -544,11 +544,12 @@ open_with (GnomeVFSMimeApplication *application,
   if (application)
     {
       gchar *msg = g_strdup_printf("%s %s",_("Starting"), application->name);
-      gchar *commandline = g_strdup_printf ("%s %s", application->command, file_info->filename);
-	        
+      gchar *commandline = g_strdup_printf ("%s '%s'", application->command, file_info->filename);
+
       gpe_popup_infoprint(GDK_DISPLAY(), msg);
       g_free(msg);
       g_spawn_command_line_async (commandline, NULL);
+      g_free (commandline);
     }
 #endif
 }
@@ -968,7 +969,6 @@ button_clicked (GtkWidget *widget, gpointer udata)
 gchar *
 find_icon_path (gchar *mime_type)
 {
-  struct stat s;
   gchar *mime_icon;
   gchar *mime_path, *p;
 
@@ -977,16 +977,16 @@ find_icon_path (gchar *mime_type)
   {
     if (mime_icon[0] == '/')
     {
-      if (stat (mime_icon, &s) == 0)
+      if (access (mime_icon, R_OK) == 0)
         return mime_icon;
     }
 
     mime_path = g_strdup_printf (PREFIX FILEMANAGER_ICON_PATH "/%s", mime_icon);
-    if (stat (mime_path, &s) == 0)
+    if (access (mime_path, R_OK) == 0)
       return mime_path;
 
     mime_path = g_strdup_printf (PREFIX DEFAULT_ICON_PATH "/%s", mime_icon);
-    if (stat (mime_path, &s) == 0)
+    if (access (mime_path, R_OK) == 0)
       return mime_path;
   }
 
@@ -995,13 +995,13 @@ find_icon_path (gchar *mime_type)
     *p = '-';
 
   mime_path = g_strdup_printf (PREFIX FILEMANAGER_ICON_PATH "/%s.png", mime_icon);
-  if (stat (mime_path, &s) == 0)
+  if (access (mime_path, R_OK) == 0)
   {
 	g_free(mime_icon);
     return mime_path;
   }
   mime_path = g_strdup_printf (PREFIX DEFAULT_ICON_PATH "/%s.png", mime_icon);
-  if (stat (mime_path, &s) == 0)
+  if (access (mime_path, R_OK) == 0)
   {
 	g_free(mime_icon);
     return mime_path;

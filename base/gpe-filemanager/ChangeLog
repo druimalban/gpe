@@ -1,3 +1,9 @@
+2007-07-29  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Use autotools for building.
+    * Rename mime icons.
+    * Escape file names in shell commands.
+
 2007-07-27  Graham Cobb  <g+gpe@cobb.uk.net>
 
     * Add gpe-filemanager.service to SVN for Maemo

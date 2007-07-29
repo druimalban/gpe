@@ -1,0 +1,6 @@
+bluetooth.c
+fileops.c
+guitools.c
+main.c
+gpe-filemanager.desktop.in
+hildon/gpe-filemanager.desktop.in
