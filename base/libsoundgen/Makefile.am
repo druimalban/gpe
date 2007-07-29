@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libsoundgen.la
 
-AM_CPPFLAGS = @DEPS_CFLAGS@ -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\" \ 
+AM_CPPFLAGS = @DEPS_CFLAGS@ -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\" \
               -I$(top_srcdir)/gpe
 
 libsoundgen_la_LIBADD = @DEPS_LIBS@
