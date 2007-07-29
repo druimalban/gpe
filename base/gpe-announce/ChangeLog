@@ -1,3 +1,7 @@
+2007-07-30  Florian Boor <florian@kernelconcepts.de>
+
+	* Makefile: Fix dependencies
+
 2006-02-21  Joe McCarthy <jjmcc@pitt.edu>
 
         * callbacks.c: fix use of VoluemReset flag and snooze handling 

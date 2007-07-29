@@ -22,8 +22,8 @@ VERSION = 0.13
 MEMBERS = main interface callbacks
 
 PACKAGE_CPPFLAGS = $(STANDARD_CPPFLAGS)
-PACKAGE_CFLAGS = $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags gthread-2.0`  `pkg-config --cflags gstreamer-0.8`
-PACKAGE_LDFLAGS = $(STANDARD_LDFLAGS) $(GPELIBS) `pkg-config --libs gthread-2.0`
+PACKAGE_CFLAGS = $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags gthread-2.0`  `pkg-config --cflags gstreamer-0.8 esound`
+PACKAGE_LDFLAGS = $(STANDARD_LDFLAGS) $(GPELIBS) `pkg-config --libs gthread-2.0 esound`
 
 ifeq ($(CVSBUILD),yes)
 PACKAGE_CPPFLAGS += -I../libsoundgen -I../libschedule
