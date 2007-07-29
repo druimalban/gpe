@@ -7,5 +7,5 @@ Name: libsoundgen
 Description: Simple sound generator.
 Version: @VERSION@
 Requires: glib-2.0
-Libs: -L${libdir} -lsoundgen
+Libs: -L${libdir} -lsoundgen -lesd
 Cflags: -I${includedir}
