@@ -1,7 +1,7 @@
 AC_INIT(gpesyncd,2.0,g+gpe@cobb.uk.net)
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADER(config.h)
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AM_MAINTAINER_MODE
 
 AC_PROG_CC
