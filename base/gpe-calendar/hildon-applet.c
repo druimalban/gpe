@@ -25,6 +25,9 @@
 
 #include <linux/inotify.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include "inotify-syscalls.h"
 
 #include "globals.h"
@@ -82,6 +85,8 @@ hildon_home_applet_lib_initialize (void *state_data,
 				   int *state_size,
 				   GtkWidget **widget)
 {
+  gchar *fn;
+  struct stat buf;
   const gchar *home_dir = g_get_home_dir ();
 	
   if (home_dir[0] && strcmp (home_dir, "/"))
