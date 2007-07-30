@@ -1,3 +1,10 @@
+2007-07-30  Graham Cobb  <g+770@cobb.uk.net>
+
+	* Add mkinstalldirs
+	* bluetooth.c: define DBUS_API_SUBJECT_TO_CHANGE for HILDON
+	* main.c: correct IS_HILDON to USE_HILDON
+	* Makefile.am: define USE_HILDON instead of IS_HILDON
+
 2007-07-29  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * Use autotools for building.

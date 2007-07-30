@@ -19,6 +19,9 @@
 
 #include <libgnomevfs/gnome-vfs.h>
 
+#ifdef USE_HILDON
+#define DBUS_API_SUBJECT_TO_CHANGE 1
+#endif
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus-glib.h>

@@ -4,7 +4,7 @@ SUBDIRS = po
 ENABLE_HILDON = @ENABLE_HILDON@
 
 if HILDON
-DEPS_CFLAGS += -DIS_HILDON
+DEPS_CFLAGS += -DUSE_HILDON
 endif
 
 INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
@@ -103,6 +103,6 @@ deb: dist
 	cp -r $(top_builddir)/debian $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION)
 	cd $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION) && dpkg-buildpackage -rfakeroot
 	-rm -rf $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION)
-	
+
 include gpe-dist.am
 include gpe-tp.am

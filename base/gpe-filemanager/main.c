@@ -66,7 +66,7 @@
 #define FILEMANAGER_ICON_PATH "/share/gpe/pixmaps/default/filemanager/document-icons"
 #define ZOOM_INCREMENT 8
 
-#ifdef IS_HILDON
+#ifdef USE_HILDON
 #define DEFAULT_ICON_PATH "gpe/pixmaps/default"
 #else
 #define DEFAULT_ICON_PATH "/pixmaps"
