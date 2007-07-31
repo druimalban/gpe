@@ -1,10 +1,14 @@
+2007-08-01  Florian Boor <florian@linuxtogo.org>
+
+	* Release 0.6
+
 2007-07-19  Graham Cobb  <g+770@cobb.uk.net>
 
 	* Makefile.am: install headers in $(includedir)/gpe
 
 2007-06-08  Florian Boor <florian@linuxtogo.org>
 
-* Release 0.50
+* Release 0.5
 * Autotools support
 * soundgen.c: Fix typo
 * include pc file
