@@ -1,3 +1,9 @@
+2007-08-01  Florian Boor <florian@kernelconcepts.de>
+
+	* docs/reference/mimedir/Makefile.am: Fix errors with up to date
+	  gtk-doc.
+	* Makefile.am: Remove some more files with distclean target.
+
 2007-07-26  Florian Boor <florian@kernelconcepts.de>
 
 	* docs/reference/mimedir/Makefile.am: Update with more recent

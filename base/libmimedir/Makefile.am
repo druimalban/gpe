@@ -7,6 +7,9 @@ EXTRA_DIST = \
 	intltool-merge.in	\
 	intltool-update.in
 
+distclean-local:
+	$(RM) -f intltool-extract intltool-merge intltool-update
+
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = mimedir-1.0.pc
 
