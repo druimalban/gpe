@@ -67,7 +67,7 @@ main (int argc, char *argv[])
   	announcetext = argv[1];
 	if(argc >= 3){
 		filename = argv[2];
-		gst_handle = dlopen("libgstreamer-0.8.so.1",RTLD_LAZY);
+		gst_handle = dlopen("libgstreamer-0.10.so.0", RTLD_LAZY);
 		if(gst_handle)
 			printf("Gstreamer library loaded\n");
 		else

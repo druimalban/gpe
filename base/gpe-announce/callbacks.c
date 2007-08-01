@@ -454,8 +454,8 @@ void play_url(player_t p, char *url)
 		void   (*gst_bin_add_many)(GstBin *bin,GstElement *element_1,...);
 		gboolean  (*gst_element_link_many)(GstElement *element_1,
 				GstElement *element_2,...);
-		GstElementStateReturn (*gst_element_set_state) (GstElement *element,
-				GstElementState state);
+		GstState (*gst_element_set_state) (GstElement *element,
+				GstState state);
 		
 		gst_thread_new = dlsym(gst_handle,"gst_thread_new");
 		gst_element_factory_make = dlsym(gst_handle,"gst_element_factory_make");

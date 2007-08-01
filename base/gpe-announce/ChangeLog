@@ -1,3 +1,9 @@
+
+2007-08-02  Florian Boor <florian@kernelconcepts.de>
+
+	* main.c, callbacks.c, Makefile: Some updates for using gstreamer
+	  0.10
+
 2007-07-30  Florian Boor <florian@kernelconcepts.de>
 
 	* Makefile: Fix dependencies
