@@ -1,6 +1,8 @@
 bin_PROGRAMS = minimix
 
-INCLUDES = @MINIMIX_CFLAGS@
+INCLUDES = @MINIMIX_CFLAGS@  -DPREFIX=\"@prefix@\" \
+           -DPACKAGE_LOCALE_DIR=\"@minimix_localedir@\"
+           
 LDADD = @MINIMIX_LIBS@
 
 desktopdir = $(datadir)/applications

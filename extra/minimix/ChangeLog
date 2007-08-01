@@ -1,3 +1,8 @@
+2007-08-01 22:37  Florian Boor <florian@kernelconcepts.de>
+
+	* Release version 0.8
+	* Fix build stuff
+
 2006-08-02 19:19  Rene Wagner <rw@handhelds.org>
 	* minimix.c: don't poll unless ENABLE_POLLING is defined and do
 	  the icon rendering outside a callback. corresponding configure
