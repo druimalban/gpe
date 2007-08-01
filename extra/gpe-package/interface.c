@@ -1,7 +1,7 @@
 /*
  * gpe-package
  *
- * Copyright (C) 2003 - 2005  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003 - 2007  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,7 +63,7 @@
 #define MI_PACKAGES_INFO    11
 
 #define HELPMESSAGE "GPE-Package\nVersion " VERSION \
-		"\nGPE frontend for ipkg\n\nflorian@handhelds.org"
+		"\nGPE frontend for ipkg\n\nflorian@linuxtogo.org"
 
 #define NOHELPMESSAGE N_("Help for this application is not installed.")
 
