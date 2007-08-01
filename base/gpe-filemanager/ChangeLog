@@ -1,3 +1,8 @@
+2007-08-01  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Release version 0.30
+	* gpe-tp.am: Update to work with new translation project site.
+
 2007-07-30  Graham Cobb  <g+770@cobb.uk.net>
 
 	* Add mkinstalldirs
