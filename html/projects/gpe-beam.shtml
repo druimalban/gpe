@@ -1,7 +1,7 @@
 
-<!--#set var="addtitle" value="Wifi finder"-->
-<!--#set var="pagename" value="Wifi finder"-->
-<!--#set var="appname" value="gpe-aerial"-->
+<!--#set var="addtitle" value="Infrared tool"-->
+<!--#set var="pagename" value="Infrared tool"-->
+<!--#set var="appname" value="gpe-beam"-->
 <!--#set var="author" value="Florian Boor"-->
 <!--#set var="authoremail" value="florian@linuxtogo.org"-->
 <!--#include virtual="/includes/head.php"-->
@@ -14,9 +14,8 @@
 <tr>
   <td><b>Function</b></td>
   <td> 
-    GPE-Aerial is a too to search wireless lans and to connect to these. It is designed
-    for devices with old or bad wifi drivers that do not support passive scanning like the drivers
-    used in many Familiar Linux releases.
+    gpe-beam is a dock applet to control and use an infrared (IRdA) port. It offers a DBus service for
+    other applications to send files via OBEX.
   </td>
   <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
 </tr>
@@ -34,7 +33,7 @@
   <td>
     <p>
       The source code can be found in <A href="../download.phtml">SVN</A>,
-      module <b>extra/<!--#echo var="appname"--></b>.  
+      module <b>base/<!--#echo var="appname"--></b>.  
 	</p>
 	<p>
 	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
@@ -53,10 +52,6 @@
   <td><b>Technical</b></td>
   <td colspan="2">
     <p>
-       GPE-Aerial makes use of the Prismstumbler wireless LAN scanner engine which is able to find 
-       all sorts of wireless LANs if it is able to work with the driver of your hardware. For more 
-       modern devices with recent Linux 2.6 its backend should be replaced with something using passive 
-       scanning only.
     </p>
   </td>
 </tr>
