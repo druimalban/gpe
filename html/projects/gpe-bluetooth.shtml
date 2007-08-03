@@ -1,0 +1,69 @@
+
+<!--#set var="addtitle" value="Bluetooth tool"-->
+<!--#set var="pagename" value="Bluetooth tool"-->
+<!--#set var="appname" value="gpe-bluetooth"-->
+<!--#set var="author" value="Florian Boor"-->
+<!--#set var="authoremail" value="florian@linuxtogo.org"-->
+<!--#include virtual="/includes/head.php"-->
+
+<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
+<tr>
+  <td colspan="3"><h2>Subprojects: <!--#echo var="appname"--></h2>
+  <i><!--#echo var="pagename"--></i></td>
+</tr>
+<tr>
+  <td><b>Function</b></td>
+  <td> 
+    gpe-bluetooth is a dock applet to initiate and use Bluetooth connections. It offers a DBus service for
+    other applications to send files via BtOBEX and is able to initate network connections using the 
+    Bluetooth PAN profile.
+  </td>
+  <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
+</tr>
+<tr>
+  <td><b>Coordinator(s)</b></td>
+  <td>
+    The coordinator for this sub-project is 
+    Philip Blundell (<a HREF="mailto:pb@reciva.com">pb@reciva.com</a>). 
+    If you want to contribute to this project, please contact him
+    or the GPE mailinglist.
+  </td>
+</tr>
+<tr>
+  <td><b>Status</b></td>
+  <td>
+    <p>
+      The source code can be found in <A href="../download.phtml">SVN</A>,
+      module <b>base/<!--#echo var="appname"--></b>.  
+	</p>
+	<p>
+	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
+	  <ul>
+	  	  <li><a href="http://familiar.handhelds.org">Familiar</a>
+                  <li><a href="http://www.openzaurus.org">OpenZaurus</a>
+	 	  <li><a href="http://www.angstrom-distribution.org">Angstrom</a>
+         </ul>
+	</p>
+	<p>
+	  <i><!--#echo var="appname"--></i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	</p>
+  </td>
+</tr>
+<tr>
+  <td><b>Technical</b></td>
+  <td colspan="2">
+    <p>
+    </p>
+  </td>
+</tr>
+<tr>
+  <td><b>Project History</b></td>
+  <td colspan="2">
+     <ul>
+	   <li>2002: Project started by Philip Blundell</li>
+     </ul>
+  </td>
+</tr>
+</table>
+
+<!--#include virtual="/includes/foot.shtml"-->
