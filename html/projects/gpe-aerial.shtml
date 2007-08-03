@@ -14,7 +14,7 @@
 <tr>
   <td><b>Function</b></td>
   <td> 
-    GPE-Aerial is a too to search wireless lans and to connect to these. It is designed
+    GPE-Aerial is a tool to search wireless LANs and to connect to these. It is designed
     for devices with old or bad wifi drivers that do not support passive scanning like the drivers
     used in many Familiar Linux releases.
   </td>
