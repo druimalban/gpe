@@ -1,3 +1,7 @@
+2007-08-03  Florian Boor <florian@kernelconcepts.de>
+
+	* Relase 0.4.2
+
 2007-08-01  Florian Boor <florian@kernelconcepts.de>
 
 	* docs/reference/mimedir/Makefile.am: Fix errors with up to date
