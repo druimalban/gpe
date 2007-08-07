@@ -1,3 +1,7 @@
+2007-08-07  Florian Boor <florian@kernelconcepts.de>
+
+	* X11/Xserver: Add support for Atmel AT91SAM9261-EK and Nokia N800
+
 2007-07-12  Florian Boor <florian@kernelconcepts.de>
 
 	* run-calibrate.sh: Support both ts_calibrate and xtscal.
