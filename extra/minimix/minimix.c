@@ -107,7 +107,7 @@ render_icon ()
   GdkPixbuf *dbuf;
 
   dbuf = gdk_pixbuf_scale_simple(current_vol_icon, icon_size, icon_size, GDK_INTERP_HYPER);
-  gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &tmp, 12);
+  gdk_pixbuf_render_pixmap_and_mask (dbuf, NULL, &tmp, 4);
   gtk_widget_shape_combine_mask (GTK_WIDGET(window), NULL, 1, 0);
   gtk_widget_shape_combine_mask (GTK_WIDGET(window), tmp, 1, 0);
   gdk_bitmap_unref (tmp);
