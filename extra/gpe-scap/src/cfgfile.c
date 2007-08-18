@@ -23,7 +23,6 @@
 #include <libintl.h>
 
 #include <glib.h>
-#include <gpe/errorbox.h>
 #include <glib/gstdio.h>
 #include "cfgfile.h"
 
