@@ -1,3 +1,7 @@
+2007-08-21  Florian Boor <florian@kernelconcepts.de>
+
+	* download.phtml: Some distribution information updates.
+
 2007-08-04  Florian Boor <florian@kernelconcepts.de>
 
 	* projects/* Add some more descriptions.
