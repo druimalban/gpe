@@ -1,5 +1,6 @@
 2007-08-25  Florian Boor <florian@kernelconcepts.de>
 
+	* Release 1.17
 	* 30xTs_Calibrate: Check if TSLIB_TSDEVICE is set.
 	* Add patches from OE:
 		- Support Ximageon
