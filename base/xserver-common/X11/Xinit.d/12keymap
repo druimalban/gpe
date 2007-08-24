@@ -4,18 +4,10 @@ MACHINE=`awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo`
 
 case $MACHINE in
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
-		case `uname -r` in
-			2.4*)
-				xmodmap - < /etc/X11/shepherd.xmodmap
-				;;
-			esac
+		xmodmap - < /etc/X11/shepherd.xmodmap
 		;;
 	"SHARP Akita" | "SHARP Borzoi" | "SHARP Spitz")
-		case `uname -r` in
-			2.4*)
-				xmodmap - < /etc/X11/slcXXXX.xmodmap
-				;;
-			esac
+		xmodmap - < /etc/X11/slcXXXX.xmodmap
 		;;				
 	"SHARP Poodle")
 		xmodmap - < /etc/X11/poodle.xmodmap

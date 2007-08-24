@@ -20,6 +20,9 @@ fi
 if [ -f /usr/bin/Xvesa ]; then
   XSERVER=Xvesa
 fi
+if [ -f /usr/bin/Ximageon ]; then
+  XSERVER=Ximageon
+fi
 
 . /etc/profile
 
@@ -33,7 +36,7 @@ module_id() {
 
 export USER=root
 
-ARGS="-br -pn"
+ARGS="-br -pn $INPUT_EXTRA_ARGS"
 
 # use ucb 1x00 touchscreen if present
 if [ -z "$TSLIB_TSDEVICE" ] && [ -e /dev/touchscreen/ucb1x00 ]; then

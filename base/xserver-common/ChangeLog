@@ -1,3 +1,12 @@
+2007-08-25  Florian Boor <florian@kernelconcepts.de>
+
+	* 30xTs_Calibrate: Check if TSLIB_TSDEVICE is set.
+	* Add patches from OE:
+		- Support Ximageon
+		- Update X11/shepherd.xmodmap
+		- Load Zaurus 2.6 modmaps
+		- Append extra input arguments
+
 2007-08-07  Florian Boor <florian@kernelconcepts.de>
 
 	* X11/Xserver: Add support for Atmel AT91SAM9261-EK and Nokia N800

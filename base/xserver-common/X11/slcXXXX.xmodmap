@@ -1,5 +1,12 @@
-keycode 88 = XF86Calendar
-keycode 89 = telephone
-keycode 40 = XF86Start
-keycode 90 = XF86Mail
 
+keycode 90 = F20
+keycode 87 = F21
+keycode 88 = F22
+keycode 89 = F23
+keycode 83 = F24
+keycode 84 = F25
+keycode 85 = F26
+keycode 79 = F27
+keycode 80 = F28
+keycode 81 = F29
+keycode 86 = F30
