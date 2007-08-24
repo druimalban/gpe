@@ -89,12 +89,10 @@ dpkg: dist
 CVSTAG := $(shell echo $(PACKAGE)-$(VERSION) | tr [a-z.] [A-Z_])
 printinfo:
 	@printf '-------------------------------------------------------------------------------\n'
-	@printf "If this becomes a package release, please add a CVS tag.\n"
-	@printf "You can use 'make tag' for that, it will execute\n"
-	@printf "   cvs tag %s\n" $(CVSTAG)
+	@printf "If this becomes a package release, please add a Subversion tag.\n"
 	@printf "Please upload a tarball (created with 'make dist') to\n"
-	@printf "   ftp://ftp.handhelds.org/pub/projects/gpe/\n"
-	@printf "   (handhelds.org:~ftp/pub/projects/gpe/source)\n"
+	@printf "   http://gpe.linuxtogo.org/download/source/\n"
+	@printf "   (linuxtogo.org:/media/data/projects/gpe/source/ )\n"
 	@printf "You can use 'make dist-upload' to do that.\n"
 	@printf "You are currently known as USER %s.\n" $(USER)
 	@printf '-------------------------------------------------------------------------------\n'
