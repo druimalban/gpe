@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = xserver-common
 CVSBUILD = yes
-VERSION = 1.17
+VERSION = 1.18
 DEBUG = no
 
 LINGUAS = 

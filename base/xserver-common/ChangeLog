@@ -1,3 +1,8 @@
+2007-08-27  Florian Boor <florian@kernelconcepts.de>
+
+	* Release 1.18
+	* 30xTs_Calibrate: Make sure TSLIB_TSDEVICE is set if necessary.
+
 2007-08-25  Florian Boor <florian@kernelconcepts.de>
 
 	* Release 1.17
