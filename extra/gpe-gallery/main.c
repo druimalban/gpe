@@ -488,7 +488,7 @@ render_list_view_button_press_event (GtkWidget *widget, GdkEventButton *event, G
   GList *this_item;
   ListItem *list_item = g_malloc (sizeof (ListItem *));
   GdkPixbuf *pixbuf_with_alpha;
-  char *pixels;
+  unsigned char *pixels;
   guint current_y = 0;
   guint target_y = event->y;
 
