@@ -37,7 +37,7 @@ gpe_popup_infoprint (Display *dpy, char *s)
   if (w != None)
     {
       XChangeProperty (dpy, w, infoprint_atom, XA_STRING, 8,
-	 PropModeReplace, s, strlen (s));
+	 PropModeReplace, (unsigned char *)s, strlen (s));
     }
   /* else infoprints not available */
 }

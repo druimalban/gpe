@@ -71,7 +71,7 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 	      GSList *iter;
 	      
 #ifdef ENABLE_NLS
-	      setlocale (LC_MESSAGES, prop);
+	      setlocale (LC_MESSAGES, (const char *)prop);
 #endif
 	      for (iter = widgets; iter; iter = iter->next)
 		{
