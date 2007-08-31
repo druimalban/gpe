@@ -138,7 +138,7 @@ void
 handle_cookie (Webi * html, WebiCookie * cookie, gpointer * data)
 {
 #ifdef DEBUG
-  printf ("Site %s wants to set a cookie.\n", cookie->domain);
+  printf ("Site wants to set a cookie.\n");
 #endif
   /* TODO: implement handling */
 }
