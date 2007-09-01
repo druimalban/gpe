@@ -17,7 +17,7 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=$PACKAGE
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="es sl sv vi ko ja"
+ALL_LINGUAS="es sl sv vi ko ja wa"
 
 gpefilemanager_localedir='${datadir}/locale'
 AC_SUBST(gpefilemanager_localedir)
