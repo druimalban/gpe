@@ -1,3 +1,8 @@
+
+2007-09-01  Florian Boor <florian@kernelconcepts.de>
+
+	* X11/simpad.xmodmap: Change mapping to reflect kernel changes.
+
 2007-08-27  Florian Boor <florian@kernelconcepts.de>
 
 	* Release 1.18
