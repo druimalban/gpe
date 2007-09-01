@@ -1,0 +1,2078 @@
+# Translation of gpe-conf into the walloon language.
+# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Pablo Saratxaga <pablo@walon.org>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-conf 0.2.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-06-05 16:51+0200\n"
+"PO-Revision-Date: 2007-08-29 18:24+0200\n"
+"Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
+"Language-Team: Walloon <linux-wa@walon.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.0.2\n"
+
+#: ../applets.c:413
+msgid "Root access"
+msgstr "Accès root"
+
+#: ../applets.c:427
+msgid ""
+"Some options are only\n"
+"accessible for user root.\n"
+"Please enter password."
+msgstr ""
+"Des tchuzes k' i gn a sont\n"
+"accessibes seulmint po root.\n"
+"Dinez s' sicret s' i vs plait."
+
+#: ../applets.c:474 ../modules/screen/calibrate.c:32
+msgid "Sorry, wrong password."
+msgstr "Mande escuzes, mins l' sicret n' va nén."
+
+#: ../modules/battery.c:186 ../modules/battery.c:247
+msgid "unknown"
+msgstr "nén cnoxhou"
+
+#: ../modules/battery.c:195 ../modules/battery.c:255 ../modules/battery.c:356
+msgid "Status: high"
+msgstr "Estat: hôte"
+
+#: ../modules/battery.c:198 ../modules/battery.c:258 ../modules/battery.c:360
+msgid "Status: low"
+msgstr "Estat: basse"
+
+#: ../modules/battery.c:201 ../modules/battery.c:261 ../modules/battery.c:364
+msgid "Status: critical"
+msgstr "Estat: critike"
+
+#: ../modules/battery.c:204 ../modules/battery.c:264 ../modules/battery.c:368
+msgid "Status: charging"
+msgstr "Estat: tcherdjant"
+
+#: ../modules/battery.c:207 ../modules/battery.c:267
+msgid "Status: charge main"
+msgstr "Estat: mwaisse tchedje"
+
+#: ../modules/battery.c:210
+msgid "Status: dead"
+msgstr "Estat: moite"
+
+#: ../modules/battery.c:213 ../modules/battery.c:273 ../modules/battery.c:354
+msgid "Status: full"
+msgstr "Estat: plinne"
+
+#: ../modules/battery.c:216 ../modules/battery.c:276
+msgid "Status: no battery"
+msgstr "Estat: nole batreye"
+
+#: ../modules/battery.c:219 ../modules/battery.c:279 ../modules/battery.c:297
+#: ../modules/battery.c:371
+msgid "Status: unknown"
+msgstr "Estat: nén cnoxhou"
+
+#: ../modules/battery.c:224
+msgid "learning"
+msgstr "aprindant"
+
+#: ../modules/battery.c:228 ../modules/battery.c:283
+msgid "Voltage"
+msgstr "Voltaedje"
+
+#: ../modules/battery.c:232 ../modules/battery.c:287 ../modules/battery.c:388
+msgid "AC connected"
+msgstr "sol corant (AC)"
+
+#: ../modules/battery.c:234 ../modules/battery.c:289 ../modules/battery.c:390
+msgid "Lifetime"
+msgstr "Tins a viker"
+
+#: ../modules/battery.c:270
+msgid "Status: not installed"
+msgstr "Estat: nén astalé"
+
+#: ../modules/battery.c:296
+msgid "not installed"
+msgstr "nén astalé"
+
+#: ../modules/battery.c:298
+msgid "Voltage: unknown"
+msgstr "Voltaedje: nén cnoxhou"
+
+#: ../modules/battery.c:299
+msgid "Lifetime: unknown"
+msgstr "Tins a viker: nén cnoxhou"
+
+#: ../modules/battery.c:346
+msgid "No battery"
+msgstr "Nole batreye"
+
+#: ../modules/battery.c:451
+msgid "Internal battery"
+msgstr "Divintrinne batreye"
+
+#: ../modules/battery.c:455
+msgid "Jacket battery"
+msgstr "Batreye difoûtrinne"
+
+#: ../modules/cfgfile.c:919
+msgid "No write access to network configuration."
+msgstr "Pont d' accès e scrijhaedje po l' apontiaedje del rantoele."
+
+#: ../main-info.c:67
+#, c-format
+msgid "usage: gpe-info [page]\n"
+msgstr "po s' è siervi: gpe-info [pådje]\n"
+
+#: ../main-info.c:68
+#, c-format
+msgid "    Where page may be \"global\" (default)\n"
+msgstr "    Wice ki l' pådje pout esse «global» (prémetou)\n"
+
+#: ../main-info.c:78 ../desktop/gpe-conf-sysinfo.desktop.in.h:2
+msgid "System Information"
+msgstr "Informåcion do sistinme"
+
+#: ../main.c:89 ../modules/timeanddate.c:489
+msgid "Time"
+msgstr "Eure"
+
+#: ../main.c:89
+msgid "Time and Date Setup"
+msgstr "Apontiaedje del date et l' eure"
+
+#: ../main.c:91
+msgid "Screen"
+msgstr "Waitroûle"
+
+#: ../main.c:91 ../desktop/gpe-conf-screen.desktop.in.h:1
+msgid "Screen Setup"
+msgstr "Apontiaedje del waitroûle"
+
+#: ../main.c:93
+msgid "Keys & Buttons"
+msgstr "Tapes et botons"
+
+#: ../main.c:93
+msgid "Keys and Buttons Setup"
+msgstr "Apontiaedje des tapes et botons"
+
+#: ../main.c:95 ../modules/timeanddate.c:502
+msgid "Network"
+msgstr "Rantoele"
+
+#: ../main.c:95 ../desktop/gpe-conf-network.desktop.in.h:1
+msgid "Network Setup"
+msgstr "Apontiaedje del rantoele"
+
+#: ../main.c:97 ../modules/theme.c:985
+msgid "Theme"
+msgstr "Tinme"
+
+#: ../main.c:97 ../modules/theme.c:987
+#: ../desktop/gpe-conf-theme.desktop.in.h:2
+msgid "Look and Feel"
+msgstr "Rivnance et dujhance"
+
+#: ../main.c:99
+msgid "Power"
+msgstr "Alimintåcion"
+
+#: ../main.c:99
+msgid "Configure Power Saving"
+msgstr "Apontyî l' manaedjaedje d' enerdjeye"
+
+#: ../main.c:101
+msgid "Owner"
+msgstr "Prôpietaire"
+
+#: ../main.c:101 ../desktop/gpe-conf-ownerinfo.desktop.in.h:1
+msgid "Owner Information"
+msgstr "Informåcion so l' prôpietaire"
+
+#: ../main.c:103
+msgid "Login"
+msgstr "Elodjaedje"
+
+#: ../main.c:103 ../desktop/gpe-conf-login-setup.desktop.in.h:1
+msgid "Login Setup"
+msgstr "Apontiaedje d' elodjaedje"
+
+#: ../main.c:105
+msgid "Users"
+msgstr "Uzeus"
+
+#: ../main.c:105
+msgid "User Administration"
+msgstr "Manaedjî les uzeus"
+
+#: ../main.c:107
+msgid "GPE"
+msgstr "GPE"
+
+#: ../main.c:107
+msgid "GPE Conf Administration"
+msgstr "Manaedjaedje des apontiaedjes di GPE"
+
+#: ../main.c:109 ../desktop/gpe-conf-serial.desktop.in.h:2
+msgid "Serial Ports"
+msgstr "Pôrts séreye"
+
+#: ../main.c:109
+msgid "Serial Port Configuration"
+msgstr "Apontiaedje do pôrt séreye"
+
+#: ../main.c:111
+msgid "USB"
+msgstr "USB"
+
+#: ../main.c:111
+msgid "USB Configuration"
+msgstr "Apontiaedje USB"
+
+#: ../main.c:113
+msgid "PCMCIA/CF Cards"
+msgstr "Cåtes PCMCIA/CF"
+
+#: ../main.c:113
+msgid "PCMCIA/CF Card Info and Config"
+msgstr "Apontiaedje ey informåcions so les cåtes PCMCIA/CF"
+
+#: ../main.c:115
+msgid "Sound"
+msgstr "Son"
+
+#: ../main.c:115
+msgid "Sound Setup"
+msgstr "Apontiaedje do son"
+
+#: ../main.c:117
+msgid "Task nameserver"
+msgstr "Bouye sierveu d' nos"
+
+#: ../main.c:117
+msgid "Task for changing nameserver"
+msgstr "Usteye po mete a djoû les djeus di Loki"
+
+#: ../main.c:119
+msgid "Task sound"
+msgstr "Bouye di son"
+
+#: ../main.c:119
+msgid "Command line task saving/restoring sound settings."
+msgstr "Bouye e roye di comande po schaper/rapexhî les apontiaedjes do son."
+
+#: ../main.c:121
+msgid "Task background image"
+msgstr "Bouye imådje di fond"
+
+#: ../main.c:121
+msgid "Only select background image."
+msgstr "Seulmint tchoezi ene imådje pol fond."
+
+#: ../main.c:123
+msgid "Task backlight setting"
+msgstr "Bouye apontiaedje dirî-loumaedje"
+
+#: ../main.c:123
+msgid "Change backlight power and brightness."
+msgstr "Candjî l' loumance eyet l' briyance do drî-loumaedje."
+
+#: ../main.c:144
+msgid "Settings saved"
+msgstr "Apontiaedjes schapés"
+
+#: ../main.c:339
+#, c-format
+msgid "'task_backlight' supports zero, one and two arguments.\n"
+msgstr "«task_backlight» sopoite zero, onk et deus årgumints.\n"
+
+#: ../main.c:358
+#, c-format
+msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
+msgstr "«task_nameserver» a mezåjhe d' on novea (et seulmint onk) sierveu d' nos come årgumint.\n"
+
+#: ../main.c:376
+#, c-format
+msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
+msgstr "«task_sound» a mezåjhe di «s» (schaper) ou «r» (rapexhî) come årgumint.\n"
+
+#: ../main.c:444
+msgid "Warning: PCMCIA init failed."
+msgstr "Asteme: l' inicialijhaedje PCMCIA a fwait berwete."
+
+#: ../main.c:476
+#, c-format
+msgid "This mode is disabled, please try:\n"
+msgstr "Ci môde la est dismetou, sayîz purade:\n"
+
+#: ../main.c:477
+#, c-format
+msgid ""
+"\n"
+"gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"gpe-conf [No_d_l_Aplikete]\n"
+"wice ki No_d_l_Aplikete est emey:\n"
+
+#: ../main.c:493
+#, c-format
+msgid "Applet %s unknown!\n"
+msgstr "L' aplikete %s n' est nén cnoxhowe!\n"
+
+#: ../main.c:494
+#, c-format
+msgid ""
+"\n"
+"\n"
+"Usage: gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"\n"
+"Po s' è siervi: gpe-conf [No_d_l_Aplikete]\n"
+"wice ki No_d_l_Aplikete est emey:\n"
+
+#: ../tools/interface.c:315 ../tools/interface.c:515 ../tools/interface.c:531
+#: ../tools/interface.c:651
+msgid "[NONE SET]"
+msgstr "[NOU DEFINI]"
+
+#: ../tools/interface.c:706 ../tools/interface.c:1704
+msgid "UNSPEC"
+msgstr "NÉNSPEC"
+
+#: ../tools/interface.c:708
+msgid "UNIX Domain"
+msgstr "UNIX Domain"
+
+#: ../tools/interface.c:711
+msgid "DARPA Internet"
+msgstr "Daegntoele DARPA"
+
+#: ../tools/interface.c:714
+msgid "IPv6"
+msgstr "IPv6"
+
+#: ../tools/interface.c:717 ../tools/interface.c:1725
+msgid "AMPR AX.25"
+msgstr "AMPR AX.25"
+
+#: ../tools/interface.c:720 ../tools/interface.c:1731
+msgid "AMPR NET/ROM"
+msgstr "AMPR NET/ROM"
+
+#: ../tools/interface.c:723
+msgid "Novell IPX"
+msgstr "IPX di Novell"
+
+#: ../tools/interface.c:726
+msgid "Appletalk DDP"
+msgstr "Appletalk DDP"
+
+#: ../tools/interface.c:729 ../tools/interface.c:1766
+msgid "Econet"
+msgstr "Econet"
+
+#: ../tools/interface.c:732
+msgid "CCITT X.25"
+msgstr "CCITT X.25"
+
+#: ../tools/interface.c:735 ../tools/interface.c:1728
+msgid "AMPR ROSE"
+msgstr "AMPR ROSE"
+
+#: ../tools/interface.c:738 ../tools/interface.c:1716
+msgid "Ash"
+msgstr "Ash"
+
+#: ../tools/interface.c:765
+#, c-format
+msgid "Too many address family arguments.\n"
+msgstr "Pår trop d' årgumints famile d' adresses.\n"
+
+#: ../tools/interface.c:776
+#, c-format
+msgid "Unknown address family '%s'.\n"
+msgstr "Famile d' adresses «%s» nén cnoxhowe.\n"
+
+#: ../tools/interface.c:839
+#, c-format
+msgid "Please don't supply more than one address family.\n"
+msgstr "S' i vs plait n' dinez nén pus d' ene famile d' adresses.\n"
+
+#: ../tools/interface.c:966
+#, c-format
+msgid "No usable address families found.\n"
+msgstr "Nole famile d' adresse di trovêye ki pout esse eployeye.\n"
+
+#: ../tools/interface.c:1036
+#, c-format
+msgid "Warning: no inet socket available: %s\n"
+msgstr "Asteme: i n' a pont d' soket «inet»: %s\n"
+
+#: ../tools/interface.c:1188
+#, c-format
+msgid "Warning: cannot open %s (%s). Limited output.\n"
+msgstr "Asteme: dji n' sai drovi %s (%s). Rexhowe limitêye.\n"
+
+#. Give better error message for this case.
+#: ../tools/interface.c:1431
+msgid "Device not found"
+msgstr "Éndjin nén trové"
+
+#: ../tools/interface.c:1435
+#, c-format
+msgid "%s: error fetching interface information: %s\n"
+msgstr "%s: åk n' a nén stî tot prindant l' informåcion so l' eterface: %s\n"
+
+#: ../tools/interface.c:1609
+#, c-format
+msgid "You cannot start PPP with this program.\n"
+msgstr "Vos n' poloz nén enonder PPP avou ç' programe ci.\n"
+
+#: ../tools/interface.c:1703
+msgid "Local Loopback"
+msgstr "Eterface locåle loopback"
+
+#: ../tools/interface.c:1706
+msgid "Serial Line IP"
+msgstr "IP so lene séreye"
+
+#: ../tools/interface.c:1707
+msgid "VJ Serial Line IP"
+msgstr "IP so lene séreye VJ"
+
+#: ../tools/interface.c:1708
+msgid "6-bit Serial Line IP"
+msgstr "IP so lene séreye 6bit"
+
+#: ../tools/interface.c:1709
+msgid "VJ 6-bit Serial Line IP"
+msgstr "IP so lene séreye VJ 6bit"
+
+#: ../tools/interface.c:1710
+msgid "Adaptive Serial Line IP"
+msgstr "IP so lene séreye adaptive"
+
+#: ../tools/interface.c:1713
+msgid "Ethernet"
+msgstr "Ethernet"
+
+#: ../tools/interface.c:1719
+msgid "Fiber Distributed Data Interface"
+msgstr "Eterface FDDI"
+
+#: ../tools/interface.c:1722
+msgid "HIPPI"
+msgstr "HIPPI"
+
+#: ../tools/interface.c:1734
+msgid "generic X.25"
+msgstr "X.25 djenerike"
+
+#: ../tools/interface.c:1737
+msgid "IPIP Tunnel"
+msgstr "Tunel IPIP"
+
+#: ../tools/interface.c:1740
+msgid "Point-to-Point Protocol"
+msgstr "Protocole Pont-a-Pont"
+
+#: ../tools/interface.c:1743
+msgid "(Cisco)-HDLC"
+msgstr "(Cisco)-HDLC"
+
+#: ../tools/interface.c:1744
+msgid "LAPB"
+msgstr "LAPB"
+
+#: ../tools/interface.c:1747
+msgid "ARCnet"
+msgstr "ARCnet"
+
+#: ../tools/interface.c:1750
+msgid "Frame Relay DLCI"
+msgstr "Frame Relay DLCI"
+
+#: ../tools/interface.c:1751
+msgid "Frame Relay Access Device"
+msgstr "Éndjin d' accès Rame Relay"
+
+#: ../tools/interface.c:1754
+msgid "IPv6-in-IPv4"
+msgstr "IPv6-so-IPv4"
+
+#: ../tools/interface.c:1757
+msgid "IrLAP"
+msgstr "IrLAP"
+
+#: ../tools/interface.c:1760
+msgid "16/4 Mbps Token Ring"
+msgstr "Token Ring 16/4 Mbps"
+
+#: ../tools/interface.c:1762
+msgid "16/4 Mbps Token Ring (New)"
+msgstr "Token Ring 16/4 Mbps (Novea)"
+
+#: ../tools/interface.c:1874
+msgid "Interface:"
+msgstr "Eterface:"
+
+#: ../tools/interface.c:1875
+#, c-format
+msgid "Type: %s"
+msgstr "Sôre: %s"
+
+#: ../tools/interface.c:1884
+#, c-format
+msgid "Media: %s"
+msgstr "Media: %s"
+
+#: ../tools/interface.c:1889
+#, c-format
+msgid "(auto)"
+msgstr "(otom.)"
+
+#: ../tools/interface.c:1901
+#, c-format
+msgid "Address: %s\n"
+msgstr "Adresse: %s\n"
+
+#: ../tools/interface.c:1906
+#, c-format
+msgid "P-t-P: %s\n"
+msgstr "P-a-P: %s\n"
+
+#: ../tools/interface.c:1910
+#, c-format
+msgid "Netmask: %s\n"
+msgstr "Maske rantoele: %s\n"
+
+#: ../tools/interface.c:1914
+#, c-format
+msgid "Broadcast: %s\n"
+msgstr "Adresse di broadcast: %s\n"
+
+#: ../tools/interface.c:1926
+#, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr "Adr. éndjolreye (MAC): %s\n"
+
+#: ../tools/interface.c:1956
+#, c-format
+msgid "IPv6 Address: %s/%d\n"
+msgstr "Adresse IPv6: %s/%d\n"
+
+#: ../tools/interface.c:1959
+#, c-format
+msgid "Scope: "
+msgstr "Poirtêye: "
+
+#: ../tools/interface.c:1964
+#, c-format
+msgid "Global"
+msgstr "Globå"
+
+#: ../tools/interface.c:1967
+#, c-format
+msgid "Link"
+msgstr "Loyén"
+
+#: ../tools/interface.c:1970
+#, c-format
+msgid "Site"
+msgstr "Site"
+
+#: ../tools/interface.c:1973
+#, c-format
+msgid "Compat"
+msgstr "Compat"
+
+#: ../tools/interface.c:1976
+#, c-format
+msgid "Host"
+msgstr "Lodjoe"
+
+#: ../tools/interface.c:1979
+#, c-format
+msgid "Unknown"
+msgstr "Nén cnoxhou"
+
+#: ../device.c:215
+msgid "Unknown Device"
+msgstr "Éndjin nén cnoxhou"
+
+#: ../modules/logread.c:116
+msgid "Can't find circular buffer, is syslog running?\n"
+msgstr "Dji n' sai trover l' tampon circulaire, est çki syslog est ene alaedje?\n"
+
+#: ../modules/logread.c:123
+msgid "Can't get access to syslogd's circular buffer."
+msgstr "Dji n' sai aveur accès å tampon circulaire da syslogd."
+
+#: ../modules/logread.c:130
+msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
+msgstr "Dji n' sai aveur accès å(s) semafore(s) pol tampon circulaire da syslogd."
+
+#: ../modules/logread.c:156
+msgid "<empty syslog>"
+msgstr "<djournå vude>"
+
+#: ../modules/logread.c:227 ../modules/logread.c:243
+msgid "System Log"
+msgstr "Djournå do sistinme"
+
+#: ../modules/logread.c:252 ../modules/logread.c:268
+msgid "Session Log"
+msgstr "Djournå del session"
+
+#: ../modules/logread.c:275
+msgid "Could not open X session log.\n"
+msgstr "Dji n' sai drovi l' djournå del session X11.\n"
+
+#: ../modules/usb.c:80
+msgid "Choose backing file"
+msgstr "Tchoezixhoz on fitchî pol copeye di såvrité"
+
+#: ../modules/usb.c:240
+msgid "USB Peripheral Mode"
+msgstr "Môde éndjin USB"
+
+#: ../modules/usb.c:247
+msgid "Ethernet Networking"
+msgstr "Rantoele pa Ethernet"
+
+#: ../modules/usb.c:252 ../modules/sysinfo.c:645
+msgid "Storage"
+msgstr "Éndjins di wårdaedje"
+
+#: ../modules/usb.c:258 ../modules/serial.c:573
+msgid "Serial Port"
+msgstr "Pôrt séreye"
+
+#: ../modules/usb.c:267
+msgid "Storage Behaviour"
+msgstr "Dujhance pol wårdaedje"
+
+#: ../modules/usb.c:274
+msgid "CF/SD Card Reader"
+msgstr "Lijheu d' cåtes CF/SD"
+
+#: ../modules/usb.c:280
+msgid "File-backed"
+msgstr "Copeye di såvrité so fitchî"
+
+#: ../modules/usb.c:290
+msgid "Select"
+msgstr "Tchoezi"
+
+#: ../modules/usb.c:298
+msgid "Allow write access"
+msgstr "Permete l' accès e scrijhaedje"
+
+#: ../modules/usb.c:307
+msgid "Serial Settings"
+msgstr "Apontiaedjes pol lene séreye"
+
+#: ../modules/usb.c:314
+msgid "Use CDC ACM"
+msgstr "Eployî CDC ACM"
+
+#: ../modules/theme.c:234
+msgid "Choose backgound image"
+msgstr "Tchoezi imådje di fond"
+
+#: ../modules/theme.c:248
+msgid "You are not allowed to read this file, choose another."
+msgstr "Vos n' avoz nén l' droet d' lére ci fitchî ci, tchoezixhoz è èn ôte."
+
+#: ../modules/theme.c:269
+msgid "Succesfully changed background image."
+msgstr "Imådje do fond candjeye comifåt."
+
+#: ../modules/theme.c:270
+msgid "Use \"Look and Feel\" setup tool to change details."
+msgstr "Alez dins l' apontiaedje «Rivnance et dujhance» po candjî les detays."
+
+#: ../modules/theme.c:781 ../modules/theme.c:859
+msgid "You don't have read access to selected background image!"
+msgstr "Vos n' avoz nén d' accès e lijhaedje po l' imådje di fond!"
+
+#: ../modules/theme.c:997
+msgid "Desktop Theme"
+msgstr "Tinme do scribanne"
+
+#: ../modules/theme.c:1009
+msgid "Name"
+msgstr "No"
+
+#: ../modules/theme.c:1023
+msgid "Icon Size"
+msgstr "Grandeu des imådjetes"
+
+#: ../modules/theme.c:1038
+msgid "Visual Effects"
+msgstr "Efets vizuwels"
+
+#: ../modules/theme.c:1044
+msgid "Enable Visual Effects"
+msgstr "Permete les efets vizuwels"
+
+#. Background tab
+#: ../modules/theme.c:1051
+msgid "Background"
+msgstr "Fond"
+
+#: ../modules/theme.c:1065 ../modules/theme.c:1067
+msgid "Background Settings"
+msgstr "Apontiaedjes do fond"
+
+#: ../modules/theme.c:1077 ../modules/theme.c:1088
+msgid "Theme Default"
+msgstr "Prémetou tinme"
+
+#: ../modules/theme.c:1096
+msgid "Solid colour"
+msgstr "Coleur solide"
+
+#: ../modules/theme.c:1110
+msgid "Horizontal"
+msgstr "Di coutchî"
+
+#: ../modules/theme.c:1114
+msgid "Vertical"
+msgstr "D' astampé"
+
+#: ../modules/theme.c:1119 ../modules/theme.c:1138 ../modules/theme.c:1312
+#: ../modules/theme.c:1318
+msgid "Colour"
+msgstr "Coleur"
+
+#: ../modules/theme.c:1129
+msgid "Colour gradient"
+msgstr "Digradé d' coleur"
+
+#: ../modules/theme.c:1148
+msgid "Image"
+msgstr "Imådje"
+
+#: ../modules/theme.c:1174
+msgid "Center"
+msgstr "Å mitan"
+
+#: ../modules/theme.c:1178
+msgid "Tile"
+msgstr "A schayes"
+
+#: ../modules/theme.c:1181
+msgid "Stretch"
+msgstr "Sitinde"
+
+#: ../modules/theme.c:1188
+msgid "Toolbars"
+msgstr "Bårs ås usteyes"
+
+#: ../modules/theme.c:1200 ../modules/theme.c:1202
+msgid "Toolbar Style"
+msgstr "Stîle del bår ås usteyes"
+
+#: ../modules/theme.c:1211 ../modules/theme.c:1235
+msgid "Icons"
+msgstr "Imådjetes"
+
+#: ../modules/theme.c:1216 ../modules/theme.c:1239
+msgid "Text"
+msgstr "Tecse"
+
+#: ../modules/theme.c:1221 ../modules/theme.c:1242
+msgid "Both"
+msgstr "Ambedeus"
+
+#: ../modules/theme.c:1249
+msgid "Toolbar Icon Size"
+msgstr "Grandeu des imådjetes pol bårs ås usteyes"
+
+#: ../modules/theme.c:1265
+msgid "Fonts"
+msgstr "Fontes"
+
+#: ../modules/theme.c:1274 ../modules/theme.c:1294
+msgid "Desktop Font"
+msgstr "Fonte do scribanne"
+
+#: ../modules/theme.c:1281 ../modules/theme.c:1340 ../modules/theme.c:1375
+#: ../modules/theme.c:1425
+msgid "Family"
+msgstr "Famile"
+
+#: ../modules/theme.c:1301 ../modules/theme.c:1360 ../modules/theme.c:1395
+#: ../modules/theme.c:1445
+msgid "Size"
+msgstr "Grandeu"
+
+#: ../modules/theme.c:1329 ../modules/theme.c:1331 ../modules/theme.c:1353
+#: ../modules/theme.c:1388
+msgid "Application Font"
+msgstr "Fonte des programes"
+
+#. terminal tab
+#: ../modules/theme.c:1409
+msgid "Terminal"
+msgstr "Terminå"
+
+#: ../modules/theme.c:1418
+msgid "Font"
+msgstr "Fonte"
+
+#: ../modules/theme.c:1438
+msgid "Terminal Font"
+msgstr "Fonte do terminå"
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: ../modules/sysinfo.c:195
+msgid "Familiar"
+msgstr "Familiar"
+
+#. TRANSLATORS: "OpenZaurus" is the name of a linux distribution.
+#: ../modules/sysinfo.c:206
+msgid "OpenZaurus"
+msgstr "OpenZaurus"
+
+#. TRANSLATORS: "Debian" is the name of a linux distribution.
+#: ../modules/sysinfo.c:215
+msgid "Debian"
+msgstr "Debian"
+
+#. TRANSLATORS: "Ångström" is the name of a linux distribution.
+#: ../modules/sysinfo.c:226
+msgid "Ångström"
+msgstr "Ångström"
+
+#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
+#: ../modules/sysinfo.c:235
+msgid "OpenEmbedded"
+msgstr "OpenEmbedded"
+
+#: ../modules/sysinfo.c:277 ../modules/sysinfo.c:279
+msgid "Build"
+msgstr "Costrure"
+
+#: ../modules/sysinfo.c:381
+msgid "Network Status"
+msgstr "Sitatistikes rantoele"
+
+#. split string into long and short lines
+#: ../modules/sysinfo.c:395 ../modules/sysinfo.c:398
+msgid "HWaddr (MAC)"
+msgstr "Adresse éndjolreye (MAC)"
+
+#: ../modules/sysinfo.c:409 ../modules/sysinfo.c:410
+#, c-format
+msgid "Wireless"
+msgstr "Sins fyis"
+
+#: ../modules/sysinfo.c:437
+msgid "Default Gateway"
+msgstr "Prémetowe pasrele"
+
+#: ../modules/sysinfo.c:480
+msgid "System information"
+msgstr "Informåcion do sistinme"
+
+#: ../modules/sysinfo.c:490
+msgid "Version"
+msgstr "Modêye"
+
+#: ../modules/sysinfo.c:522
+msgid "Distribution"
+msgstr "Distribucion"
+
+#: ../modules/sysinfo.c:547
+msgid "System"
+msgstr "Sistinme"
+
+#: ../modules/sysinfo.c:556
+msgid "Device information"
+msgstr "Informåcion di l' éndjin"
+
+#: ../modules/sysinfo.c:568
+msgid "Device Name"
+msgstr "No d' l' éndjin"
+
+#: ../modules/sysinfo.c:587
+msgid "Manufacturer:"
+msgstr "Construjheu:"
+
+#: ../modules/sysinfo.c:600
+msgid "RAM:"
+msgstr "RAM"
+
+#. TRANSLATORS: MB == Mega Bytes
+#: ../modules/sysinfo.c:606 ../modules/sysinfo.c:622 ../modules/storage.c:176
+#: ../modules/storage.c:183 ../modules/storage.c:329 ../modules/storage.c:340
+#: ../modules/storage.c:445 ../modules/storage.c:458
+msgid "MB"
+msgstr "Mo"
+
+#: ../modules/sysinfo.c:616
+msgid "Storage:"
+msgstr "Capacité:"
+
+#: ../modules/sysinfo.c:628
+msgid "Hardware"
+msgstr "Éndjolreye"
+
+#: ../modules/sysinfo.c:638
+msgid "Battery"
+msgstr "Batreye"
+
+#: ../modules/sysinfo.c:652
+msgid "Networks"
+msgstr "Rantoeles"
+
+#: ../modules/sysinfo.c:659
+msgid "Log Display"
+msgstr "Håynaedje djournå"
+
+#: ../modules/timeanddate.c:222
+msgid "Time adjusted from network."
+msgstr "Eure adjustêye a pårti del rantoele."
+
+#: ../modules/timeanddate.c:224
+msgid "Adjusting time from network failed."
+msgstr "L' adjustaedje di l' eure a pårti del rantoele a fwait berwete."
+
+#: ../modules/timeanddate.c:458
+msgid "Time & Date"
+msgstr "Date ey eure"
+
+#: ../modules/timeanddate.c:470
+msgid "Date"
+msgstr "Date"
+
+#: ../modules/timeanddate.c:486
+msgid "Enter current date here or use button to select."
+msgstr "Tapez chal li date d' ouy oudonbén eployîz l' boton po tchoezi."
+
+#: ../modules/timeanddate.c:521
+msgid "Select the timeserver to use to set the clock."
+msgstr "Tchoezi l' sierveu d' eure a-z eployî po mete l' ôrlodje a l' eure."
+
+#: ../modules/timeanddate.c:523
+msgid "Get time from network"
+msgstr "Riçure l' eure del rantoele"
+
+#: ../modules/timeanddate.c:531
+msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
+msgstr "Si vos estoz raloyî al Daegntoele, vos ploz clitchî ç' boton ci po defini l' eure di ciste éndjole tot-z eployant l' sierveu d' eure chal pa dzeu."
+
+#. root_mode
+#: ../modules/timeanddate.c:534 ../modules/timeanddate.c:544
+msgid "Timezone"
+msgstr "Coisse d' eureye"
+
+#: ../modules/timeanddate.c:588
+msgid "Area"
+msgstr "Redjon"
+
+#: ../modules/timeanddate.c:603
+msgid "Select your current timezone area here. The setting will apply after the next login."
+msgstr "Tchoezixhoz li coisse d' eurêye da vosse chal. L' apontiaedje serè-st en alaedje a l' elodjaedje shuvant."
+
+#: ../modules/timeanddate.c:610
+msgid "Zone"
+msgstr "Zône"
+
+#: ../modules/timeanddate.c:635
+msgid "Select your current timezone here. The setting applies after the next login."
+msgstr "Tchoezixhoz li coisse d' eurêye da vosse chal. L' apontiaedje serè-st en alaedje a l' elodjaedje shuvant."
+
+#: ../modules/timeanddate.c:698
+msgid "To make timezone settings take effect, you'll need to log out and log in again."
+msgstr "Po mete en alaedje les apontiaedjes del coisse d' eurêye, vos vs divoz dislodjî poy vos relodjî."
+
+#: ../modules/login-setup.c:160
+msgid "Some of these settings can only be changed by the user 'root'."
+msgstr "Sacwants di ces apontiaedjes la n' polèt esse candjîs ki pa «root»."
+
+#: ../modules/login-setup.c:183 ../modules/gpe-admin.c:85
+msgid "General"
+msgstr "Djenerå"
+
+#: ../modules/login-setup.c:200
+msgid "Show owner information at login."
+msgstr "Håyner les informåcions sol prôpietaire a l' elodjaedje."
+
+#: ../modules/login-setup.c:204
+msgid "Lock display on suspend."
+msgstr "Eclawer l' wiatroûle a môde ibernåcion."
+
+#: ../modules/login-setup.c:208
+msgid ""
+"Lock display on suspend. \n"
+"  (needs password)"
+msgstr ""
+"Eclawer l' wiatroûle a môde ibernåcion. \n"
+"  (i gn a mezåjhe d' on scret)"
+
+#: ../modules/login-setup.c:213
+msgid ""
+"Automatic login. \n"
+"  (without password)"
+msgstr ""
+"Elodjaedje otomatike. \n"
+"  (sins scret)"
+
+#: ../modules/ownerinfo.c:210
+msgid "Information about the Owner"
+msgstr "Informåcion sol prôpietaire"
+
+#: ../modules/ownerinfo.c:218
+msgid "Only the user 'root' is allowed to change this information"
+msgstr "Seulmint l' uzeu «root» a l' droet d' candjî ciste informåcion la"
+
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:237 ../modules/network.c:246
+msgid "Name:"
+msgstr "No:"
+
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:252
+msgid "E-Mail:"
+msgstr "Emile:"
+
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:267
+msgid "Phone:"
+msgstr "Telefone:"
+
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:282
+msgid "Address:"
+msgstr "Adresse:"
+
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:308
+msgid "Photofile:"
+msgstr "Fitchî foto:"
+
+#: ../modules/storage.c:166 ../modules/storage.c:423
+msgid "System Memory"
+msgstr "Memwere do sistinme"
+
+#. TRANSLATORS: MB == Mega Bytes
+#: ../modules/storage.c:174 ../modules/storage.c:443
+msgid "Free memory"
+msgstr "Memwere libe"
+
+#: ../modules/storage.c:181 ../modules/storage.c:328 ../modules/storage.c:456
+msgid "Total:"
+msgstr "Totå:"
+
+#: ../modules/storage.c:292
+msgid "Internal Flash"
+msgstr "Divintrinne memwere flash"
+
+#: ../modules/storage.c:298
+msgid "MMC"
+msgstr "MMC"
+
+#: ../modules/storage.c:304
+msgid "Compact Flash"
+msgstr "Compact Flash"
+
+#: ../modules/storage.c:310
+msgid "Network Filesystem"
+msgstr "Sistinme di fitchîs rantoele"
+
+#: ../modules/storage.c:330
+msgid "Mounted at "
+msgstr "Monté so "
+
+#: ../modules/storage.c:338
+msgid "Free space"
+msgstr "Plaece libe"
+
+#: ../modules/serial.c:428 ../modules/serial.c:434
+msgid "Simple interface to serial port configuration. Disabled components are not installed."
+msgstr "Simpe eterface po l' apontiaedje do pôrt séreye. Les componints dismetous èn sont nén astalés."
+
+#: ../modules/serial.c:431
+msgid "Port A"
+msgstr "Pôrt A"
+
+#: ../modules/serial.c:438
+msgid "Serial port default usage"
+msgstr "Prémetou eployaedje do pôrt séreye"
+
+#: ../modules/serial.c:443
+msgid "Select desired software to use serial port here."
+msgstr "Tchoezixhoz chal li programe ki vos vloz eployî sol pôrt séreye."
+
+#: ../modules/serial.c:446
+msgid "Console"
+msgstr "Conzôle"
+
+#: ../modules/serial.c:449
+msgid "This option runs console on serial port. (default)"
+msgstr "Cisse tchuze ci enonde li conzôle sol pôrt séreye. (prémetou)"
+
+#: ../modules/serial.c:457
+msgid "GPS Daemon"
+msgstr "Demon GPS"
+
+#: ../modules/serial.c:462
+msgid "GPS Daemon (needs 'gpsd')"
+msgstr "Demon GPS (a mezåjhe di «gpsd»)"
+
+#: ../modules/serial.c:467
+msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
+msgstr "Cisse tchuze ci permete l' enondaedje di GPSD, ki dene åzès programes des dnêyes ki vnèt d' on GPS."
+
+#: ../modules/serial.c:474
+msgid "Nothing (free)"
+msgstr "Rén (libe)"
+
+#: ../modules/serial.c:477
+msgid "Don't start any software that uses the serial port."
+msgstr "N' enonder nou programe k' eploye li pôrt séreye."
+
+#: ../modules/serial.c:514 ../modules/serial.c:521
+msgid "This page configures the GPS receiver software."
+msgstr "Cisse pådje ci aponteye li programe riçuveu do GPS."
+
+#: ../modules/serial.c:518
+msgid "GPS Receiver"
+msgstr "Riçuveu GPS"
+
+#: ../modules/serial.c:525
+msgid "GPS settings"
+msgstr "Apontiaedjes GPS"
+
+#: ../modules/serial.c:531
+msgid "Receiver Type"
+msgstr "Sôre di riçuveu"
+
+#: ../modules/serial.c:536
+msgid "NMEA"
+msgstr "NMEA"
+
+#: ../modules/serial.c:541
+msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
+msgstr "Li riçuveu GPS evoye des dnêyes NMEA (prémetou, nén mezåjhe del candjî pol plupårt des riçuveus)."
+
+#: ../modules/serial.c:547
+msgid "Earthmate"
+msgstr "Earthmate"
+
+#: ../modules/serial.c:553
+msgid "GPS receiver is an Earthmate GPS."
+msgstr "Li riçuveu GPS est on GPS Earthmate."
+
+#: ../modules/serial.c:557
+msgid "Baud Rate"
+msgstr "Debit"
+
+#: ../modules/cardinfo.c:103
+msgid "/_Card"
+msgstr "/_Cåte"
+
+#: ../modules/cardinfo.c:104
+msgid "/Card/_Insert"
+msgstr "/Cåte/_Sititchî"
+
+#: ../modules/cardinfo.c:105
+msgid "/Card/_Eject"
+msgstr "/Cåte/Ri_ssaetchî"
+
+#: ../modules/cardinfo.c:106
+msgid "/Card/_Suspend"
+msgstr "/Cåte/_Djoker"
+
+#: ../modules/cardinfo.c:107
+msgid "/Card/_Resume"
+msgstr "/Cåte/_Rataker"
+
+#: ../modules/cardinfo.c:108
+msgid "/Card/_Reset"
+msgstr "/Cåte/_Renonder"
+
+#: ../modules/cardinfo.c:109
+msgid "/Card/s1"
+msgstr "/Cåte/s1"
+
+#: ../modules/cardinfo.c:110
+msgid "/Card/_Assign Driver"
+msgstr "/Cåte/_Assiner mineu"
+
+#: ../modules/cardinfo.c:111
+msgid "/Card/s2"
+msgstr "/Cåte/s2"
+
+#: ../modules/cardinfo.c:112
+msgid "/Card/_Close"
+msgstr "/Cåte/_Clôre"
+
+#: ../modules/cardinfo.c:113
+msgid "/_Help"
+msgstr "/_Aidance"
+
+#: ../modules/cardinfo.c:114
+msgid "/_Help/Index"
+msgstr "/_Aidance/_Indecse"
+
+#: ../modules/cardinfo.c:115
+msgid "/_Help/About"
+msgstr "/_Aidance/Å_d fwait"
+
+#: ../modules/cardinfo.c:175 ../modules/cardinfo.c:848
+msgid "card not recognized"
+msgstr "cåte nén ricnoxhowe"
+
+#: ../modules/cardinfo.c:277 ../modules/cardinfo.c:348
+msgid "Could not write to temporal config file."
+msgstr "Dji n' sai scrire e fitchî d' apontiaedje timporaire."
+
+#: ../modules/cardinfo.c:554
+msgid "Could not open pidfile:"
+msgstr "Dji n' sai drovi l' fitchî pid:"
+
+#: ../modules/cardinfo.c:560
+msgid "Could not read pidfile"
+msgstr "Dji n' sai lére li fitchî pid"
+
+#: ../modules/cardinfo.c:564
+msgid "Could not signal cardmgr:"
+msgstr "Dji n' sai evoyî on signå a cardmgr:"
+
+#: ../modules/cardinfo.c:638
+msgid "gpe-conf must be setuid root to use cardinfo feature."
+msgstr "gpe-conf doet esse setuid root po-z eployî l' fonccion cardinfo."
+
+#: ../modules/cardinfo.c:656
+msgid "No PCMCIA driver in '/proc/devices'"
+msgstr "Nou mineu PCMCIA dins «/proc/devices»"
+
+#: ../modules/cardinfo.c:659
+msgid "Could not open '/proc/devices'"
+msgstr "Dji n' sai drovi «/proc/devices»"
+
+#: ../modules/cardinfo.c:671
+msgid "No sockets found\n"
+msgstr "Nou soket di trové\n"
+
+#: ../modules/cardinfo.c:835
+msgid "flock(stabfile) failed"
+msgstr "flock(stabfile) a fwait berwete"
+
+#: ../modules/cardinfo.c:854
+#, c-format
+msgid "no driver loaded"
+msgstr " nou mineu di tcherdjî"
+
+#: ../modules/cardinfo.c:963
+msgid "ready"
+msgstr "presse"
+
+#: ../modules/cardinfo.c:981
+msgid "not ready"
+msgstr "nén presse"
+
+#: ../modules/cardinfo.c:996
+msgid "suspended"
+msgstr "djoké"
+
+#: ../modules/cardinfo.c:1188
+msgid "Assign Driver"
+msgstr "Assiner mineu"
+
+#: ../modules/cardinfo.c:1197
+msgid ""
+"This dialog allows you to select/\n"
+"change the driver assignment for a\n"
+"PCMCIA or CF card."
+msgstr ""
+"Ci purnea vos permete di tchoezi\n"
+"ou candjî l' mineu assiné po ene\n"
+"cåte PCMCIA ou CF."
+
+#: ../modules/cardinfo.c:1207
+msgid "Your current card identifies itself as:"
+msgstr "Vosse cåte do moumint s' idintifeye como çouci:"
+
+#: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
+msgid "Manuf. Id"
+msgstr "ID constr."
+
+#: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
+msgid "Class"
+msgstr "Classe"
+
+#: ../modules/cardinfo.c:1327 ../modules/cardinfo.c:1340
+msgid "PC/CF card socket information."
+msgstr "Informåcion do soket del cåte PC/CF."
+
+#: ../modules/cardinfo.c:1335
+msgid "Socket"
+msgstr "Soket"
+
+#: ../modules/cardinfo.c:1366
+msgid "Information for socket"
+msgstr "Informåcion pol soket"
+
+#. fields
+#: ../modules/cardinfo.c:1375
+msgid "State:"
+msgstr "Estat:"
+
+#: ../modules/cardinfo.c:1376
+msgid "Device:"
+msgstr "Éndjin:"
+
+#: ../modules/cardinfo.c:1377
+msgid "Driver:"
+msgstr "Mineu:"
+
+#: ../modules/cardinfo.c:1378
+msgid "Type:"
+msgstr "Sôre:"
+
+#: ../modules/cardinfo.c:1379
+msgid "I/O:"
+msgstr "I/R:"
+
+#: ../modules/cardinfo.c:1380
+msgid "IRQ:"
+msgstr "IRQ:"
+
+#: ../modules/cardinfo.c:1387
+msgid "Flags:"
+msgstr "Drapeas:"
+
+#: ../modules/cardinfo.c:1404
+msgid "PCMCIA initialisation failed"
+msgstr "L' astalaedje PCMCIA a fwait berwete"
+
+#: ../modules/gpe-admin.c:92
+msgid "Allow users to configure everything"
+msgstr "Permete ki les uzeus apontiexhe totafwait"
+
+#: ../modules/users/ucallbacks.c:107
+msgid "You need at least one user account!"
+msgstr "Vos dvoz aveur pol moens on conte uzeu!"
+
+#: ../modules/users/ucallbacks.c:131
+msgid "You can't remove this user!"
+msgstr "Vos n' poloz nén oister cist uzeu la!"
+
+#: ../modules/users/ucallbacks.c:136
+msgid ""
+"You can't remove\n"
+" system users!"
+msgstr ""
+"Vos n' poloz nén oister\n"
+" les uzeus sistinme!"
+
+#: ../modules/users/ucallbacks.c:138
+msgid ""
+"Delete user and all its data?\n"
+"This action is not revertable\n"
+"and is executed instantly."
+msgstr ""
+"Disfacer l' uzeu et totes ses dinêyes?\n"
+"Ciste accion ci èn pout nén esse disfwaite\n"
+"et si rzultat est fwait sol côp!"
+
+#: ../modules/users/ucallbacks.c:138 ../modules/network.c:343
+msgid "Question"
+msgstr "Kesse"
+
+#: ../modules/users/ucallbacks.c:173
+msgid "Please choose a user name."
+msgstr "Tchoezixhoz on no d' uzeu, s' i vs plait."
+
+#: ../modules/users/ucallbacks.c:191
+msgid "Please choose a home directory."
+msgstr "Tchoezixhoz on ridant måjhon, s' i vs plait."
+
+#: ../modules/users/ucallbacks.c:279
+msgid ""
+"The two new pass are different!\n"
+" Please try again!"
+msgstr ""
+"Les screts n' sont nén les minmes!\n"
+" Sayîz cor on côp s' i vs plait!"
+
+#: ../modules/users/ucallbacks.c:282
+msgid ""
+"Wrong password\n"
+" Please try again!"
+msgstr ""
+"Måva scret\n"
+" Sayîz cor on côp s' i vs plait!"
+
+#: ../modules/users/uinterface.c:214
+msgid "User Name"
+msgstr "No d' l' uzeu"
+
+#: ../modules/users/uinterface.c:215
+msgid "User Info"
+msgstr "Info uzeu"
+
+#: ../modules/users/uinterface.c:216
+msgid "Home"
+msgstr "Måjhon"
+
+#: ../modules/users/uinterface.c:226
+msgid "Password"
+msgstr "Sicret"
+
+#: ../modules/users/uinterface.c:235
+msgid "Delete User"
+msgstr "Disfacer uzeu"
+
+#: ../modules/users/uinterface.c:244
+msgid "Edit User"
+msgstr "Candjî uzeu"
+
+#: ../modules/users/uinterface.c:253
+msgid "New User"
+msgstr "Novea uzeu"
+
+#: ../modules/users/uinterface.c:327
+msgid "User settings"
+msgstr "Apontiaedjes di l' uzeu"
+
+#: ../modules/users/uinterface.c:341
+msgid "User Name:"
+msgstr "No d' uzeu:"
+
+#: ../modules/users/uinterface.c:357
+msgid "Password:"
+msgstr "Sicret:"
+
+#: ../modules/users/uinterface.c:365
+msgid "User Info:"
+msgstr "Informåcion d' l' uzeu:"
+
+#: ../modules/users/uinterface.c:381
+msgid "Shell:"
+msgstr "Shell:"
+
+#: ../modules/users/uinterface.c:400
+msgid "Home:"
+msgstr "Måjhon:"
+
+#: ../modules/users/uinterface.c:419
+msgid "Change"
+msgstr "Candjî"
+
+#: ../modules/users/uinterface.c:420
+msgid "Set"
+msgstr "Mete"
+
+#: ../modules/users/uinterface.c:484
+msgid "Change Password"
+msgstr "Candjî l' sicret"
+
+#. 2nd column:
+#: ../modules/users/uinterface.c:510
+msgid "Old Password:"
+msgstr "Vî scret:"
+
+#: ../modules/users/uinterface.c:517
+msgid "New Password:"
+msgstr "Novea scret:"
+
+#: ../modules/users/uinterface.c:525
+msgid "Confirm:"
+msgstr "Acertiner:"
+
+#: ../modules/sound/sound.c:250
+msgid "Audio Settings"
+msgstr "Apontiaedjes do son"
+
+#: ../modules/sound/sound.c:257
+msgid "Mute Everything"
+msgstr "Côper l' son"
+
+#: ../modules/sound/sound.c:298
+msgid "Alarm Settings"
+msgstr "Apontiaedjes di l' abranle"
+
+#: ../modules/sound/sound.c:305
+msgid "Enable Alarm Sound"
+msgstr "Permete li son po l' abranle"
+
+#: ../modules/sound/sound.c:312
+msgid "Automatic Volume (rising)"
+msgstr "Volume otomatike (montant)"
+
+#: ../modules/sound/sound.c:322 ../modules/sound/soundctrl.c:258
+msgid "Volume"
+msgstr "Volume"
+
+#: ../modules/sound/sound.c:329
+msgid "Test"
+msgstr "Sayî"
+
+#: ../modules/keys/keyboard.c:76
+msgid "none"
+msgstr "nouk"
+
+#: ../modules/keys/keyboard.c:77
+msgid "Foldable"
+msgstr "Ployåve"
+
+#: ../modules/keys/keyboard.c:78
+msgid "SnapNType"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:79
+msgid "Stowaway"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:80
+msgid "StowawayXT"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:81
+msgid "HP Slim"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:82
+msgid "Smart BT"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:83
+msgid "LIRC"
+msgstr "LIRC"
+
+#: ../modules/keys/keyboard.c:84
+msgid "Belkin IR"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:85
+msgid "Flexis"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:86
+msgid "Benq Gamepad"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:87
+msgid "Pocketvik"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:88
+msgid "Micro Foldaway"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:89
+msgid "Micro Datapad"
+msgstr ""
+
+#: ../modules/keys/keyboard.c:255
+msgid "External keyboard configuration."
+msgstr "Apontiaedje del difoûtrinne taprece."
+
+#: ../modules/keys/keyboard.c:258
+msgid "External Keyboard Port"
+msgstr "Pôrt pol difoûtrinne taprece"
+
+#: ../modules/keys/keyboard.c:265
+msgid "Here you may select your external keyboard model."
+msgstr "Chal vos ploz tchoezi l' sôre di vosse difoûtrinne taprece."
+
+#: ../modules/keys/keyboard.c:288
+msgid "External Keyboard Type"
+msgstr "Sôre del difoûtrinne taprece"
+
+#: ../modules/keys/kbd.c:142
+msgid "Keyboard Geometry / Layout"
+msgstr "Adjinçmint del taprece"
+
+#: ../modules/keys/kbd.c:182
+msgid "User defined"
+msgstr "A vosse môde"
+
+#: ../modules/keys/keyctl.c:195
+msgid "Button layout file is missing a global section."
+msgstr "Li fitchî d' adjinçmint des botons manke ene seccion globåle."
+
+#: ../modules/keys/keyctl.c:411
+msgid "No button configuration available for this device."
+msgstr "I n' a nol apontiaedje des botons po cist éndjin ci."
+
+#: ../modules/keys/keyctl.c:583
+msgid "Critical: Can't open keylaunchrc for writing!"
+msgstr "Critike: dji n' sai drovi keylaunchrc po scrire divins!"
+
+#: ../modules/keys/keyctl.c:606
+msgid "Could not restart key handler!"
+msgstr "Dji n' sai renonder l' pougneye del tape (key handler)!"
+
+#: ../modules/keys/keyctl.c:629
+msgid "The file you selected is not executable."
+msgstr "Li fitchî ki vos avoz tchoezi n' est nén enondåve."
+
+#: ../modules/keys/keys.c:79
+msgid "Buttons"
+msgstr "Botons"
+
+#: ../modules/keys/keys.c:83
+msgid "Virtual Keyb."
+msgstr "Forv. taprece"
+
+#: ../modules/keys/keys.c:87
+msgid "External Keyb."
+msgstr "Difoû. taprece"
+
+#: ../modules/screen/screen.c:73
+msgid "Portrait"
+msgstr "D' astampé"
+
+#: ../modules/screen/screen.c:74
+msgid "Landscape (left)"
+msgstr "Di coûtchî (hintche)"
+
+#: ../modules/screen/screen.c:75
+msgid "Landscape (right)"
+msgstr "Di coûtchî (droete)"
+
+#: ../modules/screen/screen.c:79
+msgid "Landscape"
+msgstr "Di coûtchî"
+
+#: ../modules/screen/screen.c:80
+msgid "Portrait (left)"
+msgstr "D' astampé (hintche)"
+
+#: ../modules/screen/screen.c:81
+msgid "Portrait (right)"
+msgstr "D' astampé (droete)"
+
+#: ../modules/screen/screen.c:84
+msgid "Inverted"
+msgstr "Dins l' ôte sins"
+
+#: ../modules/screen/screen.c:111
+msgid "Light"
+msgstr "Loumire"
+
+#: ../modules/screen/screen.c:117
+msgid "Brightness"
+msgstr "Briyance"
+
+#: ../modules/screen/screen.c:129
+msgid "Display"
+msgstr "Håynaedje"
+
+#: ../modules/screen/screen.c:133
+msgid "Rotation"
+msgstr "Tournaedje"
+
+#: ../modules/screen/screen.c:153
+msgid "Touchscreen"
+msgstr "Waitroûle a toutchî"
+
+#: ../modules/screen/screen.c:157
+msgid "Calibrate"
+msgstr "Calibrer"
+
+#: ../modules/screen/screen.c:159
+msgid "Start"
+msgstr "Enonder"
+
+#: ../modules/screen/screen.c:275 ../modules/sleep/scallbacks.c:39
+msgid "min"
+msgstr "min"
+
+#: ../modules/screen/screen.c:278 ../modules/sleep/scallbacks.c:42
+msgid "sec"
+msgstr "seg"
+
+#: ../modules/network.c:103
+msgid "Current Config"
+msgstr "Apontiaedje do moumint"
+
+#: ../modules/network.c:252
+msgid "New Interface"
+msgstr "Novele eterface"
+
+#: ../modules/network.c:261
+msgid "This interface definition already exists!"
+msgstr "Ci definixha d' eterface egzistêye dedja!"
+
+#: ../modules/network.c:343
+msgid "Do you want to delete this interface?"
+msgstr "Voloz vs disfacer ciste eterface ci?"
+
+#: ../modules/network.c:592
+msgid "WiFi config"
+msgstr "Apontiaedje WiFi"
+
+#: ../modules/network.c:631
+#, c-format
+msgid "WiFi config for %s"
+msgstr "Apontiaedje WiFi po %s"
+
+#. page items
+#: ../modules/network.c:643
+msgid "ESSID"
+msgstr "ESSID"
+
+#: ../modules/network.c:665
+msgid "Mode"
+msgstr "Môde"
+
+#: ../modules/network.c:675
+msgid "managed"
+msgstr "manaedjî"
+
+#: ../modules/network.c:687
+msgid "ad-hoc"
+msgstr "ad-hoc"
+
+#: ../modules/network.c:704
+msgid "Channel"
+msgstr "Canå"
+
+#: ../modules/network.c:725
+msgid "WEP"
+msgstr "WEP"
+
+#: ../modules/network.c:735
+msgid "off"
+msgstr "dismetou"
+
+#: ../modules/network.c:747
+msgid "open"
+msgstr "drovou"
+
+#: ../modules/network.c:759
+msgid "restricted"
+msgstr "rastrindou"
+
+#: ../modules/network.c:775
+msgid "Key 1"
+msgstr "Clé 1"
+
+#: ../modules/network.c:803
+msgid "Key 2"
+msgstr "Clé 2"
+
+#: ../modules/network.c:831
+msgid "Key 3"
+msgstr "Clé 3"
+
+#: ../modules/network.c:861
+msgid "Key 4"
+msgstr "Clé 4"
+
+#: ../modules/network.c:1015 ../modules/network.c:1142
+#: ../modules/network.c:1259
+msgid "Interface"
+msgstr "Eterface"
+
+#. page items
+#: ../modules/network.c:1065
+msgid "Address"
+msgstr "Adresse"
+
+#: ../modules/network.c:1067
+msgid "Enter your IP address here, e.g. 192.168.1.2"
+msgstr "Dinez voste adresse IP chal, eg: 192.168.1.2"
+
+#: ../modules/network.c:1068
+msgid "Netmask"
+msgstr "Maske rantoele"
+
+#: ../modules/network.c:1070
+msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
+msgstr "Dinez vosse maske rantoele chal, eg 255.255.255.0 å pus sovint"
+
+#: ../modules/network.c:1072
+msgid "Broadcast"
+msgstr "Broadcast"
+
+#: ../modules/network.c:1074
+msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
+msgstr "Dinez vost adresse broadcast chal, å pus sovint c' est l' minme ki voste adresse IP mins avou 255 come dierin limero."
+
+#: ../modules/network.c:1076
+msgid "Gateway"
+msgstr "Pasrele"
+
+#: ../modules/network.c:1078
+msgid "Enter the IP Address of your default gateway here."
+msgstr "Dinez l' adresse IP del prémetowe pasrele chal."
+
+#: ../modules/network.c:1087 ../modules/network.c:1201
+msgid "WiFi device"
+msgstr "Éndjin WiFi"
+
+#: ../modules/network.c:1095 ../modules/network.c:1209
+msgid "Configure"
+msgstr "Apontyî"
+
+#. page items
+#: ../modules/network.c:1192 ../modules/network.c:1419
+msgid "Hostname"
+msgstr "No do lodjoe"
+
+#: ../modules/network.c:1194
+msgid "Enter your desired hostname here. This parameter is optional."
+msgstr "Dinez l' no d' lodjoe ki vos vloz chal. Ci paramete ci est opcionel."
+
+#. page items
+#: ../modules/network.c:1309
+msgid "Provider"
+msgstr "Ahesseu"
+
+#: ../modules/network.c:1311
+msgid "Here you need to enter the name of the provider configuration to use for this interface."
+msgstr "Chal vos dvoz mete li no di l' apontiaedje di l' ahesseu a-z eployî so ciste eterface ci."
+
+#: ../modules/network.c:1334
+msgid "Global Settings"
+msgstr "Apontiaedjes globås"
+
+#: ../modules/network.c:1375
+msgid "Proxy"
+msgstr "Procsi"
+
+#: ../modules/network.c:1376
+msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
+msgstr "Si vos vloz ou avoz mezåjhe d' eployî on procsi, metoz l' chal. (Çoula n' sieve ki po dillo disk' asteure.)"
+
+#: ../modules/network.c:1382
+msgid "No proxy for"
+msgstr "Nou procsi po"
+
+#: ../modules/network.c:1384
+msgid "Here you should enter your local domain for that you don't want to use a proxy."
+msgstr "Chal vos dvrîz dner vosse dominne locå ki vos n' voloz nén eployî on procsi avou."
+
+#: ../modules/network.c:1391
+msgid "DNS server"
+msgstr "Sierveu DNS"
+
+#: ../modules/network.c:1393
+msgid "Enter the IP of the DNS(name-) server to use here."
+msgstr "Dinez chal l' adresse IP do sierveu no (DNS) a-z eployî."
+
+#: ../modules/network.c:1421
+msgid "Enter the Hostname to use for this machine"
+msgstr "Dinez l' no d' lodjoe a-z eployî po ciste éndjole ci"
+
+#: ../modules/network.c:1612
+msgid ""
+"Here you may change the basic configuration type of your device.\n"
+"Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
+msgstr ""
+"Chal vos ploz candjî li sôre d' apontiaedje di båze po vost éndjin.\n"
+"Eployîz «static» po èn apontiaedje al mwin di l' eterface, «dhcp» po-z eployî DHCP po l' apontiaedje, eyet «ppp» po fé èn éndjin di raloyaedje pont-a-pont."
+
+#: ../modules/network.c:1618
+msgid "Enable this option if your device is a WiFi device"
+msgstr "Metoz cisse tchuze ci si vost éndjin est on éndjin sins fyis WiFi"
+
+#: ../modules/network.c:1620
+msgid "Click to set the wireless options for this device"
+msgstr "Clitchîz po defini les tchuzes sins fyis di ciste eterface ci"
+
+#: ../modules/network.c:1622
+msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
+msgstr "Definixhoz l' môde ki vosse cåte WiFi doet ovrer. (manaedjî ou ad-hoc)."
+
+#: ../modules/network.c:1625
+msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
+msgstr "Definixhoz l' môde d' ecriptaedje: dismetou po n' pont eployî l' ecriptaedje WEP, drovou po les sistinmes å lådje eyet rastrindou po n' permete ki les raloyaedjes WEP rastrindous."
+
+#: ../modules/network.c:1630
+msgid "Enter the essid of your WiFi network here."
+msgstr "Dinez chal l' ESSID di vosse rantoele sins fyis."
+
+#: ../modules/network.c:1633
+msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
+msgstr "Dinez chal li clé WEP da vosse e cogne iwconfig, eg: «s:12345»"
+
+#: ../modules/network.c:1636
+msgid "Select the WEP key to use."
+msgstr "Tchoezixhoz l' clé WEP a-z eployî."
+
+#: ../modules/network.c:1639
+msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
+msgstr "Dinez l' limero do canå ou l' frecwince s' i fåt. S' i n' fåt nén leyîz vude."
+
+#: ../modules/network.c:1655
+msgid "Remove current Interface"
+msgstr "Oister l' eterface do moumint"
+
+#: ../modules/network.c:1665
+msgid "Add a new Interface"
+msgstr "Radjouter ene novele eterface"
+
+#: ../modules/network.c:1672
+msgid "Info"
+msgstr "Informåcion"
+
+#: ../modules/network.c:1676
+msgid "Show current configuration."
+msgstr "Mostrer l' apontiaedje do moumint."
+
+#: ../modules/network.c:1694
+msgid "Couldn't read network configuration."
+msgstr "Dji n' a savou lére l' apontiaedje del rantoele."
+
+#: ../modules/network.c:1701
+msgid "global"
+msgstr "globå"
+
+#: ../modules/sleep/sinterface.c:64
+msgid "Auto sleep"
+msgstr "Oto-essoctaedje"
+
+#: ../modules/sleep/sinterface.c:74 ../modules/sleep/sinterface.c:105
+msgid "enabled"
+msgstr "en alaedje"
+
+#: ../modules/sleep/sinterface.c:92
+msgid "sleep timeout"
+msgstr "Tårdjaedje d' essoctaedje"
+
+#: ../modules/sleep/sinterface.c:95
+msgid "Auto dim"
+msgstr "Oto-disloumaedje"
+
+#: ../modules/sleep/sinterface.c:122
+msgid "backlight dim timeout"
+msgstr "Tårdjaedje pol dirî-disloumaedje"
+
+#: ../modules/sleep/sinterface.c:124
+msgid "Auto dim level"
+msgstr "Livea d' oto-disloumaedje"
+
+#: ../modules/sleep/sinterface.c:144
+msgid "Advanced Controls"
+msgstr "Sipepieus controles"
+
+#: ../modules/sleep/sinterface.c:154
+msgid "CPU"
+msgstr "CPU"
+
+#: ../modules/sleep/sinterface.c:160
+msgid "Sleep on cpu less than load"
+msgstr "Essocter cwand l' processeu a-st ene tchedje trop fwebe"
+
+#: ../modules/sleep/sinterface.c:164
+msgid "load below"
+msgstr "tchedje dizo"
+
+#: ../modules/sleep/sinterface.c:180
+msgid "APM"
+msgstr "APM"
+
+#: ../modules/sleep/sinterface.c:186
+msgid "Sleep on AC"
+msgstr "Essocté minme sol corant (AC)"
+
+#: ../modules/sleep/sinterface.c:188
+msgid "probe IRQs"
+msgstr "plonkî les IRQ"
+
+#: ../modules/sleep/sinterface.c:194
+msgid "Check IRQ activity"
+msgstr "Corwaitî l' activité des IRQ"
+
+#: ../desktop/gpe-conf-admin.desktop.in.h:1
+msgid "User Access"
+msgstr "Accès uzeu"
+
+#: ../desktop/gpe-conf-admin.desktop.in.h:2
+msgid "User access administration"
+msgstr "Manaedjaedje accès des uzeus"
+
+#: ../desktop/gpe-conf-cardinfo.desktop.in.h:1
+msgid "PC/CF Cards"
+msgstr "Cåtes PC/CF"
+
+#: ../desktop/gpe-conf-cardinfo.desktop.in.h:2
+msgid "PC/CF Cards info and config"
+msgstr "Informåcion ey apontiaedje des cåtes PC/CF"
+
+#: ../desktop/gpe-conf.desktop.in.h:1
+msgid "Control Panel"
+msgstr "Panea d' controle"
+
+#: ../desktop/gpe-conf-keys.desktop.in.h:1
+msgid "Keyboard and Button Setup"
+msgstr "Apontiaedje des tapes et botons"
+
+#: ../desktop/gpe-conf-keys.desktop.in.h:2
+msgid "Keys and Buttons"
+msgstr "Tapes et botons"
+
+#: ../desktop/gpe-conf-ownerinfo.desktop.in.h:2
+msgid "Set Owner Information"
+msgstr "Defini informåcion prôpietaire"
+
+#: ../desktop/gpe-conf-serial.desktop.in.h:1
+msgid "Serial Port Settings"
+msgstr "Apontiaedjes pôrt séreye"
+
+#: ../desktop/gpe-conf-sleep.desktop.in.h:1
+msgid "Sleep Config"
+msgstr "Apontiaedje essoctaedje"
+
+#: ../desktop/gpe-conf-sleep.desktop.in.h:2
+msgid "Sleep Configuration"
+msgstr "Apontiaedje di l' essoctaedje (sleep)"
+
+#: ../desktop/gpe-conf-sound.desktop.in.h:1
+msgid "Sound Settings"
+msgstr "Apontiaedjes do son"
+
+#: ../desktop/gpe-conf-sound.desktop.in.h:2
+msgid "Sound defaults and setup"
+msgstr "Prémetowès valixhances ey apontiaedje po l' son"
+
+#: ../desktop/gpe-conf-sysinfo.desktop.in.h:1
+msgid "System Info"
+msgstr "Informåcion sistinme"
+
+#: ../desktop/gpe-conf-theme.desktop.in.h:1
+msgid "Global Appearance Setup"
+msgstr "Apontiaedje rivnance globåle"
+
+#: ../desktop/gpe-conf-time.desktop.in.h:1
+msgid "Date/Time Setup"
+msgstr "Apontiaedje date/eure"
+
+#: ../desktop/gpe-conf-time.desktop.in.h:2
+msgid "Setup Date and Time"
+msgstr "Apontiaedje del date ey eure"
+
+#: ../desktop/gpe-conf-usb.desktop.in.h:1
+msgid "Change USB settings"
+msgstr "Candjî apontiaedjes USB"
+
+#: ../desktop/gpe-conf-usb.desktop.in.h:2
+msgid "USB Settings"
+msgstr "Apontiaedjes USB"
+
+#: ../desktop/gpe-conf-users.desktop.in.h:1
+msgid "Manage local users"
+msgstr "Manaedjî les uzeus locås"
+
+#: ../desktop/gpe-conf-users.desktop.in.h:2
+msgid "User Manager"
+msgstr "Manaedjeu des uzeus"
