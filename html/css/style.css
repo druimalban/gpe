@@ -22,7 +22,7 @@ div.header {
 	width: 100%;
 	height: 48px;
 	text-align: right;
-	background: url(images/fenyves3.jpg) no-repeat;
+	background: url(../images/fenyves3.jpg) no-repeat;
 	background-color: #99ccff;
 	border-bottom: 1px solid #99CCFF;
 }
