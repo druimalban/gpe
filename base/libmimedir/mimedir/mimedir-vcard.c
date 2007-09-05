@@ -339,7 +339,7 @@ mimedir_vcard_class_init (MIMEDirVCardClass *klass)
 				     _("Nick name"),
 				     _("The first nick name"),
 				     NULL,
-				     G_PARAM_READABLE);
+				     G_PARAM_READWRITE);
 	g_object_class_install_property (gobject_class, PROP_NICKNAME, pspec);
 	pspec = g_param_spec_pointer ("photo", /* FIXME: this is useless */
 				      _("Photo"),
@@ -643,6 +643,10 @@ mimedir_vcard_set_property (GObject		*object,
 	case PROP_NICKNAME_LIST:
 		mimedir_utils_free_string_slist (priv->nickname);
 		priv->nickname = mimedir_vcard_copy_string_list ((GSList *) g_value_get_pointer (value));
+		break;
+	case PROP_NICKNAME:
+	  /* Setting the Nickname attribute results in the specified nickname being prepended to the list */
+		priv->nickname = g_slist_prepend(priv->nickname, value);
 		break;
 	case PROP_PHOTO:
 		g_string_free (priv->photo, TRUE);

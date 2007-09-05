@@ -1,3 +1,9 @@
+2007-09-05  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-vcard.c: make the nickname property writeable with writing it meaning
+	the new value is prepended to the list (writing the nickname-list property
+	still means the whole list is replaced)
+
 2007-08-03  Florian Boor <florian@kernelconcepts.de>
 
 	* Relase 0.4.2
