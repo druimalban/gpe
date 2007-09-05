@@ -41,6 +41,7 @@ static struct tag_map map[] =
     { G_TYPE_STRING, "description", NULL },
     { G_TYPE_STRING, "todoid", "uid" },
     { G_TYPE_INT, "priority", NULL },
+    { G_TYPE_INT, "state", "status" },
     { G_TYPE_NONE, NULL, NULL }
   };
 
@@ -68,6 +69,8 @@ vtodo_interpret_tag (MIMEDirVTodo *todo, const char *tag, const char *value)
 		          g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, MIMEDIR_STATUS_IN_PROCESS, NULL);
                 break;
                 case ABANDONED:
+		          g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, MIMEDIR_STATUS_CANCELLED, NULL);
+		break;
                 case COMPLETED:
                   // Completed Task
 		          g_object_set (G_OBJECT (todo), t->vc ? t->vc : t->tag, MIMEDIR_STATUS_COMPLETED, NULL);
@@ -167,6 +170,9 @@ vtodo_to_tags (MIMEDirVTodo *vtodo)
               break;
               case MIMEDIR_STATUS_IN_PROCESS:
                 value = IN_PROGRESS;
+              break;
+              case MIMEDIR_STATUS_CANCELLED:
+                value = ABANDONED;
               break;
               default:
                 value = NOT_STARTED;

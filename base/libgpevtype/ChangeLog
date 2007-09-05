@@ -1,3 +1,7 @@
+2007-09-05  Graham Cobb  <g+770@cobb.uk.net>
+
+	* vtodo.c (vtodo_to_tags): Handle todo STATUS and MIMEDIR_STATUS_CANCELLED
+
 2007-06-08  Florian Boor  <florian@linuxtogo.org>
 
 	* Release version 0.50
