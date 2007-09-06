@@ -1,3 +1,8 @@
+2007-09-06  Graham Cobb  <g+770@cobb.uk.net>
+
+	* db.c, gpe/pim-categories.h: Add gpe_pim_category_id and make 
+	categories case independent
+
 2007-06-08  Florian Boor  <florian@kernelconcepts.de>
 
 	* Release version 0.9

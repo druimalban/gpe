@@ -40,6 +40,10 @@ extern void free_object_list(GSList *list) {
 void
 gpesyncd_setup_databases (gpesyncd_context * ctx)
 {
+  if (! gpe_pim_categories_init() ) {
+    fprintf(stderr, "Could not open catagories database.\n");
+  }
+
   if (contacts_db_open(FALSE)) {
     fprintf(stderr, "Could not open contacts database.\n");
   }

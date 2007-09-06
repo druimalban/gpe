@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *               2006 Florian Boor <florian.boor@kernelconcepts.de>
+ *               2007 Graham R. Cobb <g+gpe@cobb.uk.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -20,6 +21,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 #include <stdlib.h>
 #include <sqlite.h>
 
@@ -181,6 +183,22 @@ gpe_pim_category_name (gint id)
   return NULL;
 }
 
+gint
+gpe_pim_category_id (const gchar *name)
+{
+  GSList *iter;
+
+  for (iter = categories; iter; iter = iter->next)
+    {
+      struct gpe_pim_category *c = iter->data;
+
+      if (!strcasecmp (c->name, name))
+        return c->id;
+    }
+
+  return -1;
+}
+
 /**
  * gpe_pim_category_colour:
  * @id: Category id
@@ -211,6 +229,14 @@ gpe_pim_category_new (const gchar *name, gint *id)
   gchar *err;
   gint r;
   struct gpe_pim_category *c;
+
+  r = gpe_pim_category_id(name);
+  if (r >= 0)
+    {
+      // Category already exists -- pretend we created it
+      *id = r;
+      return TRUE;
+    }
   
   r = sqlite_exec_printf (db, "insert into category values (NULL, '%q', NULL)",
                           NULL, NULL, &err, name);
@@ -262,6 +288,13 @@ gpe_pim_category_rename (gint id, gchar *new_name)
 {
   gchar *err;
   gint r;
+
+  r = gpe_pim_category_id(new_name);
+  if (r >= 0)
+    {
+      gpe_error_box ("Destination category already exists");
+      return FALSE;
+    }
 
   r = sqlite_exec_printf (db,
                           "update category set description = '%q' where id =%d",

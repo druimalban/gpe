@@ -9,7 +9,7 @@ AC_GNU_SOURCE
 AC_HEADER_STDC
 AC_PROG_CXX
 
-DEP_MODULES="glib-2.0 mimedir-1.0 libgpevtype >= 0.20 sqlite gobject-2.0 gthread-2.0 gmodule-2.0 libcontactsdb libeventdb >= 0.31 libtododb >= 0.11"
+DEP_MODULES="glib-2.0 mimedir-1.0 libgpevtype >= 0.20 sqlite gobject-2.0 gthread-2.0 gmodule-2.0 libcontactsdb libeventdb >= 0.31 libtododb >= 0.11 libgpepimc"
 
 AC_PROG_LIBTOOL
 

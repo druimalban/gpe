@@ -38,6 +38,7 @@
 #include <gpe/contacts-db.h>
 #include <gpe/event-db.h>
 #include <gpe/todo-db.h>
+#include <gpe/pim-categories.h>
 
 #define BUFFER_LEN 25 
 

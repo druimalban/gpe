@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
  * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2007 Graham R. Cobb <g+gpe@cobb.uk.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -201,18 +202,49 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
         if the alarm is before the start) */
     event_set_alarm (ev, start - trigger_min, NULL);
 
-#if 0
   GList *categories = NULL;
+  // Note: the following g_object_get provides a pointer to the
+  // actual category list, not a copy.  So it must not be free'd.
   g_object_get (event, "category-list", &categories, NULL);
-
+  if (categories) 
+    {
+      // Clear the existing categories, ready for replacement
+      GError *e = NULL;
+      event_set_categories(ev, NULL, &e);
+      if (e)
+	{
+	  ERROR_PROPAGATE (gerror, e);
+	  error = TRUE;
+	  goto out;
+	}
+    }
   GList *i;
   for (i = categories; i; i = i->next)
     {
-      event_add_category (ev, map category name to integer...);
-      g_free (i->data);
+      GError *e = NULL;
+      int catid;
+      const gchar *name = (const gchar *)i->data;
+      // Lookup category name
+      catid = gpe_pim_category_id(name);
+      if (catid < 0)
+	{
+	  // Create category
+	  if (!gpe_pim_category_new(name, &catid))
+	    {
+	      error = TRUE;
+	      g_set_error (gerror, ERROR_DOMAIN (), 0,
+			   "Cannot create category %s", name);
+	      goto out;
+	    }
+	}
+      event_add_category (ev, catid, &e);
+      if (e)
+	{
+	  ERROR_PROPAGATE (gerror, e);
+	  error = TRUE;
+	  goto out;
+	}
     }
-  g_list_free (categories);
-#endif
 
   if (summary)
     event_set_summary (ev, summary, NULL);
@@ -472,18 +504,24 @@ event_export_as_vevent (Event *ev)
       mimedir_vcomponent_set_alarm_list (MIMEDIR_VCOMPONENT (event), list);
     }
 
-#if 0
-  GList *categories = NULL;
-  g_object_get (event, "category-list", &categories, NULL);
-
-  GList *i;
-  for (i = categories; i; i = i->next)
+  GSList *categories;
+  GError *gerror = NULL;
+  categories = event_get_categories (ev, &gerror);
+  if (categories)
     {
-      event_add_category (ev, map category name to integer...);
-      g_free (i->data);
+      GSList *i;
+      GList *catnamelist = NULL;
+      for (i = categories; i; i = i->next)
+	{
+	  const gchar *catname;
+	  catname = gpe_pim_category_name((gint)i->data);
+	  // If we can't find the name the category has probably been deleted -- ignore it
+	  if (catname) catnamelist = g_list_prepend(catnamelist, (gpointer)catname);
+	}
+      g_object_set(event, "category-list", catnamelist, NULL);
+      g_list_free(catnamelist);
+      g_slist_free(categories);
     }
-  g_list_free (categories);
-#endif
 
   char *summary = event_get_summary (ev, NULL);
   if (summary)

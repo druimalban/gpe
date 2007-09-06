@@ -7,6 +7,7 @@
 #include "gpe/vevent.h"
 #include "gpe/vtodo.h"
 #include "gpe/vcard.h"
+#include "gpe/pim-categories.h"
 
 #define _(x) gettext (x)
 

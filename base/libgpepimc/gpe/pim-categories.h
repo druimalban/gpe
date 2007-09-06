@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
  *               2006 Florian Boor <florian.boor@kernelconcepts.de>
+ *               2007 Graham R. Cobb <g+gpe@cobb.uk.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,6 +37,7 @@ extern GSList *gpe_pim_categories_list (void);
 
 extern gboolean gpe_pim_category_new (const gchar *title, gint *id);
 extern const gchar *gpe_pim_category_name (gint id);
+extern gint gpe_pim_category_id (const gchar *name);
 extern gboolean gpe_pim_category_rename (gint id, gchar *new_name);
 
 /* colour functions */
