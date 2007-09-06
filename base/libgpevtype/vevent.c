@@ -513,8 +513,7 @@ event_export_as_vevent (Event *ev)
       GList *catnamelist = NULL;
       for (i = categories; i; i = i->next)
 	{
-	  const gchar *catname;
-	  catname = gpe_pim_category_name((gint)i->data);
+	  const gchar *catname = gpe_pim_category_name((gint)i->data);
 	  // If we can't find the name the category has probably been deleted -- ignore it
 	  if (catname) catnamelist = g_list_prepend(catnamelist, (gpointer)catname);
 	}

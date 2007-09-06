@@ -1,6 +1,7 @@
 /* vtodo.c: Implementation of todo import and export functionality.
  * Copyright (C) 2004 Philip Blundell <philb@gnu.org>
  * Copyright (C) 2006 Neal H. Walfield <neal@gnu.org>
+ * Copyright (C) 2007 Graham R. Cobb <g+gpe@cobb.uk.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -108,6 +109,7 @@ vtodo_interpret_tag (MIMEDirVTodo *todo, const char *tag, const char *value)
 
       return TRUE;
     }
+
   if (!strcasecmp (tag, "modified"))
     {
       MIMEDirDateTime *date;
@@ -115,6 +117,37 @@ vtodo_interpret_tag (MIMEDirVTodo *todo, const char *tag, const char *value)
       date = mimedir_datetime_new_from_time_t (atoi (value));
 
       g_object_set (G_OBJECT (todo), "last-modified", date, NULL);
+
+      return TRUE;
+    }
+
+  if (!strcasecmp(tag,"category"))
+    {
+      const gchar *catname = gpe_pim_category_name(atoi(value));
+      // If we can't find the name the category has probably been deleted -- ignore it
+      if (catname) {
+	// There is no "add category" operation so we have to get the current category list
+	// add the new one and set the new list
+	GList *old_categories = NULL;
+	// Note: the following g_object_get provides a pointer to the
+	// actual category list, not a copy.  So it must not be modified or free'd!
+	g_object_get (G_OBJECT (todo), "category-list", &old_categories, NULL);
+
+	// Create a new category list.
+	GList *i, *new_categories = NULL;
+	for (i = old_categories; i; i = i->next)
+	  {new_categories = g_list_append(new_categories, g_strdup(i->data));}
+
+	new_categories = g_list_append(new_categories, g_strdup(catname));
+
+	// Setting the category-list attribute copies the whole list
+	g_object_set(G_OBJECT (todo), "category-list", new_categories, NULL);
+	for (i = new_categories; i; i = i->next)
+	  {g_free(i->data);}
+	g_list_free(new_categories);
+
+	return TRUE;
+      }
     }
 
   return FALSE;
@@ -201,7 +234,21 @@ vtodo_to_tags (MIMEDirVTodo *vtodo)
     data = gpe_tag_list_prepend (data, "due", g_strdup (d_buf));
   }
 
-
+  /* CATEGORIES */
+  GList *categories = NULL;
+  // Note: the following g_object_get provides a pointer to the
+  // actual category list, not a copy.  So it must not be free'd.
+  g_object_get (G_OBJECT (vtodo), "category-list", &categories, NULL);
+  GList *i;
+  for (i = categories; i; i = i->next)
+    {
+      int catid;
+      const gchar *name = (const gchar *)i->data;
+      // Lookup category name
+      catid = gpe_pim_category_id(name);
+      if (catid < 0) gpe_pim_category_new(name, &catid); // Create category
+      data = gpe_tag_list_prepend (data, "category", g_strdup_printf ("%d", catid));     
+    }
   return data;
 }
 

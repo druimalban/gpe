@@ -1,7 +1,12 @@
+2007-09-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* vtodo.c (vtodo_to_tags, vtodo_interpret_tag): 
+	Import/export categories for todos
+
 2007-09-06  Graham Cobb  <g+770@cobb.uk.net>
 
 	* vevent.c (event_export_as_vevent, event_import_from_vevent): 
-	Import/export categories
+	Import/export categories for events
 
 2007-09-05  Graham Cobb  <g+770@cobb.uk.net>
 

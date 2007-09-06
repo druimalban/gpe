@@ -184,6 +184,10 @@ gboolean todo_db_update_item_from_tags (struct todo_item *t, GSList *tags) {
 
   t->priority = PRIORITY_STANDARD;
 
+  /* Clear the category list */
+  g_slist_free(t->categories);
+  t->categories = NULL;
+
   while (tags) {
     gpe_tag_pair *p = tags->data;
 

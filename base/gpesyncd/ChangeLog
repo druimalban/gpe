@@ -1,3 +1,7 @@
+2007-09-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* src/import.c: import categories for todos
+
 2007-09-06  Graham Cobb  <g+770@cobb.uk.net>
 
 	* src/main.c (gpesyncd_setup_databases), configure.ac, src/gpesyncd.h: 
