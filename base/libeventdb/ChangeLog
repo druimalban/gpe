@@ -1,3 +1,11 @@
+2007-09-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* event.c (event_source_finalize): Unfortunately, 
+	if event_db_find_by_uid cannot find the specified UID
+	it creates an event with the UID (but no data).  
+	This means that the removal from the hash table can fail.  
+	The check can be re-instated when the event_db_find_by_uid bug is fixed
+
 2007-06-09  Florian Boor <florian@linuxtogo.org>
 
 	* Release version 0.90

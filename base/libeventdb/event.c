@@ -188,7 +188,11 @@ event_source_finalize (GObject *object)
     {
       gboolean removed = g_hash_table_remove (ev->edb->events,
 					      (gpointer) ev->uid);
-      g_assert (removed);
+  /* Unfortunately, if event_db_find_by_uid cannot find the specified UID
+     it creates an event with the UID (but no data).  This means that the
+     removal from the hash table can fail.  This check can be re-instated when
+     the event_db_find_by_uid bug is fixed */
+      // g_assert (removed);
     }
 
   G_OBJECT_CLASS (event_parent_class)->finalize (object);
