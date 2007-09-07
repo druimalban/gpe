@@ -1,5 +1,8 @@
 2007-09-07  Graham Cobb  <g+770@cobb.uk.net>
 
+	* vcard.c (vcard_interpret_tag, vcard_to_tags): 
+	Import/export categories for contacts
+
 	* vtodo.c (vtodo_to_tags, vtodo_interpret_tag): 
 	Import/export categories for todos
 

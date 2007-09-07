@@ -34,7 +34,7 @@ static struct tag_map map[] =
     { "company", "organization"},
     { "notes", "note"},
     { "work.title", "jobtitle"},
-    { "category", "categories"},
+    //categories handled separately    { "category", "categories"},
     { "work.www", "url" },
     { NULL, NULL }
   };
@@ -124,6 +124,35 @@ vcard_interpret_tag (MIMEDirVCard *card, const char *tag, const char *value)
 	  return TRUE;
 	}
       t++;
+    }
+
+  if (!strcasecmp(tag,"category"))
+    {
+      const gchar *catname = gpe_pim_category_name(atoi(value));
+      // If we can't find the name the category has probably been deleted -- ignore it
+      if (catname) {
+	// There is no "add category" operation so we have to get the current category list
+	// add the new one and set the new list
+	GList *old_categories = NULL;
+	// Note: the following g_object_get provides a pointer to the
+	// actual category list, not a copy.  So it must not be modified or free'd!
+	g_object_get (G_OBJECT (card), "category-list", &old_categories, NULL);
+
+	// Create a new category list.
+	GList *i, *new_categories = NULL;
+	for (i = old_categories; i; i = i->next)
+	  {new_categories = g_list_append(new_categories, g_strdup(i->data));}
+
+	new_categories = g_list_append(new_categories, g_strdup(catname));
+
+	// Setting the category-list attribute copies the whole list
+	g_object_set(G_OBJECT (card), "category-list", new_categories, NULL);
+	for (i = new_categories; i; i = i->next)
+	  {g_free(i->data);}
+	g_list_free(new_categories);
+
+	return TRUE;
+      }
     }
 
   if (!strncasecmp (tag, "home.", 5))
@@ -347,6 +376,22 @@ vcard_to_tags (MIMEDirVCard *vcard)
 
   g_free (fn);
   g_free (ln);
+
+  /* CATEGORIES */
+  GList *categories = NULL;
+  // Note: the following g_object_get provides a pointer to the
+  // actual category list, not a copy.  So it must not be free'd.
+  g_object_get (G_OBJECT (vcard), "category-list", &categories, NULL);
+  GList *i;
+  for (i = categories; i; i = i->next)
+    {
+      int catid;
+      const gchar *name = (const gchar *)i->data;
+      // Lookup category name
+      catid = gpe_pim_category_id(name);
+      if (catid < 0) gpe_pim_category_new(name, &catid); // Create category
+      data = gpe_tag_list_prepend (data, "category", g_strdup_printf ("%d", catid));     
+    }
 	
   return data;
 }
