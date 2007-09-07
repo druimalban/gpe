@@ -78,7 +78,7 @@ GSList *todo_db_item_to_tags (struct todo_item *t) {
     }
   for (iter = t->categories; iter; iter = iter->next)
     {
-      tags = gpe_tag_list_prepend(tags, "CATEGORY", g_strdup_printf("%d", iter->data));
+      tags = gpe_tag_list_prepend(tags, "CATEGORY", g_strdup_printf("%d", (int)iter->data));
     }
   tags = gpe_tag_list_prepend(tags, "PRIORITY", g_strdup_printf("%d", t->priority));
 

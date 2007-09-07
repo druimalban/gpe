@@ -1,5 +1,10 @@
 2007-09-07  Graham Cobb  <g+770@cobb.uk.net>
 
+	* src/export.c (get_event): fix workround for
+	bug in event_db_find_by_uid which returns empty 
+	events when the UID does not exist
+	(todo_db_item_to_tags): fix compilation warning
+
 	* src/import.c: import categories for todos
 
 2007-09-06  Graham Cobb  <g+770@cobb.uk.net>
