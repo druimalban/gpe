@@ -1,0 +1,90 @@
+# translation of de.po to suomi
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#: gpesummary.c:544 gpesummary.c:661 gpesummary.c:683
+# Asmo Koskinen <asmo.koskinen@arkki.info>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: de\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-02-06 17:35+0100\n"
+"PO-Revision-Date: 2007-02-16 21:00+0200\n"
+"Last-Translator: Asmo Koskinen <asmo.koskinen@arkki.info>\n"
+"Language-Team: suomi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
+
+#: gpesummary.c:115
+msgid "(no todos)"
+msgstr "(ei tehtäviä)"
+
+#: gpesummary.c:303
+msgid " Birthday "
+msgstr " Syntymäpäivä "
+
+#: gpesummary.c:370
+msgid " (no appointments)"
+msgstr " (ei tapaamisia)"
+
+#: gpesummary.c:498
+msgid "Calendar"
+msgstr "Kalenteri"
+
+#: gpesummary.c:502
+msgid "ToDo"
+msgstr "Tehtävät"
+
+#: gpesummary.c:506
+msgid "Contacts"
+msgstr "Kontaktit"
+
+#: gpesummary.c:573
+msgid "GPE Summary Options"
+msgstr "GPE-yhteenveto, asetukset"
+
+#: gpesummary.c:589
+msgid "Show birthdays (long loading)"
+msgstr "Näytä syntymäpäivät (pitkä lataus)"
+
+#: gpesummary.c:595
+msgid "Show appointments"
+msgstr "Näytä tapaamiset"
+
+#: gpesummary.c:601
+msgid "Show todos"
+msgstr "Näytä tehtävät"
+
+#: gpesummary.c:607
+msgid "Show start buttons"
+msgstr "Näytä käynnistyspainikkeet"
+
+msgid "Show ~2 appointments/todos"
+msgstr "Näytä ~2 tapaamiset/tehtävät"
+
+msgid "Show ~4 appointments/todos"
+msgstr "Näytä ~4 tapaamiset/tehtävät"
+
+msgid "Show ~6 appointments/todos"
+msgstr "Näytä ~6 tapaamiset/tehtävät"
+
+msgid "Show ~8 appointments/todos"
+msgstr "Näytä ~8 tapaamiset/tehtävät"
+
+msgid "Show ~10 appointments/todos"
+msgstr "Näytä ~10 tapaamiset/tehtävät"
+
+msgid "Show ~12 appointments/todos"
+msgstr "Näytä ~12 tapaamiset/tehtävät"
+
+msgid "Show ~14 appointments/todos"
+msgstr "Näytä ~14 tapaamiset/tehtävät"
+
+msgid "Autorefresh data (long loading)"
+msgstr "Automaattinen tietojen päivitys (pitkä lataus)"
+
+msgid "Refreshing"
+msgstr "Päivittää"
+

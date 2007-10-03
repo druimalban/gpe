@@ -1,0 +1,63 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#: gpesummary.c:544 gpesummary.c:661 gpesummary.c:683
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-02-06 17:35+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+#: gpesummary.c:115
+msgid " (no todos)"
+msgstr " (no todos)"
+
+#: gpesummary.c:303
+msgid " Birthday "
+msgstr " Birthday "
+
+#: gpesummary.c:370
+msgid " (no appointments)"
+msgstr " (no appointments)"
+
+#: gpesummary.c:498
+msgid "Calendar"
+msgstr "Calendar"
+
+#: gpesummary.c:502
+msgid "ToDo"
+msgstr "ToDo"
+
+#: gpesummary.c:506
+msgid "Contacts"
+msgstr "Contacts"
+
+#: gpesummary.c:573
+msgid "GPE Summary Options"
+msgstr "GPE Summary Options"
+
+#: gpesummary.c:589
+msgid "Show birthdays (long loading)"
+msgstr "Show birthdays (long loading)"
+
+#: gpesummary.c:595
+msgid "Show appointments"
+msgstr "Show appointments"
+
+#: gpesummary.c:601
+msgid "Show todos"
+msgstr "Show todos"
+
+#: gpesummary.c:607
+msgid "Show start buttons"
+msgstr "Show start buttons"

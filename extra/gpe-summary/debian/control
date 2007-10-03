@@ -1,0 +1,11 @@
+Source: gpesummary
+Section: user/pim
+Priority: optional
+Maintainer: Christoph Würstle <n800@axique.de>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.0
+
+Package: gpesummary
+Architecture: any
+Depends: gpe-calendar, gpe-contacts, gpe-todo
+Description: GPE Summary applet for the N800

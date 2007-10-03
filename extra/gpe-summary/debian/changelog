@@ -1,0 +1,60 @@
+gpesummary (0.7.0) unstable; urgency=low
+
+  * code restructuring
+
+ -- Christoph Würstle <N800@axique.de>  Tue, 10 Sep 2007 17:18:56 +0100
+
+gpesummary (0.6.3) unstable; urgency=low
+
+  * small bugfix, todo-items get refreshed now on new day
+  * small bugfix, gpe-todo starts also, when (no todos) is activ
+
+ -- Christoph Würstle <N800@axique.de>  Tue, 07 Jul 2007 17:18:56 +0100
+
+gpesummary (0.6.2) unstable; urgency=low
+
+  * compiled again the gpe packages in the www.cobb.uk.net repository
+
+ -- Christoph Würstle <N800@axique.de>  Tue, 25 May 2007 17:18:56 +0100
+
+gpesummary (0.6.1) unstable; urgency=low
+
+  * small bugfixes
+
+ -- Christoph Würstle <N800@axique.de>  Tue, 23 Mar 2007 17:18:56 +0100
+
+gpesummary (0.6.0) unstable; urgency=low
+
+  * Options menu, lots of code improvements, small bugfixes
+
+ -- Christoph Würstle <N800@axique.de>  Tue, 6 Feb 2007 17:18:56 +0100
+
+gpesummary (0.5.0) unstable; urgency=low
+
+  * Options menu, lots of code improvements, small bugfixes
+
+ -- Christoph Würstle <N800@axique.de>  Tue, 6 Feb 2007 17:18:56 +0100
+
+gpesummary (0.4.2) unstable; urgency=low
+
+  * Small bugfixes, speed improvements
+
+ -- Christoph Würstle <N800@axique.de>  Fri, 2 Feb 2007 13:18:56 +0100
+
+gpesummary (0.4.1) unstable; urgency=low
+
+  * Speedup improvements
+
+ -- Christoph Würstle <N800@axique.de>  Fri, 2 Feb 2007 8:18:56 +0100
+
+gpesummary (0.4) unstable; urgency=low
+
+  * Lots of bugfixes
+
+ -- Christoph Würstle <N800@axique.de>  Wed, 31 Jan 2007 18:18:56 +0100
+
+gpesummary (0.3) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Christoph Würstle <N800@axique.de>  Wed, 31 Jan 2007 18:18:56 +0100
