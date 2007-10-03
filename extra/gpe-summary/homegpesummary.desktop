@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=GPE Summary
+Comment=Summary of GPE todos and appointsments
+Type=HildonHomeApplet
+X-home-applet=libgpesummary.so
+X-home-applet-resizable=XY
+X-home-applet-minwidth=100
+X-home-applet-maxheight=100 

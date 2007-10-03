@@ -1,0 +1,16 @@
+gpesummary Applet
+----------------------
+
+This is an applet for the Hildon framework, that shows a small clock in the
+status bar of the hildon desktop.
+
+To compile this invoke the following commands in the scratchbox environment:
+
+     $ ./autogen.sh
+     $ dpkg-buildpackage -rfakeroot
+
+and you should end up with an installable debian package in the parent
+directory.
+
+Have fun!
+        Christoph Würstle  <N800@axique.de>
