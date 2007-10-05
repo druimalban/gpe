@@ -1,179 +1,318 @@
-# -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for gpe-conf-0.1.25.
+# Slovenian message catalogue for gpe-conf.
 # Copyright (C) 2005 Free Software Foundation, Inc.
-# Matej Urbančič <matej.urban@gmail.com>, 2005.
+# Matej Urbančič <matej.urban@gmail.com>, 2005 - 2007.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf 0.1.25\n"
+"Project-Id-Version: gpe-conf 0.2.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-23 02:20+0200\n"
-"PO-Revision-Date: 2005-11-04 12:45+0100\n"
+"POT-Creation-Date: 2007-06-05 16:51+0200\n"
+"PO-Revision-Date: 2007-10-01 09:46+0100\n"
 "Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
 "X-Poedit-Language: Slovenian\n"
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: main.c:90 timeanddate.c:542
+#: ../applets.c:413
+msgid "Root access"
+msgstr "Skrbniški dostop"
+
+#: ../applets.c:427
+msgid ""
+"Some options are only\n"
+"accessible for user root.\n"
+"Please enter password."
+msgstr ""
+"Nekatere možnosti so\n"
+"dostopne samo skrbniku.\n"
+"Prosim, vnesite geslo."
+
+#: ../applets.c:474 ../modules/screen/calibrate.c:32
+msgid "Sorry, wrong password."
+msgstr "Napačno geslo."
+
+#: ../modules/battery.c:186 ../modules/battery.c:247
+msgid "unknown"
+msgstr "neznano"
+
+#: ../modules/battery.c:195 ../modules/battery.c:255 ../modules/battery.c:356
+msgid "Status: high"
+msgstr "Stanje: visok"
+
+#: ../modules/battery.c:198 ../modules/battery.c:258 ../modules/battery.c:360
+msgid "Status: low"
+msgstr "Stanje: nizek"
+
+#: ../modules/battery.c:201 ../modules/battery.c:261 ../modules/battery.c:364
+msgid "Status: critical"
+msgstr "Stanje: kritičen"
+
+#: ../modules/battery.c:204 ../modules/battery.c:264 ../modules/battery.c:368
+msgid "Status: charging"
+msgstr "Stanje: spreminjajoč"
+
+#: ../modules/battery.c:207 ../modules/battery.c:267
+msgid "Status: charge main"
+msgstr "Stanje: polnjenje glavne"
+
+#: ../modules/battery.c:210
+msgid "Status: dead"
+msgstr "Stanje: mrtev"
+
+#: ../modules/battery.c:213 ../modules/battery.c:273 ../modules/battery.c:354
+msgid "Status: full"
+msgstr "Stanje: poln"
+
+#: ../modules/battery.c:216 ../modules/battery.c:276
+msgid "Status: no battery"
+msgstr "Stanje: ni baterije"
+
+#: ../modules/battery.c:219 ../modules/battery.c:279 ../modules/battery.c:297
+#: ../modules/battery.c:371
+msgid "Status: unknown"
+msgstr "Stanje: neznan"
+
+#: ../modules/battery.c:224
+msgid "learning"
+msgstr "učenje"
+
+#: ../modules/battery.c:228 ../modules/battery.c:283
+msgid "Voltage"
+msgstr "Napetost"
+
+#: ../modules/battery.c:232 ../modules/battery.c:287 ../modules/battery.c:388
+msgid "AC connected"
+msgstr "AC povezan."
+
+#: ../modules/battery.c:234 ../modules/battery.c:289 ../modules/battery.c:390
+msgid "Lifetime"
+msgstr "Življenjska doba"
+
+#: ../modules/battery.c:270
+msgid "Status: not installed"
+msgstr "Status: ni naložen"
+
+#: ../modules/battery.c:296
+msgid "not installed"
+msgstr "ni naložen"
+
+#: ../modules/battery.c:298
+msgid "Voltage: unknown"
+msgstr "Napetost: neznana"
+
+#: ../modules/battery.c:299
+msgid "Lifetime: unknown"
+msgstr "Življenjska doba: neznana"
+
+#: ../modules/battery.c:346
+msgid "No battery"
+msgstr "Ni baterije"
+
+#: ../modules/battery.c:451
+msgid "Internal battery"
+msgstr "Notranja baterija"
+
+#: ../modules/battery.c:455
+msgid "Jacket battery"
+msgstr "Baterijski vložek"
+
+#: ../modules/cfgfile.c:919
+msgid "No write access to network configuration."
+msgstr "Ni dovoljenja za pisanje nastavitev omrežja."
+
+#: ../main-info.c:67
+#, c-format
+msgid "usage: gpe-info [page]\n"
+msgstr "Uporaba: gpe-info [stran]\n"
+
+#: ../main-info.c:68
+#, c-format
+msgid "    Where page may be \"global\" (default)\n"
+msgstr "    Stran je lahko \"globalna\" (privzeto)\n"
+
+#: ../main-info.c:78 ../desktop/gpe-conf-sysinfo.desktop.in.h:2
+msgid "System Information"
+msgstr "Podrobnosti sistema"
+
+#: ../main.c:89 ../modules/timeanddate.c:489
 msgid "Time"
 msgstr "Čas"
 
-#: main.c:90
+#: ../main.c:89
 msgid "Time and Date Setup"
 msgstr "Nastavitve datuma in časa"
 
-#: main.c:92
+#: ../main.c:91
 msgid "Screen"
 msgstr "Ekran"
 
-#: main.c:92 gpe-conf-screen.desktop.in.h:1
+#: ../main.c:91 ../desktop/gpe-conf-screen.desktop.in.h:1
 msgid "Screen Setup"
 msgstr "Nastavitve Ekrana"
 
-#: main.c:94
+#: ../main.c:93
 msgid "Keys & Buttons"
 msgstr "Tipke & Gumbi"
 
-#: main.c:94
+#: ../main.c:93
 msgid "Keys and Buttons Setup"
 msgstr "Nastavitve tipk in gumbov"
 
-#: main.c:96 timeanddate.c:558
+#: ../main.c:95 ../modules/timeanddate.c:502
 msgid "Network"
 msgstr "Omrežje"
 
-#: main.c:96 gpe-conf-network.desktop.in.h:1
+#: ../main.c:95 ../desktop/gpe-conf-network.desktop.in.h:1
 msgid "Network Setup"
 msgstr "Nastavitve Omrežja"
 
-#: main.c:98 theme.c:1144
+#: ../main.c:97 ../modules/theme.c:985
 msgid "Theme"
 msgstr "Tema"
 
-#: main.c:98 theme.c:1146 gpe-conf-theme.desktop.in.h:2
+#: ../main.c:97 ../modules/theme.c:987
+#: ../desktop/gpe-conf-theme.desktop.in.h:2
 msgid "Look and Feel"
-msgstr "Izgled in Občutek"
+msgstr "Videz in Občutek"
 
-#: main.c:100
+#: ../main.c:99
 msgid "Power"
 msgstr "Napajanje"
 
-#: main.c:100
-msgid "Power safe Configuration"
-msgstr "Nastavitve varnega napajanja"
+#: ../main.c:99
+msgid "Configure Power Saving"
+msgstr "Nastavitve upravljanja napajanja"
 
-#: main.c:102
+#: ../main.c:101
 msgid "Owner"
 msgstr "Lastnik"
 
-#: main.c:102 gpe-conf-ownerinfo.desktop.in.h:1
+#: ../main.c:101 ../desktop/gpe-conf-ownerinfo.desktop.in.h:1
 msgid "Owner Information"
-msgstr "Podatki o lastniku"
+msgstr "Podrobnosti o lastniku"
 
-#: main.c:104
+#: ../main.c:103
 msgid "Login"
 msgstr "Prijava"
 
-#: main.c:104 gpe-conf-login-setup.desktop.in.h:1
+#: ../main.c:103 ../desktop/gpe-conf-login-setup.desktop.in.h:1
 msgid "Login Setup"
 msgstr "Nastavitve prijave"
 
-#: main.c:106
+#: ../main.c:105
 msgid "Users"
 msgstr "Uporabniki"
 
-#: main.c:106
+#: ../main.c:105
 msgid "User Administration"
 msgstr "Urejanje Uporabnikov"
 
-#: main.c:108
+#: ../main.c:107
 msgid "GPE"
 msgstr "GPE"
 
-#: main.c:108
+#: ../main.c:107
 msgid "GPE Conf Administration"
 msgstr "GPE Administracija nastavitev"
 
-#: main.c:110 gpe-conf-serial.desktop.in.h:2
+#: ../main.c:109 ../desktop/gpe-conf-serial.desktop.in.h:2
 msgid "Serial Ports"
 msgstr "Serijska vrata"
 
-#: main.c:110
+#: ../main.c:109
 msgid "Serial Port Configuration"
 msgstr "Orodje za nastavljanje serijskih vrat"
 
-#: main.c:112
+#: ../main.c:111
+msgid "USB"
+msgstr "USB"
+
+#: ../main.c:111
+msgid "USB Configuration"
+msgstr "USB nastavitve"
+
+#: ../main.c:113
 msgid "PCMCIA/CF Cards"
 msgstr "PCMCIA/CF Kartice"
 
-#: main.c:112
+#: ../main.c:113
 msgid "PCMCIA/CF Card Info and Config"
-msgstr "PCMCIA/CF Informacije in nastavitve"
+msgstr "PCMCIA/CF podrobnosti in nastavitve"
 
-#: main.c:114
+#: ../main.c:115
 msgid "Sound"
 msgstr "Zvok"
 
-#: main.c:114
+#: ../main.c:115
 msgid "Sound Setup"
 msgstr "Nastavitve Zvoka"
 
-#: main.c:116
+#: ../main.c:117
 msgid "Task nameserver"
 msgstr "Opravilni imenski strežnik"
 
-#: main.c:116
+#: ../main.c:117
 msgid "Task for changing nameserver"
 msgstr "Opravilo zamenjave imenskega strežnika"
 
-#: main.c:118
+#: ../main.c:119
 msgid "Task sound"
 msgstr "Zvok Naloge"
 
-#: main.c:118
+#: ../main.c:119
 msgid "Command line task saving/restoring sound settings."
 msgstr "Naloga ukazne vrstice za shranjevanje/prevzemanje nastavitev zvoka."
 
-#: main.c:120
+#: ../main.c:121
 msgid "Task background image"
 msgstr "Ozadje opravila."
 
-#: main.c:120
+#: ../main.c:121
 msgid "Only select background image."
 msgstr "Izberi samo sliko ozadja."
 
-#: main.c:146
+#: ../main.c:123
+msgid "Task backlight setting"
+msgstr "Nastavitev svetlosti ozadja"
+
+#: ../main.c:123
+msgid "Change backlight power and brightness."
+msgstr "Zamenjaj svetlost ozadja"
+
+#: ../main.c:144
 msgid "Settings saved"
 msgstr "Nastavitve shranjene"
 
-#: main.c:162
-msgid "Aborted"
-msgstr "Prekinjeno"
+#: ../main.c:339
+#, c-format
+msgid "'task_backlight' supports zero, one and two arguments.\n"
+msgstr "'task_backlight' podpira od nič do dva argumenta.\n"
 
-#: main.c:335
+#: ../main.c:358
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
 msgstr "'task_nameserver' potrebuje nov (samo en) privzeti imenski strežnik.\n"
 
-#: main.c:353
+#: ../main.c:376
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
 msgstr "'task_sound' potrebuje privzeti mesto shranjevanja/prevzemanja.\n"
 
-#: main.c:421
+#: ../main.c:444
 msgid "Warning: PCMCIA init failed."
 msgstr "Opozorilo: zagon PCMCIA ni uspel."
 
-#: main.c:453
+#: ../main.c:476
 #, c-format
 msgid "This mode is disabled, please try:\n"
 msgstr "Ta način je izključen. Poskusite:\n"
 
-#: main.c:454
+#: ../main.c:477
 #, c-format
 msgid ""
 "\n"
@@ -184,12 +323,12 @@ msgstr ""
 "gpe-conf [ImeApleta]\n"
 "ImeApleta je lahko v:\n"
 
-#: main.c:470
+#: ../main.c:493
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr "Neznan aplet %s !\n"
 
-#: main.c:471
+#: ../main.c:494
 #, c-format
 msgid ""
 "\n"
@@ -202,638 +341,682 @@ msgstr ""
 "Uporaba: gpe-conf [ImeApleta]\n"
 "ImeApleta je lahko v:\n"
 
-#: applets.c:445
-msgid "Root access"
+#: ../tools/interface.c:315 ../tools/interface.c:515 ../tools/interface.c:531
+#: ../tools/interface.c:651
+msgid "[NONE SET]"
+msgstr "[NI DOLOČEN]"
+
+#: ../tools/interface.c:706 ../tools/interface.c:1704
+msgid "UNSPEC"
+msgstr "UNSPEC"
+
+#: ../tools/interface.c:708
+msgid "UNIX Domain"
+msgstr "UNIX Domena"
+
+#: ../tools/interface.c:711
+msgid "DARPA Internet"
+msgstr "DARPA Internet"
+
+#: ../tools/interface.c:714
+msgid "IPv6"
+msgstr "IPv6"
+
+#: ../tools/interface.c:717 ../tools/interface.c:1725
+msgid "AMPR AX.25"
+msgstr "AMPR AX.25"
+
+#: ../tools/interface.c:720 ../tools/interface.c:1731
+msgid "AMPR NET/ROM"
+msgstr "AMPR NET/ROM"
+
+#: ../tools/interface.c:723
+msgid "Novell IPX"
+msgstr "Novell IPX"
+
+#: ../tools/interface.c:726
+msgid "Appletalk DDP"
+msgstr "Appletalk DDP"
+
+#: ../tools/interface.c:729 ../tools/interface.c:1766
+msgid "Econet"
+msgstr "Econet"
+
+#: ../tools/interface.c:732
+msgid "CCITT X.25"
+msgstr "CCITT X.25"
+
+#: ../tools/interface.c:735 ../tools/interface.c:1728
+msgid "AMPR ROSE"
+msgstr "AMPR ROSE"
+
+#: ../tools/interface.c:738 ../tools/interface.c:1716
+msgid "Ash"
+msgstr "Ash"
+
+#: ../tools/interface.c:765
+#, c-format
+msgid "Too many address family arguments.\n"
+msgstr "Preveč določil naslovnih družin.\n"
+
+#: ../tools/interface.c:776
+#, c-format
+msgid "Unknown address family '%s'.\n"
+msgstr "Neznana naslovna družina '%s'.\n"
+
+#: ../tools/interface.c:839
+#, c-format
+msgid "Please don't supply more than one address family.\n"
+msgstr "Prosim ne dodajte več kot ene naslovne družine.\n"
+
+#: ../tools/interface.c:966
+#, c-format
+msgid "No usable address families found.\n"
+msgstr "Nisem našel uporabne naslovne družine.\n"
+
+#: ../tools/interface.c:1036
+#, c-format
+msgid "Warning: no inet socket available: %s\n"
+msgstr "Opozorilo: ni prostega inet vtiča: %s\n"
+
+#: ../tools/interface.c:1188
+#, c-format
+msgid "Warning: cannot open %s (%s). Limited output.\n"
+msgstr "Opozorilo: ni mogoče odpreti %s (%s). Omejen izhod.\n"
+
+#. Give better error message for this case.
+#: ../tools/interface.c:1431
+msgid "Device not found"
+msgstr "Ni mogoče najti naprave"
+
+#: ../tools/interface.c:1435
+#, c-format
+msgid "%s: error fetching interface information: %s\n"
+msgstr "%s: napaka pri beleženju podatkov vmesnika: %s\n"
+
+#: ../tools/interface.c:1609
+#, c-format
+msgid "You cannot start PPP with this program.\n"
+msgstr "S tem programom ne morete zagnati PPP.\n"
+
+#: ../tools/interface.c:1703
+msgid "Local Loopback"
+msgstr "Lokalna povratna zanka"
+
+#: ../tools/interface.c:1706
+msgid "Serial Line IP"
+msgstr "Serijska IP linija"
+
+#: ../tools/interface.c:1707
+msgid "VJ Serial Line IP"
+msgstr "VJ serijska IP linija"
+
+#: ../tools/interface.c:1708
+msgid "6-bit Serial Line IP"
+msgstr "6-bitna serijska IP linija"
+
+#: ../tools/interface.c:1709
+msgid "VJ 6-bit Serial Line IP"
+msgstr "Vj 6-bitna serijska IP linija"
+
+#: ../tools/interface.c:1710
+msgid "Adaptive Serial Line IP"
+msgstr "Prilagodljiva serijska IP linija"
+
+#: ../tools/interface.c:1713
+msgid "Ethernet"
+msgstr "Eternet"
+
+#: ../tools/interface.c:1719
+msgid "Fiber Distributed Data Interface"
+msgstr "Porazdeljeni podatkovni vmesnik na vlaknu (FDDI)"
+
+#: ../tools/interface.c:1722
+msgid "HIPPI"
+msgstr "HIPPI"
+
+#: ../tools/interface.c:1734
+msgid "generic X.25"
+msgstr "Generic X.25"
+
+#: ../tools/interface.c:1737
+msgid "IPIP Tunnel"
+msgstr "IPIP Tunel"
+
+#: ../tools/interface.c:1740
+msgid "Point-to-Point Protocol"
+msgstr "Protokol med točkama"
+
+#: ../tools/interface.c:1743
+msgid "(Cisco)-HDLC"
+msgstr "(Cisco)-HDLC"
+
+#: ../tools/interface.c:1744
+msgid "LAPB"
+msgstr "LAPB"
+
+#: ../tools/interface.c:1747
+msgid "ARCnet"
+msgstr "ARCnet"
+
+#: ../tools/interface.c:1750
+msgid "Frame Relay DLCI"
+msgstr "Preklapljanje okvirov DLCI"
+
+#: ../tools/interface.c:1751
+msgid "Frame Relay Access Device"
+msgstr "Preklapljanje okvirov naprave za dostop"
+
+#: ../tools/interface.c:1754
+msgid "IPv6-in-IPv4"
+msgstr "IPv6-in-IPv4"
+
+#: ../tools/interface.c:1757
+msgid "IrLAP"
+msgstr "IrLAP"
+
+#: ../tools/interface.c:1760
+msgid "16/4 Mbps Token Ring"
+msgstr "16/4 Mbps Token Ring"
+
+#: ../tools/interface.c:1762
+msgid "16/4 Mbps Token Ring (New)"
+msgstr "16/4 Mbps Token Ring (New)"
+
+#: ../tools/interface.c:1874
+msgid "Interface:"
+msgstr "Vmesnik:"
+
+#: ../tools/interface.c:1875
+#, c-format
+msgid "Type: %s"
+msgstr "Tip: %s"
+
+#: ../tools/interface.c:1884
+#, c-format
+msgid "Media: %s"
+msgstr "Mediji: %s"
+
+#: ../tools/interface.c:1889
+#, c-format
+msgid "(auto)"
+msgstr "(samodejno)"
+
+#: ../tools/interface.c:1901
+#, c-format
+msgid "Address: %s\n"
+msgstr "Naslov: %s\n"
+
+#: ../tools/interface.c:1906
+#, c-format
+msgid "P-t-P: %s\n"
+msgstr "P-t-P: %s\n"
+
+#: ../tools/interface.c:1910
+#, c-format
+msgid "Netmask: %s\n"
+msgstr "Omrežna maska %s\n"
+
+#: ../tools/interface.c:1914
+#, c-format
+msgid "Broadcast: %s\n"
+msgstr "Razpršeno oddajanje: %s\n"
+
+#: ../tools/interface.c:1926
+#, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr "HWaddr (MAC): %s\n"
+
+#: ../tools/interface.c:1956
+#, c-format
+msgid "IPv6 Address: %s/%d\n"
+msgstr "Naslov IPv6: %s/%d\n"
+
+#: ../tools/interface.c:1959
+#, c-format
+msgid "Scope: "
+msgstr "Obseg:"
+
+#: ../tools/interface.c:1964
+#, c-format
+msgid "Global"
+msgstr "Globalno"
+
+#: ../tools/interface.c:1967
+#, c-format
+msgid "Link"
+msgstr "Povezava"
+
+#: ../tools/interface.c:1970
+#, c-format
+msgid "Site"
+msgstr "Stran"
+
+#: ../tools/interface.c:1973
+#, c-format
+msgid "Compat"
+msgstr "Združljiv"
+
+#: ../tools/interface.c:1976
+#, c-format
+msgid "Host"
+msgstr "Gostitelj"
+
+#: ../tools/interface.c:1979
+#, c-format
+msgid "Unknown"
+msgstr "Neznano"
+
+#: ../device.c:215
+msgid "Unknown Device"
+msgstr "Neznana naprava"
+
+#: ../modules/logread.c:116
+msgid "Can't find circular buffer, is syslog running?\n"
+msgstr "Ni mogoče najti krožnega medpomnilnika. Je syslog zagnan?\n"
+
+#: ../modules/logread.c:123
+msgid "Can't get access to syslogd's circular buffer."
+msgstr "Ni mogoče dostopiti do krožnega syslogd medpomnilnika."
+
+#: ../modules/logread.c:130
+msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
+msgstr "Ni mogoče dostopiti do semaforjev za krožni syslogd medpomnilnik."
+
+#: ../modules/logread.c:156
+msgid "<empty syslog>"
+msgstr "<prazen syslog>"
+
+#: ../modules/logread.c:227 ../modules/logread.c:243
+msgid "System Log"
+msgstr "Sistemski dnevnik"
+
+#: ../modules/logread.c:252 ../modules/logread.c:268
+msgid "Session Log"
+msgstr "Dnevnik sej"
+
+#: ../modules/logread.c:275
+msgid "Could not open X session log.\n"
+msgstr "Nisem uspel odpreti dnevnika X seje.\n"
+
+#: ../modules/usb.c:80
+msgid "Choose backing file"
+msgstr "Izberi sliko ozadja"
+
+#: ../modules/usb.c:240
+msgid "USB Peripheral Mode"
+msgstr "Zunanji USB način"
+
+#: ../modules/usb.c:247
+msgid "Ethernet Networking"
+msgstr "Eternet omrežje"
+
+#: ../modules/usb.c:252 ../modules/sysinfo.c:645
+msgid "Storage"
+msgstr "Skladiščenje"
+
+#: ../modules/usb.c:258 ../modules/serial.c:573
+msgid "Serial Port"
+msgstr "Serijska vrata"
+
+#: ../modules/usb.c:267
+msgid "Storage Behaviour"
+msgstr "Obnašanje shranjevanja"
+
+#: ../modules/usb.c:274
+msgid "CF/SD Card Reader"
+msgstr "CF/SD bralec kartic"
+
+#: ../modules/usb.c:280
+msgid "File-backed"
+msgstr "Odzadnja datoteka"
+
+#: ../modules/usb.c:290
+msgid "Select"
+msgstr "Izberi"
+
+#: ../modules/usb.c:298
+msgid "Allow write access"
 msgstr "Skrbniški dostop"
 
-#: applets.c:459
-msgid ""
-"Some options are only\n"
-"accessible for user root.\n"
-"Please enter password."
-msgstr ""
-"Nekatere možnosti so\n"
-"dostopne samo skrbniku.\n"
-"Prosim, vnesite geslo."
-
-#: applets.c:506 screen/calibrate.c:32
-msgid "Sorry, wrong password."
-msgstr "Napačno geslo."
-
-#: timeanddate.c:424
-msgid "Time adjusted from network."
-msgstr "Prevzemi strežniški čas."
-
-#: timeanddate.c:426
-msgid "Adjusting time from network failed."
-msgstr "Prevzem strežniškega časa ni uspel."
-
-#: timeanddate.c:506
-msgid "Time & Date"
-msgstr "Čas & Datum"
-
-#: timeanddate.c:522
-msgid "Date"
-msgstr "Datum"
-
-#: timeanddate.c:537
-msgid "Enter current date here or use button to select."
-msgstr "Vnesite trenutni čas ali izberite z gumbi."
-
-#: timeanddate.c:576
-msgid "Select the timeserver to use to set the clock."
-msgstr "Izberite časovni strežnik za nastavitev ure."
-
-#: timeanddate.c:578
-msgid "Get time from network"
-msgstr "Prevzemi omrežni čas"
-
-#: timeanddate.c:585
-msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
-msgstr "Če ste povezani z internetom, lahko nastavite čas s pritiskom na ta gumb. Časovni strežnik mora biti zgoraj nastavljen."
-
-#: timeanddate.c:590 timeanddate.c:599
-msgid "Timezone"
-msgstr "Časovno območje"
-
-#: timeanddate.c:622
-msgid "Select your current timezone here. The setting applies after the next login."
-msgstr "Izberite trenutno časovno območje. Nastavitve bodo uporabljen ob naslednji prijavi."
-
-#: timeanddate.c:630
-msgid "Daylight Saving"
-msgstr "Poletni čas"
-
-#: timeanddate.c:637
-msgid "Use daylight saving time"
-msgstr "Uporabi zamik poletnega časa"
-
-#: timeanddate.c:644
-msgid "Check this box if you want your device to handle daylight saving time for you."
-msgstr "Odkljukaj, če želite da naprava namesto vas ureja nastavitve poletnega časa."
-
-#: timeanddate.c:646
-msgid "Offset:"
-msgstr "Odmik:"
-
-#: timeanddate.c:655
-msgid "Default"
-msgstr "Privzeto"
-
-#: timeanddate.c:662
-msgid "Use default DST offset of one hour?"
-msgstr "Naj uporabim privzeti DST odmik ene ure?"
-
-#: timeanddate.c:667
-msgid "Hours"
-msgstr "Ure"
-
-#: timeanddate.c:670
-msgid "Select daylight saving time offset hours here."
-msgstr "Določite zamik ur za poletni čas."
-
-#: timeanddate.c:675
-msgid "Minutes"
-msgstr "Minute"
-
-#: timeanddate.c:678
-msgid "Select daylight saving time offset minutes here."
-msgstr "Določite zamik minut za poletni čas."
-
-#: timeanddate.c:783
-msgid "To make timezone settings take effect, you'll need to log out and log in again."
-msgstr "Nastavitve časovnega območja bodo veljale šele ob naslednji prijavi."
-
-#: screen/main.c:74
-msgid "Portrait"
-msgstr "Portret"
-
-#: screen/main.c:75
-msgid "Landscape (left)"
-msgstr "Prečno (levo)"
-
-#: screen/main.c:76
-msgid "Inverted"
-msgstr "Preobrnjeno"
-
-#: screen/main.c:77
-msgid "Landscape (right)"
-msgstr "Prečno (desno)"
-
-#: screen/main.c:104
-msgid "Light"
-msgstr "Svetlost"
-
-#: screen/main.c:110
-msgid "Brightness"
-msgstr "Svetlost"
-
-#: screen/main.c:152
-msgid "Display"
-msgstr "Zaslon"
-
-#: screen/main.c:156
-msgid "Rotation"
-msgstr "Obračanje"
-
-#: screen/main.c:176
-msgid "Touchscreen"
-msgstr "Zaslon, občutljiv na dotik"
-
-#: screen/main.c:180
-msgid "Calibrate"
-msgstr "Umeri"
-
-#: screen/main.c:182
-msgid "Start"
-msgstr "Začetek"
-
-#: screen/main.c:304 sleep/callbacks.c:39
-msgid "min"
-msgstr "min"
-
-#: screen/main.c:307 sleep/callbacks.c:42
-msgid "sec"
-msgstr "sek"
-
-#: keys/kbd.c:142
-msgid "Keyboard Geometry / Layout"
-msgstr "Geometrija tipkovnice / Ureditev"
-
-#: keys/kbd.c:182
-msgid "User defined"
-msgstr "Uporabniško določeno"
-
-#: network.c:104
-msgid "Current Config"
-msgstr "Trenutna nastavitev"
-
-#: network.c:233 ownerinfo.c:237
-msgid "Name:"
-msgstr "Ime:"
-
-#: network.c:239
-msgid "New Interface"
-msgstr "Nov vmesnik"
-
-#: network.c:248
-msgid "This interface definition already exists!"
-msgstr "Določitev tega vmesnika že obstaja!"
-
-#: network.c:326
-msgid "Do you want to delete this interface?"
-msgstr "Želite izbrisati ta vmesnik?"
-
-#: network.c:326 users/callbacks.c:138
-msgid "Question"
-msgstr "Vprašanje"
-
-#: network.c:575
-msgid "WiFi config"
-msgstr "Nastavitve WiFi"
-
-#: network.c:606
-#, c-format
-msgid "WiFi config for %s"
-msgstr "Nastavitve WiFi za %s"
-
-#: network.c:618
-msgid "ESSID"
-msgstr "ESSID"
-
-#: network.c:640
-msgid "Mode"
-msgstr "Način"
-
-#: network.c:650
-msgid "managed"
-msgstr "urejevano"
-
-#: network.c:662
-msgid "ad-hoc"
-msgstr "ad-hoc"
-
-#: network.c:679
-msgid "Channel"
-msgstr "Kanal"
-
-#: network.c:700
-msgid "WEP"
-msgstr "WEP"
-
-#: network.c:710
-msgid "off"
-msgstr "izključeno"
-
-#: network.c:722
-msgid "open"
-msgstr "odpri"
-
-#: network.c:734
-msgid "restricted"
-msgstr "omejeno"
-
-#: network.c:750
-msgid "Key 1"
-msgstr "Ključ 1"
-
-#: network.c:778
-msgid "Key 2"
-msgstr "Ključ 2"
-
-#: network.c:806
-msgid "Key 3"
-msgstr "Ključ 3"
-
-#: network.c:835
-msgid "Key 4"
-msgstr "Ključ 4"
-
-#: network.c:1040
-msgid "Address"
-msgstr "Naslov"
-
-#: network.c:1043
-msgid "Enter your IP address here, e.g. 192.168.1.2"
-msgstr "Vnesite naslov IP, npr. 192.168.1.2"
-
-#: network.c:1045
-msgid "Netmask"
-msgstr "Omrežna maska"
-
-#: network.c:1048
-msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
-msgstr "Vnesite omrežno masko, npr. 255.255.255.0"
-
-#: network.c:1050
-msgid "Broadcast"
-msgstr "Naslov za razpršeno oddajanje"
-
-#: network.c:1053
-msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
-msgstr "Vnesite naslov razpršenega oddajanja, ponavadi je to vaš IP z 255 namesto zadnje številke."
-
-#: network.c:1055
-msgid "Gateway"
-msgstr "Prehod"
-
-#: network.c:1058
-msgid "Enter the IP Address of your default gateway here."
-msgstr "Vnesite naslov IP vašega privzetega prehoda."
-
-#: network.c:1069 network.c:1186
-msgid "WiFi device"
-msgstr "WiFi naprava"
-
-#: network.c:1077 network.c:1194
-msgid "Configure"
-msgstr "Nastavitve"
-
-#: network.c:1174
-msgid "Hostname"
-msgstr "Ime gostitelja"
-
-#: network.c:1177
-msgid "Enter your desired hostname here. This parameter is optional."
-msgstr "Vnesite želenega gostitelja. Nastavitev lahko izpustite. "
-
-#: network.c:1294
-msgid "Provider"
-msgstr "Ponudnik"
-
-#: network.c:1296
-msgid "Here you need to enter the name of the provider configuration to use for this interface."
-msgstr "Vnesite ime nastavitve ponudnika za ta vmesnik."
-
-#: network.c:1319
-msgid "Global Settings"
-msgstr "Splošne Nastavitve"
-
-#: network.c:1361
-msgid "Proxy"
-msgstr "Posrednik"
-
-#: network.c:1362
-msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
-msgstr "Če potrebujete dostop preko posrednika, vnesite naslov tukaj. (Trenutno se nanaša samo na dillo.)"
-
-#: network.c:1368
-msgid "No proxy for"
-msgstr "Ni posrednika za"
-
-#: network.c:1370
-msgid "Here you should enter your local domain for that you don't want to use a proxy."
-msgstr "Vnesite domačo domeno, ki gre mimo posrednika."
-
-#: network.c:1377
-msgid "DNS server"
-msgstr "DNS Strežnik"
-
-#: network.c:1380
-msgid "Enter the IP of the DNS(name-) server to use here."
-msgstr "Vnesite naslov IP privzetega DNS strežnika."
-
-#: network.c:1551
-msgid ""
-"Here you may change the basic configuration type of your device.\n"
-"Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
-msgstr ""
-"Tu lahko spremenite osnovne nastavitve vaše naprave.\n"
-"Uporabite \"static\" za ročno nastavitev, \"dhcp\" za DHCP strežnik in \"ppp\" za točkovno povezavo med dvema napravama."
-
-#: network.c:1557
-msgid "Enable this option if your device is a WiFi device"
-msgstr "Omogočite možnost, če je vaša naprava WiFi naprava"
-
-#: network.c:1559
-msgid "Click to set the wireless options for this device"
-msgstr "Kliknite za nastavitev brezžičnih možnosti za napravo"
-
-#: network.c:1561
-msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
-msgstr "Določite način delovanja vaše WiFi kartice. (urejevano ali ad-hoc)."
-
-#: network.c:1564
-msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
-msgstr "Določite način šifriranja: izklopljeno za nešifriran WEP, odprto za odprt sistem and omejeno za omejene WEP povezave."
-
-#: network.c:1569
-msgid "Enter the essid of your WiFi network here."
-msgstr "Vnesite essid vašega WiFi omrežja."
-
-#: network.c:1572
-msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
-msgstr "Vnesite vaš WEP ključ v obliki (format iwconfig), npr.: \"s:12345\""
-
-#: network.c:1575
-msgid "Select the WEP key to use."
-msgstr "Izberite WEP ključ."
-
-#: network.c:1578
-msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
-msgstr "Vnesite številko kanala ali frekvenco. Če to ni potrebno, pustite polje prazno. "
-
-#: network.c:1601
-msgid "Add Interface"
-msgstr "Dodaj vmesnik"
-
-#: network.c:1602
-msgid "Add a new Interface"
-msgstr "Dodaj nov vmesnik"
-
-#: network.c:1612
-msgid "Remove Interface"
-msgstr "Odstrani vmesnik"
-
-#: network.c:1613
-msgid "Remove current Interface"
-msgstr "Odstrani trenutni vmesnik"
-
-#: network.c:1627
-msgid "Information"
-msgstr "Informacije"
-
-#: network.c:1628
-msgid "Show current configuration."
-msgstr "Pokaži trenutne nastavitve"
-
-#: network.c:1647
-msgid "Couldn't read network configuration."
-msgstr "Ne morem prebrati nastavitev omrežja."
-
-#: network.c:1654
-msgid "global"
-msgstr "globalno"
-
-#: theme.c:238
+#: ../modules/usb.c:307
+msgid "Serial Settings"
+msgstr "Nastavitve serijskih vrat"
+
+#: ../modules/usb.c:314
+msgid "Use CDC ACM"
+msgstr "Uporabi CDC ACM"
+
+#: ../modules/theme.c:234
 msgid "Choose backgound image"
 msgstr "Izberi sliko ozadja"
 
-#: theme.c:252
+#: ../modules/theme.c:248
 msgid "You are not allowed to read this file, choose another."
 msgstr "Nimate dovoljenja za branje te datoteke, izberite drugo."
 
-#: theme.c:273
+#: ../modules/theme.c:269
 msgid "Succesfully changed background image."
 msgstr "Uspešno sem zamenjal sliko ozadja."
 
-#: theme.c:274
+#: ../modules/theme.c:270
 msgid "Use \"Look and Feel\" setup tool to change details."
-msgstr "Uporabi \"Pogled in Izgled\" orodje za spreminjanje podrobnosti."
+msgstr "Uporabi \"Videz in občutek\" orodje za spreminjanje podrobnosti."
 
-#: theme.c:598
-msgid "Red"
-msgstr "Rdeča"
-
-#: theme.c:603
-msgid "Green"
-msgstr "Zelena"
-
-#: theme.c:608
-msgid "Blue"
-msgstr "Modra"
-
-#: theme.c:918
-msgid "Select colour"
-msgstr "Izberi barvo"
-
-#: theme.c:944 theme.c:1018
+#: ../modules/theme.c:781 ../modules/theme.c:859
 msgid "You don't have read access to selected background image!"
 msgstr "Nimate dovoljenja za branje izbrane slike ozadja!"
 
-#: theme.c:1156
+#: ../modules/theme.c:997
 msgid "Desktop Theme"
 msgstr "Tema Namizja"
 
-#: theme.c:1168
+#: ../modules/theme.c:1009
 msgid "Name"
 msgstr "Ime"
 
-#: theme.c:1185
+#: ../modules/theme.c:1023
 msgid "Icon Size"
 msgstr "Velikost Ikone"
 
-#: theme.c:1200
+#: ../modules/theme.c:1038
 msgid "Visual Effects"
 msgstr "Vizualni efekti"
 
-#: theme.c:1206
+#: ../modules/theme.c:1044
 msgid "Enable Visual Effects"
 msgstr "Omogoči Vizualne Efekte"
 
-#: theme.c:1213
+#. Background tab
+#: ../modules/theme.c:1051
 msgid "Background"
 msgstr "Ozadje"
 
-#: theme.c:1227 theme.c:1229
+#: ../modules/theme.c:1065 ../modules/theme.c:1067
 msgid "Background Settings"
 msgstr "Nastavitve Ozadja"
 
-#: theme.c:1239 theme.c:1250
+#: ../modules/theme.c:1077 ../modules/theme.c:1088
 msgid "Theme Default"
 msgstr "Privzeta Tema"
 
-#: theme.c:1258
+#: ../modules/theme.c:1096
 msgid "Solid colour"
 msgstr "Barva"
 
-#: theme.c:1272
+#: ../modules/theme.c:1110
 msgid "Horizontal"
 msgstr "Horizontalno"
 
-#: theme.c:1276
+#: ../modules/theme.c:1114
 msgid "Vertical"
 msgstr "Vertikalno"
 
-#: theme.c:1281 theme.c:1300 theme.c:1483 theme.c:1489
+#: ../modules/theme.c:1119 ../modules/theme.c:1138 ../modules/theme.c:1312
+#: ../modules/theme.c:1318
 msgid "Colour"
 msgstr "Barva"
 
-#: theme.c:1291
+#: ../modules/theme.c:1129
 msgid "Colour gradient"
 msgstr "Barvni preliv"
 
-#: theme.c:1310
+#: ../modules/theme.c:1148
 msgid "Image"
 msgstr "Slika"
 
-#: theme.c:1336
-msgid "Centered"
+#: ../modules/theme.c:1174
+msgid "Center"
 msgstr "Sredinjeno"
 
-#: theme.c:1340
-msgid "Tiled"
+#: ../modules/theme.c:1178
+msgid "Tile"
 msgstr "Zloženo"
 
-#: theme.c:1343
-msgid "Stretched"
+#: ../modules/theme.c:1181
+msgid "Stretch"
 msgstr "Razširjeno"
 
-#: theme.c:1350
+#: ../modules/theme.c:1188
 msgid "Toolbars"
 msgstr "Orodna vrstica"
 
-#: theme.c:1362 theme.c:1364
+#: ../modules/theme.c:1200 ../modules/theme.c:1202
 msgid "Toolbar Style"
 msgstr "Stil orodne vrstice"
 
-#: theme.c:1373 theme.c:1402
+#: ../modules/theme.c:1211 ../modules/theme.c:1235
 msgid "Icons"
 msgstr "Ikone"
 
-#: theme.c:1378 theme.c:1406
+#: ../modules/theme.c:1216 ../modules/theme.c:1239
 msgid "Text"
 msgstr "Besedilo"
 
-#: theme.c:1383
+#: ../modules/theme.c:1221 ../modules/theme.c:1242
 msgid "Both"
 msgstr "Oboje"
 
-#: theme.c:1388
-msgid "Both H"
-msgstr "Oboje H"
-
-#: theme.c:1409
-msgid "Both (icon above text)"
-msgstr "Oboje (ikona nad besedilom)"
-
-#: theme.c:1412
-msgid "Both (icon left of text)"
-msgstr "Oboje (ikona levo od besedila)"
-
-#: theme.c:1419
+#: ../modules/theme.c:1249
 msgid "Toolbar Icon Size"
 msgstr "Velikost ikon orodne vrstice"
 
-#: theme.c:1435
+#: ../modules/theme.c:1265
 msgid "Fonts"
 msgstr "Pisave"
 
-#: theme.c:1444 theme.c:1464
+#: ../modules/theme.c:1274 ../modules/theme.c:1294
 msgid "Desktop Font"
 msgstr "Pisava Namizja"
 
-#: theme.c:1451 theme.c:1511 theme.c:1546 theme.c:1596
+#: ../modules/theme.c:1281 ../modules/theme.c:1340 ../modules/theme.c:1375
+#: ../modules/theme.c:1425
 msgid "Family"
 msgstr "Družina"
 
-#: theme.c:1471 theme.c:1531 theme.c:1566 theme.c:1616
+#: ../modules/theme.c:1301 ../modules/theme.c:1360 ../modules/theme.c:1395
+#: ../modules/theme.c:1445
 msgid "Size"
 msgstr "Velikost"
 
-#: theme.c:1500 theme.c:1502 theme.c:1524 theme.c:1559
+#: ../modules/theme.c:1329 ../modules/theme.c:1331 ../modules/theme.c:1353
+#: ../modules/theme.c:1388
 msgid "Application Font"
 msgstr "Pisava programa"
 
-#: theme.c:1580
+#. terminal tab
+#: ../modules/theme.c:1409
 msgid "Terminal"
 msgstr "Terminal"
 
-#: theme.c:1589
+#: ../modules/theme.c:1418
 msgid "Font"
 msgstr "Pisava"
 
-#: theme.c:1609
+#: ../modules/theme.c:1438
 msgid "Terminal Font"
 msgstr "Terminalska pisava"
 
-#: keys/keyctl.c:178
-msgid "Button layout file is missing a global section."
-msgstr "Datoteki z razporeditvijo gumbov manjka splošni oddelek."
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: ../modules/sysinfo.c:195
+msgid "Familiar"
+msgstr "Znano"
 
-#: keys/keyctl.c:549
-msgid "Critical: Can't open keylaunchrc for writing!"
-msgstr "Kritično: Ne morem odpreti keylaunchrc za pisanje!"
+#. TRANSLATORS: "OpenZaurus" is the name of a linux distribution.
+#: ../modules/sysinfo.c:206
+msgid "OpenZaurus"
+msgstr "OpenZaurus"
 
-#: keys/keyctl.c:572
-msgid "Could not restart key handler!"
-msgstr "Nisem uspel zagnati urejevalnika ključev!"
+#. TRANSLATORS: "Debian" is the name of a linux distribution.
+#: ../modules/sysinfo.c:215
+msgid "Debian"
+msgstr "Debian"
 
-#: keys/keyctl.c:595
-msgid "The file you selected is not executable."
-msgstr "Izbrana datoteka ni izvršljiva."
+#. TRANSLATORS: "Ångström" is the name of a linux distribution.
+#: ../modules/sysinfo.c:226
+msgid "Ångström"
+msgstr "Ångström"
 
-#: ownerinfo.c:210
-msgid "Information about the Owner"
-msgstr "Informacije o lastniku"
+#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
+#: ../modules/sysinfo.c:235
+msgid "OpenEmbedded"
+msgstr "OpenEmbedded"
 
-#: ownerinfo.c:218
-msgid "Only the user 'root' is allowed to change this information"
-msgstr "Samo skrbnik lahko spremeni te informacije."
+#: ../modules/sysinfo.c:277 ../modules/sysinfo.c:279
+msgid "Build"
+msgstr "Gradnja"
 
-#: ownerinfo.c:252
-msgid "E-Mail:"
-msgstr "e-Pošta:"
+#: ../modules/sysinfo.c:381
+msgid "Network Status"
+msgstr "Omrežni status"
 
-#: ownerinfo.c:267
-msgid "Phone:"
-msgstr "Telefon:"
+#. split string into long and short lines
+#: ../modules/sysinfo.c:395 ../modules/sysinfo.c:398
+msgid "HWaddr (MAC)"
+msgstr "HWaddr (MAC)"
 
-#: ownerinfo.c:282
-msgid "Address:"
-msgstr "Naslov:"
+#: ../modules/sysinfo.c:409 ../modules/sysinfo.c:410
+#, c-format
+msgid "Wireless"
+msgstr "Brezžično"
 
-#: ownerinfo.c:308
-msgid "Photofile:"
-msgstr "Foto datoteka:"
+#: ../modules/sysinfo.c:437
+msgid "Default Gateway"
+msgstr "Privzet Prehod"
 
-#: login-setup.c:160
+#: ../modules/sysinfo.c:480
+msgid "System information"
+msgstr "Podrobnosti sistema"
+
+#: ../modules/sysinfo.c:490
+msgid "Version"
+msgstr "Verzija"
+
+#: ../modules/sysinfo.c:522
+msgid "Distribution"
+msgstr "Distribucija"
+
+#: ../modules/sysinfo.c:547
+msgid "System"
+msgstr "Sistem"
+
+#: ../modules/sysinfo.c:556
+msgid "Device information"
+msgstr "Podrobnosti o napravi"
+
+#: ../modules/sysinfo.c:568
+msgid "Device Name"
+msgstr "Ime naprave"
+
+#: ../modules/sysinfo.c:587
+msgid "Manufacturer:"
+msgstr "Proizvajalec:"
+
+#: ../modules/sysinfo.c:600
+msgid "RAM:"
+msgstr "RAM:"
+
+#. TRANSLATORS: MB == Mega Bytes
+#: ../modules/sysinfo.c:606 ../modules/sysinfo.c:622 ../modules/storage.c:176
+#: ../modules/storage.c:183 ../modules/storage.c:329 ../modules/storage.c:340
+#: ../modules/storage.c:445 ../modules/storage.c:458
+msgid "MB"
+msgstr "MB"
+
+#: ../modules/sysinfo.c:616
+msgid "Storage:"
+msgstr "Skladišče:"
+
+#: ../modules/sysinfo.c:628
+msgid "Hardware"
+msgstr "Strojna oprema"
+
+#: ../modules/sysinfo.c:638
+msgid "Battery"
+msgstr "Baterija"
+
+#: ../modules/sysinfo.c:652
+msgid "Networks"
+msgstr "Omrežja"
+
+#: ../modules/sysinfo.c:659
+msgid "Log Display"
+msgstr "Prikaz dnevnika"
+
+#: ../modules/timeanddate.c:222
+msgid "Time adjusted from network."
+msgstr "Prevzemi strežniški čas."
+
+#: ../modules/timeanddate.c:224
+msgid "Adjusting time from network failed."
+msgstr "Prevzem strežniškega časa ni uspel."
+
+#: ../modules/timeanddate.c:458
+msgid "Time & Date"
+msgstr "Čas & Datum"
+
+#: ../modules/timeanddate.c:470
+msgid "Date"
+msgstr "Datum"
+
+#: ../modules/timeanddate.c:486
+msgid "Enter current date here or use button to select."
+msgstr "Vnesite trenutni čas ali izberite z gumbi."
+
+#: ../modules/timeanddate.c:521
+msgid "Select the timeserver to use to set the clock."
+msgstr "Izberite časovni strežnik za nastavitev ure."
+
+#: ../modules/timeanddate.c:523
+msgid "Get time from network"
+msgstr "Prevzemi omrežni čas"
+
+#: ../modules/timeanddate.c:531
+msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
+msgstr "Če ste povezani z internetom, lahko nastavite čas s pritiskom na ta gumb. Časovni strežnik mora biti zgoraj nastavljen."
+
+#. root_mode
+#: ../modules/timeanddate.c:534 ../modules/timeanddate.c:544
+msgid "Timezone"
+msgstr "Časovno območje"
+
+#: ../modules/timeanddate.c:588
+msgid "Area"
+msgstr "Območje"
+
+#: ../modules/timeanddate.c:603
+msgid "Select your current timezone area here. The setting will apply after the next login."
+msgstr "Izberite trenutno časovno območje. Nastavitve bodo uporabljen ob naslednji prijavi."
+
+#: ../modules/timeanddate.c:610
+msgid "Zone"
+msgstr "Območje"
+
+#: ../modules/timeanddate.c:635
+msgid "Select your current timezone here. The setting applies after the next login."
+msgstr "Izberite trenutno časovno območje. Nastavitve bodo uporabljen ob naslednji prijavi."
+
+#: ../modules/timeanddate.c:698
+msgid "To make timezone settings take effect, you'll need to log out and log in again."
+msgstr "Nastavitve časovnega območja bodo veljale šele ob naslednji prijavi."
+
+#: ../modules/login-setup.c:160
 msgid "Some of these settings can only be changed by the user 'root'."
 msgstr "Nekatere nastavitve lahko spremeni samo skrbnik."
 
-#: login-setup.c:183 gpe-admin.c:85
+#: ../modules/login-setup.c:183 ../modules/gpe-admin.c:85
 msgid "General"
 msgstr "Splošno"
 
-#: login-setup.c:200
+#: ../modules/login-setup.c:200
 msgid "Show owner information at login."
-msgstr "Pokaži podatke lastnika ob prijavi."
+msgstr "Pokaži podrobnosti lastnika ob prijavi."
 
-#: login-setup.c:204
+#: ../modules/login-setup.c:204
 msgid "Lock display on suspend."
 msgstr "Zakleni ob začasni zaustavitvi."
 
-#: login-setup.c:208
+#: ../modules/login-setup.c:208
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
@@ -841,7 +1024,7 @@ msgstr ""
 "Zakleni ekran ob izključitvi. \n"
 " (zahteva geslo)"
 
-#: login-setup.c:213
+#: ../modules/login-setup.c:213
 msgid ""
 "Automatic login. \n"
 "  (without password)"
@@ -849,418 +1032,270 @@ msgstr ""
 "Samodejna prijava. \n"
 " (brez gesla)"
 
-#: sleep/interface.c:65
-msgid "Auto sleep"
-msgstr "Zaspi samodejno"
+#: ../modules/ownerinfo.c:210
+msgid "Information about the Owner"
+msgstr "Podrobnosti o lastniku"
 
-#: sleep/interface.c:75 sleep/interface.c:106
-msgid "enabled"
-msgstr "omogočeno"
+#: ../modules/ownerinfo.c:218
+msgid "Only the user 'root' is allowed to change this information"
+msgstr "Samo skrbnik lahko spremeni te podrobnosti."
 
-#: sleep/interface.c:93
-msgid "sleep timeout"
-msgstr "Zakasnitev spanja"
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:237 ../modules/network.c:246
+msgid "Name:"
+msgstr "Ime:"
 
-#: sleep/interface.c:96
-msgid "Auto dim"
-msgstr "Samodejna zatemnitev"
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:252
+msgid "E-Mail:"
+msgstr "e-Pošta:"
 
-#: sleep/interface.c:123
-msgid "backlight dim timeout"
-msgstr "Zakasnitev zatemnitve osvetljenosti ozadja"
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:267
+msgid "Phone:"
+msgstr "Telefon:"
 
-#: sleep/interface.c:125
-msgid "Auto dim level"
-msgstr "Stopnja samodejne zatemnitve"
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:282
+msgid "Address:"
+msgstr "Naslov:"
 
-#: sleep/interface.c:145
-msgid "Advanced Controls"
-msgstr "Napredni nadzornik"
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:308
+msgid "Photofile:"
+msgstr "Foto datoteka:"
 
-#: sleep/interface.c:155
-msgid "CPU"
-msgstr "CPE"
+#: ../modules/storage.c:166 ../modules/storage.c:423
+msgid "System Memory"
+msgstr "Sistemski spomin"
 
-#: sleep/interface.c:161
-msgid "Sleep on cpu less than load"
-msgstr "Zaspi ob najmanjši CPE obremenitvi"
+#. TRANSLATORS: MB == Mega Bytes
+#: ../modules/storage.c:174 ../modules/storage.c:443
+msgid "Free memory"
+msgstr "Prost spomin"
 
-#: sleep/interface.c:165
-msgid "load below"
-msgstr "najmanjša obremenitev"
+#: ../modules/storage.c:181 ../modules/storage.c:328 ../modules/storage.c:456
+msgid "Total:"
+msgstr "Skupaj:"
 
-#: sleep/interface.c:181
-msgid "APM"
-msgstr "APM"
+#: ../modules/storage.c:292
+msgid "Internal Flash"
+msgstr "Notranji spomin"
 
-#: sleep/interface.c:187
-msgid "Sleep on AC"
-msgstr "Zaspi na AC"
+#: ../modules/storage.c:298
+msgid "MMC"
+msgstr "MMC"
 
-#: sleep/interface.c:189
-msgid "probe IRQs"
-msgstr "preišči IRQs"
+#: ../modules/storage.c:304
+msgid "Compact Flash"
+msgstr "Flash kartica"
 
-#: sleep/interface.c:195
-msgid "Check IRQ activity"
-msgstr "Preveri IRQ aktivnost"
+#: ../modules/storage.c:310
+msgid "Network Filesystem"
+msgstr "Omrežni datotečni sistem"
 
-#: users/interface.c:215
-msgid "User Name"
-msgstr "Uporabniško ime"
+#: ../modules/storage.c:330
+msgid "Mounted at "
+msgstr "Priklopljeno na"
 
-#: users/interface.c:216
-msgid "User Info"
-msgstr "Informacije o uporabniku"
+#: ../modules/storage.c:338
+msgid "Free space"
+msgstr "Prosto"
 
-#: users/interface.c:217
-msgid "Home"
-msgstr "Domov"
-
-#: users/interface.c:235 users/interface.c:236
-msgid "Add user"
-msgstr "Dodaj uporabnika"
-
-#: users/interface.c:236
-msgid "Add a new user"
-msgstr "Dodaj novega uporabnika"
-
-#: users/interface.c:240 users/interface.c:241
-msgid "Edit user"
-msgstr "Uredi uporabnika"
-
-#: users/interface.c:241
-msgid "Edit existing user"
-msgstr "Uredi obstoječega uporabnika"
-
-#: users/interface.c:245 users/interface.c:246
-msgid "Delete user"
-msgstr "Zbriši uporabnika"
-
-#: users/interface.c:246
-msgid "Delete existing user"
-msgstr "Zbriši obstoječega uporabnika"
-
-#: users/interface.c:250
-msgid "Password"
-msgstr "Geslo"
-
-#: users/interface.c:251
-msgid "Change password"
-msgstr "Zamenjaj geslo"
-
-#: users/interface.c:320
-msgid "User settings"
-msgstr "Nastavitve uporabnika"
-
-#: users/interface.c:334
-msgid "User Name:"
-msgstr "Ime uporabnika:"
-
-#: users/interface.c:350
-msgid "Password:"
-msgstr "Geslo:"
-
-#: users/interface.c:358
-msgid "User Info:"
-msgstr "Informacije o uporabniku:"
-
-#: users/interface.c:374
-msgid "Shell:"
-msgstr "Lupina:"
-
-#: users/interface.c:393
-msgid "Home:"
-msgstr "Dom:"
-
-#: users/interface.c:412
-msgid "Change"
-msgstr "Spremeni"
-
-#: users/interface.c:413
-msgid "Set"
-msgstr "Nastavi"
-
-#: users/interface.c:478
-msgid "Change Password"
-msgstr "Zamenjaj geslo"
-
-#: users/interface.c:504
-msgid "Old Password:"
-msgstr "Staro geslo:"
-
-#: users/interface.c:511
-msgid "New Password:"
-msgstr "Novo geslo:"
-
-#: users/interface.c:519
-msgid "Confirm:"
-msgstr "Potrdi:"
-
-#: users/callbacks.c:107
-msgid "You need at least one user account!"
-msgstr "Potrebujeta vsaj en uporabniški račun!"
-
-#: users/callbacks.c:131
-msgid "You can't remove this user!"
-msgstr "Tega uporabnika ni mogoče odstraniti!"
-
-#: users/callbacks.c:136
-msgid ""
-"You can't remove\n"
-" system users!"
-msgstr ""
-"Ni mogoče odstraniti\n"
-" sistemski uporabnik!"
-
-#: users/callbacks.c:138
-msgid ""
-"Delete user and all its data?\n"
-"This action is not revertable\n"
-"and is executed instantly."
-msgstr ""
-"Izbrišem uporabnika in vse\n"
-"njegove podatke? Teh ne bo\n"
-"nikoli  več možno povrniti."
-
-#: users/callbacks.c:173
-msgid "Please choose a user name."
-msgstr "Prosim, izberite uporabniško ime."
-
-#: users/callbacks.c:191
-msgid "Please choose a home directory."
-msgstr "Prosim izberite domačo mapo."
-
-#: users/callbacks.c:279
-msgid ""
-"The two new pass are different!\n"
-" Please try again!"
-msgstr ""
-"Novi gesli sta različni!\n"
-" Prosim, poskusite znova!"
-
-#: users/callbacks.c:282
-msgid ""
-"Wrong password\n"
-" Please try again!"
-msgstr ""
-"Napačno geslo\n"
-" Prosim, poskusite znova!"
-
-#: cfgfile.c:919
-msgid "No write access to network configuration."
-msgstr "Ni dovoljenja za pisanje nastavitev omrežja."
-
-#: gpe-admin.c:92
-msgid "Allow users to configure everything"
-msgstr "Dovoli uporabniku nastavljanje vsega"
-
-#: serial.c:428 serial.c:434
+#: ../modules/serial.c:428 ../modules/serial.c:434
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
 msgstr "Enostaven vmesnik za nastavitev serijskih vrat. Onemogočene komponente niso naložene."
 
-#: serial.c:431
+#: ../modules/serial.c:431
 msgid "Port A"
 msgstr "Vrata A"
 
-#: serial.c:438
+#: ../modules/serial.c:438
 msgid "Serial port default usage"
 msgstr "Privzeta uporaba serijskih vrat"
 
-#: serial.c:443
+#: ../modules/serial.c:443
 msgid "Select desired software to use serial port here."
 msgstr "Izberite želeno programsko opremo za uporabo serijskih vrat."
 
-#: serial.c:446
+#: ../modules/serial.c:446
 msgid "Console"
 msgstr "Konzola"
 
-#: serial.c:449
+#: ../modules/serial.c:449
 msgid "This option runs console on serial port. (default)"
 msgstr "Ta možnost zažene konzolo na serijskih vratih. (privzeto)"
 
-#: serial.c:457
+#: ../modules/serial.c:457
 msgid "GPS Daemon"
 msgstr "GPS demon"
 
-#: serial.c:462
+#: ../modules/serial.c:462
 msgid "GPS Daemon (needs 'gpsd')"
 msgstr "GPS demon (potrebuje 'gpsd')"
 
-#: serial.c:467
+#: ../modules/serial.c:467
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
 msgstr "Ta možnost omogoči zagon GPSD, ki oskrbuje aplikacije s podatki GPS sprejemnika."
 
-#: serial.c:474
+#: ../modules/serial.c:474
 msgid "Nothing (free)"
 msgstr "Nič (prostega)"
 
-#: serial.c:477
+#: ../modules/serial.c:477
 msgid "Don't start any software that uses the serial port."
 msgstr "Ne zaženi programske opreme, ki uporablja serijska vrata."
 
-#: serial.c:514 serial.c:521
+#: ../modules/serial.c:514 ../modules/serial.c:521
 msgid "This page configures the GPS receiver software."
 msgstr "Stran za nastavljanje programske opreme GPS sprejemnika."
 
-#: serial.c:518
+#: ../modules/serial.c:518
 msgid "GPS Receiver"
 msgstr "GPS Sprejemnik"
 
-#: serial.c:525
+#: ../modules/serial.c:525
 msgid "GPS settings"
 msgstr "GPS nastavitve"
 
-#: serial.c:531
+#: ../modules/serial.c:531
 msgid "Receiver Type"
 msgstr "Tip sprejemnika"
 
-#: serial.c:536
+#: ../modules/serial.c:536
 msgid "NMEA"
 msgstr "NMEA"
 
-#: serial.c:541
+#: ../modules/serial.c:541
 msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
 msgstr "GPS sprejemnik pošilja NMEA podatke (privzeto, velja za večino sprejemnikov)."
 
-#: serial.c:547
+#: ../modules/serial.c:547
 msgid "Earthmate"
 msgstr "Earthmate"
 
-#: serial.c:553
+#: ../modules/serial.c:553
 msgid "GPS receiver is an Earthmate GPS."
 msgstr "GPS sprejemnik je Earthmate GPS."
 
-#: serial.c:557
+#: ../modules/serial.c:557
 msgid "Baud Rate"
 msgstr "Hitrost prenosa v baudih"
 
-#: serial.c:573
-msgid "Serial Port"
-msgstr "Serijska vrata"
-
-#: cardinfo.c:103
+#: ../modules/cardinfo.c:103
 msgid "/_Card"
 msgstr "/_Kartica"
 
-#: cardinfo.c:104
+#: ../modules/cardinfo.c:104
 msgid "/Card/_Insert"
 msgstr "/_Kartica/_Vstavi"
 
-#: cardinfo.c:105
+#: ../modules/cardinfo.c:105
 msgid "/Card/_Eject"
 msgstr "/_Kartica/_Izvrzi"
 
-#: cardinfo.c:106
+#: ../modules/cardinfo.c:106
 msgid "/Card/_Suspend"
 msgstr "/_Kartica/_Zaustavi"
 
-#: cardinfo.c:107
+#: ../modules/cardinfo.c:107
 msgid "/Card/_Resume"
 msgstr "/_Kartica/_Nadaljuj"
 
-#: cardinfo.c:108
+#: ../modules/cardinfo.c:108
 msgid "/Card/_Reset"
 msgstr "/_Kartica/_Povrni"
 
-#: cardinfo.c:109
+#: ../modules/cardinfo.c:109
 msgid "/Card/s1"
 msgstr "/_Kartica/s1"
 
-#: cardinfo.c:110
+#: ../modules/cardinfo.c:110
 msgid "/Card/_Assign Driver"
 msgstr "/_Kartica/_Dodeli gonilnik"
 
-#: cardinfo.c:111
+#: ../modules/cardinfo.c:111
 msgid "/Card/s2"
 msgstr "/_Kartica/s2"
 
-#: cardinfo.c:112
+#: ../modules/cardinfo.c:112
 msgid "/Card/_Close"
 msgstr "/_Kartica/_Ugasni"
 
-#: cardinfo.c:113
+#: ../modules/cardinfo.c:113
 msgid "/_Help"
 msgstr "/_Pomoč"
 
-#: cardinfo.c:114
+#: ../modules/cardinfo.c:114
 msgid "/_Help/Index"
 msgstr "/_Pomoč/Kazalo"
 
-#: cardinfo.c:115
+#: ../modules/cardinfo.c:115
 msgid "/_Help/About"
 msgstr "/_Pomoč/O programu"
 
-#: cardinfo.c:175 cardinfo.c:863
+#: ../modules/cardinfo.c:175 ../modules/cardinfo.c:848
 msgid "card not recognized"
-msgstr "ne prepoznam kartice"
+msgstr "neprepoznavna kartica"
 
-#: cardinfo.c:277 cardinfo.c:348
+#: ../modules/cardinfo.c:277 ../modules/cardinfo.c:348
 msgid "Could not write to temporal config file."
-msgstr "ne morem pisati v začasno nastavitveno datoteko."
+msgstr "Ni mogoče pisati v začasno nastavitveno datoteko."
 
-#: cardinfo.c:554
+#: ../modules/cardinfo.c:554
 msgid "Could not open pidfile:"
-msgstr "Ne morem odpreti pid datoteke:"
+msgstr "Ni mogoče odpreti pid datoteke:"
 
-#: cardinfo.c:560
+#: ../modules/cardinfo.c:560
 msgid "Could not read pidfile"
-msgstr "Ne morem prebrati pid datoteke"
+msgstr "Ni mogoče prebrati datoteke pid"
 
-#: cardinfo.c:564
+#: ../modules/cardinfo.c:564
 msgid "Could not signal cardmgr:"
 msgstr "Nisem uspel signalizirati cardmgr:"
 
-#: cardinfo.c:639
+#: ../modules/cardinfo.c:638
 msgid "gpe-conf must be setuid root to use cardinfo feature."
 msgstr "gpe-conf mora imeti pravice skrbnika za uporabo možnosti cardinfo."
 
-#: cardinfo.c:658
+#: ../modules/cardinfo.c:656
 msgid "No PCMCIA driver in '/proc/devices'"
 msgstr "Ni PCMCIA gonilnika v '/proc/devices'"
 
-#: cardinfo.c:661
+#: ../modules/cardinfo.c:659
 msgid "Could not open '/proc/devices'"
-msgstr "Ne morem odpreti '/proc/devices'"
+msgstr "Ni mogoče odpreti '/proc/devices'"
 
-#: cardinfo.c:673
+#: ../modules/cardinfo.c:671
 msgid "No sockets found\n"
-msgstr "Ne najdem vtiča\n"
+msgstr "Ni mogoče najti vtiča\n"
 
-#: cardinfo.c:682
-msgid "Card Services release does not match!"
-msgstr "Prenosi storitev kartice niso usklajeni!"
-
-#: cardinfo.c:687
-msgid "Could not get CS revision info!\n"
-msgstr "Nisem uspel dobiti informacij o CS reviziji!\n"
-
-#: cardinfo.c:850
+#: ../modules/cardinfo.c:835
 msgid "flock(stabfile) failed"
 msgstr "flock(stabfile) prekinjen"
 
-#: cardinfo.c:869
+#: ../modules/cardinfo.c:854
 #, c-format
 msgid "no driver loaded"
 msgstr "ni naloženega gonilnika"
 
-#: cardinfo.c:978
+#: ../modules/cardinfo.c:963
 msgid "ready"
 msgstr "pripravljen"
 
-#: cardinfo.c:996
+#: ../modules/cardinfo.c:981
 msgid "not ready"
 msgstr "ni pripravljeno"
 
-#: cardinfo.c:1011
+#: ../modules/cardinfo.c:996
 msgid "suspended"
 msgstr "zaustavljen"
 
-#: cardinfo.c:1203
+#: ../modules/cardinfo.c:1188
 msgid "Assign Driver"
 msgstr "Določi gonilnik"
 
-#: cardinfo.c:1212
+#: ../modules/cardinfo.c:1197
 msgid ""
 "This dialog allows you to select/\n"
 "change the driver assignment for a\n"
@@ -1270,792 +1305,884 @@ msgstr ""
 "izbrati/spremeniti določen gonilnik\n"
 "za PCMCIA ali CF kartico."
 
-#: cardinfo.c:1222
+#: ../modules/cardinfo.c:1207
 msgid "Your current card identifies itself as:"
 msgstr "Vaša trenutna kartica se javlja kot:"
 
-#: cardinfo.c:1236 cardinfo.c:1242
+#: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
 msgid "Manuf. Id"
 msgstr "ID Proizvajalca"
 
-#: cardinfo.c:1236 cardinfo.c:1242
+#: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
 msgid "Class"
 msgstr "Razred"
 
-#: cardinfo.c:1340 cardinfo.c:1353
+#: ../modules/cardinfo.c:1327 ../modules/cardinfo.c:1340
 msgid "PC/CF card socket information."
-msgstr "Informacije o vtiču PC/CF kartice."
+msgstr "Podrobnosti o vtiču PC/CF kartice."
 
-#: cardinfo.c:1348
+#: ../modules/cardinfo.c:1335
 msgid "Socket"
 msgstr "Vtič"
 
-#: cardinfo.c:1379
+#: ../modules/cardinfo.c:1366
 msgid "Information for socket"
-msgstr "Podatki za vtič"
+msgstr "Podrobnosti za vtič"
 
-#: cardinfo.c:1388
+#. fields
+#: ../modules/cardinfo.c:1375
 msgid "State:"
 msgstr "Stanje:"
 
-#: cardinfo.c:1389
+#: ../modules/cardinfo.c:1376
 msgid "Device:"
 msgstr "Naprava:"
 
-#: cardinfo.c:1390
+#: ../modules/cardinfo.c:1377
 msgid "Driver:"
 msgstr "Gonilnik:"
 
-#: cardinfo.c:1391
+#: ../modules/cardinfo.c:1378
 msgid "Type:"
 msgstr "Tip:"
 
-#: cardinfo.c:1392
+#: ../modules/cardinfo.c:1379
 msgid "I/O:"
 msgstr "I/O:"
 
-#: cardinfo.c:1393
+#: ../modules/cardinfo.c:1380
 msgid "IRQ:"
 msgstr "IRQ:"
 
-#: cardinfo.c:1400
+#: ../modules/cardinfo.c:1387
 msgid "Flags:"
 msgstr "Zastave:"
 
-#: cardinfo.c:1417
+#: ../modules/cardinfo.c:1404
 msgid "PCMCIA initialisation failed"
 msgstr "Zagon PCMCIA ni uspel"
 
-#: tools/interface.c:315 tools/interface.c:515 tools/interface.c:531
-#: tools/interface.c:651
-msgid "[NONE SET]"
-msgstr "[NI DOLOČEN]"
+#: ../modules/gpe-admin.c:92
+msgid "Allow users to configure everything"
+msgstr "Dovoli uporabniku nastavljanje vsega"
 
-#: tools/interface.c:706 tools/interface.c:1704
-msgid "UNSPEC"
-msgstr "UNSPEC"
+#: ../modules/users/ucallbacks.c:107
+msgid "You need at least one user account!"
+msgstr "Potrebujeta vsaj en uporabniški račun!"
 
-#: tools/interface.c:708
-msgid "UNIX Domain"
-msgstr "UNIX Domena"
+#: ../modules/users/ucallbacks.c:131
+msgid "You can't remove this user!"
+msgstr "Tega uporabnika ni mogoče odstraniti!"
 
-#: tools/interface.c:711
-msgid "DARPA Internet"
-msgstr "DARPA Internet"
+#: ../modules/users/ucallbacks.c:136
+msgid ""
+"You can't remove\n"
+" system users!"
+msgstr ""
+"Ni mogoče odstraniti\n"
+" sistemski uporabnik!"
 
-#: tools/interface.c:714
-msgid "IPv6"
-msgstr "IPv6"
+#: ../modules/users/ucallbacks.c:138
+msgid ""
+"Delete user and all its data?\n"
+"This action is not revertable\n"
+"and is executed instantly."
+msgstr ""
+"Izbrišem uporabnika in vse\n"
+"njegove podatke? Teh ne bo\n"
+"več možno povrniti."
 
-#: tools/interface.c:717 tools/interface.c:1725
-msgid "AMPR AX.25"
-msgstr "AMPR AX.25"
+#: ../modules/users/ucallbacks.c:138 ../modules/network.c:343
+msgid "Question"
+msgstr "Vprašanje"
 
-#: tools/interface.c:720 tools/interface.c:1731
-msgid "AMPR NET/ROM"
-msgstr "AMPR NET/ROM"
+#: ../modules/users/ucallbacks.c:173
+msgid "Please choose a user name."
+msgstr "Prosim, izberite uporabniško ime."
 
-#: tools/interface.c:723
-msgid "Novell IPX"
-msgstr "Novell IPX"
+#: ../modules/users/ucallbacks.c:191
+msgid "Please choose a home directory."
+msgstr "Prosim izberite domačo mapo."
 
-#: tools/interface.c:726
-msgid "Appletalk DDP"
-msgstr "Appletalk DDP"
+#: ../modules/users/ucallbacks.c:279
+msgid ""
+"The two new pass are different!\n"
+" Please try again!"
+msgstr ""
+"Novi gesli sta različni!\n"
+" Prosim, poskusite znova!"
 
-#: tools/interface.c:729 tools/interface.c:1766
-msgid "Econet"
-msgstr "Econet"
+#: ../modules/users/ucallbacks.c:282
+msgid ""
+"Wrong password\n"
+" Please try again!"
+msgstr ""
+"Napačno geslo\n"
+" Prosim, poskusite znova!"
 
-#: tools/interface.c:732
-msgid "CCITT X.25"
-msgstr "CCITT X.25"
+#: ../modules/users/uinterface.c:214
+msgid "User Name"
+msgstr "Uporabniško ime"
 
-#: tools/interface.c:735 tools/interface.c:1728
-msgid "AMPR ROSE"
-msgstr "AMPR ROSE"
+#: ../modules/users/uinterface.c:215
+msgid "User Info"
+msgstr "Podrobnosti o uporabniku"
 
-#: tools/interface.c:738 tools/interface.c:1716
-msgid "Ash"
-msgstr "Ash"
+#: ../modules/users/uinterface.c:216
+msgid "Home"
+msgstr "Domov"
 
-#: tools/interface.c:765
-#, c-format
-msgid "Too many address family arguments.\n"
-msgstr "Preveč določil naslovnih družin.\n"
+#: ../modules/users/uinterface.c:226
+msgid "Password"
+msgstr "Geslo"
 
-#: tools/interface.c:776
-#, c-format
-msgid "Unknown address family '%s'.\n"
-msgstr "Neznana naslovna družina '%s'.\n"
+#: ../modules/users/uinterface.c:235
+msgid "Delete User"
+msgstr "Zbriši uporabnika"
 
-#: tools/interface.c:839
-#, c-format
-msgid "Please don't supply more than one address family.\n"
-msgstr "Prosim ne dodajte več kot ene naslovne družine.\n"
+#: ../modules/users/uinterface.c:244
+msgid "Edit User"
+msgstr "Uredi uporabnika"
 
-#: tools/interface.c:966
-#, c-format
-msgid "No usable address families found.\n"
-msgstr "Nisem našel uporabne naslovne družine.\n"
+#: ../modules/users/uinterface.c:253
+msgid "New User"
+msgstr "Nov uporabnik"
 
-#: tools/interface.c:1036
-#, c-format
-msgid "Warning: no inet socket available: %s\n"
-msgstr "Opozorilo: ni prostega inet vtiča: %s\n"
+#: ../modules/users/uinterface.c:327
+msgid "User settings"
+msgstr "Nastavitve uporabnika"
 
-#: tools/interface.c:1188
-#, c-format
-msgid "Warning: cannot open %s (%s). Limited output.\n"
-msgstr "Opozorilo: ne morem odpreti %s (%s). Omejen izhod.\n"
+#: ../modules/users/uinterface.c:341
+msgid "User Name:"
+msgstr "Ime uporabnika:"
 
-#: tools/interface.c:1431
-msgid "Device not found"
-msgstr "Ne najdem naprave"
+#: ../modules/users/uinterface.c:357
+msgid "Password:"
+msgstr "Geslo:"
 
-#: tools/interface.c:1435
-#, c-format
-msgid "%s: error fetching interface information: %s\n"
-msgstr "%s: napaka pri beleženju podatkov vmesnika: %s\n"
+#: ../modules/users/uinterface.c:365
+msgid "User Info:"
+msgstr "Podrobnosti o uporabniku:"
 
-#: tools/interface.c:1609
-#, c-format
-msgid "You cannot start PPP with this program.\n"
-msgstr "S tem programom ne morete zagnati PPP.\n"
+#: ../modules/users/uinterface.c:381
+msgid "Shell:"
+msgstr "Lupina:"
 
-#: tools/interface.c:1703
-msgid "Local Loopback"
-msgstr "Lokalna povratna zanka"
+#: ../modules/users/uinterface.c:400
+msgid "Home:"
+msgstr "Dom:"
 
-#: tools/interface.c:1706
-msgid "Serial Line IP"
-msgstr "Serijska IP linija"
+#: ../modules/users/uinterface.c:419
+msgid "Change"
+msgstr "Spremeni"
 
-#: tools/interface.c:1707
-msgid "VJ Serial Line IP"
-msgstr "VJ serijska IP linija"
+#: ../modules/users/uinterface.c:420
+msgid "Set"
+msgstr "Nastavi"
 
-#: tools/interface.c:1708
-msgid "6-bit Serial Line IP"
-msgstr "6-bitna serijska IP linija"
+#: ../modules/users/uinterface.c:484
+msgid "Change Password"
+msgstr "Zamenjaj geslo"
 
-#: tools/interface.c:1709
-msgid "VJ 6-bit Serial Line IP"
-msgstr "Vj 6-bitna serijska IP linija"
+#. 2nd column:
+#: ../modules/users/uinterface.c:510
+msgid "Old Password:"
+msgstr "Staro geslo:"
 
-#: tools/interface.c:1710
-msgid "Adaptive Serial Line IP"
-msgstr "Prilagodljiva serijska IP linija"
+#: ../modules/users/uinterface.c:517
+msgid "New Password:"
+msgstr "Novo geslo:"
 
-#: tools/interface.c:1713
-msgid "Ethernet"
-msgstr "Eternet"
+#: ../modules/users/uinterface.c:525
+msgid "Confirm:"
+msgstr "Potrdi:"
 
-#: tools/interface.c:1719
-msgid "Fiber Distributed Data Interface"
-msgstr "Porazdeljeni podatkovni vmesnik na vlaknu (FDDI)"
-
-#: tools/interface.c:1722
-msgid "HIPPI"
-msgstr "HIPPI"
-
-#: tools/interface.c:1734
-msgid "generic X.25"
-msgstr "Generic X.25"
-
-#: tools/interface.c:1737
-msgid "IPIP Tunnel"
-msgstr "IPIP Tunel"
-
-#: tools/interface.c:1740
-msgid "Point-to-Point Protocol"
-msgstr "Protokol med točkama"
-
-#: tools/interface.c:1743
-msgid "(Cisco)-HDLC"
-msgstr "(Cisco)-HDLC"
-
-#: tools/interface.c:1744
-msgid "LAPB"
-msgstr "LAPB"
-
-#: tools/interface.c:1747
-msgid "ARCnet"
-msgstr "ARCnet"
-
-#: tools/interface.c:1750
-msgid "Frame Relay DLCI"
-msgstr "Preklapljanje okvirov DLCI"
-
-#: tools/interface.c:1751
-msgid "Frame Relay Access Device"
-msgstr "Preklapljanje okvirov naprave za dostop"
-
-#: tools/interface.c:1754
-msgid "IPv6-in-IPv4"
-msgstr "IPv6-in-IPv4"
-
-#: tools/interface.c:1757
-msgid "IrLAP"
-msgstr "IrLAP"
-
-#: tools/interface.c:1760
-msgid "16/4 Mbps Token Ring"
-msgstr "16/4 Mbps Token Ring"
-
-#: tools/interface.c:1762
-msgid "16/4 Mbps Token Ring (New)"
-msgstr "16/4 Mbps Token Ring (New)"
-
-#: tools/interface.c:1875
-#, c-format
-msgid "Interface %s"
-msgstr "Vmesnik %s"
-
-#: tools/interface.c:1876
-#, c-format
-msgid "Type: %s"
-msgstr "Tip: %s"
-
-#: tools/interface.c:1885
-#, c-format
-msgid "Media: %s"
-msgstr "Mediji: %s"
-
-#: tools/interface.c:1890
-#, c-format
-msgid "(auto)"
-msgstr "(samodejno)"
-
-#: tools/interface.c:1902
-#, c-format
-msgid "Address: %s\n"
-msgstr "Naslov: %s\n"
-
-#: tools/interface.c:1907
-#, c-format
-msgid "P-t-P: %s\n"
-msgstr "P-t-P: %s\n"
-
-#: tools/interface.c:1911
-#, c-format
-msgid "Netmask: %s\n"
-msgstr "Omrežna maska %s\n"
-
-#: tools/interface.c:1915
-#, c-format
-msgid "Broadcast: %s\n"
-msgstr "Razpršeno oddajanje: %s\n"
-
-#: tools/interface.c:1927
-#, c-format
-msgid "HWaddr (MAC): %s\n"
-msgstr "HWaddr (MAC): %s\n"
-
-#: tools/interface.c:1957
-#, c-format
-msgid "IPv6 Address: %s/%d\n"
-msgstr "Naslov IPv6: %s/%d\n"
-
-#: tools/interface.c:1960
-#, c-format
-msgid "Scope: "
-msgstr "Obseg:"
-
-#: tools/interface.c:1965
-#, c-format
-msgid "Global"
-msgstr "Globalno"
-
-#: tools/interface.c:1968
-#, c-format
-msgid "Link"
-msgstr "Povezava"
-
-#: tools/interface.c:1971
-#, c-format
-msgid "Site"
-msgstr "Stran"
-
-#: tools/interface.c:1974
-#, c-format
-msgid "Compat"
-msgstr "Združljiv"
-
-#: tools/interface.c:1977
-#, c-format
-msgid "Host"
-msgstr "Gostitelj"
-
-#: tools/interface.c:1980
-#, c-format
-msgid "Unknown"
-msgstr "Neznano"
-
-#: sound/sound.c:250
+#: ../modules/sound/sound.c:250
 msgid "Audio Settings"
 msgstr "Nastavitve Zvoka"
 
-#: sound/sound.c:257
+#: ../modules/sound/sound.c:257
 msgid "Mute Everything"
 msgstr "Utišaj vse"
 
-#: sound/sound.c:298
+#: ../modules/sound/sound.c:298
 msgid "Alarm Settings"
 msgstr "Nastavitve alarma"
 
-#: sound/sound.c:305
+#: ../modules/sound/sound.c:305
 msgid "Enable Alarm Sound"
 msgstr "Omogoči zvok alarma"
 
-#: sound/sound.c:312
+#: ../modules/sound/sound.c:312
 msgid "Automatic Volume (rising)"
 msgstr "Samodejna glasnost (rastoča)"
 
-#: sound/sound.c:322 sound/soundctrl.c:298
+#: ../modules/sound/sound.c:322 ../modules/sound/soundctrl.c:258
 msgid "Volume"
 msgstr "Glasnost"
 
-#: sound/sound.c:329
+#: ../modules/sound/sound.c:329
 msgid "Test"
 msgstr "Test"
 
-#: keys/keyboard.c:75
+#: ../modules/keys/keyboard.c:76
 msgid "none"
 msgstr "noben"
 
-#: keys/keyboard.c:76
+#: ../modules/keys/keyboard.c:77
 msgid "Foldable"
 msgstr "Zložljivo"
 
-#: keys/keyboard.c:77
+#: ../modules/keys/keyboard.c:78
 msgid "SnapNType"
 msgstr "SnapNType"
 
-#: keys/keyboard.c:78
+#: ../modules/keys/keyboard.c:79
 msgid "Stowaway"
 msgstr "Stowaway"
 
-#: keys/keyboard.c:79
+#: ../modules/keys/keyboard.c:80
 msgid "StowawayXT"
 msgstr "StowawayXT"
 
-#: keys/keyboard.c:80
+#: ../modules/keys/keyboard.c:81
 msgid "HP Slim"
 msgstr "HP Slim"
 
-#: keys/keyboard.c:81
+#: ../modules/keys/keyboard.c:82
 msgid "Smart BT"
 msgstr "Smart BT"
 
-#: keys/keyboard.c:82
+#: ../modules/keys/keyboard.c:83
 msgid "LIRC"
 msgstr "LIRC"
 
-#: keys/keyboard.c:83
+#: ../modules/keys/keyboard.c:84
 msgid "Belkin IR"
 msgstr "Belkin IR"
 
-#: keys/keyboard.c:84
+#: ../modules/keys/keyboard.c:85
 msgid "Flexis"
 msgstr "Flexis"
 
-#: keys/keyboard.c:85
+#: ../modules/keys/keyboard.c:86
 msgid "Benq Gamepad"
 msgstr "Benq Gamepad"
 
-#: keys/keyboard.c:86
+#: ../modules/keys/keyboard.c:87
 msgid "Pocketvik"
 msgstr "Pocketvik"
 
-#: keys/keyboard.c:87
+#: ../modules/keys/keyboard.c:88
 msgid "Micro Foldaway"
 msgstr "Micro Foldaway"
 
-#: keys/keyboard.c:88
+#: ../modules/keys/keyboard.c:89
 msgid "Micro Datapad"
 msgstr "Micro Datapad"
 
-#: keys/keyboard.c:252
+#: ../modules/keys/keyboard.c:255
 msgid "External keyboard configuration."
 msgstr "Nastavitve zunanje tipkovnice"
 
-#: keys/keyboard.c:255
+#: ../modules/keys/keyboard.c:258
 msgid "External Keyboard Port"
 msgstr "Vrata zunanje tipkovnice"
 
-#: keys/keyboard.c:262
+#: ../modules/keys/keyboard.c:265
 msgid "Here you may select your external keyboard model."
 msgstr "Izberite model zunanje tipkovnice."
 
-#: keys/keyboard.c:283
+#: ../modules/keys/keyboard.c:288
 msgid "External Keyboard Type"
 msgstr "Tip zunanje tipkovnice"
 
-#: keys/keys.c:79
+#: ../modules/keys/kbd.c:142
+msgid "Keyboard Geometry / Layout"
+msgstr "Geometrija tipkovnice / Ureditev"
+
+#: ../modules/keys/kbd.c:182
+msgid "User defined"
+msgstr "Uporabniško določeno"
+
+#: ../modules/keys/keyctl.c:195
+msgid "Button layout file is missing a global section."
+msgstr "Datoteki z razporeditvijo gumbov manjka splošni oddelek."
+
+#: ../modules/keys/keyctl.c:411
+msgid "No button configuration available for this device."
+msgstr "Za napravo ni na voljo nastavitev gumbov."
+
+#: ../modules/keys/keyctl.c:583
+msgid "Critical: Can't open keylaunchrc for writing!"
+msgstr "Kritično: Ni mogoče odpreti keylaunchrc za pisanje!"
+
+#: ../modules/keys/keyctl.c:606
+msgid "Could not restart key handler!"
+msgstr "Nisem uspel zagnati urejevalnika ključev!"
+
+#: ../modules/keys/keyctl.c:629
+msgid "The file you selected is not executable."
+msgstr "Izbrana datoteka ni izvršljiva."
+
+#: ../modules/keys/keys.c:79
 msgid "Buttons"
 msgstr "Gumbi"
 
-#: keys/keys.c:83
-msgid "Virtual Keyboard"
+#: ../modules/keys/keys.c:83
+msgid "Virtual Keyb."
 msgstr "Navidezna tipkovnica"
 
-#: keys/keys.c:87
-msgid "External Keyboard"
+#: ../modules/keys/keys.c:87
+msgid "External Keyb."
 msgstr "Zunanja tipkovnica"
 
-#: main-info.c:67
+#: ../modules/screen/screen.c:73
+msgid "Portrait"
+msgstr "Portret"
+
+#: ../modules/screen/screen.c:74
+msgid "Landscape (left)"
+msgstr "Prečno (levo)"
+
+#: ../modules/screen/screen.c:75
+msgid "Landscape (right)"
+msgstr "Prečno (desno)"
+
+#: ../modules/screen/screen.c:79
+msgid "Landscape"
+msgstr "Ležeče"
+
+#: ../modules/screen/screen.c:80
+msgid "Portrait (left)"
+msgstr "Portret (levo)"
+
+#: ../modules/screen/screen.c:81
+msgid "Portrait (right)"
+msgstr "Portret (desno)"
+
+#: ../modules/screen/screen.c:84
+msgid "Inverted"
+msgstr "Preobrnjeno"
+
+#: ../modules/screen/screen.c:111
+msgid "Light"
+msgstr "Svetlost"
+
+#: ../modules/screen/screen.c:117
+msgid "Brightness"
+msgstr "Svetlost"
+
+#: ../modules/screen/screen.c:129
+msgid "Display"
+msgstr "Zaslon"
+
+#: ../modules/screen/screen.c:133
+msgid "Rotation"
+msgstr "Obračanje"
+
+#: ../modules/screen/screen.c:153
+msgid "Touchscreen"
+msgstr "Zaslon, občutljiv na dotik"
+
+#: ../modules/screen/screen.c:157
+msgid "Calibrate"
+msgstr "Umeri"
+
+#: ../modules/screen/screen.c:159
+msgid "Start"
+msgstr "Začetek"
+
+#: ../modules/screen/screen.c:275 ../modules/sleep/scallbacks.c:39
+msgid "min"
+msgstr "min"
+
+#: ../modules/screen/screen.c:278 ../modules/sleep/scallbacks.c:42
+msgid "sec"
+msgstr "sek"
+
+#: ../modules/network.c:103
+msgid "Current Config"
+msgstr "Trenutna nastavitev"
+
+#: ../modules/network.c:252
+msgid "New Interface"
+msgstr "Nov vmesnik"
+
+#: ../modules/network.c:261
+msgid "This interface definition already exists!"
+msgstr "Določitev tega vmesnika že obstaja!"
+
+#: ../modules/network.c:343
+msgid "Do you want to delete this interface?"
+msgstr "Želite izbrisati ta vmesnik?"
+
+#: ../modules/network.c:592
+msgid "WiFi config"
+msgstr "Nastavitve WiFi"
+
+#: ../modules/network.c:631
 #, c-format
-msgid "usage: gpe-info [page]\n"
-msgstr "Uporaba: gpe-info [stran]\n"
-
-#: main-info.c:68
-#, c-format
-msgid "    Where page may be \"global\" (default)\n"
-msgstr "    Stran je lahko \"globalna\" (privzeto)\n"
-
-#: main-info.c:78 gpe-conf-sysinfo.desktop.in.h:2
-msgid "System Information"
-msgstr "Informacije o sistemu"
-
-#: storage.c:166 storage.c:423
-msgid "System Memory"
-msgstr "Sistemski spomin"
-
-#. TRANSLATORS: MB == Mega Bytes
-#: storage.c:174 storage.c:443
-msgid "Free memory"
-msgstr "Prost spomin"
-
-#. TRANSLATORS: MB == Mega Bytes
-#: storage.c:176 storage.c:183 storage.c:329 storage.c:340 storage.c:445
-#: storage.c:458 sysinfo.c:663 sysinfo.c:679
-msgid "MB"
-msgstr "MB"
-
-#: storage.c:181 storage.c:328 storage.c:456
-msgid "Total:"
-msgstr "Skupaj:"
-
-#: storage.c:292
-msgid "Internal Flash"
-msgstr "Notranji spomin"
-
-#: storage.c:298
-msgid "MMC"
-msgstr "MMC"
-
-#: storage.c:304
-msgid "Compact Flash"
-msgstr "Flash kartica"
-
-#: storage.c:310
-msgid "Network Filesystem"
-msgstr "Omrežni datotečni sistem"
-
-#: storage.c:330
-msgid "Mounted at "
-msgstr "Priklopljeno na"
-
-#: storage.c:338
-msgid "Free space"
-msgstr "Prosto"
-
-#: logread.c:116
-msgid "Can't find circular buffer, is syslog running?\n"
-msgstr "Ne najdem krožnega medpomnilnika. Je syslog zagnan?\n"
-
-#: logread.c:123
-msgid "Can't get access to syslogd's circular buffer."
-msgstr "Ne morem dostopati do krožnega syslogd medpomnilnika."
-
-#: logread.c:130
-msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
-msgstr "Ne morem dostopati do semaforjev za krožni syslogd medpomnilnik."
-
-#: logread.c:156
-msgid "<empty syslog>"
-msgstr "<prazen syslog>"
-
-#: logread.c:227 logread.c:243
-msgid "System Log"
-msgstr "Sistemski dnevnik"
-
-#: logread.c:252 logread.c:268
-msgid "Session Log"
-msgstr "Dnevnik sej"
-
-#: logread.c:275
-msgid "Could not open X session log.\n"
-msgstr "Nisem uspel odpreti dnevnika X seje.\n"
-
-#: battery.c:190 battery.c:251
-msgid "unknown"
-msgstr "neznano"
-
-#: battery.c:199 battery.c:259 battery.c:358
-msgid "Status: high"
-msgstr "Status: visok"
-
-#: battery.c:202 battery.c:262 battery.c:362
-msgid "Status: low"
-msgstr "Status: nizek"
-
-#: battery.c:205 battery.c:265 battery.c:366
-msgid "Status: critical"
-msgstr "Status: kritičen"
-
-#: battery.c:208 battery.c:268 battery.c:370
-msgid "Status: charging"
-msgstr "Status: spreminjajoč"
-
-#: battery.c:211 battery.c:271
-msgid "Status: charge main"
-msgstr "Status: polnjenje glavne"
-
-#: battery.c:214
-msgid "Status: dead"
-msgstr "Status: mrtev"
-
-#: battery.c:217 battery.c:277 battery.c:356
-msgid "Status: full"
-msgstr "Status: poln"
-
-#: battery.c:220 battery.c:280
-msgid "Status: no battery"
-msgstr "Status: ni baterije"
-
-#: battery.c:223 battery.c:283 battery.c:301 battery.c:373
-msgid "Status: unknown"
-msgstr "Status: neznan"
-
-#: battery.c:228
-msgid "learning"
-msgstr "učenje"
-
-#: battery.c:232 battery.c:287
-msgid "Voltage"
-msgstr "Napetost"
-
-#: battery.c:236 battery.c:291 battery.c:390
-msgid "AC connected"
-msgstr "AC povezan."
-
-#: battery.c:238 battery.c:293 battery.c:392
-msgid "Lifetime"
-msgstr "Življenjska doba"
-
-#: battery.c:274
-msgid "Status: not installed"
-msgstr "Status: ni naložen"
-
-#: battery.c:300
-msgid "not installed"
-msgstr "ni naložen"
-
-#: battery.c:302
-msgid "Voltage: unknown"
-msgstr "Napetost: neznana"
-
-#: battery.c:303
-msgid "Lifetime: unknown"
-msgstr "Življenjska doba: neznana"
-
-#: battery.c:348
-msgid "No battery"
-msgstr "Ni baterije"
-
-#: battery.c:453
-msgid "Internal battery"
-msgstr "Notranja baterija"
-
-#: battery.c:457
-msgid "Jacket battery"
-msgstr "Baterijski vložek"
-
-#: sysinfo.c:236
-msgid "ARM"
-msgstr "ARM"
-
-#: sysinfo.c:239
-msgid "Intel x86 or compatible"
-msgstr "Intel x86 ali kompatibilen"
-
-#: sysinfo.c:240
-msgid "IBM type PC"
-msgstr "IBM tip PC"
-
-#: sysinfo.c:243
-msgid "Mips"
-msgstr "Mips"
-
-#: sysinfo.c:245
-msgid "Silicon Graphics Machine"
-msgstr "Silicon Graphics naprava"
-
-#: sysinfo.c:249
-msgid "IBM Power or PowerPC"
-msgstr "IBM Power ali PowerPC"
-
-#. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: sysinfo.c:278
-msgid "Familiar"
-msgstr "Znano"
-
-#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
-#: sysinfo.c:292
-msgid "OpenEmbedded"
-msgstr "OpenEmbedded"
-
-#: sysinfo.c:334 sysinfo.c:336
-msgid "Build"
-msgstr "Gradnja"
-
-#: sysinfo.c:438
-msgid "Network Status"
-msgstr "Omrežni status"
-
-#: sysinfo.c:452 sysinfo.c:455
-msgid "HWaddr (MAC)"
-msgstr "HWaddr (MAC)"
-
-#: sysinfo.c:466 sysinfo.c:467
-#, c-format
-msgid "Wireless"
-msgstr "Brezžično"
-
-#: sysinfo.c:494
-msgid "Default Gateway"
-msgstr "Privzet Prehod"
-
-#: sysinfo.c:537
-msgid "System information"
-msgstr "Informacije o sistemu"
-
-#: sysinfo.c:547
-msgid "Version"
-msgstr "Verzija"
-
-#: sysinfo.c:579
-msgid "Distribution"
-msgstr "Distribucija"
-
-#: sysinfo.c:604
-msgid "System"
-msgstr "Sistem"
-
-#: sysinfo.c:613
-msgid "Device information"
-msgstr "Informacije o napravi"
-
-#: sysinfo.c:625
-msgid "Device Name"
-msgstr "Ime naprave"
-
-#: sysinfo.c:644
-msgid "CPU:"
-msgstr "CPE:"
-
-#: sysinfo.c:657
-msgid "RAM:"
-msgstr "RAM:"
-
-#: sysinfo.c:673
-msgid "Storage:"
-msgstr "Skladišče:"
-
-#: sysinfo.c:685
-msgid "Hardware"
-msgstr "Strojna oprema"
-
-#: sysinfo.c:695
-msgid "Battery"
-msgstr "Baterija"
-
-#: sysinfo.c:702
-msgid "Storage"
-msgstr "Skladiščenje"
-
-#: sysinfo.c:709
-msgid "Networks"
-msgstr "Omrežja"
-
-#: sysinfo.c:716
-msgid "Log Display"
-msgstr "Prikaz dnevnika"
-
-#: gpe-conf.desktop.in.h:1
-msgid "Control Panel"
-msgstr "Kontrolna plošča"
-
-#: gpe-conf-admin.desktop.in.h:1
+msgid "WiFi config for %s"
+msgstr "Nastavitve WiFi za %s"
+
+#. page items
+#: ../modules/network.c:643
+msgid "ESSID"
+msgstr "ESSID"
+
+#: ../modules/network.c:665
+msgid "Mode"
+msgstr "Način"
+
+#: ../modules/network.c:675
+msgid "managed"
+msgstr "urejevano"
+
+#: ../modules/network.c:687
+msgid "ad-hoc"
+msgstr "ad-hoc"
+
+#: ../modules/network.c:704
+msgid "Channel"
+msgstr "Kanal"
+
+#: ../modules/network.c:725
+msgid "WEP"
+msgstr "WEP"
+
+#: ../modules/network.c:735
+msgid "off"
+msgstr "izključeno"
+
+#: ../modules/network.c:747
+msgid "open"
+msgstr "odpri"
+
+#: ../modules/network.c:759
+msgid "restricted"
+msgstr "omejeno"
+
+#: ../modules/network.c:775
+msgid "Key 1"
+msgstr "Ključ 1"
+
+#: ../modules/network.c:803
+msgid "Key 2"
+msgstr "Ključ 2"
+
+#: ../modules/network.c:831
+msgid "Key 3"
+msgstr "Ključ 3"
+
+#: ../modules/network.c:861
+msgid "Key 4"
+msgstr "Ključ 4"
+
+#: ../modules/network.c:1015 ../modules/network.c:1142
+#: ../modules/network.c:1259
+msgid "Interface"
+msgstr "Vmesnik"
+
+#. page items
+#: ../modules/network.c:1065
+msgid "Address"
+msgstr "Naslov"
+
+#: ../modules/network.c:1067
+msgid "Enter your IP address here, e.g. 192.168.1.2"
+msgstr "Vnesite naslov IP, npr. 192.168.1.2"
+
+#: ../modules/network.c:1068
+msgid "Netmask"
+msgstr "Omrežna maska"
+
+#: ../modules/network.c:1070
+msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
+msgstr "Vnesite omrežno masko, npr. 255.255.255.0"
+
+#: ../modules/network.c:1072
+msgid "Broadcast"
+msgstr "Naslov za razpršeno oddajanje"
+
+#: ../modules/network.c:1074
+msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
+msgstr "Vnesite naslov razpršenega oddajanja, ponavadi je to vaš IP z 255 namesto zadnje številke."
+
+#: ../modules/network.c:1076
+msgid "Gateway"
+msgstr "Prehod"
+
+#: ../modules/network.c:1078
+msgid "Enter the IP Address of your default gateway here."
+msgstr "Vnesite naslov IP vašega privzetega prehoda."
+
+#: ../modules/network.c:1087 ../modules/network.c:1201
+msgid "WiFi device"
+msgstr "WiFi naprava"
+
+#: ../modules/network.c:1095 ../modules/network.c:1209
+msgid "Configure"
+msgstr "Nastavitve"
+
+#. page items
+#: ../modules/network.c:1192 ../modules/network.c:1419
+msgid "Hostname"
+msgstr "Ime gostitelja"
+
+#: ../modules/network.c:1194
+msgid "Enter your desired hostname here. This parameter is optional."
+msgstr "Vnesite želenega gostitelja. Nastavitev lahko izpustite. "
+
+#. page items
+#: ../modules/network.c:1309
+msgid "Provider"
+msgstr "Ponudnik"
+
+#: ../modules/network.c:1311
+msgid "Here you need to enter the name of the provider configuration to use for this interface."
+msgstr "Vnesite ime nastavitve ponudnika za ta vmesnik."
+
+#: ../modules/network.c:1334
+msgid "Global Settings"
+msgstr "Splošne Nastavitve"
+
+#: ../modules/network.c:1375
+msgid "Proxy"
+msgstr "Posrednik"
+
+#: ../modules/network.c:1376
+msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
+msgstr "Če potrebujete dostop preko posrednika, vnesite naslov tukaj. (Trenutno se nanaša samo na dillo.)"
+
+#: ../modules/network.c:1382
+msgid "No proxy for"
+msgstr "Ni posrednika za"
+
+#: ../modules/network.c:1384
+msgid "Here you should enter your local domain for that you don't want to use a proxy."
+msgstr "Vnesite domačo domeno, ki gre mimo posrednika."
+
+#: ../modules/network.c:1391
+msgid "DNS server"
+msgstr "DNS Strežnik"
+
+#: ../modules/network.c:1393
+msgid "Enter the IP of the DNS(name-) server to use here."
+msgstr "Vnesite naslov IP privzetega DNS strežnika."
+
+#: ../modules/network.c:1421
+msgid "Enter the Hostname to use for this machine"
+msgstr "Vnesite gostitelja za to napravo"
+
+#: ../modules/network.c:1612
+msgid ""
+"Here you may change the basic configuration type of your device.\n"
+"Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
+msgstr ""
+"Tu lahko spremenite osnovne nastavitve vaše naprave.\n"
+"Uporabite \"static\" za ročno nastavitev, \"dhcp\" za DHCP strežnik in \"ppp\" za točkovno povezavo med dvema napravama."
+
+#: ../modules/network.c:1618
+msgid "Enable this option if your device is a WiFi device"
+msgstr "Omogočite možnost, če je vaša naprava WiFi naprava"
+
+#: ../modules/network.c:1620
+msgid "Click to set the wireless options for this device"
+msgstr "Kliknite za nastavitev brezžičnih možnosti za napravo"
+
+#: ../modules/network.c:1622
+msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
+msgstr "Določite način delovanja vaše WiFi kartice. (urejevano ali ad-hoc)."
+
+#: ../modules/network.c:1625
+msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
+msgstr "Določite način šifriranja: izklopljeno za nešifriran WEP, odprto za odprt sistem and omejeno za omejene WEP povezave."
+
+#: ../modules/network.c:1630
+msgid "Enter the essid of your WiFi network here."
+msgstr "Vnesite essid vašega WiFi omrežja."
+
+#: ../modules/network.c:1633
+msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
+msgstr "Vnesite vaš WEP ključ v obliki (format iwconfig), npr.: \"s:12345\""
+
+#: ../modules/network.c:1636
+msgid "Select the WEP key to use."
+msgstr "Izberite WEP ključ."
+
+#: ../modules/network.c:1639
+msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
+msgstr "Vnesite številko kanala ali frekvenco. Če to ni potrebno, pustite polje prazno. "
+
+#: ../modules/network.c:1655
+msgid "Remove current Interface"
+msgstr "Odstrani trenutni vmesnik"
+
+#: ../modules/network.c:1665
+msgid "Add a new Interface"
+msgstr "Dodaj nov vmesnik"
+
+#: ../modules/network.c:1672
+msgid "Info"
+msgstr "Podrobnosti"
+
+#: ../modules/network.c:1676
+msgid "Show current configuration."
+msgstr "Pokaži trenutne nastavitve"
+
+#: ../modules/network.c:1694
+msgid "Couldn't read network configuration."
+msgstr "Ni mogoče prebrati nastavitev omrežja."
+
+#: ../modules/network.c:1701
+msgid "global"
+msgstr "globalno"
+
+#: ../modules/sleep/sinterface.c:64
+msgid "Auto sleep"
+msgstr "Zaspi samodejno"
+
+#: ../modules/sleep/sinterface.c:74 ../modules/sleep/sinterface.c:105
+msgid "enabled"
+msgstr "omogočeno"
+
+#: ../modules/sleep/sinterface.c:92
+msgid "sleep timeout"
+msgstr "Zakasnitev spanja"
+
+#: ../modules/sleep/sinterface.c:95
+msgid "Auto dim"
+msgstr "Samodejna zatemnitev"
+
+#: ../modules/sleep/sinterface.c:122
+msgid "backlight dim timeout"
+msgstr "Zakasnitev zatemnitve osvetljenosti ozadja"
+
+#: ../modules/sleep/sinterface.c:124
+msgid "Auto dim level"
+msgstr "Stopnja samodejne zatemnitve"
+
+#: ../modules/sleep/sinterface.c:144
+msgid "Advanced Controls"
+msgstr "Napredni nadzornik"
+
+#: ../modules/sleep/sinterface.c:154
+msgid "CPU"
+msgstr "CPE"
+
+#: ../modules/sleep/sinterface.c:160
+msgid "Sleep on cpu less than load"
+msgstr "Zaspi ob najmanjši CPE obremenitvi"
+
+#: ../modules/sleep/sinterface.c:164
+msgid "load below"
+msgstr "najmanjša obremenitev"
+
+#: ../modules/sleep/sinterface.c:180
+msgid "APM"
+msgstr "APM"
+
+#: ../modules/sleep/sinterface.c:186
+msgid "Sleep on AC"
+msgstr "Zaspi na AC"
+
+#: ../modules/sleep/sinterface.c:188
+msgid "probe IRQs"
+msgstr "preišči IRQs"
+
+#: ../modules/sleep/sinterface.c:194
+msgid "Check IRQ activity"
+msgstr "Preveri IRQ aktivnost"
+
+#: ../desktop/gpe-conf-admin.desktop.in.h:1
 msgid "User Access"
 msgstr "Uporabniški dostop"
 
-#: gpe-conf-admin.desktop.in.h:2
+#: ../desktop/gpe-conf-admin.desktop.in.h:2
 msgid "User access administration"
 msgstr "Administracija uporabniškega dostopa"
 
-#: gpe-conf-cardinfo.desktop.in.h:1
+#: ../desktop/gpe-conf-cardinfo.desktop.in.h:1
 msgid "PC/CF Cards"
 msgstr "PC/CF Kartice"
 
-#: gpe-conf-cardinfo.desktop.in.h:2
+#: ../desktop/gpe-conf-cardinfo.desktop.in.h:2
 msgid "PC/CF Cards info and config"
-msgstr "Nastavitve in podatki o PC/CF karticah"
+msgstr "Nastavitve in podrobnosti PC/CF kartic"
 
-#: gpe-conf-keys.desktop.in.h:1
+#: ../desktop/gpe-conf.desktop.in.h:1
+msgid "Control Panel"
+msgstr "Kontrolna plošča"
+
+#: ../desktop/gpe-conf-keys.desktop.in.h:1
 msgid "Keyboard and Button Setup"
 msgstr "Nastavitve tipkovnice in gumbov"
 
-#: gpe-conf-keys.desktop.in.h:2
+#: ../desktop/gpe-conf-keys.desktop.in.h:2
 msgid "Keys and Buttons"
 msgstr "Tipke in Gumbi"
 
-#: gpe-conf-ownerinfo.desktop.in.h:2
+#: ../desktop/gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
-msgstr "Nastavi informacije lastnika"
+msgstr "Nastavi podrobnosti lastnika"
 
-#: gpe-conf-serial.desktop.in.h:1
+#: ../desktop/gpe-conf-serial.desktop.in.h:1
 msgid "Serial Port Settings"
 msgstr "Nastavitve serijskih vrat"
 
-#: gpe-conf-sleep.desktop.in.h:1
+#: ../desktop/gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"
 msgstr "Nastavitev spanja"
 
-#: gpe-conf-sleep.desktop.in.h:2
+#: ../desktop/gpe-conf-sleep.desktop.in.h:2
 msgid "Sleep Configuration"
 msgstr "Nastavitve spanja"
 
-#: gpe-conf-theme.desktop.in.h:1
-msgid "Global Appearance Setup"
-msgstr "Nastavitve splošnega izgleda"
-
-#: gpe-conf-time.desktop.in.h:1
-msgid "Date/Time Setup"
-msgstr "Datum/Čas Nastavitve"
-
-#: gpe-conf-time.desktop.in.h:2
-msgid "Setup Date and Time"
-msgstr "Nastavitve datuma in časa"
-
-#: gpe-conf-users.desktop.in.h:1
-msgid "Manage local users"
-msgstr "Upravljanje z uporabniki"
-
-#: gpe-conf-users.desktop.in.h:2
-msgid "User Manager"
-msgstr "Urejevalnik Uporabnikov"
-
-#: gpe-conf-sysinfo.desktop.in.h:1
-msgid "System Info"
-msgstr "Informacije o sistemu"
-
-#: gpe-conf-sound.desktop.in.h:1
+#: ../desktop/gpe-conf-sound.desktop.in.h:1
 msgid "Sound Settings"
 msgstr "Nastavitve zvoka"
 
-#: gpe-conf-sound.desktop.in.h:2
+#: ../desktop/gpe-conf-sound.desktop.in.h:2
 msgid "Sound defaults and setup"
 msgstr "Privzete zvočne nastavitve"
+
+#: ../desktop/gpe-conf-sysinfo.desktop.in.h:1
+msgid "System Info"
+msgstr "Podrobnosti sistema"
+
+#: ../desktop/gpe-conf-theme.desktop.in.h:1
+msgid "Global Appearance Setup"
+msgstr "Nastavitve splošnega videza"
+
+#: ../desktop/gpe-conf-time.desktop.in.h:1
+msgid "Date/Time Setup"
+msgstr "Datum/Čas Nastavitve"
+
+#: ../desktop/gpe-conf-time.desktop.in.h:2
+msgid "Setup Date and Time"
+msgstr "Nastavitve datuma in časa"
+
+#: ../desktop/gpe-conf-usb.desktop.in.h:1
+msgid "Change USB settings"
+msgstr "Spremeni USB nastavitve"
+
+#: ../desktop/gpe-conf-usb.desktop.in.h:2
+msgid "USB Settings"
+msgstr "USB nastavitve"
+
+#: ../desktop/gpe-conf-users.desktop.in.h:1
+msgid "Manage local users"
+msgstr "Upravljanje z uporabniki"
+
+#: ../desktop/gpe-conf-users.desktop.in.h:2
+msgid "User Manager"
+msgstr "Upravljalec uporabnikov"
+
+#~ msgid "Power safe Configuration"
+#~ msgstr "Nastavitve varnega napajanja"
+
+#~ msgid "Aborted"
+#~ msgstr "Prekinjeno"
+
+#~ msgid "Daylight Saving"
+#~ msgstr "Poletni čas"
+
+#~ msgid "Use daylight saving time"
+#~ msgstr "Uporabi zamik poletnega časa"
+
+#~ msgid "Check this box if you want your device to handle daylight saving time for you."
+#~ msgstr "Odkljukaj, če želite da naprava namesto vas ureja nastavitve poletnega časa."
+
+#~ msgid "Offset:"
+#~ msgstr "Odmik:"
+
+#~ msgid "Default"
+#~ msgstr "Privzeto"
+
+#~ msgid "Use default DST offset of one hour?"
+#~ msgstr "Naj uporabim privzeti DST odmik ene ure?"
+
+#~ msgid "Hours"
+#~ msgstr "Ure"
+
+#~ msgid "Select daylight saving time offset hours here."
+#~ msgstr "Določite zamik ur za poletni čas."
+
+#~ msgid "Minutes"
+#~ msgstr "Minute"
+
+#~ msgid "Select daylight saving time offset minutes here."
+#~ msgstr "Določite zamik minut za poletni čas."
+
+#~ msgid "Add Interface"
+#~ msgstr "Dodaj vmesnik"
+
+#~ msgid "Remove Interface"
+#~ msgstr "Odstrani vmesnik"
+
+#~ msgid "Information"
+#~ msgstr "Informacije"
+
+#~ msgid "Red"
+#~ msgstr "Rdeča"
+
+#~ msgid "Green"
+#~ msgstr "Zelena"
+
+#~ msgid "Blue"
+#~ msgstr "Modra"
+
+#~ msgid "Select colour"
+#~ msgstr "Izberi barvo"
+
+#~ msgid "Both H"
+#~ msgstr "Oboje H"
+
+#~ msgid "Both (icon above text)"
+#~ msgstr "Oboje (ikona nad besedilom)"
+
+#~ msgid "Both (icon left of text)"
+#~ msgstr "Oboje (ikona levo od besedila)"
+
+#~ msgid "Add user"
+#~ msgstr "Dodaj uporabnika"
+
+#~ msgid "Add a new user"
+#~ msgstr "Dodaj novega uporabnika"
+
+#~ msgid "Edit existing user"
+#~ msgstr "Uredi obstoječega uporabnika"
+
+#~ msgid "Delete existing user"
+#~ msgstr "Zbriši obstoječega uporabnika"
+
+#~ msgid "Change password"
+#~ msgstr "Zamenjaj geslo"
+
+#~ msgid "Card Services release does not match!"
+#~ msgstr "Prenosi storitev kartice niso usklajeni!"
+
+#~ msgid "Could not get CS revision info!\n"
+#~ msgstr "Nisem uspel dobiti informacij o CS reviziji!\n"
+
+#~ msgid "ARM"
+#~ msgstr "ARM"
+
+#~ msgid "Intel x86 or compatible"
+#~ msgstr "Intel x86 ali kompatibilen"
+
+#~ msgid "IBM type PC"
+#~ msgstr "IBM tip PC"
+
+#~ msgid "Mips"
+#~ msgstr "Mips"
+
+#~ msgid "Silicon Graphics Machine"
+#~ msgstr "Silicon Graphics naprava"
+
+#~ msgid "IBM Power or PowerPC"
+#~ msgstr "IBM Power ali PowerPC"
+
+#~ msgid "CPU:"
+#~ msgstr "CPE:"
