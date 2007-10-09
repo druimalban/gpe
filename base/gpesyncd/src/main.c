@@ -454,6 +454,10 @@ do_command (gpesyncd_context * ctx, gchar * command)
 
     }
 
+  else if (!strncasecmp (cmd, "VERSION", 7))
+    {
+      g_string_append_printf (ctx->result, "OK:%d:%d:%d\n", PROTOCOL_MAJOR, PROTOCOL_MINOR, PROTOCOL_EDIT);
+    }
   else if (!strncasecmp (cmd, "HELP", 4))
     {
       g_string_append (ctx->result, "GET (VCARD|VEVENT|VTODO) UID\n");
@@ -461,6 +465,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
       g_string_append (ctx->result, "MODIFY (VCARD|VEVENT|VTODO) UID DATA\n");
       g_string_append (ctx->result, "DEL (VCARD|VEVENT|VTODO) UID\n");
       g_string_append (ctx->result, "UIDLIST (VCARD|VEVENT|VTODO)\n");
+      g_string_append (ctx->result, "VERSION\n");
       g_string_append (ctx->result, "QUIT\n");
     }
   else if (!strncasecmp (cmd, "QUIT", 4))

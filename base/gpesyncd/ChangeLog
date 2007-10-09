@@ -1,3 +1,7 @@
+2007-10-09  Graham Cobb  <g+770@cobb.uk.net>
+
+	* src/main.c (do_command), src/gpesyncd.h: Add VERSION command
+
 2007-09-07  Graham Cobb  <g+770@cobb.uk.net>
 
 	* src/export.c (get_event): fix workround for

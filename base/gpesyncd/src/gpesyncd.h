@@ -1,5 +1,6 @@
 /*
  *  Copyright (C) 2005 Martin Felis <martin@silef.de>
+ *  Copyright (C) 2007 Graham Cobb <g+gpe@cobb.uk.net>
  *  
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -39,6 +40,28 @@
 #include <gpe/event-db.h>
 #include <gpe/todo-db.h>
 #include <gpe/pim-categories.h>
+
+/*
+ * Protocol version number
+ *
+ * Major number: increment this if the other end cannot even parse
+ * the protocol correctly any more
+ *
+ * Minor number: increment this if a new command is added but existing
+ * protocol does not change
+ *
+ * Edit number: increment this if it is useful for a human trying to
+ * debug a problem at the other end to know the version of gpesyncd
+ * (for example a major bug has been fixed).  I suggest this is incremented
+ * for ever (never reset back to 0).
+ *
+ * Note: the implied version number if the VERSION command is not implemented
+ * is 1.0.0.
+ *
+ */
+#define PROTOCOL_MAJOR 1
+#define PROTOCOL_MINOR 1
+#define PROTOCOL_EDIT 1
 
 #define BUFFER_LEN 25 
 
