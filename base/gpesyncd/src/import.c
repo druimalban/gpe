@@ -158,11 +158,8 @@ add_event (gpesyncd_context * ctx, guint *uid, gchar * data,
     g_object_unref(ev);
   }
 
-  EventCalendar *ec = event_db_get_default_calendar(ctx->event_db, NULL, NULL);
+  int res = event_import_from_vevent (ctx->import_calendar, vevent, &ev, error);
 
-  int res = event_import_from_vevent (ec, vevent, &ev, error);
-
-  g_object_unref(ec);
   g_object_unref (vevent);
   g_slist_free (events);
   g_object_unref (vcal);

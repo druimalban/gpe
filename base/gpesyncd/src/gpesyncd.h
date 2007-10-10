@@ -44,24 +44,34 @@
 /*
  * Protocol version number
  *
- * Major number: increment this if the other end cannot even parse
- * the protocol correctly any more
+ * Major number: increment this if backward compatibility is broken.
+ * This should never happen!  The other end should check this for
+ * equality and disconnect if the expected value is not returned. 
  *
- * Minor number: increment this if a new command is added but existing
- * protocol does not change
+ * Minor number: increment this if a new command/feature is added in 
+ * a backwards compatible way.  The other end may expect a minimum 
+ * version but should not fail if the version is higher than expected.
  *
  * Edit number: increment this if it is useful for a human trying to
  * debug a problem at the other end to know the version of gpesyncd
- * (for example a major bug has been fixed).  I suggest this is incremented
- * for ever (never reset back to 0).
+ * (for example a major bug has been fixed).  This is intended for
+ * information only and the other end should normally ignore it.
+ * This should be incremented for ever (never reset back to 0).
+ * NOTE: this means the value will rapidly exceed a single byte -- use an int!
  *
- * Note: the implied version number if the VERSION command is not implemented
- * is 1.0.0.
+ * Version history
+ * ---------------
+ *
+ * 1.0.0    Original version.  Implied version if VERSION command not implemented.
+ *
+ * 1.1.1    VERSION command added.
+ *
+ * 1.2.2    PATH VEVENT command added.
  *
  */
 #define PROTOCOL_MAJOR 1
-#define PROTOCOL_MINOR 1
-#define PROTOCOL_EDIT 1
+#define PROTOCOL_MINOR 2
+#define PROTOCOL_EDIT 2
 
 #define BUFFER_LEN 25 
 
@@ -83,6 +93,7 @@ typedef struct
 
   EventDB *event_db;
   GSList *event_calendars;
+  EventCalendar *import_calendar;
 
   GString *result;
 

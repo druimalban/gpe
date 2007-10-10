@@ -30,6 +30,57 @@ extern void free_object_list(GSList *list) {
 
 }
 
+/* Set up calendars
+ *
+ * If a calendar is specified it is set up as the single calendar
+ * for both import and export.
+ * If the calendar cannot be found no changes are made.
+ *
+ * If the calendar is NULL, all calendars are set up for export and
+ * the default calendar is used for import.
+ *
+ */
+gboolean setup_calendars (gpesyncd_context * ctx, char *calendar)
+{
+
+  if (calendar) {
+
+    /* Check to see if the calendar exists */
+    EventCalendar *ec = event_db_find_calendar_by_name(ctx->event_db, calendar, NULL);
+    if (!ec) return FALSE;
+
+    /* Free existing calendar pointers */
+    free_object_list(ctx->event_calendars);
+    ctx->event_calendars = NULL;
+    if (ctx->import_calendar) g_object_unref(ctx->import_calendar);
+    ctx->import_calendar = NULL;
+
+    // Use the calendar we have got as the import calendar
+    ctx->import_calendar = ec;
+
+    // Add another reference to the calendar we have already got...
+    g_object_ref(ec);
+    // ...and put it in a single entry list for the export calendars
+    ctx->event_calendars = g_slist_append(ctx->event_calendars, ec);
+
+  } else {
+
+    /* Free existing calendar pointers */
+    free_object_list(ctx->event_calendars);
+    ctx->event_calendars = NULL;
+    if (ctx->import_calendar) g_object_unref(ctx->import_calendar);
+    ctx->import_calendar = NULL;
+
+    /* Use all calendars for export */
+    ctx->event_calendars = event_db_list_event_calendars (ctx->event_db, NULL);
+
+    /* Use default calendar for import */
+    ctx->import_calendar = event_db_get_default_calendar(ctx->event_db, NULL, NULL);
+  }
+
+  return TRUE;
+}
+
 /*! \brief Initializes the databases
  *
  * \param ctx	The current context
@@ -56,8 +107,8 @@ gpesyncd_setup_databases (gpesyncd_context * ctx)
     fprintf(stderr, "Could not open calendar database.\n");
   }
 
-  /* Get the calendars */
-  ctx->event_calendars = event_db_list_event_calendars (ctx->event_db, NULL);
+  /* Setup default calendars */
+  setup_calendars(ctx, NULL);
 
   if (todo_db_start()) {
     fprintf(stderr, "Could not open todo database.\n");
@@ -135,6 +186,7 @@ gpesyncd_context_new (char *err)
   ctx->ofp = NULL;
   ctx->socket = 0;
   ctx->event_calendars = NULL;
+  ctx->import_calendar = NULL;
 
   ctx->result = g_string_new ("");
 
@@ -154,6 +206,8 @@ gpesyncd_context_free (gpesyncd_context * ctx)
       /* Events DB */
       free_object_list(ctx->event_calendars);
       ctx->event_calendars = NULL;
+      if (ctx->import_calendar) g_object_unref(ctx->import_calendar);
+      ctx->import_calendar = NULL;
       g_object_unref(ctx->event_db);
       ctx->event_db = 0;
 
@@ -454,6 +508,21 @@ do_command (gpesyncd_context * ctx, gchar * command)
 
     }
 
+  else if ((!strcasecmp (cmd, "PATH")) && (type != GPE_DB_TYPE_UNKNOWN))
+    {
+      switch (type)
+	{
+	case GPE_DB_TYPE_VEVENT:
+	  // data contains a <LF> at the end which needs to be removed
+	  if (data) g_strchomp(data);
+	  cmd_result = setup_calendars(ctx, data);
+	  if (!cmd_result) g_string_printf (ctx->result, "Error: calendar %s not found\n", data);
+	  break;
+	default:
+	  g_string_append (ctx->result, "Error: wrong type\n");
+	}
+    }
+
   else if (!strncasecmp (cmd, "VERSION", 7))
     {
       g_string_append_printf (ctx->result, "OK:%d:%d:%d\n", PROTOCOL_MAJOR, PROTOCOL_MINOR, PROTOCOL_EDIT);
@@ -465,6 +534,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
       g_string_append (ctx->result, "MODIFY (VCARD|VEVENT|VTODO) UID DATA\n");
       g_string_append (ctx->result, "DEL (VCARD|VEVENT|VTODO) UID\n");
       g_string_append (ctx->result, "UIDLIST (VCARD|VEVENT|VTODO)\n");
+      g_string_append (ctx->result, "PATH VEVENT NAME\n");
       g_string_append (ctx->result, "VERSION\n");
       g_string_append (ctx->result, "QUIT\n");
     }

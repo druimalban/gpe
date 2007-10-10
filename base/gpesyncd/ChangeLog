@@ -1,3 +1,14 @@
+2007-10-10  Graham Cobb  <g+770@cobb.uk.net>
+
+	* src/import.c (add_event): Use specified calendar for import
+
+	* src/gpesyncd.h: Increment protocol version, add import calendar
+	pointer
+
+	* src/main.c (do_command): Add PATH VEVENT command
+	* src/main.c (setup_calendars): Add concept of import calendar
+	and settable export calendar list
+
 2007-10-09  Graham Cobb  <g+770@cobb.uk.net>
 
 	* src/main.c (do_command), src/gpesyncd.h: Add VERSION command
