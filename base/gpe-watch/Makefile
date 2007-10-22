@@ -3,7 +3,7 @@ PACKAGE = gpe-watch
 DEBUG = no
 CVSBUILD = yes
 GST = yes
-VERSION = 0.10
+VERSION = 0.11
 
 MEMBERS = gpe-watch
 
