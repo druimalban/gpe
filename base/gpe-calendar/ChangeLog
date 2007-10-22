@@ -1,3 +1,9 @@
+2007-10-22  Graham Cobb  <g+770@cobb.uk.net>
+
+	* event-ui.c (build_recurrence_page): Use newly created hildon_number_editor 
+	object in call to hildon_number_editor_set_value.  
+	Fixes GLIB critical error: default - hildon_number_editor_set_value: assertion `HILDON_IS_NUMBER_EDITOR(editor)' failed
+
 2007-08-01  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release version 0.91

@@ -1015,7 +1015,7 @@ build_recurrence_page (struct edit_state *s)
 #ifdef IS_HILDON
   GtkWidget *spin = hildon_number_editor_new (1, 1000);
   if (s->ev)
-    hildon_number_editor_set_value (HILDON_NUMBER_EDITOR (s->increment_unit),
+    hildon_number_editor_set_value (HILDON_NUMBER_EDITOR (spin),
 			       event_get_recurrence_increment (s->ev));
 #else
   GtkWidget *spin = gtk_spin_button_new_with_range (1, 1000, 1);
