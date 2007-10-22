@@ -461,15 +461,15 @@ buzzer (gpointer data)
       i = next;
       next = i->next;
 
-      EventSource *ev = EVENT_SOURCE (i->data);
+      EventSource *ev = RESOLVE_CLONE (EVENT (i->data));
 
       /* Has this event gone off?  */
-      time_t start = event_get_start (EVENT (ev));
+      time_t start = event_get_start (EVENT (i->data));
       int alarm = event_get_alarm (EVENT (ev));
       if (start - alarm <= now)
 	{
 	  /* Mark it as unacknowledged.  */
-	  EVENT_DB_GET_CLASS (ev->edb)->event_mark_unacknowledged (i->data,
+	  EVENT_DB_GET_CLASS (ev->edb)->event_mark_unacknowledged (ev,
 								   NULL);
 
 	  /* And signal the user a signal.  */
@@ -488,10 +488,11 @@ buzzer (gpointer data)
 			  EVENT_DB_GET_CLASS (edb)->alarm_fired_signal,
 			  0, &rv);
 
-	  /* Remove from the upcoming alarms list.  */
+	  /* Drop our reference.  */
+	  g_object_unref (i->data);
+
+	  /* And remove from the upcoming alarms list.  */
 	  edb->upcoming_alarms = g_slist_delete_link (edb->upcoming_alarms, i);
-	  /* And drop our reference.  */
-	  g_object_unref (ev);
 	}
       else
 	/* No, in which case will this be the next alarm to go

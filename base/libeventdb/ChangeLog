@@ -1,3 +1,8 @@
+2007-10-22  Graham Cobb  <g+770@cobb.uk.net>
+
+	* event-db.c (buzzer): Resolve clone to handle alarms for recurring events correctly.
+	Unref event before deallocating pointer to it.
+
 2007-09-07  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event.c (event_source_finalize): Unfortunately, 
