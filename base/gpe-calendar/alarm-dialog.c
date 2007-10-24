@@ -169,6 +169,7 @@ ack_all_events_clicked (GtkWidget *button, gpointer d)
   for (i = alarm_dialog->events; i; i = g_list_next (i))
     ack_event_clicked (button, i->data);
   g_list_free (alarm_dialog->events);
+  alarm_dialog->events = NULL;
 
   /* Hide the dialog as well.  */
   gtk_widget_hide (GTK_WIDGET (alarm_dialog));
@@ -363,7 +364,11 @@ event_get_layout (Event *ev, GtkWidget *widget, int width)
       /* Kill any trailing new lines.  */
       for (p = s + strlen (s) - 1; p > s && *p == '\n'; p --)
 	*p = '\0';
-      return s;
+
+      /* Escape <, >, &, etc */
+      p = g_markup_escape_text(s, -1);
+      g_free(s);
+      return p;
     }
       
   char *summary = str (event_get_summary (ev, NULL));

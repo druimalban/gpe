@@ -1,3 +1,13 @@
+2007-10-24  Graham Cobb  <g+770@cobb.uk.net>
+
+	* alarm-dialog.c (event_get_layout): escape characters from summary, etc in alarm dialog window
+	Fixes: GLIB WARNING ** Pango - pango-layout.c:910: Error on line 2: Character ' ' is not valid at the start of an entity name; the & character begins an entity; if this ampersand isn't supposed to be an entity, escape it as &amp;
+	This Pango error then causes the alarm display to show the event as blank (no summary, etc.)
+	
+	(ack_all_events_clicked): zero alarm dialog event pointer after deallocating list.
+	I am not certain this is necessary but it doesn't do any harm and it may be the cause of a SEGV fault
+	I have seen deallocating this list.
+
 2007-10-22  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event-ui.c (build_recurrence_page): Use newly created hildon_number_editor 
