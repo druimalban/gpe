@@ -291,3 +291,12 @@ Model =
 Type = smartphone
 Manufacturer = FIC
 Features = 0x08
+
+[BD Neon]                            
+ID = 33                                                          
+Pattern = Boundary Devices Neon board
+Name = Neon                          
+Model =                        
+Type = neon                    
+Manufacturer = Boundary Devices
+Features = 0x04
