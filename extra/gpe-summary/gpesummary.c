@@ -375,6 +375,7 @@ void prepare_birthdays() {
 			}
 			
 		}
+		 while (gtk_events_pending()) { gtk_main_iteration(); }
 	}
 	g_slist_free(iter);
 }
@@ -477,6 +478,8 @@ gint add_events(GtkWidget *vbox,EventDB *event_db, time_t start, time_t stop, gc
 			memset (&buf, 0, sizeof (buf)); //Allday event!
 			if (doshow_extended==FALSE) {
 		  	  showtitle=FALSE;
+			  memset (&tm, 0, sizeof (tm));
+		 	  tm=*localtime(&start);
 		  	  strftime (buf, sizeof (buf), "%a", &tm); //%d.%m 
 			}
 			if ((event_get_start(ev)-start)>0) ignoreEvent=TRUE;
@@ -690,11 +693,6 @@ void show_all() {
 	gtk_box_pack_start(GTK_BOX(hbox), event_box, FALSE, FALSE, 0);	
 	
 	g_warning ("show_all 5");	
-	//Begin rss abschreiben
-/*   	GtkWidget *rss_image = g_object_new (
-  
-*/	
-	//Ende abschreiben
 	
 	vbox_events = gtk_vbox_new (FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(mainvbox),vbox_events,TRUE,TRUE,0);
@@ -752,6 +750,8 @@ void show_all() {
 
 
 gint update_clock(gpointer data) {
+	if (mainwidget==NULL) { return FALSE;}  //already destroyed itself?
+
 	time_t start = time (NULL);
 	//if ((lastTimeUpdate+3)>start) return TRUE;
 	//lastTimeUpdate=start;
@@ -1088,14 +1088,20 @@ void *
 void
 		hildon_home_applet_lib_deinitialize (void *applet_data)
 {
+	g_warning("hildon_home_applet_lib_deinitialize 1");
 	if (osso)
 		osso_deinitialize (osso);
+	g_warning("hildon_home_applet_lib_deinitialize 2");
 	g_slist_free(birthdaylist);
 	birthdaylist=NULL;
+	g_warning("hildon_home_applet_lib_deinitialize 3");
 	if (prefsvbox) gtk_widget_destroy(prefsvbox);
+	g_warning("hildon_home_applet_lib_deinitialize 4");
 	if (mainwidget) gtk_widget_destroy(mainwidget);
+	g_warning("hildon_home_applet_lib_deinitialize 5");
         //if (mainwidget) g_free(mainwidget);
 	mainwidget=NULL;
+	g_warning("hildon_home_applet_lib_deinitialize 6");
 	/*if (app) {
 		g_free (app);
 		app = NULL;
