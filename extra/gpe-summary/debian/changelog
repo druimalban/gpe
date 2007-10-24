@@ -1,3 +1,11 @@
+gpesummary (0.7.1) unstable; urgency=low
+
+  * hopefully fix install bug on some systems see bug [#1061]
+  * hopefully fix bug when there are many contacts  [#1542]
+  * fix minor bug in the not extended view when there are all day events over some days
+
+ -- Christoph Würstle <N800@axique.de>  Tue, 20 Oct 2007 17:18:56 +0100
+
 gpesummary (0.7.0) unstable; urgency=low
 
   * code restructuring
