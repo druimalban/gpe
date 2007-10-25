@@ -1,3 +1,7 @@
+2007-10-25  Graham Cobb  <g+770@cobb.uk.net>
+
+	* event-db.c (buzzer): Simplify previous fix avoiding explicit handling of event source
+
 2007-10-22  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event-db.c (buzzer): Resolve clone to handle alarms for recurring events correctly.
