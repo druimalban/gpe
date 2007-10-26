@@ -4,16 +4,16 @@ SUBDIRS = po
 ENABLE_HILDON = @ENABLE_HILDON@
 
 if HILDON
-DEPS_CFLAGS += -DUSE_HILDON
+HILDON_CFLAGS += -DUSE_HILDON
 endif
 
-INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
+INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
            -DPACKAGE_LOCALE_DIR=\"@gpefilemanager_localedir@\"
 
 bin_PROGRAMS = gpe-filemanager
 
-gpe_filemanager_LDADD = @DEPS_LIBS@
+gpe_filemanager_LDADD = @DEPS_LIBS@ @HILDON_LIBS@
 
 gpe_filemanager_SOURCES = main.c bluetooth.c guitools.c fileops.c \
                           main.h bluetooth.h guitools.h fileops.h
