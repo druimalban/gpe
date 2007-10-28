@@ -1,3 +1,7 @@
+2007-10-28  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac: Fix typo in previous change; HILDON_VAR->HILDON_VER
+
 2007-10-26  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac, Makefile.am, main.c: build and compile
