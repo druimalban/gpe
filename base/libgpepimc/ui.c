@@ -27,8 +27,13 @@
 #include "internal.h"
 
 #ifdef IS_HILDON
+#if HILDON_VER == 1
+#include <hildon/hildon-caption.h>
+#include <hildon/hildon-color-button.h>
+#else
 #include <hildon-widgets/hildon-caption.h>
 #include <hildon-widgets/hildon-color-button.h>
+#endif
 #endif
 
 enum 
@@ -74,7 +79,11 @@ color_changed (HildonColorButton *color_button, GParamSpec *spec, gpointer data)
   GdkColor *color;
   gchar color_str[8];
 
+#if HILDON_VER == 1
+  hildon_color_button_get_color (color_button, &color);
+#else
   color = hildon_color_button_get_color (color_button);
+#endif
   g_snprintf (color_str, 8, "#%02x%02x%02x", color->red / 257, color->green  / 257, color->blue / 257);
   gdk_color_free (color);
 

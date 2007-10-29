@@ -34,7 +34,12 @@ AC_ARG_ENABLE(hildon,
 [  --enable-hildon         Enable Hildon GUI],
 [
         ENABLE_HILDON=true
-        DEP_MODULES="$DEP_MODULES hildon-lgpl hildon-libs"
+        PKG_CHECK_MODULES(HILDON, hildon-1,
+                AC_DEFINE(HILDON_VER, 1, [Version of hildon libraries]),
+                [
+                        AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
+                        PKG_CHECK_MODULES(HILDON, hildon-libs)
+                ])
 ],
 [
          ENABLE_HILDON=false

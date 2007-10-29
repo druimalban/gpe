@@ -5,9 +5,9 @@ if HILDON
 PIMC_CFLAGS += -DIS_HILDON
 endif
 
-INCLUDES = $(PIMC_CFLAGS) -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"
+INCLUDES = $(PIMC_CFLAGS) $(HILDON_CFLAGS) -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"
 
-libgpepimc_la_LIBADD = @PIMC_LIBS@
+libgpepimc_la_LIBADD = @PIMC_LIBS@ @HILDON_LIBS@
 libgpepimc_la_LDFLAGS = -version-info 0:0:0
 
 libgpepimc_la_SOURCES = ui.c db.c gpe/pim-categories.h gpe/pim-categories-ui.h \
@@ -38,7 +38,7 @@ DISTCLEANFILES = intltool-extract intltool-merge intltool-update
 
 doc:
 	make -C doc
-	
+
 include gpe-dist.am
 
 .PHONY: doc
