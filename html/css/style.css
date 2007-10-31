@@ -50,7 +50,9 @@ h3 {
 	-moz-border-radius: 10px 10px 10px 10px;
 	padding-top: 2px;
 	padding-left: 2px;
+	padding-bottom: 2px;
 }
+
 
 p {
 	margin-left:	10px;
@@ -82,13 +84,16 @@ img {
 }
 
 a { 
-	color: #000000; 
-	text-decoration: underline; 
+	color: #0000FF;
+	text-decoration: none; 
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 a:visited { 
 	color: #6600FF;
-	text-decoration:underline; 
 }
 
 hr {
