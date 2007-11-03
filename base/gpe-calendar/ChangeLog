@@ -1,3 +1,8 @@
+2007-11-02  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac, Makefile.am: build and compile
+	changes for new hildon libraries in chinook
+
 2007-10-24  Graham Cobb  <g+770@cobb.uk.net>
 
 	* alarm-dialog.c (event_get_layout): escape characters from summary, etc in alarm dialog window

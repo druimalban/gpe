@@ -5,7 +5,7 @@ if HILDON
 DEPS_CFLAGS += -DIS_HILDON
 endif
 
-INCLUDES = $(DEPS_CFLAGS) $(SERVERDEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
+INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS) $(SERVERDEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE -Wall \
            -DPACKAGE_LOCALE_DIR=\"@gpecalendar_localedir@\" \
            -DDBUS_API_SUBJECT_TO_CHANGE
@@ -22,7 +22,7 @@ libwidgets_la_SOURCES = \
 
 bin_PROGRAMS = gpe-calendar
 
-gpe_calendar_LDADD = $(DEPS_LIBS) libwidgets.la
+gpe_calendar_LDADD = $(DEPS_LIBS) $(HILDON_LIBS) libwidgets.la
 
 gpe_calendar_SOURCES = main.c						\
 		       globals.h util.h					\
