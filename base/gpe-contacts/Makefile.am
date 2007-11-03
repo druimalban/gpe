@@ -5,7 +5,7 @@ if HILDON
 DEPS_CFLAGS += -DIS_HILDON
 endif
 
-INCLUDES = $(DEPS_CFLAGS) $(SERVERDEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
+INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS) $(SERVERDEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE -Wall \
            -DPACKAGE_LOCALE_DIR=\"@gpecontacts_localedir@\" \
            -DDBUS_API_SUBJECT_TO_CHANGE
@@ -15,7 +15,7 @@ INCLUDES = $(DEPS_CFLAGS) $(SERVERDEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdi
 
 bin_PROGRAMS = gpe-contacts
 
-gpe_contacts_LDADD = $(DEPS_LIBS)
+gpe_contacts_LDADD = $(DEPS_LIBS) $(HILDON_LIBS) 
 
 gpe_contacts_SOURCES = main.h configure.c \
                        editing.c export.c export.h \
@@ -117,6 +117,6 @@ deb: dist
 	cp -r $(top_builddir)/debian $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION)
 	cd $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION) && dpkg-buildpackage -rfakeroot
 	-rm -rf $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION)
-	
+
 include gpe-dist.am
 include gpe-tp.am
