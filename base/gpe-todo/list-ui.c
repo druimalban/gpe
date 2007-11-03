@@ -27,7 +27,12 @@
 /* Hildon includes */
 #ifdef IS_HILDON
 
+#if HILDON_VER == 1
+#include <hildon/hildon-program.h>
+#else
 #include <hildon-widgets/hildon-program.h>
+#endif
+
 #include <gpe/pim-categories-ui.h>
 
 #define ICON_PATH "/usr/share/icons/hicolor/26x26/hildon"

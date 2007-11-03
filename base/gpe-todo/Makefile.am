@@ -7,13 +7,13 @@ if HILDON
 DEPS_CFLAGS += -DIS_HILDON
 endif
 
-INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
+INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
            -DPACKAGE_LOCALE_DIR=\"@gpetodo_localedir@\"
 
 bin_PROGRAMS = gpe-todo
 
-gpe_todo_LDADD = @DEPS_LIBS@
+gpe_todo_LDADD = @DEPS_LIBS@ @HILDON_LIBS@
 
 gpe_todo_SOURCES = list-ui.c main.c todo-ui.c todo.h
 
@@ -84,6 +84,6 @@ deb: dist
 	cp -r $(top_builddir)/debian $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION)
 	cd $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION) && dpkg-buildpackage -rfakeroot
 	-rm -rf $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION)
-	
+
 include gpe-dist.am
 include gpe-tp.am

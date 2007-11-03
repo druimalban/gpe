@@ -16,8 +16,14 @@
 
 /* Hildon includes */
 #ifdef IS_HILDON
+#if HILDON_VER == 1
+#include <hildon/hildon-program.h>
+#include <hildon/hildon-window.h>
+#else
 #include <hildon-widgets/hildon-program.h>
 #include <hildon-widgets/hildon-window.h>
+#endif
+
 #include <libosso.h>
 
 #define OSSO_SERVICE_NAME "gpe_todo"
