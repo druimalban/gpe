@@ -55,9 +55,10 @@ service_in_files = hildon/com.nokia.gpe-calendar.service.in
 
 hildonhomelibdir = /usr/lib/hildon-home
 
-hildonhomelib_LTLIBRARIES = libgpe-calendar-applet.la
-libgpe_calendar_applet_la_SOURCES = hildon-applet.c inotify-syscalls.h
-libgpe_calendar_applet_la_LIBADD = $(DEPS_LIBS) libwidgets.la
+#fixme
+#hildonhomelib_LTLIBRARIES = libgpe-calendar-applet.la
+#libgpe_calendar_applet_la_SOURCES = hildon-applet.c inotify-syscalls.h
+#libgpe_calendar_applet_la_LIBADD = $(DEPS_LIBS) libwidgets.la
 
 hildonhomedir = $(datadir)/applications/hildon-home
 hildonhome_in_files = hildon/gpe-calendar-home.desktop.in
