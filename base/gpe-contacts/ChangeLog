@@ -1,5 +1,7 @@
 2007-11-04  Graham Cobb  <g+770@cobb.uk.net>
 
+	* main-hildon.c: Include config.h
+
 	* editing.c: New include files for chinook
 
 2007-11-03  Graham Cobb  <g+770@cobb.uk.net>
