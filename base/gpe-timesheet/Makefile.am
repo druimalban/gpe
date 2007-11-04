@@ -4,13 +4,13 @@ if HILDON
 CFLAGS += -DIS_HILDON
 endif
 
-INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
+INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
            -DPACKAGE_LOCALE_DIR=\"@gpetimesheet_localedir@\"
 
 bin_PROGRAMS = gpe-timesheet
 
-gpe_timesheet_LDADD = @DEPS_LIBS@ -lsqlite
+gpe_timesheet_LDADD = @DEPS_LIBS@ @HILDON_LIBS@ -lsqlite
 
 gpe_timesheet_SOURCES = journal.c journal.h main.c main.h sql.c sql.h ui.c ui.h
 
@@ -81,6 +81,6 @@ deb: dist
 	cd $(top_builddir)/debian-build && tar xzf $(top_builddir)/../$(PACKAGE)-$(VERSION).tar.gz
 	cd $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION) && dpkg-buildpackage -rfakeroot
 	-rm -rf $(top_builddir)/debian-build/$(PACKAGE)-$(VERSION)
-	
+
 include gpe-dist.am
 include gpe-tp.am
