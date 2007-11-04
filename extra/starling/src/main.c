@@ -30,9 +30,15 @@
 
 #ifdef IS_HILDON
 /* Hildon includes */
+#if HILDON_VER == 1
+//#include <hildon/hildon-app.h>
+//#include <hildon/hildon-appview.h>
+#include <hildon/hildon-file-chooser-dialog.h>
+#else
 #include <hildon-widgets/hildon-app.h>
 #include <hildon-widgets/hildon-appview.h>
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
+
 #include <libosso.h>
 #define APPLICATION_DBUS_SERVICE "starling"
 #endif

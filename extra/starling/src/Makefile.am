@@ -1,6 +1,6 @@
 bin_PROGRAMS = starling
 
-starling_LDADD = $(DEPS_LIBS)
+starling_LDADD = $(DEPS_LIBS) $(HILDON_LIBS) 
 starling_SOURCES = main.c \
 		utils.c playlist.c config.c \
 		lyrics.c lastfm.c md5.c errorbox.c \
@@ -8,7 +8,7 @@ starling_SOURCES = main.c \
 		utils.h playlist.h config.h \
 		lyrics.h lastfm.h md5.h errorbox.h
 
-INCLUDES = $(DEPS_CFLAGS)
+INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS)
 
 nodist_starling_SOURCES = marshal.c
 
