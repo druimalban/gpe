@@ -30,10 +30,17 @@
 
 #ifdef IS_HILDON
 #include "pimc-ui.h"
+#if HILDON_VER == 1
+#include <hildon/hildon-file-chooser-dialog.h>
+#include <hildon/hildon-caption.h>
+#include <hildon/hildon-date-editor.h>
+//#include <hildon/hildon-input-mode-hint.h>
+#else
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #include <hildon-widgets/hildon-caption.h>
 #include <hildon-widgets/hildon-date-editor.h>
 #include <hildon-widgets/hildon-input-mode-hint.h>
+#endif /* HILDON_VER */
 #endif
 
 void on_edit_cancel_clicked (GtkButton * button, gpointer user_data);
