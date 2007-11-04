@@ -34,10 +34,20 @@
 #include "calendar-edit-dialog.h"
 
 #ifdef IS_HILDON
+
+#if HILDON_VER == 1
+#include <hildon/hildon-caption.h>
+#include <hildon/hildon-number-editor.h>
+#include <hildon/hildon-time-editor.h>
+#include <hildon/hildon-date-editor.h>
+#include <hildon/hildon-note.h>
+//#include <hildon/hildon-input-mode-hint.h>
+#else
 #include <hildon-widgets/hildon-number-editor.h>
 #include <hildon-widgets/hildon-time-editor.h>
 #include <hildon-widgets/hildon-date-editor.h>
 #include <hildon-widgets/hildon-note.h>
+#endif /* HILDON_VER */
 #endif
 
 struct edit_state
