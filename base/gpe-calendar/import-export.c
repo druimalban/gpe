@@ -24,7 +24,14 @@
 #include <mimedir/mimedir-vcal.h>
 
 #ifdef IS_HILDON
+
+
+#if HILDON_VER == 1
+#include <hildon/hildon-file-chooser-dialog.h>
+#else
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
+#endif /* HILDON_VER */
+
 #endif
 
 #include "import-export.h"
