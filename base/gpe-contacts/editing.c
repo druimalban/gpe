@@ -129,7 +129,12 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
               || strstr(e->tag,".EMAIL")
               || strstr (e->tag, ".WWW"))
             {
-              g_object_set (G_OBJECT (w), HILDON_AUTOCAP, FALSE, NULL);
+#if HILDON_VER == 1
+  //FixMe g_object_set (G_OBJECT (w), HILDON_AUTOCAP, FALSE, NULL);
+#else
+  g_object_set (G_OBJECT (w), HILDON_AUTOCAP, FALSE, NULL);
+#endif
+              
             }
 
           l = hildon_caption_new (size_group, e->name, w, NULL, HILDON_CAPTION_OPTIONAL);
