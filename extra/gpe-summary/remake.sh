@@ -7,4 +7,4 @@ af-sb-init.sh stop
 #./autogen.sh --force
 dpkg-buildpackage -rfakeroot 
 #dpkg -i ../
-dpkg -i ../gpesummary_0.7.0_armel.deb
+dpkg -i ../gpesummary_0.7.1_armel.deb

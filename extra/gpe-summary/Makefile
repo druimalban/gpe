@@ -39,6 +39,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 host_triplet = arm-unknown-linux-gnu
 ACLOCAL = ${SHELL} /home/chris/gpesummary-0.7/missing --run aclocal-1.7
+ALL_LINGUAS = en_GB de_DE en de fi_FI fi
 AMDEP_FALSE = #
 AMDEP_TRUE = 
 AMTAR = ${SHELL} /home/chris/gpesummary-0.7/missing --run tar
@@ -62,23 +63,31 @@ CYGPATH_W = echo
 DATADIRNAME = share
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
+DEPS_CFLAGS = -pthread -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/gnome-vfs-2.0 -I/usr/lib/gnome-vfs-2.0/include -I/usr/include/gconf/2 -I/usr/include/gnome-vfs-module-2.0  
+DEPS_LIBS = -pthread -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lpango-1.0 -lcairo -lgnomevfs-2 -lgconf-2 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -losso -ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lglib-2.0  
 ECHO = echo
 ECHO_C = 
 ECHO_N = -n
 ECHO_T = 
 EGREP = grep -E
+ENABLE_HILDON = 
 EVENTDB_CFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
 EVENTDB_LIBS = -leventdb -lglib-2.0  
 EXEEXT = 
 F77 = 
 FFLAGS = 
 GCONF_CFLAGS = -I/usr/include/gconf/2 -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
-GCONF_LIBS = -lgconf-2 -ldbus-glib-1 -ldbus-1 -lglib-2.0  
+GCONF_LIBS = -lgconf-2 -ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lglib-2.0  
 GETTEXT_PACKAGE = gpesummary
 GMOFILES =  en_GB.gmo de_DE.gmo en.gmo de.gmo fi_FI.gmo fi.gmo
 GMSGFMT = /scratchbox/tools/bin/msgfmt
-GTK_CFLAGS = -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
-GTK_LIBS = -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0  
+GTK_CFLAGS = -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/freetype2 -I/usr/include/libpng12  
+GTK_LIBS = -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lpango-1.0 -lcairo -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0  
+HILDON = 
+HILDON_CFLAGS = -DMAEMO_CHANGES -pthread -I/usr/include/hildon-1 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/gnome-vfs-2.0 -I/usr/lib/gnome-vfs-2.0/include -I/usr/include/dbus-1.0 -I/usr/include/gconf/2 -I/usr/lib/dbus-1.0/include  
+HILDON_FALSE = 
+HILDON_LIBS = -pthread -lhildon-1 -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lpango-1.0 -lcairo -lhildonmime -lgnomevfs-2 -lgconf-2 -lgthread-2.0 -lrt -lgmodule-2.0 -ldl -ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lglib-2.0  
+HILDON_TRUE = #
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
@@ -101,6 +110,7 @@ INTLTOOL_PONG_RULE = %.pong:      %.pong.in      $(INTLTOOL_MERGE) $(wildcard $(
 INTLTOOL_PROP_RULE = %.prop:      %.prop.in      $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
 INTLTOOL_SCHEMAS_RULE = %.schemas:   %.schemas.in   $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -s -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
 INTLTOOL_SERVER_RULE = %.server:    %.server.in    $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -o -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
+INTLTOOL_SERVICE_RULE = %.service: %.service.in   $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
 INTLTOOL_SHEET_RULE = %.sheet:     %.sheet.in     $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -x -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
 INTLTOOL_SOUNDLIST_RULE = %.soundlist: %.soundlist.in $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
 INTLTOOL_THEME_RULE = %.theme:     %.theme.in     $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
@@ -121,9 +131,10 @@ LTLIBOBJS =
 MAKEINFO = ${SHELL} /home/chris/gpesummary-0.7/missing --run makeinfo
 MKINSTALLDIRS = ./mkinstalldirs
 MSGFMT = /scratchbox/tools/bin/msgfmt
+MSGFMT_OPTS = -c
 OBJEXT = o
 OSSO_CFLAGS = -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
-OSSO_LIBS = -losso -ldbus-glib-1 -ldbus-1 -lglib-2.0  
+OSSO_LIBS = -losso -ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lglib-2.0  
 PACKAGE = gpesummary
 PACKAGE_BUGREPORT = 
 PACKAGE_NAME = 
@@ -131,7 +142,7 @@ PACKAGE_STRING =
 PACKAGE_TARNAME = 
 PACKAGE_VERSION = 
 PATH_SEPARATOR = :
-PKG_CONFIG = /scratchbox/devkits/maemo3-tools/bin/pkg-config
+PKG_CONFIG = /scratchbox/tools/bin/pkg-config
 POFILES =  en_GB.po de_DE.po en.po de.po fi_FI.po fi.po
 POSUB = po
 PO_IN_DATADIR_FALSE = 
@@ -151,6 +162,7 @@ ac_ct_CXX = g++
 ac_ct_F77 = 
 ac_ct_RANLIB = ranlib
 ac_ct_STRIP = strip
+ac_pt_PKG_CONFIG = /scratchbox/tools/bin/pkg-config
 am__fastdepCC_FALSE = #
 am__fastdepCC_TRUE = 
 am__fastdepCXX_FALSE = #
@@ -178,7 +190,6 @@ libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localstatedir = ${prefix}/var
 mandir = ${prefix}/man
-mkdir_p = mkdir -p -- .
 oldincludedir = /usr/include
 prefix = /usr
 program_transform_name = s,x,x,
@@ -195,7 +206,7 @@ libsb_LTLIBRARIES = libgpesummary.la
 datsb_DATA = homegpesummary.desktop
 
 libgpesummary_la_SOURCES = gpesummary.c
-libgpesummary_la_CFLAGS = $(GTK_CFLAGS) $(OSSO_CFLAGS) $(GCONF_CFLAGS) $(EVENTDB_CFLAGS)
+libgpesummary_la_CFLAGS = $(GTK_CFLAGS) $(OSSO_CFLAGS) $(GCONF_CFLAGS) $(EVENTDB_CFLAGS) $(HILDON_CFLAGS)
 #`pkg-config --cflags --libs gtk+-2.0 hildon-libs dbus-1 libosso libeventdb libtododb libcontactsdb`
 libgpesummary_la_LDFLAGS = -module -avoid-version -leventdb -losso -ltododb -lcontactsdb
 

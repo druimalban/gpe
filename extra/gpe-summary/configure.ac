@@ -33,6 +33,25 @@ PKG_CHECK_MODULES(LIBCONTACTSDB, libcontactsdb >= 0.0.1)
 AC_SUBST(LIBCONTACTSDB_LIBS)
 AC_SUBST(LIBCONTACTSDB_CFLAGS)
 
+PKG_CHECK_MODULES(HILDON, hildon-1 >= 0.9.9 libhildonmime,
+                AC_DEFINE(HILDON_VER, 1, [Version of hildon libraries]),
+                [
+                        AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
+                        PKG_CHECK_MODULES(HILDON, hildon-libs >= 0.12.0 libossomime)
+                ])
+AC_SUBST(HILDON)
+AC_SUBST(HILDON_LIBS)
+AC_SUBST(HILDON_CFLAGS)
+
+DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget >= 0.114 dbus-glib-1 gnome-vfs-2.0 gnome-vfs-module-2.0"
+DEP_MODULES="$DEP_MODULES libosso"
+AC_SUBST(ENABLE_HILDON)
+
+AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
+
+PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
+
+
 dnl Set PACKAGE_LOCALE_DIR in config.h
 if test "x${prefix}" = "xNONE"; then
   AC_DEFINE_UNQUOTED([PACKAGE_LOCALE_DIR], ["${ac_default_prefix}/${DATADIRNAME}/locale"],[Locale directory])
@@ -45,6 +64,9 @@ ALL_LINGUAS="en_GB de_DE en de fi_FI fi"
 GETTEXT_PACKAGE=gpesummary
 AC_SUBST(GETTEXT_PACKAGE)
 AM_GLIB_GNU_GETTEXT()
+
+
+
 
 
 AC_OUTPUT([ 

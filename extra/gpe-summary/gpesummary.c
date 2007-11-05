@@ -11,7 +11,7 @@
 //
 
 
-#define IS_HILDON 1
+#include <config.h>
 
 #include <glib.h>
 #include <stdlib.h>
@@ -35,20 +35,28 @@
 #include <libintl.h>
 #include <locale.h>
 
-#ifdef IS_HILDON
-/* Hildon includes */
 
+/* Hildon includes */
+#if HILDON_VER == 1
+#include <hildon/hildon-program.h>
+#include <hildon/hildon-window.h>
+#include <hildon/hildon-defines.h>
+#include <hildon/hildon-banner.h>
+#else
 #include <hildon-widgets/hildon-program.h>
 #include <hildon-widgets/hildon-window.h>
-#include <libosso.h>
 #include <hildon-home-plugin/hildon-home-plugin-interface.h>
 #include <hildon-widgets/hildon-note.h>
+#endif /* HILDON_VER == 1 */
+
+#include <libosso.h>
+
 
 #include <config.h>
 
 #define APPLICATION_DBUS_SERVICE "gpesummary"
 #define ICON_PATH "/usr/share/icons/hicolor/26x26/hildon"
-#endif
+
 
 #define CALENDAR_FILE_ "/.gpe/calendar"
 #define CALENDAR_FILE() \
@@ -314,6 +322,33 @@ void show_title(GtkWidget *vbox,gchar *title) {
 Because searching for birthdays is slow (have to check all contacts one by one,
 make sure the contact-loop just needed to be searched through one time, and remember the uids
 */
+void addBirthdaysAtDay(gchar *day) {
+	GSList *iter;
+
+	struct contacts_person *p;	
+
+	for (iter = contacts_db_get_entries_finddlg (day,""); iter; iter = g_slist_next(iter)) {
+		struct contacts_tag_value *ctv;
+		p = contacts_db_get_by_uid(((struct contacts_person *)iter->data)->id);
+		if (p) {
+		  ctv=contacts_db_find_tag(p,"BIRTHDAY");
+		} else ctv=NULL;
+
+		if (ctv) {
+			gboolean found=FALSE;
+			if (strncmp((ctv->value)+4, day,4)==0) found=TRUE;
+			
+			if(found==TRUE) {
+				int i =((struct contacts_person *)iter->data)->id;
+				birthdaylist = g_slist_prepend (birthdaylist, GINT_TO_POINTER (i));
+			}
+			
+		}
+		 while (gtk_events_pending()) { gtk_main_iteration(); }
+	}
+	g_slist_free(iter);
+}
+
 void prepare_birthdays() {
 	if (doshow_birthdays==FALSE) return;
 
@@ -348,36 +383,15 @@ void prepare_birthdays() {
 	strftime (day7, sizeof(day7), "%m%d", &tm);
 
 	//g_warning( buf2 );
-	GSList *iter;
 
-	struct contacts_person *p;
 	
-	for (iter = contacts_db_get_entries(); iter; iter = g_slist_next(iter)) {
-		struct contacts_tag_value *ctv;
-		p = contacts_db_get_by_uid(((struct contacts_person *)iter->data)->id);
-		if (p) {
-		  ctv=contacts_db_find_tag(p,"BIRTHDAY");
-		} else ctv=NULL;
-
-		if (ctv) {
-			gboolean found=FALSE;
-			if (strncmp((ctv->value)+4, day1,4)==0) found=TRUE;
-			if (strncmp((ctv->value)+4, day2,4)==0) found=TRUE;
-			if (strncmp((ctv->value)+4, day3,4)==0) found=TRUE;
-			if (strncmp((ctv->value)+4, day4,4)==0) found=TRUE;
-			if (strncmp((ctv->value)+4, day5,4)==0) found=TRUE;
-			if (strncmp((ctv->value)+4, day6,4)==0) found=TRUE;
-			if (strncmp((ctv->value)+4, day7,4)==0) found=TRUE;
-			
-			if(found==TRUE) {
-				int i =((struct contacts_person *)iter->data)->id;
-				birthdaylist = g_slist_append (birthdaylist, GINT_TO_POINTER (i));
-			}
-			
-		}
-		 while (gtk_events_pending()) { gtk_main_iteration(); }
-	}
-	g_slist_free(iter);
+	addBirthdaysAtDay(day1);
+	addBirthdaysAtDay(day2);
+	addBirthdaysAtDay(day3);
+	addBirthdaysAtDay(day4);
+	addBirthdaysAtDay(day5);
+	addBirthdaysAtDay(day6);
+	addBirthdaysAtDay(day7);
 }
 
 gboolean show_birthdays (GtkWidget *vbox,time_t start,gchar *title) {
