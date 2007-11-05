@@ -35,7 +35,7 @@
 
 #ifdef IS_HILDON
 
-#if HILDON_VER == 1
+#if HILDON_VER > 0
 #include <hildon/hildon-caption.h>
 #include <hildon/hildon-number-editor.h>
 #include <hildon/hildon-time-editor.h>

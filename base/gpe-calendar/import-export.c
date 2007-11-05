@@ -26,7 +26,7 @@
 #ifdef IS_HILDON
 
 
-#if HILDON_VER == 1
+#if HILDON_VER > 0
 #include <hildon/hildon-file-chooser-dialog.h>
 #else
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>

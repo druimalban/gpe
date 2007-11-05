@@ -54,11 +54,15 @@ AC_ARG_ENABLE(hildon,
 [  --enable-hildon         Enable Hildon GUI],
 [
 	ENABLE_HILDON=true
-        PKG_CHECK_MODULES(HILDON, hildon-1 hildon-fm-2,
-                AC_DEFINE(HILDON_VER, 1, [Version of hildon libraries]),
+        PKG_CHECK_MODULES(HILDON, hildon-1,
+		[
+			AC_DEFINE(HILDON_VER, 2, [Version of hildon libraries])
+			DEP_MODULES="$DEP_MODULES hildon-fm-2"
+		],
                 [
                         AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
-                        PKG_CHECK_MODULES(HILDON, hildon-lgpl hildon-libs hildon-fm)
+                        PKG_CHECK_MODULES(HILDON, hildon-lgpl hildon-libs)
+			DEP_MODULES="$DEP_MODULES hildon-fm"
                 ])
 	DEP_MODULES="$DEP_MODULES libosso"
 ],

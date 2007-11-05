@@ -1,3 +1,7 @@
+2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.c, event-ui.c, import-export.c: Set HILDON_VER to 2
+
 2007-11-02  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac, Makefile.am: build and compile
