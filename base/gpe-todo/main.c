@@ -16,13 +16,13 @@
 
 /* Hildon includes */
 #ifdef IS_HILDON
-#if HILDON_VER == 1
+#if HILDON_VER > 0
 #include <hildon/hildon-program.h>
 #include <hildon/hildon-window.h>
 #else
 #include <hildon-widgets/hildon-program.h>
 #include <hildon-widgets/hildon-window.h>
-#endif
+#endif /* HILDON_VER */
 
 #include <libosso.h>
 

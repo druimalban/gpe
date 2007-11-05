@@ -1,3 +1,7 @@
+2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac, main.c, list-ui.c: Set HILDON_VER to 2
+
 2007-11-03  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac, Makefile.am, main.c, list-ui.c: build and compile

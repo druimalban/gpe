@@ -27,11 +27,11 @@
 /* Hildon includes */
 #ifdef IS_HILDON
 
-#if HILDON_VER == 1
+#if HILDON_VER > 0
 #include <hildon/hildon-program.h>
 #else
 #include <hildon-widgets/hildon-program.h>
-#endif
+#endif /* HILDON_VER */
 
 #include <gpe/pim-categories-ui.h>
 
