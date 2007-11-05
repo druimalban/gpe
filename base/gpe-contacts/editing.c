@@ -30,7 +30,7 @@
 
 #ifdef IS_HILDON
 #include "pimc-ui.h"
-#if HILDON_VER == 1
+#if HILDON_VER > 0
 #include <hildon/hildon-file-chooser-dialog.h>
 #include <hildon/hildon-caption.h>
 #include <hildon/hildon-date-editor.h>
@@ -129,11 +129,11 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
               || strstr(e->tag,".EMAIL")
               || strstr (e->tag, ".WWW"))
             {
-#if HILDON_VER == 1
+#if HILDON_VER > 0
   //FixMe g_object_set (G_OBJECT (w), HILDON_AUTOCAP, FALSE, NULL);
 #else
   g_object_set (G_OBJECT (w), HILDON_AUTOCAP, FALSE, NULL);
-#endif
+#endif /* HILDON_VER */
               
             }
 

@@ -40,7 +40,7 @@
 
 /* Hildon includes */
 
-#if HILDON_VER == 1
+#if HILDON_VER > 0
 #include <hildon/hildon-file-chooser-dialog.h>
 #include <hildon/hildon-caption.h>
 #include <hildon/hildon-date-editor.h>

@@ -1,3 +1,7 @@
+2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac, editing.c, main-hildon.c: Set HILDON_VER to 2
+
 2007-11-04  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main-hildon.c: Include config.h
