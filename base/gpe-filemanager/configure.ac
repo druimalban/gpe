@@ -32,11 +32,15 @@ AC_ARG_ENABLE(hildon,
 [  --enable-hildon         Enable Hildon GUI],
 [
 	ENABLE_HILDON=true
-        PKG_CHECK_MODULES(HILDON, hildon-1 >= 0.9.9 libhildonmime,
-                AC_DEFINE(HILDON_VER, 1, [Version of hildon libraries]),
+        PKG_CHECK_MODULES(HILDON, hildon-1,
+		[
+			AC_DEFINE(HILDON_VER, 2, [Version of hildon libraries]),
+			DEP_MODULES="$DEP_MODULES libhildonmime"
+		],
                 [
                         AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
-                        PKG_CHECK_MODULES(HILDON, hildon-libs >= 0.12.0 libossomime)
+                        PKG_CHECK_MODULES(HILDON, hildon-libs >= 0.12.0)
+			DEP_MODULES="$DEP_MODULES libossomime"
                 ])
 	DEP_MODULES="$DEP_MODULES libosso"
 ],

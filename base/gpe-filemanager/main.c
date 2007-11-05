@@ -42,7 +42,7 @@
 #include <gpe/infoprint.h>
 
 #ifdef USE_HILDON
-#if HILDON_VER == 1
+#if HILDON_VER > 0
 #include <hildon/hildon-program.h>
 #include <hildon/hildon-window.h>
 #include <hildon/hildon-defines.h>
@@ -56,7 +56,7 @@
 #include <libosso.h>
 #include <osso-mime.h>
 #include <hildon-widgets/hildon-banner.h>
-#endif
+#endif /* HILDON_VER */
 #define gpe_popup_infoprint(x, y) \
 	hildon_banner_show_information(window, NULL, y)
 #endif
@@ -546,7 +546,7 @@ open_with (GnomeVFSMimeApplication *application,
 {
 #ifdef USE_HILDON
   DBusConnection *conn = dbus_bus_get(DBUS_BUS_SESSION, NULL);
-#if HILDON_VER == 1
+#if HILDON_VER > 0
   hildon_mime_open_file(conn, file_info->filename);
 #else
   osso_mime_open_file(conn, file_info->filename);
@@ -2081,7 +2081,7 @@ static GtkWidget *menubar_to_menu (GtkWidget *widget)
 
 static gchar *get_icon_name (const gchar *mime_type)
 {
-#if HILDON_VER == 1
+#if HILDON_VER > 0
   gchar **names = hildon_mime_get_icon_names(
       mime_type,
       NULL);
@@ -2089,7 +2089,7 @@ static gchar *get_icon_name (const gchar *mime_type)
   gchar **names = osso_mime_get_icon_names(
       mime_type,
       NULL);
-#endif
+#endif /* HILDON_VER */
   gchar *retval = NULL;
   guint i = 0;
   GtkIconTheme *theme = gtk_icon_theme_get_default();
