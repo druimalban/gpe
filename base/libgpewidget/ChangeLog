@@ -1,3 +1,7 @@
+2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac, Makefile.am: Changes for Chinook
+
 2007-07-18  Graham Cobb  <g+770@cobb.uk.net>
 
 	* debian/libgpewidget1.files: add etc so that Maemo backup
