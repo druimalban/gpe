@@ -1447,7 +1447,14 @@ gpe_cal_deiconify (void)
 static void
 toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
 {
-  //hildon_appview_set_fullscreen (HILDON_APPVIEW (main_appview), gtk_check_menu_item_get_active (menuitem));  //fixme
+#if HILDON_VER > 0
+  if (gtk_check_menu_item_get_active (menuitem))
+    gtk_window_fullscreen (GTK_WINDOW (main_window));
+  else
+    gtk_window_unfullscreen (GTK_WINDOW (main_window));
+#else
+  hildon_appview_set_fullscreen (HILDON_APPVIEW (main_appview), gtk_check_menu_item_get_active (menuitem)); 
+#endif /* HILDON_VER  */
 }
 #endif /*IS_HILDON*/
 
