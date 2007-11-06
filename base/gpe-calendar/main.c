@@ -36,8 +36,17 @@
 
 #ifdef IS_HILDON
 /* Hildon includes */
+#if HILDON_VER > 0
+#include <hildon/hildon-program.h>
+//#include <hildon/hildon-input-mode-hint.h>
+#include <hildon/hildon-window.h>
+#include <hildon/hildon-defines.h>
+#include <hildon/hildon-banner.h>
+#else
 #include <hildon-widgets/hildon-app.h>
 #include <hildon-widgets/hildon-appview.h>
+#endif /* HILDON_VER */
+
 #include <libosso.h>
 #define APPLICATION_DBUS_SERVICE "gpe_calendar"
 #define ICON_PATH "/usr/share/icons/hicolor/26x26/hildon"
@@ -98,9 +107,16 @@ static struct gpe_icon my_icons[] = {
    hidden: control not useful at the moment.  Each blocker must
    increment the appropriate hidden by 1 and decrements it by 1 when
    the blocking condition is cleared.  */
-GtkWidget *main_window;
+
 #ifdef IS_HILDON
-GtkWidget *main_appview;
+#if HILDON_VER > 0
+  HildonWindow *main_window;
+#else
+  GtkWidget *main_appview;
+  GtkWidget *main_window;
+#endif /* HILDON_VER  */
+#else
+  GtkWidget *main_window;
 #endif
 static GtkBox *main_box;
 static GtkWidget *date_toolbar;
@@ -598,7 +614,11 @@ set_title (void)
   snprintf (buffer, sizeof (buffer), _("Calendar - %s"), date);
 
 #ifdef IS_HILDON
+#if HILDON_VER > 0
+  gtk_window_set_title (GTK_WINDOW (main_window), buffer);
+#else
   hildon_app_set_title (HILDON_APP (main_window), buffer);
+#endif /* HILDON_VER  */
 #else
   gtk_window_set_title (GTK_WINDOW (main_window), buffer);
 #endif
@@ -1367,10 +1387,22 @@ conf_write (void)
   g_key_file_set_boolean (conf, "gpe-calendar", "event-list-disabled",
 			  event_list_disabled);
 
+#ifdef IS_HILDON
+#if HILDON_VER > 0
+  //fixme
+#else
   g_key_file_set_integer (conf, "gpe-calendar", "window-width",
 			  main_window->allocation.width);
   g_key_file_set_integer (conf, "gpe-calendar", "window-height",
 			  main_window->allocation.height);
+#endif /* HILDON_VER */
+#else
+  g_key_file_set_integer (conf, "gpe-calendar", "window-width",
+			  main_window->allocation.width);
+  g_key_file_set_integer (conf, "gpe-calendar", "window-height",
+			  main_window->allocation.height);
+#endif
+
 
   gsize length;
   char *data = g_key_file_to_data (conf, &length, NULL);
@@ -1415,8 +1447,7 @@ gpe_cal_deiconify (void)
 static void
 toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
 {
-  hildon_appview_set_fullscreen (HILDON_APPVIEW (main_appview),
-				 gtk_check_menu_item_get_active (menuitem));
+  //hildon_appview_set_fullscreen (HILDON_APPVIEW (main_appview), gtk_check_menu_item_get_active (menuitem));  //fixme
 }
 #endif /*IS_HILDON*/
 
@@ -2182,11 +2213,24 @@ main (int argc, char *argv[])
   g_key_file_free (conf);
 
 #ifdef IS_HILDON
+#if HILDON_VER > 0
+  HildonProgram *program;
+  /* Create the hildon program and setup the title */
+  program = HILDON_PROGRAM (hildon_program_get_instance());
+  /* Create HildonWindow and set it to HildonProgram */
+  main_window = HILDON_WINDOW (hildon_window_new());
+  hildon_program_add_window (program, main_window);
+//  main_window = hildon_app_new ();
+//  hildon_app_set_two_part_title (HILDON_APP (main_window), FALSE);
+//  main_appview = hildon_appview_new (_("Main"));
+//  hildon_app_set_appview (HILDON_APP (main_window), HILDON_APPVIEW (main_appview));
+#else
   main_window = hildon_app_new ();
   hildon_app_set_two_part_title (HILDON_APP (main_window), FALSE);
   main_appview = hildon_appview_new (_("Main"));
   hildon_app_set_appview (HILDON_APP (main_window),
 			  HILDON_APPVIEW (main_appview));
+#endif /* HILDON_VER  */
 #else    
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
@@ -2195,26 +2239,32 @@ main (int argc, char *argv[])
   g_signal_connect (G_OBJECT (main_window), "delete-event",
                     G_CALLBACK (gpe_cal_iconify), NULL);
   gtk_widget_show (main_window);
-
   main_box = GTK_BOX (gtk_vbox_new (FALSE, 0));
 #if IS_HILDON
+#if HILDON_VER > 0
+  gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (main_box));
+#else
   gtk_container_add (GTK_CONTAINER (main_appview), GTK_WIDGET (main_box));
+#endif /* HILDON_VER  */
 #else
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (main_box));
 #endif
   gtk_widget_show (GTK_WIDGET (main_box));
-
-  /* Menu bar.  */
   GtkMenuShell *menu_main;
 #ifdef IS_HILDON
-  menu_main
-    = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
+#if HILDON_VER > 0
+  //menu_main = GTK_MENU_SHELL (gtk_menu_bar_new ());
+  menu_main = gtk_menu_new ();
+  hildon_window_set_menu (main_window,menu_main);
+  //gtk_widget_show (GTK_WIDGET (menu_main));
+#else
+  menu_main = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
+#endif /* HILDON_VER  */
 #else
   menu_main = GTK_MENU_SHELL (gtk_menu_bar_new ());
   gtk_box_pack_start (main_box, GTK_WIDGET (menu_main), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (menu_main));
 #endif
-
   /* Tool bar.  We fill it before the menu bar as the menu bar
      requires some of its widgets.  */
   tooltips = gtk_tooltips_new ();
@@ -2230,15 +2280,17 @@ main (int argc, char *argv[])
   gtk_widget_show (toolbar);
 
 #ifdef IS_HILDON
+#if HILDON_VER > 0
+  gtk_box_pack_start (GTK_BOX (main_box), toolbar, FALSE, FALSE, 0);
+#else
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   hildon_appview_set_toolbar (HILDON_APPVIEW (main_appview),
 			      GTK_TOOLBAR (toolbar));
   gtk_widget_show_all (main_appview);
+#endif /* HILDON_VER  */
 #else
   gtk_box_pack_start (GTK_BOX (main_box), toolbar, FALSE, FALSE, 0);
 #endif
-
-
   GtkToolItem *item;
 
   /* Initialize the day view button.  */
@@ -2652,7 +2704,6 @@ main (int argc, char *argv[])
   current_view_consider ();
 
   gpe_calendar_start_xsettings (update_view);
-
   gtk_main ();
 
   return 0;

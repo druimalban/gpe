@@ -14,6 +14,14 @@
 
 #include "util.h"
 
+#ifdef IS_HILDON
+#if HILDON_VER > 0
+#include <hildon/hildon-program.h>
+#else
+#include <hildon-widgets/hildon-program.h>
+#endif /* HILDON_VER  */
+#endif
+
 #define ERROR_DOMAIN() g_quark_from_static_string ("gpe-calendar")
 
 extern EventDB *event_db;
@@ -23,7 +31,16 @@ extern guint week_offset;
 extern gboolean day_view_combined_times;
 extern void set_time_and_day_view (time_t selected_time);
 
-extern GtkWidget *main_window;
+#ifdef IS_HILDON
+#if HILDON_VER > 0
+  extern HildonWindow *main_window;
+#else
+  extern GtkWidget *main_window;
+#endif /* HILDON_VER  */
+#else
+  extern GtkWidget *main_window;
+#endif
+
 
 #define SECONDS_IN_DAY (24*60*60)
 
