@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <glib.h>
 
 #ifdef ENABLE_GPE
 #   include <gpe/errorbox.h>

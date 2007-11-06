@@ -29,11 +29,15 @@ AC_CHECK_LIB([osso], [osso_initialize],
 	[AC_MSG_NOTICE([building for Hildon])
 	 AC_DEFINE([IS_HILDON], [1], [Define to 1 to integrate with Hildon])
 	 ENABLE_HILDON=true
-	 PKG_CHECK_MODULES(HILDON, hildon-1 hildon-fm-2,
-                AC_DEFINE(HILDON_VER, 1, [Version of hildon libraries]),
+	 PKG_CHECK_MODULES(HILDON, hildon-1,
+		[
+                AC_DEFINE(HILDON_VER, 2, [Version of hildon libraries])
+		DEP_MODULES="$DEP_MODULES hildon-fm-2"
+		],
                 [
                         AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
-                        PKG_CHECK_MODULES(HILDON, hildon-lgpl hildon-libs hildon-fm)
+                        PKG_CHECK_MODULES(HILDON, hildon-lgpl hildon-libs)
+			DEP_MODULES="$DEP_MODULES hildon-fm"
                 ])
 	 DEP_MODULES="$DEP_MODULES libosso"],
 	[ENABLE_HILDON=false])
