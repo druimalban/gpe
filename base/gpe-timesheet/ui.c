@@ -703,7 +703,11 @@ GtkWidget * create_interface(GtkWidget *main_window)
 /* this is Hildon Main Menu */
 
   /*main menu*/
+#if HILDON_VER > 0
+    GtkMenu   *menu_main = gtk_menu_new();
+#else
     GtkMenu   *menu_main = hildon_appview_get_menu(HILDON_APPVIEW(main_window));
+#endif /* HILDON_VER */
   /*view menu declarations*/
     GtkWidget *menu_view = gtk_menu_new();
     GtkWidget *item_view = gtk_menu_item_new_with_label(_("View"));
@@ -739,8 +743,15 @@ GtkWidget * create_interface(GtkWidget *main_window)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_switch_journal), FALSE);
   /* fire! */
     gtk_widget_show_all (GTK_WIDGET(menu_main));
+#if HILDON_VER > 0
+    hildon_window_set_menu(HILDON_WINDOW(main_window), menu_main);
+#endif
   /*these are necessary to show all toolbar's items*/
+#if HILDON_VER > 0
+    hildon_window_ass_toolbar(HILDON_WINDOW(main_window), GTK_TOOLBAR(main_toolbar));
+#else
     hildon_appview_set_toolbar(HILDON_APPVIEW(main_window), GTK_TOOLBAR(main_toolbar));
+#endif /* HILDON_VER */
     gtk_widget_show_all (GTK_WIDGET(main_window));
 #endif
 

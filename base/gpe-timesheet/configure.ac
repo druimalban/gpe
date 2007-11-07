@@ -34,7 +34,7 @@ AC_ARG_ENABLE(hildon,
 [
 	ENABLE_HILDON=true
         PKG_CHECK_MODULES(HILDON, hildon-1,
-                AC_DEFINE(HILDON_VER, 1, [Version of hildon libraries]),
+                AC_DEFINE(HILDON_VER, 2, [Version of hildon libraries]),
                 [
                         AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
                         PKG_CHECK_MODULES(HILDON, hildon-lgpl)

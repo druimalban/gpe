@@ -22,11 +22,16 @@
 
 // hildon includes
 #ifdef IS_HILDON
+#if HILDON_VER > 0
+#include <hildon/hildon-program.h>
+#include <hildon/hildon-window.h>
+#else
 #include <hildon-widgets/hildon-app.h>
 #include <hildon-widgets/hildon-appview.h>
+#endif /* HILDON_VER */
 #include <libosso.h>
 #define OSSO_SERVICE_NAME "gpe_timesheet"
-#endif
+#endif /* IS_HILDON */
 
 // gdk-gtk-gpe includes
 #include <gdk/gdkkeysyms.h>
@@ -70,14 +75,38 @@ GtkWidget *main_window;
 
 // hildon main appview definition and specific functions
 #ifdef IS_HILDON
-  GtkWidget *main_appview;
-
 static void osso_top_callback (const gchar* arguments, gpointer ptr)
 {
     GtkWindow *window = ptr;
 
     gtk_window_present (GTK_WINDOW (window));
 }
+
+#if HILDON_VER > 0
+static gboolean key_press_cb(GtkWidget *w, GdkEventKey *event, GtkWindow *window)
+{
+#ifndef HILDON_FULLSCREEN_KEY
+#define HILDON_FULLSCREEN_KEY GDK_F6
+#endif
+  static gboolean fullscreen = FALSE;
+
+  switch (event->keyval)
+  {
+    case HILDON_FULLSCREEN_KEY: {
+      if (fullscreen) {
+	gtk_window_unfullscreen(window);
+	fullscreen = FALSE;
+      } else {
+ 	gtk_window_fullscreen(window);
+	fullscreen = TRUE;
+      }
+   }
+  }
+
+  return FALSE;
+}
+#else
+GtkWidget *main_appview;
 
 static gboolean key_press_cb(GtkWidget *w, GdkEventKey *event, HildonApp *app)
 {
@@ -96,7 +125,8 @@ static gboolean key_press_cb(GtkWidget *w, GdkEventKey *event, HildonApp *app)
   return FALSE;
 
 }
-#endif
+#endif /* HILDON_VER */
+#endif /* IS_HILDON */
 
 
 static void
@@ -109,11 +139,24 @@ open_window (void)
 
 #ifdef IS_HILDON
 // a lot of hildon stuff for hildon integration
-  GtkWidget *app;
   GtkToolbar *main_toolbar;
   osso_context_t *context;
 
-  app = hildon_app_new();
+#if HILDON_VER > 0
+  HildonProgram *program = HILDON_PROGRAM (hildon_program_get_instance());
+  g_set_application_name (_("TimeTracker"));
+  main_window = GTK_WIDGET (hildon_window_new());
+  hildon_program_add_window (program, HILDON_WINDOW(main_window));
+  main_vbox = GTK_WIDGET(create_interface(main_window));
+  gtk_container_add (GTK_CONTAINER(main_window), main_vbox);
+
+  /* this code is not to be killed by osso */
+  context = osso_initialize (OSSO_SERVICE_NAME, VERSION, TRUE, NULL);
+  g_assert(context);
+  osso_application_set_top_cb(context, osso_top_callback, ( gpointer )main_window);
+
+#else
+  GtkWidget *app = hildon_app_new();
   hildon_app_set_two_part_title(HILDON_APP(app), TRUE);
   hildon_app_set_title (HILDON_APP(app), _("TimeTracker"));
   main_appview = hildon_appview_new (_("List"));
@@ -134,6 +177,7 @@ open_window (void)
 
   gtk_widget_show (app);
   gtk_widget_show (main_appview);
+#endif /* HILDON_VER */
 
 #else
 
@@ -143,7 +187,7 @@ open_window (void)
   gpe_set_window_icon (main_window, "gpe-timesheet");
   main_vbox = GTK_WIDGET(create_interface(main_window));
   gtk_container_add (GTK_CONTAINER(main_window), main_vbox);
-#endif
+#endif /* IS_HILDON */
 
   g_signal_connect (G_OBJECT(main_window), "delete-event", G_CALLBACK (gtk_main_quit), NULL);
 

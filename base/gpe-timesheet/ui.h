@@ -16,11 +16,16 @@
 
 // hildon includes
 #ifdef IS_HILDON
+#if HILDON_VER > 0
+  #include <hildon/hildon-program.h>
+  #include <hildon/hildon-window.h>
+#else
   #include <hildon-widgets/hildon-app.h>
   #include <hildon-widgets/hildon-appview.h>
+#endif /* HILDON_VER */
   #include <libosso.h>
   #define OSSO_SERVICE_NAME "gpe_timesheet"
-#endif
+#endif /* IS_HILDON */
 
 // gdk-gtk-gpe includes
 #include <gdk/gdkkeysyms.h>
