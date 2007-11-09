@@ -748,7 +748,7 @@ GtkWidget * create_interface(GtkWidget *main_window)
 #endif
   /*these are necessary to show all toolbar's items*/
 #if HILDON_VER > 0
-    hildon_window_ass_toolbar(HILDON_WINDOW(main_window), GTK_TOOLBAR(main_toolbar));
+    hildon_window_add_toolbar(HILDON_WINDOW(main_window), GTK_TOOLBAR(main_toolbar));
 #else
     hildon_appview_set_toolbar(HILDON_APPVIEW(main_window), GTK_TOOLBAR(main_toolbar));
 #endif /* HILDON_VER */

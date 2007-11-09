@@ -1,3 +1,7 @@
+2007-11-09  Graham Cobb  <g+770@cobb.uk.net>
+
+	* ui.c (create_interface): Fix typo in previous change
+
 2007-11-06  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c: Use HildonProgram and HildonWindow instead of 
