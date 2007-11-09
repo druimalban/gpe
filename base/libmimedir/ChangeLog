@@ -1,3 +1,8 @@
+2007-11-08  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-attribute.c: allow for UTF-8 in 
+	attribute parameters (Bug 118)
+
 2007-09-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-vcard.c: make the nickname property writeable with writing it meaning

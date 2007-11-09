@@ -558,13 +558,15 @@ static gchar *
 escape (const gchar *text, GError **error)
 {
 	GString *string;
+	gunichar uc;
 
 	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
 	string = g_string_new ("");
 
-	for (; text[0] != '\0'; text++) {
-		switch (text[0]) {
+	uc = g_utf8_get_char(text);
+	while (uc != '\0') {
+		switch (uc) {
 		case ';':
 			g_string_append (string, "\\;");
 			break;
@@ -581,15 +583,16 @@ escape (const gchar *text, GError **error)
 			g_string_append (string, "\\n");
 			break;
 		default:
-			if ((text[0] > 0x00 && text[0] < '\t') ||
-			    (text[0] > '\t' && text[0] < ' ') ||
-			    (text[0] == 0x7f)) {
-				g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR, text[0], "text");
-				return FALSE;
-			}
-			g_string_append_c (string, text[0]);
-			break;
+		  if (uc != '\t' && (! g_unichar_isprint(uc))) {
+		    g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR, uc, "text");
+		    return FALSE;
+		  }
+		  g_string_append_unichar (string, uc);
+		  break;
 		}
+
+		text = g_utf8_next_char(text);
+		uc = g_utf8_get_char(text);
 	}
 
 	return g_string_free (string, FALSE);
@@ -600,28 +603,29 @@ static gchar *
 unescape (const gchar *text, GError **error)
 {
 	GString *string;
+	gunichar uc;
 
 	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
 	string = g_string_new ("");
 
-	for (; text[0] != '\0'; text++) {
-		switch (text[0]) {
+	uc = g_utf8_get_char(text);
+	while (uc != '\0') {
+		switch (uc) {
 		case '\\':
-			text++;
-			switch (text[0]) {
+			text = g_utf8_next_char(text);
+			uc = g_utf8_get_char(text);
+			switch (uc) {
 			case 'n':
 			case 'N':
 				g_string_append_c (string, '\n');
 				break;
 			default:
-				if ((text[0] > 0x00 && text[0] < '\t') ||
-				    (text[0] > '\t' && text[0] < ' ') ||
-				    (text[0] == 0x7f)) {
-					g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR, text[0], "text");
+				if (uc != '\t' && (! g_unichar_isprint(uc))) {
+					g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR, uc, "text");
 					return NULL;
 				}
-				g_string_append_c (string, text[0]);
+				g_string_append_unichar (string, uc);
 				break;
 			}
 			break;
@@ -629,18 +633,19 @@ unescape (const gchar *text, GError **error)
 			/* ignore */
 			break;
 		case '\n':
-			g_string_append_c (string, text[0]);
+			g_string_append_unichar (string, uc);
 			break;
 		default:
-			if ((text[0] > 0x00 && text[0] < '\t') ||
-			    (text[0] > '\t' && text[0] < ' ') ||
-			    (text[0] == 0x7f)) {
-				g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR, text[0], "text");
+			if (uc != '\t' && (! g_unichar_isprint(uc))) {
+				g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR, uc, "text");
 				return NULL;
 			}
-			g_string_append_c (string, text[0]);
+			g_string_append_unichar (string, uc);
 			break;
 		}
+
+		text = g_utf8_next_char(text);
+		uc = g_utf8_get_char(text);
 	}
 
 	return g_string_free (string, FALSE);
@@ -915,10 +920,16 @@ static GSList *
 parse_parameter_list (const gchar *string, gsize *_pos, gchar terminator, gboolean no_name_allowed, GError **error)
 {
         GSList *list = NULL;
-	gsize pos = *_pos;
-	gchar c;
+	const gchar *p = string + *_pos;
+	gunichar uc;
+	const gchar *end;
 
-	if (string[pos] == terminator)
+	if (! g_utf8_validate(p, -1, NULL)) {
+	  g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR, _("invalid UTF-8 data"));
+	  return NULL;
+	}
+
+	if (g_utf8_get_char(p) == terminator)
 	        return NULL;
 
         do {
@@ -927,8 +938,7 @@ parse_parameter_list (const gchar *string, gsize *_pos, gchar terminator, gboole
 
 		/* Read parameter name */
 
-		param_name = get_next_token (string + pos, &len);
-		pos += len;
+		param_name = get_next_token (p, &len);
 
 		if (len == 0) {
 			g_free (param_name);
@@ -939,53 +949,53 @@ parse_parameter_list (const gchar *string, gsize *_pos, gchar terminator, gboole
 
 		/* Read parameter value list */
 
-		if (string[pos] == '=') {
+		p = g_utf8_offset_to_pointer(p, len);
+		uc = g_utf8_get_char(p);
+		if (uc == '=') {
 			GString *s = g_string_new (NULL);
 
-                        pos++;
+			p = g_utf8_next_char(p);
+			uc = g_utf8_get_char(p);
 
-			if (string[pos] == '"') {
-			        pos++;
-				while (string[pos] == ' '  ||
-				       string[pos] == '\t' ||
-				       string[pos] == '!'  ||
-				       (string[pos] >= '#' && string[pos] <= '~') ||
-				       string[pos] < 0) {
-				        g_string_append_c (s, string[pos]);
-					pos++;
+			if (uc == '"') {
+			        p = g_utf8_next_char(p);
+				uc = g_utf8_get_char(p);
+				while (uc == '\t' ||
+				       (g_unichar_isprint(uc) && uc != '"')) {
+				  g_string_append_unichar (s, uc);
+				  p = g_utf8_next_char(p);
+				  uc = g_utf8_get_char(p);
 				}
-				if (string[pos] != '"') {
+				if (uc != '"') {
 					g_string_free (s, TRUE);
 					g_free (param_name);
 					mimedir_attribute_free_string_list (list);
 					g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR, _("missing closing quotation mark"));
 					return NULL;
 				}
-				pos++;
+			        p = g_utf8_next_char(p);
+				uc = g_utf8_get_char(p);
 			} else {
-			        while (string[pos] == ' '  ||
-				       string[pos] == '\t' ||
-				       string[pos] == '!'  ||
-				       (string[pos] >= '#' && string[pos] <= ':') ||
-				       (string[pos] >= '<' && string[pos] <= '~') ||
-				       string[pos] < 0) {
-				        if (string[pos] == terminator)
-					        break;
-					g_string_append_c (s, string[pos]);
-					pos++;
+			        while (uc == '\t' ||
+				       (g_unichar_isprint(uc) && uc != '"' && uc != ';')) {
+				  if (uc == terminator)
+				    break;
+				  g_string_append_unichar (s, uc);
+				  p = g_utf8_next_char(p);
+				  uc = g_utf8_get_char(p);
 				}
 			}
 
 			param_value = g_string_free (s, FALSE);
 		}
 
-                c = string[pos++];
-		if (c != terminator && c != ';') {
+		if (uc != terminator && uc != ';') {
 			g_free (param_name);
 			mimedir_attribute_free_string_list (list);
 			g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR, _("wrong parameter syntax"));
 			return NULL;
 		}
+		p = g_utf8_next_char(p);
 
 		/* Append parameter to list */
 
@@ -1002,12 +1012,12 @@ parse_parameter_list (const gchar *string, gsize *_pos, gchar terminator, gboole
 
 		list = g_slist_prepend (list, param_name);
 		list = g_slist_prepend (list, param_value);
-	} while (c != terminator);
+	} while (uc != terminator);
 
-	pos--;
+	p = g_utf8_prev_char(p);
 
 	list = g_slist_reverse (list);
-	*_pos = pos;
+	*_pos = p - string;
 
 	g_assert (g_slist_length (list) % 2 == 0);
 
@@ -1077,34 +1087,44 @@ parse_attribute (MIMEDirAttribute *attr, const gchar *string, GError **error)
 {
 	MIMEDirAttributePriv *priv = attr->priv;
 	gchar *token;
-	gsize pos = 0, len;
+	const gchar *p = string;
+	gsize len, pos;
+	gunichar uc;
+
+	if (! g_utf8_validate(p, -1, NULL)) {
+	  g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR, _("invalid UTF-8 data"));
+	  return FALSE;
+	}
 
 	/* Read group/name */
 
-	token = get_next_token (string + pos, &len);
-	pos += len;
-
+	token = get_next_token (p, &len);
 	if (len == 0) {
 		g_free (token);
 		g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR, _("missing attribute name/group"));
 		return FALSE;
 	}
 
+	p = g_utf8_offset_to_pointer(p, len);
+	uc = g_utf8_get_char(p);
+
 	g_free (priv->group);
 	priv->group = NULL;
 
-	if (string[pos] == '.') {
+	if (uc == '.') {
 		priv->group = token;
-		pos++;
+		p = g_utf8_next_char(p);
+		uc = g_utf8_get_char(p);
 
-		token = get_next_token (string + pos, &len);
-		pos += len;
-
+		token = get_next_token (p, &len);
 		if (len == 0) {
 			g_free (token);
 			g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR, _("no attribute name after group"));
 			return FALSE;
 		}
+
+		p = g_utf8_offset_to_pointer(p, len);
+		uc = g_utf8_get_char(p);
 	}
 
 	g_free (priv->name);
@@ -1112,16 +1132,20 @@ parse_attribute (MIMEDirAttribute *attr, const gchar *string, GError **error)
 
 	/* Read parameters */
 
+	pos = p - string;
 	if (!parse_attribute_parameters (attr, string, &pos, error))
 	        return FALSE;
+	p = string + pos;
+	uc = g_utf8_get_char(p);
 
 	/* Read value */
 
-	if (string[pos] != ':') {
+	if (uc != ':') {
 		g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR, _("missing value delimiter"));
 		return FALSE;
 	}
-	pos++;
+	p = g_utf8_next_char(p);
+	uc = g_utf8_get_char(p);
 
 	{
 		GString *s;
@@ -1129,17 +1153,16 @@ parse_attribute (MIMEDirAttribute *attr, const gchar *string, GError **error)
 
 		s = g_string_new (NULL);
 
-		while (string[pos] != '\0') {
-			if ((string[pos] >= 0   && string[pos] < '\t') ||
-			    (string[pos] > '\t' && string[pos] < ' ')  ||
-			    string[pos] == 127) {
+		while (uc != '\0') {
+			if (uc != '\t' && (! g_unichar_isprint(uc))) {
 				g_string_free (s, TRUE);
 				g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR, _("invalid character"));
 				return FALSE;
 			}
 
-			g_string_append_c (s, string[pos]);
-			pos++;
+			g_string_append_unichar (s, uc);
+			p = g_utf8_next_char(p);
+			uc = g_utf8_get_char(p);
 		}
 
 		/* Decode value */
@@ -1644,11 +1667,14 @@ mimedir_attribute_get_value_text (MIMEDirAttribute *attribute, GError **error)
 static gboolean
 append_value_text (MIMEDirAttribute *attribute, GString *string, const gchar *text, gboolean escape_semicolon)
 {
+	gunichar uc;
+
 	if (!text)
 		return TRUE;
 
-	for (; text[0] != '\0'; text++) {
-		switch (text[0]) {
+	uc = g_utf8_get_char(text);
+	while (uc != '\0') {
+		switch (uc) {
 		case ',':
 			g_string_append (string, "\\,");
 			break;
@@ -1665,13 +1691,14 @@ append_value_text (MIMEDirAttribute *attribute, GString *string, const gchar *te
 			g_string_append (string, "\\n");
 			break;
 		default:
-			if ((text[0] > 0x00 && text[0] < '\t') ||
-			    (text[0] > '\t' && text[0] < ' ') ||
-			    (text[0] == 0x7f))
+			if (uc != '\t' && (! g_unichar_isprint(uc)))
 				return FALSE;
-			g_string_append_c (string, text[0]);
+			g_string_append_unichar (string, uc);
 			break;
 		}
+
+		text = g_utf8_next_char(text);
+		uc = g_utf8_get_char(text);
 	}
 
 	return TRUE;
@@ -1729,6 +1756,7 @@ mimedir_attribute_get_value_text_list (MIMEDirAttribute *attribute, GError **err
 	GSList *list = NULL;
 	GString *string;
 	const gchar *data, *text;
+	gunichar uc;
 
 	g_return_val_if_fail (attribute != NULL, NULL);
 	g_return_val_if_fail (MIMEDIR_IS_ATTRIBUTE (attribute), NULL);
@@ -1743,11 +1771,13 @@ mimedir_attribute_get_value_text_list (MIMEDirAttribute *attribute, GError **err
 
 	string = g_string_new ("");
 
-	for (; text[0] != '\0'; text++) {
-		switch (text[0]) {
+	uc = g_utf8_get_char(text);
+	while (uc != '\0') {
+		switch (uc) {
 		case '\\':
-			text++;
-			switch (text[0]) {
+			text = g_utf8_next_char(text);
+			uc = g_utf8_get_char(text);
+			switch (uc) {
 			case '\\':
 				g_string_append_c (string, '\\');
 				break;
@@ -1759,14 +1789,12 @@ mimedir_attribute_get_value_text_list (MIMEDirAttribute *attribute, GError **err
 				g_string_append_c (string, '\n');
 				break;
 			default:
-				if ((text[0] > 0x00 && text[0] < '\t') ||
-				    (text[0] > '\t' && text[0] < ' ') ||
-				    (text[0] == 0x7f)) {
+				if (uc != '\t' && (! g_unichar_isprint(uc))) {
 					g_string_free (string, TRUE);
 					g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR, text[0], "text");
 					return NULL;
 				}
-				g_string_append_c (string, text[0]);
+				g_string_append_unichar (string, uc);
 				break;
 			}
 			break;
@@ -1778,19 +1806,20 @@ mimedir_attribute_get_value_text_list (MIMEDirAttribute *attribute, GError **err
 			/* ignore */
 			break;
 		case '\n':
-			g_string_append_c (string, text[0]);
+			g_string_append_unichar (string, uc);
 			break;
 		default:
-			if ((text[0] > 0x00 && text[0] < '\t') ||
-			    (text[0] > '\t' && text[0] < ' ') ||
-			    (text[0] == 0x7f)) {
+			if (uc != '\t' && (! g_unichar_isprint(uc))) {
 				g_string_free (string, TRUE);
 				g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR, MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR, text[0], "text");
 				return NULL;
 			}
-			g_string_append_c (string, text[0]);
+			g_string_append_unichar (string, uc);
 			break;
 		}
+
+		text = g_utf8_next_char(text);
+		uc = g_utf8_get_char(text);
 	}
 
 	list = g_slist_append (list, g_string_free (string, FALSE));
@@ -2469,10 +2498,15 @@ mimedir_attribute_get_value_structured_text (MIMEDirAttribute *attribute, GError
 
 	text = attribute->priv->value->str;
 
+	if (!g_utf8_validate(text, -1, NULL)) {
+	  g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR, _("invalid UTF-8"));
+	  return NULL;
+	}
+
 	string = g_string_new ("");
 
 	for (;;) {
-		switch (text[0]) {
+		switch (g_utf8_get_char(text)) {
 		case '\0':
 			list2 = g_slist_append (list2, g_string_free (string, FALSE));
 			list  = g_slist_append (list, list2);
@@ -2488,8 +2522,8 @@ mimedir_attribute_get_value_structured_text (MIMEDirAttribute *attribute, GError
 			string = g_string_new ("");
 			break;
 		case '\\':
-			text++;
-			switch (text[0]) {
+			text = g_utf8_next_char(text);
+			switch (g_utf8_get_char(text)) {
 			case '\\':
 				g_string_append_c (string, '\\');
 				break;
@@ -2510,17 +2544,17 @@ mimedir_attribute_get_value_structured_text (MIMEDirAttribute *attribute, GError
 			}
 			break;
 		default:
-			if (text[0] >= '\0' && text[0] < ' ') {
+			if (!g_unichar_isprint(g_utf8_get_char(text))) {
 				g_string_free (string, TRUE);
 				list = g_slist_append (list, list2);
 				mimedir_attribute_free_structured_text_list (list);
 				g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX, MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR, _("illegal character"));
 				return NULL;
 			}
-			g_string_append_c (string, text[0]);
+			g_string_append_unichar (string, g_utf8_get_char(text));
 			break;
 		}
-		text++;
+		text = g_utf8_next_char(text);;
 	}
 }
 
