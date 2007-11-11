@@ -6,5 +6,5 @@ Exec=gpe-lights
 Terminal=false
 Type=Application
 Icon=gpe-lights.png
-Categories=Games
+Categories=Game;LogicGame
 StartupNotify=true
