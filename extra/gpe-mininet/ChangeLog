@@ -1,3 +1,7 @@
+2007-11-11 Philippe De Swert <philippedeswert@scar;et.be>
+
+        * Make desktop file standards compliant
+	          (http://standards.freedesktop.org/desktop-entry-spec/latest/index.html)
 
 2006-12-01	Florian Boor <florian.boor@kernelconcepts.de>
 
