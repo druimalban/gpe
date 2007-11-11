@@ -2,9 +2,9 @@
 _Name=Mini Web Browser
 _Comment=Browse the web
 Exec=gpe-mini-browser
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-mini-browser.png
 Categories=Application;PIM;GPE
-StartupNotify=True
+StartupNotify=true
 

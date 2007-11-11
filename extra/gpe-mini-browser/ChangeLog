@@ -1,3 +1,8 @@
+v0.21a - 11/11/2007 - Philippe De Swert
+
+* Make .desktop file standards compliant 
+  (http://standards.freedesktop.org/desktop-entry-spec/latest/index.html)
+
 v0.21 - Gonosz release  - 13/06/2007  - Philippe De Swert
 
 * Added option to configure (the now customized) User Agent through the configfile
