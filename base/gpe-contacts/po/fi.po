@@ -3,19 +3,18 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Asmo Koskinen <asmo.koskinen@arkki.info>, 2007.
+# Elias Julkunen <elias.julkunen@gmail.com>, 2007.
 msgid ""
 msgstr ""
 "Project-Id-Version: fi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-04 01:58+0200\n"
-"PO-Revision-Date: 2007-02-12 09:39+0200\n"
-"Last-Translator: Asmo Koskinen <asmo.koskinen@arkki.info>\n"
+"POT-Creation-Date: 2007-06-08 18:43+0200\n"
+"PO-Revision-Date: 2007-11-17 19:21+0200\n"
+"Last-Translator: Elias Julkunen <elias.julkunen@gmail.com>\n"
 "Language-Team: suomi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
-"Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -110,31 +109,31 @@ msgstr "Muokkaa henkilökohtaisia VCard-tietoja"
 msgid "My VCard"
 msgstr "VCard-tietoni"
 
-#: ../editing.c:135 ../main.c:1346
+#: ../editing.c:135 ../main.c:1440
 msgid "Details"
 msgstr "Yksityiskohdat"
 
-#: ../editing.c:367
+#: ../editing.c:368
 msgid "no year"
 msgstr "ei vuotta"
 
-#: ../editing.c:426
+#: ../editing.c:427
 msgid "Image"
 msgstr "Kuva"
 
-#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:540 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Peruuta"
 
-#: ../editing.c:540 ../namedetail.c:64
+#: ../editing.c:51 ../namedetail.c:64
 msgid "OK"
 msgstr "OK"
 
-#: ../editing.c:650 ../main.c:502 ../main.c:629
+#: ../editing.c:651 ../main.c:561 ../main.c:688
 msgid "Categories"
 msgstr "Luokat"
 
-#: ../editing.c:1431
+#: ../editing.c:1439
 msgid "Select image"
 msgstr "Valitse kuva"
 
@@ -152,7 +151,7 @@ msgstr "Etsi yhteystietoja"
 msgid "Search for:"
 msgstr "Etsi:"
 
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1376
 #: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
 msgstr "Yhteystiedot"
@@ -181,92 +180,91 @@ msgstr "Kaikki luokat"
 msgid "New Contact"
 msgstr "Uusi yhteystieto"
 
-#: ../main.c:513
+#: ../main.c:572
 msgid "No contact selected."
 msgstr "Yhtään yhteystietoa ei ole valittu."
 
 #. create and set up dialog
-#. * detail section *
-#: ../main.c:585 ../main.c:1418 ../main.c:1490
+#: ../main.c:644 ../main.c:1512 ../main.c:1585
 msgid "Contact"
 msgstr "Yhteystieto"
 
-#: ../main.c:1202
+#: ../main.c:1295
 msgid "Choose file"
 msgstr "Valitse tiedosto"
 
-#: ../main.c:1230
+#: ../main.c:1323
 msgid "Import of"
 msgstr "Tuonti"
 
-#: ../main.c:1230
+#: ../main.c:1323
 msgid "files failed:"
 msgstr "epäonnistuneet tiedostot:"
 
-#: ../main.c:1234
+#: ../main.c:1327
 msgid "Import successful"
 msgstr "Tuonti onnistui"
 
-#: ../main.c:1299
+#: ../main.c:1393
 msgid "Tap this button to add a new contact."
 msgstr "Napauta tästä lisätäksesi uuden yhteystiedon."
 
-#: ../main.c:1308
+#: ../main.c:1402
 msgid "Tap here to edit the selected contact."
 msgstr "Napauta tästä muokataksesi valittua yhteystietoa."
 
-#: ../main.c:1318
+#: ../main.c:1412
 msgid "Tap here to delete the selected contact."
 msgstr "Napauta tästä poistaaksesi valitun yhteystiedon."
 
-#: ../main.c:1338
+#: ../main.c:1432
 msgid "Find a contact by searching for any data."
 msgstr "Etsi yhteystietoja millä tahansa tiedolla."
 
-#: ../main.c:1348
+#: ../main.c:1442
 msgid "Tap here to show contacts details."
 msgstr "Napauta tästä nähdäksesi yksityiskohdat yhteystiedoista."
 
-#: ../main.c:1358
+#: ../main.c:1452
 msgid "Tap here to configure this program."
 msgstr "Napauta tästä muokataksesi tätä ohjelmaa."
 
-#: ../main.c:1366
+#: ../main.c:1460
 msgid "Import"
 msgstr "Tuo"
 
-#: ../main.c:1368
+#: ../main.c:1462
 msgid "Open file to import a contact from it."
 msgstr "Avaa tiedosto tuodaksesi yhteystiedot siitä."
 
-#: ../main.c:1381
+#: ../main.c:1475
 msgid "Tap here to exit gpe-contacts."
 msgstr "Napauta tästä poistuaksesi GPE-yhteystiedoista."
 
 #. * find and categories section *
-#: ../main.c:1447
+#: ../main.c:1541
 msgid "Find:"
 msgstr "Etsi:"
 
-#: ../main.c:1454
+#: ../main.c:1548
 msgid "in"
 msgstr "sisään"
 
-#: ../main.c:1587
+#: ../main.c:1694
 #, c-format
 msgid "Could not import file %s."
 msgstr "Tiedostoa %s ei voitu tuoda."
 
-#: ../main.c:1592
+#: ../main.c:1699
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr "Tiedosto %s tuotiin onnistuneesti."
 
-#: ../main.c:1618
+#: ../main.c:1725
 msgid "My Card"
 msgstr "Korttini"
 
-#: ../main.c:1621
+#: ../main.c:1728
 msgid "Saving vcard failed"
 msgstr "VCard-tietojen tallennus epäonnistui"
 
@@ -289,7 +287,7 @@ msgstr "rouva"
 
 #: ../namedetail.c:30
 msgid "Ms."
-msgstr "Ms."
+msgstr "neiti"
 
 #: ../namedetail.c:30
 msgid "Prof."

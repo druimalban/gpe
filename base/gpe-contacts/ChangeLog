@@ -1,3 +1,7 @@
+2007-11-22  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Update Finnish  translation
+
 2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac, editing.c, main-hildon.c: Set HILDON_VER to 2
