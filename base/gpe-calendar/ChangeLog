@@ -1,3 +1,6 @@
+2007-11-22  Florian Boor <florian@kernelconcepts.de>
+        * po/fi.po: Update Finnish translation
+
 2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.c, event-ui.c, import-export.c: Set HILDON_VER to 2
