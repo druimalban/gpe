@@ -5,7 +5,7 @@ GTK2 = yes
 CVSBUILD = yes
 VERSION = 0.25
 
-LINGUAS = nl pt cs fr de ro ru sr sk sv es
+LINGUAS = nl pt cs fr de ro ru sr sk sv es fi
 
 MEMBERS = clock 
 
