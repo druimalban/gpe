@@ -4,7 +4,6 @@ _Comment=Browse the web
 Exec=gpe-mini-browser
 Terminal=false
 Type=Application
-Icon=gpe-mini-browser.png
-Categories=Application;PIM;GPE;
+Icon=gpe-mini-browser
+Categories=X-GPE;X-PIM;X-Internet;X-Browser;
 StartupNotify=true
-
