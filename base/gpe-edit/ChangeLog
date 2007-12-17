@@ -1,3 +1,8 @@
+2007-12-17  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Release Version 0.41
+    * Update translations, pot file and translation code.
+
 2007-05-17  Yang Hong <yanghong@ccoss.com.cn>
 
 	* po/zh_CN.po: New Simplified Chinese translation

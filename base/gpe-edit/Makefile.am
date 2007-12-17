@@ -36,7 +36,8 @@ EXTRA_DIST = $(desktop_DATA) \
              $(mime_DATA) \
              intltool-extract.in \
              intltool-merge.in \
-             intltool-update.in
+             intltool-update.in \
+             po/gpe-edit.pot
 			 
 
 DISTCLEANFILES = intltool-extract \

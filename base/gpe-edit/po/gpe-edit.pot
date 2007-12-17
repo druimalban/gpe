@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-28 12:03+0200\n"
+"POT-Creation-Date: 2007-12-17 23:21+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,153 +16,117 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:75
+#: ../gpe-edit.desktop.in.in.h:1
+msgid "GPE Text Editor"
+msgstr ""
+
+#: ../gpe-edit.desktop.in.in.h:2
+msgid "Text Editor"
+msgstr ""
+
+#: ../main.c:78
 msgid ""
 "Help not (or incorrectly) installed. Or no helpviewer application registered."
 msgstr ""
 
-#: main.c:96
+#: ../main.c:99
 msgid "Untitled"
 msgstr ""
 
-#: main.c:137
+#: ../main.c:140
 msgid "Current file is modified, save?"
 msgstr ""
 
-#: main.c:137 main.c:364
+#: ../main.c:140 ../main.c:367
 msgid "Question"
 msgstr ""
 
-#: main.c:268
+#: ../main.c:271
 msgid "Open File ..."
 msgstr ""
 
-#: main.c:319
+#: ../main.c:322
 msgid "Save as..."
 msgstr ""
 
-#: main.c:364
+#: ../main.c:367
 msgid "Save current file before exiting?"
 msgstr ""
 
-#: main.c:365
+#: ../main.c:368
 msgid "Don't save"
 msgstr ""
 
-#: main.c:430
+#: ../main.c:433
 msgid "Text not found"
 msgstr ""
 
-#: main.c:470
+#: ../main.c:473
 msgid "Unable to replace text"
 msgstr ""
 
-#: main.c:483
+#: ../main.c:486
 msgid "Search for: "
 msgstr ""
 
-#: main.c:486 main.c:543
+#: ../main.c:489 ../main.c:546
 msgid "Find"
 msgstr ""
 
-#: main.c:535
+#: ../main.c:538
 msgid "Search for:"
 msgstr ""
 
-#: main.c:537
+#: ../main.c:540
 msgid "Replace with:"
 msgstr ""
 
-#: main.c:542 main.c:697
+#: ../main.c:545
 msgid "Replace"
 msgstr ""
 
-#: main.c:668
+#: ../main.c:671
 msgid ""
 "File editing field, additional functions are available by tap&hold or right "
 "click."
 msgstr ""
 
-#: main.c:675
-msgid "New"
-msgstr ""
-
-#: main.c:676
+#: ../main.c:678
 msgid "New document"
 msgstr ""
 
-#: main.c:679
-msgid "Open"
-msgstr ""
-
-#: main.c:680
+#: ../main.c:683
 msgid "Open file"
 msgstr ""
 
-#: main.c:683
-msgid "Save"
-msgstr ""
-
-#: main.c:684
+#: ../main.c:688
 msgid "Save current file"
 msgstr ""
 
-#: main.c:687
-msgid "Save as"
-msgstr ""
-
-#: main.c:688
+#: ../main.c:693
 msgid "Save current file as"
 msgstr ""
 
-#: main.c:693
-msgid "Search"
-msgstr ""
-
-#: main.c:694
+#: ../main.c:704
 msgid "Search text for a string"
 msgstr ""
 
-#: main.c:698
+#: ../main.c:710
 msgid "Replace a string"
 msgstr ""
 
-#: main.c:704
-msgid "Copy"
-msgstr ""
-
-#: main.c:705
+#: ../main.c:725
 msgid "Copy selected, paste is possible by tap&hold"
 msgstr ""
 
-#: main.c:711
-msgid "Paste"
-msgstr ""
-
-#: main.c:712
+#: ../main.c:735
 msgid "Paste from clipboard"
 msgstr ""
 
-#: main.c:718
-msgid "Help"
-msgstr ""
-
-#: main.c:719
+#: ../main.c:743
 msgid "Get help"
 msgstr ""
 
-#: main.c:724
-msgid "Quit"
-msgstr ""
-
-#: main.c:725
+#: ../main.c:751
 msgid "Exit gpe-edit"
-msgstr ""
-
-#: gpe-edit.desktop.in.h:1
-msgid "GPE Text Editor"
-msgstr ""
-
-#: gpe-edit.desktop.in.h:2
-msgid "Text Editor"
 msgstr ""

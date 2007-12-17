@@ -1,42 +1,43 @@
-# Chinese (simplified) translation for gpe-edit.
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Japanese translations for gpe-edit package
+# gpe-edit パッケージに対する英訳.
+# Copyright (C) 2006 THE gpe-edit'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-edit package.
-# Wenzheng Hu <db.lobster@gmail.com>, 2007.
+# Takeshi HAMASAKI <hma@syd.odn.ne.jp>, 2006.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-edit 0.13\n"
+"Project-Id-Version: gpe-edit-0.13\n"
 "POT-Creation-Date: 2003-02-20 20:31+0000\n"
-"PO-Revision-Date: 2007-07-08 14:29+0800\n"
-"Last-Translator: LI Daobing <lidaobing@gmail.com>\n"
-"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2006-07-25 14:03+0900\n"
+"Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: main.c:88 main.c:89
 msgid "Untitled"
-msgstr "无标题"
+msgstr "名前なし"
 
 #: main.c:260
 msgid "Open File ..."
-msgstr "打开文件..."
+msgstr "ファイルを開く..."
 
 #: main.c:289
 msgid "Save as .."
-msgstr "另存为..."
+msgstr "名前を付けて保存..."
 
 #: main.c:327
 msgid "Save current file before exiting?"
-msgstr "退出前保存当前文件?"
+msgstr "終了する前に編集中のファイルを保存しますか?"
 
 #: main.c:327
 msgid "Question"
-msgstr "问题"
+msgstr "質問"
 
 #: main.c:328
 msgid "Don't save"
-msgstr "不保存"
+msgstr "保存しない"
 
 #: main.c:328 main.c:616
 msgid "Save"
@@ -44,72 +45,72 @@ msgstr "保存"
 
 #: main.c:390
 msgid "Text not found"
-msgstr "文本未找到"
+msgstr "テキストが見つかりません"
 
 #: main.c:429
 msgid "Unable to replace text"
-msgstr "不能替换文本"
+msgstr "テキストを置換できません"
 
 #: main.c:443 main.c:492
 msgid "Search for:"
-msgstr "搜索:"
+msgstr "探すテキスト:"
 
 #: main.c:446 main.c:498
 msgid "Find"
-msgstr "查找"
+msgstr "検索"
 
 #: main.c:493
 msgid "Replace with:"
-msgstr "替换为:"
+msgstr "このテキストに置換:"
 
 #: main.c:497 main.c:630
 msgid "Replace"
-msgstr "替换"
+msgstr "置換"
 
 #: main.c:608
 msgid "New"
-msgstr "新建"
+msgstr "新規"
 
 #: main.c:609
 msgid "New document"
-msgstr "新建文档"
+msgstr "新しい文書"
 
 #: main.c:612
 msgid "Open"
-msgstr "打开"
+msgstr "開く"
 
 #: main.c:613
 msgid "Open file"
-msgstr "打开文件"
+msgstr "ファイルを開く"
 
 #: main.c:617
 msgid "Save current file"
-msgstr "保存当前文件"
+msgstr "編集中のファイルを保存"
 
 #: main.c:620
 msgid "Save as"
-msgstr "另存为"
+msgstr "名前を付けて保存"
 
 #: main.c:621
 msgid "Save current file as"
-msgstr "将当前文件另存为"
+msgstr "編集中のファイルを名前を付けて保存"
 
 #: main.c:626
 msgid "Search"
-msgstr "查找"
+msgstr "検索"
 
 #: main.c:627
 msgid "Search for a string"
-msgstr "查找字符串"
+msgstr "文字列の検索"
 
 #: main.c:631
 msgid "Replace a string"
-msgstr "替换字符串"
+msgstr "単語を置換"
 
 #: gpe-edit.desktop.in.h:1
 msgid "GPE Text Editor"
-msgstr "GPE 文本编辑器"
+msgstr "GPE テキストエディタ"
 
 #: gpe-edit.desktop.in.h:2
 msgid "Text Editor"
-msgstr "文本编辑器"
+msgstr "テキストエディタ"
