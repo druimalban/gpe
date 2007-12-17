@@ -1,4 +1,10 @@
+2007-12-17  Florian Boor <florian@kernelconcepts.de>
+
+	* po/*po: Update translation files.
+	* gpe-tp.am: Update translation include to fetch from new location.
+
 2007-11-22  Florian Boor <florian@kernelconcepts.de>
+
         * po/fi.po: Update Finnish translation
 
 2007-11-05  Graham Cobb  <g+770@cobb.uk.net>

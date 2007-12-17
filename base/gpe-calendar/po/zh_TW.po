@@ -1,419 +1,322 @@
-# traditional Chinese translation for gpe-calendar.
-# Copyright (C) 2003 Free Software Foundation, Inc.
-# This file is distributed under the same license as the PACKAGE package.
-# Chao-Hsiung Liao <pesder.liao@msa.hinet.net>, 2003.
+# traditional Chinese translation of gpe-calendar.
+# Copyright (C) 2001, 03, 2004 Free Software Foundation, Inc.
+# Chao-Hsiung Liao <pesder.liao@msa.hinet.net>, 2003, 2004.
 #
-#: intltool-merge.in:592 intltool-merge.in:593
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-calendar 0.40\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-27 00:49+0200\n"
-"PO-Revision-Date: 2003-04-14 21:58+0800\n"
+"Project-Id-Version: gpe-calendar 0.45\n"
+"POT-Creation-Date: 2003-09-05 23:16+0100\n"
+"PO-Revision-Date: 2005-03-13 16:30+0800\n"
 "Last-Translator: Chao-Hsiung Liao <pesder.liao@msa.hinet.net>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=Big5\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.0.2\n"
 
-#: day_popup.c:209
-msgid "No appointments"
-msgstr "µL¬ù·|"
+#: main.c:242 gpe-calendar.desktop.in.h:1
+msgid "Calendar"
+msgstr "è¡Œäº‹æ›†"
 
-#: day_view.c:59 event-ui.c:281
+#: main.c:261
+msgid "New appointment"
+msgstr "æ–°å¢ç´„æœƒ"
+
+#: main.c:261
+msgid "Tap here to add a new appointment or reminder"
+msgstr "é»é¸æ­¤è™•ä»¥åŠ å…¥ä¸€å€‹æ–°çš„ç´„æœƒæˆ–æé†’"
+
+#: main.c:267 main.c:268
+msgid "Today"
+msgstr "ä»Šå¤©"
+
+#: main.c:276
+msgid "Future"
+msgstr "å°‡ä¾†"
+
+#: main.c:276
+msgid "Future View"
+msgstr "å°‡ä¾†æª¢è¦–"
+
+#: main.c:277
+msgid "Tap here to see all future events."
+msgstr "é»é¸æ­¤è™•ä»¥æŸ¥çœ‹æ‰€æœ‰å°‡ä¾†çš„äº‹ä»¶ã€‚"
+
+#: main.c:284
+msgid "Day View"
+msgstr "æ—¥æª¢è¦–"
+
+#: main.c:285
+msgid "Tap here to select day-at-a-time view."
+msgstr "é»é¸æ­¤è™•ä»¥é¸æ“‡ä»¥æ—¥ç‚ºå–®ä½çš„æª¢è¦–ã€‚"
+
+#: main.c:292
+msgid "Week"
+msgstr "é€±"
+
+#: main.c:292
+msgid "Week View"
+msgstr "é€±æª¢è¦–"
+
+#: main.c:293
+msgid "Tap here to select week-at-a-time view."
+msgstr "é»é¸æ­¤è™•ä»¥é¸æ“‡ä»¥é€±ç‚ºå–®ä½çš„æª¢è¦–ã€‚"
+
+#: main.c:300
+msgid "Month"
+msgstr "æœˆ"
+
+#: main.c:300
+msgid "Month View"
+msgstr "æœˆæª¢è¦–"
+
+#: main.c:301
+msgid "Tap here to select month-at-a-time view."
+msgstr "é»é¸æ­¤è™•ä»¥é¸æ“‡ä»¥æœˆç‚ºå–®ä½çš„æª¢è¦–ã€‚"
+
+#: main.c:307
+msgid "Exit"
+msgstr "é›¢é–‹"
+
+#: main.c:307
+msgid "Tap here to exit the program"
+msgstr "é»é¸æ­¤è™•ä»¥é›¢é–‹æœ¬ç¨‹å¼"
+
+#: event-ui.c:251
 msgid ""
 "Delete all recurring entries?\n"
 "(If no, delete this instance only)"
 msgstr ""
+"æ˜¯å¦åˆªé™¤æ‰€æœ‰çš„å¾ªç’°é …ç›®ï¼Ÿ\n"
+"(å¦‚æœä¸è¦ï¼Œå‰‡åªæœƒåˆªé™¤æ­¤å¯¦é«”)"
 
-#: day_view.c:60 day_view.c:164 event-ui.c:282
-#, fuzzy
-msgid "Question"
-msgstr "´y­z:"
-
-#: day_view.c:164
-#, fuzzy
-msgid "Delete event?"
-msgstr "¦b¨Æ¥ó«e"
-
-#: event-ui.c:415
+#: event-ui.c:383
 msgid "End time must not be earlier than start time"
-msgstr "µ²§ô®É¶¡¥²¶·¦­©ó¶}©l®É¶¡"
+msgstr "çµæŸæ™‚é–“å¿…é ˆæ—©æ–¼é–‹å§‹æ™‚é–“"
 
-#: event-ui.c:435
-msgid ""
-"Event starts in the past!\n"
-"Save anyway?"
-msgstr ""
-
-#: event-ui.c:875
+#: event-ui.c:622
 msgid "Event"
-msgstr "¨Æ¥ó"
+msgstr "äº‹ä»¶"
 
-#: event-ui.c:876
+#: event-ui.c:623
 msgid "Recurrence"
-msgstr "´`Àô"
+msgstr "å¾ªç’°"
 
-#: event-ui.c:877 event-ui.c:1080
+#: event-ui.c:624 event-ui.c:797
 msgid "Alarm"
-msgstr "Äµ¥Ü"
+msgstr "è­¦ç¤º"
 
-#: event-ui.c:907
+#: event-ui.c:651 event-ui.c:853
 msgid "Type:"
-msgstr "Ãş«¬:"
+msgstr "é¡å‹:"
 
-#: event-ui.c:912
+#: event-ui.c:656
 msgid "Appointment"
-msgstr "¬ù·|"
+msgstr "ç´„æœƒ"
 
-#: event-ui.c:913
+#: event-ui.c:657
 msgid "Reminder"
-msgstr "´£¿ô"
+msgstr "æé†’"
 
-#: event-ui.c:915
+#: event-ui.c:659
 msgid "Task"
-msgstr "¤u§@"
+msgstr "å·¥ä½œ"
+
+#: event-ui.c:665
+msgid "Days"
+msgstr "æ—¥"
+
+#: event-ui.c:666
+msgid "Weeks"
+msgstr "é€±"
+
+#: event-ui.c:674
+msgid "Summary:"
+msgstr "æ‘˜è¦:"
+
+#: event-ui.c:690
+msgid "Start:"
+msgstr "é–‹å§‹:"
+
+#: event-ui.c:691
+msgid "End:"
+msgstr "çµæŸ:"
+
+#: event-ui.c:692 event-ui.c:693
+msgid "at:"
+msgstr "æ–¼:"
+
+#: event-ui.c:726
+msgid "Date:"
+msgstr "æ—¥æœŸ:"
+
+#: event-ui.c:729
+msgid "Time:"
+msgstr "æ™‚é–“:"
+
+#: event-ui.c:749
+msgid "Due:"
+msgstr "åˆ°æœŸ:"
+
+#: event-ui.c:753
+msgid "Allow:"
+msgstr "å…è¨±:"
+
+#: event-ui.c:768
+msgid "Description:"
+msgstr "æè¿°:"
+
+#: event-ui.c:801
+msgid "before event"
+msgstr "åœ¨äº‹ä»¶å‰"
+
+#: event-ui.c:804
+msgid "minutes"
+msgstr "åˆ†é˜"
+
+#: event-ui.c:806
+msgid "hours"
+msgstr "å°æ™‚"
+
+#: event-ui.c:808 event-ui.c:908
+msgid "days"
+msgstr "æ—¥"
+
+#: event-ui.c:810
+msgid "weeks"
+msgstr "é€±"
+
+#: event-ui.c:865
+msgid "No recurrence"
+msgstr "ä¸å¾ªç’°"
+
+#: event-ui.c:868
+msgid "Daily"
+msgstr "æ¯æ—¥"
+
+#: event-ui.c:871
+msgid "Weekly"
+msgstr "æ¯é€±"
+
+#: event-ui.c:874
+msgid "Monthly"
+msgstr "æ¯æœˆ"
+
+#: event-ui.c:877
+msgid "Yearly"
+msgstr "æ¯å¹´"
+
+#: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
+msgid "Every"
+msgstr "æ¯"
 
 #: event-ui.c:921
-msgid "Days"
-msgstr "¤é"
-
-#: event-ui.c:922
-msgid "Weeks"
-msgstr "¶g"
-
-#: event-ui.c:929
-#, fuzzy
-msgid "Text:"
-msgstr "®É¶¡:"
-
-#: event-ui.c:949
-#, fuzzy
-msgid "Start at:"
-msgstr "¶}©l:"
-
-#: event-ui.c:950
-#, fuzzy
-msgid "End at:"
-msgstr "µ²§ô¤é´Á:"
-
-#: event-ui.c:951 event-ui.c:952
-msgid "on:"
-msgstr ""
-
-#: event-ui.c:988
-msgid "Date:"
-msgstr "¤é´Á:"
-
-#: event-ui.c:991
-msgid "Time:"
-msgstr "®É¶¡:"
-
-#: event-ui.c:1012
-msgid "Due:"
-msgstr "¨ì´Á:"
-
-#: event-ui.c:1016
-msgid "Allow:"
-msgstr "¤¹³\:"
-
-#: event-ui.c:1026
-msgid "Categories"
-msgstr ""
-
-#: event-ui.c:1050
-msgid "Description:"
-msgstr "´y­z:"
-
-#: event-ui.c:1084
-msgid "before event"
-msgstr "¦b¨Æ¥ó«e"
-
-#: event-ui.c:1087
-msgid "minutes"
-msgstr "¤ÀÄÁ"
-
-#: event-ui.c:1089
-msgid "hours"
-msgstr "¤p®É"
-
-#. days label
-#: event-ui.c:1091 event-ui.c:1198
-msgid "days"
-msgstr "¤é"
-
-#: event-ui.c:1093
-msgid "weeks"
-msgstr "¶g"
-
-#: event-ui.c:1143
-#, fuzzy
-msgid "Type"
-msgstr "Ãş«¬:"
-
-#: event-ui.c:1155
-msgid "No recurrence"
-msgstr "¤£´`Àô"
-
-#: event-ui.c:1158
-msgid "Daily"
-msgstr "¨C¤é"
-
-#: event-ui.c:1161
-msgid "Weekly"
-msgstr "¨C¶g"
-
-#: event-ui.c:1164
-msgid "Monthly"
-msgstr "¨C¤ë"
-
-#: event-ui.c:1167
-msgid "Yearly"
-msgstr "¨C¦~"
-
-#. "every" label
-#: event-ui.c:1188 event-ui.c:1210 event-ui.c:1262 event-ui.c:1317
-msgid "Every"
-msgstr "¨C"
-
-#: event-ui.c:1211
 msgid "weeks, on:"
-msgstr "¶g¡A©ó:"
+msgstr "é€±ï¼Œæ–¼:"
 
-#. months label
-#: event-ui.c:1273
+#: event-ui.c:974
 msgid "months"
-msgstr "¤ë"
+msgstr "æœˆ"
 
-#: event-ui.c:1278
+#: event-ui.c:979
 #, c-format
 msgid "on day %d"
-msgstr "©ó %d ¤é"
+msgstr "æ–¼ %d æ—¥"
 
-#: event-ui.c:1282
+#: event-ui.c:983
 msgid "on the"
-msgstr "©ó"
+msgstr "æ–¼"
 
-#: event-ui.c:1290
+#: event-ui.c:991
 msgid "first"
-msgstr "²Ä¤@"
+msgstr "ä¸€"
 
-#: event-ui.c:1292
+#: event-ui.c:993
 msgid "second"
-msgstr "²Ä¤G"
+msgstr "äºŒ"
 
-#: event-ui.c:1294
+#: event-ui.c:995
 msgid "third"
-msgstr "²Ä¤T"
+msgstr "ä¸‰"
 
-#: event-ui.c:1296
+#: event-ui.c:997
 msgid "fourth"
-msgstr "²Ä¥|"
+msgstr "å››"
 
-#: event-ui.c:1298
+#: event-ui.c:999
 msgid "fifth"
-msgstr "²Ä¤­"
+msgstr "äº”"
 
-#: event-ui.c:1300
+#: event-ui.c:1001
 msgid "last"
-msgstr "³Ì«á"
+msgstr "æœ€å¾Œ"
 
-#. years label
-#: event-ui.c:1327
+#: event-ui.c:1028
 msgid "years"
-msgstr "¦~"
+msgstr "å¹´"
 
-#. Begin end-date vbox
-#: event-ui.c:1346
-#, fuzzy
-msgid "End Date"
-msgstr "µ²§ô¤é´Á:"
+#: event-ui.c:1047
+msgid "End Date:"
+msgstr "çµæŸæ—¥æœŸ:"
 
-#. forever radio button
-#: event-ui.c:1352
+#: event-ui.c:1053
 msgid "forever"
-msgstr "¥Ã¤["
+msgstr "æ°¸ä¹…"
 
-#: event-ui.c:1363
+#: event-ui.c:1064
 msgid "end after"
-msgstr "¦b¦¹¤§«áµ²§ô"
+msgstr "åœ¨æ­¤ä¹‹å¾ŒçµæŸ"
 
-#: event-ui.c:1380
+#: event-ui.c:1081
 msgid "end on"
-msgstr "µ²§ô©ó"
+msgstr "çµæŸæ–¼"
 
-#. events label
-#: event-ui.c:1388
+#: event-ui.c:1089
 msgid "events"
-msgstr "¨Æ¥ó"
+msgstr "äº‹ä»¶"
 
-#: event-ui.c:1504
+#: event-ui.c:1188
 msgid "Calendar: New event"
-msgstr "¦æ¨Æ¾ä¡G·s¼W¨Æ¥ó"
+msgstr "è¡Œäº‹æ›†ï¼šæ–°å¢äº‹ä»¶"
 
-#: event-ui.c:1558
+#: event-ui.c:1235
 msgid "Calendar: Edit event"
-msgstr "¦æ¨Æ¾ä¡G½s¿è¨Æ¥ó"
+msgstr "è¡Œäº‹æ›†ï¼šç·¨è¼¯äº‹ä»¶"
 
-#: gtkdatesel.c:216
+#: day_popup.c:171
+msgid "No appointments"
+msgstr "ç„¡ç´„æœƒ"
+
+#: xsettings.c:105
+msgid "Cannot create XSettings client"
+msgstr "ä¸èƒ½å»ºç«‹ XSettings å®¢æˆ¶ç«¯"
+
+#: gtkdatesel.c:193
 msgid "%Y"
 msgstr "%Y"
 
-#: gtkdatesel.c:225 gtkdatesel.c:272
+#: gtkdatesel.c:202
 msgid "%b"
 msgstr "%b"
 
-#: gtkdatesel.c:228 gtkdatesel.c:275
+#: gtkdatesel.c:205
 msgid "%B"
 msgstr "%B"
 
-#: gtkdatesel.c:231 gtkdatesel.c:278
+#: gtkdatesel.c:208
 #, c-format
 msgid "%m"
 msgstr "%m"
 
-#: gtkdatesel.c:242
+#: gtkdatesel.c:219
 msgid "Week %V"
-msgstr "%V ¶g"
+msgstr "%V é€±"
 
-#: gtkdatesel.c:248
+#: gtkdatesel.c:225
 #, c-format
 msgid "%a, %d"
 msgstr "%a, %d"
 
-#: gtkdatesel.c:312
-#, c-format
-msgid "%d"
-msgstr ""
-
-#: gtkdatesel.c:324
-#, c-format
-msgid "%a"
-msgstr ""
-
-#: intltool-merge.in:554
-msgid "($q)"
-msgstr ""
-
-#: intltool-merge.in:572
-msgid ")($q)"
-msgstr ""
-
-#: intltool-merge.in:605
-msgid "'"
-msgstr ""
-
-#: main.c:276
-msgid "Choose file"
-msgstr ""
-
-#: main.c:304
-msgid "Import of"
-msgstr ""
-
-#: main.c:304
-msgid "files failed:"
-msgstr ""
-
-#: main.c:308
-msgid "Import successful"
-msgstr ""
-
-#: main.c:424
-#, c-format
-msgid "Could not import file %s."
-msgstr ""
-
-#: main.c:429
-#, c-format
-msgid "File %s imported sucessfully."
-msgstr ""
-
-#: main.c:462
-msgid "Calendar"
-msgstr "¦æ¨Æ¾ä"
-
-#: main.c:484
-msgid "New appointment"
-msgstr "·s¼W¬ù·|"
-
-#: main.c:484
-msgid "Tap here to add a new appointment or reminder"
-msgstr "ÂI¿ï¦¹³B¥H¥[¤J¤@­Ó·sªº¬ù·|©Î´£¿ô"
-
-#: main.c:495
-msgid "Today"
-msgstr "¤µ¤Ñ"
-
-#: main.c:496
-msgid "Switch to today and stay there/return to day selecting."
-msgstr ""
-
-#: main.c:508
-msgid "Tap here to select day-at-a-time view."
-msgstr "ÂI¿ï¦¹³B¥H¿ï¾Ü¥H¤é¬°³æ¦ìªºÀËµø¡C"
-
-#: main.c:516
-msgid "Week"
-msgstr "¶g"
-
-#: main.c:517
-msgid "Tap here to select week-at-a-time view."
-msgstr "ÂI¿ï¦¹³B¥H¿ï¾Ü¥H¶g¬°³æ¦ìªºÀËµø¡C"
-
-#: main.c:525
-msgid "Month"
-msgstr "¤ë"
-
-#: main.c:526
-msgid "Tap here to select month-at-a-time view."
-msgstr "ÂI¿ï¦¹³B¥H¿ï¾Ü¥H¤ë¬°³æ¦ìªºÀËµø¡C"
-
-#: main.c:533
-msgid "Import"
-msgstr ""
-
-#: main.c:533
-msgid "Open file to import an event from it."
-msgstr ""
-
-#: main.c:540
-msgid "Tap here to exit the program"
-msgstr "ÂI¿ï¦¹³B¥HÂ÷¶}¥»µ{¦¡"
-
-#: xsettings.c:105
-msgid "Cannot create XSettings client"
-msgstr "¤£¯à«Ø¥ß XSettings «È¤áºİ"
-
-#~ msgid "Future"
-#~ msgstr "±N¨Ó"
-
-#~ msgid "Future View"
-#~ msgstr "±N¨ÓÀËµø"
-
-#~ msgid "Tap here to see all future events."
-#~ msgstr "ÂI¿ï¦¹³B¥H¬d¬İ©Ò¦³±N¨Óªº¨Æ¥ó¡C"
-
-#~ msgid "Day View"
-#~ msgstr "¤éÀËµø"
-
-#~ msgid "Week View"
-#~ msgstr "¶gÀËµø"
-
-#~ msgid "Month View"
-#~ msgstr "¤ëÀËµø"
-
-#~ msgid "Exit"
-#~ msgstr "Â÷¶}"
-
-#~ msgid "Summary:"
-#~ msgstr "ºK­n:"
-
-#~ msgid "End:"
-#~ msgstr "µ²§ô:"
-
-#~ msgid "at:"
-#~ msgstr "©ó:"
-
-#~ msgid "GPE Calendar"
-#~ msgstr "GPE ¦æ¨Æ¾ä"
+#: gpe-calendar.desktop.in.h:2
+msgid "GPE Calendar"
+msgstr "GPE è¡Œäº‹æ›†"

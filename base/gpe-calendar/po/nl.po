@@ -3,12 +3,10 @@
 # This file is distributed under the same license as the gpe-calendar package.
 # Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
 #
-#: intltool-merge.in:592 intltool-merge.in:593
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar 0.45\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-27 00:49+0200\n"
+"POT-Creation-Date: 2003-09-05 23:16+0100\n"
 "PO-Revision-Date: 2003-09-06 09:43+0100\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
@@ -16,11 +14,75 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: day_popup.c:209
-msgid "No appointments"
-msgstr "Geen afspraken"
+#: main.c:242 gpe-calendar.desktop.in.h:1
+msgid "Calendar"
+msgstr "Kalender"
 
-#: day_view.c:59 event-ui.c:281
+#: main.c:261
+msgid "New appointment"
+msgstr "Nieuwe afspraak"
+
+#: main.c:261
+msgid "Tap here to add a new appointment or reminder"
+msgstr "Druk hier om een nieuwe afspraak of herinnering toe te voegen"
+
+#: main.c:267 main.c:268
+msgid "Today"
+msgstr "Vandaag"
+
+#: main.c:276
+msgid "Future"
+msgstr "In de toekomst"
+
+#: main.c:276
+msgid "Future View"
+msgstr "Toekomst weergave"
+
+#: main.c:277
+msgid "Tap here to see all future events."
+msgstr "Druk hier om alle toekomstige gebeurtenissen te zien"
+
+#: main.c:284
+msgid "Day View"
+msgstr "Dag weergave"
+
+#: main.c:285
+msgid "Tap here to select day-at-a-time view."
+msgstr "Druk hier om per-dag weergave te selecteren."
+
+#: main.c:292
+msgid "Week"
+msgstr "Week"
+
+#: main.c:292
+msgid "Week View"
+msgstr "Week weergave"
+
+#: main.c:293
+msgid "Tap here to select week-at-a-time view."
+msgstr "Druk hier om per-week weergave te selecteren."
+
+#: main.c:300
+msgid "Month"
+msgstr "Maand"
+
+#: main.c:300
+msgid "Month View"
+msgstr "Maand weergave"
+
+#: main.c:301
+msgid "Tap here to select month-at-a-time view."
+msgstr "Druk hier om per-maand weergave te selecteren."
+
+#: main.c:307
+msgid "Exit"
+msgstr "Afsluiten"
+
+#: main.c:307
+msgid "Tap here to exit the program"
+msgstr "Druk hier om het programma af te sluiten"
+
+#: event-ui.c:251
 msgid ""
 "Delete all recurring entries?\n"
 "(If no, delete this instance only)"
@@ -28,394 +90,233 @@ msgstr ""
 "Alle terugkomende ingangen verwijderen?\n"
 "(Als nee, dan alleen deze ene ingang)"
 
-#: day_view.c:60 day_view.c:164 event-ui.c:282
-#, fuzzy
-msgid "Question"
-msgstr "Beschrijving:"
-
-#: day_view.c:164
-#, fuzzy
-msgid "Delete event?"
-msgstr "voor gebeurtenis"
-
-#: event-ui.c:415
+#: event-ui.c:383
 msgid "End time must not be earlier than start time"
 msgstr "Eindtijd mag niet eerder zijn dan begintijd"
 
-#: event-ui.c:435
-msgid ""
-"Event starts in the past!\n"
-"Save anyway?"
-msgstr ""
-
-#: event-ui.c:875
+#: event-ui.c:622
 msgid "Event"
 msgstr "Gebeurtenis"
 
-#: event-ui.c:876
+#: event-ui.c:623
 msgid "Recurrence"
 msgstr "Herhaling"
 
-#: event-ui.c:877 event-ui.c:1080
+#: event-ui.c:624 event-ui.c:797
 msgid "Alarm"
 msgstr "Alarm"
 
-#: event-ui.c:907
+#: event-ui.c:651 event-ui.c:853
 msgid "Type:"
 msgstr "Soort:"
 
-#: event-ui.c:912
+#: event-ui.c:656
 msgid "Appointment"
 msgstr "Afspraak"
 
-#: event-ui.c:913
+#: event-ui.c:657
 msgid "Reminder"
 msgstr "Herinnering"
 
-#: event-ui.c:915
+#: event-ui.c:659
 msgid "Task"
 msgstr "Taak"
 
-#: event-ui.c:921
+#: event-ui.c:665
 msgid "Days"
 msgstr "Dagen"
 
-#: event-ui.c:922
+#: event-ui.c:666
 msgid "Weeks"
 msgstr "Weken"
 
-#: event-ui.c:929
-#, fuzzy
-msgid "Text:"
-msgstr "Tijd:"
+#: event-ui.c:674
+msgid "Summary:"
+msgstr "Samenvatting:"
 
-#: event-ui.c:949
-#, fuzzy
-msgid "Start at:"
+#: event-ui.c:690
+msgid "Start:"
 msgstr "Begin:"
 
-#: event-ui.c:950
-#, fuzzy
-msgid "End at:"
-msgstr "Einddatum:"
+#: event-ui.c:691
+msgid "End:"
+msgstr "Einde:"
 
-#: event-ui.c:951 event-ui.c:952
-msgid "on:"
-msgstr ""
+#: event-ui.c:692 event-ui.c:693
+msgid "at:"
+msgstr "op:"
 
-#: event-ui.c:988
+#: event-ui.c:726
 msgid "Date:"
 msgstr "Datum:"
 
-#: event-ui.c:991
+#: event-ui.c:729
 msgid "Time:"
 msgstr "Tijd:"
 
-#: event-ui.c:1012
+#: event-ui.c:749
 msgid "Due:"
 msgstr "Tijdstip:"
 
-#: event-ui.c:1016
+#: event-ui.c:753
 msgid "Allow:"
 msgstr "Toestaan:"
 
-#: event-ui.c:1026
-msgid "Categories"
-msgstr ""
-
-#: event-ui.c:1050
+#: event-ui.c:768
 msgid "Description:"
 msgstr "Beschrijving:"
 
-#: event-ui.c:1084
+#: event-ui.c:801
 msgid "before event"
 msgstr "voor gebeurtenis"
 
-#: event-ui.c:1087
+#: event-ui.c:804
 msgid "minutes"
 msgstr "minuten"
 
-#: event-ui.c:1089
+#: event-ui.c:806
 msgid "hours"
 msgstr "uren"
 
-#. days label
-#: event-ui.c:1091 event-ui.c:1198
+#: event-ui.c:808 event-ui.c:908
 msgid "days"
 msgstr "dagen"
 
-#: event-ui.c:1093
+#: event-ui.c:810
 msgid "weeks"
 msgstr "weken"
 
-#: event-ui.c:1143
-#, fuzzy
-msgid "Type"
-msgstr "Soort:"
-
-#: event-ui.c:1155
+#: event-ui.c:865
 msgid "No recurrence"
 msgstr "Geen herhaling"
 
-#: event-ui.c:1158
+#: event-ui.c:868
 msgid "Daily"
 msgstr "Dagelijks"
 
-#: event-ui.c:1161
+#: event-ui.c:871
 msgid "Weekly"
 msgstr "Wekelijks"
 
-#: event-ui.c:1164
+#: event-ui.c:874
 msgid "Monthly"
 msgstr "Maandelijks"
 
-#: event-ui.c:1167
+#: event-ui.c:877
 msgid "Yearly"
 msgstr "Jaarlijks"
 
-#. "every" label
-#: event-ui.c:1188 event-ui.c:1210 event-ui.c:1262 event-ui.c:1317
+#: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
 msgid "Every"
 msgstr "Elke"
 
-#: event-ui.c:1211
+#: event-ui.c:921
 msgid "weeks, on:"
 msgstr "weken, op:"
 
-#. months label
-#: event-ui.c:1273
+#: event-ui.c:974
 msgid "months"
 msgstr "maanden"
 
-#: event-ui.c:1278
+#: event-ui.c:979
 #, c-format
 msgid "on day %d"
 msgstr "op dag %d"
 
-#: event-ui.c:1282
+#: event-ui.c:983
 msgid "on the"
 msgstr "op de"
 
-#: event-ui.c:1290
+#: event-ui.c:991
 msgid "first"
 msgstr "eerste"
 
-#: event-ui.c:1292
+#: event-ui.c:993
 msgid "second"
 msgstr "tweede"
 
-#: event-ui.c:1294
+#: event-ui.c:995
 msgid "third"
 msgstr "derde"
 
-#: event-ui.c:1296
+#: event-ui.c:997
 msgid "fourth"
 msgstr "vierde"
 
-#: event-ui.c:1298
+#: event-ui.c:999
 msgid "fifth"
 msgstr "vijfde"
 
-#: event-ui.c:1300
+#: event-ui.c:1001
 msgid "last"
 msgstr "laatste"
 
-#. years label
-#: event-ui.c:1327
+#: event-ui.c:1028
 msgid "years"
 msgstr "jaren"
 
-#. Begin end-date vbox
-#: event-ui.c:1346
-#, fuzzy
-msgid "End Date"
+#: event-ui.c:1047
+msgid "End Date:"
 msgstr "Einddatum:"
 
-#. forever radio button
-#: event-ui.c:1352
+#: event-ui.c:1053
 msgid "forever"
 msgstr "altijd"
 
-#: event-ui.c:1363
+#: event-ui.c:1064
 msgid "end after"
 msgstr "einde na"
 
-#: event-ui.c:1380
+#: event-ui.c:1081
 msgid "end on"
 msgstr "einde op"
 
-#. events label
-#: event-ui.c:1388
+#: event-ui.c:1089
 msgid "events"
 msgstr "gebeurtenissen"
 
-#: event-ui.c:1504
+#: event-ui.c:1188
 msgid "Calendar: New event"
 msgstr "Kalender: Nieuwe gebeurtenis"
 
-#: event-ui.c:1558
+#: event-ui.c:1235
 msgid "Calendar: Edit event"
 msgstr "Kalender: Gebeurtenis bewerken"
 
-#: gtkdatesel.c:216
-msgid "%Y"
-msgstr "%Y"
-
-#: gtkdatesel.c:225 gtkdatesel.c:272
-msgid "%b"
-msgstr "%b"
-
-#: gtkdatesel.c:228 gtkdatesel.c:275
-msgid "%B"
-msgstr "%B"
-
-#: gtkdatesel.c:231 gtkdatesel.c:278
-#, c-format
-msgid "%m"
-msgstr "%m"
-
-#: gtkdatesel.c:242
-msgid "Week %V"
-msgstr "Week %V"
-
-#: gtkdatesel.c:248
-#, c-format
-msgid "%a, %d"
-msgstr "%a, %d"
-
-#: gtkdatesel.c:312
-#, c-format
-msgid "%d"
-msgstr ""
-
-#: gtkdatesel.c:324
-#, c-format
-msgid "%a"
-msgstr ""
-
-#: intltool-merge.in:554
-msgid "($q)"
-msgstr ""
-
-#: intltool-merge.in:572
-msgid ")($q)"
-msgstr ""
-
-#: intltool-merge.in:605
-msgid "'"
-msgstr ""
-
-#: main.c:276
-msgid "Choose file"
-msgstr ""
-
-#: main.c:304
-msgid "Import of"
-msgstr ""
-
-#: main.c:304
-msgid "files failed:"
-msgstr ""
-
-#: main.c:308
-msgid "Import successful"
-msgstr ""
-
-#: main.c:424
-#, c-format
-msgid "Could not import file %s."
-msgstr ""
-
-#: main.c:429
-#, c-format
-msgid "File %s imported sucessfully."
-msgstr ""
-
-#: main.c:462
-msgid "Calendar"
-msgstr "Kalender"
-
-#: main.c:484
-msgid "New appointment"
-msgstr "Nieuwe afspraak"
-
-#: main.c:484
-msgid "Tap here to add a new appointment or reminder"
-msgstr "Druk hier om een nieuwe afspraak of herinnering toe te voegen"
-
-#: main.c:495
-msgid "Today"
-msgstr "Vandaag"
-
-#: main.c:496
-msgid "Switch to today and stay there/return to day selecting."
-msgstr ""
-
-#: main.c:508
-msgid "Tap here to select day-at-a-time view."
-msgstr "Druk hier om per-dag weergave te selecteren."
-
-#: main.c:516
-msgid "Week"
-msgstr "Week"
-
-#: main.c:517
-msgid "Tap here to select week-at-a-time view."
-msgstr "Druk hier om per-week weergave te selecteren."
-
-#: main.c:525
-msgid "Month"
-msgstr "Maand"
-
-#: main.c:526
-msgid "Tap here to select month-at-a-time view."
-msgstr "Druk hier om per-maand weergave te selecteren."
-
-#: main.c:533
-msgid "Import"
-msgstr ""
-
-#: main.c:533
-msgid "Open file to import an event from it."
-msgstr ""
-
-#: main.c:540
-msgid "Tap here to exit the program"
-msgstr "Druk hier om het programma af te sluiten"
+#: day_popup.c:171
+msgid "No appointments"
+msgstr "Geen afspraken"
 
 #: xsettings.c:105
 msgid "Cannot create XSettings client"
 msgstr "Kan geen XSettings client maken"
 
-#~ msgid "Future"
-#~ msgstr "In de toekomst"
+#: gtkdatesel.c:193
+msgid "%Y"
+msgstr "%Y"
 
-#~ msgid "Future View"
-#~ msgstr "Toekomst weergave"
+#: gtkdatesel.c:202
+msgid "%b"
+msgstr "%b"
 
-#~ msgid "Tap here to see all future events."
-#~ msgstr "Druk hier om alle toekomstige gebeurtenissen te zien"
+#: gtkdatesel.c:205
+msgid "%B"
+msgstr "%B"
 
-#~ msgid "Day View"
-#~ msgstr "Dag weergave"
+#: gtkdatesel.c:208
+#, c-format
+msgid "%m"
+msgstr "%m"
 
-#~ msgid "Week View"
-#~ msgstr "Week weergave"
+#: gtkdatesel.c:219
+msgid "Week %V"
+msgstr "Week %V"
 
-#~ msgid "Month View"
-#~ msgstr "Maand weergave"
+#: gtkdatesel.c:225
+#, c-format
+msgid "%a, %d"
+msgstr "%a, %d"
 
-#~ msgid "Exit"
-#~ msgstr "Afsluiten"
-
-#~ msgid "Summary:"
-#~ msgstr "Samenvatting:"
-
-#~ msgid "End:"
-#~ msgstr "Einde:"
-
-#~ msgid "at:"
-#~ msgstr "op:"
-
-#~ msgid "GPE Calendar"
-#~ msgstr "GPE Kalender"
+#: gpe-calendar.desktop.in.h:2
+msgid "GPE Calendar"
+msgstr "GPE Kalender"

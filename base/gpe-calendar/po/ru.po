@@ -1,391 +1,788 @@
-# Translation of gpe-calendar-0.45.po to Russian.
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Translation of gpe-calendar-0.73rc2.po to Russian
+# Copyright (C) 2003, 2006 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-calendar package.
-# Pavel Maryanov <acid_jack@ukr.net>, 2003.
 #
-#: intltool-merge.in:592 intltool-merge.in:593
+# Pavel Maryanov <acid_jack@ukr.net>, 2003, 2006.
+#: ../event-ui.c:185
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-calendar 0.45\n"
+"Project-Id-Version: gpe-calendar-0.73rc2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-27 00:49+0200\n"
-"PO-Revision-Date: 2003-10-23 21:39+0200\n"
+"POT-Creation-Date: 2006-07-03 16:10+0200\n"
+"PO-Revision-Date: 2006-08-31 00:51+0300\n"
 "Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.2\n"
 
-#: day_popup.c:209
-msgid "No appointments"
-msgstr "Встреч нет"
+#: ../gpe-calendar.desktop.in.in.h:1 ../hildon/gpe-calendar.desktop.in.in.h:1
+msgid "Calendar"
+msgstr "Календарь"
 
-#: day_view.c:59 event-ui.c:281
+#: ../gpe-calendar.desktop.in.in.h:2
+msgid "GPE Calendar"
+msgstr "Календарь GPE"
+
+#: ../hildon/gpe-calendar.desktop.in.in.h:2
+msgid "GPE Calendar Application"
+msgstr "Приложение 'Календарь GPE'"
+
+#: ../alarm-dialog.c:188 ../main.c:1788
+msgid "Alarms"
+msgstr "Будильники"
+
+#: ../alarm-dialog.c:208
+msgid "Acknowledge All"
+msgstr "Подтвердить все"
+
+#: ../alarm-dialog.c:214 ../calendars-dialog.c:467
+msgid "Dismiss"
+msgstr "Отменить"
+
+#: ../alarm-dialog.c:285
+msgid "No alarms have gone off."
+msgstr "Ни один из будильников не был убран."
+
+#: ../alarm-dialog.c:371
+#, c-format
+msgid "%s%s%s%s%s%s%s%s"
+msgstr "%s%s%s%s%s%s%s%s"
+
+#: ../alarm-dialog.c:372
+msgid "<b>Summary</b>: "
+msgstr "<b>Сводка</b>: "
+
+#: ../alarm-dialog.c:375
+msgid "<b>Description</b>: "
+msgstr "<b>Описание</b>: "
+
+#: ../alarm-dialog.c:378
+msgid "<b>Location</b>: "
+msgstr "<b>Место</b>: "
+
+#: ../alarm-dialog.c:464
+msgid "Show Event"
+msgstr "Показать событие"
+
+#: ../alarm-dialog.c:470
+msgid "Acknowledge"
+msgstr "Подтвердить"
+
+#: ../alarm-dialog.c:477
+msgid "Sleep:"
+msgstr "Ожидание:"
+
+#: ../alarm-dialog.c:492
+msgid "Minutes"
+msgstr "Минуты"
+
+#: ../alarm-dialog.c:493
+msgid "Hours"
+msgstr "Часы"
+
+#: ../alarm-dialog.c:494
+msgid "Days"
+msgstr "Дни"
+
+#: ../calendar-delete-dialog.c:134
+#, c-format
 msgid ""
-"Delete all recurring entries?\n"
-"(If no, delete this instance only)"
+" %s cannot be the new parent of %s's constituents: this would create a loop (try being your own grandparent).\n"
+"Please select a calendar which is not a descendent of %s."
 msgstr ""
-"Удалить все повторяющиеся пункты?\n"
-"(Если нет, удалить только этот пункт)"
+" %s не может быть новым родителем для компонентов %s: при этом получится обратная петля (попробуйте стать сам себе дедушкой).\n"
+"Выберите календарь, который не является потомком %s."
 
-#: day_view.c:60 day_view.c:164 event-ui.c:282
-#, fuzzy
-msgid "Question"
+#: ../calendar-delete-dialog.c:171
+#, c-format
+msgid "Delete Calendar %s"
+msgstr "Удалить календарь %s"
+
+#: ../calendar-delete-dialog.c:197
+#, c-format
+msgid "Delete %s%s%s"
+msgstr "Удалить %s%s%s"
+
+#: ../calendar-delete-dialog.c:207
+#, c-format
+msgid "Reparent %s%s%s"
+msgstr "Новый родитель %s%s%s"
+
+#: ../calendar-edit-dialog.c:252
+msgid "Calendar: New Calendar"
+msgstr "Календарь: новый календарь"
+
+#: ../calendar-edit-dialog.c:275
+msgid "Title:"
+msgstr "Заголовок:"
+
+#. Description textarea.
+#: ../calendar-edit-dialog.c:288 ../event-ui.c:717
+msgid "Description:"
 msgstr "Описание:"
 
-#: day_view.c:164
-#, fuzzy
-msgid "Delete event?"
-msgstr "до события"
+#: ../calendar-edit-dialog.c:301
+msgid "Parent:"
+msgstr "Родитель:"
 
-#: event-ui.c:415
+#: ../calendar-edit-dialog.c:320
+msgid "Color:"
+msgstr "Цвет:"
+
+#: ../calendar-edit-dialog.c:341
+msgid "Type:"
+msgstr "Тип:"
+
+#: ../calendar-edit-dialog.c:346
+msgid "Local"
+msgstr "Локальный"
+
+#: ../calendar-edit-dialog.c:347
+msgid "Subscribe"
+msgstr "Подписаться"
+
+#: ../calendar-edit-dialog.c:348
+msgid "Publish"
+msgstr "Опубликовать"
+
+#. Uncomment as we support other modes.
+#: ../calendar-edit-dialog.c:351
+msgid "Synchronize"
+msgstr "Синхронизировать"
+
+#: ../calendar-edit-dialog.c:368
+msgid "URL:"
+msgstr "URL:"
+
+#: ../calendar-edit-dialog.c:380
+msgid "Username:"
+msgstr "Пользователь:"
+
+#: ../calendar-edit-dialog.c:392
+msgid "Password:"
+msgstr "Пароль:"
+
+#. Don't show initially.
+#: ../calendar-edit-dialog.c:406
+msgid "Update:"
+msgstr "Обновить:"
+
+#: ../calendar-edit-dialog.c:420
+msgid "times per year"
+msgstr "раз в году"
+
+#: ../calendar-edit-dialog.c:421
+msgid "times per month"
+msgstr "раз в месяц"
+
+#: ../calendar-edit-dialog.c:422
+msgid "times per week"
+msgstr "раз в неделю"
+
+#: ../calendar-edit-dialog.c:423
+msgid "times per day"
+msgstr "раз в день"
+
+#: ../calendar-edit-dialog.c:424
+msgid "times per hour"
+msgstr "раз в час"
+
+#: ../calendar-edit-dialog.c:522
+msgid "Calendar: Edit Calendar"
+msgstr "Календарь: редактирование календаря"
+
+#: ../calendars-dialog.c:299 ../main.c:1680
+msgid "Calendars"
+msgstr "Календари"
+
+#: ../calendars-dialog.c:335
+msgid "Show All"
+msgstr "Показать все"
+
+#: ../calendars-widgets.c:382
+#, c-format
+msgid "%ld minutes ago"
+msgstr "%ld минут назад"
+
+#: ../calendars-widgets.c:384
+#, c-format
+msgid "%ld hours ago"
+msgstr "%ld часов назад"
+
+#: ../calendars-widgets.c:386
+#, c-format
+msgid "%ld days ago"
+msgstr "%ld дней назад"
+
+#: ../calendars-widgets.c:393
+#, c-format
+msgid "%x"
+msgstr "%x"
+
+#: ../calendars-widgets.c:406
+msgid "Up to date"
+msgstr "Актуален"
+
+#: ../calendars-widgets.c:408
+msgid "Modified"
+msgstr "Изменён"
+
+#: ../calendar-update.c:158
+msgid "Calendar Syncronization"
+msgstr "Синхронизация календаря"
+
+#: ../day_popup.c:89
+msgid "%a %d %B"
+msgstr "%a %d %B"
+
+#: ../day_popup.c:137 ../event-list.c:250
+#, c-format
+msgid "Until %s"
+msgstr "До %s"
+
+#: ../day_view.c:238
+msgid "Until %b %d"
+msgstr "До %b %d"
+
+#: ../day_view.c:240
+#, c-format
+msgid "Until %d:%02d"
+msgstr "До %d:%02d"
+
+#: ../event-list.c:189
+#, c-format
+msgid "%-m/%-d"
+msgstr "%-m/%-d"
+
+#: ../event-list.c:190
+msgid "%b %-d"
+msgstr "%b %-d"
+
+#: ../event-list.c:193
+msgid "%m/%d/%t"
+msgstr "%m/%d/%t"
+
+#: ../event-list.c:194
+msgid "%b %d, %y"
+msgstr "%b %d, %y"
+
+#: ../event-list.c:200
+msgid "%-H:%M"
+msgstr "%-H:%M"
+
+#: ../event-list.c:203
+msgid "%-m/%-d %-H:%M"
+msgstr "%-m/%-d %-H:%M"
+
+#: ../event-list.c:204
+msgid "%b %-d %-H:%M"
+msgstr "%b %-d %-H:%M"
+
+#: ../event-list.c:207
+msgid "%-m/%-d/%y %-H:%M"
+msgstr "%-m/%-d/%y %-H:%M"
+
+#: ../event-list.c:208
+msgid "%b %-d, %y %-H:%M"
+msgstr "%b %-d, %y %-H:%M"
+
+#: ../event-list.c:235 ../event-list.c:313 ../main.c:338 ../main.c:1811
+msgid "Today"
+msgstr "Сегодня"
+
+#: ../event-list.c:741 ../event-ui.c:188 ../event-ui.c:780
+msgid "days"
+msgstr "дни"
+
+#: ../event-list.c:742 ../event-ui.c:781
+msgid "weeks"
+msgstr "недели"
+
+#: ../event-list.c:743 ../event-ui.c:194
+msgid "months"
+msgstr "месяцы"
+
+#: ../event-list.c:744 ../event-ui.c:197
+msgid "years"
+msgstr "годы"
+
+#: ../event-menu.c:57
+#, c-format
+msgid "Delete all occurrences of %s?"
+msgstr "Удалить все события %s?"
+
+#: ../event-menu.c:60 ../event-menu.c:84
+msgid "Question"
+msgstr "Вопрос"
+
+#: ../event-menu.c:61
+msgid "Delete this occurrence"
+msgstr "Удалить это событие"
+
+#: ../event-menu.c:62
+msgid "Delete all occurrences"
+msgstr "Удалить все события"
+
+#: ../event-menu.c:82
+#, c-format
+msgid "Delete %s?"
+msgstr "Удалить %s?"
+
+#: ../event-menu.c:254
+msgid "Edit"
+msgstr "Редактировать"
+
+#: ../event-menu.c:267
+msgid "Edit Event"
+msgstr "Редактировать событие"
+
+#: ../event-menu.c:275
+#, c-format
+msgid "Edit <i>%s</i>"
+msgstr "Редактировать <i>%s</i>"
+
+#: ../event-menu.c:286
+msgid "Delete"
+msgstr "Удалить"
+
+#: ../event-menu.c:299
+msgid "Delete Event"
+msgstr "Удалить событие"
+
+#: ../event-menu.c:307
+#, c-format
+msgid "Delete <i>%s</i>"
+msgstr "Удалить <i>%s</i>"
+
+#: ../event-menu.c:318 ../event-ui.c:1459
+msgid "Save"
+msgstr "Сохранить"
+
+#: ../event-menu.c:331
+msgid "Save Event"
+msgstr "Сохранить событие"
+
+#: ../event-menu.c:339
+#, c-format
+msgid "Save <i>%s</i>"
+msgstr "Сохранить <i>%s</i>"
+
+#: ../event-menu.c:353
+msgid "Send via Infra-red"
+msgstr "Отправить через ИК-порт"
+
+#: ../event-menu.c:366
+msgid "Send via Bluetooth"
+msgstr "Отправить через Bluetooth"
+
+#: ../event-menu.c:381
+msgid "Move to Calendar..."
+msgstr "Переместить в календарь..."
+
+#: ../event-menu.c:390
+#, c-format
+msgid "Only Show <i>%s</i>"
+msgstr "Показать только <i>%s</i>"
+
+#: ../event-menu.c:401
+#, c-format
+msgid "Hide <i>%s</i>"
+msgstr "Скрыть <i>%s</i>"
+
+#: ../event-ui.c:148 ../event-ui.c:872
+msgid "Every"
+msgstr "Каждый"
+
+#: ../event-ui.c:149
+msgid "First"
+msgstr "Первый"
+
+#: ../event-ui.c:150
+msgid "Second"
+msgstr "Второй"
+
+#: ../event-ui.c:151
+msgid "Third"
+msgstr "Третий"
+
+#: ../event-ui.c:152
+msgid "Fourth"
+msgstr "Четвертый"
+
+#: ../event-ui.c:153
+msgid "Last"
+msgstr "Последний"
+
+#: ../event-ui.c:154
+msgid "Second to last"
+msgstr "Предпоследний"
+
+#: ../event-ui.c:191
+msgid "weeks, on:"
+msgstr "недели, в:"
+
+#: ../event-ui.c:266
 msgid "End time must not be earlier than start time"
-msgstr "Время окончания не должно быть раньше времени начала"
+msgstr "Время окончания не должно предшествовать времени начала"
 
-#: event-ui.c:435
+#: ../event-ui.c:276 ../event-ui.c:282
 msgid ""
 "Event starts in the past!\n"
 "Save anyway?"
 msgstr ""
+"Событие начинается в прошлом!\n"
+"Всё равно сохранить?"
 
-#: event-ui.c:875
-msgid "Event"
-msgstr "Событие"
+#. Location.
+#: ../event-ui.c:677
+msgid "Location:"
+msgstr "Место:"
 
-#: event-ui.c:876
-msgid "Recurrence"
-msgstr "Повторение"
+#. Categories.
+#: ../event-ui.c:695
+msgid "Categories"
+msgstr "Категории"
 
-#: event-ui.c:877 event-ui.c:1080
+#: ../event-ui.c:703
+msgid "Define categories by tapping the Categories button."
+msgstr "Определите категории, нажав кнопку соответствующую кнопку."
+
+#: ../event-ui.c:764 ../event-ui.c:1360
 msgid "Alarm"
 msgstr "Будильник"
 
-#: event-ui.c:907
-msgid "Type:"
-msgstr "Тип:"
-
-#: event-ui.c:912
-msgid "Appointment"
-msgstr "Встреча"
-
-#: event-ui.c:913
-msgid "Reminder"
-msgstr "Напоминание"
-
-#: event-ui.c:915
-msgid "Task"
-msgstr "Задание"
-
-#: event-ui.c:921
-msgid "Days"
-msgstr "Дни"
-
-#: event-ui.c:922
-msgid "Weeks"
-msgstr "Недели"
-
-#: event-ui.c:929
-#, fuzzy
-msgid "Text:"
-msgstr "Время:"
-
-#: event-ui.c:949
-#, fuzzy
-msgid "Start at:"
-msgstr "Начало:"
-
-#: event-ui.c:950
-#, fuzzy
-msgid "End at:"
-msgstr "Дата окончания:"
-
-#: event-ui.c:951 event-ui.c:952
-msgid "on:"
-msgstr ""
-
-#: event-ui.c:988
-msgid "Date:"
-msgstr "Дата:"
-
-#: event-ui.c:991
-msgid "Time:"
-msgstr "Время:"
-
-#: event-ui.c:1012
-msgid "Due:"
-msgstr "Ожидание:"
-
-#: event-ui.c:1016
-msgid "Allow:"
-msgstr "Разрешение:"
-
-#: event-ui.c:1026
-msgid "Categories"
-msgstr ""
-
-#: event-ui.c:1050
-msgid "Description:"
-msgstr "Описание:"
-
-#: event-ui.c:1084
-msgid "before event"
-msgstr "до события"
-
-#: event-ui.c:1087
+#: ../event-ui.c:778
 msgid "minutes"
 msgstr "минуты"
 
-#: event-ui.c:1089
+#: ../event-ui.c:779
 msgid "hours"
 msgstr "часы"
 
-#. days label
-#: event-ui.c:1091 event-ui.c:1198
-msgid "days"
-msgstr "дни"
+#: ../event-ui.c:788
+msgid "before event"
+msgstr "до события"
 
-#: event-ui.c:1093
-msgid "weeks"
-msgstr "недели"
+#: ../event-ui.c:825
+msgid "Recurrence type:"
+msgstr "Тип повторения:"
 
-#: event-ui.c:1143
-#, fuzzy
-msgid "Type"
-msgstr "Тип:"
+#: ../event-ui.c:831
+msgid "single occurrence"
+msgstr "один раз"
 
-#: event-ui.c:1155
-msgid "No recurrence"
-msgstr "Без повторения"
+#: ../event-ui.c:832
+msgid "daily"
+msgstr "ежедневно"
 
-#: event-ui.c:1158
-msgid "Daily"
-msgstr "Ежедневно"
+#: ../event-ui.c:833
+msgid "weekly"
+msgstr "еженедельно"
 
-#: event-ui.c:1161
-msgid "Weekly"
-msgstr "Еженедельно"
+#: ../event-ui.c:834
+msgid "monthly"
+msgstr "ежемесячно"
 
-#: event-ui.c:1164
-msgid "Monthly"
-msgstr "Ежемесячно"
+#: ../event-ui.c:835
+msgid "yearly"
+msgstr "ежегодно"
 
-#: event-ui.c:1167
-msgid "Yearly"
-msgstr "Ежегодно"
+#: ../event-ui.c:904
+msgid "M"
+msgstr "П"
 
-#. "every" label
-#: event-ui.c:1188 event-ui.c:1210 event-ui.c:1262 event-ui.c:1317
-msgid "Every"
-msgstr "Каждый"
+#: ../event-ui.c:904
+msgid "T"
+msgstr "В"
 
-#: event-ui.c:1211
-msgid "weeks, on:"
-msgstr "недели, в:"
+#: ../event-ui.c:904
+msgid "W"
+msgstr "С"
 
-#. months label
-#: event-ui.c:1273
-msgid "months"
-msgstr "месяцы"
+#: ../event-ui.c:904
+msgid "F"
+msgstr "П"
 
-#: event-ui.c:1278
-#, c-format
-msgid "on day %d"
-msgstr "в день %d"
+#: ../event-ui.c:904
+msgid "S"
+msgstr "С"
 
-#: event-ui.c:1282
-msgid "on the"
-msgstr "в"
-
-#: event-ui.c:1290
-msgid "first"
-msgstr "первый"
-
-#: event-ui.c:1292
-msgid "second"
-msgstr "второй"
-
-#: event-ui.c:1294
-msgid "third"
-msgstr "третий"
-
-#: event-ui.c:1296
-msgid "fourth"
-msgstr "четвертый"
-
-#: event-ui.c:1298
-msgid "fifth"
-msgstr "пятый"
-
-#: event-ui.c:1300
-msgid "last"
-msgstr "последний"
-
-#. years label
-#: event-ui.c:1327
-msgid "years"
-msgstr "годы"
-
-#. Begin end-date vbox
-#: event-ui.c:1346
-#, fuzzy
+#. End date.
+#: ../event-ui.c:1016
 msgid "End Date"
-msgstr "Дата окончания:"
+msgstr "Дата окончания"
 
 #. forever radio button
-#: event-ui.c:1352
+#: ../event-ui.c:1027
 msgid "forever"
 msgstr "всегда"
 
-#: event-ui.c:1363
+#: ../event-ui.c:1039
 msgid "end after"
 msgstr "после окончания"
 
-#: event-ui.c:1380
+#: ../event-ui.c:1051
+msgid "occurrences"
+msgstr "события"
+
+#: ../event-ui.c:1061
 msgid "end on"
 msgstr "перед окончанием"
 
-#. events label
-#: event-ui.c:1388
-msgid "events"
-msgstr "события"
+#. Event tab.
+#: ../event-ui.c:1153
+msgid "Event"
+msgstr "Событие"
 
-#: event-ui.c:1504
+#: ../event-ui.c:1188
+msgid "Summary:"
+msgstr "Сводка:"
+
+#: ../event-ui.c:1204
+msgid "All day event"
+msgstr "Событие на весь день"
+
+#. Start time.
+#: ../event-ui.c:1219
+msgid "Start:"
+msgstr "Начало:"
+
+#: ../event-ui.c:1232 ../event-ui.c:1273
+msgid "on:"
+msgstr "в:"
+
+#. End time.
+#: ../event-ui.c:1259
+msgid "End:"
+msgstr "Окончание:"
+
+#: ../event-ui.c:1304
+msgid "Calendar:"
+msgstr "Календарь:"
+
+#. Detail page.
+#: ../event-ui.c:1328
+msgid "Details"
+msgstr "Подробнее"
+
+#: ../event-ui.c:1402
+msgid "Recurrence"
+msgstr "Повторение"
+
+#: ../event-ui.c:1449
+msgid "Cancel"
+msgstr "Отмена"
+
+#: ../event-ui.c:1510
 msgid "Calendar: New event"
-msgstr "Календарь: Новое событие"
+msgstr "Календарь: новое событие"
 
-#: event-ui.c:1558
+#: ../event-ui.c:1544
 msgid "Calendar: Edit event"
-msgstr "Календарь: Редактировать событие"
+msgstr "Календарь: редактировать событие"
 
-#: gtkdatesel.c:216
-msgid "%Y"
-msgstr "%Y"
+#: ../export-vcal.c:356 ../export-vcal.c:363
+#, c-format
+msgid "Opening %s"
+msgstr "Открывается %s"
 
-#: gtkdatesel.c:225 gtkdatesel.c:272
+#: ../export-vcal.c:402
+#, c-format
+msgid "Save %s as..."
+msgstr "Сохранить %s как..."
+
+#: ../export-vcal.c:418
+#, c-format
+msgid "Saving %s: %s"
+msgstr "Сохраняется %s: %s"
+
+#: ../gtkdatesel.c:225
+#, c-format
+msgid "%d"
+msgstr "%d"
+
+#: ../gtkdatesel.c:273
 msgid "%b"
 msgstr "%b"
 
-#: gtkdatesel.c:228 gtkdatesel.c:275
+#: ../gtkdatesel.c:276
 msgid "%B"
 msgstr "%B"
 
-#: gtkdatesel.c:231 gtkdatesel.c:278
+#: ../gtkdatesel.c:279
 #, c-format
 msgid "%m"
 msgstr "%m"
 
-#: gtkdatesel.c:242
-msgid "Week %V"
-msgstr "Неделя %V"
-
-#: gtkdatesel.c:248
-#, c-format
-msgid "%a, %d"
-msgstr "%a, %d"
-
-#: gtkdatesel.c:312
-#, c-format
-msgid "%d"
-msgstr ""
-
-#: gtkdatesel.c:324
-#, c-format
-msgid "%a"
-msgstr ""
-
-#: intltool-merge.in:554
-msgid "($q)"
-msgstr ""
-
-#: intltool-merge.in:572
-msgid ")($q)"
-msgstr ""
-
-#: intltool-merge.in:605
-msgid "'"
-msgstr ""
-
-#: main.c:276
+#: ../import-vcal.c:488
 msgid "Choose file"
-msgstr ""
+msgstr "Выберите файл"
 
-#: main.c:304
-msgid "Import of"
-msgstr ""
+#: ../import-vcal.c:526
+msgid "Import into calendar: "
+msgstr "Импортировать в календарь:"
 
-#: main.c:304
-msgid "files failed:"
-msgstr ""
+#: ../import-vcal.c:556
+#, c-format
+msgid "Select Calendar for %s%s"
+msgstr "Выберите календарь для %s%s"
 
-#: main.c:308
+#: ../import-vcal.c:623
 msgid "Import successful"
-msgstr ""
+msgstr "Успешно импортирован"
 
-#: main.c:424
+#: ../main.c:332
+msgid "Yesterday"
+msgstr "Вчера"
+
+#: ../main.c:344
+msgid "Tomorrow"
+msgstr "Завтра"
+
+#: ../main.c:372
 #, c-format
-msgid "Could not import file %s."
-msgstr ""
+msgid "Calendar - %s"
+msgstr "Календарь - %s"
 
-#: main.c:429
-#, c-format
-msgid "File %s imported sucessfully."
-msgstr ""
+#: ../main.c:1623
+msgid "Main"
+msgstr "Главный"
 
-#: main.c:462
-msgid "Calendar"
-msgstr "Календарь"
+#: ../main.c:1685
+msgid "Tap here to select the calendars to show."
+msgstr "Нажмите здесь, чтобы выбрать нужные календари."
 
-#: main.c:484
-msgid "New appointment"
-msgstr "Новая встреча"
+#: ../main.c:1704
+msgid "Day"
+msgstr "День"
 
-#: main.c:484
-msgid "Tap here to add a new appointment or reminder"
-msgstr "Нажмите здесь, чтобы добавить новую встречу или напоминание"
-
-#: main.c:495
-msgid "Today"
-msgstr "Сегодня"
-
-#: main.c:496
-msgid "Switch to today and stay there/return to day selecting."
-msgstr ""
-
-#: main.c:508
+#: ../main.c:1712
 msgid "Tap here to select day-at-a-time view."
 msgstr "Нажмите здесь, чтобы выбрать вид дня-за-раз."
 
-#: main.c:516
+#: ../main.c:1722
 msgid "Week"
 msgstr "Неделя"
 
-#: main.c:517
+#: ../main.c:1730
 msgid "Tap here to select week-at-a-time view."
 msgstr "Нажмите здесь, чтобы выбрать вид недели-за-раз."
 
-#: main.c:525
+#: ../main.c:1742
 msgid "Month"
 msgstr "Месяц"
 
-#: main.c:526
+#: ../main.c:1750
 msgid "Tap here to select month-at-a-time view."
 msgstr "Нажмите здесь, чтобы выбрать вид месяца-за-раз."
 
-#: main.c:533
-msgid "Import"
-msgstr ""
+#: ../main.c:1761
+msgid "Agenda"
+msgstr "План"
 
-#: main.c:533
-msgid "Open file to import an event from it."
-msgstr ""
+#: ../main.c:1770
+msgid "Tap here to select the agenda."
+msgstr "Нажмите здесь, чтобы выбрать план."
 
-#: main.c:540
-msgid "Tap here to exit the program"
-msgstr "Нажмите здесь для выхода из программы"
+#: ../main.c:1793
+msgid "Tap here to view alarms pending acknowledgement."
+msgstr "Нажмите здесь, чтобы выбрать будильники, ожидающие подтверждения."
 
-#: xsettings.c:105
+#: ../main.c:1815
+msgid "Switch to today."
+msgstr "Переключиться на сегодня."
+
+#. File menu.
+#: ../main.c:1852
+msgid "_File"
+msgstr "_Файл"
+
+#. View menu.
+#: ../main.c:1885
+msgid "_View"
+msgstr "_Вид"
+
+#. View -> Today.
+#: ../main.c:1892
+msgid "_Today"
+msgstr "_Сегодня"
+
+#. View -> Day.
+#: ../main.c:1905
+msgid "_Day"
+msgstr "_День"
+
+#. View -> Week.
+#: ../main.c:1915
+msgid "_Week"
+msgstr "_Неделя"
+
+#. View -> Month.
+#: ../main.c:1925
+msgid "_Month"
+msgstr "_Месяц"
+
+#. View -> Agenda.
+#: ../main.c:1935 ../main.c:1976
+msgid "_Agenda"
+msgstr "_План"
+
+#. View -> Sidebar.
+#: ../main.c:1949
+msgid "_Sidebar"
+msgstr "_Боковая панель"
+
+#. View -> Calendar.
+#: ../main.c:1958
+msgid "_Calendar"
+msgstr "_Календарь"
+
+#. View -> Selector.
+#: ../main.c:1967
+msgid "Calendar _Selector"
+msgstr "_Выбор календаря"
+
+#. Tools menu.
+#: ../main.c:1985
+msgid "_Tools"
+msgstr "_Сервис"
+
+#. Tools -> Calendars.
+#: ../main.c:1992
+msgid "_Calendars"
+msgstr "_Календари"
+
+#. Tools -> Categories.
+#: ../main.c:2002
+msgid "Cate_gories"
+msgstr "Кате_гории"
+
+#. Tools -> Alarms.
+#: ../main.c:2013
+msgid "_Alarms"
+msgstr "_Будильники"
+
+#. Tools -> Toolbar.
+#: ../main.c:2027
+msgid "_Toolbar"
+msgstr "_Панель инструментов"
+
+#. Tools -> Full Screen.
+#: ../main.c:2036
+msgid "_Full Screen"
+msgstr "Полный _экран"
+
+#: ../xsettings.c:105
 msgid "Cannot create XSettings client"
 msgstr "Невозможно создать клиента XSettings"
+
+#~ msgid "New appointment"
+#~ msgstr "Новая встреча"
+
+#~ msgid "Tap here to add a new appointment or reminder"
+#~ msgstr "Нажмите здесь, чтобы добавить новую встречу или напоминание"
 
 #~ msgid "Future"
 #~ msgstr "Будущее"
@@ -396,26 +793,60 @@ msgstr "Невозможно создать клиента XSettings"
 #~ msgid "Tap here to see all future events."
 #~ msgstr "Нажмите здесь, чтобы увидеть все будущие события."
 
-#~ msgid "Day View"
-#~ msgstr "Вид: День"
-
 #~ msgid "Week View"
 #~ msgstr "Вид: Неделя"
 
 #~ msgid "Month View"
 #~ msgstr "Вид: Месяц"
 
-#~ msgid "Exit"
-#~ msgstr "Выход"
+#~ msgid ""
+#~ "Delete all recurring entries?\n"
+#~ "(If no, delete this instance only)"
+#~ msgstr ""
+#~ "Удалить все повторяющиеся пункты?\n"
+#~ "(Если нет, удалить только этот пункт)"
 
-#~ msgid "Summary:"
-#~ msgstr "Сводка:"
+#~ msgid "Appointment"
+#~ msgstr "Встреча"
 
-#~ msgid "End:"
-#~ msgstr "Окончание:"
+#~ msgid "Reminder"
+#~ msgstr "Напоминание"
+
+#~ msgid "Task"
+#~ msgstr "Задание"
+
+#~ msgid "Weeks"
+#~ msgstr "Недели"
 
 #~ msgid "at:"
 #~ msgstr "в:"
 
-#~ msgid "GPE Calendar"
-#~ msgstr "Календарь GPE"
+#~ msgid "Due:"
+#~ msgstr "Ожидание:"
+
+#~ msgid "Allow:"
+#~ msgstr "Разрешение:"
+
+#~ msgid "No recurrence"
+#~ msgstr "Без повторения"
+
+#~ msgid "on day %d"
+#~ msgstr "в день %d"
+
+#~ msgid "on the"
+#~ msgstr "в"
+
+#~ msgid "fifth"
+#~ msgstr "пятый"
+
+#~ msgid "events"
+#~ msgstr "события"
+
+#~ msgid "No appointments"
+#~ msgstr "Встреч нет"
+
+#~ msgid "%Y"
+#~ msgstr "%Y"
+
+#~ msgid "Week %V"
+#~ msgstr "Неделя %V"

@@ -1,420 +1,777 @@
 # Serbian translation of `gpe-calendar'.
-# Copyright (C) 2004 Free Software Foundation, Inc.
+# Copyright (C) 2006 Free Software Foundation, Inc.
 # This file is distributed under the same license as the `gpe-calendar' package.
-# Aleksandar Jelenak <jelenak@netlinkplus.net>, 2004.
-#: intltool-merge.in:592 intltool-merge.in:593
+# Aleksandar Jelenak <jelenak@verizon.net>, 2006
+#: ../event-ui.c:185
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-calendar 0.45\n"
+"Project-Id-Version: gpe-calendar 0.73rc2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-27 00:49+0200\n"
-"PO-Revision-Date: 2004-02-03 01:03-0500\n"
-"Last-Translator: Aleksandar Jelenak <jelenak@netlinkplus.net>\n"
-"Language-Team: Serbian <sr@li.org>\n"
+"POT-Creation-Date: 2006-07-03 16:10+0200\n"
+"PO-Revision-Date: 2007-02-02 15:30-0500\n"
+"Last-Translator: Aleksandar Jelenak <jelenak@verizon.net>\n"
+"Language-Team: Serbian <gnu@prevod.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: day_popup.c:209
-msgid "No appointments"
-msgstr "Нема састанака"
+#: ../gpe-calendar.desktop.in.in.h:1 ../hildon/gpe-calendar.desktop.in.in.h:1
+msgid "Calendar"
+msgstr "Календар"
 
-#: day_view.c:59 event-ui.c:281
+#: ../gpe-calendar.desktop.in.in.h:2
+msgid "GPE Calendar"
+msgstr "GPE Календар"
+
+#: ../hildon/gpe-calendar.desktop.in.in.h:2
+msgid "GPE Calendar Application"
+msgstr "GPE Календар програм"
+
+#: ../alarm-dialog.c:188 ../main.c:1788
+msgid "Alarms"
+msgstr "Аларми"
+
+#: ../alarm-dialog.c:208
+msgid "Acknowledge All"
+msgstr "Потврди све"
+
+#: ../alarm-dialog.c:214 ../calendars-dialog.c:467
+msgid "Dismiss"
+msgstr "Одбаци"
+
+#: ../alarm-dialog.c:285
+msgid "No alarms have gone off."
+msgstr "Ниједан аларм није активиран."
+
+#: ../alarm-dialog.c:371
+#, c-format
+msgid "%s%s%s%s%s%s%s%s"
+msgstr "%s%s%s%s%s%s%s%s"
+
+#: ../alarm-dialog.c:372
+msgid "<b>Summary</b>: "
+msgstr "<b>Сажетак</b>:"
+
+#: ../alarm-dialog.c:375
+msgid "<b>Description</b>: "
+msgstr "<b>Опис</b>:"
+
+#: ../alarm-dialog.c:378
+msgid "<b>Location</b>: "
+msgstr "<b>Место</b>: "
+
+#: ../alarm-dialog.c:464
+msgid "Show Event"
+msgstr "Прикажи догађај"
+
+#: ../alarm-dialog.c:470
+msgid "Acknowledge"
+msgstr "Потврди"
+
+#: ../alarm-dialog.c:477
+msgid "Sleep:"
+msgstr "Спавај:"
+
+#: ../alarm-dialog.c:492
+msgid "Minutes"
+msgstr "минута"
+
+#: ../alarm-dialog.c:493
+msgid "Hours"
+msgstr "сати"
+
+#: ../alarm-dialog.c:494
+msgid "Days"
+msgstr "дана"
+
+#: ../calendar-delete-dialog.c:134
+#, c-format
 msgid ""
-"Delete all recurring entries?\n"
-"(If no, delete this instance only)"
+" %s cannot be the new parent of %s's constituents: this would create a loop (try being your own grandparent).\n"
+"Please select a calendar which is not a descendent of %s."
 msgstr ""
-"Избрисати све понављајуће уносе?\n"
-"(Ако не, избриши само овај)"
+" %s не може бити нови родитељ %s-ових делова: ово би створило петљу (покушајте бити сопствени дека/бака).\n"
+"Изаберите календар који није %s-ов потомак."
 
-#: day_view.c:60 day_view.c:164 event-ui.c:282
-#, fuzzy
-msgid "Question"
+#: ../calendar-delete-dialog.c:171
+#, c-format
+msgid "Delete Calendar %s"
+msgstr "Избриши календар %s"
+
+#: ../calendar-delete-dialog.c:197
+#, c-format
+msgid "Delete %s%s%s"
+msgstr "Избриши %s%s%s"
+
+#: ../calendar-delete-dialog.c:207
+#, c-format
+msgid "Reparent %s%s%s"
+msgstr "Породитељи %s%s%s"
+
+#: ../calendar-edit-dialog.c:252
+msgid "Calendar: New Calendar"
+msgstr "Календар: Нови календар"
+
+#: ../calendar-edit-dialog.c:275
+msgid "Title:"
+msgstr "Наслов:"
+
+#. Description textarea.
+#: ../calendar-edit-dialog.c:288 ../event-ui.c:717
+msgid "Description:"
 msgstr "Опис:"
 
-#: day_view.c:164
-#, fuzzy
-msgid "Delete event?"
-msgstr "пре догађаја"
+#: ../calendar-edit-dialog.c:301
+msgid "Parent:"
+msgstr "Родитељ:"
 
-#: event-ui.c:415
+#: ../calendar-edit-dialog.c:320
+msgid "Color:"
+msgstr "Боја:"
+
+#: ../calendar-edit-dialog.c:341
+msgid "Type:"
+msgstr "Врста:"
+
+#: ../calendar-edit-dialog.c:346
+msgid "Local"
+msgstr "Локално"
+
+#: ../calendar-edit-dialog.c:347
+msgid "Subscribe"
+msgstr "Претплати"
+
+#: ../calendar-edit-dialog.c:348
+msgid "Publish"
+msgstr "Објави"
+
+#. Uncomment as we support other modes.
+#: ../calendar-edit-dialog.c:351
+msgid "Synchronize"
+msgstr "Усклади"
+
+#: ../calendar-edit-dialog.c:368
+msgid "URL:"
+msgstr "УРЛ:"
+
+#: ../calendar-edit-dialog.c:380
+msgid "Username:"
+msgstr "Корисник:"
+
+#: ../calendar-edit-dialog.c:392
+msgid "Password:"
+msgstr "Лозинка:"
+
+#. Don't show initially.
+#: ../calendar-edit-dialog.c:406
+msgid "Update:"
+msgstr "Обнова:"
+
+#: ../calendar-edit-dialog.c:420
+msgid "times per year"
+msgstr "пута годишње"
+
+#: ../calendar-edit-dialog.c:421
+msgid "times per month"
+msgstr "пута месечно"
+
+#: ../calendar-edit-dialog.c:422
+msgid "times per week"
+msgstr "пута недељно"
+
+#: ../calendar-edit-dialog.c:423
+msgid "times per day"
+msgstr "пута дневно"
+
+#: ../calendar-edit-dialog.c:424
+msgid "times per hour"
+msgstr "пута на сат"
+
+#: ../calendar-edit-dialog.c:522
+msgid "Calendar: Edit Calendar"
+msgstr "Календар: Уреди календар"
+
+#: ../calendars-dialog.c:299 ../main.c:1680
+msgid "Calendars"
+msgstr "Календари"
+
+#: ../calendars-dialog.c:335
+msgid "Show All"
+msgstr "Прикажи све"
+
+#: ../calendars-widgets.c:382
+#, c-format
+msgid "%ld minutes ago"
+msgstr "%ld минута после"
+
+#: ../calendars-widgets.c:384
+#, c-format
+msgid "%ld hours ago"
+msgstr "%ld часова после"
+
+#: ../calendars-widgets.c:386
+#, c-format
+msgid "%ld days ago"
+msgstr "%ld дана после"
+
+#: ../calendars-widgets.c:393
+#, c-format
+msgid "%x"
+msgstr "%x"
+
+#: ../calendars-widgets.c:406
+msgid "Up to date"
+msgstr "Освежено"
+
+#: ../calendars-widgets.c:408
+msgid "Modified"
+msgstr "Измењен"
+
+#: ../calendar-update.c:158
+msgid "Calendar Syncronization"
+msgstr "Усклађивање календара"
+
+#: ../day_popup.c:89
+msgid "%a %d %B"
+msgstr "%a %d %B"
+
+#: ../day_popup.c:137 ../event-list.c:250
+#, c-format
+msgid "Until %s"
+msgstr "До %s"
+
+#: ../day_view.c:238
+msgid "Until %b %d"
+msgstr "До %b %d"
+
+#: ../day_view.c:240
+#, c-format
+msgid "Until %d:%02d"
+msgstr "До %d:%02d"
+
+#: ../event-list.c:189
+#, c-format
+msgid "%-m/%-d"
+msgstr "%-m/%-d"
+
+#: ../event-list.c:190
+msgid "%b %-d"
+msgstr "%b %-d"
+
+#: ../event-list.c:193
+msgid "%m/%d/%t"
+msgstr "%m/%d/%t"
+
+#: ../event-list.c:194
+msgid "%b %d, %y"
+msgstr "%b %d, %y"
+
+#: ../event-list.c:200
+msgid "%-H:%M"
+msgstr "%-H:%M"
+
+#: ../event-list.c:203
+msgid "%-m/%-d %-H:%M"
+msgstr "%-m/%-d %-H:%M"
+
+#: ../event-list.c:204
+msgid "%b %-d %-H:%M"
+msgstr "%b %-d %-H:%M"
+
+#: ../event-list.c:207
+msgid "%-m/%-d/%y %-H:%M"
+msgstr "%-m/%-d/%y %-H:%M"
+
+#: ../event-list.c:208
+msgid "%b %-d, %y %-H:%M"
+msgstr "%b %-d, %y %-H:%M"
+
+#: ../event-list.c:235 ../event-list.c:313 ../main.c:338 ../main.c:1811
+msgid "Today"
+msgstr "Данас"
+
+#: ../event-list.c:741 ../event-ui.c:188 ../event-ui.c:780
+msgid "days"
+msgstr "дана"
+
+#: ../event-list.c:742 ../event-ui.c:781
+msgid "weeks"
+msgstr "недеља"
+
+#: ../event-list.c:743 ../event-ui.c:194
+msgid "months"
+msgstr "месеци"
+
+#: ../event-list.c:744 ../event-ui.c:197
+msgid "years"
+msgstr "године"
+
+#: ../event-menu.c:57
+#, c-format
+msgid "Delete all occurrences of %s?"
+msgstr "Избрисати све %s?"
+
+#: ../event-menu.c:60 ../event-menu.c:84
+msgid "Question"
+msgstr "Питање"
+
+#: ../event-menu.c:61
+msgid "Delete this occurrence"
+msgstr "Избриши ово појављивање"
+
+#: ../event-menu.c:62
+msgid "Delete all occurrences"
+msgstr "Избриши сва појављивања"
+
+#: ../event-menu.c:82
+#, c-format
+msgid "Delete %s?"
+msgstr "Избрисати %s?"
+
+#: ../event-menu.c:254
+msgid "Edit"
+msgstr "Уреди"
+
+#: ../event-menu.c:267
+msgid "Edit Event"
+msgstr "Уреди догађај"
+
+#: ../event-menu.c:275
+#, c-format
+msgid "Edit <i>%s</i>"
+msgstr "Уреди <i>%s</i>"
+
+#: ../event-menu.c:286
+msgid "Delete"
+msgstr "Избриши"
+
+#: ../event-menu.c:299
+msgid "Delete Event"
+msgstr "Избриши догађај"
+
+#: ../event-menu.c:307
+#, c-format
+msgid "Delete <i>%s</i>"
+msgstr "Избриши <i>%s</i>"
+
+#: ../event-menu.c:318 ../event-ui.c:1459
+msgid "Save"
+msgstr "Сачувај"
+
+#: ../event-menu.c:331
+msgid "Save Event"
+msgstr "Сачувај догађај"
+
+#: ../event-menu.c:339
+#, c-format
+msgid "Save <i>%s</i>"
+msgstr "Сачувати <i>%s</i>"
+
+#: ../event-menu.c:353
+msgid "Send via Infra-red"
+msgstr "Послати са инфрацрвеним"
+
+#: ../event-menu.c:366
+msgid "Send via Bluetooth"
+msgstr "Послати са Bluetooth"
+
+#: ../event-menu.c:381
+msgid "Move to Calendar..."
+msgstr "Пребаци у календар..."
+
+#: ../event-menu.c:390
+#, c-format
+msgid "Only Show <i>%s</i>"
+msgstr "Само приказати <i>%s</i>"
+
+#: ../event-menu.c:401
+#, c-format
+msgid "Hide <i>%s</i>"
+msgstr "Сакрити <i>%s</i>"
+
+#: ../event-ui.c:148 ../event-ui.c:872
+msgid "Every"
+msgstr "Сваки(е)"
+
+#: ../event-ui.c:149
+msgid "First"
+msgstr "први"
+
+#: ../event-ui.c:150
+msgid "Second"
+msgstr "други"
+
+#: ../event-ui.c:151
+msgid "Third"
+msgstr "трећи"
+
+#: ../event-ui.c:152
+msgid "Fourth"
+msgstr "четврти"
+
+#: ../event-ui.c:153
+msgid "Last"
+msgstr "задњи"
+
+#: ../event-ui.c:154
+msgid "Second to last"
+msgstr "претпоследњи"
+
+#: ../event-ui.c:191
+msgid "weeks, on:"
+msgstr "недељама, на:"
+
+#: ../event-ui.c:266
 msgid "End time must not be earlier than start time"
 msgstr "Време завршетка не сме да буде пре времена почетка"
 
-#: event-ui.c:435
+#: ../event-ui.c:276 ../event-ui.c:282
 msgid ""
 "Event starts in the past!\n"
 "Save anyway?"
 msgstr ""
+"Догађај почиње у прошлости!\n"
+"Ипак сачувати?"
 
-#: event-ui.c:875
-msgid "Event"
-msgstr "Догађај"
+#. Location.
+#: ../event-ui.c:677
+msgid "Location:"
+msgstr "Место:"
 
-#: event-ui.c:876
-msgid "Recurrence"
-msgstr "Понављање"
+#. Categories.
+#: ../event-ui.c:695
+msgid "Categories"
+msgstr "Категорије"
 
-#: event-ui.c:877 event-ui.c:1080
+#: ../event-ui.c:703
+msgid "Define categories by tapping the Categories button."
+msgstr "Дефиниши категорије лупкањем дугмета „Категорије“."
+
+#: ../event-ui.c:764 ../event-ui.c:1360
 msgid "Alarm"
 msgstr "Аларм"
 
-#: event-ui.c:907
-msgid "Type:"
-msgstr "Врста:"
-
-#: event-ui.c:912
-msgid "Appointment"
-msgstr "Састанак"
-
-#: event-ui.c:913
-msgid "Reminder"
-msgstr "Подсетник"
-
-#: event-ui.c:915
-msgid "Task"
-msgstr "Задатак"
-
-#: event-ui.c:921
-msgid "Days"
-msgstr "Дани"
-
-#: event-ui.c:922
-msgid "Weeks"
-msgstr "Недеље"
-
-#: event-ui.c:929
-#, fuzzy
-msgid "Text:"
-msgstr "Време:"
-
-#: event-ui.c:949
-#, fuzzy
-msgid "Start at:"
-msgstr "Почетак:"
-
-#: event-ui.c:950
-#, fuzzy
-msgid "End at:"
-msgstr "Крајњу датум:"
-
-#: event-ui.c:951 event-ui.c:952
-msgid "on:"
-msgstr ""
-
-#: event-ui.c:988
-msgid "Date:"
-msgstr "Датум:"
-
-#: event-ui.c:991
-msgid "Time:"
-msgstr "Време:"
-
-#: event-ui.c:1012
-msgid "Due:"
-msgstr "Приспева:"
-
-#: event-ui.c:1016
-msgid "Allow:"
-msgstr "Дозволи:"
-
-#: event-ui.c:1026
-msgid "Categories"
-msgstr ""
-
-#: event-ui.c:1050
-msgid "Description:"
-msgstr "Опис:"
-
-#: event-ui.c:1084
-msgid "before event"
-msgstr "пре догађаја"
-
-#: event-ui.c:1087
+#: ../event-ui.c:778
 msgid "minutes"
 msgstr "минута"
 
-#: event-ui.c:1089
+#: ../event-ui.c:779
 msgid "hours"
 msgstr "сати"
 
-#. days label
-#: event-ui.c:1091 event-ui.c:1198
-msgid "days"
-msgstr "дана"
+#: ../event-ui.c:788
+msgid "before event"
+msgstr "пре догађаја"
 
-#: event-ui.c:1093
-msgid "weeks"
-msgstr "недеља"
+#: ../event-ui.c:825
+msgid "Recurrence type:"
+msgstr "Врста понављање"
 
-#: event-ui.c:1143
-#, fuzzy
-msgid "Type"
-msgstr "Врста:"
+#: ../event-ui.c:831
+msgid "single occurrence"
+msgstr "једанпут"
 
-#: event-ui.c:1155
-msgid "No recurrence"
-msgstr "Без понављања"
+#: ../event-ui.c:832
+msgid "daily"
+msgstr "дневно"
 
-#: event-ui.c:1158
-msgid "Daily"
-msgstr "Дневно"
+#: ../event-ui.c:833
+msgid "weekly"
+msgstr "недељно"
 
-#: event-ui.c:1161
-msgid "Weekly"
-msgstr "Недељно"
+#: ../event-ui.c:834
+msgid "monthly"
+msgstr "месечно"
 
-#: event-ui.c:1164
-msgid "Monthly"
-msgstr "Месечно"
+#: ../event-ui.c:835
+msgid "yearly"
+msgstr "годишње"
 
-#: event-ui.c:1167
-msgid "Yearly"
-msgstr "Годишње"
+#: ../event-ui.c:904
+msgid "M"
+msgstr "П"
 
-#. "every" label
-#: event-ui.c:1188 event-ui.c:1210 event-ui.c:1262 event-ui.c:1317
-msgid "Every"
-msgstr "Сваки(е)"
+#: ../event-ui.c:904
+msgid "T"
+msgstr "У/ч"
 
-#: event-ui.c:1211
-msgid "weeks, on:"
-msgstr "недељама, на:"
+#: ../event-ui.c:904
+msgid "W"
+msgstr "С"
 
-#. months label
-#: event-ui.c:1273
-msgid "months"
-msgstr "месеци"
+#: ../event-ui.c:904
+msgid "F"
+msgstr "П"
 
-#: event-ui.c:1278
-#, c-format
-msgid "on day %d"
-msgstr "на дан %d"
+#: ../event-ui.c:904
+msgid "S"
+msgstr "с/н"
 
-#: event-ui.c:1282
-msgid "on the"
-msgstr "на"
-
-#: event-ui.c:1290
-msgid "first"
-msgstr "први"
-
-#: event-ui.c:1292
-msgid "second"
-msgstr "други"
-
-#: event-ui.c:1294
-msgid "third"
-msgstr "трећи"
-
-#: event-ui.c:1296
-msgid "fourth"
-msgstr "четврти"
-
-#: event-ui.c:1298
-msgid "fifth"
-msgstr "пети"
-
-#: event-ui.c:1300
-msgid "last"
-msgstr "задњи"
-
-#. years label
-#: event-ui.c:1327
-msgid "years"
-msgstr "године"
-
-#. Begin end-date vbox
-#: event-ui.c:1346
-#, fuzzy
+#. End date.
+#: ../event-ui.c:1016
 msgid "End Date"
-msgstr "Крајњу датум:"
+msgstr "Крајњи датум"
 
 #. forever radio button
-#: event-ui.c:1352
+#: ../event-ui.c:1027
 msgid "forever"
 msgstr "заувек"
 
-#: event-ui.c:1363
+#: ../event-ui.c:1039
 msgid "end after"
 msgstr "завршава после"
 
-#: event-ui.c:1380
+#: ../event-ui.c:1051
+msgid "occurrences"
+msgstr "понављања"
+
+#: ../event-ui.c:1061
 msgid "end on"
 msgstr "завршава на"
 
-#. events label
-#: event-ui.c:1388
-msgid "events"
-msgstr "догађаји"
+#. Event tab.
+#: ../event-ui.c:1153
+msgid "Event"
+msgstr "Догађај"
 
-#: event-ui.c:1504
+#: ../event-ui.c:1188
+msgid "Summary:"
+msgstr "Сажетак:"
+
+#: ../event-ui.c:1204
+msgid "All day event"
+msgstr "Целодневни догађај"
+
+#. Start time.
+#: ../event-ui.c:1219
+msgid "Start:"
+msgstr "Почетак:"
+
+#: ../event-ui.c:1232 ../event-ui.c:1273
+msgid "on:"
+msgstr "у:"
+
+#. End time.
+#: ../event-ui.c:1259
+msgid "End:"
+msgstr "Крај:"
+
+#: ../event-ui.c:1304
+msgid "Calendar:"
+msgstr "Календар:"
+
+#. Detail page.
+#: ../event-ui.c:1328
+msgid "Details"
+msgstr "Детаљи"
+
+#: ../event-ui.c:1402
+msgid "Recurrence"
+msgstr "Понављање"
+
+#: ../event-ui.c:1449
+msgid "Cancel"
+msgstr "Поништи"
+
+#: ../event-ui.c:1510
 msgid "Calendar: New event"
 msgstr "Календар: Нови догађај"
 
-#: event-ui.c:1558
+#: ../event-ui.c:1544
 msgid "Calendar: Edit event"
 msgstr "Календар: Уреди догађај"
 
-#: gtkdatesel.c:216
-msgid "%Y"
-msgstr "%Y"
+#: ../export-vcal.c:356 ../export-vcal.c:363
+#, c-format
+msgid "Opening %s"
+msgstr "Отварам %s"
 
-#: gtkdatesel.c:225 gtkdatesel.c:272
+#: ../export-vcal.c:402
+#, c-format
+msgid "Save %s as..."
+msgstr "Сачувати %s као..."
+
+#: ../export-vcal.c:418
+#, c-format
+msgid "Saving %s: %s"
+msgstr "Сачувај %s: %s"
+
+#: ../gtkdatesel.c:225
+#, c-format
+msgid "%d"
+msgstr "%d"
+
+#: ../gtkdatesel.c:273
 msgid "%b"
 msgstr "%b"
 
-#: gtkdatesel.c:228 gtkdatesel.c:275
+#: ../gtkdatesel.c:276
 msgid "%B"
 msgstr "%B"
 
-#: gtkdatesel.c:231 gtkdatesel.c:278
+#: ../gtkdatesel.c:279
 #, c-format
 msgid "%m"
 msgstr "%m"
 
-#: gtkdatesel.c:242
-msgid "Week %V"
-msgstr "Недеља %V"
-
-#: gtkdatesel.c:248
-#, c-format
-msgid "%a, %d"
-msgstr "%a, %d"
-
-#: gtkdatesel.c:312
-#, c-format
-msgid "%d"
-msgstr ""
-
-#: gtkdatesel.c:324
-#, c-format
-msgid "%a"
-msgstr ""
-
-#: intltool-merge.in:554
-msgid "($q)"
-msgstr ""
-
-#: intltool-merge.in:572
-msgid ")($q)"
-msgstr ""
-
-#: intltool-merge.in:605
-msgid "'"
-msgstr ""
-
-#: main.c:276
+#: ../import-vcal.c:488
 msgid "Choose file"
-msgstr ""
+msgstr "Изабери датотеку"
 
-#: main.c:304
-msgid "Import of"
-msgstr ""
+#: ../import-vcal.c:526
+msgid "Import into calendar: "
+msgstr "Увоз у календар: "
 
-#: main.c:304
-msgid "files failed:"
-msgstr ""
+#: ../import-vcal.c:556
+#, c-format
+msgid "Select Calendar for %s%s"
+msgstr "Изабери календар за %s%s"
 
-#: main.c:308
+#: ../import-vcal.c:623
 msgid "Import successful"
-msgstr ""
+msgstr "Увоз успешан"
 
-#: main.c:424
+#: ../main.c:332
+msgid "Yesterday"
+msgstr "Јуче"
+
+#: ../main.c:344
+msgid "Tomorrow"
+msgstr "Сутра"
+
+#: ../main.c:372
 #, c-format
-msgid "Could not import file %s."
-msgstr ""
+msgid "Calendar - %s"
+msgstr "Календар — %s"
 
-#: main.c:429
-#, c-format
-msgid "File %s imported sucessfully."
-msgstr ""
+#: ../main.c:1623
+msgid "Main"
+msgstr "Главни"
 
-#: main.c:462
-msgid "Calendar"
-msgstr "Календар"
+#: ../main.c:1685
+msgid "Tap here to select the calendars to show."
+msgstr "Лупни овде за избор календара за приказ."
 
-#: main.c:484
-msgid "New appointment"
-msgstr "Нови састанак"
+#: ../main.c:1704
+msgid "Day"
+msgstr "Дан"
 
-#: main.c:484
-msgid "Tap here to add a new appointment or reminder"
-msgstr "Лупни овде за нови састанак или подсетник"
-
-#: main.c:495
-msgid "Today"
-msgstr "Данас"
-
-#: main.c:496
-msgid "Switch to today and stay there/return to day selecting."
-msgstr ""
-
-#: main.c:508
+#: ../main.c:1712
 msgid "Tap here to select day-at-a-time view."
 msgstr "Лупни овде за преглед по данима"
 
-#: main.c:516
+#: ../main.c:1722
 msgid "Week"
 msgstr "Недеља"
 
-#: main.c:517
+#: ../main.c:1730
 msgid "Tap here to select week-at-a-time view."
 msgstr "Лупни овде за преглед по недељама"
 
-#: main.c:525
+#: ../main.c:1742
 msgid "Month"
 msgstr "Месец"
 
-#: main.c:526
+#: ../main.c:1750
 msgid "Tap here to select month-at-a-time view."
 msgstr "Лупни овде за преглед по месецима."
 
-#: main.c:533
-msgid "Import"
-msgstr ""
+#: ../main.c:1761
+msgid "Agenda"
+msgstr "Дневни ред"
 
-#: main.c:533
-msgid "Open file to import an event from it."
-msgstr ""
+#: ../main.c:1770
+msgid "Tap here to select the agenda."
+msgstr "Лупни овде за избор дневног реда"
 
-#: main.c:540
-msgid "Tap here to exit the program"
-msgstr "Лупни овде за крај"
+#: ../main.c:1793
+msgid "Tap here to view alarms pending acknowledgement."
+msgstr "Лупни овде за приказ аларма за усвајање"
 
-#: xsettings.c:105
+#: ../main.c:1815
+msgid "Switch to today."
+msgstr "Пребаци на данас."
+
+#. File menu.
+#: ../main.c:1852
+msgid "_File"
+msgstr "_Датотека"
+
+#. View menu.
+#: ../main.c:1885
+msgid "_View"
+msgstr "_Преглед"
+
+#. View -> Today.
+#: ../main.c:1892
+msgid "_Today"
+msgstr "_Данас"
+
+#. View -> Day.
+#: ../main.c:1905
+msgid "_Day"
+msgstr "_Дани"
+
+#. View -> Week.
+#: ../main.c:1915
+msgid "_Week"
+msgstr "_Недеља"
+
+#. View -> Month.
+#: ../main.c:1925
+msgid "_Month"
+msgstr "_Месец"
+
+#. View -> Agenda.
+#: ../main.c:1935 ../main.c:1976
+msgid "_Agenda"
+msgstr "_Дневни ред"
+
+#. View -> Sidebar.
+#: ../main.c:1949
+msgid "_Sidebar"
+msgstr "_Бочна трака"
+
+#. View -> Calendar.
+#: ../main.c:1958
+msgid "_Calendar"
+msgstr "_Календар"
+
+#. View -> Selector.
+#: ../main.c:1967
+msgid "Calendar _Selector"
+msgstr "Избор _календара"
+
+#. Tools menu.
+#: ../main.c:1985
+msgid "_Tools"
+msgstr "_Алатке"
+
+#. Tools -> Calendars.
+#: ../main.c:1992
+msgid "_Calendars"
+msgstr "_Календари"
+
+#. Tools -> Categories.
+#: ../main.c:2002
+msgid "Cate_gories"
+msgstr "Кате_горије"
+
+#. Tools -> Alarms.
+#: ../main.c:2013
+msgid "_Alarms"
+msgstr "_Аларми"
+
+#. Tools -> Toolbar.
+#: ../main.c:2027
+msgid "_Toolbar"
+msgstr "_Алатна трака"
+
+#. Tools -> Full Screen.
+#: ../main.c:2036
+msgid "_Full Screen"
+msgstr "Пун _екран"
+
+#: ../xsettings.c:105
 msgid "Cannot create XSettings client"
 msgstr "Не може створити XSettings клијента"
-
-#~ msgid "Future"
-#~ msgstr "Будућност"
-
-#~ msgid "Future View"
-#~ msgstr "Преглед будућности"
-
-#~ msgid "Tap here to see all future events."
-#~ msgstr "Лупни овде за преглед будућих догађаја."
-
-#~ msgid "Day View"
-#~ msgstr "Преглед дана"
-
-#~ msgid "Week View"
-#~ msgstr "Преглед недеље"
-
-#~ msgid "Month View"
-#~ msgstr "Преглед месеца"
-
-#~ msgid "Exit"
-#~ msgstr "Излаз"
-
-#~ msgid "Summary:"
-#~ msgstr "Сажетак:"
-
-#~ msgid "End:"
-#~ msgstr "Крај:"
-
-#~ msgid "at:"
-#~ msgstr "у:"
-
-#~ msgid "GPE Calendar"
-#~ msgstr "GPE Календар"

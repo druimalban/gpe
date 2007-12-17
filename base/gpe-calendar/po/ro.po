@@ -5,12 +5,10 @@
 #
 #
 #
-#: intltool-merge.in:592 intltool-merge.in:593
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-calendar 0.45\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-27 00:49+0200\n"
+"POT-Creation-Date: 2003-09-05 23:16+0100\n"
 "PO-Revision-Date: 2003-09-08 12:00-0500\n"
 "Last-Translator: Laurentiu Buzdugan <buzdugan@voyager.net>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -19,11 +17,75 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: day_popup.c:209
-msgid "No appointments"
-msgstr "Nici o întâlnire"
+#: main.c:242 gpe-calendar.desktop.in.h:1
+msgid "Calendar"
+msgstr "Calendar"
 
-#: day_view.c:59 event-ui.c:281
+#: main.c:261
+msgid "New appointment"
+msgstr "Nouã întâlnire"
+
+#: main.c:261
+msgid "Tap here to add a new appointment or reminder"
+msgstr "Apasã aici pentru a adãuga o nouã întâlnire sau re-amintire"
+
+#: main.c:267 main.c:268
+msgid "Today"
+msgstr "Azi"
+
+#: main.c:276
+msgid "Future"
+msgstr "Viitor"
+
+#: main.c:276
+msgid "Future View"
+msgstr "Vizualizare Viitor"
+
+#: main.c:277
+msgid "Tap here to see all future events."
+msgstr "Apasã aici pentru a vedea toate evenimentele viitoare."
+
+#: main.c:284
+msgid "Day View"
+msgstr "Vizualizare Zi"
+
+#: main.c:285
+msgid "Tap here to select day-at-a-time view."
+msgstr "Apasã aici pentru a selecta vizualizare câte-o-zi."
+
+#: main.c:292
+msgid "Week"
+msgstr "Sãptãmânã"
+
+#: main.c:292
+msgid "Week View"
+msgstr "Vizualizare Sãptãmânã"
+
+#: main.c:293
+msgid "Tap here to select week-at-a-time view."
+msgstr "Apasã aici pentru a selecta vizualizare câte-o-sãptãmânã."
+
+#: main.c:300
+msgid "Month"
+msgstr "Lunã"
+
+#: main.c:300
+msgid "Month View"
+msgstr "Vizualizare Lunã"
+
+#: main.c:301
+msgid "Tap here to select month-at-a-time view."
+msgstr "Apasã aici pentru a selecta vizualizare câte-o-lunã."
+
+#: main.c:307
+msgid "Exit"
+msgstr "Terminã"
+
+#: main.c:307
+msgid "Tap here to exit the program"
+msgstr "Apasã aici pentru a termina programul"
+
+#: event-ui.c:251
 msgid ""
 "Delete all recurring entries?\n"
 "(If no, delete this instance only)"
@@ -31,394 +93,233 @@ msgstr ""
 "ªterge toate intrãrile care apar?\n"
 "(Dacã nu, ºterge numai aceastã intrare)"
 
-#: day_view.c:60 day_view.c:164 event-ui.c:282
-#, fuzzy
-msgid "Question"
-msgstr "Descriere:"
-
-#: day_view.c:164
-#, fuzzy
-msgid "Delete event?"
-msgstr "înainte de eveniment"
-
-#: event-ui.c:415
+#: event-ui.c:383
 msgid "End time must not be earlier than start time"
 msgstr "Timpul de terminare nu trebuie sã fie mai devreme decât cel de început"
 
-#: event-ui.c:435
-msgid ""
-"Event starts in the past!\n"
-"Save anyway?"
-msgstr ""
-
-#: event-ui.c:875
+#: event-ui.c:622
 msgid "Event"
 msgstr "Eveniment"
 
-#: event-ui.c:876
+#: event-ui.c:623
 msgid "Recurrence"
 msgstr "Reapariþie"
 
-#: event-ui.c:877 event-ui.c:1080
+#: event-ui.c:624 event-ui.c:797
 msgid "Alarm"
 msgstr "Alarmã"
 
-#: event-ui.c:907
+#: event-ui.c:651 event-ui.c:853
 msgid "Type:"
 msgstr "Tip:"
 
-#: event-ui.c:912
+#: event-ui.c:656
 msgid "Appointment"
 msgstr "Întâlnire"
 
-#: event-ui.c:913
+#: event-ui.c:657
 msgid "Reminder"
 msgstr "Re-amintire"
 
-#: event-ui.c:915
+#: event-ui.c:659
 msgid "Task"
 msgstr "Acþiune"
 
-#: event-ui.c:921
+#: event-ui.c:665
 msgid "Days"
 msgstr "Zile"
 
-#: event-ui.c:922
+#: event-ui.c:666
 msgid "Weeks"
 msgstr "Sãptãmâni"
 
-#: event-ui.c:929
-#, fuzzy
-msgid "Text:"
-msgstr "Timp:"
+#: event-ui.c:674
+msgid "Summary:"
+msgstr "Rezumat:"
 
-#: event-ui.c:949
-#, fuzzy
-msgid "Start at:"
+#: event-ui.c:690
+msgid "Start:"
 msgstr "Început:"
 
-#: event-ui.c:950
-#, fuzzy
-msgid "End at:"
-msgstr "Datã Terminare:"
+#: event-ui.c:691
+msgid "End:"
+msgstr "Terminare:"
 
-#: event-ui.c:951 event-ui.c:952
-msgid "on:"
-msgstr ""
+#: event-ui.c:692 event-ui.c:693
+msgid "at:"
+msgstr "la:"
 
-#: event-ui.c:988
+#: event-ui.c:726
 msgid "Date:"
 msgstr "Datã:"
 
-#: event-ui.c:991
+#: event-ui.c:729
 msgid "Time:"
 msgstr "Timp:"
 
-#: event-ui.c:1012
+#: event-ui.c:749
 msgid "Due:"
 msgstr "Scadent:"
 
-#: event-ui.c:1016
+#: event-ui.c:753
 msgid "Allow:"
 msgstr "Permite:"
 
-#: event-ui.c:1026
-msgid "Categories"
-msgstr ""
-
-#: event-ui.c:1050
+#: event-ui.c:768
 msgid "Description:"
 msgstr "Descriere:"
 
-#: event-ui.c:1084
+#: event-ui.c:801
 msgid "before event"
 msgstr "înainte de eveniment"
 
-#: event-ui.c:1087
+#: event-ui.c:804
 msgid "minutes"
 msgstr "minute"
 
-#: event-ui.c:1089
+#: event-ui.c:806
 msgid "hours"
 msgstr "ore"
 
-#. days label
-#: event-ui.c:1091 event-ui.c:1198
+#: event-ui.c:808 event-ui.c:908
 msgid "days"
 msgstr "zile"
 
-#: event-ui.c:1093
+#: event-ui.c:810
 msgid "weeks"
 msgstr "sãptãmâni"
 
-#: event-ui.c:1143
-#, fuzzy
-msgid "Type"
-msgstr "Tip:"
-
-#: event-ui.c:1155
+#: event-ui.c:865
 msgid "No recurrence"
 msgstr "Nici un caz"
 
-#: event-ui.c:1158
+#: event-ui.c:868
 msgid "Daily"
 msgstr "Zilnic"
 
-#: event-ui.c:1161
+#: event-ui.c:871
 msgid "Weekly"
 msgstr "Sãptãmânal"
 
-#: event-ui.c:1164
+#: event-ui.c:874
 msgid "Monthly"
 msgstr "Lunar"
 
-#: event-ui.c:1167
+#: event-ui.c:877
 msgid "Yearly"
 msgstr "Anual"
 
-#. "every" label
-#: event-ui.c:1188 event-ui.c:1210 event-ui.c:1262 event-ui.c:1317
+#: event-ui.c:898 event-ui.c:920 event-ui.c:963 event-ui.c:1018
 msgid "Every"
 msgstr "Fiecare"
 
-#: event-ui.c:1211
+#: event-ui.c:921
 msgid "weeks, on:"
 msgstr "sãptãmâni, pe:"
 
-#. months label
-#: event-ui.c:1273
+#: event-ui.c:974
 msgid "months"
 msgstr "luni"
 
-#: event-ui.c:1278
+#: event-ui.c:979
 #, c-format
 msgid "on day %d"
 msgstr "în ziua %d"
 
-#: event-ui.c:1282
+#: event-ui.c:983
 msgid "on the"
 msgstr "pe "
 
-#: event-ui.c:1290
+#: event-ui.c:991
 msgid "first"
 msgstr "prima"
 
-#: event-ui.c:1292
+#: event-ui.c:993
 msgid "second"
 msgstr "a doua"
 
-#: event-ui.c:1294
+#: event-ui.c:995
 msgid "third"
 msgstr "a treia"
 
-#: event-ui.c:1296
+#: event-ui.c:997
 msgid "fourth"
 msgstr "a patra"
 
-#: event-ui.c:1298
+#: event-ui.c:999
 msgid "fifth"
 msgstr "a cincea"
 
-#: event-ui.c:1300
+#: event-ui.c:1001
 msgid "last"
 msgstr "ultima"
 
-#. years label
-#: event-ui.c:1327
+#: event-ui.c:1028
 msgid "years"
 msgstr "ani"
 
-#. Begin end-date vbox
-#: event-ui.c:1346
-#, fuzzy
-msgid "End Date"
+#: event-ui.c:1047
+msgid "End Date:"
 msgstr "Datã Terminare:"
 
-#. forever radio button
-#: event-ui.c:1352
+#: event-ui.c:1053
 msgid "forever"
 msgstr "pentru totdeauna"
 
-#: event-ui.c:1363
+#: event-ui.c:1064
 msgid "end after"
 msgstr "terminã dupã"
 
-#: event-ui.c:1380
+#: event-ui.c:1081
 msgid "end on"
 msgstr "terminã pe"
 
-#. events label
-#: event-ui.c:1388
+#: event-ui.c:1089
 msgid "events"
 msgstr "evenimente"
 
-#: event-ui.c:1504
+#: event-ui.c:1188
 msgid "Calendar: New event"
 msgstr "Calendar: Eveniment nou"
 
-#: event-ui.c:1558
+#: event-ui.c:1235
 msgid "Calendar: Edit event"
 msgstr "Calendar: Editeazã eveniment"
 
-#: gtkdatesel.c:216
-msgid "%Y"
-msgstr "%Y"
-
-#: gtkdatesel.c:225 gtkdatesel.c:272
-msgid "%b"
-msgstr "%b"
-
-#: gtkdatesel.c:228 gtkdatesel.c:275
-msgid "%B"
-msgstr "%B"
-
-#: gtkdatesel.c:231 gtkdatesel.c:278
-#, c-format
-msgid "%m"
-msgstr "%m"
-
-#: gtkdatesel.c:242
-msgid "Week %V"
-msgstr "Sãptãmânã %V"
-
-#: gtkdatesel.c:248
-#, c-format
-msgid "%a, %d"
-msgstr "%a, %d"
-
-#: gtkdatesel.c:312
-#, c-format
-msgid "%d"
-msgstr ""
-
-#: gtkdatesel.c:324
-#, c-format
-msgid "%a"
-msgstr ""
-
-#: intltool-merge.in:554
-msgid "($q)"
-msgstr ""
-
-#: intltool-merge.in:572
-msgid ")($q)"
-msgstr ""
-
-#: intltool-merge.in:605
-msgid "'"
-msgstr ""
-
-#: main.c:276
-msgid "Choose file"
-msgstr ""
-
-#: main.c:304
-msgid "Import of"
-msgstr ""
-
-#: main.c:304
-msgid "files failed:"
-msgstr ""
-
-#: main.c:308
-msgid "Import successful"
-msgstr ""
-
-#: main.c:424
-#, c-format
-msgid "Could not import file %s."
-msgstr ""
-
-#: main.c:429
-#, c-format
-msgid "File %s imported sucessfully."
-msgstr ""
-
-#: main.c:462
-msgid "Calendar"
-msgstr "Calendar"
-
-#: main.c:484
-msgid "New appointment"
-msgstr "Nouã întâlnire"
-
-#: main.c:484
-msgid "Tap here to add a new appointment or reminder"
-msgstr "Apasã aici pentru a adãuga o nouã întâlnire sau re-amintire"
-
-#: main.c:495
-msgid "Today"
-msgstr "Azi"
-
-#: main.c:496
-msgid "Switch to today and stay there/return to day selecting."
-msgstr ""
-
-#: main.c:508
-msgid "Tap here to select day-at-a-time view."
-msgstr "Apasã aici pentru a selecta vizualizare câte-o-zi."
-
-#: main.c:516
-msgid "Week"
-msgstr "Sãptãmânã"
-
-#: main.c:517
-msgid "Tap here to select week-at-a-time view."
-msgstr "Apasã aici pentru a selecta vizualizare câte-o-sãptãmânã."
-
-#: main.c:525
-msgid "Month"
-msgstr "Lunã"
-
-#: main.c:526
-msgid "Tap here to select month-at-a-time view."
-msgstr "Apasã aici pentru a selecta vizualizare câte-o-lunã."
-
-#: main.c:533
-msgid "Import"
-msgstr ""
-
-#: main.c:533
-msgid "Open file to import an event from it."
-msgstr ""
-
-#: main.c:540
-msgid "Tap here to exit the program"
-msgstr "Apasã aici pentru a termina programul"
+#: day_popup.c:171
+msgid "No appointments"
+msgstr "Nici o întâlnire"
 
 #: xsettings.c:105
 msgid "Cannot create XSettings client"
 msgstr "Nu pot crea client XSettings"
 
-#~ msgid "Future"
-#~ msgstr "Viitor"
+#: gtkdatesel.c:193
+msgid "%Y"
+msgstr "%Y"
 
-#~ msgid "Future View"
-#~ msgstr "Vizualizare Viitor"
+#: gtkdatesel.c:202
+msgid "%b"
+msgstr "%b"
 
-#~ msgid "Tap here to see all future events."
-#~ msgstr "Apasã aici pentru a vedea toate evenimentele viitoare."
+#: gtkdatesel.c:205
+msgid "%B"
+msgstr "%B"
 
-#~ msgid "Day View"
-#~ msgstr "Vizualizare Zi"
+#: gtkdatesel.c:208
+#, c-format
+msgid "%m"
+msgstr "%m"
 
-#~ msgid "Week View"
-#~ msgstr "Vizualizare Sãptãmânã"
+#: gtkdatesel.c:219
+msgid "Week %V"
+msgstr "Sãptãmânã %V"
 
-#~ msgid "Month View"
-#~ msgstr "Vizualizare Lunã"
+#: gtkdatesel.c:225
+#, c-format
+msgid "%a, %d"
+msgstr "%a, %d"
 
-#~ msgid "Exit"
-#~ msgstr "Terminã"
-
-#~ msgid "Summary:"
-#~ msgstr "Rezumat:"
-
-#~ msgid "End:"
-#~ msgstr "Terminare:"
-
-#~ msgid "at:"
-#~ msgstr "la:"
-
-#~ msgid "GPE Calendar"
-#~ msgstr "GPE Calendar"
+#: gpe-calendar.desktop.in.h:2
+msgid "GPE Calendar"
+msgstr "GPE Calendar"

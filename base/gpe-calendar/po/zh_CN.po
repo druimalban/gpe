@@ -1,391 +1,788 @@
 # Simplified Chinese messages for gpe-calendar
-# Copyright (C) 2004 Free Software Foundation, Inc.
+# Copyright (C) 2004, 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-calendar package.
 # Meng Jie <zuxyhere@eastday.com>, 2004.
+# LI Daobing <lidaobing@gmail.com>, 2007.
 #
-#: intltool-merge.in:592 intltool-merge.in:593
+#: ../event-ui.c:185
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-calendar 0.45\n"
+"Project-Id-Version: gpe-calendar 0.73rc2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-07-27 00:49+0200\n"
-"PO-Revision-Date: 2004-11-03 22:20+0800\n"
-"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
-"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"POT-Creation-Date: 2006-07-03 16:10+0200\n"
+"PO-Revision-Date: 2007-11-03 19:46+0800\n"
+"Last-Translator: LI Daobing <lidaobing@gmail.com>\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: day_popup.c:209
-msgid "No appointments"
-msgstr "没有约会"
+#: ../gpe-calendar.desktop.in.in.h:1 ../hildon/gpe-calendar.desktop.in.in.h:1
+msgid "Calendar"
+msgstr "日历"
 
-#: day_view.c:59 event-ui.c:281
+#: ../gpe-calendar.desktop.in.in.h:2
+msgid "GPE Calendar"
+msgstr "GPE 日历"
+
+#: ../hildon/gpe-calendar.desktop.in.in.h:2
+msgid "GPE Calendar Application"
+msgstr "GPE 日历程序"
+
+#: ../alarm-dialog.c:188 ../main.c:1788
+msgid "Alarms"
+msgstr "提醒"
+
+#: ../alarm-dialog.c:208
+msgid "Acknowledge All"
+msgstr "全部清除"
+
+#: ../alarm-dialog.c:214 ../calendars-dialog.c:467
+msgid "Dismiss"
+msgstr "关闭"
+
+#: ../alarm-dialog.c:285
+msgid "No alarms have gone off."
+msgstr "未曾触发提醒。"
+
+#: ../alarm-dialog.c:371
+#, c-format
+msgid "%s%s%s%s%s%s%s%s"
+msgstr "%s%s%s%s%s%s%s%s"
+
+#: ../alarm-dialog.c:372
+msgid "<b>Summary</b>: "
+msgstr "<b>概要</b>："
+
+#: ../alarm-dialog.c:375
+msgid "<b>Description</b>: "
+msgstr "<b>描述</b>："
+
+#: ../alarm-dialog.c:378
+msgid "<b>Location</b>: "
+msgstr "<b>位置</b>"
+
+#: ../alarm-dialog.c:464
+msgid "Show Event"
+msgstr "显示事件"
+
+#: ../alarm-dialog.c:470
+msgid "Acknowledge"
+msgstr "感谢"
+
+#: ../alarm-dialog.c:477
+msgid "Sleep:"
+msgstr "休息:"
+
+#: ../alarm-dialog.c:492
+msgid "Minutes"
+msgstr "分钟"
+
+#: ../alarm-dialog.c:493
+msgid "Hours"
+msgstr "小时"
+
+#: ../alarm-dialog.c:494
+msgid "Days"
+msgstr "日"
+
+#: ../calendar-delete-dialog.c:134
+#, c-format
 msgid ""
-"Delete all recurring entries?\n"
-"(If no, delete this instance only)"
+" %s cannot be the new parent of %s's constituents: this would create a loop (try being your own grandparent).\n"
+"Please select a calendar which is not a descendent of %s."
 msgstr ""
-"删除所有重复条目？\n"
-"(否则仅删除此实例)"
+"%s 不能为 %s 的下级的新上级: 这会构成一个循环(试图成为自己的上级的上级)。\n"
+"请选择一个跟 %s 没有关系的日历。"
 
-#: day_view.c:60 day_view.c:164 event-ui.c:282
-#, fuzzy
-msgid "Question"
+#: ../calendar-delete-dialog.c:171
+#, c-format
+msgid "Delete Calendar %s"
+msgstr "删除日历 %s"
+
+#: ../calendar-delete-dialog.c:197
+#, c-format
+msgid "Delete %s%s%s"
+msgstr "删除 %s%s%s"
+
+#: ../calendar-delete-dialog.c:207
+#, c-format
+msgid "Reparent %s%s%s"
+msgstr "重为上级 %s%s%s"
+
+#: ../calendar-edit-dialog.c:252
+msgid "Calendar: New Calendar"
+msgstr "日历：新日历"
+
+#: ../calendar-edit-dialog.c:275
+msgid "Title:"
+msgstr "标题："
+
+#. Description textarea.
+#: ../calendar-edit-dialog.c:288 ../event-ui.c:717
+msgid "Description:"
 msgstr "描述："
 
-#: day_view.c:164
-#, fuzzy
-msgid "Delete event?"
-msgstr "先于事件"
+#: ../calendar-edit-dialog.c:301
+msgid "Parent:"
+msgstr "上级："
 
-#: event-ui.c:415
+#: ../calendar-edit-dialog.c:320
+msgid "Color:"
+msgstr "颜色："
+
+#: ../calendar-edit-dialog.c:341
+msgid "Type:"
+msgstr "类型："
+
+#: ../calendar-edit-dialog.c:346
+msgid "Local"
+msgstr "本地"
+
+#: ../calendar-edit-dialog.c:347
+msgid "Subscribe"
+msgstr "订阅"
+
+#: ../calendar-edit-dialog.c:348
+msgid "Publish"
+msgstr "发布"
+
+#. Uncomment as we support other modes.
+#: ../calendar-edit-dialog.c:351
+msgid "Synchronize"
+msgstr "同步"
+
+#: ../calendar-edit-dialog.c:368
+msgid "URL:"
+msgstr "网址："
+
+#: ../calendar-edit-dialog.c:380
+msgid "Username:"
+msgstr "用户名："
+
+#: ../calendar-edit-dialog.c:392
+msgid "Password:"
+msgstr "密码："
+
+#. Don't show initially.
+#: ../calendar-edit-dialog.c:406
+msgid "Update:"
+msgstr "更新："
+
+#: ../calendar-edit-dialog.c:420
+msgid "times per year"
+msgstr "次每年"
+
+#: ../calendar-edit-dialog.c:421
+msgid "times per month"
+msgstr "次每月"
+
+#: ../calendar-edit-dialog.c:422
+msgid "times per week"
+msgstr "次每周"
+
+#: ../calendar-edit-dialog.c:423
+msgid "times per day"
+msgstr "次每天"
+
+#: ../calendar-edit-dialog.c:424
+msgid "times per hour"
+msgstr "次每小时"
+
+#: ../calendar-edit-dialog.c:522
+msgid "Calendar: Edit Calendar"
+msgstr "日历：编辑日历"
+
+#: ../calendars-dialog.c:299 ../main.c:1680
+msgid "Calendars"
+msgstr "日历"
+
+#: ../calendars-dialog.c:335
+msgid "Show All"
+msgstr "显示所有"
+
+#: ../calendars-widgets.c:382
+#, c-format
+msgid "%ld minutes ago"
+msgstr "%ld 分钟前"
+
+#: ../calendars-widgets.c:384
+#, c-format
+msgid "%ld hours ago"
+msgstr "%ld 小时以前"
+
+#: ../calendars-widgets.c:386
+#, c-format
+msgid "%ld days ago"
+msgstr "%ld 天以前"
+
+#: ../calendars-widgets.c:393
+#, c-format
+msgid "%x"
+msgstr "%x"
+
+#: ../calendars-widgets.c:406
+msgid "Up to date"
+msgstr "已更新"
+
+#: ../calendars-widgets.c:408
+msgid "Modified"
+msgstr "被修改"
+
+#: ../calendar-update.c:158
+msgid "Calendar Syncronization"
+msgstr "日历同步"
+
+#: ../day_popup.c:89
+msgid "%a %d %B"
+msgstr "%a %d %B"
+
+#: ../day_popup.c:137 ../event-list.c:250
+#, c-format
+msgid "Until %s"
+msgstr "直到 %s"
+
+#: ../day_view.c:238
+msgid "Until %b %d"
+msgstr "直到 %b %d"
+
+#: ../day_view.c:240
+#, c-format
+msgid "Until %d:%02d"
+msgstr "直到 %d:%02d"
+
+#: ../event-list.c:189
+#, c-format
+msgid "%-m/%-d"
+msgstr "%-m/%-d"
+
+#: ../event-list.c:190
+msgid "%b %-d"
+msgstr "%b %-d"
+
+#: ../event-list.c:193
+msgid "%m/%d/%t"
+msgstr "%m/%d/%t"
+
+#: ../event-list.c:194
+msgid "%b %d, %y"
+msgstr "%b %d, %y"
+
+#: ../event-list.c:200
+msgid "%-H:%M"
+msgstr "%-H:%M"
+
+#: ../event-list.c:203
+msgid "%-m/%-d %-H:%M"
+msgstr "%-m/%-d %-H:%M"
+
+#: ../event-list.c:204
+msgid "%b %-d %-H:%M"
+msgstr "%b %-d %-H:%M"
+
+#: ../event-list.c:207
+msgid "%-m/%-d/%y %-H:%M"
+msgstr "%-m/%-d/%y %-H:%M"
+
+#: ../event-list.c:208
+msgid "%b %-d, %y %-H:%M"
+msgstr "%b %-d, %y %-H:%M"
+
+#: ../event-list.c:235 ../event-list.c:313 ../main.c:338 ../main.c:1811
+msgid "Today"
+msgstr "今日"
+
+#: ../event-list.c:741 ../event-ui.c:188 ../event-ui.c:780
+msgid "days"
+msgstr "天"
+
+#: ../event-list.c:742 ../event-ui.c:781
+msgid "weeks"
+msgstr "周"
+
+#: ../event-list.c:743 ../event-ui.c:194
+msgid "months"
+msgstr "月"
+
+#: ../event-list.c:744 ../event-ui.c:197
+msgid "years"
+msgstr "年"
+
+#: ../event-menu.c:57
+#, c-format
+msgid "Delete all occurrences of %s?"
+msgstr "删除所有出现的 %s？"
+
+#: ../event-menu.c:60 ../event-menu.c:84
+msgid "Question"
+msgstr "问题"
+
+#: ../event-menu.c:61
+msgid "Delete this occurrence"
+msgstr "删除该次"
+
+#: ../event-menu.c:62
+msgid "Delete all occurrences"
+msgstr "删除所有次数"
+
+#: ../event-menu.c:82
+#, c-format
+msgid "Delete %s?"
+msgstr "删除 %s？"
+
+#: ../event-menu.c:254
+msgid "Edit"
+msgstr "编辑"
+
+#: ../event-menu.c:267
+msgid "Edit Event"
+msgstr "编辑事件"
+
+#: ../event-menu.c:275
+#, c-format
+msgid "Edit <i>%s</i>"
+msgstr "编辑 <i>%s</i>"
+
+#: ../event-menu.c:286
+msgid "Delete"
+msgstr "删除"
+
+#: ../event-menu.c:299
+msgid "Delete Event"
+msgstr "删除事件"
+
+#: ../event-menu.c:307
+#, c-format
+msgid "Delete <i>%s</i>"
+msgstr "删除 <i>%s</i>"
+
+#: ../event-menu.c:318 ../event-ui.c:1459
+msgid "Save"
+msgstr "保存"
+
+#: ../event-menu.c:331
+msgid "Save Event"
+msgstr "保存事件"
+
+#: ../event-menu.c:339
+#, c-format
+msgid "Save <i>%s</i>"
+msgstr "保存 <i>%s</i>"
+
+#: ../event-menu.c:353
+msgid "Send via Infra-red"
+msgstr "通过红外发送"
+
+#: ../event-menu.c:366
+msgid "Send via Bluetooth"
+msgstr "通过蓝牙发送"
+
+#: ../event-menu.c:381
+msgid "Move to Calendar..."
+msgstr "移动至日历..."
+
+#: ../event-menu.c:390
+#, c-format
+msgid "Only Show <i>%s</i>"
+msgstr "仅显示 <i>%s</i>"
+
+#: ../event-menu.c:401
+#, c-format
+msgid "Hide <i>%s</i>"
+msgstr "隐藏 <i>%s</i>"
+
+#: ../event-ui.c:148 ../event-ui.c:872
+msgid "Every"
+msgstr "每"
+
+#: ../event-ui.c:149
+msgid "First"
+msgstr "第一"
+
+#: ../event-ui.c:150
+msgid "Second"
+msgstr "第二"
+
+#: ../event-ui.c:151
+msgid "Third"
+msgstr "第三"
+
+#: ../event-ui.c:152
+msgid "Fourth"
+msgstr "第四"
+
+#: ../event-ui.c:153
+msgid "Last"
+msgstr "最后"
+
+#: ../event-ui.c:154
+msgid "Second to last"
+msgstr "从第二至最后"
+
+#: ../event-ui.c:191
+msgid "weeks, on:"
+msgstr "周，于："
+
+#: ../event-ui.c:266
 msgid "End time must not be earlier than start time"
 msgstr "结束时间不能早于开始时间"
 
-#: event-ui.c:435
+#: ../event-ui.c:276 ../event-ui.c:282
 msgid ""
 "Event starts in the past!\n"
 "Save anyway?"
 msgstr ""
+"时间开始于过去！\n"
+"仍然保存？"
 
-#: event-ui.c:875
-msgid "Event"
-msgstr "事件"
+#. Location.
+#: ../event-ui.c:677
+msgid "Location:"
+msgstr "地址："
 
-#: event-ui.c:876
-msgid "Recurrence"
-msgstr "重复任务"
+#. Categories.
+#: ../event-ui.c:695
+msgid "Categories"
+msgstr "目录"
 
-#: event-ui.c:877 event-ui.c:1080
+#: ../event-ui.c:703
+msgid "Define categories by tapping the Categories button."
+msgstr "点击目录按钮来定义目录。"
+
+#: ../event-ui.c:764 ../event-ui.c:1360
 msgid "Alarm"
-msgstr "闹钟"
-
-#: event-ui.c:907
-msgid "Type:"
-msgstr "类型："
-
-#: event-ui.c:912
-msgid "Appointment"
-msgstr "约会"
-
-#: event-ui.c:913
-msgid "Reminder"
 msgstr "提醒"
 
-#: event-ui.c:915
-msgid "Task"
-msgstr "任务"
-
-#: event-ui.c:921
-msgid "Days"
-msgstr "日"
-
-#: event-ui.c:922
-msgid "Weeks"
-msgstr "周"
-
-#: event-ui.c:929
-#, fuzzy
-msgid "Text:"
-msgstr "时间："
-
-#: event-ui.c:949
-#, fuzzy
-msgid "Start at:"
-msgstr "开始："
-
-#: event-ui.c:950
-#, fuzzy
-msgid "End at:"
-msgstr "结束日期："
-
-#: event-ui.c:951 event-ui.c:952
-msgid "on:"
-msgstr ""
-
-#: event-ui.c:988
-msgid "Date:"
-msgstr "日期："
-
-#: event-ui.c:991
-msgid "Time:"
-msgstr "时间："
-
-#: event-ui.c:1012
-msgid "Due:"
-msgstr "定于："
-
-#: event-ui.c:1016
-msgid "Allow:"
-msgstr "允许："
-
-#: event-ui.c:1026
-msgid "Categories"
-msgstr ""
-
-#: event-ui.c:1050
-msgid "Description:"
-msgstr "描述："
-
-#: event-ui.c:1084
-msgid "before event"
-msgstr "先于事件"
-
-#: event-ui.c:1087
+#: ../event-ui.c:778
 msgid "minutes"
 msgstr "分钟"
 
-#: event-ui.c:1089
+#: ../event-ui.c:779
 msgid "hours"
 msgstr "小时"
 
-#. days label
-#: event-ui.c:1091 event-ui.c:1198
-msgid "days"
-msgstr "天"
+#: ../event-ui.c:788
+msgid "before event"
+msgstr "事件前"
 
-#: event-ui.c:1093
-msgid "weeks"
-msgstr "周"
+#: ../event-ui.c:825
+msgid "Recurrence type:"
+msgstr "重复类型："
 
-#: event-ui.c:1143
-#, fuzzy
-msgid "Type"
-msgstr "类型："
+#: ../event-ui.c:831
+msgid "single occurrence"
+msgstr "单次事件"
 
-#: event-ui.c:1155
-msgid "No recurrence"
-msgstr "不重复任务"
-
-#: event-ui.c:1158
-msgid "Daily"
+#: ../event-ui.c:832
+msgid "daily"
 msgstr "每天"
 
-#: event-ui.c:1161
-msgid "Weekly"
+#: ../event-ui.c:833
+msgid "weekly"
 msgstr "每周"
 
-#: event-ui.c:1164
-msgid "Monthly"
+#: ../event-ui.c:834
+msgid "monthly"
 msgstr "每月"
 
-#: event-ui.c:1167
-msgid "Yearly"
+#: ../event-ui.c:835
+msgid "yearly"
 msgstr "每年"
 
-#. "every" label
-#: event-ui.c:1188 event-ui.c:1210 event-ui.c:1262 event-ui.c:1317
-msgid "Every"
-msgstr "每"
+#: ../event-ui.c:904
+msgid "M"
+msgstr ""
 
-#: event-ui.c:1211
-msgid "weeks, on:"
-msgstr "周，于："
+#: ../event-ui.c:904
+msgid "T"
+msgstr ""
 
-#. months label
-#: event-ui.c:1273
-msgid "months"
-msgstr "月"
+#: ../event-ui.c:904
+msgid "W"
+msgstr ""
 
-#: event-ui.c:1278
-#, c-format
-msgid "on day %d"
-msgstr "于 %d"
+#: ../event-ui.c:904
+msgid "F"
+msgstr ""
 
-#: event-ui.c:1282
-msgid "on the"
-msgstr "在"
+#: ../event-ui.c:904
+msgid "S"
+msgstr ""
 
-#: event-ui.c:1290
-msgid "first"
-msgstr "第一"
-
-#: event-ui.c:1292
-msgid "second"
-msgstr "第二"
-
-#: event-ui.c:1294
-msgid "third"
-msgstr "第三"
-
-#: event-ui.c:1296
-msgid "fourth"
-msgstr "第四"
-
-#: event-ui.c:1298
-msgid "fifth"
-msgstr "第五"
-
-#: event-ui.c:1300
-msgid "last"
-msgstr "最后"
-
-#. years label
-#: event-ui.c:1327
-msgid "years"
-msgstr "年"
-
-#. Begin end-date vbox
-#: event-ui.c:1346
-#, fuzzy
+#. End date.
+#: ../event-ui.c:1016
 msgid "End Date"
-msgstr "结束日期："
+msgstr "结束日期"
 
 #. forever radio button
-#: event-ui.c:1352
+#: ../event-ui.c:1027
 msgid "forever"
 msgstr "永远"
 
-#: event-ui.c:1363
+#: ../event-ui.c:1039
 msgid "end after"
-msgstr "在这之后结束"
+msgstr "在出现"
 
-#: event-ui.c:1380
+#: ../event-ui.c:1051
+msgid "occurrences"
+msgstr "次后结束"
+
+#: ../event-ui.c:1061
 msgid "end on"
 msgstr "结束于"
 
-#. events label
-#: event-ui.c:1388
-msgid "events"
+#. Event tab.
+#: ../event-ui.c:1153
+msgid "Event"
 msgstr "事件"
 
-#: event-ui.c:1504
+#: ../event-ui.c:1188
+msgid "Summary:"
+msgstr "概要："
+
+#: ../event-ui.c:1204
+msgid "All day event"
+msgstr "全天事件"
+
+#. Start time.
+#: ../event-ui.c:1219
+msgid "Start:"
+msgstr "开始："
+
+#: ../event-ui.c:1232 ../event-ui.c:1273
+msgid "on:"
+msgstr "在："
+
+#. End time.
+#: ../event-ui.c:1259
+msgid "End:"
+msgstr "结束："
+
+#: ../event-ui.c:1304
+msgid "Calendar:"
+msgstr "日历："
+
+#. Detail page.
+#: ../event-ui.c:1328
+msgid "Details"
+msgstr "细节"
+
+#: ../event-ui.c:1402
+msgid "Recurrence"
+msgstr "重复任务"
+
+#: ../event-ui.c:1449
+msgid "Cancel"
+msgstr "取消"
+
+#: ../event-ui.c:1510
 msgid "Calendar: New event"
 msgstr "日历：新事件"
 
-#: event-ui.c:1558
+#: ../event-ui.c:1544
 msgid "Calendar: Edit event"
 msgstr "日历：编辑事件"
 
-#: gtkdatesel.c:216
-msgid "%Y"
-msgstr "%Y"
+#: ../export-vcal.c:356 ../export-vcal.c:363
+#, c-format
+msgid "Opening %s"
+msgstr "打开 %s"
 
-#: gtkdatesel.c:225 gtkdatesel.c:272
+#: ../export-vcal.c:402
+#, c-format
+msgid "Save %s as..."
+msgstr "保存 %s 为..."
+
+#: ../export-vcal.c:418
+#, c-format
+msgid "Saving %s: %s"
+msgstr "保存 %s: %s"
+
+#: ../gtkdatesel.c:225
+#, c-format
+msgid "%d"
+msgstr "%d"
+
+#: ../gtkdatesel.c:273
 msgid "%b"
 msgstr "%b"
 
-#: gtkdatesel.c:228 gtkdatesel.c:275
+#: ../gtkdatesel.c:276
 msgid "%B"
 msgstr "%B"
 
-#: gtkdatesel.c:231 gtkdatesel.c:278
+#: ../gtkdatesel.c:279
 #, c-format
 msgid "%m"
 msgstr "%m"
 
-#: gtkdatesel.c:242
-msgid "Week %V"
-msgstr "周 %V"
-
-#: gtkdatesel.c:248
-#, c-format
-msgid "%a, %d"
-msgstr "%a，%d"
-
-#: gtkdatesel.c:312
-#, c-format
-msgid "%d"
-msgstr ""
-
-#: gtkdatesel.c:324
-#, c-format
-msgid "%a"
-msgstr ""
-
-#: intltool-merge.in:554
-msgid "($q)"
-msgstr ""
-
-#: intltool-merge.in:572
-msgid ")($q)"
-msgstr ""
-
-#: intltool-merge.in:605
-msgid "'"
-msgstr ""
-
-#: main.c:276
+#: ../import-vcal.c:488
 msgid "Choose file"
-msgstr ""
+msgstr "选择文件"
 
-#: main.c:304
-msgid "Import of"
-msgstr ""
+#: ../import-vcal.c:526
+msgid "Import into calendar: "
+msgstr "导入到日历："
 
-#: main.c:304
-msgid "files failed:"
-msgstr ""
+#: ../import-vcal.c:556
+#, c-format
+msgid "Select Calendar for %s%s"
+msgstr "为 %s%s 选择日历"
 
-#: main.c:308
+#: ../import-vcal.c:623
 msgid "Import successful"
-msgstr ""
+msgstr "成功导入"
 
-#: main.c:424
+#: ../main.c:332
+msgid "Yesterday"
+msgstr "昨天"
+
+#: ../main.c:344
+msgid "Tomorrow"
+msgstr "明天"
+
+#: ../main.c:372
 #, c-format
-msgid "Could not import file %s."
-msgstr ""
+msgid "Calendar - %s"
+msgstr "日历 - %s"
 
-#: main.c:429
-#, c-format
-msgid "File %s imported sucessfully."
-msgstr ""
+#: ../main.c:1623
+msgid "Main"
+msgstr "主要"
 
-#: main.c:462
-msgid "Calendar"
-msgstr "日历"
+#: ../main.c:1685
+msgid "Tap here to select the calendars to show."
+msgstr "点击此处选择显示的日历。"
 
-#: main.c:484
-msgid "New appointment"
-msgstr "新约会"
+#: ../main.c:1704
+msgid "Day"
+msgstr "日"
 
-#: main.c:484
-msgid "Tap here to add a new appointment or reminder"
-msgstr "轻击此处添加一个新约会或提醒"
-
-#: main.c:495
-msgid "Today"
-msgstr "今日"
-
-#: main.c:496
-msgid "Switch to today and stay there/return to day selecting."
-msgstr ""
-
-#: main.c:508
+#: ../main.c:1712
 msgid "Tap here to select day-at-a-time view."
 msgstr "轻击此处查看一日。"
 
-#: main.c:516
+#: ../main.c:1722
 msgid "Week"
 msgstr "周"
 
-#: main.c:517
+#: ../main.c:1730
 msgid "Tap here to select week-at-a-time view."
 msgstr "轻击此处查看一周。"
 
-#: main.c:525
+#: ../main.c:1742
 msgid "Month"
 msgstr "月"
 
-#: main.c:526
+#: ../main.c:1750
 msgid "Tap here to select month-at-a-time view."
 msgstr "轻击此处查看一个月。"
 
-#: main.c:533
-msgid "Import"
-msgstr ""
+#: ../main.c:1761
+msgid "Agenda"
+msgstr "摘要"
 
-#: main.c:533
-msgid "Open file to import an event from it."
-msgstr ""
+#: ../main.c:1770
+msgid "Tap here to select the agenda."
+msgstr "点击此处选择摘要。"
 
-#: main.c:540
-msgid "Tap here to exit the program"
-msgstr "轻击此处退出程序"
+#: ../main.c:1793
+msgid "Tap here to view alarms pending acknowledgement."
+msgstr "点击此处选择需要关注的提醒。"
 
-#: xsettings.c:105
+#: ../main.c:1815
+msgid "Switch to today."
+msgstr "切换至今天。"
+
+#. File menu.
+#: ../main.c:1852
+msgid "_File"
+msgstr "文件(_F)"
+
+#. View menu.
+#: ../main.c:1885
+msgid "_View"
+msgstr "视图(_V)"
+
+#. View -> Today.
+#: ../main.c:1892
+msgid "_Today"
+msgstr "今日(_T)"
+
+#. View -> Day.
+#: ../main.c:1905
+msgid "_Day"
+msgstr "日(_D)"
+
+#. View -> Week.
+#: ../main.c:1915
+msgid "_Week"
+msgstr "周(_W)"
+
+#. View -> Month.
+#: ../main.c:1925
+msgid "_Month"
+msgstr "月(_M)"
+
+#. View -> Agenda.
+#: ../main.c:1935 ../main.c:1976
+msgid "_Agenda"
+msgstr "代理(_A)"
+
+#. View -> Sidebar.
+#: ../main.c:1949
+msgid "_Sidebar"
+msgstr "侧栏(_S)"
+
+#. View -> Calendar.
+#: ../main.c:1958
+msgid "_Calendar"
+msgstr "日历(_C)"
+
+#. View -> Selector.
+#: ../main.c:1967
+msgid "Calendar _Selector"
+msgstr "选择日历(_S)"
+
+#. Tools menu.
+#: ../main.c:1985
+msgid "_Tools"
+msgstr "工具(_T)"
+
+#. Tools -> Calendars.
+#: ../main.c:1992
+msgid "_Calendars"
+msgstr "日历(_C)"
+
+#. Tools -> Categories.
+#: ../main.c:2002
+msgid "Cate_gories"
+msgstr "目录(_G)"
+
+#. Tools -> Alarms.
+#: ../main.c:2013
+msgid "_Alarms"
+msgstr "提醒(_A)"
+
+#. Tools -> Toolbar.
+#: ../main.c:2027
+msgid "_Toolbar"
+msgstr "工具栏(_T)"
+
+#. Tools -> Full Screen.
+#: ../main.c:2036
+msgid "_Full Screen"
+msgstr "全屏(_F)"
+
+#: ../xsettings.c:105
 msgid "Cannot create XSettings client"
 msgstr "不能创建 XSettings 客户"
+
+#~ msgid "New appointment"
+#~ msgstr "新约会"
+
+#~ msgid "Tap here to add a new appointment or reminder"
+#~ msgstr "轻击此处添加一个新约会或提醒"
 
 #~ msgid "Future"
 #~ msgstr "未来"
@@ -396,26 +793,60 @@ msgstr "不能创建 XSettings 客户"
 #~ msgid "Tap here to see all future events."
 #~ msgstr "轻击此处查看所有未来事件。"
 
-#~ msgid "Day View"
-#~ msgstr "日视图"
-
 #~ msgid "Week View"
 #~ msgstr "周视图"
 
 #~ msgid "Month View"
 #~ msgstr "月视图"
 
-#~ msgid "Exit"
-#~ msgstr "退出"
+#~ msgid ""
+#~ "Delete all recurring entries?\n"
+#~ "(If no, delete this instance only)"
+#~ msgstr ""
+#~ "删除所有重复条目？\n"
+#~ "(否则仅删除此实例)"
 
-#~ msgid "Summary:"
-#~ msgstr "概要："
+#~ msgid "Appointment"
+#~ msgstr "约会"
 
-#~ msgid "End:"
-#~ msgstr "结束："
+#~ msgid "Reminder"
+#~ msgstr "提醒"
+
+#~ msgid "Task"
+#~ msgstr "任务"
+
+#~ msgid "Weeks"
+#~ msgstr "周"
 
 #~ msgid "at:"
 #~ msgstr "于："
 
-#~ msgid "GPE Calendar"
-#~ msgstr "GPE 日历"
+#~ msgid "Due:"
+#~ msgstr "定于："
+
+#~ msgid "Allow:"
+#~ msgstr "允许："
+
+#~ msgid "No recurrence"
+#~ msgstr "不重复任务"
+
+#~ msgid "on day %d"
+#~ msgstr "于 %d"
+
+#~ msgid "on the"
+#~ msgstr "在"
+
+#~ msgid "fifth"
+#~ msgstr "第五"
+
+#~ msgid "events"
+#~ msgstr "事件"
+
+#~ msgid "No appointments"
+#~ msgstr "没有约会"
+
+#~ msgid "%Y"
+#~ msgstr "%Y"
+
+#~ msgid "Week %V"
+#~ msgstr "周 %V"
