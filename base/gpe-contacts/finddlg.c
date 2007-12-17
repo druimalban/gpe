@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004 Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2004, 2007 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,6 +34,16 @@ do_find_contacts(GtkWindow *parent, gchar *cat_id)
   GSList *result = NULL;
     
   /* create dialog window */
+#ifdef IS_HILDON
+  dialog = gtk_dialog_new_with_buttons(_("Find Contacts"), parent,
+                                       GTK_DIALOG_MODAL,
+                                       NULL);
+
+  btnOK = gtk_dialog_add_button(GTK_DIALOG(dialog), _("OK"), 
+                                GTK_RESPONSE_OK);
+  gtk_dialog_add_button(GTK_DIALOG(dialog), _("Cancel"), 
+                                GTK_RESPONSE_CANCEL);
+#else
   dialog = gtk_dialog_new_with_buttons(_("Find Contacts"), parent,
                                        GTK_DIALOG_MODAL,
                                        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
@@ -41,6 +51,8 @@ do_find_contacts(GtkWindow *parent, gchar *cat_id)
 
   btnOK = gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_OK, 
                                 GTK_RESPONSE_OK);
+#endif
+    
   GTK_WIDGET_SET_FLAGS(btnOK, GTK_CAN_DEFAULT);
   gtk_widget_grab_default(btnOK);
   
@@ -57,7 +69,7 @@ do_find_contacts(GtkWindow *parent, gchar *cat_id)
   gtk_box_set_spacing(GTK_BOX(GTK_DIALOG(dialog)->vbox), gpe_get_boxspacing());  
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), label, FALSE, TRUE, 0);
   gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox), entry, FALSE, TRUE, 0);
-
+    
   gtk_widget_show_all(dialog);
   
   if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_OK)

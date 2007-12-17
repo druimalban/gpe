@@ -1,6 +1,11 @@
+2007-12-15  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main-hildon.c: Enable search dialog for Hildon.
+    * finddlg.c: Add support for Hildon UI.
+
 2007-11-22  Florian Boor  <florian.boor@kernelconcepts.de>
 
-	* Update Finnish  translation
+	* Update Finnish translation
 
 2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
 

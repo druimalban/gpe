@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2005, 2006 by Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2005, 2006, 2007 by Florian Boor <florian.boor@kernelconcepts.de>
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1503,6 +1503,10 @@ create_main (gboolean edit_structure)
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (edit_categories), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_FIND);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(do_find), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);    
+    
   item = gtk_separator_tool_item_new();
   gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), TRUE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
