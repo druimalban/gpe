@@ -1,3 +1,8 @@
+2007-12-28  Florian Boor  <florian@kernelconcepts.de>
+
+	* ui.c: Do not set "allow-checkbox-mode" property if using modern
+	  Hildon  libraries. Should fix #128
+
 2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac, ui.c: set HILDON_VER to 2

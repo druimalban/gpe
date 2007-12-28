@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- *               2006 Florian Boor <florian.boor@kernelconcepts.de>
+ *               2006, 2007 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -665,7 +665,9 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 
 #ifdef IS_HILDON
 
+#if HILDON_VER = 0
     g_object_set(G_OBJECT(tree_view), "allow-checkbox-mode", FALSE, NULL);
+#endif
 
 #else
     toolbar = gtk_toolbar_new ();
