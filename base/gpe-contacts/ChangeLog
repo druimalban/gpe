@@ -1,3 +1,8 @@
+2007-12-30  Graham Cobb  <g+770@cobb.uk.net>
+
+	* pimc-ui.c (build_pim_categories_list): do not use allow-checkbox-mode
+	in chinook or later
+
 2007-12-15  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main-hildon.c: Enable search dialog for Hildon.
