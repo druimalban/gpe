@@ -665,7 +665,7 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 
 #ifdef IS_HILDON
 
-#if HILDON_VER = 0
+#if HILDON_VER == 0
     g_object_set(G_OBJECT(tree_view), "allow-checkbox-mode", FALSE, NULL);
 #endif
 
