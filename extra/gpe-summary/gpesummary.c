@@ -100,8 +100,7 @@ struct tm tm;
 
 void printTime(gchar * comment) {
      struct timeval tv;
-     struct timezone tz;
-     gettimeofday(&tv, &tz);
+     gettimeofday(&tv, NULL);
      tm=*localtime(&tv.tv_sec);
      printf("%s %d:%d:%d %d \n",comment, tm.tm_hour, tm.tm_min,
               tm.tm_sec, tv.tv_usec);

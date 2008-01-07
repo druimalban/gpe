@@ -1,0 +1,4 @@
+2008-01-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpesummary.c (printTime) : Remove reference to struct timezone
+
