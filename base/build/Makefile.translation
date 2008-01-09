@@ -70,11 +70,7 @@ clean-po:
 	intltool-merge -u -d $(DIR_PO) $< $@
 
 freshen-po:
-	rm -rf tmp-po
-	mkdir tmp-po
-	cd tmp-po; for LANG in $(LINGUAS); do wget $(TRANSLATION_SITE)/$(PACKAGE)/$$LANG.po; done
-	for LANG in $(LINGUAS); do if [ ! -f $(DIR_PO)/$$LANG.po ] || ! cmp -s $(DIR_PO)/$$LANG.po tmp-po/$$LANG.po ; then mv tmp-po/$$LANG.po $(DIR_PO)/$$LANG.po; echo "Updated $$LANG translation"; fi; done
-	rm -rf tmp-po
+	 rsync -Lrtvz  translationproject.org::tp/latest/$(PACKAGE)/* po/
 
 # ------------------------------------------------------------------------
 
