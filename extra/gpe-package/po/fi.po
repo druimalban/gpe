@@ -1,0 +1,259 @@
+# translation of gpe-package-0.3.pot to Finnish
+# Copyright © 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-package package.
+#
+# Jorma Karvonen <karvjorm@users.sf.net>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-package 0.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-08-26 15:13+0200\n"
+"PO-Revision-Date: 2008-01-09 16:15+0200\n"
+"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: main.c:45
+msgid "Unable to fork"
+msgstr "Ei voitu käynnistää uusia tehtäviä"
+
+#: interface.c:67
+msgid "Help for this application is not installed."
+msgstr "Tälle sovellukselle ei ole asennettu ohjetta."
+
+#: interface.c:120
+msgid "/_File"
+msgstr "/_Tiedosto"
+
+#: interface.c:121
+msgid "/File/_Install file"
+msgstr "/Tiedosto/_Asenna tiedosto"
+
+#: interface.c:122
+msgid "/_File/s1"
+msgstr "/_Tiedosto/s1"
+
+#: interface.c:123
+msgid "/File/_Close"
+msgstr "/Tiedosto/Sul_je"
+
+#: interface.c:124
+msgid "/_Packages"
+msgstr "/_Paketit"
+
+#: interface.c:125
+msgid "/Packages/Show Insta_lled"
+msgstr "/Paketit/Näytä a_sennetut"
+
+#: interface.c:126
+msgid "/Packages/Show _Not Installed"
+msgstr "/Paketit/Näytä asentamatt_omat"
+
+#: interface.c:127
+msgid "/_Packages/s2"
+msgstr "/_Paketit/s2"
+
+#: interface.c:128
+msgid "/Packages/Show _Info"
+msgstr "/Paketit/Näytä tie_dot"
+
+#: interface.c:129 interface.c:132
+msgid "/_Packages/s3"
+msgstr "/Paketit/s3"
+
+#: interface.c:130
+msgid "/Packages/_Update lists"
+msgstr "/Paketit/Päi_vitä luettelot"
+
+#: interface.c:131
+msgid "/Packages/Upgrade _System"
+msgstr "/Paketit/Päivitä järjestel_mä"
+
+#: interface.c:133
+msgid "/Packages/_Apply"
+msgstr "/Paketit/Tote_uta"
+
+#: interface.c:134
+msgid "/_Help"
+msgstr "/O_hje"
+
+#: interface.c:135
+msgid "/_Help/Index"
+msgstr "/O_hje/Hakemisto"
+
+#: interface.c:136
+msgid "/_Help/About"
+msgstr "/O_hje/Ohjelmasta"
+
+#: interface.c:187
+msgid "Package information"
+msgstr "Pakettitiedot"
+
+#: interface.c:276
+msgid "Reading packages list..."
+msgstr "Luetaan pakettiluettelo..."
+
+#: interface.c:282
+msgid "Updating package lists"
+msgstr "Päivitetään pakettiluetteloita..."
+
+#: interface.c:285
+msgid "Upgrading installed system"
+msgstr "Päivitetään asennettu järjestelmä"
+
+#: interface.c:288
+msgid "Installing"
+msgstr "Asennetaan"
+
+#: interface.c:291
+msgid "Retrieving package information"
+msgstr "Haetaan pakettitietoja"
+
+#: interface.c:294
+msgid "Working..."
+msgstr "Työskennellään..."
+
+#: interface.c:390
+msgid "Updating views, please wait..."
+msgstr "Päivitetään näkymiä, odota..."
+
+#: interface.c:502
+msgid "Command finished. Please check log messages for errors."
+msgstr "Käsky valmistunut. Tarkista loki virheiden varalta."
+
+#: interface.c:522
+msgid "Package selection was changed. Really exit?"
+msgstr "Pakettivalinta muuttui. Haluatko varmasti poistua?"
+
+#: interface.c:551
+msgid "IPKG backend failure, cannot continue."
+msgstr "IPKG-taustavirhe, ei voida jatkaa."
+
+#: interface.c:558
+msgid "Communication error, cannot continue."
+msgstr "Tiedonsiirtovirhe, ei voida jatkaa."
+
+#: interface.c:572
+msgid ""
+"An error occurred.\n"
+"Please consult the message log\n"
+"for hints what went wrong."
+msgstr ""
+"Tapahtui virhe.\n"
+"Etsi viestilokista vihjeitä\n"
+"siitä mikä meni vikaan."
+
+#: interface.c:658
+msgid "The selected file could not be accessed."
+msgstr "Valittua tiedostoa ei voitu käyttää."
+
+#: interface.c:769
+msgid "Make sure your internet connection is up or your update source is available and press OK to continue."
+msgstr "Varmista, että internet-yhteytesi on päällä tai päivityslähde on saatavilla ja jatka painamalla OK-painiketta."
+
+#: interface.c:785
+msgid "Some packages could not be updated, please check your configuration."
+msgstr "Joitakin paketteja ei voitu päivittää, tarkista asetuksesi."
+
+#  sucessfully -> successfully
+#: interface.c:788
+msgid "System updated sucessfully."
+msgstr "Järjestelmän päivitys onnistui."
+
+#: interface.c:814
+msgid "Some lists could not be updated, please check your configuration."
+msgstr "Joitakin luetteloja ei voitu päivittää, tarkista asetuksesi."
+
+#: interface.c:817
+msgid "Package lists updated successfully."
+msgstr "Pakettiluettelot päivitettiin onnistuneesti."
+
+#  Tätä virheilmoitusta edeltää numero, joka kertoo kuinka montaa muutosta virheilmoitus koskee. Siksi tämä virheilmoitus alkaa pienellä kirjaimella.
+#: interface.c:830
+msgid "changes could not be applied."
+msgstr "muutoksia ei voitu toteuttaa."
+
+#  sucessfully -> successfully
+#: interface.c:834
+msgid "Packages installed sucessfully."
+msgstr "Pakettien asennus onnistui."
+
+#: interface.c:920 gpe-package.desktop.in.h:2
+msgid "Package Manager"
+msgstr "Pakettihallinta"
+
+#: interface.c:970
+msgid "List"
+msgstr "Luettelo"
+
+#: interface.c:975
+msgid "Package List"
+msgstr "Pakettiluettelo"
+
+#: interface.c:999
+msgid "Inst."
+msgstr "Asen."
+
+#: interface.c:1009 feededit.c:112 feededit.c:352
+msgid "Name"
+msgstr "Nimi"
+
+#: interface.c:1022
+msgid "Messages"
+msgstr "Viestit"
+
+#: interface.c:1027
+msgid "Messages Log"
+msgstr "Viestiloki"
+
+#: interface.c:1037
+msgid "This window shows all messages from the packet manager."
+msgstr "Tämä ikkuna näyttää kaikki viestit pakettihallinnasta."
+
+#: interface.c:1044
+msgid "Feeds"
+msgstr "Syötteet"
+
+#: filechooser.c:40
+msgid "Choose packages"
+msgstr "Valitse paketit"
+
+#: feededit.c:82
+msgid "Could not open"
+msgstr "Ei voitu avata"
+
+#  Ilmeisesti jatkoa edelliseen
+#: feededit.c:83
+msgid "for writing."
+msgstr "kirjoitusta varten."
+
+#: feededit.c:103
+msgid "Feed Properties"
+msgstr "Syöteominaisuudet"
+
+#: feededit.c:117
+msgid "Location (URL)"
+msgstr "Osoite (URL)"
+
+#: feededit.c:122
+msgid "Compressed"
+msgstr "Tiivistetty"
+
+#: feededit.c:225
+msgid "Delete selected feed?"
+msgstr "Poistetaanko valittu syöte?"
+
+#: feededit.c:315
+msgid "Package Feeds"
+msgstr "Pakettisyötteet"
+
+#: feededit.c:361
+msgid "Location"
+msgstr "Sijainti"
+
+#: gpe-package.desktop.in.h:1
+msgid "Install and update packages"
+msgstr "Asenna ja päivitä paketteja"

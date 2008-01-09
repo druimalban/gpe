@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-20 10:15+0200\n"
+"POT-Creation-Date: 2007-08-01 21:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,254 +24,248 @@ msgstr ""
 msgid "Help for this application is not installed."
 msgstr ""
 
-#: interface.c:121
+#: interface.c:129
 msgid "/_File"
 msgstr ""
 
-#: interface.c:122
+#: interface.c:130
 msgid "/File/_Install file"
 msgstr ""
 
-#: interface.c:123
+#: interface.c:131
 msgid "/_File/s1"
 msgstr ""
 
-#: interface.c:124
+#: interface.c:132
 msgid "/File/_Close"
 msgstr ""
 
-#: interface.c:125
+#: interface.c:133
 msgid "/_Packages"
 msgstr ""
 
-#: interface.c:126
+#: interface.c:134
 msgid "/Packages/Show Insta_lled"
 msgstr ""
 
-#: interface.c:127
+#: interface.c:135
 msgid "/Packages/Show _Not Installed"
 msgstr ""
 
-#: interface.c:128
+#: interface.c:136
 msgid "/_Packages/s2"
 msgstr ""
 
-#: interface.c:129
-msgid "/Packages/Show _Info"
+#: interface.c:137
+msgid "/Packages/_Search"
 msgstr ""
 
-#: interface.c:130 interface.c:133
+#: interface.c:138 interface.c:143
 msgid "/_Packages/s3"
 msgstr ""
 
-#: interface.c:131
+#: interface.c:139
+msgid "/Packages/Show _Info"
+msgstr ""
+
+#: interface.c:140
+msgid "/_Packages/s4"
+msgstr ""
+
+#: interface.c:141
 msgid "/Packages/_Update lists"
 msgstr ""
 
-#: interface.c:132
+#: interface.c:142
 msgid "/Packages/Upgrade _System"
 msgstr ""
 
-#: interface.c:134
+#: interface.c:144
 msgid "/Packages/_Apply"
 msgstr ""
 
-#: interface.c:135
+#: interface.c:145
 msgid "/_Help"
 msgstr ""
 
-#: interface.c:136
+#: interface.c:146
 msgid "/_Help/Index"
 msgstr ""
 
-#: interface.c:137
+#: interface.c:147
 msgid "/_Help/About"
 msgstr ""
 
-#: interface.c:189
+#: interface.c:198
 msgid "Package information"
 msgstr ""
 
-#: interface.c:278
+#: interface.c:241
+msgid "Working"
+msgstr ""
+
+#: interface.c:288
 msgid "Reading packages list..."
 msgstr ""
 
-#: interface.c:284
+#: interface.c:294
 msgid "Updating package lists"
 msgstr ""
 
-#: interface.c:287
+#: interface.c:297
 msgid "Upgrading installed system"
 msgstr ""
 
-#: interface.c:290
+#: interface.c:300
 msgid "Installing"
 msgstr ""
 
-#: interface.c:293
+#: interface.c:303
 msgid "Retrieving package information"
 msgstr ""
 
-#: interface.c:296
+#: interface.c:306
 msgid "Working..."
 msgstr ""
 
-#: interface.c:392
+#: interface.c:402
 msgid "Updating views, please wait..."
 msgstr ""
 
-#: interface.c:504
+#: interface.c:518
+msgid "Search term:"
+msgstr ""
+
+#: interface.c:529
+msgid "Regular expression"
+msgstr ""
+
+#: interface.c:633
 msgid "Command finished. Please check log messages for errors."
 msgstr ""
 
-#: interface.c:524
+#: interface.c:653
 msgid "Package selection was changed. Really exit?"
 msgstr ""
 
-#: interface.c:553
+#: interface.c:682
 msgid "IPKG backend failure, cannot continue."
 msgstr ""
 
-#: interface.c:560
+#: interface.c:689
 msgid "Communication error, cannot continue."
 msgstr ""
 
-#: interface.c:574
+#: interface.c:703
 msgid ""
 "An error occurred.\n"
 "Please consult the message log\n"
 "for hints what went wrong."
 msgstr ""
 
-#: interface.c:660
+#: interface.c:789
 msgid "The selected file could not be accessed."
 msgstr ""
 
-#: interface.c:771
-msgid "Make sure your internet connection is up "
+#: interface.c:900
+msgid ""
+"Make sure your internet connection is up or your update source is available "
+"and press OK to continue."
 msgstr ""
 
-#: interface.c:772
-msgid "or your update source is available and press OK to continue."
-msgstr ""
-
-#: interface.c:787
+#: interface.c:916
 msgid "Some packages could not be updated, please check your configuration."
 msgstr ""
 
-#: interface.c:790
+#: interface.c:919
 msgid "System updated sucessfully."
 msgstr ""
 
-#: interface.c:816
+#: interface.c:945
 msgid "Some lists could not be updated, please check your configuration."
 msgstr ""
 
-#: interface.c:819
+#: interface.c:948
 msgid "Package lists updated successfully."
 msgstr ""
 
-#: interface.c:832
+#: interface.c:961
 msgid "changes could not be applied."
 msgstr ""
 
-#: interface.c:836
+#: interface.c:965
 msgid "Packages installed sucessfully."
 msgstr ""
 
-#: interface.c:922 gpe-package.desktop.in.h:2
+#: interface.c:1060 gpe-package.desktop.in.h:2
 msgid "Package Manager"
 msgstr ""
 
-#: interface.c:946
-msgid "Apply package selection"
-msgstr ""
-
-#: interface.c:952
-msgid "Close"
-msgstr ""
-
-#: interface.c:953
-msgid "Close application"
-msgstr ""
-
-#: interface.c:968
+#: interface.c:1104
 msgid "List"
 msgstr ""
 
-#: interface.c:973
+#: interface.c:1109
 msgid "Package List"
 msgstr ""
 
-#: interface.c:997
+#: interface.c:1135
 msgid "Inst."
 msgstr ""
 
-#: interface.c:1007 feededit.c:106 feededit.c:293
+#: interface.c:1145 feededit.c:129 feededit.c:363
 msgid "Name"
 msgstr ""
 
-#: interface.c:1020
+#: interface.c:1158
 msgid "Messages"
 msgstr ""
 
-#: interface.c:1025
+#: interface.c:1163
 msgid "Messages Log"
 msgstr ""
 
-#: interface.c:1035
+#: interface.c:1173
 msgid "This window shows all messages from the packet manager."
 msgstr ""
 
-#: interface.c:1042
+#: interface.c:1180
 msgid "Feeds"
 msgstr ""
 
-#: filechooser.c:40
+#: filechooser.c:44 filechooser.c:63
 msgid "Choose packages"
 msgstr ""
 
-#: feededit.c:76
+#: feededit.c:99
 msgid "Could not open"
 msgstr ""
 
-#: feededit.c:77
+#: feededit.c:100
 msgid "for writing."
 msgstr ""
 
-#: feededit.c:97
+#: feededit.c:120
 msgid "Feed Properties"
 msgstr ""
 
-#: feededit.c:111
+#: feededit.c:134
 msgid "Location (URL)"
 msgstr ""
 
-#: feededit.c:116
+#: feededit.c:139
 msgid "Compressed"
 msgstr ""
 
-#: feededit.c:215
+#: feededit.c:242
 msgid "Delete selected feed?"
 msgstr ""
 
-#: feededit.c:259
+#: feededit.c:331
 msgid "Package Feeds"
 msgstr ""
 
-#: feededit.c:270
-msgid "Add a new package feed."
-msgstr ""
-
-#: feededit.c:274
-msgid "Remove selected package feed."
-msgstr ""
-
-#: feededit.c:278
-msgid "Edit selected package feed."
-msgstr ""
-
-#: feededit.c:302
+#: feededit.c:372
 msgid "Location"
 msgstr ""
 
