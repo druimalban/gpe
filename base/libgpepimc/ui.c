@@ -72,6 +72,20 @@ set_widget_color_str (GtkWidget *widget, const gchar *colstr)
 }
 
 #ifdef IS_HILDON
+#if HILDON_VER > 0
+static void
+color_changed (HildonColorButton *color_button, GParamSpec *spec, gpointer data)
+{
+  GtkWidget *parent = data;
+  GdkColor color;
+  gchar color_str[8];
+
+  hildon_color_button_get_color (color_button, &color);
+  g_snprintf (color_str, 8, "#%02x%02x%02x", color.red / 257, color.green  / 257, color.blue / 257);
+
+  g_object_set_data_full (G_OBJECT (parent), "col", g_strdup (color_str), g_free);
+}
+#else
 static void
 color_changed (HildonColorButton *color_button, GParamSpec *spec, gpointer data)
 {
@@ -79,16 +93,13 @@ color_changed (HildonColorButton *color_button, GParamSpec *spec, gpointer data)
   GdkColor *color;
   gchar color_str[8];
 
-#if HILDON_VER > 0
-  hildon_color_button_get_color (color_button, &color);
-#else
   color = hildon_color_button_get_color (color_button);
-#endif
   g_snprintf (color_str, 8, "#%02x%02x%02x", color->red / 257, color->green  / 257, color->blue / 257);
   gdk_color_free (color);
 
   g_object_set_data_full (G_OBJECT (parent), "col", g_strdup (color_str), g_free);
 }
+#endif // HILDON_VER
 #else
 static void
 palette_color (GtkWidget *w, gpointer data)

@@ -1,3 +1,8 @@
+2008-01-10  Graham Cobb  <g+770@cobb.uk.net>
+
+	* ui.c: Fix usage of new color argument in 
+	hildon_color_button_get_color.  Does fix #128
+
 2007-12-30  Graham Cobb  <g+770@cobb.uk.net>
 
 	* ui.c: Fix typo in previous change
