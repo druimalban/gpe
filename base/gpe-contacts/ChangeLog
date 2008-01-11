@@ -1,3 +1,8 @@
+2008-01-12  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* hildon/gpe-contacts.png: Use larger icon - later Hildon UIs want
+	  look better in this way. We maybe want even bigger ones.
+
 2007-12-30  Graham Cobb  <g+770@cobb.uk.net>
 
 	* pimc-ui.c (build_pim_categories_list): do not use allow-checkbox-mode
