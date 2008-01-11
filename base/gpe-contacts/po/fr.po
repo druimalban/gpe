@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.32\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-04 01:52+0200\n"
+"POT-Creation-Date: 2004-10-17 00:23+0200\n"
 "PO-Revision-Date: 2004-11-09 17:49+0200\n"
 "Last-Translator: Luc Pionchon <luc@handhelds.org>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -15,433 +15,362 @@ msgstr ""
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. TRANSLATORS: kB = kilo bytes
-#: ../configure.c:130 ../configure.c:340
-msgid "Current size:"
-msgstr "Taille actuelle :"
+#: db.c:70
+msgid "Name"
+msgstr "Nom"
 
-#: ../configure.c:131
-msgid "kB (optimised)"
-msgstr "Ko (optimisé)"
+#: db.c:71
+msgid "Phone"
+msgstr "Tél."
 
-#: ../configure.c:177
-#, fuzzy
-msgid "Detail panel:"
-msgstr "<b>Détails :</b>"
+#: db.c:72
+msgid "EMail"
+msgstr "Mél."
 
-#: ../configure.c:206
-msgid "NAME"
-msgstr "NOM"
-
-#: ../configure.c:216
-msgid "Add"
-msgstr "Ajouter"
-
-# Will probably not fit in the GUI...
-#: ../configure.c:223
-msgid "Remove"
-msgstr "Retirer"
-
-#: ../configure.c:245
-msgid "Label"
-msgstr "Libellé"
-
-#: ../configure.c:250
-msgid "Data item"
-msgstr "Champ de donnée"
-
-#: ../configure.c:294
-msgid "Screen Layout"
-msgstr "Mise en page"
-
-#: ../configure.c:300
-msgid "List position"
-msgstr "Position de la liste"
-
-#: ../configure.c:303
-msgid "left"
-msgstr "gauche"
-
-#: ../configure.c:305
-msgid "right"
-msgstr "droite"
-
-#: ../configure.c:333
-msgid "Database Size"
-msgstr "Taille de la base de données"
-
-#: ../configure.c:340
-msgid "kB"
-msgstr "Ko"
-
-#: ../configure.c:345
-msgid "Actions"
-msgstr "Actions"
-
-#: ../configure.c:352
-msgid "Optimise database"
-msgstr "Optimiser la base de données"
-
-#: ../configure.c:355
-msgid "Run"
-msgstr ""
-
-#: ../configure.c:461
-msgid "Editing Layout"
-msgstr "Mise en page"
-
-#: ../configure.c:463
-msgid "Setup"
-msgstr "Détail"
-
-#: ../configure.c:464
-msgid "Database"
-msgstr "Base de données"
-
-#: ../configure.c:496
-msgid "Contacts: Configuration"
-msgstr "Contacts : Configuration"
-
-#: ../edit-vcard.desktop.in.in.h:1
-msgid "Edit personal vcard"
-msgstr "Éditer ma carte de visite (vcard)"
-
-#: ../edit-vcard.desktop.in.in.h:2
-msgid "My VCard"
-msgstr "Ma Carte"
-
-#: ../editing.c:135 ../main.c:1346
+#: editing.c:108 main.c:1218
 msgid "Details"
 msgstr "Détails"
 
-#: ../editing.c:367
+#: editing.c:227
 msgid "no year"
 msgstr "pas d'année"
 
-#: ../editing.c:426
-#, fuzzy
-msgid "Image"
-msgstr "Photo"
-
-#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
-msgid "Cancel"
-msgstr "Annuler"
-
-#: ../editing.c:540 ../namedetail.c:64
-msgid "OK"
-msgstr ""
-
-#: ../editing.c:650 ../main.c:502 ../main.c:629
+#: editing.c:436 main.c:470 main.c:597
 msgid "Categories"
 msgstr "Catégories"
 
-#: ../editing.c:1431
+#: editing.c:972
 msgid "Select image"
 msgstr "Sélectionner une image"
 
-#: ../export.c:190
-msgid "Save as..."
-msgstr "Enregistrer sous..."
-
-#. create dialog window
-#: ../finddlg.c:37
-msgid "Find Contacts"
-msgstr "Rechercher"
-
-#. supply action area
-#: ../finddlg.c:49
-msgid "Search for:"
-msgstr "Rechercher :"
-
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
-#: ../hildon/gpe-contacts.desktop.in.in.h:1
-msgid "Contacts"
-msgstr "Contacts"
-
-#: ../gpe-contacts.desktop.in.in.h:2
-msgid "GPE Contacts"
-msgstr "GPE Contacts"
-
-#: ../main.c:77 ../main.c:179
+#: main.c:80 main.c:182
 msgid "Edit Contact"
 msgstr "Contact"
 
-#: ../main.c:83 ../main.c:195
+#: main.c:86 main.c:198
 msgid "Really delete this contact?"
 msgstr "Supprimer ce contact ?"
 
-#: ../main.c:83 ../main.c:195 ../structure.c:176
+#: main.c:86 main.c:198 structure.c:176
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: ../main.c:135
+#: main.c:138
 msgid "All categories"
 msgstr "Toutes les catégories"
 
-#: ../main.c:157
+#: main.c:160
 msgid "New Contact"
 msgstr "Nouveau contact"
 
-#: ../main.c:513
+#: main.c:481
 msgid "No contact selected."
 msgstr "Aucun contact sélectionné"
 
-#. create and set up dialog
-#. * detail section *
-#: ../main.c:585 ../main.c:1418 ../main.c:1490
+#: main.c:553 main.c:1272 main.c:1338
 msgid "Contact"
 msgstr "Contact"
 
-#: ../main.c:1202
-#, fuzzy
-msgid "Choose file"
-msgstr "Cliquer pour sélectionner un fichier"
+#: main.c:1182 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
+msgstr "Contacts"
 
-#: ../main.c:1230
-msgid "Import of"
-msgstr ""
-
-#: ../main.c:1230
-msgid "files failed:"
-msgstr ""
-
-#: ../main.c:1234
-msgid "Import successful"
-msgstr ""
-
-#: ../main.c:1299
+#: main.c:1195
 msgid "Tap this button to add a new contact."
 msgstr "Cliquer ici pour ajouter un contact."
 
-#: ../main.c:1308
+#: main.c:1202
+msgid "Edit"
+msgstr "Editer"
+
+#: main.c:1203
 msgid "Tap here to edit the selected contact."
 msgstr "Cliquer ici pour éditer le contact sélectionné."
 
-#: ../main.c:1318
+#: main.c:1209
 msgid "Tap here to delete the selected contact."
 msgstr "Cliquer ici pour supprimer le contact sélectionné."
 
-#: ../main.c:1338
-msgid "Find a contact by searching for any data."
-msgstr "Trouver un contact À partir de n'importe quelle donnée."
-
-#: ../main.c:1348
+#: main.c:1219
 msgid "Tap here to show contacts details."
 msgstr "Cliquer ici pour afficher les détails."
 
-#: ../main.c:1358
+#: main.c:1228
+msgid "Find a contact by searching for any data."
+msgstr "Trouver un contact À partir de n'importe quelle donnée."
+
+#: main.c:1233
+msgid "Properties"
+msgstr "Propriétés"
+
+#: main.c:1233
 msgid "Tap here to configure this program."
 msgstr "Cliquer ici pour configurer le programme."
 
-#: ../main.c:1366
-msgid "Import"
-msgstr ""
+#: main.c:1239
+msgid "Close"
+msgstr "Fermer"
 
-#: ../main.c:1368
-msgid "Open file to import a contact from it."
-msgstr ""
-
-#: ../main.c:1381
+#: main.c:1239
 msgid "Tap here to exit gpe-contacts."
 msgstr "Cliquer ici pour quitter le programme."
 
-#. * find and categories section *
-#: ../main.c:1447
+#: main.c:1298
 msgid "Find:"
 msgstr "Trouver :"
 
-#: ../main.c:1454
+#: main.c:1305
 msgid "in"
 msgstr "pour"
 
-#: ../main.c:1587
-#, fuzzy, c-format
-msgid "Could not import file %s."
-msgstr "Impossible de trouver l'image : %s"
-
-#: ../main.c:1592
-#, c-format
-msgid "File %s imported sucessfully."
-msgstr ""
-
-#: ../main.c:1618
+#: main.c:1491
 msgid "My Card"
 msgstr "Ma Carte"
 
-#: ../main.c:1621
+#: main.c:1494
 msgid "Saving vcard failed"
 msgstr "Échec de la sauvegarde au format vcard"
 
-#. TRANSLATORS: These abbreviations are a list of common titles used in a name
-#: ../namedetail.c:30
-msgid "Dr."
-msgstr ""
-
-#: ../namedetail.c:30
-msgid "Miss"
-msgstr "Mlle"
-
-#: ../namedetail.c:30
-msgid "Mr."
-msgstr "M."
-
-#: ../namedetail.c:30
-msgid "Mrs."
-msgstr "Mme"
-
-#: ../namedetail.c:30
-msgid "Ms."
-msgstr "Mme"
-
-#: ../namedetail.c:30
-msgid "Prof."
-msgstr ""
-
-#: ../namedetail.c:30
-msgid "Sir"
-msgstr ""
-
-#. TRANSLATORS: This is a list of common name suffixes
-#: ../namedetail.c:32
-msgid "Jr."
-msgstr ""
-
-#: ../namedetail.c:32
-msgid "Esq."
-msgstr ""
-
-#: ../namedetail.c:32
-msgid "Sr."
-msgstr ""
-
-#: ../namedetail.c:32
-msgid "I"
-msgstr "I"
-
-#: ../namedetail.c:32
-msgid "II"
-msgstr "II"
-
-#: ../namedetail.c:32
-msgid "III"
-msgstr "III"
-
-#: ../namedetail.c:62 ../namedetail.c:69
-msgid "Edit Name Details"
-msgstr ""
-
-#: ../namedetail.c:97
-msgid "First name:"
-msgstr "Prénom"
-
-#: ../namedetail.c:98
-msgid "Middle name:"
-msgstr ""
-
-#: ../namedetail.c:99
-msgid "Last name:"
-msgstr "Nom de famille"
-
-#: ../namedetail.c:100
-msgid "Suffix:"
-msgstr "Suffixe"
-
-#: ../namedetail.c:101
-msgid "Title:"
-msgstr "Titre"
-
-#: ../structure.c:105 ../structure.c:235
+#: structure.c:105 structure.c:235
 msgid "New page"
 msgstr "Nouvelle page"
 
-#: ../structure.c:105 ../structure.c:124 ../structure.c:149
+#: structure.c:105 structure.c:124 structure.c:149
 msgid "Title"
 msgstr "Titre"
 
-#: ../structure.c:124
+#: structure.c:124
 msgid "New group"
 msgstr "Nouveau group"
 
-#: ../structure.c:136 ../structure.c:166
+#: structure.c:136 structure.c:166
 msgid "No container selected"
 msgstr "Aucun container sélectionné"
 
 # Étiquette
-#: ../structure.c:150
+#: structure.c:150
 msgid "Tag"
 msgstr "Tag"
 
-#: ../structure.c:152
+#: structure.c:152
 msgid "New field"
 msgstr "Nouveau champ"
 
-#: ../structure.c:176
+#: structure.c:176
 msgid "Really delete this field?"
 msgstr "Supprimer ce champ ?"
 
-#: ../structure.c:177
+#: structure.c:177
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ../structure.c:234
+#: structure.c:177
+msgid "Cancel"
+msgstr "Annuler"
+
+#: structure.c:234
 msgid "Page"
 msgstr "Page"
 
-#: ../structure.c:235
+#: structure.c:235
 msgid "Tap here to add a page."
 msgstr "Cliquer ici pour ajouter une page."
 
-#: ../structure.c:251
+#: structure.c:251
 msgid "Delete item"
 msgstr "Supprimer l'objet"
 
-#: ../structure.c:251
+#: structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "Cliquer ici pour supprimer l'objet sélectionné."
 
-#: ../hildon/gpe-contacts.desktop.in.in.h:2
-#, fuzzy
-msgid "GPE Contacts Application"
+#. TRANSLATORS: kB = kilo bytes
+#: configure.c:131 configure.c:337
+msgid "Current size:"
+msgstr "Taille actuelle :"
+
+#: configure.c:132
+msgid "kB (optimised)"
+msgstr "Ko (optimisé)"
+
+#: configure.c:177
+msgid "<b>Detail panel:</b>"
+msgstr "<b>Détails :</b>"
+
+#: configure.c:203
+msgid "NAME"
+msgstr "NOM"
+
+#: configure.c:213
+msgid "Add"
+msgstr "Ajouter"
+
+# Will probably not fit in the GUI...
+#: configure.c:220
+msgid "Remove"
+msgstr "Retirer"
+
+#: configure.c:242
+msgid "Label"
+msgstr "Libellé"
+
+#: configure.c:247
+msgid "Data item"
+msgstr "Champ de donnée"
+
+#: configure.c:291
+msgid "Screen Layout"
+msgstr "Mise en page"
+
+#: configure.c:297
+msgid "List position"
+msgstr "Position de la liste"
+
+#: configure.c:300
+msgid "left"
+msgstr "gauche"
+
+#: configure.c:302
+msgid "right"
+msgstr "droite"
+
+#: configure.c:330
+msgid "Database Size"
+msgstr "Taille de la base de données"
+
+#: configure.c:337
+msgid "kB"
+msgstr "Ko"
+
+#: configure.c:342
+msgid "Actions"
+msgstr "Actions"
+
+#: configure.c:349
+msgid "Optimise database"
+msgstr "Optimiser la base de données"
+
+#: configure.c:352
+msgid "Run"
+msgstr ""
+
+#: configure.c:458
+msgid "Editing Layout"
+msgstr "Mise en page"
+
+#: configure.c:460
+msgid "Setup"
+msgstr "Détail"
+
+#: configure.c:461
+msgid "Database"
+msgstr "Base de données"
+
+#: configure.c:493
+msgid "Contacts: Configuration"
+msgstr "Contacts : Configuration"
+
+#: export.c:158
+msgid "Save as..."
+msgstr "Enregistrer sous..."
+
+#. TRANSLATORS: These abbreviations are a list of common titles used in a name
+#: namedetail.c:30
+msgid "Dr."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Miss"
+msgstr "Mlle"
+
+#: namedetail.c:30
+msgid "Mr."
+msgstr "M."
+
+#: namedetail.c:30
+msgid "Mrs."
+msgstr "Mme"
+
+#: namedetail.c:30
+msgid "Ms."
+msgstr "Mme"
+
+#: namedetail.c:30
+msgid "Prof."
+msgstr ""
+
+#: namedetail.c:30
+msgid "Sir"
+msgstr ""
+
+#. TRANSLATORS: This is a list of common name suffixes
+#: namedetail.c:32
+msgid "Jr."
+msgstr ""
+
+#: namedetail.c:32
+msgid "Esq."
+msgstr ""
+
+#: namedetail.c:32
+msgid "Sr."
+msgstr ""
+
+#: namedetail.c:32
+msgid "I"
+msgstr "I"
+
+#: namedetail.c:32
+msgid "II"
+msgstr "II"
+
+#: namedetail.c:32
+msgid "III"
+msgstr "III"
+
+#: namedetail.c:61
+msgid "Edit Name Details"
+msgstr ""
+
+#: namedetail.c:88
+msgid "First name:"
+msgstr "Prénom"
+
+#: namedetail.c:89
+msgid "Middle name:"
+msgstr ""
+
+#: namedetail.c:90
+msgid "Last name:"
+msgstr "Nom de famille"
+
+#: namedetail.c:91
+msgid "Suffix:"
+msgstr "Suffixe"
+
+#: namedetail.c:92
+msgid "Title:"
+msgstr "Titre"
+
+#: finddlg.c:37
+msgid "Find Contacts"
+msgstr "Rechercher"
+
+#: finddlg.c:49
+msgid "Search for:"
+msgstr "Rechercher :"
+
+#: gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
 msgstr "GPE Contacts"
 
-#, fuzzy
-#~ msgid "Name:"
-#~ msgstr "Nom"
+#: edit-vcard.desktop.in.h:1
+msgid "Edit personal vcard"
+msgstr "Éditer ma carte de visite (vcard)"
 
-#~ msgid "New category"
-#~ msgstr "Nouvelle catégorie"
-
-#, fuzzy
-#~ msgid "Tap here to add a new category."
-#~ msgstr "Cliquer ici pour créer une nouvelle catégorie."
-
-#~ msgid "Delete category"
-#~ msgstr "Effacer la catégorie"
-
-#~ msgid "Tap here to delete the selected category."
-#~ msgstr "Cliquer ici pour supprimer la catégorie sélectionnée."
-
-#, fuzzy
-#~ msgid "Select categories"
-#~ msgstr "Toutes les catégories"
-
-#~ msgid "Name"
-#~ msgstr "Nom"
-
-#~ msgid "Phone"
-#~ msgstr "Tél."
-
-#~ msgid "EMail"
-#~ msgstr "Mél."
-
-#~ msgid "Edit"
-#~ msgstr "Editer"
-
-#~ msgid "Properties"
-#~ msgstr "Propriétés"
-
-#~ msgid "Close"
-#~ msgstr "Fermer"
+#: edit-vcard.desktop.in.h:2
+msgid "My VCard"
+msgstr "Ma Carte"
 
 #~ msgid "more detailed name options"
 #~ msgstr "options avancées"
@@ -452,12 +381,18 @@ msgstr "GPE Contacts"
 #~ msgid "Birthday"
 #~ msgstr "Né(e) le"
 
+#~ msgid "Image"
+#~ msgstr "Photo"
+
 # rappel, programmer
 #~ msgid "Schedule"
 #~ msgstr "rappel"
 
 #~ msgid "automatic appointment"
 #~ msgstr "Enregistre un événement pour la date anniversaire"
+
+#~ msgid "click to choose file"
+#~ msgstr "Cliquer pour sélectionner un fichier"
 
 #~ msgid "Personal"
 #~ msgstr "Personnel"
@@ -470,6 +405,18 @@ msgstr "GPE Contacts"
 
 #~ msgid "Really delete this category?"
 #~ msgstr "Supprimer cette catégorie ?"
+
+#~ msgid "New category"
+#~ msgstr "Nouvelle catégorie"
+
+#~ msgid "Tap here to create a category."
+#~ msgstr "Cliquer ici pour créer une nouvelle catégorie."
+
+#~ msgid "Delete category"
+#~ msgstr "Effacer la catégorie"
+
+#~ msgid "Tap here to delete the selected category."
+#~ msgstr "Cliquer ici pour supprimer la catégorie sélectionnée."
 
 #~ msgid "Edit contact"
 #~ msgstr "Éditer le contact"
@@ -497,6 +444,9 @@ msgstr "GPE Contacts"
 
 #~ msgid "WXYZ"
 #~ msgstr "WXYZ"
+
+#~ msgid "Couldn't find pixmap file: %s"
+#~ msgstr "Impossible de trouver l'image : %s"
 
 #~ msgid "Error loading pixmap file: %s"
 #~ msgstr "Erreur en chargeant l'image : %s"

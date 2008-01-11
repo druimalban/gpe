@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.42\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-04 01:52+0200\n"
+"POT-Creation-Date: 2005-08-31 23:43+0200\n"
 "PO-Revision-Date: 2005-11-13 12:39+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
 "Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
@@ -15,6 +15,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 "X-Generator: LocFactoryEditor 1.5b\n"
+
+#: ../categories.c:105
+msgid "Category name must not be blank"
+msgstr "Tên loại không phải trống"
+
+#: ../categories.c:115
+msgid "A category by that name already exists"
+msgstr "Có tên loại ấy"
+
+#: ../categories.c:147
+msgid "Name:"
+msgstr "Tên:"
+
+#: ../categories.c:174 ../categories.c:328
+msgid "New category"
+msgstr "Loại mới"
+
+#: ../categories.c:329
+msgid "Tap here to add a new category."
+msgstr "Bấm ở đây để thêm loại mới."
+
+#: ../categories.c:333
+msgid "Delete category"
+msgstr "Xóa bỏ loại"
+
+#: ../categories.c:334
+msgid "Tap here to delete the selected category."
+msgstr "Bấm ở đây để xóa bỏ loại được chọn."
+
+#: ../categories.c:401
+msgid "Select categories"
+msgstr "Chọn loại"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -101,44 +133,55 @@ msgstr "Cơ sở dữ liệu"
 msgid "Contacts: Configuration"
 msgstr "Liên hệ: cấu hình"
 
-#: ../edit-vcard.desktop.in.in.h:1
+#: ../db.c:255
+msgid "Name"
+msgstr "Tên"
+
+#: ../db.c:256
+msgid "Phone"
+msgstr "Số đ.t."
+
+#: ../db.c:257
+msgid "EMail"
+msgstr "Thư điện tử"
+
+#: ../edit-vcard.desktop.in.h:1
 msgid "Edit personal vcard"
 msgstr "Hiệu chỉnh vCard cá nhân"
 
-#: ../edit-vcard.desktop.in.in.h:2
+#: ../edit-vcard.desktop.in.h:2
 msgid "My VCard"
 msgstr "vCard tôi"
 
-#: ../editing.c:135 ../main.c:1346
+#: ../editing.c:114 ../main.c:1352
 msgid "Details"
 msgstr "Chi tiết"
 
-#: ../editing.c:367
+#: ../editing.c:271
 msgid "no year"
 msgstr "không có năm"
 
-#: ../editing.c:426
-#, fuzzy
-msgid "Image"
-msgstr "Ảnh..."
-
-#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Thôi"
 
-#: ../editing.c:540 ../namedetail.c:64
+#: ../editing.c:451 ../namedetail.c:64
 msgid "OK"
 msgstr "Được"
 
-#: ../editing.c:650 ../main.c:502 ../main.c:629
+#: ../editing.c:452
+msgid "Image..."
+msgstr "Ảnh..."
+
+#: ../editing.c:560 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Loại"
 
-#: ../editing.c:1431
+#: ../editing.c:1168
 msgid "Select image"
 msgstr "Chọn ảnh"
 
-#: ../export.c:190
+#: ../export.c:168
 msgid "Save as..."
 msgstr "Lưu như..."
 
@@ -152,12 +195,11 @@ msgstr "Tìm liên hệ"
 msgid "Search for:"
 msgstr "Tìm kiếm:"
 
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
-#: ../hildon/gpe-contacts.desktop.in.in.h:1
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
 msgid "Contacts"
 msgstr "Liên hệ"
 
-#: ../gpe-contacts.desktop.in.in.h:2
+#: ../gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr "Liên hệ GPE"
 
@@ -187,86 +229,86 @@ msgstr "Chưa chọn liên hệ"
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:585 ../main.c:1418 ../main.c:1490
+#: ../main.c:585 ../main.c:1424 ../main.c:1496
 msgid "Contact"
 msgstr "Liên hệ"
 
-#: ../main.c:1202
+#: ../main.c:1208
 msgid "Choose file"
 msgstr "Chọn tập tin"
 
-#: ../main.c:1230
+#: ../main.c:1236
 msgid "Import of"
 msgstr "Nạp"
 
-#: ../main.c:1230
+#: ../main.c:1236
 msgid "files failed:"
 msgstr "tập tin đã thất bại"
 
-#: ../main.c:1234
+#: ../main.c:1240
 msgid "Import successful"
 msgstr "Nạp xong rồi"
 
-#: ../main.c:1299
+#: ../main.c:1305
 msgid "Tap this button to add a new contact."
 msgstr "Bấm cái nút này để thêm liên hệ mới."
 
-#: ../main.c:1308
+#: ../main.c:1314
 msgid "Tap here to edit the selected contact."
 msgstr "Bấm ở đây để hiệu chỉnh liên hệ được chọn."
 
-#: ../main.c:1318
+#: ../main.c:1324
 msgid "Tap here to delete the selected contact."
 msgstr "Bấm ở đây để xóa bỏ liên hệ được chọn."
 
-#: ../main.c:1338
+#: ../main.c:1344
 msgid "Find a contact by searching for any data."
 msgstr "Tìm liên hệ bằng cách tìm kiếm bất cứ dữ liệu nào."
 
-#: ../main.c:1348
+#: ../main.c:1354
 msgid "Tap here to show contacts details."
 msgstr "Bấm ở đây để hiển thị thông tin liên hệ."
 
-#: ../main.c:1358
+#: ../main.c:1364
 msgid "Tap here to configure this program."
 msgstr "Bấm ở đây để định cấu hình chương trình này."
 
-#: ../main.c:1366
+#: ../main.c:1372
 msgid "Import"
 msgstr "Nạp"
 
-#: ../main.c:1368
+#: ../main.c:1374
 msgid "Open file to import a contact from it."
 msgstr "Mở tập tin để nạp liên hệ từ nó."
 
-#: ../main.c:1381
+#: ../main.c:1387
 msgid "Tap here to exit gpe-contacts."
 msgstr "Bấm ở đây để thoát khỏi trình gpe-contacts."
 
 #. * find and categories section *
-#: ../main.c:1447
+#: ../main.c:1453
 msgid "Find:"
 msgstr "Tìm:"
 
-#: ../main.c:1454
+#: ../main.c:1460
 msgid "in"
 msgstr "trong"
 
-#: ../main.c:1587
+#: ../main.c:1590
 #, c-format
 msgid "Could not import file %s."
 msgstr "Không nạp được tập tin %s."
 
-#: ../main.c:1592
+#: ../main.c:1595
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr "Đã nạp tập tin %s rồi."
 
-#: ../main.c:1618
+#: ../main.c:1620
 msgid "My Card"
 msgstr "vCard tôi"
 
-#: ../main.c:1621
+#: ../main.c:1623
 msgid "Saving vcard failed"
 msgstr "Không lưu vCard được"
 
@@ -396,41 +438,3 @@ msgstr "Xóa bỏ mục"
 #: ../structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "Bấm ở đây để xóa bỏ mục được chọn."
-
-#: ../hildon/gpe-contacts.desktop.in.in.h:2
-#, fuzzy
-msgid "GPE Contacts Application"
-msgstr "Liên hệ GPE"
-
-#~ msgid "Category name must not be blank"
-#~ msgstr "Tên loại không phải trống"
-
-#~ msgid "A category by that name already exists"
-#~ msgstr "Có tên loại ấy"
-
-#~ msgid "Name:"
-#~ msgstr "Tên:"
-
-#~ msgid "New category"
-#~ msgstr "Loại mới"
-
-#~ msgid "Tap here to add a new category."
-#~ msgstr "Bấm ở đây để thêm loại mới."
-
-#~ msgid "Delete category"
-#~ msgstr "Xóa bỏ loại"
-
-#~ msgid "Tap here to delete the selected category."
-#~ msgstr "Bấm ở đây để xóa bỏ loại được chọn."
-
-#~ msgid "Select categories"
-#~ msgstr "Chọn loại"
-
-#~ msgid "Name"
-#~ msgstr "Tên"
-
-#~ msgid "Phone"
-#~ msgstr "Số đ.t."
-
-#~ msgid "EMail"
-#~ msgstr "Thư điện tử"

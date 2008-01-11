@@ -3,4 +3,4 @@ DIR_TP = tp
 
 #-- Fetch .po files from TP
 freshen-po:
-	rsync -Lrtvz  translationproject.org::tp/latest/${PACKAGE}/ ../po/
+	rsync -Lrtvz  translationproject.org::tp/latest/${PACKAGE}/ ${top_srcdir}/po/

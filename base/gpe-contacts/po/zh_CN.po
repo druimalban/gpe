@@ -5,16 +5,47 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-contacts 0.37\n"
+"Project-Id-Version: gpe-contacts 0.42\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-04 01:52+0200\n"
-"PO-Revision-Date: 2005-05-04 02:33+0800\n"
-"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
-"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"POT-Creation-Date: 2005-08-31 23:43+0200\n"
+"PO-Revision-Date: 2007-06-25 22:04+0800\n"
+"Last-Translator: Meng Jie <zuxy.meng@gmail.com>\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Basepath: D:\\MSYS\\source\\gpe-contacts-0.12\n"
+
+#: ../categories.c:105
+msgid "Category name must not be blank"
+msgstr "类别名不能为空"
+
+#: ../categories.c:115
+msgid "A category by that name already exists"
+msgstr "指定名称的类别已存在"
+
+#: ../categories.c:147
+msgid "Name:"
+msgstr "姓名："
+
+#: ../categories.c:174 ../categories.c:328
+msgid "New category"
+msgstr "新建类别"
+
+#: ../categories.c:329
+msgid "Tap here to add a new category."
+msgstr "轻击此处添加新的类别。"
+
+#: ../categories.c:333
+msgid "Delete category"
+msgstr "删除类别"
+
+#: ../categories.c:334
+msgid "Tap here to delete the selected category."
+msgstr "轻击此处删除所选类别。"
+
+#: ../categories.c:401
+msgid "Select categories"
+msgstr "选择类别"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -101,44 +132,55 @@ msgstr "数据库"
 msgid "Contacts: Configuration"
 msgstr "联系人：配置"
 
-#: ../edit-vcard.desktop.in.in.h:1
+#: ../db.c:255
+msgid "Name"
+msgstr "姓名"
+
+#: ../db.c:256
+msgid "Phone"
+msgstr "电话"
+
+#: ../db.c:257
+msgid "EMail"
+msgstr "电子邮件"
+
+#: ../edit-vcard.desktop.in.h:1
 msgid "Edit personal vcard"
 msgstr "编辑个人名片"
 
-#: ../edit-vcard.desktop.in.in.h:2
+#: ../edit-vcard.desktop.in.h:2
 msgid "My VCard"
 msgstr "我的名片"
 
-#: ../editing.c:135 ../main.c:1346
+#: ../editing.c:114 ../main.c:1352
 msgid "Details"
 msgstr "详细信息"
 
-#: ../editing.c:367
+#: ../editing.c:271
 msgid "no year"
 msgstr "无年份"
 
-#: ../editing.c:426
-#, fuzzy
-msgid "Image"
-msgstr "页"
-
-#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "取消"
 
-#: ../editing.c:540 ../namedetail.c:64
+#: ../editing.c:451 ../namedetail.c:64
 msgid "OK"
-msgstr ""
+msgstr "确定"
 
-#: ../editing.c:650 ../main.c:502 ../main.c:629
+#: ../editing.c:452
+msgid "Image..."
+msgstr "图片..."
+
+#: ../editing.c:560 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "类别"
 
-#: ../editing.c:1431
+#: ../editing.c:1168
 msgid "Select image"
 msgstr "选择图片"
 
-#: ../export.c:190
+#: ../export.c:168
 msgid "Save as..."
 msgstr "另存为..."
 
@@ -152,12 +194,11 @@ msgstr "查找联系人"
 msgid "Search for:"
 msgstr "寻找："
 
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
-#: ../hildon/gpe-contacts.desktop.in.in.h:1
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
 msgid "Contacts"
 msgstr "联系人"
 
-#: ../gpe-contacts.desktop.in.in.h:2
+#: ../gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE 联系人"
 
@@ -187,86 +228,86 @@ msgstr "未选择联系人。"
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:585 ../main.c:1418 ../main.c:1490
+#: ../main.c:585 ../main.c:1424 ../main.c:1496
 msgid "Contact"
 msgstr "联系人"
 
-#: ../main.c:1202
+#: ../main.c:1208
 msgid "Choose file"
 msgstr "选择文件"
 
-#: ../main.c:1230
+#: ../main.c:1236
 msgid "Import of"
 msgstr "导入"
 
-#: ../main.c:1230
+#: ../main.c:1236
 msgid "files failed:"
 msgstr "文件失败："
 
-#: ../main.c:1234
+#: ../main.c:1240
 msgid "Import successful"
 msgstr "导入成功"
 
-#: ../main.c:1299
+#: ../main.c:1305
 msgid "Tap this button to add a new contact."
 msgstr "轻击此按钮添加一个新的联系人。"
 
-#: ../main.c:1308
+#: ../main.c:1314
 msgid "Tap here to edit the selected contact."
 msgstr "轻击此处编辑选择的联系人。"
 
-#: ../main.c:1318
+#: ../main.c:1324
 msgid "Tap here to delete the selected contact."
 msgstr "轻击此处删除选择的联系人。"
 
-#: ../main.c:1338
+#: ../main.c:1344
 msgid "Find a contact by searching for any data."
 msgstr "通过搜索所有数据来查找联系人。"
 
-#: ../main.c:1348
+#: ../main.c:1354
 msgid "Tap here to show contacts details."
 msgstr "轻击此处显示联系人的详细信息。"
 
-#: ../main.c:1358
+#: ../main.c:1364
 msgid "Tap here to configure this program."
 msgstr "轻击此处配置此程序。"
 
-#: ../main.c:1366
+#: ../main.c:1372
 msgid "Import"
 msgstr "导入"
 
-#: ../main.c:1368
+#: ../main.c:1374
 msgid "Open file to import a contact from it."
 msgstr "打开文件以从中导入联系人"
 
-#: ../main.c:1381
+#: ../main.c:1387
 msgid "Tap here to exit gpe-contacts."
 msgstr "轻击此处退出 GPE 联系人。"
 
 #. * find and categories section *
-#: ../main.c:1447
+#: ../main.c:1453
 msgid "Find:"
 msgstr "查找："
 
-#: ../main.c:1454
+#: ../main.c:1460
 msgid "in"
 msgstr "在"
 
-#: ../main.c:1587
+#: ../main.c:1590
 #, c-format
 msgid "Could not import file %s."
 msgstr "无法导入文件 %s。"
 
-#: ../main.c:1592
+#: ../main.c:1595
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr "文件 %s 已被成功导入"
 
-#: ../main.c:1618
+#: ../main.c:1620
 msgid "My Card"
 msgstr "我的名片"
 
-#: ../main.c:1621
+#: ../main.c:1623
 msgid "Saving vcard failed"
 msgstr "保存 vCard 名片失败。"
 
@@ -395,50 +436,3 @@ msgstr "删除项目"
 #: ../structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "轻击此处删除所选项。"
-
-#: ../hildon/gpe-contacts.desktop.in.in.h:2
-#, fuzzy
-msgid "GPE Contacts Application"
-msgstr "GPE 联系人"
-
-#~ msgid "Category name must not be blank"
-#~ msgstr "类别名不能为空"
-
-#~ msgid "A category by that name already exists"
-#~ msgstr "指定名称的类别已存在"
-
-#~ msgid "Name:"
-#~ msgstr "姓名："
-
-#~ msgid "New category"
-#~ msgstr "新建类别"
-
-#~ msgid "Tap here to add a new category."
-#~ msgstr "轻击此处添加新的类别。"
-
-#~ msgid "Delete category"
-#~ msgstr "删除类别"
-
-#~ msgid "Tap here to delete the selected category."
-#~ msgstr "轻击此处删除所选类别。"
-
-#~ msgid "Select categories"
-#~ msgstr "选择类别"
-
-#~ msgid "Name"
-#~ msgstr "姓名"
-
-#~ msgid "Phone"
-#~ msgstr "电话"
-
-#~ msgid "EMail"
-#~ msgstr "电子邮件"
-
-#~ msgid "Edit"
-#~ msgstr "编辑"
-
-#~ msgid "Properties"
-#~ msgstr "属性"
-
-#~ msgid "Close"
-#~ msgstr "关闭"

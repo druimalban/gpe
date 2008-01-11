@@ -1,20 +1,52 @@
-# translation of fi.po to suomi
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# translation of gpe-contacts-0.42.pot to Finnish
+# Copyright © 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-contacts package.
 #
-# Asmo Koskinen <asmo.koskinen@arkki.info>, 2007.
-# Elias Julkunen <elias.julkunen@gmail.com>, 2007.
+# Jorma Karvonen <karvjorm@users.sf.net>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: fi\n"
+"Project-Id-Version: gpe-contacts 0.42\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-08 18:43+0200\n"
-"PO-Revision-Date: 2007-11-17 19:21+0200\n"
-"Last-Translator: Elias Julkunen <elias.julkunen@gmail.com>\n"
-"Language-Team: suomi\n"
+"POT-Creation-Date: 2005-08-31 23:43+0200\n"
+"PO-Revision-Date: 2008-01-09 22:26+0200\n"
+"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: ../categories.c:105
+msgid "Category name must not be blank"
+msgstr "Luokkanimi ei saa olla tyhjä"
+
+#: ../categories.c:115
+msgid "A category by that name already exists"
+msgstr "Tuon niminen luokka on jo olemassa"
+
+#: ../categories.c:147
+msgid "Name:"
+msgstr "Nimi:"
+
+#: ../categories.c:174 ../categories.c:328
+msgid "New category"
+msgstr "Uusi luokka"
+
+#: ../categories.c:329
+msgid "Tap here to add a new category."
+msgstr "Lisää uusi luokka napauttamalla tästä."
+
+#: ../categories.c:333
+msgid "Delete category"
+msgstr "Poista luokka"
+
+#: ../categories.c:334
+msgid "Tap here to delete the selected category."
+msgstr "Poista valittu luokka napauttamalla tästä."
+
+#: ../categories.c:401
+msgid "Select categories"
+msgstr "Valitse luokat"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -27,7 +59,7 @@ msgstr "kt (optimoitu)"
 
 #: ../configure.c:177
 msgid "Detail panel:"
-msgstr "Yksityiskohdat:"
+msgstr "Yksityiskohdat-taulu:"
 
 #: ../configure.c:206
 msgid "NAME"
@@ -43,19 +75,19 @@ msgstr "Poista"
 
 #: ../configure.c:245
 msgid "Label"
-msgstr "Nimilappu"
+msgstr "Tunniste"
 
 #: ../configure.c:250
 msgid "Data item"
-msgstr "Tietoa"
+msgstr "Tietoalkio"
 
 #: ../configure.c:294
 msgid "Screen Layout"
-msgstr "Näytön asettelu"
+msgstr "Näytön ulkoasu"
 
 #: ../configure.c:300
 msgid "List position"
-msgstr "Listan asema"
+msgstr "Luettelon sijainti"
 
 #: ../configure.c:303
 msgid "left"
@@ -79,7 +111,7 @@ msgstr "Toiminnot"
 
 #: ../configure.c:352
 msgid "Optimise database"
-msgstr "Optimoi tietokantaa"
+msgstr "Optimoi tietokanta"
 
 #: ../configure.c:355
 msgid "Run"
@@ -87,11 +119,11 @@ msgstr "Suorita"
 
 #: ../configure.c:461
 msgid "Editing Layout"
-msgstr "Muokkaa asettelua"
+msgstr "Muokkaa asetuksia"
 
 #: ../configure.c:463
 msgid "Setup"
-msgstr "Asennus"
+msgstr "Asetukset"
 
 #: ../configure.c:464
 msgid "Database"
@@ -99,45 +131,57 @@ msgstr "Tietokanta"
 
 #: ../configure.c:496
 msgid "Contacts: Configuration"
-msgstr "Yhteystiedot: määritykset"
+msgstr "Yhteystiedot: Asetukset"
 
-#: ../edit-vcard.desktop.in.in.h:1
+#: ../db.c:255
+msgid "Name"
+msgstr "Nimi"
+
+#: ../db.c:256
+msgid "Phone"
+msgstr "Puhelin"
+
+#: ../db.c:257
+msgid "EMail"
+msgstr "Sähköposti"
+
+#: ../edit-vcard.desktop.in.h:1
 msgid "Edit personal vcard"
-msgstr "Muokkaa henkilökohtaisia VCard-tietoja"
+msgstr "Muokkaa vcard-korttia"
 
-#: ../edit-vcard.desktop.in.in.h:2
+#: ../edit-vcard.desktop.in.h:2
 msgid "My VCard"
-msgstr "VCard-tietoni"
+msgstr "Oma VCard"
 
-#: ../editing.c:135 ../main.c:1440
+#: ../editing.c:114 ../main.c:1352
 msgid "Details"
 msgstr "Yksityiskohdat"
 
-#: ../editing.c:368
+#: ../editing.c:271
 msgid "no year"
 msgstr "ei vuotta"
 
-#: ../editing.c:427
-msgid "Image"
-msgstr "Kuva"
-
-#: ../editing.c:540 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
-msgstr "Peruuta"
+msgstr "Peru"
 
-#: ../editing.c:51 ../namedetail.c:64
+#: ../editing.c:451 ../namedetail.c:64
 msgid "OK"
-msgstr "OK"
+msgstr "Hyväksy"
 
-#: ../editing.c:651 ../main.c:561 ../main.c:688
+#: ../editing.c:452
+msgid "Image..."
+msgstr "Kuva..."
+
+#: ../editing.c:560 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Luokat"
 
-#: ../editing.c:1439
+#: ../editing.c:1168
 msgid "Select image"
 msgstr "Valitse kuva"
 
-#: ../export.c:190
+#: ../export.c:168
 msgid "Save as..."
 msgstr "Tallenna nimellä..."
 
@@ -151,12 +195,11 @@ msgstr "Etsi yhteystietoja"
 msgid "Search for:"
 msgstr "Etsi:"
 
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1376
-#: ../hildon/gpe-contacts.desktop.in.in.h:1
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
 msgid "Contacts"
 msgstr "Yhteystiedot"
 
-#: ../gpe-contacts.desktop.in.in.h:2
+#: ../gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE-yhteystiedot"
 
@@ -166,7 +209,7 @@ msgstr "Muokkaa yhteystietoa"
 
 #: ../main.c:83 ../main.c:195
 msgid "Really delete this contact?"
-msgstr "Haluatko todella poistaa tämän yhteystiedon?"
+msgstr "Poistetaanko varmasti tämä yhteystieto?"
 
 #: ../main.c:83 ../main.c:195 ../structure.c:176
 msgid "Confirm"
@@ -180,118 +223,121 @@ msgstr "Kaikki luokat"
 msgid "New Contact"
 msgstr "Uusi yhteystieto"
 
-#: ../main.c:572
+#: ../main.c:513
 msgid "No contact selected."
-msgstr "Yhtään yhteystietoa ei ole valittu."
+msgstr "Ei yhteystietoa valittuna."
 
 #. create and set up dialog
-#: ../main.c:644 ../main.c:1512 ../main.c:1585
+#. * detail section *
+#: ../main.c:585 ../main.c:1424 ../main.c:1496
 msgid "Contact"
 msgstr "Yhteystieto"
 
-#: ../main.c:1295
+#: ../main.c:1208
 msgid "Choose file"
 msgstr "Valitse tiedosto"
 
-#: ../main.c:1323
+#  Kaksi seuraavaa kuuluu yhteen
+#: ../main.c:1236
 msgid "Import of"
-msgstr "Tuonti"
+msgstr "Yhteensä"
 
-#: ../main.c:1323
+#: ../main.c:1236
 msgid "files failed:"
-msgstr "epäonnistuneet tiedostot:"
+msgstr "tiedoston tuonti ei onnistunut:"
 
-#: ../main.c:1327
+#: ../main.c:1240
 msgid "Import successful"
 msgstr "Tuonti onnistui"
 
-#: ../main.c:1393
+#: ../main.c:1305
 msgid "Tap this button to add a new contact."
-msgstr "Napauta tästä lisätäksesi uuden yhteystiedon."
+msgstr "Lisää uusi yhteystieto napauttamalla tätä painiketta."
 
-#: ../main.c:1402
+#: ../main.c:1314
 msgid "Tap here to edit the selected contact."
-msgstr "Napauta tästä muokataksesi valittua yhteystietoa."
+msgstr "Muokkaa valittua yhteystietoa napauttamalla tästä."
 
-#: ../main.c:1412
+#: ../main.c:1324
 msgid "Tap here to delete the selected contact."
-msgstr "Napauta tästä poistaaksesi valitun yhteystiedon."
+msgstr "Poista valittu yhteystieto napauttamalla tästä."
 
-#: ../main.c:1432
+#: ../main.c:1344
 msgid "Find a contact by searching for any data."
-msgstr "Etsi yhteystietoja millä tahansa tiedolla."
+msgstr "Etsi yhteystietoa hakemalla kaikista tiedoista."
 
-#: ../main.c:1442
+#: ../main.c:1354
 msgid "Tap here to show contacts details."
-msgstr "Napauta tästä nähdäksesi yksityiskohdat yhteystiedoista."
+msgstr "Näytä yksityiskohdat napauttamalla tästä."
 
-#: ../main.c:1452
+#: ../main.c:1364
 msgid "Tap here to configure this program."
-msgstr "Napauta tästä muokataksesi tätä ohjelmaa."
+msgstr "Tee tämän ohjelman asetukset napauttamalla tästä."
 
-#: ../main.c:1460
+#: ../main.c:1372
 msgid "Import"
 msgstr "Tuo"
 
-#: ../main.c:1462
+#: ../main.c:1374
 msgid "Open file to import a contact from it."
-msgstr "Avaa tiedosto tuodaksesi yhteystiedot siitä."
+msgstr "Avaa tiedosto tuodaksesi siitä yhteystiedon."
 
-#: ../main.c:1475
+#: ../main.c:1387
 msgid "Tap here to exit gpe-contacts."
-msgstr "Napauta tästä poistuaksesi GPE-yhteystiedoista."
+msgstr "Poistu gpe-yhteystiedot-ohjelmasta napauttamalla tästä."
 
 #. * find and categories section *
-#: ../main.c:1541
+#: ../main.c:1453
 msgid "Find:"
 msgstr "Etsi:"
 
-#: ../main.c:1548
+#: ../main.c:1460
 msgid "in"
-msgstr "sisään"
+msgstr "luokassa"
 
-#: ../main.c:1694
+#: ../main.c:1590
 #, c-format
 msgid "Could not import file %s."
-msgstr "Tiedostoa %s ei voitu tuoda."
+msgstr "Ei voitu tuoda tiedostoa %s."
 
-#: ../main.c:1699
+#  sucssfully -> successfully
+#: ../main.c:1595
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr "Tiedosto %s tuotiin onnistuneesti."
 
-#: ../main.c:1725
+#: ../main.c:1620
 msgid "My Card"
-msgstr "Korttini"
+msgstr "Oma kortti"
 
-#: ../main.c:1728
+#: ../main.c:1623
 msgid "Saving vcard failed"
-msgstr "VCard-tietojen tallennus epäonnistui"
+msgstr "Vcardin tallennus ei onnistunut"
 
 #. TRANSLATORS: These abbreviations are a list of common titles used in a name
 #: ../namedetail.c:30
 msgid "Dr."
-msgstr "toht."
+msgstr "Tri"
 
 #: ../namedetail.c:30
 msgid "Miss"
-msgstr "neiti"
+msgstr "Nti"
 
 #: ../namedetail.c:30
 msgid "Mr."
-msgstr "herra"
+msgstr "Hra"
 
 #: ../namedetail.c:30
 msgid "Mrs."
-msgstr "rouva"
+msgstr "Rva"
 
 #: ../namedetail.c:30
 msgid "Ms."
-msgstr "neiti"
+msgstr "Nti/Rva"
 
 #: ../namedetail.c:30
 msgid "Prof."
-msgstr "prof."
+msgstr "Prof."
 
 #: ../namedetail.c:30
 msgid "Sir"
@@ -302,9 +348,10 @@ msgstr "Sir"
 msgid "Jr."
 msgstr "Jr."
 
+#  Amerikanenglannissa tätä brittiläistä termiä käytetään etenkin lyhennyksissä tarkoittamaan lakimiestä.
 #: ../namedetail.c:32
 msgid "Esq."
-msgstr "Esq."
+msgstr "Lakimies"
 
 #: ../namedetail.c:32
 msgid "Sr."
@@ -340,11 +387,11 @@ msgstr "Sukunimi:"
 
 #: ../namedetail.c:100
 msgid "Suffix:"
-msgstr "Jälkiliite:"
+msgstr "Suffiksi:"
 
 #: ../namedetail.c:101
 msgid "Title:"
-msgstr "Otsikko:"
+msgstr "Arvo:"
 
 #: ../structure.c:105 ../structure.c:235
 msgid "New page"
@@ -352,7 +399,7 @@ msgstr "Uusi sivu"
 
 #: ../structure.c:105 ../structure.c:124 ../structure.c:149
 msgid "Title"
-msgstr "Otsikko"
+msgstr "Arvo"
 
 #: ../structure.c:124
 msgid "New group"
@@ -360,11 +407,11 @@ msgstr "Uusi ryhmä"
 
 #: ../structure.c:136 ../structure.c:166
 msgid "No container selected"
-msgstr "Mitään sisältöjä ei ole valittu"
+msgstr "Säiliötä ei ole valittu"
 
 #: ../structure.c:150
 msgid "Tag"
-msgstr "Lappu"
+msgstr "Nimikenttä"
 
 #: ../structure.c:152
 msgid "New field"
@@ -372,7 +419,7 @@ msgstr "Uusi kenttä"
 
 #: ../structure.c:176
 msgid "Really delete this field?"
-msgstr "Haluatko todella poistaa tämän kentän?"
+msgstr "Poistetaanko tämä kenttä varmasti?"
 
 #: ../structure.c:177
 msgid "Delete"
@@ -384,17 +431,12 @@ msgstr "Sivu"
 
 #: ../structure.c:235
 msgid "Tap here to add a page."
-msgstr "Napauta tästä lisätäksesi sivun."
+msgstr "Lisää sivu napauttamalla tästä."
 
 #: ../structure.c:251
 msgid "Delete item"
-msgstr "Poista kohta"
+msgstr "Poista alkio"
 
 #: ../structure.c:251
 msgid "Tap here to delete the selected item."
-msgstr "Napauta tästä poistaaksesi valittu kohta."
-
-#: ../hildon/gpe-contacts.desktop.in.in.h:2
-msgid "GPE Contacts Application"
-msgstr "GPE-yhteystiedot-sovellus"
-
+msgstr "Poista valittu alkio napauttamalla tästä."

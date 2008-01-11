@@ -6,8 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.12\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-04 01:52+0200\n"
+"POT-Creation-Date: 2003-03-30 15:59+0100\n"
 "PO-Revision-Date: 2003-04-14 22:00+0800\n"
 "Last-Translator: Chao-Hsiung Liao <pesder.liao@msa.hinet.net>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -15,498 +14,276 @@ msgstr ""
 "Content-Type: text/plain; charset=Big5\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#. TRANSLATORS: kB = kilo bytes
-#: ../configure.c:130 ../configure.c:340
-msgid "Current size:"
-msgstr ""
-
-#: ../configure.c:131
-msgid "kB (optimised)"
-msgstr ""
-
-#: ../configure.c:177
-#, fuzzy
-msgid "Detail panel:"
-msgstr "詳細資料面板"
-
-#: ../configure.c:206
-msgid "NAME"
+#: db.c:103 db.c:136 editing.c:188 main.c:437
+msgid "Name"
 msgstr "姓名"
 
-#: ../configure.c:216
-msgid "Add"
-msgstr "新增"
+#: db.c:104 db.c:137
+msgid "Phone"
+msgstr "電話"
 
-#: ../configure.c:223
-msgid "Remove"
-msgstr "移除"
+#: db.c:105 db.c:138
+msgid "EMail"
+msgstr "電子郵件"
 
-#: ../configure.c:245
-msgid "Label"
-msgstr "標籤"
-
-#: ../configure.c:250
-#, fuzzy
-msgid "Data item"
-msgstr "資料欄位"
-
-#: ../configure.c:294
-msgid "Screen Layout"
-msgstr ""
-
-#: ../configure.c:300
-msgid "List position"
-msgstr ""
-
-#: ../configure.c:303
-#, fuzzy
-msgid "left"
-msgstr "刪除"
-
-#: ../configure.c:305
-msgid "right"
-msgstr ""
-
-#: ../configure.c:333
-#, fuzzy
-msgid "Database Size"
-msgstr "資料欄位"
-
-#: ../configure.c:340
-msgid "kB"
-msgstr ""
-
-#: ../configure.c:345
-msgid "Actions"
-msgstr ""
-
-#: ../configure.c:352
-msgid "Optimise database"
-msgstr ""
-
-#: ../configure.c:355
-msgid "Run"
-msgstr ""
-
-#: ../configure.c:461
-msgid "Editing Layout"
-msgstr "編輯版面"
-
-#: ../configure.c:463
-msgid "Setup"
-msgstr "設定"
-
-#: ../configure.c:464
-msgid "Database"
-msgstr ""
-
-#: ../configure.c:496
-msgid "Contacts: Configuration"
-msgstr "連絡人：組態"
-
-#: ../edit-vcard.desktop.in.in.h:1
-msgid "Edit personal vcard"
-msgstr ""
-
-#: ../edit-vcard.desktop.in.in.h:2
-msgid "My VCard"
-msgstr ""
-
-#: ../editing.c:135 ../main.c:1346
-#, fuzzy
-msgid "Details"
-msgstr "詳細資料面板"
-
-#: ../editing.c:367
-msgid "no year"
-msgstr ""
-
-#: ../editing.c:426
-#, fuzzy
-msgid "Image"
-msgstr "影像"
-
-#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
-msgid "Cancel"
-msgstr "取消"
-
-#: ../editing.c:540 ../namedetail.c:64
-msgid "OK"
-msgstr ""
-
-#: ../editing.c:650 ../main.c:502 ../main.c:629
-msgid "Categories"
-msgstr "類別"
-
-#: ../editing.c:1431
-#, fuzzy
-msgid "Select image"
-msgstr "刪除項目"
-
-#: ../export.c:190
-msgid "Save as..."
-msgstr ""
-
-#. create dialog window
-#: ../finddlg.c:37
-#, fuzzy
-msgid "Find Contacts"
-msgstr "連絡人"
-
-#. supply action area
-#: ../finddlg.c:49
-msgid "Search for:"
-msgstr ""
-
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
-#: ../hildon/gpe-contacts.desktop.in.in.h:1
-msgid "Contacts"
-msgstr "連絡人"
-
-#: ../gpe-contacts.desktop.in.in.h:2
-msgid "GPE Contacts"
-msgstr "GPE 連絡人"
-
-#: ../main.c:77 ../main.c:179
+#: editing.c:170
 msgid "Edit Contact"
 msgstr "編輯連絡人"
 
-#: ../main.c:83 ../main.c:195
-msgid "Really delete this contact?"
-msgstr "確定要刪除這個連絡人？"
+#: editing.c:192
+msgid "more detailed name options"
+msgstr "更多詳細的姓名選項"
 
-#: ../main.c:83 ../main.c:195 ../structure.c:176
-msgid "Confirm"
-msgstr "確認"
+#: editing.c:194
+msgid "Summary"
+msgstr "摘要"
 
-#: ../main.c:135
+#: editing.c:200
+msgid "Birthday"
+msgstr "生日"
+
+#: editing.c:206
+msgid "Image"
+msgstr "影像"
+
+#: editing.c:222
+msgid "Schedule"
+msgstr "行程"
+
+#: editing.c:226
+msgid "automatic appointment"
+msgstr "自動約會"
+
+#: editing.c:235
+msgid "click to choose file"
+msgstr "點選以選擇檔案"
+
+#: editing.c:237 main.c:536
+msgid "Categories"
+msgstr "類別"
+
+#: editing.c:279
+msgid "Personal"
+msgstr "個人"
+
+#: interface.c:44 main.c:538
+msgid "Setup"
+msgstr "設定"
+
+#: interface.c:56 main.c:143
+msgid "Detail panel"
+msgstr "詳細資料面板"
+
+#: interface.c:95 main.c:182
+msgid "NAME"
+msgstr "姓名"
+
+#: interface.c:105 main.c:192
+msgid "Add"
+msgstr "新增"
+
+#: interface.c:113 main.c:200
+msgid "Remove"
+msgstr "移除"
+
+#: interface.c:141 main.c:230
+msgid "Data Field"
+msgstr "資料欄位"
+
+#: interface.c:149 main.c:238
+msgid "Label"
+msgstr "標籤"
+
+#: interface.c:157 main.c:246
+msgid "Pages"
+msgstr "頁"
+
+#: main.c:298
 msgid "All categories"
 msgstr "所有類別"
 
-#: ../main.c:157
-#, fuzzy
-msgid "New Contact"
-msgstr "新增連絡人"
+#: main.c:424
+msgid "Really delete this contact?"
+msgstr "確定要刪除這個連絡人？"
 
-#: ../main.c:513
-#, fuzzy
-msgid "No contact selected."
-msgstr "沒有選擇容器"
+#: main.c:424 main.c:457 structure.c:179
+msgid "Confirm"
+msgstr "確認"
 
-#. create and set up dialog
-#. * detail section *
-#: ../main.c:585 ../main.c:1418 ../main.c:1490
-msgid "Contact"
-msgstr "連絡人"
-
-#: ../main.c:1202
-#, fuzzy
-msgid "Choose file"
-msgstr "點選以選擇檔案"
-
-#: ../main.c:1230
-msgid "Import of"
-msgstr ""
-
-#: ../main.c:1230
-msgid "files failed:"
-msgstr ""
-
-#: ../main.c:1234
-msgid "Import successful"
-msgstr ""
-
-#: ../main.c:1299
-#, fuzzy
-msgid "Tap this button to add a new contact."
-msgstr "點選此處以加入新的連絡人。"
-
-#: ../main.c:1308
-msgid "Tap here to edit the selected contact."
-msgstr "點選此處以編輯選定的連絡人。"
-
-#: ../main.c:1318
-msgid "Tap here to delete the selected contact."
-msgstr "點選此處以刪除選定的連絡人。"
-
-#: ../main.c:1338
-msgid "Find a contact by searching for any data."
-msgstr ""
-
-#: ../main.c:1348
-#, fuzzy
-msgid "Tap here to show contacts details."
-msgstr "點選此處以加入新的連絡人。"
-
-#: ../main.c:1358
-#, fuzzy
-msgid "Tap here to configure this program."
-msgstr "點選此處以設定此程式。"
-
-#: ../main.c:1366
-msgid "Import"
-msgstr ""
-
-#: ../main.c:1368
-msgid "Open file to import a contact from it."
-msgstr ""
-
-#: ../main.c:1381
-#, fuzzy
-msgid "Tap here to exit gpe-contacts."
-msgstr "點選此處以編輯選定的連絡人。"
-
-#. * find and categories section *
-#: ../main.c:1447
-msgid "Find:"
-msgstr "尋找:"
-
-#: ../main.c:1454
-msgid "in"
-msgstr "於"
-
-#: ../main.c:1587
-#, fuzzy, c-format
-msgid "Could not import file %s."
-msgstr "找不到點陣圖檔案： %s"
-
-#: ../main.c:1592
-#, c-format
-msgid "File %s imported sucessfully."
-msgstr ""
-
-#: ../main.c:1618
-msgid "My Card"
-msgstr ""
-
-#: ../main.c:1621
-msgid "Saving vcard failed"
-msgstr ""
-
-#. TRANSLATORS: These abbreviations are a list of common titles used in a name
-#: ../namedetail.c:30
-msgid "Dr."
-msgstr ""
-
-#: ../namedetail.c:30
-msgid "Miss"
-msgstr ""
-
-#: ../namedetail.c:30
-msgid "Mr."
-msgstr ""
-
-#: ../namedetail.c:30
-msgid "Mrs."
-msgstr ""
-
-#: ../namedetail.c:30
-msgid "Ms."
-msgstr ""
-
-#: ../namedetail.c:30
-msgid "Prof."
-msgstr ""
-
-#: ../namedetail.c:30
-msgid "Sir"
-msgstr ""
-
-#. TRANSLATORS: This is a list of common name suffixes
-#: ../namedetail.c:32
-msgid "Jr."
-msgstr ""
-
-#: ../namedetail.c:32
-msgid "Esq."
-msgstr ""
-
-#: ../namedetail.c:32
-msgid "Sr."
-msgstr ""
-
-#: ../namedetail.c:32
-msgid "I"
-msgstr ""
-
-#: ../namedetail.c:32
-msgid "II"
-msgstr ""
-
-#: ../namedetail.c:32
-msgid "III"
-msgstr ""
-
-#: ../namedetail.c:62 ../namedetail.c:69
-msgid "Edit Name Details"
-msgstr ""
-
-#: ../namedetail.c:97
-msgid "First name:"
-msgstr ""
-
-#: ../namedetail.c:98
-msgid "Middle name:"
-msgstr ""
-
-#: ../namedetail.c:99
-msgid "Last name:"
-msgstr ""
-
-#: ../namedetail.c:100
-msgid "Suffix:"
-msgstr ""
-
-#: ../namedetail.c:101
-#, fuzzy
-msgid "Title:"
-msgstr "標題"
-
-#: ../structure.c:105 ../structure.c:235
-msgid "New page"
-msgstr "新增頁"
-
-#: ../structure.c:105 ../structure.c:124 ../structure.c:149
-msgid "Title"
-msgstr "標題"
-
-#: ../structure.c:124
-msgid "New group"
-msgstr "新增群組"
-
-#: ../structure.c:136 ../structure.c:166
-msgid "No container selected"
-msgstr "沒有選擇容器"
-
-#: ../structure.c:150
-msgid "Tag"
-msgstr "標記"
-
-#: ../structure.c:152
-msgid "New field"
-msgstr "新增欄位"
-
-#: ../structure.c:176
-msgid "Really delete this field?"
-msgstr "確定要刪除這個欄位？"
-
-#: ../structure.c:177
+#: main.c:425 main.c:458 structure.c:180
 msgid "Delete"
 msgstr "刪除"
 
-#: ../structure.c:234
+#: main.c:425 main.c:458 structure.c:180
+msgid "Cancel"
+msgstr "取消"
+
+#: main.c:437
+msgid "New Category"
+msgstr "新增類別"
+
+#: main.c:457
+msgid "Really delete this category?"
+msgstr "確定要刪除這個類別？"
+
+#: main.c:487
+msgid "New category"
+msgstr "新類別"
+
+#: main.c:487
+msgid "Tap here to create a category."
+msgstr "點選此處以建立類別。"
+
+#: main.c:491
+msgid "Delete category"
+msgstr "刪除類別"
+
+#: main.c:491
+msgid "Tap here to delete the selected category."
+msgstr "點選此處以刪除所選的類別。"
+
+#: main.c:534
+msgid "Editing Layout"
+msgstr "編輯版面"
+
+#: main.c:559
+msgid "Contacts: Configuration"
+msgstr "連絡人：組態"
+
+#: main.c:794 gpe-contacts.desktop.in.h:1
+msgid "Contacts"
+msgstr "連絡人"
+
+#: main.c:808
+msgid "New contact"
+msgstr "新增連絡人"
+
+#: main.c:808
+msgid "Tap here to add a new contact."
+msgstr "點選此處以加入新的連絡人。"
+
+#: main.c:814
+msgid "Edit"
+msgstr "編輯"
+
+#: main.c:815
+msgid "Edit contact"
+msgstr "編輯連絡人"
+
+#: main.c:815
+msgid "Tap here to edit the selected contact."
+msgstr "點選此處以編輯選定的連絡人。"
+
+#: main.c:819
+msgid "Delete contact"
+msgstr "刪除連絡人"
+
+#: main.c:819
+msgid "Tap here to delete the selected contact."
+msgstr "點選此處以刪除選定的連絡人。"
+
+#: main.c:823
+msgid "Properties"
+msgstr "內容"
+
+#: main.c:823
+msgid "Tap here to configure the program."
+msgstr "點選此處以設定此程式。"
+
+#: main.c:835
+msgid "ABC"
+msgstr "ABC"
+
+#: main.c:843
+msgid "DEF"
+msgstr "DEF"
+
+#: main.c:850
+msgid "GHIJ"
+msgstr "GHIJ"
+
+#: main.c:857
+msgid "KLMN"
+msgstr "KLMN"
+
+#: main.c:864
+msgid "OPQR"
+msgstr "OPQR"
+
+#: main.c:871
+msgid "STUV"
+msgstr "STUV"
+
+#: main.c:878
+msgid "WXYZ"
+msgstr "WXYZ"
+
+#: main.c:894 main.c:918
+msgid "Contact"
+msgstr "連絡人"
+
+#: main.c:901
+msgid "Find:"
+msgstr "尋找:"
+
+#: main.c:907
+msgid "in"
+msgstr "於"
+
+#: structure.c:108 structure.c:238
+msgid "New page"
+msgstr "新增頁"
+
+#: structure.c:108 structure.c:127 structure.c:152
+msgid "Title"
+msgstr "標題"
+
+#: structure.c:127
+msgid "New group"
+msgstr "新增群組"
+
+#: structure.c:139 structure.c:169
+msgid "No container selected"
+msgstr "沒有選擇容器"
+
+#: structure.c:153
+msgid "Tag"
+msgstr "標記"
+
+#: structure.c:155
+msgid "New field"
+msgstr "新增欄位"
+
+#: structure.c:179
+msgid "Really delete this field?"
+msgstr "確定要刪除這個欄位？"
+
+#: structure.c:237
 msgid "Page"
 msgstr "頁"
 
-#: ../structure.c:235
+#: structure.c:238
 msgid "Tap here to add a page."
 msgstr "點選此處以加入新的頁。"
 
-#: ../structure.c:251
+#: structure.c:254
 msgid "Delete item"
 msgstr "刪除項目"
 
-#: ../structure.c:251
+#: structure.c:254
 msgid "Tap here to delete the selected item."
 msgstr "點選此處以刪除選定的項目。"
 
-#: ../hildon/gpe-contacts.desktop.in.in.h:2
-#, fuzzy
-msgid "GPE Contacts Application"
+#: support.c:121
+#, c-format
+msgid "Couldn't find pixmap file: %s"
+msgstr "找不到點陣圖檔案： %s"
+
+#: support.c:130
+#, c-format
+msgid "Error loading pixmap file: %s"
+msgstr "載入點陣圖檔案時發生錯誤：%s"
+
+#: gpe-contacts.desktop.in.h:2
+msgid "GPE Contacts"
 msgstr "GPE 連絡人"
-
-#, fuzzy
-#~ msgid "Name:"
-#~ msgstr "姓名"
-
-#~ msgid "New category"
-#~ msgstr "新類別"
-
-#, fuzzy
-#~ msgid "Tap here to add a new category."
-#~ msgstr "點選此處以加入新的連絡人。"
-
-#~ msgid "Delete category"
-#~ msgstr "刪除類別"
-
-#~ msgid "Tap here to delete the selected category."
-#~ msgstr "點選此處以刪除所選的類別。"
-
-#, fuzzy
-#~ msgid "Select categories"
-#~ msgstr "所有類別"
-
-#~ msgid "Name"
-#~ msgstr "姓名"
-
-#~ msgid "Phone"
-#~ msgstr "電話"
-
-#~ msgid "EMail"
-#~ msgstr "電子郵件"
-
-#~ msgid "more detailed name options"
-#~ msgstr "更多詳細的姓名選項"
-
-#~ msgid "Summary"
-#~ msgstr "摘要"
-
-#~ msgid "Birthday"
-#~ msgstr "生日"
-
-#~ msgid "Schedule"
-#~ msgstr "行程"
-
-#~ msgid "automatic appointment"
-#~ msgstr "自動約會"
-
-#~ msgid "Personal"
-#~ msgstr "個人"
-
-#~ msgid "Pages"
-#~ msgstr "頁"
-
-#~ msgid "New Category"
-#~ msgstr "新增類別"
-
-#~ msgid "Really delete this category?"
-#~ msgstr "確定要刪除這個類別？"
-
-#~ msgid "Tap here to create a category."
-#~ msgstr "點選此處以建立類別。"
-
-#~ msgid "Edit"
-#~ msgstr "編輯"
-
-#~ msgid "Edit contact"
-#~ msgstr "編輯連絡人"
-
-#~ msgid "Delete contact"
-#~ msgstr "刪除連絡人"
-
-#~ msgid "Properties"
-#~ msgstr "內容"
-
-#~ msgid "ABC"
-#~ msgstr "ABC"
-
-#~ msgid "DEF"
-#~ msgstr "DEF"
-
-#~ msgid "GHIJ"
-#~ msgstr "GHIJ"
-
-#~ msgid "KLMN"
-#~ msgstr "KLMN"
-
-#~ msgid "OPQR"
-#~ msgstr "OPQR"
-
-#~ msgid "STUV"
-#~ msgstr "STUV"
-
-#~ msgid "WXYZ"
-#~ msgstr "WXYZ"
-
-#~ msgid "Error loading pixmap file: %s"
-#~ msgstr "載入點陣圖檔案時發生錯誤：%s"

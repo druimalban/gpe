@@ -7,13 +7,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.42\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-04 01:52+0200\n"
+"POT-Creation-Date: 2005-08-31 23:43+0200\n"
 "PO-Revision-Date: 2006-02-13 00:05+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: ../categories.c:105
+msgid "Category name must not be blank"
+msgstr "Kategorinamn får inte vara blankt"
+
+#: ../categories.c:115
+msgid "A category by that name already exists"
+msgstr "En kategori med det namnet finns redan"
+
+#: ../categories.c:147
+msgid "Name:"
+msgstr "Namn:"
+
+#: ../categories.c:174 ../categories.c:328
+msgid "New category"
+msgstr "Ny kategori"
+
+#: ../categories.c:329
+msgid "Tap here to add a new category."
+msgstr "Tryck här för att lägga till en ny kategori."
+
+#: ../categories.c:333
+msgid "Delete category"
+msgstr "Ta bort kategori"
+
+#: ../categories.c:334
+msgid "Tap here to delete the selected category."
+msgstr "Tryck här för att ta bort den markerade kategorin."
+
+#: ../categories.c:401
+msgid "Select categories"
+msgstr "Välj kategorier"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
@@ -100,44 +132,55 @@ msgstr "Databas"
 msgid "Contacts: Configuration"
 msgstr "Kontakter: Konfiguration"
 
-#: ../edit-vcard.desktop.in.in.h:1
+#: ../db.c:255
+msgid "Name"
+msgstr "Namn"
+
+#: ../db.c:256
+msgid "Phone"
+msgstr "Telefon"
+
+#: ../db.c:257
+msgid "EMail"
+msgstr "E-post"
+
+#: ../edit-vcard.desktop.in.h:1
 msgid "Edit personal vcard"
 msgstr "Redigera personligt vcard"
 
-#: ../edit-vcard.desktop.in.in.h:2
+#: ../edit-vcard.desktop.in.h:2
 msgid "My VCard"
 msgstr "Mitt vcard"
 
-#: ../editing.c:135 ../main.c:1346
+#: ../editing.c:114 ../main.c:1352
 msgid "Details"
 msgstr "Detaljer"
 
-#: ../editing.c:367
+#: ../editing.c:271
 msgid "no year"
 msgstr "inget år"
 
-#: ../editing.c:426
-#, fuzzy
-msgid "Image"
-msgstr "Bild..."
-
-#: ../editing.c:539 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:450 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ../editing.c:540 ../namedetail.c:64
+#: ../editing.c:451 ../namedetail.c:64
 msgid "OK"
 msgstr "OK"
 
-#: ../editing.c:650 ../main.c:502 ../main.c:629
+#: ../editing.c:452
+msgid "Image..."
+msgstr "Bild..."
+
+#: ../editing.c:560 ../main.c:502 ../main.c:629
 msgid "Categories"
 msgstr "Kategorier"
 
-#: ../editing.c:1431
+#: ../editing.c:1168
 msgid "Select image"
 msgstr "Välj bild"
 
-#: ../export.c:190
+#: ../export.c:168
 msgid "Save as..."
 msgstr "Spara som..."
 
@@ -151,12 +194,11 @@ msgstr "Sök kontakter"
 msgid "Search for:"
 msgstr "Sök efter:"
 
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1282
-#: ../hildon/gpe-contacts.desktop.in.in.h:1
+#: ../gpe-contacts.desktop.in.h:1 ../main.c:1288
 msgid "Contacts"
 msgstr "Kontakter"
 
-#: ../gpe-contacts.desktop.in.in.h:2
+#: ../gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE-kontakter"
 
@@ -186,86 +228,86 @@ msgstr "Ingen kontakt markerad."
 
 #. create and set up dialog
 #. * detail section *
-#: ../main.c:585 ../main.c:1418 ../main.c:1490
+#: ../main.c:585 ../main.c:1424 ../main.c:1496
 msgid "Contact"
 msgstr "Kontakt"
 
-#: ../main.c:1202
+#: ../main.c:1208
 msgid "Choose file"
 msgstr "Välj fil"
 
-#: ../main.c:1230
+#: ../main.c:1236
 msgid "Import of"
 msgstr "Importering av"
 
-#: ../main.c:1230
+#: ../main.c:1236
 msgid "files failed:"
 msgstr "filer misslyckades:"
 
-#: ../main.c:1234
+#: ../main.c:1240
 msgid "Import successful"
 msgstr "Importering lyckades"
 
-#: ../main.c:1299
+#: ../main.c:1305
 msgid "Tap this button to add a new contact."
 msgstr "Tryck på denna knapp för att lägga till en ny kontakt."
 
-#: ../main.c:1308
+#: ../main.c:1314
 msgid "Tap here to edit the selected contact."
 msgstr "Tryck här för att redigera den markerade kontakten."
 
-#: ../main.c:1318
+#: ../main.c:1324
 msgid "Tap here to delete the selected contact."
 msgstr "Tryck här för att ta bort den markerade kontakten."
 
-#: ../main.c:1338
+#: ../main.c:1344
 msgid "Find a contact by searching for any data."
 msgstr "Hitta en kontakt genom att söka efter några data."
 
-#: ../main.c:1348
+#: ../main.c:1354
 msgid "Tap here to show contacts details."
 msgstr "Tryck här för att visa kontaktdetaljer."
 
-#: ../main.c:1358
+#: ../main.c:1364
 msgid "Tap here to configure this program."
 msgstr "Tryck här för att konfigurera detta program."
 
-#: ../main.c:1366
+#: ../main.c:1372
 msgid "Import"
 msgstr "Importera"
 
-#: ../main.c:1368
+#: ../main.c:1374
 msgid "Open file to import a contact from it."
 msgstr "Öppna en fil att importera en kontakt från."
 
-#: ../main.c:1381
+#: ../main.c:1387
 msgid "Tap here to exit gpe-contacts."
 msgstr "Tryck här för att avsluta gpe-contacts."
 
 #. * find and categories section *
-#: ../main.c:1447
+#: ../main.c:1453
 msgid "Find:"
 msgstr "Sök:"
 
-#: ../main.c:1454
+#: ../main.c:1460
 msgid "in"
 msgstr "i"
 
-#: ../main.c:1587
+#: ../main.c:1590
 #, c-format
 msgid "Could not import file %s."
 msgstr "Kunde inte importera fil: %s."
 
-#: ../main.c:1592
+#: ../main.c:1595
 #, c-format
 msgid "File %s imported sucessfully."
 msgstr "Fil %s importerades."
 
-#: ../main.c:1618
+#: ../main.c:1620
 msgid "My Card"
 msgstr "Mitt kort"
 
-#: ../main.c:1621
+#: ../main.c:1623
 msgid "Saving vcard failed"
 msgstr "Misslyckades med att spara vcard"
 
@@ -397,44 +439,6 @@ msgstr "Ta bort objekt"
 #: ../structure.c:251
 msgid "Tap here to delete the selected item."
 msgstr "Tryck här för att ta bort det markerade objektet."
-
-#: ../hildon/gpe-contacts.desktop.in.in.h:2
-#, fuzzy
-msgid "GPE Contacts Application"
-msgstr "GPE-kontakter"
-
-#~ msgid "Category name must not be blank"
-#~ msgstr "Kategorinamn får inte vara blankt"
-
-#~ msgid "A category by that name already exists"
-#~ msgstr "En kategori med det namnet finns redan"
-
-#~ msgid "Name:"
-#~ msgstr "Namn:"
-
-#~ msgid "New category"
-#~ msgstr "Ny kategori"
-
-#~ msgid "Tap here to add a new category."
-#~ msgstr "Tryck här för att lägga till en ny kategori."
-
-#~ msgid "Delete category"
-#~ msgstr "Ta bort kategori"
-
-#~ msgid "Tap here to delete the selected category."
-#~ msgstr "Tryck här för att ta bort den markerade kategorin."
-
-#~ msgid "Select categories"
-#~ msgstr "Välj kategorier"
-
-#~ msgid "Name"
-#~ msgstr "Namn"
-
-#~ msgid "Phone"
-#~ msgstr "Telefon"
-
-#~ msgid "EMail"
-#~ msgstr "E-post"
 
 #~ msgid "Edit"
 #~ msgstr "Redigera"

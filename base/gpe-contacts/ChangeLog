@@ -1,5 +1,7 @@
 2008-01-12  Florian Boor  <florian.boor@kernelconcepts.de>
 
+	* gpe-tp.am: Update Translation Project support, update
+	  translations.
 	* hildon/gpe-contacts.png: Use larger icon - later Hildon UIs want
 	  look better in this way. We maybe want even bigger ones.
 
