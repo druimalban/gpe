@@ -1,3 +1,8 @@
+2008-01-11  Graham Cobb  <g+770@cobb.uk.net>
+
+	* ui.c (create_interface): Fix bug #120: do not touch show journal button widget
+	in Hildon
+
 2007-11-09  Graham Cobb  <g+770@cobb.uk.net>
 
 	* ui.c (create_interface): Fix typo in previous change

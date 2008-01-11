@@ -40,7 +40,7 @@
 
 char *appname="gpe-timesheet";
 static GtkWidget *btn_con, *btn_coff;
-static GtkWidget *btn_journal = NULL;
+static GtkWidget *btn_journal = NULL; /* Note: will always be NULL in Hildon */
 
 GtkWidget *main_appview;
 
@@ -493,7 +493,10 @@ GtkWidget * create_interface(GtkWidget *main_window)
   GtkTreeSelection *task_selection, *journal_selection;
   GtkCellRenderer *main_renderer[3], *renderer[4];
   GdkPixbuf *p;
-  GtkToolItem *new, *new_sub, *delete, *refresh, *edit, *clock_in, *clock_out, *show, *html, *quit, *back;
+  GtkToolItem *new, *new_sub, *delete, *refresh, *edit, *clock_in, *clock_out, *html, *quit, *back;
+#ifndef IS_HILDON
+  GtkToolItem *show;
+#endif
   GtkToolItem *sep, *sep1, *sep2, *sep3;
   gboolean smallscreen;
 #ifdef IS_HILDON
@@ -891,7 +894,9 @@ GtkWidget * create_interface(GtkWidget *main_window)
 /* last stuff */
 btn_con = GTK_WIDGET(clock_in);
 btn_coff = GTK_WIDGET(clock_out);
+#ifndef IS_HILDON
 btn_journal = GTK_WIDGET(show);
+#endif
 set_active (0,0);
 gtk_widget_show_all (main_vbox);
 
