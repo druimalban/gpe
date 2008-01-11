@@ -1,3 +1,10 @@
+2008-01-12  Florian Boor  <florian.boor@kernelconcepts.de>
+
+        * gpe-tp.am: Update Translation Project support, update
+          translations.
+        * hildon/gpe-contacts.png: Use larger icon - later Hildon UIs want
+          look better in this way. We maybe want even bigger ones.
+
 2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac, main.c, list-ui.c: Set HILDON_VER to 2
