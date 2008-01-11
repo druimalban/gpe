@@ -1,3 +1,11 @@
+2008-01-11  Graham Cobb  <g+770@cobb.uk.net>
+
+	* event-ui.c (build_detail_page): Hack workround for apparent GTK 
+	bug (in Chinook release) displaying detail page of event edit dialog
+	(build_edit_event_window): remove compilation warning 
+	by casting HildonWindow main_window
+	(build_edit_event_window): remove compilation warning (hbox)
+
 2007-12-17  Florian Boor <florian@kernelconcepts.de>
 
 	* po/*po: Update translation files.

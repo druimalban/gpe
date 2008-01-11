@@ -795,10 +795,27 @@ set_toggle (GtkWidget *widget, GtkToggleButton *toggle)
 static void
 build_detail_page (struct edit_state *s)
 {
+
   g_assert (! s->location);
 
   GtkBox *vbox = s->detail_box;
   gtk_widget_show (GTK_WIDGET (vbox));
+
+#ifdef IS_HILDON
+#if HILDON_VER == 2
+  /* This is a workround for what seems to be a GTK bug in the Maemo
+     Chinook release.  Without this, the page contents are never mapped
+     (even though they are built, here): the page displays as empty
+     
+     No, I don't understand it either! GRC
+  */
+
+  GtkComboBox *combo = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  gtk_box_pack_end (vbox, GTK_WIDGET (combo), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (combo));
+  gtk_widget_destroy (GTK_WIDGET (combo));
+#endif
+#endif
 
   GtkTable *table = GTK_TABLE (gtk_table_new (2, 3, FALSE));
   gtk_table_set_col_spacings (table, gpe_get_boxspacing());
@@ -1318,7 +1335,7 @@ build_edit_event_window (Event *ev)
 				GDK_WINDOW_TYPE_HINT_DIALOG);
       gtk_window_set_transient_for
 	(GTK_WINDOW (window),
-	 GTK_WINDOW (gtk_widget_get_toplevel (main_window)));
+	 GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET(main_window))));
       gtk_window_set_modal (GTK_WINDOW(window), TRUE);
     }
 
@@ -1694,7 +1711,7 @@ build_edit_event_window (Event *ev)
                             G_CALLBACK (gtk_widget_destroy), s->window);
 #endif
 
-  gtk_widget_show_all (hbox);
+  gtk_widget_show_all (GTK_WIDGET(hbox));
 
   /* Misc.  */
   if (! large)
