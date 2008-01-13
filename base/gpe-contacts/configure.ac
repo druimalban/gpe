@@ -18,7 +18,7 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=$PACKAGE
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="cs es fi hu ja pt_BR ro rw sr vi zh_TW de fr nl pt ru sk sv zh_CN"
+ALL_LINGUAS="cs es fi hu pt_BR ro rw sr vi zh_TW de fr nl pt ru sk sv zh_CN"
 
 gpecontacts_localedir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(gpecontacts_localedir)
