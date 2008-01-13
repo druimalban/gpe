@@ -21,6 +21,7 @@
 #include "config.h"
 #include "md5.h"
 #include "errorbox.h"
+#include <time.h>
 
 #define TABLE_NAME "lastfm"
 
@@ -28,28 +29,27 @@
                         "(artist VARCHAR(50), " \
                         "title VARCHAR(50), " \
                         "length INT, time DATE);"
-#define COUNT_STATEMENT "SELECT COUNT(rowid) FROM lastfm;"
+#define COUNT_STATEMENT "SELECT COUNT(rowid) FROM " TABLE_NAME ";"
 
 #define LASTFM_MAX_ITEMS_PER_SUBMISSION 10
 
-#define SELECT_STATEMENT "SELECT rowid, artist, title, length, time " \
-                        "FROM lastfm LIMIT 10;"
+#define SELECT_STATEMENT "SELECT rowid, artist, title, length, strftime(\"%s\",time) " \
+                        "FROM " TABLE_NAME " LIMIT 10;"
 
-#define STORE_STATEMENT "INSERT INTO lastfm (artist, title, length, " \
+#define STORE_STATEMENT "INSERT INTO " TABLE_NAME " (artist, title, length, " \
                         "time) VALUES (?, ?, ?, DATETIME('NOW'));"
 
-#define DELETE_STATEMENT "DELETE FROM lastfm WHERE rowid <= ?;"
+#define DELETE_STATEMENT "DELETE FROM " TABLE_NAME " WHERE rowid <= ?;"
 
 #define HANDSHAKE_URI "http://post.audioscrobbler.com/" \
-                        "?hs=true&p=1.1&c=gpe&v=0.1&u=%s"
+                        "?hs=true&p=1.2&c=gpe&v=0.1&u=%s&t=%lu&a=%s"
 
 
 typedef struct {
-    gchar *md5response;
-    gchar *post_uri;
-    gchar *username;
-    gchar *passwd;
-    GtkWidget *label;
+  gchar *sessionid;
+  gchar *nowplaying_uri;
+  gchar *post_uri;
+  GtkWidget *label;
 } lastfm_data;
 
 typedef struct {
@@ -100,11 +100,24 @@ lastfm_delete_by_id (gint id)
     sqlite_finalize (vm, NULL);
 }
 
+gint lastfm_create_table (sqlite *db)
+{
+  gint ret;
+  sqlite_vm *vm;
+
+  sqlite_compile (db, CREATE_STATEMENT, NULL, &vm, NULL);
+
+  ret = sqlite_step (vm, NULL, NULL, NULL);
+
+  sqlite_finalize (vm, NULL); 
+  
+  return ret;
+}
+
 gboolean
 lastfm_init (Starling *st)
 {
     gchar *dbpath;
-    sqlite_vm *vm;
     gint ret;
 
     dbpath = g_strdup_printf ("%s/%s/%s", g_get_home_dir(), CONFIGDIR,
@@ -117,14 +130,10 @@ lastfm_init (Starling *st)
     g_return_val_if_fail (db != NULL, FALSE);
 
     if (!has_db_table (db, TABLE_NAME)) {
-        sqlite_compile (db, CREATE_STATEMENT, NULL, &vm, NULL);
-
-        ret = sqlite_step (vm, NULL, NULL, NULL);
-
-        sqlite_finalize (vm, NULL); 
+      ret = lastfm_create_table(db);
                     
-        if (SQLITE_DONE != ret)
-            return FALSE;
+      if (SQLITE_DONE != ret)
+	return FALSE;
     }
 
     //lastfm_show_count (GTK_LABEL (st->web_count), lastfm_count());
@@ -158,7 +167,6 @@ gint
 lastfm_count (void)
 {
     sqlite_vm *vm;
-    gint ret;
     const gchar **sqlout;
     gint count;
 
@@ -181,8 +189,14 @@ lastfm_submit_real_helper (gpointer data, gint argc, gchar **argv, gchar **col)
     gchar *chunk;
     lastfm_helper_data *d = data;
 
-    chunk = g_strdup_printf ("&a[%d]=%s&t[%d]=%s&b[%d]&m[%d]=&l[%d]=%s&i[%d]=%s",
-        d->n, argv[1], d->n, argv[2], d->n, d->n, d->n, argv[3], d->n, argv[4]);
+    gchar *artist = soup_uri_encode(argv[1],"&+; ");
+    gchar *title = soup_uri_encode(argv[2],"&+; ");
+    chunk = g_strdup_printf ("&a[%d]=%s&t[%d]=%s&b[%d]=&m[%d]=&l[%d]=%s&i[%d]=%s&n[%d]=&r[%d]=&o[%d]=P",
+        d->n, artist, d->n, title, d->n, d->n, d->n, argv[3], d->n, argv[4], d->n, d->n, d->n);
+    g_free(artist);
+    g_free(title);
+
+    //g_message("Chunk = %s\n", chunk);
 
     d->n++;
 
@@ -200,7 +214,6 @@ got_submission_response (SoupMessage *msg, gpointer arg)
 {
     gchar **lines;
     gchar *command;
-    gint interval;
     lastfm_data *data = arg;
 
     lines = g_strsplit (msg->response.body, "\n", 2);
@@ -213,32 +226,24 @@ got_submission_response (SoupMessage *msg, gpointer arg)
 
         if (lastfm_count()) {
             /* There are more tracks to send */
-            if (lines[1] && strlen (lines[1])) {
-                interval = atoi (strstr (lines[1], " "));
-            } else {
-                interval = 1;
-            }
 
-            g_timeout_add (1000 * interval, (GSourceFunc) lastfm_submit_real,
+            g_timeout_add (1000, (GSourceFunc) lastfm_submit_real,
                     data);
 
             g_strfreev (lines);
             return;
         } 
-    } else if (g_str_equal (command, "BADAUTH")) {
-        starling_error_box (_("Your last.fm password is wrong."));
     } else { /* command is FAILED <reason> */
         starling_error_box_fmt (_("The submission failed with the "
                 "following reason: %s."), strstr (command, " "));
     }
 
     /* If we reach this point, we're done with the submission */
-    lastfm_show_count (GTK_LABEL (data->label), lastfm_count());
+    lastfm_show_count(GTK_LABEL (data->label), lastfm_count());
     
-    g_free (data->md5response);
+    g_free (data->sessionid);
     g_free (data->post_uri);
-    g_free (data->username);
-    g_free (data->passwd);
+    g_free (data->nowplaying_uri);
     g_free (data);
     g_strfreev (lines);
 }
@@ -257,13 +262,14 @@ lastfm_submit_real (lastfm_data *data)
     d->str = str;
     d->n = 0;
 
-    auth = g_strdup_printf ("u=%s&s=%s", data->username, data->md5response);
+    auth = g_strdup_printf ("s=%s", data->sessionid);
     g_string_append (str, auth);
     g_free (auth);
 
     sqlite_exec (db, SELECT_STATEMENT, lastfm_submit_real_helper, d, NULL);
 
     g_free (d);
+    //g_message("last.fm submission = %s\n",str->str);
 
     msg = soup_message_new (SOUP_METHOD_POST, data->post_uri);
 
@@ -285,58 +291,55 @@ lastfm_submit_real (lastfm_data *data)
 static void
 got_handshake_response (SoupMessage *msg, gpointer arg)
 {
+    gchar *command;
     gchar **lines;
-    guchar md5[16];
-    gchar md5str[33];
-    gchar *challenge;
-    gchar *tohash;
     lastfm_data *data = arg;
-    gchar *intervalstr;
-    gint interval;
-    gint i;
 
     g_return_if_fail (SOUP_STATUS_IS_SUCCESSFUL (msg->status_code));
 
+    //g_message("Handshake response = %s\n", msg->response.body);
+
     lines = g_strsplit (msg->response.body, "\n", 5);
 
-    challenge = g_strdup (lines[1]);
-    data->post_uri = g_strdup (lines[2]);
+    command = lines[0];
 
-    if (lines[3] && strlen (lines[3])) {
-        intervalstr = g_strdup (lines[3]);
-        interval = atoi (strstr (intervalstr, " "));
-        
-        g_free (intervalstr);
-    } else {
-        interval = 1;
+    if (g_str_equal (command, "OK")) {
+      data->sessionid = g_strdup(lines[1]);
+      data->nowplaying_uri = g_strdup(lines[2]);
+      data->post_uri = g_strdup(lines[3]);
+      //g_message("last.fm post URI = %s\n",data->post_uri);
+
+      g_timeout_add (1000, (GSourceFunc) lastfm_submit_real, data);
+    } else if (g_str_equal (command, "BADAUTH")) {
+        starling_error_box (_("Your last.fm password is wrong."));
+    } else if (g_str_equal (command, "BANNED")) {
+        starling_error_box (_("This version of this software has been banned. Please upgrade to a newer version."));
+    } else if (g_str_equal (command, "BADTIME")) {
+        starling_error_box (_("The system clock is too inaccurate.  Please correct the system time."));
+    } else { /* command is FAILED <reason> */
+        starling_error_box_fmt (_("The submission failed with the "
+                "following reason: %s."), strstr (command, " "));
     }
 
     g_strfreev (lines);
+}
 
-    md5_buffer (data->passwd, strlen (data->passwd), md5);
-
-    /* We're done with the password */
-    //g_free (data->passwd);
-    //data->passwd = NULL;
-
+static gchar * lastfm_md5(const gchar *string)
+{
+  /* From Audioscrobbler spec:
+     The md5() function takes a string and returns the 32-byte ASCII hexadecimal 
+     representation of the MD5 hash, using lower case characters for the hex values.
+  */
+    guchar md5[16];
+    gchar md5str[33];
+    int i;
+ 
+    md5_buffer (string, strlen(string), md5);
     for (i = 0; i < sizeof(md5); i++)
         sprintf(md5str + 2 * i, "%02x", md5[i]);
-
     md5str[33] = '\0';
-
-    tohash = g_strdup_printf ("%s%s", md5str, challenge);
-
-    md5_buffer (tohash, strlen (tohash), md5);
-
-    g_free (tohash);
     
-    for (i = 0; i < sizeof(md5); i++)
-        sprintf(md5str + 2 * i, "%02x", md5[i]);
-
-    md5str[33] = '\0';
-    data->md5response = g_strdup (md5str);
-
-    g_timeout_add (1000 * interval, (GSourceFunc) lastfm_submit_real, data);
+    return g_strdup(md5str);
 }
 
 void
@@ -346,16 +349,31 @@ lastfm_submit (const gchar *username, const gchar *passwd, Starling *st)
     SoupMessage *msg;
     lastfm_data *data;
     gchar *uri;
+    gchar *md5pwd, *md5andtime, *token;
+    time_t t = time(NULL);
+
+    if (lastfm_count() == 0)
+      {
+      starling_error_box (_("No tracks pending to be sent."));
+      return;
+      }
+
+    /* Create protocol V1.2 authentication token
+       token := md5(md5(password) + timestamp) */
+    md5pwd = lastfm_md5(passwd);
+    md5andtime = g_strdup_printf("%s%lu", md5pwd, (unsigned long)t);
+    g_free(md5pwd);
+    token = lastfm_md5(md5andtime);
+    g_free(md5andtime);    
 
     data = g_new0 (lastfm_data, 1);
-    uri = g_strdup_printf (HANDSHAKE_URI, username);
+    uri = g_strdup_printf (HANDSHAKE_URI, username, (unsigned long)t, token);
+    g_free(token);
 
     session = soup_session_async_new ();
     msg = soup_message_new (SOUP_METHOD_GET, uri);
 
     data->label = st->web_count;
-    data->username = g_strdup (username);
-    data->passwd = g_strdup (passwd);
 
     soup_session_queue_message (session, msg, got_handshake_response, (gpointer) data);
 

@@ -1,5 +1,8 @@
 2008-01-11  Graham Cobb  <g+770@cobb.uk.net>
 
+	* src/lastfm.c (HANDSHAKE_URI): Move to V1.2 of Audioscrobbler
+	Realtime Submission Protocol (last.fm)
+
 	* src/main.c (main): Create menu not menubar in chinook
 
 2007-11-06  Graham Cobb  <g+770@cobb.uk.net>
