@@ -34,7 +34,6 @@
 #include <hildon/hildon-file-chooser-dialog.h>
 #include <hildon/hildon-caption.h>
 #include <hildon/hildon-date-editor.h>
-//#include <hildon/hildon-input-mode-hint.h>
 #else
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #include <hildon-widgets/hildon-caption.h>
@@ -121,8 +120,17 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
               || strstr(e->tag,".MOBILE") 
               || strstr(e->tag,".FAX"))
             {
+#ifdef IS_HILDON
+#if HILDON_VER > 0
+	      /* Use Hildon telephone number mode */
+	      hildon_gtk_entry_set_input_mode(GTK_ENTRY(w), (HILDON_GTK_INPUT_MODE_TELE));
+#else
               g_signal_connect (G_OBJECT (w), "insert-text", 
 		         G_CALLBACK (on_phone_insert_text), NULL);
+#endif /* HILDON_VER */
+              g_signal_connect (G_OBJECT (w), "insert-text", 
+		         G_CALLBACK (on_phone_insert_text), NULL);
+#endif /* IS_HILDON */
             }
 #ifdef IS_HILDON
           if (strstr(e->tag,".WEB")
@@ -130,7 +138,8 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
               || strstr (e->tag, ".WWW"))
             {
 #if HILDON_VER > 0
-  //FixMe g_object_set (G_OBJECT (w), HILDON_AUTOCAP, FALSE, NULL);
+	      /* Turn off HILDON_GTK_INPUT_MODE_AUTOCAP */
+	      hildon_gtk_entry_set_input_mode(GTK_ENTRY(w), (HILDON_GTK_INPUT_MODE_ALPHA | HILDON_GTK_INPUT_MODE_NUMERIC));
 #else
   g_object_set (G_OBJECT (w), HILDON_AUTOCAP, FALSE, NULL);
 #endif /* HILDON_VER */

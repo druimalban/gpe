@@ -46,7 +46,6 @@
 #include <hildon/hildon-date-editor.h>
 #include <hildon/hildon-program.h>
 #include <hildon/hildon-window.h>
-//#include <hildon/hildon-input-mode-hint.h>
 #else
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #include <hildon-widgets/hildon-caption.h>

@@ -1,3 +1,7 @@
+2008-01-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* editing.c (pop_singles): use new HildonGtkInputMode for input fields
+
 2008-01-12  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* gpe-tp.am: Update Translation Project support, update
