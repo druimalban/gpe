@@ -1,3 +1,7 @@
+2008-01-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (menubar_to_menu): Remove deprecated use of gtk_object_sink
+
 2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac, main.c: Set HILDON_VER to 2

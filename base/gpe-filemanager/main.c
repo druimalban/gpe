@@ -2074,7 +2074,11 @@ static GtkWidget *menubar_to_menu (GtkWidget *widget)
   gtk_container_foreach(GTK_CONTAINER(widget),
       (GtkCallback)gtk_widget_reparent, retval);
 
+#if HILDON_VER > 0
+  g_object_ref_sink(GTK_OBJECT(widget));
+#else
   gtk_object_sink(GTK_OBJECT(widget));
+#endif /* HILDON_VER */
 
   return retval;
 }
