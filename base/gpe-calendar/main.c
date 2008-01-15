@@ -2260,10 +2260,8 @@ main (int argc, char *argv[])
   GtkMenuShell *menu_main;
 #ifdef IS_HILDON
 #if HILDON_VER > 0
-  //menu_main = GTK_MENU_SHELL (gtk_menu_bar_new ());
   menu_main = gtk_menu_new ();
   hildon_window_set_menu (main_window,menu_main);
-  //gtk_widget_show (GTK_WIDGET (menu_main));
 #else
   menu_main = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
 #endif /* HILDON_VER  */

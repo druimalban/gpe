@@ -19,13 +19,20 @@
 
 #include <string.h>
 #include <gtk/gtk.h>
+#if defined(IS_HILDON) && HILDON_VER > 0
+#include <hildon/hildon-calendar.h>
+#endif
 #include <gpe/event-db.h>
 #include "globals.h"
 #include "event-cal.h"
 
 struct _GtkEventCal
 {
+#if defined(IS_HILDON) && HILDON_VER > 0
+  HildonCalendar widget;
+#else
   GtkCalendar widget;
+#endif
 
   /* Current year and month.  */
   int year;
@@ -36,7 +43,11 @@ struct _GtkEventCal
 
 typedef struct
 {
+#if defined(IS_HILDON) && HILDON_VER > 0
+  HildonCalendarClass hildon_calendar_class;
+#else
   GtkCalendarClass gtk_calendar_class;
+#endif
 } EventCalClass;
 
 static void gtk_event_cal_base_class_init (gpointer klass,
@@ -46,8 +57,11 @@ static void gtk_event_cal_dispose (GObject *obj);
 static void gtk_event_cal_finalize (GObject *object);
 static gboolean gtk_event_cal_expose_event (GtkWidget *widget,
 					    GdkEventExpose *event);
+#if defined(IS_HILDON) && HILDON_VER > 0
+static void gtk_event_cal_month_changed (HildonCalendar *cal);
+#else
 static void gtk_event_cal_month_changed (GtkCalendar *cal);
-
+#endif
 static GtkWidgetClass *parent_class;
 
 GType
@@ -70,9 +84,14 @@ gtk_event_cal_get_type (void)
 	gtk_event_cal_init
       };
 
+#if defined(IS_HILDON) && HILDON_VER > 0
+      type = g_type_register_static (hildon_calendar_get_type (),
+				     "GtkEventCal", &info, 0);
+#else
       type = g_type_register_static (gtk_calendar_get_type (),
 				     "GtkEventCal", &info, 0);
-    }
+#endif
+   }
 
   return type;
 }
@@ -82,9 +101,17 @@ gtk_event_cal_base_class_init (gpointer klass, gpointer klass_data)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
+#if defined(IS_HILDON) && HILDON_VER > 0
+  HildonCalendarClass *calendar_class;
+#else
   GtkCalendarClass *calendar_class;
+#endif
 
+#if defined(IS_HILDON) && HILDON_VER > 0
+  parent_class = g_type_class_ref (hildon_calendar_get_type ());
+#else
   parent_class = g_type_class_ref (gtk_calendar_get_type ());
+#endif
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gtk_event_cal_finalize;
@@ -93,7 +120,11 @@ gtk_event_cal_base_class_init (gpointer klass, gpointer klass_data)
   widget_class = (GtkWidgetClass *) klass;
   widget_class->expose_event = gtk_event_cal_expose_event;
 
+#if defined(IS_HILDON) && HILDON_VER > 0
+  calendar_class = (HildonCalendarClass *) klass;
+#else
   calendar_class = (GtkCalendarClass *) klass;
+#endif
   calendar_class->month_changed = gtk_event_cal_month_changed;
 }
 
@@ -120,8 +151,13 @@ gtk_event_cal_finalize (GObject *object)
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
+#if defined(IS_HILDON) && HILDON_VER > 0
+static void
+update_cal (HildonCalendar *cal)
+#else
 static void
 update_cal (GtkCalendar *cal)
+#endif
 {
   GtkEventCal *event_cal = GTK_EVENT_CAL (cal);
   unsigned int year, month, day;
@@ -132,10 +168,17 @@ update_cal (GtkCalendar *cal)
   GSList *events;
   GSList *e;
 
+#if defined(IS_HILDON) && HILDON_VER > 0
+  hildon_calendar_get_date (cal, &year, &month, &day);
+
+  hildon_calendar_freeze (cal);
+  hildon_calendar_clear_marks (cal);
+#else
   gtk_calendar_get_date (cal, &year, &month, &day);
 
   gtk_calendar_freeze (cal);
   gtk_calendar_clear_marks (cal);
+#endif
 
   event_cal->year = year;
   event_cal->month = month;
@@ -185,10 +228,18 @@ update_cal (GtkCalendar *cal)
 	end = MIN (tm.tm_yday - start_tm.tm_yday + 1, days);
 
       for (i = start; i <= end; i ++)
+#if defined(IS_HILDON) && HILDON_VER > 0
+	hildon_calendar_mark_day (cal, i);
+#else
 	gtk_calendar_mark_day (cal, i);
+#endif
     }
   event_list_unref (events);
+#if defined(IS_HILDON) && HILDON_VER > 0
+  hildon_calendar_thaw (cal);
+#else
   gtk_calendar_thaw (cal);
+#endif
 
   event_cal->pending_reload = FALSE;
 }
@@ -198,18 +249,31 @@ gtk_event_cal_expose_event (GtkWidget *widget, GdkEventExpose *event)
 {
   GtkEventCal *ec = GTK_EVENT_CAL (widget);
   if (ec->pending_reload)
+#if defined(IS_HILDON) && HILDON_VER > 0
+    update_cal (HILDON_CALENDAR (ec));
+#else
     update_cal (GTK_CALENDAR (ec));
+#endif
 
   return GTK_WIDGET_CLASS (parent_class)->expose_event (widget, event);
 }
 
+#if defined(IS_HILDON) && HILDON_VER > 0
+static void
+gtk_event_cal_month_changed (HildonCalendar *cal)
+#else
 static void
 gtk_event_cal_month_changed (GtkCalendar *cal)
+#endif
 {
   GtkEventCal *ec = GTK_EVENT_CAL (cal);
   
   unsigned int year, month, day;
+#if defined(IS_HILDON) && HILDON_VER > 0
+  hildon_calendar_get_date (cal, &year, &month, &day);
+#else
   gtk_calendar_get_date (cal, &year, &month, &day);
+#endif
   if (ec->year == year && ec->month == month)
     return;
 

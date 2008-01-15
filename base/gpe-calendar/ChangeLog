@@ -1,4 +1,9 @@
-200-01-15  Florian Boor <florian@kernelconcepts.de>
+2008-01-15  Graham Cobb  <g+770@cobb.uk.net>
+
+	* event-cal.c: On chinook, base event calendar widget on 
+	HildonCalendar, not GtkCalendar
+
+2008-01-15  Florian Boor <florian@kernelconcepts.de>
 
 	* hildon/gpe-calendar.png: Use larger icon.
 	* Update translations and translation code.
