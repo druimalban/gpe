@@ -1,3 +1,7 @@
+2008-01-15  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gtkdatecombo.c: On chinook use HildonCalendar instead of GtkCalendar
+
 2007-11-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac, Makefile.am: Changes for Chinook

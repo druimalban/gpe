@@ -21,6 +21,9 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
+#if defined(IS_HILDON) && HILDON_VER > 0
+#include <hildon/hildon-calendar.h>
+#endif
 
 #include "stylus.h"
 #include "pixmaps.h"
@@ -124,8 +127,13 @@ update_text (GtkDateCombo *combo)
 static void
 click_calendar (GtkWidget *widget, GtkDateCombo *combo)
 {
+#if defined(IS_HILDON) && HILDON_VER > 0
+  hildon_calendar_get_date (HILDON_CALENDAR (widget), &combo->year, 
+			 &combo->month, &combo->day);
+#else
   gtk_calendar_get_date (GTK_CALENDAR (widget), &combo->year, 
 			 &combo->month, &combo->day);
+#endif
   combo->set = TRUE;
   update_text (combo);
   popdown_calendar (combo);
@@ -146,8 +154,13 @@ drop_calendar (GtkWidget *widget, GtkDateCombo *dp)
       gint screen_width;
       gint screen_height;
 
+#if defined(IS_HILDON) && HILDON_VER > 0
+      hildon_calendar_select_month (HILDON_CALENDAR (dp->cal), dp->month, dp->year);
+      hildon_calendar_select_day (HILDON_CALENDAR (dp->cal), dp->day);
+#else
       gtk_calendar_select_month (GTK_CALENDAR (dp->cal), dp->month, dp->year);
       gtk_calendar_select_day (GTK_CALENDAR (dp->cal), dp->day);
+#endif
  
       gdk_window_get_pointer (NULL, &x, &y, NULL);
       gtk_widget_size_request (dp->cal, &requisition);
@@ -240,7 +253,11 @@ gtk_date_combo_init (GtkDateCombo *combo)
   gtk_widget_show (combo->button);
   gtk_widget_show (combo->entry);
 
+#if defined(IS_HILDON) && HILDON_VER > 0
+  combo->cal = hildon_calendar_new ();
+#else
   combo->cal = gtk_calendar_new ();
+#endif
   combo->calw = gtk_window_new (GTK_WINDOW_POPUP);
   g_object_ref (combo->calw);
   combo->cal_open = FALSE;
@@ -395,10 +412,17 @@ gtk_date_combo_clear (GtkDateCombo *dp)
 void
 gtk_date_combo_week_starts_monday (GtkDateCombo *combo, gboolean yes)
 {
+#if defined(IS_HILDON) && HILDON_VER > 0
+  hildon_calendar_set_display_options (HILDON_CALENDAR (combo->cal), 
+				HILDON_CALENDAR_SHOW_DAY_NAMES | 
+				HILDON_CALENDAR_SHOW_HEADING |
+				(yes ? HILDON_CALENDAR_WEEK_START_MONDAY : 0));
+#else
   gtk_calendar_display_options (GTK_CALENDAR (combo->cal), 
 				GTK_CALENDAR_SHOW_DAY_NAMES | 
 				GTK_CALENDAR_SHOW_HEADING |
 				(yes ? GTK_CALENDAR_WEEK_START_MONDAY : 0));
+#endif
 }
 
 void
