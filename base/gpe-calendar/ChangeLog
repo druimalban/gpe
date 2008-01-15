@@ -1,3 +1,9 @@
+200-01-15  Florian Boor <florian@kernelconcepts.de>
+
+	* hildon/gpe-calendar.png: Use larger icon.
+	* Update translations and translation code.
+	* Add Japanese translation contributed by Takeshi Hamasaki
+
 2008-01-11  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event-ui.c (build_detail_page): Hack workround for apparent GTK 
