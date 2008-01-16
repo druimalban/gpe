@@ -1,0 +1,2093 @@
+# translation of gpe-conf-0.2.6.pot to Finnish
+# Copyright © 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-conf package.
+#
+# Jorma Karvonen <karvjorm@users.sf.net>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-conf 0.2.6\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-06-05 16:51+0200\n"
+"PO-Revision-Date: 2008-01-15 19:01+0200\n"
+"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: ../applets.c:413
+msgid "Root access"
+msgstr "Root-oikeudet"
+
+#: ../applets.c:427
+msgid ""
+"Some options are only\n"
+"accessible for user root.\n"
+"Please enter password."
+msgstr ""
+"Jotkut valitsimet ovat vain\n"
+"root-käyttäjän käytettävissä.\n"
+"Kirjoita salasana."
+
+#: ../applets.c:474 ../modules/screen/calibrate.c:32
+msgid "Sorry, wrong password."
+msgstr "Valitan, väärä salasana."
+
+#: ../modules/battery.c:186 ../modules/battery.c:247
+msgid "unknown"
+msgstr "tuntematon"
+
+#: ../modules/battery.c:195 ../modules/battery.c:255 ../modules/battery.c:356
+msgid "Status: high"
+msgstr "Tila: korkea"
+
+#: ../modules/battery.c:198 ../modules/battery.c:258 ../modules/battery.c:360
+msgid "Status: low"
+msgstr "Tila: alhainen"
+
+#: ../modules/battery.c:201 ../modules/battery.c:261 ../modules/battery.c:364
+msgid "Status: critical"
+msgstr "Tila: kriittinen"
+
+#: ../modules/battery.c:204 ../modules/battery.c:264 ../modules/battery.c:368
+msgid "Status: charging"
+msgstr "Tila: ladataan"
+
+#: ../modules/battery.c:207 ../modules/battery.c:267
+msgid "Status: charge main"
+msgstr "Tila: lataa pääohjelma"
+
+#: ../modules/battery.c:210
+msgid "Status: dead"
+msgstr "Tila: kuollut"
+
+#: ../modules/battery.c:213 ../modules/battery.c:273 ../modules/battery.c:354
+msgid "Status: full"
+msgstr "Tila: täysi"
+
+#: ../modules/battery.c:216 ../modules/battery.c:276
+msgid "Status: no battery"
+msgstr "Tila: ei akkua"
+
+#: ../modules/battery.c:219 ../modules/battery.c:279 ../modules/battery.c:297
+#: ../modules/battery.c:371
+msgid "Status: unknown"
+msgstr "Tila: tuntematon"
+
+#: ../modules/battery.c:224
+msgid "learning"
+msgstr "opitaan"
+
+#: ../modules/battery.c:228 ../modules/battery.c:283
+msgid "Voltage"
+msgstr "Jännite"
+
+#: ../modules/battery.c:232 ../modules/battery.c:287 ../modules/battery.c:388
+msgid "AC connected"
+msgstr "Verkkovirta kytketty"
+
+#: ../modules/battery.c:234 ../modules/battery.c:289 ../modules/battery.c:390
+msgid "Lifetime"
+msgstr "Elinikä"
+
+#: ../modules/battery.c:270
+msgid "Status: not installed"
+msgstr "Tila: ei ole asennettu"
+
+#: ../modules/battery.c:296
+msgid "not installed"
+msgstr "ei ole asennettu"
+
+#: ../modules/battery.c:298
+msgid "Voltage: unknown"
+msgstr "Jännite: tuntematon"
+
+#: ../modules/battery.c:299
+msgid "Lifetime: unknown"
+msgstr "Elinikä: tuntematon"
+
+#: ../modules/battery.c:346
+msgid "No battery"
+msgstr "Ei akkua"
+
+#: ../modules/battery.c:451
+msgid "Internal battery"
+msgstr "Sisäinen akku"
+
+#  Jacket tarkoittaa sitä, että sauvapariston päällä on suojaava vaippa
+#: ../modules/battery.c:455
+msgid "Jacket battery"
+msgstr "Sauvaparisto"
+
+#: ../modules/cfgfile.c:919
+msgid "No write access to network configuration."
+msgstr "Verkkoasetuksiin ei ole kirjoitusoikeutta."
+
+#: ../main-info.c:67
+#, c-format
+msgid "usage: gpe-info [page]\n"
+msgstr "käyttö: gpe-info [sivu]\n"
+
+#: ../main-info.c:68
+#, c-format
+msgid "    Where page may be \"global\" (default)\n"
+msgstr "    Jossa sivu voi olla ”yleinen” (oletus)\n"
+
+#: ../main-info.c:78 ../desktop/gpe-conf-sysinfo.desktop.in.h:2
+msgid "System Information"
+msgstr "Järjestelmätiedot"
+
+#: ../main.c:89 ../modules/timeanddate.c:489
+msgid "Time"
+msgstr "Aika"
+
+#: ../main.c:89
+msgid "Time and Date Setup"
+msgstr "Aika- ja päivämääräasetukset"
+
+#: ../main.c:91
+msgid "Screen"
+msgstr "Näyttö"
+
+#: ../main.c:91 ../desktop/gpe-conf-screen.desktop.in.h:1
+msgid "Screen Setup"
+msgstr "Näyttöasetukset"
+
+#: ../main.c:93
+msgid "Keys & Buttons"
+msgstr "Näppäimet ja painikkeet"
+
+#: ../main.c:93
+msgid "Keys and Buttons Setup"
+msgstr "Näppäin- ja painikeasetukset"
+
+#: ../main.c:95 ../modules/timeanddate.c:502
+msgid "Network"
+msgstr "Verkko"
+
+#: ../main.c:95 ../desktop/gpe-conf-network.desktop.in.h:1
+msgid "Network Setup"
+msgstr "Verkkoasetukset"
+
+#: ../main.c:97 ../modules/theme.c:985
+msgid "Theme"
+msgstr "Teema"
+
+#: ../main.c:97 ../modules/theme.c:987
+#: ../desktop/gpe-conf-theme.desktop.in.h:2
+msgid "Look and Feel"
+msgstr "Käyttötuntuma"
+
+#: ../main.c:99
+msgid "Power"
+msgstr "Virtalähde"
+
+#: ../main.c:99
+msgid "Configure Power Saving"
+msgstr "Aseta virransäästöasetukset"
+
+#: ../main.c:101
+msgid "Owner"
+msgstr "Omistaja"
+
+#: ../main.c:101 ../desktop/gpe-conf-ownerinfo.desktop.in.h:1
+msgid "Owner Information"
+msgstr "Omistajatiedot"
+
+#: ../main.c:103
+msgid "Login"
+msgstr "Sisäänkirjaus"
+
+#: ../main.c:103 ../desktop/gpe-conf-login-setup.desktop.in.h:1
+msgid "Login Setup"
+msgstr "Sisäänkirjausasetukset"
+
+#: ../main.c:105
+msgid "Users"
+msgstr "Käyttäjät"
+
+#: ../main.c:105
+msgid "User Administration"
+msgstr "Käyttäjähallinta"
+
+#: ../main.c:107
+msgid "GPE"
+msgstr "GPE"
+
+#: ../main.c:107
+msgid "GPE Conf Administration"
+msgstr "GPE-asetusten hallinta"
+
+#: ../main.c:109 ../desktop/gpe-conf-serial.desktop.in.h:2
+msgid "Serial Ports"
+msgstr "Sarjaportit"
+
+#: ../main.c:109
+msgid "Serial Port Configuration"
+msgstr "Sarjaporttiasetukset"
+
+#: ../main.c:111
+msgid "USB"
+msgstr "USB"
+
+#: ../main.c:111
+msgid "USB Configuration"
+msgstr "USB-asetukset"
+
+#: ../main.c:113
+msgid "PCMCIA/CF Cards"
+msgstr "PCMCIA/CF-kortit"
+
+#: ../main.c:113
+msgid "PCMCIA/CF Card Info and Config"
+msgstr "PCMCIA/CF-korttitiedot ja -asetukset"
+
+#: ../main.c:115
+msgid "Sound"
+msgstr "Ääni"
+
+#: ../main.c:115
+msgid "Sound Setup"
+msgstr "Ääniasetukset"
+
+#: ../main.c:117
+msgid "Task nameserver"
+msgstr "Sovelma nimipalvelin"
+
+#: ../main.c:117
+msgid "Task for changing nameserver"
+msgstr "Sovelma nimipalvelimen vaihtamiselle"
+
+#: ../main.c:119
+msgid "Task sound"
+msgstr "Sovelman ääni"
+
+#: ../main.c:119
+msgid "Command line task saving/restoring sound settings."
+msgstr "Tallennus- ja ääniasetusten palautus komentoriviltä."
+
+#: ../main.c:121
+msgid "Task background image"
+msgstr "Sovelman taustakuva"
+
+#: ../main.c:121
+msgid "Only select background image."
+msgstr "Valitse vain taustakuva."
+
+#: ../main.c:123
+msgid "Task backlight setting"
+msgstr "Sovelman taustavaloasetukset"
+
+#: ../main.c:123
+msgid "Change backlight power and brightness."
+msgstr "Muuta taustavalon virtalähdettä ja kirkkautta."
+
+#: ../main.c:144
+msgid "Settings saved"
+msgstr "Asetukset tallennettu"
+
+#: ../main.c:339
+#, c-format
+msgid "'task_backlight' supports zero, one and two arguments.\n"
+msgstr "”task_backlight” tukee nollaa, yhtä tai kahta argumenttia.\n"
+
+#: ../main.c:358
+#, c-format
+msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
+msgstr "”task_nameserver” tarvitsee uuden (ja vain yhden) nimipalvelimen argumenttina.\n"
+
+#: ../main.c:376
+#, c-format
+msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
+msgstr "”task_sound” tarvitsee parametrin ”(s)ave” tai ”(r)estore” argumenttina.\n"
+
+#: ../main.c:444
+msgid "Warning: PCMCIA init failed."
+msgstr "Varoitus: PCMICIA-alustus ei onnistunut."
+
+#: ../main.c:476
+#, c-format
+msgid "This mode is disabled, please try:\n"
+msgstr "Tämä tila on pois käytöstä, yritä sen sijaan:\n"
+
+#: ../main.c:477
+#, c-format
+msgid ""
+"\n"
+"gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"gpe-conf [Sovelmanimi]\n"
+"missä Sovelmanimi on joukossa:\n"
+
+#: ../main.c:493
+#, c-format
+msgid "Applet %s unknown!\n"
+msgstr "Sovelma %s on tuntematon!\n"
+
+#: ../main.c:494
+#, c-format
+msgid ""
+"\n"
+"\n"
+"Usage: gpe-conf [AppletName]\n"
+"where AppletName is in:\n"
+msgstr ""
+"\n"
+"\n"
+"Käyttö: gpe-conf [Sovelmanimi]\n"
+"missä Sovelmanimi on joukossa:\n"
+
+#: ../tools/interface.c:315 ../tools/interface.c:515 ../tools/interface.c:531
+#: ../tools/interface.c:651
+msgid "[NONE SET]"
+msgstr "[MITÄÄN EI OLE ASETETTU]"
+
+#: ../tools/interface.c:706 ../tools/interface.c:1704
+msgid "UNSPEC"
+msgstr "MÄÄRITTELEMÄTÖN"
+
+#: ../tools/interface.c:708
+msgid "UNIX Domain"
+msgstr "Unix-verkkoalue"
+
+#: ../tools/interface.c:711
+msgid "DARPA Internet"
+msgstr "DARPA Internet"
+
+#: ../tools/interface.c:714
+msgid "IPv6"
+msgstr "IPv6"
+
+#: ../tools/interface.c:717 ../tools/interface.c:1725
+msgid "AMPR AX.25"
+msgstr "AMPR AX.25"
+
+#: ../tools/interface.c:720 ../tools/interface.c:1731
+msgid "AMPR NET/ROM"
+msgstr "AMPR NET/ROM"
+
+#: ../tools/interface.c:723
+msgid "Novell IPX"
+msgstr "Novell IPX"
+
+#: ../tools/interface.c:726
+msgid "Appletalk DDP"
+msgstr "Appletalk DDP"
+
+#: ../tools/interface.c:729 ../tools/interface.c:1766
+msgid "Econet"
+msgstr "Econet"
+
+#: ../tools/interface.c:732
+msgid "CCITT X.25"
+msgstr "CCITT X.25"
+
+#: ../tools/interface.c:735 ../tools/interface.c:1728
+msgid "AMPR ROSE"
+msgstr "AMPR ROSE"
+
+#: ../tools/interface.c:738 ../tools/interface.c:1716
+msgid "Ash"
+msgstr "Ash-komentotulkki"
+
+#: ../tools/interface.c:765
+#, c-format
+msgid "Too many address family arguments.\n"
+msgstr "Liian monia osoiteperheargumentteja.\n"
+
+#: ../tools/interface.c:776
+#, c-format
+msgid "Unknown address family '%s'.\n"
+msgstr "Tuntematon osoiteperhe ”%s”.\n"
+
+#: ../tools/interface.c:839
+#, c-format
+msgid "Please don't supply more than one address family.\n"
+msgstr "Älä tarjoa yhtä useampia osoiteperheitä.\n"
+
+#: ../tools/interface.c:966
+#, c-format
+msgid "No usable address families found.\n"
+msgstr "Käyttökelpoista osoiteperhettä ei löytynyt.\n"
+
+#: ../tools/interface.c:1036
+#, c-format
+msgid "Warning: no inet socket available: %s\n"
+msgstr "Varoitus: inet-pistoke ei ole käytettävissä: %s\n"
+
+#: ../tools/interface.c:1188
+#, c-format
+msgid "Warning: cannot open %s (%s). Limited output.\n"
+msgstr "Varoitus: ei voida avata %s (%s). Rajoitettu tuloste.\n"
+
+#. Give better error message for this case.
+#: ../tools/interface.c:1431
+msgid "Device not found"
+msgstr "Laitetta ei löytynyt"
+
+#: ../tools/interface.c:1435
+#, c-format
+msgid "%s: error fetching interface information: %s\n"
+msgstr "%s: virhe haettaessa liitäntätietoja: %s\n"
+
+#: ../tools/interface.c:1609
+#, c-format
+msgid "You cannot start PPP with this program.\n"
+msgstr "Et voi käynnistää PPP:tä tällä ohjelmalla.\n"
+
+#: ../tools/interface.c:1703
+msgid "Local Loopback"
+msgstr "Paikallinen loopback-silmukka"
+
+#  SLIP on vanhentunut yhteyskäytäntö, joka on korvattu yleensä PPP:llä
+#: ../tools/interface.c:1706
+msgid "Serial Line IP"
+msgstr "SLIP-sarjaliikenteen Internet-yhteyskäytäntö"
+
+#: ../tools/interface.c:1707
+msgid "VJ Serial Line IP"
+msgstr "VJ SLIP-sarjaliikenteen Internet-yhteyskäytäntö"
+
+#: ../tools/interface.c:1708
+msgid "6-bit Serial Line IP"
+msgstr "6-bittinen SLIP-sarjaliikenteen yhteyskäytäntö"
+
+#: ../tools/interface.c:1709
+msgid "VJ 6-bit Serial Line IP"
+msgstr "VJ 6-bittinen SLIP-sarjaliikenteen yhteyskäytäntö"
+
+#: ../tools/interface.c:1710
+msgid "Adaptive Serial Line IP"
+msgstr "Mukautuva SLIP-sarjaliikenteen Internet-yhteyskäytäntö"
+
+#: ../tools/interface.c:1713
+msgid "Ethernet"
+msgstr "Ethernet"
+
+#: ../tools/interface.c:1719
+msgid "Fiber Distributed Data Interface"
+msgstr "FDDI-yhteyskäytäntö"
+
+#: ../tools/interface.c:1722
+msgid "HIPPI"
+msgstr "HIPPI-verkkoväylä"
+
+#: ../tools/interface.c:1734
+msgid "generic X.25"
+msgstr "geneerinen X.25-yhteyskäytäntö"
+
+#: ../tools/interface.c:1737
+msgid "IPIP Tunnel"
+msgstr "IPIP-tunnelointiyhteyskäytäntö"
+
+#: ../tools/interface.c:1740
+msgid "Point-to-Point Protocol"
+msgstr "Kaksipisteyhteyskäytäntö"
+
+#: ../tools/interface.c:1743
+msgid "(Cisco)-HDLC"
+msgstr "(Cisco)-HDLC-yhteyskäytäntö"
+
+#: ../tools/interface.c:1744
+msgid "LAPB"
+msgstr "LAPB-yhteyskäytäntö"
+
+#: ../tools/interface.c:1747
+msgid "ARCnet"
+msgstr "ARCnet-yhteyskäytäntö"
+
+#: ../tools/interface.c:1750
+msgid "Frame Relay DLCI"
+msgstr "Frame Relay DLCI-yhteyskäytäntö"
+
+#: ../tools/interface.c:1751
+msgid "Frame Relay Access Device"
+msgstr "FRAD-yhteyskäytäntömuunnin"
+
+#: ../tools/interface.c:1754
+msgid "IPv6-in-IPv4"
+msgstr "IPv6-in-IPv4-tunnelointi"
+
+#: ../tools/interface.c:1757
+msgid "IrLAP"
+msgstr "IrLAP-yhteyskäytäntö"
+
+#: ../tools/interface.c:1760
+msgid "16/4 Mbps Token Ring"
+msgstr "16/4 Mbps Token Ring-teknologia"
+
+#: ../tools/interface.c:1762
+msgid "16/4 Mbps Token Ring (New)"
+msgstr "16/4 Mbps Token Ring (Uusi)-teknologia"
+
+#: ../tools/interface.c:1874
+msgid "Interface:"
+msgstr "Liitäntä:"
+
+#: ../tools/interface.c:1875
+#, c-format
+msgid "Type: %s"
+msgstr "Tyyppi: %s"
+
+#: ../tools/interface.c:1884
+#, c-format
+msgid "Media: %s"
+msgstr "Media: %s"
+
+#: ../tools/interface.c:1889
+#, c-format
+msgid "(auto)"
+msgstr "(automaattinen)"
+
+#: ../tools/interface.c:1901
+#, c-format
+msgid "Address: %s\n"
+msgstr "Osoite: %s\n"
+
+#  Otaksuttavasti lyhenne point-to-point-yhteyskäytännöstä
+#: ../tools/interface.c:1906
+#, c-format
+msgid "P-t-P: %s\n"
+msgstr "P-t-P: %s\n"
+
+#: ../tools/interface.c:1910
+#, c-format
+msgid "Netmask: %s\n"
+msgstr "Verkkopeite: %s\n"
+
+#: ../tools/interface.c:1914
+#, c-format
+msgid "Broadcast: %s\n"
+msgstr "Yleislähetys: %s\n"
+
+#: ../tools/interface.c:1926
+#, c-format
+msgid "HWaddr (MAC): %s\n"
+msgstr "HWaddr (MAC): %s\n"
+
+#: ../tools/interface.c:1956
+#, c-format
+msgid "IPv6 Address: %s/%d\n"
+msgstr "IPv6-osoite: %s/%d\n"
+
+#: ../tools/interface.c:1959
+#, c-format
+msgid "Scope: "
+msgstr "Näkyvyysalue: "
+
+#: ../tools/interface.c:1964
+#, c-format
+msgid "Global"
+msgstr "Yleinen"
+
+#: ../tools/interface.c:1967
+#, c-format
+msgid "Link"
+msgstr "Linkki"
+
+#: ../tools/interface.c:1970
+#, c-format
+msgid "Site"
+msgstr "Sivusto"
+
+#: ../tools/interface.c:1973
+#, c-format
+msgid "Compat"
+msgstr "Compat-näppäimistö"
+
+#: ../tools/interface.c:1976
+#, c-format
+msgid "Host"
+msgstr "Isäntäkone"
+
+#: ../tools/interface.c:1979
+#, c-format
+msgid "Unknown"
+msgstr "Tuntematon"
+
+#: ../device.c:215
+msgid "Unknown Device"
+msgstr "Tuntematon laite"
+
+#: ../modules/logread.c:116
+msgid "Can't find circular buffer, is syslog running?\n"
+msgstr "Kiertopuskuri ei löydy, suoritetaanko syslog-ohjelmaa?\n"
+
+#: ../modules/logread.c:123
+msgid "Can't get access to syslogd's circular buffer."
+msgstr "Ei voitu lukea syslogd-kiertopuskuria."
+
+#: ../modules/logread.c:130
+msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
+msgstr "Ei voitu lukea semaphorea syslogd-kiertopuskurille."
+
+#: ../modules/logread.c:156
+msgid "<empty syslog>"
+msgstr "<tyhjä syslog>"
+
+#: ../modules/logread.c:227 ../modules/logread.c:243
+msgid "System Log"
+msgstr "Järjestelmäloki"
+
+#: ../modules/logread.c:252 ../modules/logread.c:268
+msgid "Session Log"
+msgstr "Istuntoloki"
+
+#: ../modules/logread.c:275
+msgid "Could not open X session log.\n"
+msgstr "Ei voitu avata X-istuntolokia.\n"
+
+#: ../modules/usb.c:80
+msgid "Choose backing file"
+msgstr "Valitse varmistamistiedosto"
+
+#: ../modules/usb.c:240
+msgid "USB Peripheral Mode"
+msgstr "USB-oheislaitetila"
+
+#: ../modules/usb.c:247
+msgid "Ethernet Networking"
+msgstr "Ethernet-verkkoliikenne"
+
+#: ../modules/usb.c:252 ../modules/sysinfo.c:645
+msgid "Storage"
+msgstr "Massamuisti"
+
+#: ../modules/usb.c:258 ../modules/serial.c:573
+msgid "Serial Port"
+msgstr "Sarjaportti"
+
+#: ../modules/usb.c:267
+msgid "Storage Behaviour"
+msgstr "Massamuistin käyttäytyminen"
+
+#: ../modules/usb.c:274
+msgid "CF/SD Card Reader"
+msgstr "CF/SD-kortinlukija"
+
+#: ../modules/usb.c:280
+msgid "File-backed"
+msgstr "Tiedostotallennettu"
+
+#: ../modules/usb.c:290
+msgid "Select"
+msgstr "Valitse"
+
+#: ../modules/usb.c:298
+msgid "Allow write access"
+msgstr "Anna kirjoitusoikeus"
+
+#: ../modules/usb.c:307
+msgid "Serial Settings"
+msgstr "Sarjaliikenneasetukset"
+
+#: ../modules/usb.c:314
+msgid "Use CDC ACM"
+msgstr "Käytä USB CDC ACM-laitetta"
+
+#: ../modules/theme.c:234
+msgid "Choose backgound image"
+msgstr "Valitse taustakuva"
+
+#: ../modules/theme.c:248
+msgid "You are not allowed to read this file, choose another."
+msgstr "Sinulla ei ole lupaa lukea tätä tiedostoa, valitse joku toinen."
+
+#: ../modules/theme.c:269
+msgid "Succesfully changed background image."
+msgstr "Taustakuvan vaihto onnistui."
+
+#: ../modules/theme.c:270
+msgid "Use \"Look and Feel\" setup tool to change details."
+msgstr "Käytä ”Käyttötuntuma”-asetustyökalua yksityiskohtien muuttamiseen."
+
+#: ../modules/theme.c:781 ../modules/theme.c:859
+msgid "You don't have read access to selected background image!"
+msgstr "Sinulla ei ole lukuoikeuksia valittuun taustakuvaan!"
+
+#: ../modules/theme.c:997
+msgid "Desktop Theme"
+msgstr "Työpöytäteema"
+
+#: ../modules/theme.c:1009
+msgid "Name"
+msgstr "Nimi"
+
+#: ../modules/theme.c:1023
+msgid "Icon Size"
+msgstr "Kuvakekoko"
+
+#: ../modules/theme.c:1038
+msgid "Visual Effects"
+msgstr "Visuaalitehosteet"
+
+#: ../modules/theme.c:1044
+msgid "Enable Visual Effects"
+msgstr "Aktivoi visuaalitehosteet"
+
+#. Background tab
+#: ../modules/theme.c:1051
+msgid "Background"
+msgstr "Tausta"
+
+#: ../modules/theme.c:1065 ../modules/theme.c:1067
+msgid "Background Settings"
+msgstr "Tausta-asetukset"
+
+#: ../modules/theme.c:1077 ../modules/theme.c:1088
+msgid "Theme Default"
+msgstr "Teemaoletus"
+
+#: ../modules/theme.c:1096
+msgid "Solid colour"
+msgstr "Kiinteä väri"
+
+#: ../modules/theme.c:1110
+msgid "Horizontal"
+msgstr "Vaakasuora"
+
+#: ../modules/theme.c:1114
+msgid "Vertical"
+msgstr "Pystysuora"
+
+#: ../modules/theme.c:1119 ../modules/theme.c:1138 ../modules/theme.c:1312
+#: ../modules/theme.c:1318
+msgid "Colour"
+msgstr "Väri"
+
+#: ../modules/theme.c:1129
+msgid "Colour gradient"
+msgstr "Väriaskeleet"
+
+#: ../modules/theme.c:1148
+msgid "Image"
+msgstr "Kuva"
+
+#: ../modules/theme.c:1174
+msgid "Center"
+msgstr "Keskipiste"
+
+#: ../modules/theme.c:1178
+msgid "Tile"
+msgstr "Limitä"
+
+#: ../modules/theme.c:1181
+msgid "Stretch"
+msgstr "Venytä"
+
+#: ../modules/theme.c:1188
+msgid "Toolbars"
+msgstr "Työkalupalkit"
+
+#: ../modules/theme.c:1200 ../modules/theme.c:1202
+msgid "Toolbar Style"
+msgstr "Työkalupalkkityyli"
+
+#: ../modules/theme.c:1211 ../modules/theme.c:1235
+msgid "Icons"
+msgstr "Kuvakkeet"
+
+#: ../modules/theme.c:1216 ../modules/theme.c:1239
+msgid "Text"
+msgstr "Teksti"
+
+#: ../modules/theme.c:1221 ../modules/theme.c:1242
+msgid "Both"
+msgstr "Molemmat"
+
+#: ../modules/theme.c:1249
+msgid "Toolbar Icon Size"
+msgstr "Työkalupalkin kuvakekoko"
+
+#: ../modules/theme.c:1265
+msgid "Fonts"
+msgstr "Kirjasinlajit"
+
+#: ../modules/theme.c:1274 ../modules/theme.c:1294
+msgid "Desktop Font"
+msgstr "Työpöydän kirjasinlaji"
+
+#: ../modules/theme.c:1281 ../modules/theme.c:1340 ../modules/theme.c:1375
+#: ../modules/theme.c:1425
+msgid "Family"
+msgstr "Perhe"
+
+#: ../modules/theme.c:1301 ../modules/theme.c:1360 ../modules/theme.c:1395
+#: ../modules/theme.c:1445
+msgid "Size"
+msgstr "Koko"
+
+#: ../modules/theme.c:1329 ../modules/theme.c:1331 ../modules/theme.c:1353
+#: ../modules/theme.c:1388
+msgid "Application Font"
+msgstr "Sovelluksen kirjasinlaji"
+
+#. terminal tab
+#: ../modules/theme.c:1409
+msgid "Terminal"
+msgstr "Pääte"
+
+#: ../modules/theme.c:1418
+msgid "Font"
+msgstr "Kirjasinlaji"
+
+#: ../modules/theme.c:1438
+msgid "Terminal Font"
+msgstr "Päätteen kirjasinlaji"
+
+#. TRANSLATORS: "Familiar" is the name of a linux distribution.
+#: ../modules/sysinfo.c:195
+msgid "Familiar"
+msgstr "Familiar"
+
+#. TRANSLATORS: "OpenZaurus" is the name of a linux distribution.
+#: ../modules/sysinfo.c:206
+msgid "OpenZaurus"
+msgstr "OpenZaurus"
+
+#. TRANSLATORS: "Debian" is the name of a linux distribution.
+#: ../modules/sysinfo.c:215
+msgid "Debian"
+msgstr "Debian"
+
+#. TRANSLATORS: "Ångström" is the name of a linux distribution.
+#: ../modules/sysinfo.c:226
+msgid "Ångström"
+msgstr "Ångström"
+
+#. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
+#: ../modules/sysinfo.c:235
+msgid "OpenEmbedded"
+msgstr "OpenEmbedded"
+
+#: ../modules/sysinfo.c:277 ../modules/sysinfo.c:279
+msgid "Build"
+msgstr "Ohjelman versio"
+
+#: ../modules/sysinfo.c:381
+msgid "Network Status"
+msgstr "Verkkotila"
+
+#. split string into long and short lines
+#: ../modules/sysinfo.c:395 ../modules/sysinfo.c:398
+msgid "HWaddr (MAC)"
+msgstr "HWaddr (MAC)-osoite"
+
+#: ../modules/sysinfo.c:409 ../modules/sysinfo.c:410
+#, c-format
+msgid "Wireless"
+msgstr "Langaton"
+
+#: ../modules/sysinfo.c:437
+msgid "Default Gateway"
+msgstr "Oletusyhdysväylä"
+
+#: ../modules/sysinfo.c:480
+msgid "System information"
+msgstr "Järjestelmätiedot"
+
+#: ../modules/sysinfo.c:490
+msgid "Version"
+msgstr "Versio"
+
+#: ../modules/sysinfo.c:522
+msgid "Distribution"
+msgstr "Jakeluversio"
+
+#: ../modules/sysinfo.c:547
+msgid "System"
+msgstr "Järjestelmä"
+
+#: ../modules/sysinfo.c:556
+msgid "Device information"
+msgstr "Laitetiedot"
+
+#: ../modules/sysinfo.c:568
+msgid "Device Name"
+msgstr "Laitenimi"
+
+#: ../modules/sysinfo.c:587
+msgid "Manufacturer:"
+msgstr "Valmistaja:"
+
+#: ../modules/sysinfo.c:600
+msgid "RAM:"
+msgstr "RAM:"
+
+#  Tämän robotti voi merkitä fuzzyksi, koska alkaa suomeksi pienellä kirjaimella.
+#. TRANSLATORS: MB == Mega Bytes
+#: ../modules/sysinfo.c:606 ../modules/sysinfo.c:622 ../modules/storage.c:176
+#: ../modules/storage.c:183 ../modules/storage.c:329 ../modules/storage.c:340
+#: ../modules/storage.c:445 ../modules/storage.c:458
+msgid "MB"
+msgstr "megatavua"
+
+#: ../modules/sysinfo.c:616
+msgid "Storage:"
+msgstr "Massamuisti:"
+
+#: ../modules/sysinfo.c:628
+msgid "Hardware"
+msgstr "Laitteisto"
+
+#: ../modules/sysinfo.c:638
+msgid "Battery"
+msgstr "Akku"
+
+#: ../modules/sysinfo.c:652
+msgid "Networks"
+msgstr "Verkot"
+
+#: ../modules/sysinfo.c:659
+msgid "Log Display"
+msgstr "Lokinäyttö"
+
+#: ../modules/timeanddate.c:222
+msgid "Time adjusted from network."
+msgstr "Aika noudettu verkosta."
+
+#: ../modules/timeanddate.c:224
+msgid "Adjusting time from network failed."
+msgstr "Ajan nouto verkosta ei onnistunut."
+
+#: ../modules/timeanddate.c:458
+msgid "Time & Date"
+msgstr "Aika ja päivä"
+
+#: ../modules/timeanddate.c:470
+msgid "Date"
+msgstr "Päivä"
+
+#: ../modules/timeanddate.c:486
+msgid "Enter current date here or use button to select."
+msgstr "Kirjoita tänne nykyinen päivämäärä tai käytä painiketta sen valitsemiseksi."
+
+#: ../modules/timeanddate.c:521
+msgid "Select the timeserver to use to set the clock."
+msgstr "Valitse kellon asetukseen käytettävä aikapalvelin."
+
+#: ../modules/timeanddate.c:523
+msgid "Get time from network"
+msgstr "Hae aika verkosta"
+
+#: ../modules/timeanddate.c:531
+msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
+msgstr "Jos otat yhteytä Internettiin, voit painaa tätä painiketta asettaaksesi tämän laitteen ajan käyttäen yllä olevaa aikapalvelinta."
+
+#. root_mode
+#: ../modules/timeanddate.c:534 ../modules/timeanddate.c:544
+msgid "Timezone"
+msgstr "Aikavyöhyke"
+
+#: ../modules/timeanddate.c:588
+msgid "Area"
+msgstr "Alue"
+
+#: ../modules/timeanddate.c:603
+msgid "Select your current timezone area here. The setting will apply after the next login."
+msgstr "Valitse tässä nykyinen aikavyöhykkeesi. Asetus on voimassa seuraavan sisäänkirjautumisen jälkeen."
+
+#: ../modules/timeanddate.c:610
+msgid "Zone"
+msgstr "Vyöhyke"
+
+#: ../modules/timeanddate.c:635
+msgid "Select your current timezone here. The setting applies after the next login."
+msgstr "Valitse tässä nykyinen aikavyöhykkeesi. Asetus on voimassa seuraavan sisäänkirjautumisen jälkeen."
+
+#: ../modules/timeanddate.c:698
+msgid "To make timezone settings take effect, you'll need to log out and log in again."
+msgstr "Sinun täytyy kirjautua ulos ja kirjautua uudelleen sisään, jotta aikavyöhykeasetus tulee voimaan."
+
+#: ../modules/login-setup.c:160
+msgid "Some of these settings can only be changed by the user 'root'."
+msgstr "Vain root-käyttäjä voi muuttaa joitakin näistä asetuksista."
+
+#: ../modules/login-setup.c:183 ../modules/gpe-admin.c:85
+msgid "General"
+msgstr "Yleinen"
+
+#: ../modules/login-setup.c:200
+msgid "Show owner information at login."
+msgstr "Näytä omistajatiedot sisäänkirjautumisen yhteydessä."
+
+#: ../modules/login-setup.c:204
+msgid "Lock display on suspend."
+msgstr "Lukitse näyttö keskeytettäessä."
+
+#: ../modules/login-setup.c:208
+msgid ""
+"Lock display on suspend. \n"
+"  (needs password)"
+msgstr ""
+"Lukitusnäyttö keskeytyksellä. \n"
+"  (tarvitsee salasanan)"
+
+#: ../modules/login-setup.c:213
+msgid ""
+"Automatic login. \n"
+"  (without password)"
+msgstr ""
+"Automaattinen sisäänkirjoittautuminen. \n"
+"  (ilman salasanaa)"
+
+#: ../modules/ownerinfo.c:210
+msgid "Information about the Owner"
+msgstr "Omistajatiedot"
+
+#: ../modules/ownerinfo.c:218
+msgid "Only the user 'root' is allowed to change this information"
+msgstr "Vain root-käyttäjällä on lupa muuttaa näitä tietoja"
+
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:237 ../modules/network.c:246
+msgid "Name:"
+msgstr "Nimi:"
+
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:252
+msgid "E-Mail:"
+msgstr "Sähköposti:"
+
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:267
+msgid "Phone:"
+msgstr "Puhelin:"
+
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:282
+msgid "Address:"
+msgstr "Osoite:"
+
+#. ------------------------------------------------------------------------
+#: ../modules/ownerinfo.c:308
+msgid "Photofile:"
+msgstr "Valokuvatiedosto"
+
+#: ../modules/storage.c:166 ../modules/storage.c:423
+msgid "System Memory"
+msgstr "Järjestelmämuisti"
+
+#. TRANSLATORS: MB == Mega Bytes
+#: ../modules/storage.c:174 ../modules/storage.c:443
+msgid "Free memory"
+msgstr "Vapaa muisti"
+
+#: ../modules/storage.c:181 ../modules/storage.c:328 ../modules/storage.c:456
+msgid "Total:"
+msgstr "Yhteensä:"
+
+#: ../modules/storage.c:292
+msgid "Internal Flash"
+msgstr "Sisäinen flash-muisti"
+
+#: ../modules/storage.c:298
+msgid "MMC"
+msgstr "MMC Flash-muisti"
+
+#: ../modules/storage.c:304
+msgid "Compact Flash"
+msgstr "Compact Flash-muisti"
+
+#: ../modules/storage.c:310
+msgid "Network Filesystem"
+msgstr "Verkkotiedostojärjestelmä"
+
+#: ../modules/storage.c:330
+msgid "Mounted at "
+msgstr "Liitetty asennuspisteeseen "
+
+#: ../modules/storage.c:338
+msgid "Free space"
+msgstr "Vapaa tila"
+
+#: ../modules/serial.c:428 ../modules/serial.c:434
+msgid "Simple interface to serial port configuration. Disabled components are not installed."
+msgstr "Yksinkertainen rajapinta sarjaporttiasetuksiin. Passivoitua komponentteja ei asenneta."
+
+#: ../modules/serial.c:431
+msgid "Port A"
+msgstr "Portti A"
+
+#: ../modules/serial.c:438
+msgid "Serial port default usage"
+msgstr "Sarjaportin oletuskäyttö"
+
+#: ../modules/serial.c:443
+msgid "Select desired software to use serial port here."
+msgstr "Valitse tässä ohjelmisto, jota halutaan käyttää sarjaportissa."
+
+#: ../modules/serial.c:446
+msgid "Console"
+msgstr "Konsoli-ikkuna"
+
+#: ../modules/serial.c:449
+msgid "This option runs console on serial port. (default)"
+msgstr "Tämä valitsin suorittaa konsolin sarjaportissa. (oletus)"
+
+#: ../modules/serial.c:457
+msgid "GPS Daemon"
+msgstr "GPS-taustaprosessi"
+
+#: ../modules/serial.c:462
+msgid "GPS Daemon (needs 'gpsd')"
+msgstr "GPS-taustaprosessi (tarvitse ”gpsd”:n)"
+
+#  Otaksun: reciver -> receiver
+#: ../modules/serial.c:467
+msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
+msgstr "Tämä valitsin sallii käynnistää GPSD:n, joka tarjoaa tietoja GPS-vastaanottimesta sovelluksille."
+
+#: ../modules/serial.c:474
+msgid "Nothing (free)"
+msgstr "Ei mitään (vapaa)"
+
+#: ../modules/serial.c:477
+msgid "Don't start any software that uses the serial port."
+msgstr "Älä käynnistä mitään ohjelmistoa, joka käyttää sarjaporttia."
+
+#: ../modules/serial.c:514 ../modules/serial.c:521
+msgid "This page configures the GPS receiver software."
+msgstr "Tällä sivulla tehdään GPS-vastaanotinohjelmiston asetukset."
+
+#: ../modules/serial.c:518
+msgid "GPS Receiver"
+msgstr "GPS-vastaanotin"
+
+#: ../modules/serial.c:525
+msgid "GPS settings"
+msgstr "GPS-asetukset"
+
+#: ../modules/serial.c:531
+msgid "Receiver Type"
+msgstr "Vastaanotintyyppi"
+
+#: ../modules/serial.c:536
+msgid "NMEA"
+msgstr "NMEA-viestintä"
+
+#: ../modules/serial.c:541
+msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
+msgstr "GPS-vastaanotin lähettää NMEA-tietoja (oletus, ei tarvitse muuttaa useimmilla vastaanottimilla)."
+
+#: ../modules/serial.c:547
+msgid "Earthmate"
+msgstr "Earthmate GPS-vastaanotin"
+
+#: ../modules/serial.c:553
+msgid "GPS receiver is an Earthmate GPS."
+msgstr "GPS-vastaanotin on Earthmate GPS."
+
+#: ../modules/serial.c:557
+msgid "Baud Rate"
+msgstr "Baudinopeus"
+
+#: ../modules/cardinfo.c:103
+msgid "/_Card"
+msgstr "/_Kortti"
+
+#: ../modules/cardinfo.c:104
+msgid "/Card/_Insert"
+msgstr "/Kortti/_Lisää"
+
+#: ../modules/cardinfo.c:105
+msgid "/Card/_Eject"
+msgstr "/Kortti/_Irrota"
+
+#: ../modules/cardinfo.c:106
+msgid "/Card/_Suspend"
+msgstr "/Kortti/K_eskeytystila"
+
+#: ../modules/cardinfo.c:107
+msgid "/Card/_Resume"
+msgstr "/Kortti/Al_oita uudelleen"
+
+#: ../modules/cardinfo.c:108
+msgid "/Card/_Reset"
+msgstr "/Kortti/_Nollaa"
+
+#: ../modules/cardinfo.c:109
+msgid "/Card/s1"
+msgstr "/Kortti/s1"
+
+#: ../modules/cardinfo.c:110
+msgid "/Card/_Assign Driver"
+msgstr "/Kortti/L_iitä ajuri"
+
+#: ../modules/cardinfo.c:111
+msgid "/Card/s2"
+msgstr "/Kortti/s2"
+
+#: ../modules/cardinfo.c:112
+msgid "/Card/_Close"
+msgstr "/Kortti/S_ulje"
+
+#: ../modules/cardinfo.c:113
+msgid "/_Help"
+msgstr "/O_hje"
+
+#: ../modules/cardinfo.c:114
+msgid "/_Help/Index"
+msgstr "/O_hje/Hakemisto"
+
+#: ../modules/cardinfo.c:115
+msgid "/_Help/About"
+msgstr "/O_hje/Ohjelmasta"
+
+#: ../modules/cardinfo.c:175 ../modules/cardinfo.c:848
+msgid "card not recognized"
+msgstr "korttia ei voi tunnistaa"
+
+#: ../modules/cardinfo.c:277 ../modules/cardinfo.c:348
+msgid "Could not write to temporal config file."
+msgstr "Ei voitu kirjoittaa tilapäistä asetustiedostoa."
+
+#: ../modules/cardinfo.c:554
+msgid "Could not open pidfile:"
+msgstr "Ei voitu avata pid-tiedostoa:"
+
+#: ../modules/cardinfo.c:560
+msgid "Could not read pidfile"
+msgstr "Ei voitu lukea pid-tiedosto"
+
+#: ../modules/cardinfo.c:564
+msgid "Could not signal cardmgr:"
+msgstr "Ei voitu signaloida kortinhallintaa:"
+
+#: ../modules/cardinfo.c:638
+#, fuzzy
+msgid "gpe-conf must be setuid root to use cardinfo feature."
+msgstr "gpe-conf-ohjelman on oltava setuid root käytettäessä korttitieto-ominaisuutta."
+
+#: ../modules/cardinfo.c:656
+msgid "No PCMCIA driver in '/proc/devices'"
+msgstr "Ei PCMCIA-ajuria kohteessa ”/proc/devices”"
+
+#: ../modules/cardinfo.c:659
+msgid "Could not open '/proc/devices'"
+msgstr "Ei voitu avata ”/proc/devices”"
+
+#: ../modules/cardinfo.c:671
+msgid "No sockets found\n"
+msgstr "Pistokkeita ei löytynyt\n"
+
+#: ../modules/cardinfo.c:835
+msgid "flock(stabfile) failed"
+msgstr "flock(stabfile) ei onnistunut"
+
+#: ../modules/cardinfo.c:854
+#, c-format
+msgid "no driver loaded"
+msgstr "ajuria ei ole ladattu"
+
+#: ../modules/cardinfo.c:963
+msgid "ready"
+msgstr "valmis"
+
+#: ../modules/cardinfo.c:981
+msgid "not ready"
+msgstr "ei valmis"
+
+#: ../modules/cardinfo.c:996
+msgid "suspended"
+msgstr "keskeytetty"
+
+#: ../modules/cardinfo.c:1188
+msgid "Assign Driver"
+msgstr "Liitä ajuri"
+
+#: ../modules/cardinfo.c:1197
+msgid ""
+"This dialog allows you to select/\n"
+"change the driver assignment for a\n"
+"PCMCIA or CF card."
+msgstr ""
+"Tämä valintaikkuna sallii sinun valita\n"
+"tai muuttaa ajurin liitännän PCMCIA-\n"
+"tai CF-korttiin."
+
+#: ../modules/cardinfo.c:1207
+msgid "Your current card identifies itself as:"
+msgstr "Nykyinen korttisi tunnistetaan nimellä:"
+
+#: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
+msgid "Manuf. Id"
+msgstr "Valm. tunnus"
+
+#: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
+msgid "Class"
+msgstr "Luokka"
+
+#: ../modules/cardinfo.c:1327 ../modules/cardinfo.c:1340
+msgid "PC/CF card socket information."
+msgstr "PC/CF-korttipistoketiedot."
+
+#: ../modules/cardinfo.c:1335
+msgid "Socket"
+msgstr "Pistoke"
+
+#: ../modules/cardinfo.c:1366
+msgid "Information for socket"
+msgstr "Tietoja pistokkeelle"
+
+#. fields
+#: ../modules/cardinfo.c:1375
+msgid "State:"
+msgstr "Tila:"
+
+#: ../modules/cardinfo.c:1376
+msgid "Device:"
+msgstr "Laite:"
+
+#: ../modules/cardinfo.c:1377
+msgid "Driver:"
+msgstr "Ajuri:"
+
+#: ../modules/cardinfo.c:1378
+msgid "Type:"
+msgstr "Tyyppi:"
+
+#: ../modules/cardinfo.c:1379
+msgid "I/O:"
+msgstr "Siirräntä:"
+
+#: ../modules/cardinfo.c:1380
+msgid "IRQ:"
+msgstr "Keskeytyspyyntö:"
+
+#: ../modules/cardinfo.c:1387
+msgid "Flags:"
+msgstr "Liput:"
+
+#: ../modules/cardinfo.c:1404
+msgid "PCMCIA initialisation failed"
+msgstr "PCMCIA-alustus ei onnistunut"
+
+#: ../modules/gpe-admin.c:92
+msgid "Allow users to configure everything"
+msgstr "Sallii käyttäjien asettaa kaikki"
+
+#: ../modules/users/ucallbacks.c:107
+msgid "You need at least one user account!"
+msgstr "Tarvitset vähintään yhden käyttäjätilin!"
+
+#: ../modules/users/ucallbacks.c:131
+msgid "You can't remove this user!"
+msgstr "Et voi poistaa tätä käyttäjää!"
+
+#: ../modules/users/ucallbacks.c:136
+msgid ""
+"You can't remove\n"
+" system users!"
+msgstr ""
+"Et voi poistaa\n"
+" järjestelmäkäyttäjiä!"
+
+#: ../modules/users/ucallbacks.c:138
+msgid ""
+"Delete user and all its data?\n"
+"This action is not revertable\n"
+"and is executed instantly."
+msgstr ""
+"Poistetaanko käyttäjä ja kaikki\n"
+"hänen tietonsa? Tätä toimintoa\n"
+"ei voi perua ja se\n"
+"suoritetaan heti."
+
+#: ../modules/users/ucallbacks.c:138 ../modules/network.c:343
+msgid "Question"
+msgstr "Kysymys"
+
+#: ../modules/users/ucallbacks.c:173
+msgid "Please choose a user name."
+msgstr "Valitse käyttäjänimi."
+
+#: ../modules/users/ucallbacks.c:191
+msgid "Please choose a home directory."
+msgstr "Valitse kotihakemisto."
+
+#: ../modules/users/ucallbacks.c:279
+msgid ""
+"The two new pass are different!\n"
+" Please try again!"
+msgstr ""
+"Kaksi uutta salasanaa ovat erilaisia!\n"
+" Yritä uudelleen!"
+
+#: ../modules/users/ucallbacks.c:282
+msgid ""
+"Wrong password\n"
+" Please try again!"
+msgstr ""
+"Väärä salasana\n"
+" Yritä uudelleen!"
+
+#  Lähden siitä, että erikseen kirjoitettuna tyyppiä "Ville Virtanen", yhteenkirjoitettuna esimerkiksi "ville_v"
+#: ../modules/users/uinterface.c:214
+msgid "User Name"
+msgstr "Käyttäjän nimi"
+
+#: ../modules/users/uinterface.c:215
+msgid "User Info"
+msgstr "Käyttäjän tiedot"
+
+#: ../modules/users/uinterface.c:216
+msgid "Home"
+msgstr "Koti"
+
+#: ../modules/users/uinterface.c:226
+msgid "Password"
+msgstr "Salasana"
+
+#: ../modules/users/uinterface.c:235
+msgid "Delete User"
+msgstr "Poista käyttäjä"
+
+#: ../modules/users/uinterface.c:244
+msgid "Edit User"
+msgstr "Muokkaa käyttäjää"
+
+#: ../modules/users/uinterface.c:253
+msgid "New User"
+msgstr "Uusi käyttäjä"
+
+#: ../modules/users/uinterface.c:327
+msgid "User settings"
+msgstr "Käyttäjän asetukset"
+
+#: ../modules/users/uinterface.c:341
+msgid "User Name:"
+msgstr "Käyttäjänimi:"
+
+#: ../modules/users/uinterface.c:357
+msgid "Password:"
+msgstr "Salasana:"
+
+#: ../modules/users/uinterface.c:365
+msgid "User Info:"
+msgstr "Käyttäjän tiedot:"
+
+#: ../modules/users/uinterface.c:381
+msgid "Shell:"
+msgstr "Komentotulkki:"
+
+#: ../modules/users/uinterface.c:400
+msgid "Home:"
+msgstr "Koti:"
+
+#: ../modules/users/uinterface.c:419
+msgid "Change"
+msgstr "Muutos"
+
+#: ../modules/users/uinterface.c:420
+msgid "Set"
+msgstr "Asetus"
+
+#: ../modules/users/uinterface.c:484
+msgid "Change Password"
+msgstr "Muuta salasana"
+
+#. 2nd column:
+#: ../modules/users/uinterface.c:510
+msgid "Old Password:"
+msgstr "Vanha salasana:"
+
+#: ../modules/users/uinterface.c:517
+msgid "New Password:"
+msgstr "Uusi salasana:"
+
+#: ../modules/users/uinterface.c:525
+msgid "Confirm:"
+msgstr "Vahvista:"
+
+#: ../modules/sound/sound.c:250
+msgid "Audio Settings"
+msgstr "Ääniasetukset"
+
+#: ../modules/sound/sound.c:257
+msgid "Mute Everything"
+msgstr "Vaimenna kaikki"
+
+#: ../modules/sound/sound.c:298
+msgid "Alarm Settings"
+msgstr "Hälytysasetukset"
+
+#: ../modules/sound/sound.c:305
+msgid "Enable Alarm Sound"
+msgstr "Aktivoi hälytysääni"
+
+#: ../modules/sound/sound.c:312
+msgid "Automatic Volume (rising)"
+msgstr "Automaattinen äänenvoimakkuus (nouseva)"
+
+#: ../modules/sound/sound.c:322 ../modules/sound/soundctrl.c:258
+msgid "Volume"
+msgstr "Äänenvoimakkuus"
+
+#: ../modules/sound/sound.c:329
+msgid "Test"
+msgstr "Testi"
+
+#: ../modules/keys/keyboard.c:76
+msgid "none"
+msgstr "ei mitään"
+
+#  Tämä on ilmeisesti joku Kiinassa käytettävä näppäimistö
+#: ../modules/keys/keyboard.c:77
+msgid "Foldable"
+msgstr "Foldable-näppäimistö"
+
+#: ../modules/keys/keyboard.c:78
+msgid "SnapNType"
+msgstr "SnapNType-näppäimistö"
+
+#: ../modules/keys/keyboard.c:79
+msgid "Stowaway"
+msgstr "Stowaway-näppäimistö"
+
+#: ../modules/keys/keyboard.c:80
+msgid "StowawayXT"
+msgstr "StowawayXT-näppäimistö"
+
+#: ../modules/keys/keyboard.c:81
+msgid "HP Slim"
+msgstr "HP Slim-näppäimistö"
+
+#  BT tarkoittaa tässä ilmeisesti BlueTooth
+#: ../modules/keys/keyboard.c:82
+msgid "Smart BT"
+msgstr "Smart BT-näppäimistö"
+
+#: ../modules/keys/keyboard.c:83
+msgid "LIRC"
+msgstr "LIRC-näppäimistö"
+
+#  IR tarkoittaa tässä ilmeisesti Infrared eli infrapuna
+#: ../modules/keys/keyboard.c:84
+msgid "Belkin IR"
+msgstr "Belkin IR-näppäimistö"
+
+#: ../modules/keys/keyboard.c:85
+msgid "Flexis"
+msgstr "Flexis-näppäimistö"
+
+#: ../modules/keys/keyboard.c:86
+msgid "Benq Gamepad"
+msgstr "Benq Gamepad-näppäimistö"
+
+#: ../modules/keys/keyboard.c:87
+msgid "Pocketvik"
+msgstr "Pocketvik-näppäimistö"
+
+#: ../modules/keys/keyboard.c:88
+msgid "Micro Foldaway"
+msgstr "Micro Foldaway-näppäimistö"
+
+#: ../modules/keys/keyboard.c:89
+msgid "Micro Datapad"
+msgstr "Micro Datapad-näppäimistö"
+
+#: ../modules/keys/keyboard.c:255
+msgid "External keyboard configuration."
+msgstr "Ulkoisen näppäimistön asetukset."
+
+#: ../modules/keys/keyboard.c:258
+msgid "External Keyboard Port"
+msgstr "Ulkoinen näppäimistöportti"
+
+#: ../modules/keys/keyboard.c:265
+msgid "Here you may select your external keyboard model."
+msgstr "Voit valita tässä ulkoisen näppäimistösi mallin."
+
+#: ../modules/keys/keyboard.c:288
+msgid "External Keyboard Type"
+msgstr "Ulkoisen näppäimistön tyyppi"
+
+#: ../modules/keys/kbd.c:142
+msgid "Keyboard Geometry / Layout"
+msgstr "Näppäimistö ja sen asettelu"
+
+#: ../modules/keys/kbd.c:182
+msgid "User defined"
+msgstr "Käyttäjän määrittelemä"
+
+#: ../modules/keys/keyctl.c:195
+msgid "Button layout file is missing a global section."
+msgstr "Painikkeiden asetustiedosto puuttuu yleislohkosta."
+
+#: ../modules/keys/keyctl.c:411
+msgid "No button configuration available for this device."
+msgstr "Tälle laitteelle ei ole olemassa painikeasetuksia."
+
+#: ../modules/keys/keyctl.c:583
+msgid "Critical: Can't open keylaunchrc for writing!"
+msgstr "Kriittinen: Ei voida avata keylaunchrc-tiedostoa kirjoittamista varten!"
+
+#: ../modules/keys/keyctl.c:606
+msgid "Could not restart key handler!"
+msgstr "Näppäinkäsittelijää ei voitu käynnistää uudelleen!"
+
+#: ../modules/keys/keyctl.c:629
+msgid "The file you selected is not executable."
+msgstr "Valitsemasi tiedosto ei ole suoritettava."
+
+#: ../modules/keys/keys.c:79
+msgid "Buttons"
+msgstr "Painikkeet"
+
+#: ../modules/keys/keys.c:83
+msgid "Virtual Keyb."
+msgstr "Virtuaalinäppäimistö"
+
+#: ../modules/keys/keys.c:87
+msgid "External Keyb."
+msgstr "Ulkoinen näppäimistö"
+
+#: ../modules/screen/screen.c:73
+msgid "Portrait"
+msgstr "Pystysuora"
+
+#: ../modules/screen/screen.c:74
+msgid "Landscape (left)"
+msgstr "Vaakasuora (vasen)"
+
+#: ../modules/screen/screen.c:75
+msgid "Landscape (right)"
+msgstr "Vaakasuora (oikea)"
+
+#: ../modules/screen/screen.c:79
+msgid "Landscape"
+msgstr "Vaakasuora"
+
+#: ../modules/screen/screen.c:80
+msgid "Portrait (left)"
+msgstr "Pystysuora (vasen)"
+
+#: ../modules/screen/screen.c:81
+msgid "Portrait (right)"
+msgstr "Pystysuora (oikea)"
+
+#: ../modules/screen/screen.c:84
+msgid "Inverted"
+msgstr "Käänteinen"
+
+#: ../modules/screen/screen.c:111
+msgid "Light"
+msgstr "Valo"
+
+#: ../modules/screen/screen.c:117
+msgid "Brightness"
+msgstr "Kirkkaus"
+
+#: ../modules/screen/screen.c:129
+msgid "Display"
+msgstr "Näyttö"
+
+#: ../modules/screen/screen.c:133
+msgid "Rotation"
+msgstr "Kierto"
+
+#: ../modules/screen/screen.c:153
+msgid "Touchscreen"
+msgstr "Kosketusnäyttö"
+
+#: ../modules/screen/screen.c:157
+msgid "Calibrate"
+msgstr "Kalibroi"
+
+#: ../modules/screen/screen.c:159
+msgid "Start"
+msgstr "Aloita"
+
+#: ../modules/screen/screen.c:275 ../modules/sleep/scallbacks.c:39
+msgid "min"
+msgstr "min."
+
+#: ../modules/screen/screen.c:278 ../modules/sleep/scallbacks.c:42
+msgid "sec"
+msgstr "sek."
+
+#: ../modules/network.c:103
+msgid "Current Config"
+msgstr "Nykyiset asetukset"
+
+#: ../modules/network.c:252
+msgid "New Interface"
+msgstr "Uusi liitäntä"
+
+#: ../modules/network.c:261
+msgid "This interface definition already exists!"
+msgstr "Tämä liitäntämäärittely on jo olemassa!"
+
+#: ../modules/network.c:343
+msgid "Do you want to delete this interface?"
+msgstr "Haluatko poistaa tämän liitännän?"
+
+#: ../modules/network.c:592
+msgid "WiFi config"
+msgstr "WiFi-asetukset"
+
+#: ../modules/network.c:631
+#, c-format
+msgid "WiFi config for %s"
+msgstr "WiFi-asetukset verkolle %s"
+
+#. page items
+#: ../modules/network.c:643
+msgid "ESSID"
+msgstr "ESSID"
+
+#: ../modules/network.c:665
+msgid "Mode"
+msgstr "Tila"
+
+#: ../modules/network.c:675
+msgid "managed"
+msgstr "hallinnoitu"
+
+#: ../modules/network.c:687
+msgid "ad-hoc"
+msgstr "ennakoimaton"
+
+#: ../modules/network.c:704
+msgid "Channel"
+msgstr "Kanava"
+
+#: ../modules/network.c:725
+msgid "WEP"
+msgstr "WEP"
+
+#: ../modules/network.c:735
+msgid "off"
+msgstr "suljettu"
+
+#: ../modules/network.c:747
+msgid "open"
+msgstr "avoin"
+
+#: ../modules/network.c:759
+msgid "restricted"
+msgstr "rajoitettu"
+
+#  Tässä on kyse verkosta, joten kyseessä on kai avaimet, ei näppäimet
+#: ../modules/network.c:775
+msgid "Key 1"
+msgstr "Avain 1"
+
+#: ../modules/network.c:803
+msgid "Key 2"
+msgstr "Avain 2"
+
+#: ../modules/network.c:831
+msgid "Key 3"
+msgstr "Avain 3"
+
+#: ../modules/network.c:861
+msgid "Key 4"
+msgstr "Avain 4"
+
+#: ../modules/network.c:1015 ../modules/network.c:1142
+#: ../modules/network.c:1259
+msgid "Interface"
+msgstr "Liitäntä"
+
+#. page items
+#: ../modules/network.c:1065
+msgid "Address"
+msgstr "Osoite"
+
+#: ../modules/network.c:1067
+msgid "Enter your IP address here, e.g. 192.168.1.2"
+msgstr "Kirjoita tähän IP-osoitteesi, esim. 192.168.1.2"
+
+#: ../modules/network.c:1068
+msgid "Netmask"
+msgstr "Verkkopeite"
+
+#: ../modules/network.c:1070
+msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
+msgstr "Kirjoita tähän verkkopeitteesi, useimmissa tapauksissa 255.255.255.0"
+
+#: ../modules/network.c:1072
+msgid "Broadcast"
+msgstr "Yleislähete"
+
+#: ../modules/network.c:1074
+msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
+msgstr "Kirjoita tähän yleislähetysosoitteesi, tavallisesti sama kuin IP-osoitteesi, jossa viimeinen numero on 255."
+
+#: ../modules/network.c:1076
+msgid "Gateway"
+msgstr "Yhdysväylä"
+
+#: ../modules/network.c:1078
+msgid "Enter the IP Address of your default gateway here."
+msgstr "Kirjoita tähän oletusyhdysväyläsi IP-osoite."
+
+#: ../modules/network.c:1087 ../modules/network.c:1201
+msgid "WiFi device"
+msgstr "WiFi-laite"
+
+#: ../modules/network.c:1095 ../modules/network.c:1209
+msgid "Configure"
+msgstr "Asetukset"
+
+#. page items
+#: ../modules/network.c:1192 ../modules/network.c:1419
+msgid "Hostname"
+msgstr "Koneen nimi"
+
+#: ../modules/network.c:1194
+msgid "Enter your desired hostname here. This parameter is optional."
+msgstr "Kirjoita tähän haluamasi koneen nimi. Asetuksen voi jättää pois."
+
+#. page items
+#: ../modules/network.c:1309
+msgid "Provider"
+msgstr "Palvelutarjoaja"
+
+#: ../modules/network.c:1311
+msgid "Here you need to enter the name of the provider configuration to use for this interface."
+msgstr "Sinun on kirjoitettava tässä tälle liitännälle käytettävän palvelutarjoaja-asetuksen nimi."
+
+#: ../modules/network.c:1334
+msgid "Global Settings"
+msgstr "Yleiset asetukset"
+
+#: ../modules/network.c:1375
+msgid "Proxy"
+msgstr "Välipalvelin"
+
+#  Tuon dillon arvasin tarkoittavan Dillo-selainta. Voi olla väärin.
+#: ../modules/network.c:1376
+msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
+msgstr "Jos haluat käyttää tai tarvitset välipalvelinta, kirjoita se tähän. (Tämä ei koske toistaiseksi dillo-selainta)"
+
+#: ../modules/network.c:1382
+msgid "No proxy for"
+msgstr "Ei välipalvelinta verkkoalueelle"
+
+#: ../modules/network.c:1384
+msgid "Here you should enter your local domain for that you don't want to use a proxy."
+msgstr "Anna tähän paikallinen verkkoalueesi, jossa et halua käyttää välipalvelinta"
+
+#: ../modules/network.c:1391
+msgid "DNS server"
+msgstr "DNS-palvelin"
+
+#: ../modules/network.c:1393
+msgid "Enter the IP of the DNS(name-) server to use here."
+msgstr "Kirjoiteta tähän käytettävän DNS-(nimi)palvelimen IP-osoite."
+
+#: ../modules/network.c:1421
+msgid "Enter the Hostname to use for this machine"
+msgstr "Anna tästä koneesta käytettävä nimi"
+
+#: ../modules/network.c:1612
+msgid ""
+"Here you may change the basic configuration type of your device.\n"
+"Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
+msgstr ""
+"Tässä voit muuttaa laitteesi perusasetustyyppiä.\n"
+"Käytä ”static” manuaaliseen liintäntäasetukseen,  ”dhcp” jos käytät DHCP:tä ja ”ppp” jos teet laitteesta kaksipisteyhteyslaitteen."
+
+#: ../modules/network.c:1618
+msgid "Enable this option if your device is a WiFi device"
+msgstr "Aktivoi tämä valitsin, jos laitteesi on WiFi-laite"
+
+#  Jaaha, tässä käytetään Click-sanaa?
+#: ../modules/network.c:1620
+msgid "Click to set the wireless options for this device"
+msgstr "Aseta tämän laitteen langattomat valitsimet napsauttamalla tästä"
+
+#: ../modules/network.c:1622
+msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
+msgstr "Aseta tila, jossa WiFi-korttisi pitäisi toimia. (hallinnoitu tai ennakoimaton)."
+
+#  Otaksun: enrcyption -> encryption
+#: ../modules/network.c:1625
+msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
+msgstr "Aseta salaustila: ei käytössä, jos ei ole WEP-salausta, avoin avoimessa järjestelmässä ja rajoitettu, kun yhteys rajoitettu vain WEP-yhteyksille"
+
+#: ../modules/network.c:1630
+msgid "Enter the essid of your WiFi network here."
+msgstr "Kirjoita tähän WiFi-verkkosi essid-tunniste."
+
+#: ../modules/network.c:1633
+msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
+msgstr "Kirjoita WEP-avaimesi tänne (iwconfig-muodossa), esim.: ”s:12345”"
+
+#: ../modules/network.c:1636
+msgid "Select the WEP key to use."
+msgstr "Valitse käytettävä WEP-avain."
+
+#: ../modules/network.c:1639
+msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
+msgstr "Kirjoita kanavanumero tai taajuus, jos se tarvitaan. Jos sitä ei tarvita, jätä tämä kenttä tyhjäksi."
+
+#: ../modules/network.c:1655
+msgid "Remove current Interface"
+msgstr "Poista nykyinen liitäntä"
+
+#: ../modules/network.c:1665
+msgid "Add a new Interface"
+msgstr "Lisää uusi liitäntä"
+
+#: ../modules/network.c:1672
+msgid "Info"
+msgstr "Tiedot"
+
+#: ../modules/network.c:1676
+msgid "Show current configuration."
+msgstr "Näytä nykyiset asetukset."
+
+#: ../modules/network.c:1694
+msgid "Couldn't read network configuration."
+msgstr "Ei voitu lukea verkkoasetuksia."
+
+#: ../modules/network.c:1701
+msgid "global"
+msgstr "yleinen"
+
+#: ../modules/sleep/sinterface.c:64
+msgid "Auto sleep"
+msgstr "Automaattinen valmiustilaan siirtyminen"
+
+#: ../modules/sleep/sinterface.c:74 ../modules/sleep/sinterface.c:105
+msgid "enabled"
+msgstr "aktivoitu"
+
+#: ../modules/sleep/sinterface.c:92
+msgid "sleep timeout"
+msgstr "valmiustilan aikakatkaisu"
+
+#: ../modules/sleep/sinterface.c:95
+msgid "Auto dim"
+msgstr "Automaattihimmennin"
+
+#: ../modules/sleep/sinterface.c:122
+msgid "backlight dim timeout"
+msgstr "taustavalon himmennyksen aikakatkaisu"
+
+#: ../modules/sleep/sinterface.c:124
+msgid "Auto dim level"
+msgstr "Automaattihimmennyksen taso"
+
+#: ../modules/sleep/sinterface.c:144
+msgid "Advanced Controls"
+msgstr "Lisäasetukset"
+
+#: ../modules/sleep/sinterface.c:154
+msgid "CPU"
+msgstr "Prosessori"
+
+#: ../modules/sleep/sinterface.c:160
+msgid "Sleep on cpu less than load"
+msgstr "Pidä prosessoria valmiustilassa vähemmän kun on kuormaa"
+
+#: ../modules/sleep/sinterface.c:164
+msgid "load below"
+msgstr "kuorma alla"
+
+#: ../modules/sleep/sinterface.c:180
+msgid "APM"
+msgstr "APM"
+
+#: ../modules/sleep/sinterface.c:186
+msgid "Sleep on AC"
+msgstr "Valmiustila vaihtovirralla"
+
+#: ../modules/sleep/sinterface.c:188
+msgid "probe IRQs"
+msgstr "koesta keskeytyspyyntöjä"
+
+#: ../modules/sleep/sinterface.c:194
+msgid "Check IRQ activity"
+msgstr "Tarkista keskeytyspyyntötoiminnot"
+
+#: ../desktop/gpe-conf-admin.desktop.in.h:1
+msgid "User Access"
+msgstr "Käyttäjäoikeudet"
+
+#: ../desktop/gpe-conf-admin.desktop.in.h:2
+msgid "User access administration"
+msgstr "Käyttäjäoikeuksien hallinta"
+
+#: ../desktop/gpe-conf-cardinfo.desktop.in.h:1
+msgid "PC/CF Cards"
+msgstr "PC/CF-kortit"
+
+#: ../desktop/gpe-conf-cardinfo.desktop.in.h:2
+msgid "PC/CF Cards info and config"
+msgstr "PC/CF-korttitiedot ja asetukset"
+
+#: ../desktop/gpe-conf.desktop.in.h:1
+msgid "Control Panel"
+msgstr "Ohjauspaneeli"
+
+#: ../desktop/gpe-conf-keys.desktop.in.h:1
+msgid "Keyboard and Button Setup"
+msgstr "Näppäimistö- ja painikeasetukset"
+
+#: ../desktop/gpe-conf-keys.desktop.in.h:2
+msgid "Keys and Buttons"
+msgstr "Näppäimet ja painikkeet"
+
+#: ../desktop/gpe-conf-ownerinfo.desktop.in.h:2
+msgid "Set Owner Information"
+msgstr "Aseta omistajatiedot"
+
+#: ../desktop/gpe-conf-serial.desktop.in.h:1
+msgid "Serial Port Settings"
+msgstr "Sarjaliikenneasetukset"
+
+#: ../desktop/gpe-conf-sleep.desktop.in.h:1
+msgid "Sleep Config"
+msgstr "Valmiustilaasetus"
+
+#: ../desktop/gpe-conf-sleep.desktop.in.h:2
+msgid "Sleep Configuration"
+msgstr "Valmiustila-asetukset"
+
+#: ../desktop/gpe-conf-sound.desktop.in.h:1
+msgid "Sound Settings"
+msgstr "Ääniasetukset"
+
+#: ../desktop/gpe-conf-sound.desktop.in.h:2
+msgid "Sound defaults and setup"
+msgstr "Ääniasetukset ja -oletukset"
+
+#: ../desktop/gpe-conf-sysinfo.desktop.in.h:1
+msgid "System Info"
+msgstr "Järjestelmätiedot"
+
+#: ../desktop/gpe-conf-theme.desktop.in.h:1
+msgid "Global Appearance Setup"
+msgstr "Yleiset ulkoasuasetukset"
+
+#: ../desktop/gpe-conf-time.desktop.in.h:1
+msgid "Date/Time Setup"
+msgstr "Päivämäärä/Aika-asetukset"
+
+#: ../desktop/gpe-conf-time.desktop.in.h:2
+msgid "Setup Date and Time"
+msgstr "Päivämäärän ja ajan asetus"
+
+#: ../desktop/gpe-conf-usb.desktop.in.h:1
+msgid "Change USB settings"
+msgstr "Muuta USB-asetuksia"
+
+#: ../desktop/gpe-conf-usb.desktop.in.h:2
+msgid "USB Settings"
+msgstr "USB-asetukset"
+
+#: ../desktop/gpe-conf-users.desktop.in.h:1
+msgid "Manage local users"
+msgstr "Hallinnoi paikallisia käyttäjiä"
+
+#: ../desktop/gpe-conf-users.desktop.in.h:2
+msgid "User Manager"
+msgstr "Käyttäjähallinnointi"
