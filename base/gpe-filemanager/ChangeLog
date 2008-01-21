@@ -1,5 +1,8 @@
 2008-01-21  Florian Boor  <florian.boor@kernelconcepts.de>
 
+	* Release 0.31
+	* Makefile.am: Make sure pot file is included in the release
+	  package.
 	* Add Russian and Finnish translations.
 
 2008-01-14  Graham Cobb  <g+770@cobb.uk.net>

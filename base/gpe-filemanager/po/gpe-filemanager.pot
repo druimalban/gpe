@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-09-20 01:32+0200\n"
+"POT-Creation-Date: 2008-01-21 16:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,213 +16,363 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:67
-msgid "Displaying help failed."
+#: ../bluetooth.c:57
+msgid "This file is too large to beam"
 msgstr ""
 
-#: main.c:219
-msgid "/_File"
+#: ../fileops.c:104
+msgid "Transfer progress"
 msgstr ""
 
-#: main.c:220
-msgid "/_File/_Create Directory"
+#. error query dialog
+#: ../fileops.c:122 ../fileops.c:283 ../main.c:1269
+msgid "Error:"
 msgstr ""
 
-#: main.c:221
-msgid "/_File/s1"
+#: ../fileops.c:124 ../main.c:601
+msgid "Error"
 msgstr ""
 
-#: main.c:222
-msgid "/_File/_Close"
+#: ../fileops.c:159
+msgid "File exists"
 msgstr ""
 
-#: main.c:223
-msgid "/_Settings"
+#: ../fileops.c:167
+msgid "Apply to all"
 msgstr ""
 
-#: main.c:224
-msgid "/_Settings/Directory Browser"
+#: ../fileops.c:259
+msgid "File(s) copied to clipboard."
 msgstr ""
 
-#: main.c:225
-msgid "/_Settings/My Files only"
-msgstr ""
-
-#: main.c:226
-msgid "/_Go To"
-msgstr ""
-
-#: main.c:227
-msgid "/_Help"
-msgstr ""
-
-#: main.c:228
-msgid "/_Help/Index"
-msgstr ""
-
-#: main.c:229
-msgid "/_Help/About"
-msgstr ""
-
-#: main.c:250
-msgid "/Settings/Directory Browser"
-msgstr ""
-
-#: main.c:252
-msgid "/Settings/My Files only"
-msgstr ""
-
-#: main.c:254
-msgid "/Go To"
-msgstr ""
-
-#: main.c:563
-msgid "Directory created."
-msgstr ""
-
-#: main.c:596
+#: ../fileops.c:289
 msgid "File copied."
 msgstr ""
 
-#: main.c:612
-msgid "File copied to clipboard."
+#: ../fileops.c:428
+msgid "Delete selected object(s)?"
 msgstr ""
 
-#: main.c:683
-msgid "Starting"
-msgstr ""
-
-#: main.c:753
-msgid "File renamed."
-msgstr ""
-
-#: main.c:797
-msgid "File moved."
-msgstr ""
-
-#: main.c:808
-msgid "Move to directory..."
-msgstr ""
-
-#: main.c:857
-#, c-format
-msgid "Delete \"%s\"?"
-msgstr ""
-
-#: main.c:859
+#: ../fileops.c:429
 msgid "Confirm"
 msgstr ""
 
-#: main.c:966
-msgid "<b>Open with program</b>"
+#: ../fileops.c:483
+msgid "File(s) moved."
 msgstr ""
 
-#: main.c:1031
-msgid "<b>No available applications</b>"
+#: ../fileops.c:504
+msgid "Move to directory..."
 msgstr ""
 
-#: main.c:1137
+#: ../guitools.c:186
+msgid "MMC-Card"
+msgstr ""
+
+#: ../guitools.c:188
+msgid "PC-Card"
+msgstr ""
+
+#: ../guitools.c:190
+msgid "CF-Card"
+msgstr ""
+
+#: ../guitools.c:192
+msgid "USB-Device"
+msgstr ""
+
+#: ../guitools.c:194
+msgid "CDROM"
+msgstr ""
+
+#. add defaults
+#: ../guitools.c:232 ../main.c:1408
+msgid "My Documents"
+msgstr ""
+
+#. if you change this order, change below too
+#: ../guitools.c:233
+msgid "Filesystem"
+msgstr ""
+
+#: ../main.c:98
+msgid "Help for this application is not installed."
+msgstr ""
+
+#: ../main.c:233
+msgid "/_File"
+msgstr ""
+
+#: ../main.c:234
+msgid "/_File/_Copy"
+msgstr ""
+
+#: ../main.c:235
+msgid "/_File/_Paste"
+msgstr ""
+
+#: ../main.c:236
+msgid "/_File/_Move"
+msgstr ""
+
+#: ../main.c:237
+msgid "/_File/_Rename"
+msgstr ""
+
+#: ../main.c:238
+msgid "/_File/_Delete"
+msgstr ""
+
+#: ../main.c:239
+msgid "/_File/_Create Directory"
+msgstr ""
+
+#: ../main.c:240
+msgid "/_File/s1"
+msgstr ""
+
+#: ../main.c:241
+msgid "/_File/Select _All"
+msgstr ""
+
+#: ../main.c:242
+msgid "/_File/s2"
+msgstr ""
+
+#: ../main.c:243
+msgid "/_File/_Close"
+msgstr ""
+
+#: ../main.c:244
+msgid "/_Settings"
+msgstr ""
+
+#: ../main.c:245
+msgid "/_Settings/Directory Browser"
+msgstr ""
+
+#: ../main.c:246
+msgid "/_Settings/My Files only"
+msgstr ""
+
+#: ../main.c:247
+msgid "/_Settings/s3"
+msgstr ""
+
+#: ../main.c:248
+msgid "/_Settings/View Icons"
+msgstr ""
+
+#: ../main.c:249
+msgid "/_Settings/View List"
+msgstr ""
+
+#: ../main.c:250
+msgid "/_Go To"
+msgstr ""
+
+#: ../main.c:251
+msgid "/_Help"
+msgstr ""
+
+#: ../main.c:252
+msgid "/_Help/Index"
+msgstr ""
+
+#: ../main.c:253
+msgid "/_Help/About"
+msgstr ""
+
+#: ../main.c:314
+msgid "/Settings/Directory Browser"
+msgstr ""
+
+#: ../main.c:316
+msgid "/Settings/My Files only"
+msgstr ""
+
+#: ../main.c:318
+msgid "/Settings/View Icons"
+msgstr ""
+
+#: ../main.c:320
+msgid "/Settings/View List"
+msgstr ""
+
+#: ../main.c:322
+msgid "/Go To"
+msgstr ""
+
+#: ../main.c:407
+msgid "Login failed, please try again"
+msgstr ""
+
+#: ../main.c:409
+msgid "Enter credentials to access"
+msgstr ""
+
+#: ../main.c:411
+msgid "Restricted Resource"
+msgstr ""
+
+#: ../main.c:434
+msgid "Username"
+msgstr ""
+
+#: ../main.c:437
+msgid "Password"
+msgstr ""
+
+#: ../main.c:486
+msgid "Directory created."
+msgstr ""
+
+#: ../main.c:559
+msgid "Starting"
+msgstr ""
+
+#: ../main.c:589
+msgid "File is read only."
+msgstr ""
+
+#: ../main.c:592 ../main.c:1260
+msgid "Access denied."
+msgstr ""
+
+#: ../main.c:595 ../main.c:1263
+msgid "Read only file system."
+msgstr ""
+
+#: ../main.c:598
+msgid "Destination file already exists."
+msgstr ""
+
+#: ../main.c:610
+msgid "File renamed."
+msgstr ""
+
+#: ../main.c:627 ../main.c:630
+msgid "Rename file"
+msgstr ""
+
+#: ../main.c:628
+msgid "to:"
+msgstr ""
+
+#. location
+#: ../main.c:681
+msgid "Location:"
+msgstr ""
+
+#. size
+#: ../main.c:696
+msgid "Size:"
+msgstr ""
+
+#. mime type
+#: ../main.c:709
+msgid "MIME-Type:"
+msgstr ""
+
+#. change time
+#: ../main.c:720
+msgid "Changed:"
+msgstr ""
+
+#: ../main.c:750
+msgid "Open With..."
+msgstr ""
+
+#: ../main.c:755
+msgid "Open with program"
+msgstr ""
+
+#: ../main.c:824
+msgid "No available applications"
+msgstr ""
+
+#: ../main.c:944
 #, c-format
 msgid "Symbolic link %s leads to inaccessable file!"
 msgstr ""
 
-#: main.c:1145
+#: ../main.c:952
 #, c-format
 msgid "Maximum symbolic link depth exceeded for %s"
 msgstr ""
 
-#: main.c:1739 main.c:1835
+#: ../main.c:1257
+msgid "Destination is read only."
+msgstr ""
+
+#: ../main.c:1390 ../main.c:1397
+msgid "Opening"
+msgstr ""
+
+#: ../main.c:1645 ../main.c:1746
 msgid "Icon"
 msgstr ""
 
-#: main.c:1747
+#: ../main.c:1653
 msgid "Name"
 msgstr ""
 
-#: main.c:1756
+#: ../main.c:1662
 msgid "Size"
 msgstr ""
 
-#: main.c:1765
+#: ../main.c:1671
 msgid "Changed"
 msgstr ""
 
-#: main.c:1842
+#: ../main.c:1753
 msgid "Directory"
 msgstr ""
 
-#: main.c:1957
+#: ../main.c:1859 ../main.c:1862
+msgid "Filemanager"
+msgstr ""
+
+#: ../main.c:1909
 msgid "Go back in history."
 msgstr ""
 
-#: main.c:1961
+#: ../main.c:1915
 msgid "Go forward in history."
 msgstr ""
 
-#: main.c:1965
+#: ../main.c:1921
 msgid "Go up one level."
 msgstr ""
 
-#: main.c:1973
+#: ../main.c:1934
 msgid "Goto your home directory."
 msgstr ""
 
-#: main.c:1978
+#: ../main.c:1941
 msgid "Refresh current directory."
 msgstr ""
 
-#: main.c:1982
+#: ../main.c:1948
 msgid "Stop the current process."
 msgstr ""
 
-#: main.c:1989
-msgid "Icon view"
+#: ../main.c:1960
+msgid "Exit from this program."
 msgstr ""
 
-#: main.c:1990
-msgid "View files as icons"
-msgstr ""
-
-#: main.c:1995
-msgid "List view"
-msgstr ""
-
-#: main.c:1996
-msgid "View files in a list"
-msgstr ""
-
-#: main.c:2002
+#: ../main.c:1968
 msgid "Go!"
 msgstr ""
 
-#: main.c:2003
+#: ../main.c:1969
 msgid "Goto Location"
 msgstr ""
 
-#: bluetooth.c:49
-msgid "This file is too large to beam"
+#: ../gpe-filemanager.desktop.in.h:1 ../hildon/gpe-filemanager.desktop.in.h:1
+msgid "File Manager"
 msgstr ""
 
-#: guitools.c:178
-msgid "MMC-Card"
-msgstr ""
-
-#: guitools.c:180
-msgid "CF-Card"
-msgstr ""
-
-#: guitools.c:182
-msgid "USB-Device"
-msgstr ""
-
-#: guitools.c:184
-msgid "CDROM"
-msgstr ""
-
-#: guitools.c:202
-msgid "My Documents"
-msgstr ""
-
-#: guitools.c:203
-msgid "Filesystem"
+#: ../gpe-filemanager.desktop.in.h:2 ../hildon/gpe-filemanager.desktop.in.h:2
+msgid "GPE File Manager"
 msgstr ""

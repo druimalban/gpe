@@ -85,7 +85,8 @@ EXTRA_DIST =  \
              hildon/gpe-filemanager.desktop.in.in \
              hildon/gpe-filemanager.desktop.in \
              hildon/gpe-filemanager.service.in \
-			 gpe-filemanager.desktop.in
+			 gpe-filemanager.desktop.in \
+             po/gpe-filemanager.pot
 
 
 DISTCLEANFILES = intltool-extract \
