@@ -17,8 +17,6 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef IS_HILDON
-
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
@@ -101,4 +99,3 @@ contacts_db_migrate_old_categories (sqlite *db)
     }
 }
 
-#endif
