@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004, 2006 Philip Blundell <philb@gnu.org>
- *               2004 - 2006 Florian Boor <florian@kernelconcepts.de>
+ *               2004 - 2006, 2008 Florian Boor <florian@kernelconcepts.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,9 +39,7 @@
 
 static sqlite *contacts_db = NULL;
 
-#ifndef IS_HILDON
 extern void contacts_db_migrate_old_categories (sqlite * db);
-#endif
 
 /* contacts full data in tag/value pairs */
 static const char *contacts_schema_str =
@@ -53,8 +51,11 @@ static const char *contacts_schema2_str =
 
 /* this one is for config data */
 static const char *contacts_schema4_str =
-  "create table contacts_config (id INTEGER PRIMARY KEY,	cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT);";
+  "create table contacts_config (id INTEGER PRIMARY KEY, cgroup INTEGER NOT NULL, cidentifier TEXT NOT NULL, cvalue TEXT);";
 
+/* this for additional indexes */
+static const char *contacts_index_str = "create index urn on contacts(urn)";
+static const char *contacts_index2_str = "create index tag_val on contacts(tag, value)";
 
 /**
  * contacts_new_person:
@@ -291,6 +292,9 @@ contacts_db_open (gboolean open_vcard)
 
   sqlite_exec (contacts_db, contacts_schema_str, NULL, NULL, NULL);
   sqlite_exec (contacts_db, contacts_schema2_str, NULL, NULL, NULL);
+  sqlite_exec (contacts_db, contacts_index_str, NULL, NULL, NULL);
+  sqlite_exec (contacts_db, contacts_index2_str, NULL, NULL, NULL);
+
   /* if we can create this table, we should add some defaults */
   if (sqlite_exec (contacts_db, contacts_schema4_str, NULL, NULL, NULL) ==
       SQLITE_OK)
@@ -300,12 +304,11 @@ contacts_db_open (gboolean open_vcard)
 				     "HOME.TELEPHONE");
       contacts_db_add_config_values (CONFIG_PANEL, _("EMail"), "HOME.EMAIL");
     }
-#ifndef IS_HILDON
   else
     contacts_check_table_update ();
 
   contacts_db_migrate_old_categories (contacts_db);
-#endif
+
   contacts_db_check_tags ();
 
   return 0;
@@ -501,8 +504,7 @@ contacts_db_get_entries_list (const gchar * name, const gchar * cat)
     {
       r = sqlite_exec_printf (contacts_db,
                  "select contacts_urn.urn, contacts_urn.name, contacts_urn.family_name, contacts_urn.company "
-                 "from contacts_urn, contacts where contacts_urn.urn = contacts.urn "
-                 "and contacts.tag = 'CATEGORY' and contacts.value like '%q%%'",
+                 "from contacts_urn where urn in (select urn from contacts where tag='CATEGORY' and value='%q')",
                  contacts_read_one_entry, &list, &err, cat);
     }
   else if (no_cat)

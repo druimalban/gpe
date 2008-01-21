@@ -1,3 +1,10 @@
+
+2008-01-21  Florian Boor  <florian@kernelconcepts.de>
+
+	* configure.ac: Get rid of old hh.o list.
+	* contacts.db: Performance improvements as suggested by Paul
+	  Sokolovsky.
+
 2006-09-19  Florian Boor  <florian@kernelconcepts.de>
 
 	* contacts-db.c: Add more documentation.
