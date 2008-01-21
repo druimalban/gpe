@@ -1,0 +1,275 @@
+# translation of gpe-filemanager-0.23.pot to Finnish
+# Copyright © 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-filemanager package.
+#
+# Jorma Karvonen <karvjorm@users.sf.net>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-filemanager 0.23\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-07-21 11:57+0200\n"
+"PO-Revision-Date: 2008-01-01 17:17+0200\n"
+"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: main.c:69
+msgid "Help for this application is not installed."
+msgstr "Tämän sovelluksen ohjetta ei ole asennettu."
+
+#: main.c:214
+msgid "/_File"
+msgstr "/_Tiedosto"
+
+#: main.c:215
+msgid "/_File/_Copy"
+msgstr "/_Tiedosto/_Kopioi"
+
+#: main.c:216
+msgid "/_File/_Paste"
+msgstr "/_Tiedosto/_Liitä"
+
+#: main.c:217
+msgid "/_File/_Move"
+msgstr "/_Tiedosto/_Siirrä"
+
+#: main.c:218
+msgid "/_File/_Rename"
+msgstr "/_Tiedosto/_Nimeä uudelleen"
+
+#: main.c:219
+msgid "/_File/_Delete"
+msgstr "/_Tiedosto/_Poista"
+
+#: main.c:220
+msgid "/_File/_Create Directory"
+msgstr "/_Tiedosto/L_uo kansio"
+
+#: main.c:221
+msgid "/_File/s1"
+msgstr "/_Tiedosto/s1"
+
+#: main.c:222
+msgid "/_File/Select _All"
+msgstr "/_Tiedosto/Valitse k_aikki"
+
+#: main.c:223
+msgid "/_File/s2"
+msgstr "/_Tiedosto/s2"
+
+#: main.c:224
+msgid "/_File/_Close"
+msgstr "/_Tiedosto/Sul_je"
+
+#: main.c:225
+msgid "/_Settings"
+msgstr "/As_etukset"
+
+#: main.c:226
+msgid "/_Settings/Directory Browser"
+msgstr "/As_etukset/Kansioselain"
+
+#: main.c:227
+msgid "/_Settings/My Files only"
+msgstr "/As_etukset/Vain omat tiedostot"
+
+#: main.c:228
+msgid "/_Settings/s3"
+msgstr "/As_etukset/s3"
+
+#: main.c:229
+msgid "/_Settings/View Icons"
+msgstr "/As_etukset/Näytä kuvakkeet"
+
+#: main.c:230
+msgid "/_Settings/View List"
+msgstr "/As_etukset/Näkymäluettelo"
+
+#: main.c:231
+msgid "/_Go To"
+msgstr "/Sii_rry kansioon"
+
+#: main.c:232
+msgid "/_Help"
+msgstr "/_Ohje"
+
+#: main.c:233
+msgid "/_Help/Index"
+msgstr "/_Ohje/Hakemisto"
+
+#: main.c:234
+msgid "/_Help/About"
+msgstr "/_Ohje/Ohjelmasta"
+
+#: main.c:295
+msgid "/Settings/Directory Browser"
+msgstr "/As_etukset/Kansioselain"
+
+#: main.c:297
+msgid "/Settings/My Files only"
+msgstr "/As_etukset/Vain omat tiedostot"
+
+#: main.c:299
+msgid "/Settings/View Icons"
+msgstr "/As_etukset/Näytä kuvakkeet"
+
+#: main.c:301
+msgid "/Settings/View List"
+msgstr "/As_etukset/Näkymäluettelo"
+
+#: main.c:303
+msgid "/Go To"
+msgstr "/Sii_rry kansioon"
+
+#: main.c:467
+msgid "Directory created."
+msgstr "Kansio luotu."
+
+#: main.c:532
+msgid "Starting"
+msgstr "Aloitetaan"
+
+#: main.c:602
+msgid "File renamed."
+msgstr "Tiedosto nimetty uudelleen."
+
+#: main.c:746
+msgid "Open with program"
+msgstr "Avaa ohjelmalla"
+
+#: main.c:815
+msgid "No available applications"
+msgstr "Sovellusta ei ole käytettävissä"
+
+#: main.c:935
+#, c-format
+msgid "Symbolic link %s leads to inaccessable file!"
+msgstr "Symbolinen linkki %s johtaa tiedostoon, johon ei ole pääsyä!"
+
+#: main.c:943
+#, c-format
+msgid "Maximum symbolic link depth exceeded for %s"
+msgstr "Suurin symbolisen linkin syvyys ylittyi kohteelle %s"
+
+#: main.c:1338 main.c:1340
+msgid "Opening"
+msgstr "Avataan"
+
+#: main.c:1577 main.c:1678
+msgid "Icon"
+msgstr "Kuvake"
+
+#: main.c:1585
+msgid "Name"
+msgstr "Nimi"
+
+#: main.c:1594
+msgid "Size"
+msgstr "Koko"
+
+#: main.c:1603
+msgid "Changed"
+msgstr "Muuttunut"
+
+#: main.c:1685
+msgid "Directory"
+msgstr "Kansio"
+
+#: main.c:1766
+msgid "Filemanager"
+msgstr "Tiedostohallinta"
+
+#: main.c:1809
+msgid "Go back in history."
+msgstr "Siirry taaksepäin historiatiedoissa."
+
+#: main.c:1815
+msgid "Go forward in history."
+msgstr "Siirry eteenpäin historiatiedoissa."
+
+#: main.c:1821
+msgid "Go up one level."
+msgstr "Siirry yksi taso ylemmäs."
+
+#: main.c:1834
+msgid "Goto your home directory."
+msgstr "Siirry kotikansioosi."
+
+#: main.c:1841
+msgid "Refresh current directory."
+msgstr "Päivitä nykyistä kansiota."
+
+#: main.c:1848
+msgid "Stop the current process."
+msgstr "Pysäytä nykyinen prosessi."
+
+#: main.c:1860
+msgid "Exit from this program."
+msgstr "Poistu tästä ohjelmasta."
+
+#: main.c:1868
+msgid "Go!"
+msgstr "Siirry!"
+
+#: main.c:1869
+msgid "Goto Location"
+msgstr "Siirry kohteeseen"
+
+#: bluetooth.c:53
+msgid "This file is too large to beam"
+msgstr "Tämä tiedosto on liian suuri siirrettäväksi infrapunalähetyksenä"
+
+#: guitools.c:186
+msgid "MMC-Card"
+msgstr "MMC-kortti"
+
+#: guitools.c:188
+msgid "PC-Card"
+msgstr "PC-kortti"
+
+#: guitools.c:190
+msgid "CF-Card"
+msgstr "CF-kortti"
+
+#: guitools.c:192
+msgid "USB-Device"
+msgstr "USB-laite"
+
+#: guitools.c:194
+msgid "CDROM"
+msgstr "CD-ROM"
+
+#: guitools.c:232
+msgid "My Documents"
+msgstr "Omat dokumentit"
+
+#: guitools.c:233
+msgid "Filesystem"
+msgstr "Tiedostojärjestelmä"
+
+#: fileops.c:259
+msgid "File(s) copied to clipboard."
+msgstr "Tiedosto(t) kopioitu leikepöydälle"
+
+#: fileops.c:289
+msgid "File copied."
+msgstr "Tiedosto kopioitu."
+
+#: fileops.c:428
+msgid "Delete selected object(s)?"
+msgstr "Poistetaanko valittu objekti(t)?"
+
+#: fileops.c:429
+msgid "Confirm"
+msgstr "Vahvista"
+
+#: fileops.c:483
+msgid "File(s) moved."
+msgstr "Tiedosto(t) siirretty."
+
+#: fileops.c:504
+msgid "Move to directory..."
+msgstr "Siirrä kansioon..."
