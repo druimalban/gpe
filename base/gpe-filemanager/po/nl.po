@@ -1,378 +1,378 @@
-# Translation of gpe-filemanager messages to Russian
-# Copyright (C) 2008 Free Software Foundation, Inc.
+# Translation of gpe-filemanager-0.31 to Dutch.
 # This file is distributed under the same license as the gpe-filemanager package.
-# Pavel Maryanov <acid_jack@ukr.net>, 2008
 #
+# Benno Schulenberg <benno@vertaalt.nl>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-filemanager 0.31\n"
+"Project-Id-Version: gpe-filemanager-0.31\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-21 16:15+0100\n"
-"PO-Revision-Date: 2008-01-21 20:58+0200\n"
-"Last-Translator: Pavel Maryanov <acid_jack@ukr.net>\n"
-"Language-Team: Russian <gnu@mx.ru>\n"
+"PO-Revision-Date: 2008-01-21 20:15+0100\n"
+"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
+"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../bluetooth.c:57
 msgid "This file is too large to beam"
-msgstr "Файл слишком большой для передачи"
+msgstr "Dit bestand is te groot om te verzenden"
 
 #: ../fileops.c:104
 msgid "Transfer progress"
-msgstr "Ход загрузки"
+msgstr "Verzendingsvoortgang"
 
 #. error query dialog
 #: ../fileops.c:122 ../fileops.c:283 ../main.c:1269
 msgid "Error:"
-msgstr "Ошибка:"
+msgstr "Fout:"
 
 #: ../fileops.c:124 ../main.c:601
 msgid "Error"
-msgstr "Ошибка"
+msgstr "Fout"
 
 #: ../fileops.c:159
 msgid "File exists"
-msgstr "Файл существует"
+msgstr "Bestand bestaat al"
 
 #: ../fileops.c:167
 msgid "Apply to all"
-msgstr "Применть ко всем"
+msgstr "Op alles toepassen"
 
 #: ../fileops.c:259
 msgid "File(s) copied to clipboard."
-msgstr "Файлы скопированы в буфер обмена."
+msgstr "Bestand(en) gekopieerd naar klembord."
 
 #: ../fileops.c:289
 msgid "File copied."
-msgstr "Файл скопирован."
+msgstr "Bestand gekopieerd."
 
 #: ../fileops.c:428
 msgid "Delete selected object(s)?"
-msgstr "Удалить выделенные объекты?"
+msgstr "Geselecteerde object(en) verwijderen?"
 
 #: ../fileops.c:429
 msgid "Confirm"
-msgstr "Подвердить"
+msgstr "Bevestigen"
 
 #: ../fileops.c:483
 msgid "File(s) moved."
-msgstr "Файлы перемещены."
+msgstr "Bestand(en) verplaatst."
 
 #: ../fileops.c:504
 msgid "Move to directory..."
-msgstr "Переместить в каталог..."
+msgstr "Verplaatsen naar map..."
 
 #: ../guitools.c:186
 msgid "MMC-Card"
-msgstr "MMC-карта"
+msgstr "MMC-kaart"
 
 #: ../guitools.c:188
 msgid "PC-Card"
-msgstr "PC-карта"
+msgstr "PC-kaart"
 
 #: ../guitools.c:190
 msgid "CF-Card"
-msgstr "CF-карта"
+msgstr "CF-kaart"
 
 #: ../guitools.c:192
 msgid "USB-Device"
-msgstr "Устройство USB"
+msgstr "USB-apparaat"
 
 #: ../guitools.c:194
 msgid "CDROM"
-msgstr "Привод CDROM"
+msgstr "CDROM"
 
 #. add defaults
 #: ../guitools.c:232 ../main.c:1408
 msgid "My Documents"
-msgstr "Мои документы"
+msgstr "Mijn documenten"
 
 #. if you change this order, change below too
 #: ../guitools.c:233
 msgid "Filesystem"
-msgstr "Файлова система"
+msgstr "Bestandssysteem"
 
 #: ../main.c:98
 msgid "Help for this application is not installed."
-msgstr "Для этого приложения не установлена справка"
+msgstr "Hulp voor dit programma is niet geïnstalleerd."
 
 #: ../main.c:233
 msgid "/_File"
-msgstr "/_Файл"
+msgstr "/_Bestand"
 
 #: ../main.c:234
 msgid "/_File/_Copy"
-msgstr "/_Файл/_Копировать"
+msgstr "/_Bestand/_Kopiëren"
 
 #: ../main.c:235
 msgid "/_File/_Paste"
-msgstr "/_Файл/_Вставить"
+msgstr "/_Bestand/_Plakken"
 
 #: ../main.c:236
 msgid "/_File/_Move"
-msgstr "/_Файл/_Переместить"
+msgstr "/_Bestand/_Verplaatsen"
 
 #: ../main.c:237
 msgid "/_File/_Rename"
-msgstr "/_Файл/_Переименовать"
+msgstr "/_Bestand/_Hernoemen"
 
 #: ../main.c:238
 msgid "/_File/_Delete"
-msgstr "/_Файл/_Удалить"
+msgstr "/_Bestand/Ver_wijderen"
 
 #: ../main.c:239
 msgid "/_File/_Create Directory"
-msgstr "/_Файл/_Создать каталог"
+msgstr "/_Bestand/_Map aanmaken"
 
 #: ../main.c:240
 msgid "/_File/s1"
-msgstr "/_Файл/s1"
+msgstr "/_Bestand/s1"
 
 #: ../main.c:241
 msgid "/_File/Select _All"
-msgstr "/_Файл/Выбрать _все"
+msgstr "/_Bestand/_Alles selecteren"
 
 #: ../main.c:242
 msgid "/_File/s2"
-msgstr "/_Файл/s2"
+msgstr "/_Bestand/s2"
 
 #: ../main.c:243
 msgid "/_File/_Close"
-msgstr "/_Файл/_Закрыть"
+msgstr "/_Bestand/Sl_uiten"
 
 #: ../main.c:244
 msgid "/_Settings"
-msgstr "/_Настройки"
+msgstr "/_Instellingen"
 
 #: ../main.c:245
 msgid "/_Settings/Directory Browser"
-msgstr "/_Настройки/Проводник каталогов"
+msgstr "/_Instellingen/Mappenbladeraar"
 
 #: ../main.c:246
 msgid "/_Settings/My Files only"
-msgstr "/_Настройки/Только мои файлы"
+msgstr "/_Instellingen/Alleen mijn bestanden"
 
 #: ../main.c:247
 msgid "/_Settings/s3"
-msgstr "/_Настройки/s3"
+msgstr "/_Instellingen/s3"
 
 #: ../main.c:248
 msgid "/_Settings/View Icons"
-msgstr "/_Настройки/Значки"
+msgstr "/_Instellingen/Pictogrammen tonen"
 
 #: ../main.c:249
 msgid "/_Settings/View List"
-msgstr "/_Настройки/Таблица"
+msgstr "/_Instellingen/Lijst tonen"
 
 #: ../main.c:250
 msgid "/_Go To"
-msgstr "/_Перейти к"
+msgstr "/_Ga naar"
 
 #: ../main.c:251
 msgid "/_Help"
-msgstr "/_Справка"
+msgstr "/_Hulp"
 
 #: ../main.c:252
 msgid "/_Help/Index"
-msgstr "/_Справка/Указатель"
+msgstr "/_Hulp/Inhoud"
 
 #: ../main.c:253
 msgid "/_Help/About"
-msgstr "/_Справка/О программе"
+msgstr "/_Hulp/Info"
 
 #: ../main.c:314
 msgid "/Settings/Directory Browser"
-msgstr "/Настройки/Проводник каталогов"
+msgstr "/Instellingen/Mappenbladeraar"
 
 #: ../main.c:316
 msgid "/Settings/My Files only"
-msgstr "/Настройки/Только мои файлы"
+msgstr "/Instellingen/Alleen mijn bestanden"
 
 #: ../main.c:318
 msgid "/Settings/View Icons"
-msgstr "/Настройки/Значки"
+msgstr "/Instellingen/Pictogrammen tonen"
 
 #: ../main.c:320
 msgid "/Settings/View List"
-msgstr "/Настройки/Таблица"
+msgstr "/Instellingen/Lijst tonen"
 
 #: ../main.c:322
 msgid "/Go To"
-msgstr "/Перейти к"
+msgstr "/Ga naar"
 
 #: ../main.c:407
 msgid "Login failed, please try again"
-msgstr "Ошибка аутентификации. Попробуйте ещё раз"
+msgstr "Inloggen is mislukt; probeer het opnieuw"
 
 #: ../main.c:409
 msgid "Enter credentials to access"
-msgstr "Введите данные для входа в систему"
+msgstr "Voer uw gegevens in om toegang te krijgen"
 
 #: ../main.c:411
 msgid "Restricted Resource"
-msgstr "Ограниченный ресурс"
+msgstr "Afgeschermde bron"
 
 #: ../main.c:434
 msgid "Username"
-msgstr "Имя пользователя"
+msgstr "Gebruikersnaam"
 
 #: ../main.c:437
 msgid "Password"
-msgstr "Пароль"
+msgstr "Wachtwoord"
 
 #: ../main.c:486
 msgid "Directory created."
-msgstr "Каталог создан."
+msgstr "Map aangemaakt."
 
 #: ../main.c:559
 msgid "Starting"
-msgstr "Запускается"
+msgstr "Starten"
 
 #: ../main.c:589
 msgid "File is read only."
-msgstr "Файл доступен только для чтения."
+msgstr "Bestand is alleen-lezen."
 
 #: ../main.c:592 ../main.c:1260
 msgid "Access denied."
-msgstr "В доступе отказано."
+msgstr "Toegang geweigerd."
 
 #: ../main.c:595 ../main.c:1263
 msgid "Read only file system."
-msgstr "Файловая система только для чтения."
+msgstr "Bestandssysteem is alleen-lezen."
 
 #: ../main.c:598
 msgid "Destination file already exists."
-msgstr "Файл назначения уже существует."
+msgstr "Doelbestand bestaat al."
 
 #: ../main.c:610
 msgid "File renamed."
-msgstr "Файл переименован."
+msgstr "Bestand is hernoemd."
 
 #: ../main.c:627 ../main.c:630
 msgid "Rename file"
-msgstr "Переименовать файл"
+msgstr "Bestand hernoemen"
 
 #: ../main.c:628
 msgid "to:"
-msgstr "в:"
+msgstr "naar:"
 
 #. location
 #: ../main.c:681
 msgid "Location:"
-msgstr "Местоположение:"
+msgstr "Locatie:"
 
 #. size
 #: ../main.c:696
 msgid "Size:"
-msgstr "Размер:"
+msgstr "Grootte:"
 
 #. mime type
 #: ../main.c:709
 msgid "MIME-Type:"
-msgstr "Тип MIME:"
+msgstr "MIME-type:"
 
 #. change time
 #: ../main.c:720
 msgid "Changed:"
-msgstr "Изменён:"
+msgstr "Gewijzigd:"
 
 #: ../main.c:750
 msgid "Open With..."
-msgstr "Открыть с помощью..."
+msgstr "Openen met..."
 
 #: ../main.c:755
 msgid "Open with program"
-msgstr "Открыть с помощью"
+msgstr "Openen met programma"
 
 #: ../main.c:824
 msgid "No available applications"
-msgstr "Приложение недоступно"
+msgstr "Geen programma's beschikbaar"
 
 #: ../main.c:944
 #, c-format
 msgid "Symbolic link %s leads to inaccessable file!"
-msgstr "Символьная ссылка %s указывает на недоступный файл."
+msgstr "Symbolische koppeling %s leidt naar een ontoegankelijk bestand!"
 
 #: ../main.c:952
 #, c-format
 msgid "Maximum symbolic link depth exceeded for %s"
-msgstr "Для %s превышена глубина символьной ссылки."
+msgstr "Maximum diepte voor symbolische koppelingen is overschreden voor %s"
 
 #: ../main.c:1257
 msgid "Destination is read only."
-msgstr "Файл назначения доступен только для чтения."
+msgstr "Doel is alleen-lezen."
 
 #: ../main.c:1390 ../main.c:1397
 msgid "Opening"
-msgstr "Открывается"
+msgstr "Openen"
 
 #: ../main.c:1645 ../main.c:1746
 msgid "Icon"
-msgstr "Значок"
+msgstr "Pictogram"
 
 #: ../main.c:1653
 msgid "Name"
-msgstr "Название"
+msgstr "Naam"
 
 #: ../main.c:1662
 msgid "Size"
-msgstr "Размер"
+msgstr "Grootte"
 
 #: ../main.c:1671
 msgid "Changed"
-msgstr "Изменён"
+msgstr "Gewijzigd"
 
 #: ../main.c:1753
 msgid "Directory"
-msgstr "Каталог"
+msgstr "Map"
 
 #: ../main.c:1859 ../main.c:1862
 msgid "Filemanager"
-msgstr "Проводник файлов"
+msgstr "Bestandsbeheer"
 
 #: ../main.c:1909
 msgid "Go back in history."
-msgstr "Назад в истории."
+msgstr "Terug in de geschiedenis."
 
 #: ../main.c:1915
 msgid "Go forward in history."
-msgstr "Вперёд в истории."
+msgstr "Vooruit in de geschiedenis."
 
 #: ../main.c:1921
 msgid "Go up one level."
-msgstr "На уровень выше."
+msgstr "Eén niveau omhoog."
 
 #: ../main.c:1934
 msgid "Goto your home directory."
-msgstr "В домашний каталог."
+msgstr "Naar uw persoonlijke map."
 
 #: ../main.c:1941
 msgid "Refresh current directory."
-msgstr "Обновить текущий каталог."
+msgstr "Huidige map verversen."
 
 #: ../main.c:1948
 msgid "Stop the current process."
-msgstr "Остановить текущий процесс."
+msgstr "Het huidige proces stoppen."
 
 #: ../main.c:1960
 msgid "Exit from this program."
-msgstr "Выйти из программы."
+msgstr "Dit programma verlaten."
 
 #: ../main.c:1968
 msgid "Go!"
-msgstr "Вперёд"
+msgstr "Ga!"
 
 #: ../main.c:1969
 msgid "Goto Location"
-msgstr "Местоположение для перехода"
+msgstr "Naar locatie"
 
 #: ../gpe-filemanager.desktop.in.h:1 ../hildon/gpe-filemanager.desktop.in.h:1
 msgid "File Manager"
-msgstr "Менеджер файлов"
+msgstr "Bestandsbeheer"
 
 #: ../gpe-filemanager.desktop.in.h:2 ../hildon/gpe-filemanager.desktop.in.h:2
 msgid "GPE File Manager"
-msgstr "Проводник файлов GPE"
+msgstr "GPE-bestandsbeheer"
