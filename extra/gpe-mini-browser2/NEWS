@@ -1,0 +1,75 @@
+13/06/2007
+
+* release 0.21 -Gonosz - Dedicated to a dear evil mind -
+* Added option to configure (the now customized) User Agent through the configfile
+* Fixed possible overflow bug and tuned homepage query
+* Fixed cookie handling to adhere to new gtk-webcore API
+* Added some functionality to remove the excessive amount of warning pop-ups on load 
+  errors (as this needs to be improved in gtk-webcore)
+* Improved history handling, trying to avoid duplicates and limiting the list to 100 items 
+* Opens new windows if we click on links that open in a new window
+* Fixed crash related to about dialog
+
+
+21/11/2006
+
+* release 0.20 - Satyr - Dedicated to Nóra, my wonderful girlfriend -
+* added configuration/preferences management
+* build and localisation fixes
+* move all created file to ~/.gpe/gpe-mini-browser instead of ~/.gpe
+* put application specific info in the install file (document --disable-bookmarks and --enable-hildon)
+* details as always in the Changelog
+
+10/01/2006
+
+* release 0.19 - Happy New Year - Because I had so much fun this New Year and met some wonderful people
+* adding about dialog 
+* adding info window to inform the user of an homepage change
+* General bugfixing for GPE 2.7 familiar 0.8.3 release
+
+30/11/2005
+
+* release 0.18 -Snow - Because so much snow is just great fun!
+* several bugfixes
+* a user can set its own bookmarks
+* as always see the changelog and cvs for details
+
+17/10/2005
+
+* release 0.17 - No beer - To remind me to the horrible fact I haven't found any Finnish beer that is worth drinking
+* added history
+* new fullscreen mode
+* Fully valgrind profiled
+* See Changelog for details
+
+
+07/09/2005
+
+* release 0.16 - Tampere - In honour of the city I will soon be moving too
+* bookmarks
+* improved toolbar
+* more.... see Changelog
+
+31/07/2005
+
+* release 0.15 - Happy Koen - For making Koen Kooi happy by indulging some wishlist items
+* fullscreen mode
+* text-input now accepts enter (no need to push on the ok button anymore)
+* Hildon support
+
+19/07/2005
+
+* Bumped up to 0.14. Fixed some bugs and added extra features.
+* For more info see changelog
+
+12/07/2005
+
+* Improved version 0.13. See Changelog for more info
+
+23/06/2005
+
+* Minor maintenance release + extra features
+
+20/06/2005 
+
+* First release of basic browser
