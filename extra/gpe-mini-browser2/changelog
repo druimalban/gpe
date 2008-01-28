@@ -1,0 +1,7 @@
+Gpe-mini-browser2 v0.0.1- 29/01/2008 - Philippe De Swert
+* src/main.c :
+	- Basic implementation
+	- Fullscreen functionality
+	- Back and forward functionality
+	- First svn check-in
+	- Added changelog

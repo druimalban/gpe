@@ -50,8 +50,11 @@ struct gpe_icon my_icons[] = {
   {NULL, NULL}
 };
 
-WebKitWebView *web_view;
-GtkWidget *url_entry;
+
+WebKitWebView *web_view; /* every new window/tab needs its own html render object */
+GtkWidget *url_entry; /* keeping track of the url entry box */
+GtkWidget *main_window; /* for fullscreen */
+GtkWidget *main_window_vbox; /* for packing and removing the loading progressbar */
 
 /* For the UI */
 
@@ -267,6 +270,18 @@ static void preferences_cb (GtkWidget* widget, gpointer data)
 
 static void fullscreen_cb (GtkWidget* widget, gpointer data)
 {
+  static bool fullscreen_status = FALSE;
+
+  if(!fullscreen_status)
+  {
+    gtk_window_fullscreen(GTK_WINDOW(main_window));
+    fullscreen_status = TRUE;
+  }
+  else
+  {
+   gtk_window_unfullscreen(GTK_WINDOW(main_window));   
+    fullscreen_status = FALSE;
+  }
 }
 
 static void browser_quit_cb (GtkWidget* widget, gpointer data)
@@ -278,7 +293,6 @@ static void browser_quit_cb (GtkWidget* widget, gpointer data)
 
 int main (int argc, char *argv[])
 {
-  GtkWidget *main_window, *vbox;
   int opt;
 
   /* application init */
@@ -325,13 +339,13 @@ int main (int argc, char *argv[])
   gpe_set_window_icon (main_window, "gpe-mini-browser-icon");
 
   /* pack components before adding them to the main window */
-  vbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), create_toolbar(), FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), create_urlbar(), FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), create_htmlview(), TRUE, TRUE, 0);
+  main_window_vbox = gtk_vbox_new (FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (main_window_vbox), create_toolbar(), FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (main_window_vbox), create_urlbar(), FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (main_window_vbox), create_htmlview(), TRUE, TRUE, 0);
 
   /* populate main window and show everything */
-  gtk_container_add(GTK_CONTAINER(main_window), vbox);
+  gtk_container_add(GTK_CONTAINER(main_window), main_window_vbox);
 
   /* next two lines are debug code */
   gchar* uri = (gchar*) (argc > 1 ? argv[1] : "http://www.google.com/");
