@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <getopt.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
@@ -36,6 +37,7 @@
 #include <gpe/errorbox.h>
 #include <gpe/pixmaps.h>
 #include <gpe/picturebutton.h>
+#include <gpe/gpedialog.h>
 
 
 #include "browser-data.h"
@@ -106,12 +108,11 @@ static GtkWidget * create_toolbar(void)
   {
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
     gtk_toolbar_set_icon_size(GTK_TOOLBAR(toolbar), GTK_ICON_SIZE_SMALL_TOOLBAR);
-    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
   }
   else
   {
     gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
-    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH_HORIZ);
+    gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_BOTH);
   }	
 
   /* back button */
@@ -121,6 +122,8 @@ static GtkWidget * create_toolbar(void)
 
   /* forward button */
   button = gtk_tool_button_new_from_stock (GTK_STOCK_GO_FORWARD);
+  /* set forward not sensitive on start-up to make clear there is no way to go forward
+  gtk_widget_set_sensitive(GTK_WIDGET(button), FALSE); */
   g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (forward_cb), NULL);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), button, -1);
 
@@ -146,6 +149,7 @@ static GtkWidget * create_toolbar(void)
 
   /* fullscreen button */
   button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (button), "fullscreen");
   g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (fullscreen_cb), NULL);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), button, -1);
 
@@ -202,7 +206,7 @@ main_window_key_press_event (GtkWidget * widget, GdkEventKey * k,
 
 static GtkWidget* create_htmlview(void)
 {
-  GtkWidget* scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
   web_view = WEBKIT_WEB_VIEW (webkit_web_view_new ());
@@ -229,7 +233,7 @@ static void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame
 
 static void load_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
 {
-  const gchar* url = webkit_web_frame_get_uri(frame);
+  const gchar *url = webkit_web_frame_get_uri(frame);
   if (url)
       gtk_entry_set_text (GTK_ENTRY (url_entry), url);
 }
@@ -245,8 +249,15 @@ static void link_hover_cb (WebKitWebView* page, const gchar* title, const gchar*
 
 static void load_text_entry_cb (GtkWidget* widget, gpointer data)
 {
-  const gchar* url = gtk_entry_get_text (GTK_ENTRY (url_entry));
-  webkit_web_view_open (web_view, url);
+  const gchar *url = gtk_entry_get_text (GTK_ENTRY (url_entry));
+  if (!strcmp(url,"about:"))
+  {
+     gpe_info_dialog (("GPE mini-browser v0.0.1\n\nHTML engine : WebKitGtk \n\nCopyright (c) Philippe De Swert\n<philippedeswert@scarlet.be>\n"));
+      return;
+
+  }
+  else
+    webkit_web_view_open (web_view, url);
 }
 
 static void back_cb (GtkWidget* widget, gpointer data)
@@ -266,6 +277,8 @@ static void stop_reload_cb (GtkWidget* widget, gpointer data)
 
 static void preferences_cb (GtkWidget* widget, gpointer data)
 {
+  /* Not implemented yet warning */
+  gpe_info_dialog ("Sorry. Not implemented yet.\n");
 }
 
 static void fullscreen_cb (GtkWidget* widget, gpointer data)
@@ -279,7 +292,7 @@ static void fullscreen_cb (GtkWidget* widget, gpointer data)
   }
   else
   {
-   gtk_window_unfullscreen(GTK_WINDOW(main_window));   
+    gtk_window_unfullscreen(GTK_WINDOW(main_window));   
     fullscreen_status = FALSE;
   }
 }
@@ -320,6 +333,7 @@ int main (int argc, char *argv[])
             (("GPE-mini-browser2 version 0.0.1. (C) 2008, Philippe De Swert\n"));
           exit (0);
 
+	case 'h':
         default:
           printf
             (("GPE-mini-browser2, basic web browser application. (c) 2008, Philippe De Swert\n"));
@@ -344,12 +358,12 @@ int main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (main_window_vbox), create_urlbar(), FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (main_window_vbox), create_htmlview(), TRUE, TRUE, 0);
 
+  /* load command line url if there is one */
+  gchar *url = (gchar*) (argc != optind ? argv[optind] : "http://www.google.com/");
+  webkit_web_view_open (web_view, url);
+
   /* populate main window and show everything */
   gtk_container_add(GTK_CONTAINER(main_window), main_window_vbox);
-
-  /* next two lines are debug code */
-  gchar* uri = (gchar*) (argc > 1 ? argv[1] : "http://www.google.com/");
-  webkit_web_view_open (web_view, uri);
 
   gtk_widget_show_all(main_window);
   gtk_main();

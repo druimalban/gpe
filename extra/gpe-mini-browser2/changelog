@@ -5,3 +5,5 @@ Gpe-mini-browser2 v0.0.1- 29/01/2008 - Philippe De Swert
 	- Back and forward functionality
 	- First svn check-in
 	- Added changelog
+	- Added "about:" dialog
+	- Fixed up command-line handling
