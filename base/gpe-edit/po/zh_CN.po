@@ -2,114 +2,127 @@
 # Copyright (C) 2007 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-edit package.
 # Wenzheng Hu <db.lobster@gmail.com>, 2007.
-#
+# LI Daobing <lidaobing@gmail.com>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-edit 0.13\n"
-"POT-Creation-Date: 2003-02-20 20:31+0000\n"
-"PO-Revision-Date: 2007-07-08 14:29+0800\n"
+"Project-Id-Version: gpe-edit 0.41\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-17 23:21+0100\n"
+"PO-Revision-Date: 2008-01-28 23:39+0800\n"
 "Last-Translator: LI Daobing <lidaobing@gmail.com>\n"
 "Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:88 main.c:89
-msgid "Untitled"
-msgstr "无标题"
-
-#: main.c:260
-msgid "Open File ..."
-msgstr "打开文件..."
-
-#: main.c:289
-msgid "Save as .."
-msgstr "另存为..."
-
-#: main.c:327
-msgid "Save current file before exiting?"
-msgstr "退出前保存当前文件?"
-
-#: main.c:327
-msgid "Question"
-msgstr "问题"
-
-#: main.c:328
-msgid "Don't save"
-msgstr "不保存"
-
-#: main.c:328 main.c:616
-msgid "Save"
-msgstr "保存"
-
-#: main.c:390
-msgid "Text not found"
-msgstr "文本未找到"
-
-#: main.c:429
-msgid "Unable to replace text"
-msgstr "不能替换文本"
-
-#: main.c:443 main.c:492
-msgid "Search for:"
-msgstr "搜索:"
-
-#: main.c:446 main.c:498
-msgid "Find"
-msgstr "查找"
-
-#: main.c:493
-msgid "Replace with:"
-msgstr "替换为:"
-
-#: main.c:497 main.c:630
-msgid "Replace"
-msgstr "替换"
-
-#: main.c:608
-msgid "New"
-msgstr "新建"
-
-#: main.c:609
-msgid "New document"
-msgstr "新建文档"
-
-#: main.c:612
-msgid "Open"
-msgstr "打开"
-
-#: main.c:613
-msgid "Open file"
-msgstr "打开文件"
-
-#: main.c:617
-msgid "Save current file"
-msgstr "保存当前文件"
-
-#: main.c:620
-msgid "Save as"
-msgstr "另存为"
-
-#: main.c:621
-msgid "Save current file as"
-msgstr "将当前文件另存为"
-
-#: main.c:626
-msgid "Search"
-msgstr "查找"
-
-#: main.c:627
-msgid "Search for a string"
-msgstr "查找字符串"
-
-#: main.c:631
-msgid "Replace a string"
-msgstr "替换字符串"
-
-#: gpe-edit.desktop.in.h:1
+#: ../gpe-edit.desktop.in.in.h:1
 msgid "GPE Text Editor"
 msgstr "GPE 文本编辑器"
 
-#: gpe-edit.desktop.in.h:2
+#: ../gpe-edit.desktop.in.in.h:2
 msgid "Text Editor"
 msgstr "文本编辑器"
+
+#: ../main.c:78
+msgid "Help not (or incorrectly) installed. Or no helpviewer application registered."
+msgstr "帮助没有安装或没有正确安装。或者没有注册帮助浏览程序。"
+
+#: ../main.c:99
+msgid "Untitled"
+msgstr "无标题"
+
+#: ../main.c:140
+msgid "Current file is modified, save?"
+msgstr "当前文件已被修改，保存？"
+
+#: ../main.c:140 ../main.c:367
+msgid "Question"
+msgstr "问题"
+
+#: ../main.c:271
+msgid "Open File ..."
+msgstr "打开文件..."
+
+#: ../main.c:322
+msgid "Save as..."
+msgstr "另存为..."
+
+#: ../main.c:367
+msgid "Save current file before exiting?"
+msgstr "退出前保存当前文件?"
+
+#: ../main.c:368
+msgid "Don't save"
+msgstr "不保存"
+
+#: ../main.c:433
+msgid "Text not found"
+msgstr "文本未找到"
+
+#: ../main.c:473
+msgid "Unable to replace text"
+msgstr "不能替换文本"
+
+#: ../main.c:486
+msgid "Search for: "
+msgstr "搜索: "
+
+#: ../main.c:489 ../main.c:546
+msgid "Find"
+msgstr "查找"
+
+#: ../main.c:538
+msgid "Search for:"
+msgstr "搜索:"
+
+#: ../main.c:540
+msgid "Replace with:"
+msgstr "替换为:"
+
+#: ../main.c:545
+msgid "Replace"
+msgstr "替换"
+
+#: ../main.c:671
+msgid "File editing field, additional functions are available by tap&hold or right click."
+msgstr "文件编辑区，更多功能请用拖拽及右键。"
+
+#: ../main.c:678
+msgid "New document"
+msgstr "新建文档"
+
+#: ../main.c:683
+msgid "Open file"
+msgstr "打开文件"
+
+#: ../main.c:688
+msgid "Save current file"
+msgstr "保存当前文件"
+
+#: ../main.c:693
+msgid "Save current file as"
+msgstr "将当前文件另存为"
+
+#: ../main.c:704
+msgid "Search text for a string"
+msgstr "查找字符串"
+
+#: ../main.c:710
+msgid "Replace a string"
+msgstr "替换字符串"
+
+#: ../main.c:725
+msgid "Copy selected, paste is possible by tap&hold"
+msgstr "拷贝选定内容，支持拖拽方式粘贴"
+
+#: ../main.c:735
+msgid "Paste from clipboard"
+msgstr "从剪贴板粘贴"
+
+#: ../main.c:743
+msgid "Get help"
+msgstr "获取帮助"
+
+#: ../main.c:751
+msgid "Exit gpe-edit"
+msgstr "退出 gpe-edit"

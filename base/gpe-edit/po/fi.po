@@ -1,152 +1,129 @@
-# Swedish messages for gpe-edit. 
-# Copyright (C) 2003, 2007 Free Software Foundation, Inc.
-# Christian Rose <menthos@menthos.com>, 2003.
-# Daniel Nylander <po@danielnylander.se>, 2007.
+# translation of gpe-edit-0.41.pot to Finnish
+# Copyright © 2007, 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-edit package.
 #
+# Jorma Karvonen <karvjorm@users.sf.net>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-edit 0.41\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-17 23:21+0100\n"
-"PO-Revision-Date: 2007-12-18 20:57+0100\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
-"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"PO-Revision-Date: 2008-01-01 15:07+0200\n"
+"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../gpe-edit.desktop.in.in.h:1
 msgid "GPE Text Editor"
-msgstr "GPE-textredigerare"
+msgstr "GPE Tekstimuokkain"
 
 #: ../gpe-edit.desktop.in.in.h:2
 msgid "Text Editor"
-msgstr "Textredigerare"
+msgstr "Tekstimuokkain"
 
 #: ../main.c:78
 msgid "Help not (or incorrectly) installed. Or no helpviewer application registered."
-msgstr "Hjälp inte (eller felaktigt) installerad, eller inget hjälpvisarprogram registrerat."
+msgstr "Ohjetta ei ole asennettu (tai se on asennettu väärin). Tai mitään ohjeen katseluohjelmaa ei ole rekisteröity."
 
 #: ../main.c:99
 msgid "Untitled"
-msgstr "Namnlös"
+msgstr "Ei otsikkoa"
 
 #: ../main.c:140
 msgid "Current file is modified, save?"
-msgstr "Aktuell fil har ändrats. Spara?"
+msgstr "Nykyistä tiedostoa on muokattu, tallennetaanko se?"
 
 #: ../main.c:140 ../main.c:367
 msgid "Question"
-msgstr "Fråga"
+msgstr "Kysymys"
 
 #: ../main.c:271
 msgid "Open File ..."
-msgstr "Öppna fil..."
+msgstr "Avaa tiedosto ..."
 
 #: ../main.c:322
 msgid "Save as..."
-msgstr "Spara som..."
+msgstr "Tallenna nimellä ..."
 
 #: ../main.c:367
 msgid "Save current file before exiting?"
-msgstr "Spara aktuell fil innan avslutande?"
+msgstr "Tallennetaanko nykyinen tiedosto ennen poistumista?"
 
 #: ../main.c:368
 msgid "Don't save"
-msgstr "Spara inte"
+msgstr "Älä tallenna"
 
 #: ../main.c:433
 msgid "Text not found"
-msgstr "Texten hittades inte"
+msgstr "Tekstiä ei löydy"
 
 #: ../main.c:473
 msgid "Unable to replace text"
-msgstr "Kan inte ersätta text"
+msgstr "Tekstiä ei voitu korvata"
 
 #: ../main.c:486
 msgid "Search for: "
-msgstr "Sök efter:"
+msgstr "Etsitään: "
 
 #: ../main.c:489 ../main.c:546
 msgid "Find"
-msgstr "Sök"
+msgstr "Etsi"
 
 #: ../main.c:538
 msgid "Search for:"
-msgstr "Sök efter:"
+msgstr "Etsitään:"
 
 #: ../main.c:540
 msgid "Replace with:"
-msgstr "Ersätt med:"
+msgstr "Korvaa merkkijonolla:"
 
 #: ../main.c:545
 msgid "Replace"
-msgstr "Ersätt"
+msgstr "Korvaa"
 
 #: ../main.c:671
 msgid "File editing field, additional functions are available by tap&hold or right click."
-msgstr "Filredigeringsfält, ytterligare funktioner finns tillgängliga genom klick & håll eller högerklick."
+msgstr "Tiedoston muokkauskenttä, lisätoiminnot ovat käytettävissä ”napauta ja pidä”-toiminnolla tai hiiren oikean painikkeen näpäyksellä."
 
 #: ../main.c:678
 msgid "New document"
-msgstr "Nytt dokument"
+msgstr "Uusi dokumentti"
 
 #: ../main.c:683
 msgid "Open file"
-msgstr "Öppna fil"
+msgstr "Avaa tiedosto"
 
 #: ../main.c:688
 msgid "Save current file"
-msgstr "Spara aktuell fil"
+msgstr "Tallenna nykyinen tiedosto"
 
 #: ../main.c:693
 msgid "Save current file as"
-msgstr "Spara aktuell fil som"
+msgstr "Tallenna nykyinen tiedosto nimellä"
 
 #: ../main.c:704
 msgid "Search text for a string"
-msgstr "Sök efter en sträng"
+msgstr "Etsi tekstistä merkkijono"
 
 #: ../main.c:710
 msgid "Replace a string"
-msgstr "Ersätt en sträng"
+msgstr "Korvaa merkkijono"
 
 #: ../main.c:725
 msgid "Copy selected, paste is possible by tap&hold"
-msgstr "Kopiera markerad text, klistra in är möjligt genom att klicka & hålla"
+msgstr "Kopioi valittu, liittäminen om mahdollista ”napauta ja pidä”-toiminnolla"
 
 #: ../main.c:735
 msgid "Paste from clipboard"
-msgstr "Klistra in från urklipp"
+msgstr "Liitä leikepöydältä"
 
 #: ../main.c:743
 msgid "Get help"
-msgstr "Få hjälp"
+msgstr "Hae ohje"
 
 #: ../main.c:751
 msgid "Exit gpe-edit"
-msgstr "Avsluta gpe-edit"
-
-#~ msgid "Save as .."
-#~ msgstr "Spara som..."
-
-#~ msgid "Save"
-#~ msgstr "Spara"
-
-#~ msgid "New"
-#~ msgstr "Nytt"
-
-#~ msgid "Open"
-#~ msgstr "Öppna"
-
-#~ msgid "Save as"
-#~ msgstr "Spara som"
-
-#~ msgid "Search"
-#~ msgstr "Sök"
-
-#~ msgid "Open File..."
-#~ msgstr "Öppna fil..."
-
-#~ msgid "Save as ..."
-#~ msgstr "Spara som..."
+msgstr "Poistu gpe-edit-ohjelmasta"
