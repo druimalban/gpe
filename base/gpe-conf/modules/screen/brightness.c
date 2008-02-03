@@ -152,15 +152,15 @@ detect_platform(void)
 		return P_SIMPAD;
 	if (!access(GENERIC_PROC_DRIVER,R_OK))
 		return P_GENERIC;
-	if (!access(SYSCLASS_770, R_OK))
-	{
-		setup_sysclass_770();
-		return P_SYSCLASS_770;
-	}
 	if (!access(SYSCLASS, R_OK))
 	{
 		setup_sysclass();
 		return P_SYSCLASS;
+	}
+	if (!access(SYSCLASS_770, R_OK))
+	{
+		setup_sysclass_770();
+		return P_SYSCLASS_770;
 	}
 	
 	return P_NONE;

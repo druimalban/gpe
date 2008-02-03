@@ -1,3 +1,8 @@
+2008-02-03  Florian Boor <florian@kernelconcepts.de>
+
+	* brightness.c: Change probing order. Patch by Andrew
+	  Paulsen.
+
 2008-01-16  Florian Boor <florian@kernelconcepts.de>
 
 	* Update translations, add Finnish translation by Jorma Karvonen
