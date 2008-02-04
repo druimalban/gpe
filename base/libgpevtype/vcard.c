@@ -36,6 +36,7 @@ static struct tag_map map[] =
     { "work.title", "jobtitle"},
     //categories handled separately    { "category", "categories"},
     { "work.www", "url" },
+    //birthday handled specially { "birthday", NULL },
     { NULL, NULL }
   };
 
@@ -159,6 +160,23 @@ vcard_interpret_tag (MIMEDirVCard *card, const char *tag, const char *value)
     return tag_with_type (card, tag + 5, value, "home");
   else if (!strncasecmp (tag, "work.", 5))
     return tag_with_type (card, tag + 5, value, "work");
+
+  if (!strcasecmp (tag, "birthday")) {
+    /* Need to convert between YYYYMMDD format used in tag and MIMEDirDateTime format used in VCARD */
+
+    guint year, month, day;
+    MIMEDirDateTime *dtime;
+
+    sscanf (value, "%04d%02d%02d", &year, &month, &day);
+
+    dtime = mimedir_datetime_new_from_date((GDateYear)year, (GDateMonth)month, (GDateDay)day);
+    if (!dtime) return FALSE;
+
+    g_object_set(G_OBJECT (card), "birthday", dtime, NULL);
+
+    g_object_unref(G_OBJECT (dtime));
+    return TRUE;
+  }
 
   return FALSE;
 }
@@ -392,6 +410,21 @@ vcard_to_tags (MIMEDirVCard *vcard)
       if (catid < 0) gpe_pim_category_new(name, &catid); // Create category
       data = gpe_tag_list_prepend (data, "category", g_strdup_printf ("%d", catid));     
     }
+
+  /* Birthday */
+  // Note that mimedir_vcard_get_birthday just returns the pointer to the object
+  // without adding a reference, so we must not remove the reference
+  MIMEDirDateTime *bday = mimedir_vcard_get_birthday(vcard);
+  if (bday) {
+    // Convert from MIMEDirDateTime to YYYYMMDD format
+    GDateYear year;
+    GDateMonth month;
+    GDateDay day;
+
+    mimedir_datetime_get_date (bday, &year, &month, &day);
+
+    data = gpe_tag_list_prepend (data, "birthday", g_strdup_printf ("%04d%02d%02d", (int)year, (int)month, (int)day));
+  }
 	
   return data;
 }

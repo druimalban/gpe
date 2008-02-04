@@ -1,3 +1,7 @@
+2008-02-03  Graham Cobb  <g+770@cobb.uk.net>
+
+	* vcard.c: Add birthday handling
+
 2007-09-07  Graham Cobb  <g+770@cobb.uk.net>
 
 	* vcard.c (vcard_interpret_tag, vcard_to_tags): 
