@@ -637,6 +637,10 @@ mimedir_recurrence_write_to_string (MIMEDirRecurrence *recurrence)
 		g_string_append_printf (string, ";INTERVAL=%d", priv->interval);
 	}
 
+	if (priv->count) {
+		g_string_append_printf (string, ";COUNT=%d", priv->count);
+	}
+
 	if (priv->unit != RECURRENCE_UNIT_NONE && priv->units) {
 		const gchar *unit;
 		unit = unit_to_string (priv->unit);

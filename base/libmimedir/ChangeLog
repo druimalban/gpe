@@ -1,3 +1,8 @@
+2008-02-04  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-recurrence.c (mimedir_recurrence_write_to_string): 
+	add COUNT= for recurrence (Bug 35)
+
 2007-11-08  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-attribute.c: allow for UTF-8 in 
