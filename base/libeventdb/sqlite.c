@@ -240,6 +240,8 @@ event_load_callback (void *arg, int argc, char **argv, char **names)
 
   i ++;
   char *p = argv[i];
+  // Ignore the value if it is "(NULL)"
+  if (p && !strcmp(p,"(NULL)")) p = NULL;
   while (p)
     {
       char *end = strchr (p, ',');
@@ -265,6 +267,8 @@ event_load_callback (void *arg, int argc, char **argv, char **names)
 
   i ++;
   p = argv[i];
+  // Ignore the value if it is "(NULL)"
+  if (p && !strcmp(p,"(NULL)")) p = NULL;
   while (p)
     {
       long rmtime = (long)atoi (p);
@@ -458,7 +462,7 @@ do_eventid_to_uid (EventDB *edb, const char *eventid, GError **error)
   char *err = NULL;
   SQLITE_TRY (sqlite_exec_printf (SQLITE_DB (edb)->sqliteh,
 				  "select uid from events"
-				  " where eventid='%q';",
+				  " where eventid=%Q;",
 				  callback, NULL, &err, eventid));
   if (err)
     {
@@ -645,9 +649,9 @@ do_event_flush (EventSource *ev, GError **error)
 
   if (sqlite_exec_printf
       (SQLITE_DB (ev->edb)->sqliteh,
-       "update events set start='%q', duration=%u, recur=%d, rend=%s,"
-       "  alarm=%d, calendar=%d, eventid='%q', rcount=%d,"
-       "  rincrement=%d, modified=%u, byday='%q', rexceptions='%q'"
+       "update events set start=%Q, duration=%u, recur=%d, rend=%s,"
+       "  alarm=%d, calendar=%d, eventid=%Q, rcount=%d,"
+       "  rincrement=%d, modified=%u, byday=%Q, rexceptions=%Q"
        " where uid=%u;",
        NULL, NULL, &err,
        start, ev->duration, ev->type, end, ev->alarm, ev->calendar,
@@ -661,9 +665,9 @@ do_event_flush (EventSource *ev, GError **error)
 	  (SQLITE_DB (ev->edb)->sqliteh,
 	   "delete from calendar where uid=%d;"
 	   "insert or replace into calendar values (%d, 'sequence', %d);"
-	   "insert or replace into calendar values (%d, 'summary', '%q');"
-	   "insert or replace into calendar values (%d, 'description', '%q');"
-	   "insert or replace into calendar values (%d, 'location', '%q');",
+	   "insert or replace into calendar values (%d, 'summary', %Q);"
+	   "insert or replace into calendar values (%d, 'description', %Q);"
+	   "insert or replace into calendar values (%d, 'location', %Q);",
 	   NULL, NULL, &err,
 	   ev->uid,
 	   ev->uid, ev->sequence,
@@ -707,7 +711,7 @@ do_event_remove (EventSource *ev, GError **error)
       (sqlite_exec_printf (SQLITE_DB (ev->edb)->sqliteh,
 			   "begin transaction;"
 			   "insert into events_deleted (eventid, calendar)"
-			   " values ('%q', '%d');"
+			   " values (%Q, '%d');"
 			   "delete from calendar where uid=%d;"
 			   "delete from events where uid=%d;"
 			   "commit transaction;",
@@ -912,7 +916,7 @@ do_event_calendar_new (EventCalendar *ec, GError **error)
       (sqlite_exec_printf
        (SQLITE_DB (ec->edb)->sqliteh,
 	"insert into calendars values"
-	" ('%q', '%q', '%q', '%q', '%q', %d, %d, %d, %d, %d,"
+	" (%Q, %Q, %Q, %Q, %Q, %d, %d, %d, %d, %d,"
 	"  %d, %d, %d, %d, %d, %d)",
 	NULL, NULL, &err,
 	ec->title ?: "", ec->description ?: "",
@@ -939,8 +943,8 @@ do_event_calendar_flush (EventCalendar *ec, GError **error)
   if (SQLITE_TRY
       (sqlite_exec_printf (SQLITE_DB (ec->edb)->sqliteh,
 			   "update calendars set"
-			   "  title='%q', description='%q',"
-			   "  url='%q', username='%q', password='%q',"
+			   "  title=%Q, description=%Q,"
+			   "  url=%Q, username=%Q, password=%Q,"
 			   "  parent=%d, hidden=%d,"
 			   "  has_color=%d, red=%d, green=%d, blue=%d,"
 			   "  mode=%d, sync_interval=%d,"
@@ -1411,7 +1415,7 @@ event_db_new (const char *fname, GError **error)
 
 	  sqlite_exec_printf
 	    (SQLITE_DB (edb)->sqliteh,
-	     "update events set byday='%q' where uid='%d';",
+	     "update events set byday=%Q where uid='%d';",
 	     NULL, NULL, NULL, info->s, info->uid);
 
 	  g_free (info->s);

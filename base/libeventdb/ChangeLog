@@ -1,3 +1,10 @@
+2008-02-05  Graham Cobb  <g+770@cobb.uk.net>
+
+	* sqlite.c (event_load_callback): correctly handle NULL values
+	in columns such as byday (bug 35).  Note that existing events
+	will have '(NULL)' in the field, new events will have NULL (i.e. '').
+	The code must handle both.
+
 2007-10-25  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event-db.c (buzzer): Simplify previous fix avoiding explicit handling of event source
