@@ -86,6 +86,8 @@ case `module_id` in
 		ARGS="$ARGS -dpi 100 -rgba rgb" ;;
 	"Generic OMAP1510/1610/1710")
 		ARGS="$ARGS -dpi 220 -mouse /dev/input/event0" ;;
+	"TI-OSK")
+		ARGS="$ARGS -dpi 100 -mouse tslib" ;;
 	"Cellon C8000 Board")
 		ARGS="$ARGS -dpi 100 -screen ${SCREEN_SIZE},10,1" ;;
 	"HTC Universal")
