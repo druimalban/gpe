@@ -1,3 +1,13 @@
+2008-02-07  Florian Boor <florian@kernelconcepts.de>
+
+	* Release 1.19
+	* Remove obsolete support for Xipaq.
+	* Add support for Xglamo
+	* Update Nokia 770 and N800 support. (from xserver-kdrive-common)
+	* Add Nokia N810 (RX-44)
+	* Add Compulab CM-x270 (from xserver-kdrive-common)
+	* Set default vesa mode to 800x600x16k
+
 2007-09-03  Florian Boor <florian@kernelconcepts.de>
 
 	* Xserver: Add GTA02 and EZX devices
