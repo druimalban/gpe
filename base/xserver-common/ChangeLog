@@ -1,5 +1,7 @@
 2008-02-07  Florian Boor <florian@kernelconcepts.de>
 
+	* Release 1.21
+	* Update shephered.xmodmap (by Takeshi Hamasaki) Fixes OE bug #2609 
 	* Apply omap5912osk xmodmap patch by Andrew Paulsen.
 	* Release 1.20
 	* Apply patches from OE to upport TI OSK and fix keymap on some
