@@ -1,0 +1,6 @@
+keycode 65 = XF86Calendar
+keycode 67 = telephone
+keycode 96 = XF86Start
+keycode 37 = XF86Mail
+keycode  9 = XF86PowerDown
+keycode 73 = XF86AudioRecord

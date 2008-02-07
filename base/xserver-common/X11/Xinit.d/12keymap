@@ -18,6 +18,9 @@ case $MACHINE in
 	"HP iPAQ h6300")
 		xmodmap - < /etc/X11/h6300.xmodmap
 		;;
+	"TI-OSK")
+		xmodmap - < /etc/X11/omap5912osk.xmodmap
+		;;
 	# All the rest of keyboardless PDA machines use common buttonmap
 	"Simpad" | "HP iPAQ"* | "Asus MyPal"*)
 		xmodmap - < /etc/X11/keyboardless.xmodmap
