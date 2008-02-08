@@ -1,3 +1,7 @@
+2008-02-08  Graham Cobb  <g+770@cobb.uk.net>
+
+	* editing.c (pop_singles): fix previous change to allow all characters in email fields
+
 2008-01-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* editing.c (pop_singles): use new HildonGtkInputMode for input fields

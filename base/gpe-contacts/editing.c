@@ -139,7 +139,7 @@ pop_singles (GtkWidget *vtable, GSList *list, GtkWidget *pw, gboolean visible, g
             {
 #if HILDON_VER > 0
 	      /* Turn off HILDON_GTK_INPUT_MODE_AUTOCAP */
-	      hildon_gtk_entry_set_input_mode(GTK_ENTRY(w), (HILDON_GTK_INPUT_MODE_ALPHA | HILDON_GTK_INPUT_MODE_NUMERIC));
+	      hildon_gtk_entry_set_input_mode(GTK_ENTRY(w), (HILDON_GTK_INPUT_MODE_FULL));
 #else
   g_object_set (G_OBJECT (w), HILDON_AUTOCAP, FALSE, NULL);
 #endif /* HILDON_VER */
