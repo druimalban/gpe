@@ -1,3 +1,11 @@
+gpesummary (0.7.2) unstable; urgency=low
+
+  * increased startup speed
+  * new option to show all todos
+  * some compiler fixes
+
+ -- Christoph Würstle <N800@axique.de>  Sun, 10 Feb 2008 17:18:56 +0100
+
 gpesummary (0.7.1) unstable; urgency=low
 
   * hopefully fix install bug on some systems see bug [#1061]

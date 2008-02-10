@@ -82,6 +82,8 @@ char timestring[40];
 gboolean doshow_birthdays=TRUE;
 gboolean doshow_appointments=TRUE;
 gboolean doshow_todos=TRUE;
+gboolean doshow_alltodos=TRUE;
+
 gboolean doshow_buttons=FALSE;
 gint doshow_countitems=8;
 gboolean doshow_autorefresh=FALSE;
@@ -99,11 +101,12 @@ int todocount;
 struct tm tm;
 
 void printTime(gchar * comment) {
+/*
      struct timeval tv;
      gettimeofday(&tv, NULL);
      tm=*localtime(&tv.tv_sec);
-     printf("%s %d:%d:%d %d \n",comment, tm.tm_hour, tm.tm_min,
-              tm.tm_sec, tv.tv_usec);
+     printf("%s %d:%d:%d %d \n",comment, tm.tm_hour, tm.tm_min, tm.tm_sec, tv.tv_usec);
+*/
 }
 
 static void async_cb(const gchar *interface, const gchar *method,
@@ -254,12 +257,12 @@ gint show_todos(GtkWidget *vbox, gint count) {
 			continue;
 		if (((struct todo_item *)iter->data)->time > todaystop)
 			continue;
-		if (((struct todo_item *)iter->data)->time == 0)
+		if ((((struct todo_item *)iter->data)->time == 0)&&(doshow_alltodos==FALSE))
 			continue;
 		todocount+=1;
 		
 		GString *label = g_string_new( (((struct todo_item *)iter->data)->summary) );
-		if (((struct todo_item *)iter->data)->time < todaystart) {
+		if ((((struct todo_item *)iter->data)->time < todaystart)&&(((struct todo_item *)iter->data)->time>0)) {
 			g_string_append(label," (!)");
 		}
 
@@ -343,7 +346,7 @@ void addBirthdaysAtDay(gchar *day) {
 			}
 			
 		}
-		 while (gtk_events_pending()) { gtk_main_iteration(); }
+		while (gtk_events_pending()) { gtk_main_iteration(); }
 	}
 	g_slist_free(iter);
 }
@@ -391,6 +394,7 @@ void prepare_birthdays() {
 	addBirthdaysAtDay(day5);
 	addBirthdaysAtDay(day6);
 	addBirthdaysAtDay(day7);
+	while (gtk_events_pending()) { gtk_main_iteration(); }
 }
 
 gboolean show_birthdays (GtkWidget *vbox,time_t start,gchar *title) {
@@ -630,6 +634,7 @@ void loadPrefs(){
 	doshow_birthdays = g_key_file_get_boolean(keyfile, "options","show_birthdays", error);
 	doshow_appointments = g_key_file_get_boolean(keyfile, "options","show_appointments", error);
 	doshow_todos = g_key_file_get_boolean(keyfile, "options","show_todos", error);
+	doshow_alltodos = g_key_file_get_boolean(keyfile, "options","show_alltodos", error);
 	doshow_buttons = g_key_file_get_boolean(keyfile, "options","show_buttons", error);
 	doshow_autorefresh = g_key_file_get_boolean(keyfile, "options","show_autorefresh", error);
 	doshow_countitems = g_key_file_get_integer(keyfile, "options", "show_countitems", error);
@@ -669,8 +674,6 @@ void show_all() {
 	
 	mainvbox = gtk_vbox_new (FALSE, 0);
 	gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW(scrolled_window), mainvbox );
-    	
-	g_warning ("show_all 3");
 
 	//Show headtitle
 	
@@ -693,8 +696,6 @@ void show_all() {
 	GtkWidget *refresh_image=gtk_image_new_from_icon_name("qgn_toolb_gene_refresh",
 				     GTK_ICON_SIZE_LARGE_TOOLBAR);
 	
-	g_warning ("show_all 4");	
-
 	GtkWidget *event_box = gtk_event_box_new ();
 	gtk_container_add (GTK_CONTAINER (event_box), refresh_image);
 	gtk_misc_set_alignment(GTK_MISC(refresh_image),0,0);
@@ -704,8 +705,6 @@ void show_all() {
                       refresh_image);
 	
 	gtk_box_pack_start(GTK_BOX(hbox), event_box, FALSE, FALSE, 0);	
-	
-	g_warning ("show_all 5");	
 	
 	vbox_events = gtk_vbox_new (FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(mainvbox),vbox_events,TRUE,TRUE,0);
@@ -722,15 +721,12 @@ void show_all() {
 
 	gint count=0;
 	count=show_todos(vbox_todo,count);
-	count=show_events(vbox_events,count);
-	
 
-	
+	count=show_events(vbox_events,count);
+
 	//scroll = gtk_vscrollbar_new (GTK_BOX (mainvbox)->vadj);
 	//gtk_box_pack_start(GTK_BOX(hbox),scroll,TRUE,TRUE,0);
 	
-	g_warning ("show_all 6");
-
 	if (doshow_buttons==TRUE) {
 		printTime("preButtons");
 	
@@ -800,7 +796,7 @@ gint update_clock(gpointer data) {
 
 void save_prefs() {
 	GKeyFile *keyfile;
-	GKeyFileFlags flags;
+	//GKeyFileFlags flags;
 	GError *error = NULL;
   
 	g_warning ("save_prefs 1");
@@ -817,6 +813,7 @@ void save_prefs() {
 	g_key_file_set_boolean(keyfile, "options","show_birthdays", doshow_birthdays);
 	g_key_file_set_boolean(keyfile, "options","show_appointments", doshow_appointments);
 	g_key_file_set_boolean(keyfile, "options","show_todos", doshow_todos);
+	g_key_file_set_boolean(keyfile, "options","show_alltodos", doshow_alltodos);
 	g_key_file_set_boolean(keyfile, "options","show_buttons", doshow_buttons);
 	g_key_file_set_boolean(keyfile, "options","show_autorefresh", doshow_autorefresh);
 	g_key_file_set_boolean(keyfile, "options","show_extended", doshow_extended);
@@ -824,8 +821,8 @@ void save_prefs() {
 
 	g_warning ("save_prefs 3");
 
-	gsize length;
-	gchar* conf=g_key_file_to_data (keyfile,&length,error);
+	gsize length = 0;
+	gchar* conf=g_key_file_to_data (keyfile,&length,NULL);
 
 	GString *label = g_string_new( g_get_home_dir() );
 	g_string_append(label,"/.gpesummary");
@@ -867,6 +864,11 @@ static gboolean options_clicked( GtkWidget      *button,
 		g_warning("todos");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_todos=FALSE; } else { doshow_todos=TRUE;}
 	}
+	if (strcmp(label->str,"alltodos")==0) { 
+		g_warning("alltodos");
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_alltodos=FALSE; } else { doshow_alltodos=TRUE;}
+	}
+
 	if (strcmp(label->str,"buttons")==0) { 
 		g_warning("buttons");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_buttons=FALSE; } else { doshow_buttons=TRUE;}
@@ -885,7 +887,7 @@ static gboolean options_clicked( GtkWidget      *button,
 	save_prefs();
 	
 	g_string_free(label,TRUE);
-	show_all();
+	//show_all();
 	return FALSE;
 }
 
@@ -893,7 +895,7 @@ static void options_showcountchanged(GtkComboBox *widget,gpointer user_data) {
 	gint i=gtk_combo_box_get_active(widget);
 	doshow_countitems=(char)((i+1)*2);
 	save_prefs();
-	show_all();	
+	//show_all();	
 }
 
 static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
@@ -946,6 +948,12 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 	gtk_widget_set_name(button, "todos");	
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),doshow_todos);
 	g_signal_connect( GTK_OBJECT( button ), "clicked",   GTK_SIGNAL_FUNC( options_clicked ), NULL );
+
+	button = gtk_check_button_new_with_label(_("Show all (unfinished) todos"));
+	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),button);
+	gtk_widget_set_name(button, "alltodos");	
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),doshow_alltodos);
+	g_signal_connect( GTK_OBJECT( button ), "clicked",   GTK_SIGNAL_FUNC( options_clicked ), NULL );
 	
 	button = gtk_check_button_new_with_label(_("Show start buttons"));
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),button);
@@ -980,17 +988,19 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 	
 	gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
 	gtk_widget_show_all (GTK_WIDGET(dialog));
-	
+	gtk_dialog_run(GTK_DIALOG(dialog));
 	g_warning("widget showed");
+	gtk_widget_destroy(dialog);
+
+	while (gtk_events_pending()) { gtk_main_iteration(); }
+	show_all();
 	
 	
-	
-	//gtk_widget_destroy(dialog);
 	//g_free(dialog);
 }
 
 
-
+/*
 gboolean focus_in(GtkWidget *widget, GdkEventFocus *event, gpointer user_data) {
   //g_warning("Focus in event");
 	if (last_gui_update+3 < time(NULL)) {
@@ -1042,7 +1052,7 @@ int main (int argc, char *argv[])
 
 
     return 0;
-}
+}*/
 
 
 
@@ -1062,7 +1072,7 @@ void *
  	//textdomain(PACKAGE);
 	
 	
-	osso = osso_initialize ("gpesummary", "0.7.0", FALSE, NULL);
+	osso = osso_initialize ("gpesummary", "0.7.2", FALSE, NULL);
     	if (!osso) {
         	g_debug ("Error initializing the osso maemo gpesummary applet");
         	return NULL;
@@ -1078,10 +1088,7 @@ void *
   
   	gtk_container_set_border_width (GTK_CONTAINER (mainwidget), 0);
 
-  	GtkWidget* alignment = gtk_alignment_new (0.5,
-                                 0.5,
-                                 1.0,
-                                 1.0);
+  	GtkWidget* alignment = gtk_alignment_new (0.5,0.5,1.0,1.0);
 
   	gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 15, 15, 15, 15);
 
@@ -1090,7 +1097,7 @@ void *
 	gtk_container_add (GTK_CONTAINER (mainwidget), alignment);
 	gtk_container_add( GTK_CONTAINER( alignment ), scrolled_window );	
 
-	show_all();
+	//show_all();
 	update_clock(NULL); //->Also shows all because it runs show_all()
 	gtk_widget_show_all(GTK_WIDGET(mainwidget));
 	g_timeout_add(5000, update_clock, NULL);
