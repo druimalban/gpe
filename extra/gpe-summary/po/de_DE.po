@@ -7,14 +7,14 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: gpe-summary 0.7.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-02-06 17:35+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2008-02-10 14:14+0100\n"
+"Last-Translator: Christoph Würstle <n800@axique.de>\n"
+"Language-Team: de_DE <n800@axique.de>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 
@@ -89,10 +89,11 @@ msgstr "Automat. akt. der Daten (lädt lange)"
 msgid "Refreshing"
 msgstr "Aktualisiere"
 
-msgid "After clicking view will be changed, so be patient."
-msgstr "Nach dem Klicken wird Ansicht neu geladen, dauert ein wenig."
+msgid "View will be changed after clicking OK, please be patient."
+msgstr "Nach dem Klicken auf OK wird Ansicht neu geladen, dauert ein wenig."
 
 msgid "Extended view (needs more space)"
 msgstr "Erweiterte Ansicht (benötigt mehr Platz)"
 
-
+msgid "Show all (unfinished) todos"
+msgstr "Zeige alle (unbeendeten) ToDos"

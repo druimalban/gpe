@@ -928,7 +928,7 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 	/* Add the label, and show everything we've added to the dialog. */
 
 	//gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),label);
-	button = gtk_label_new(_("After clicking view will be changed, so be patient."));
+	button = gtk_label_new(_("View will be changed after clicking OK, please be patient."));
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),button);
 	
 	button = gtk_check_button_new_with_label(_("Show birthdays (long loading)"));
