@@ -115,6 +115,9 @@ case `module_id` in
 	"GTA02")
  		ARGS="$ARGS -dpi 285 -screen ${SCREEN_SIZE}" 
 		;;
+	"Boundary Devices Neon board")
+		ARGS="$ARGS -dpi 100 -screen ${SCREEN_SIZE} -mouse tslib"
+		;;
 	# This is a fallback for PCs
 	"")
 		if [ -f /usr/bin/Xvesa ]; then

@@ -1,3 +1,8 @@
+
+2008-02-12  Florian Boor <florian@kernelconcepts.de>
+
+	* Add support for Boundary devices Neon
+
 2008-02-07  Florian Boor <florian@kernelconcepts.de>
 
 	* Release 1.21
