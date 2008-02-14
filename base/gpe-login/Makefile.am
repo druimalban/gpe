@@ -17,7 +17,7 @@ x11dir = $(sysconfdir)/X11
 x11_SCRIPTS = gpe-login.setup X11/gpe-login.pre-session
 x11_DATA = gpe-login.keylaunchrc X11/gpe-login.gtkrc
 
-apmdir = $(sysconfdir)/apm/resume.d
+apmdir = $(sysconfdir)/apm/suspend.d
 apm_SCRIPTS = gpe-login.suspend 
 	
 xsessiondir = $(sysconfdir)/X11/Xsession.d

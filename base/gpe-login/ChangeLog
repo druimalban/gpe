@@ -1,3 +1,8 @@
+2008-02-14  Florian Boor <florian@kernelconcepts.de>
+
+	* Release 0.91
+	* Fix security issue - patch courtesy by Paul Sokolovsky
+	* Update translations, add new translations
 
 2007-04-02  Florian Boor <florian@kernelconcepts.de>
 

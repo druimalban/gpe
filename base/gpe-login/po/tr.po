@@ -1,85 +1,84 @@
-# gpe-login turkish.
-# Copyright (C) 2005 gpe-login
+# Turkish translation of gpe-login.
+# Copyright (C) 2005 gpe-login GNU GPL.
 # This file is distributed under the same license as the gpe-login package.
-# Abdullah Ulas <ulas@sdf.lonestar.org>, 2005.
+# Abdullah Ulas <potkal@bioinformatics.org>, 2005.
 #
-# fuzzy
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-login 0.60\n"
-"POT-Creation-Date: 2003-08-17 13:50+0100\n"
-"PO-Revision-Date: 2005-03-20 11:30+EET\n"
-"Last-Translator: Abdullah Ulas <ulas@sdf.lonestar.org>\n"
+"Project-Id-Version: gpe-login 0.48\n"
+"POT-Creation-Date: 2003-03-30 15:44+0100\n"
+"PO-Revision-Date: 2005-04-06 08:55+0300\n"
+"Last-Translator: Abdullah Ulas <potkal@bioinformatics.org>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=iso-8859-9\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:468 gpe-login.c:541
+#: gpe-login.c:480 gpe-login.c:553
 msgid "Login incorrect"
-msgstr "Giri? yanly'?"
+msgstr "Yanlýþ giriþ"
 
-#: gpe-login.c:570
+#: gpe-login.c:582
 msgid "User already exists"
-msgstr "Kullany'cy' zaten var"
+msgstr "Kullanýcý zaten var"
 
-#: gpe-login.c:581
+#: gpe-login.c:593
 msgid "Passwords don't match"
-msgstr "?ifreler ayny' de?il"
+msgstr "Þifreler ayný deðil"
 
-#: gpe-login.c:590
+#: gpe-login.c:602
 msgid "Empty password not allowed"
-msgstr "Bo? ?ifre giri? izni yok"
+msgstr "Boþ þifre izni yok"
 
-#: gpe-login.c:1125
+#: gpe-login.c:1058
 msgid "Record"
-msgstr "Kayy't"
+msgstr "Kaydet"
 
-#: gpe-login.c:1126
+#: gpe-login.c:1059
 msgid "recalibrates touchscreen"
-msgstr "ekrany' tekrar ?ekillendir"
+msgstr "Dokunma ekrarnýný yeniden boyutlandýr"
 
-#. TRANSLATORS: please replace this with your own Pango language code:
-#: gpe-login.c:1162
+#: gpe-login.c:1095
 msgid "en"
 msgstr "tr"
 
-#: gpe-login.c:1396
+#: gpe-login.c:1329
 msgid "Screen locked"
 msgstr "Ekran kilitli"
 
-#: gpe-login.c:1400 gpe-login.c:1516
+#: gpe-login.c:1333 gpe-login.c:1448
 msgid "Username"
-msgstr "Kullany'cy' ady'"
+msgstr "Kullanýcý adý"
 
-#: gpe-login.c:1425 gpe-login.c:1518
+#: gpe-login.c:1358 gpe-login.c:1450
 msgid "Password"
-msgstr "?ifre"
+msgstr "Þifre"
 
-#: gpe-login.c:1439
+#: gpe-login.c:1372
 msgid "Language"
 msgstr "Dil"
 
-#: gpe-login.c:1460
+#: gpe-login.c:1392
 msgid "Enter password with hard keys"
-msgstr "?ifrenizi tahmin edilmesi zor tu?lardan seçiniz"
+msgstr "Þifreyi tahmin edilmesi zor tuþlardan seçiniz"
 
-#: gpe-login.c:1517
+#: gpe-login.c:1449
 msgid "Full name"
 msgstr "Tam ad"
 
-#: gpe-login.c:1519
+#: gpe-login.c:1451
 msgid "Confirm password"
-msgstr "?ifre onayy'"
+msgstr "Þifre onayý"
 
-#: gpe-login.c:1573
+#: gpe-login.c:1505
 msgid "New user"
-msgstr "Yeni kullany'cy'"
+msgstr "Yeni kullanýcý"
 
 #: gpe-logout.desktop.in.h:1
 msgid "Log out"
-msgstr "Çy'ky'?"
+msgstr "Çýkýþ"
 
 #: gpe-logout.desktop.in.h:2
 msgid "Log out of GPE"
-msgstr "GPE'den çy'k"
+msgstr "GPE'den çýk"
