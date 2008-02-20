@@ -110,8 +110,8 @@ event_import_from_vevent (EventCalendar *ec, MIMEDirVEvent *event,
     {
       error = TRUE;
       g_set_error (gerror, ERROR_DOMAIN (), 0,
-		   "Not important malformed event %s (%s):"
-		   " lacks required field dtstart",
+		   "Not importing malformed event \"%s\" (%s):"
+		   " lacks required property DTSTART",
 		   summary, uid);
       goto out;
     }
