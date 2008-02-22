@@ -1,0 +1,265 @@
+# translation of gpe-aerial-0.2.10.pot to Finnish
+# Copyright © 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-aerial package.
+#
+# Jorma Karvonen <karvjorm@users.sf.net>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-aerial 0.2.10\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-06-12 01:19+0200\n"
+"PO-Revision-Date: 2008-01-16 20:25+0200\n"
+"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: main.c:386
+msgid "Wireless networks"
+msgstr "Langattomat verkot"
+
+#: main.c:402
+msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some configuration, red=not possible."
+msgstr "Tämä ikkuna näyttää kaikki havaitut verkot. Havaitut verkot päivittyvät koko ajan ja värit ilmaisevat verkon käytettävyyden liikennevalojen tapaan. Keltainen voi tarvita lisäasetuksia toimiakseen."
+
+#: main.c:410 netedit.c:231 netedit.c:422 netedit.c:424
+msgid "Mode"
+msgstr "Tila"
+
+#: main.c:420
+msgid "ESSID"
+msgstr "ESSID"
+
+#: main.c:431
+msgid "CH"
+msgstr "Kanava"
+
+#: main.c:442
+msgid "WEP"
+msgstr "WEP"
+
+#: main.c:463
+msgid "Unable to scan for devices."
+msgstr "Laitteiden etsintä verkosta ei onnistunut."
+
+#: main.c:597
+msgid "Successfully connected."
+msgstr "Yhteys onnistui."
+
+#: main.c:611
+msgid "Ad-Hoc connections setup complete."
+msgstr "Langattoman verkon laitteiden keskinäisten yhteyksien asetukset valmiina."
+
+#: main.c:620
+msgid "Could not connect to wireless LAN."
+msgstr "Ei voitu kytkeytyä langattomaan LAN-verkkoon."
+
+#: main.c:700
+msgid "Details..."
+msgstr "Yksityiskohdat..."
+
+#: main.c:706
+msgid "Enter additional info"
+msgstr "Anna lisätietoja"
+
+#: main.c:713
+msgid "Try connect..."
+msgstr "Yritä yhdistää..."
+
+#: main.c:768
+msgid "Scanning for networks..."
+msgstr "Etsitään verkkoja..."
+
+#: main.c:867
+msgid "scanner died unexpectedly"
+msgstr "etsintä keskeytyi odottamattomasti"
+
+#: main.c:966
+msgid "Wireless LAN control"
+msgstr "Langaton LAN-ohjain"
+
+#: main.c:972
+msgid "Switch scanner on"
+msgstr "Käynnistä haku"
+
+#: main.c:974
+msgid "Switch scanner off"
+msgstr "Lopeta haku"
+
+#: main.c:975
+msgid "Networks..."
+msgstr "Verkot..."
+
+#: main.c:976
+msgid "Remove from dock"
+msgstr "Poista telakasta"
+
+#: main.c:977
+msgid "Turn WLAN off"
+msgstr "Katkaise WLAN-yhteys"
+
+#: main.c:1022
+msgid "This is gpe-aerial - the wireless LAN selector."
+msgstr "Tämä on gpe-aerial - langaton LAN-valitsin."
+
+#: netedit.c:103
+msgid "The key you entered is not valid."
+msgstr "Antamasi avain ei ole voimassa."
+
+#: netedit.c:114
+msgid "The IP address you entered is not valid."
+msgstr "Antamasi IP-osoite ei ole voimassa."
+
+#: netedit.c:133
+msgid "The subnet mask address you entered is not valid."
+msgstr "Antamasi aliverkkopeite ei ole voimassa."
+
+#: netedit.c:152
+msgid "The gateway address you entered is not valid."
+msgstr "Antamasi yhdyskäytäväosoite ei ole voimassa."
+
+#: netedit.c:171
+msgid "The DNS server address you entered is not valid."
+msgstr "Antamasi DNS-palvelinosoite ei ole voimassa."
+
+#: netedit.c:227
+msgid "SSID"
+msgstr "SSID"
+
+#: netedit.c:232
+msgid "Managed"
+msgstr "Hallinnoitu"
+
+#: netedit.c:233 netedit.c:441
+msgid "Channel"
+msgstr "Kanava"
+
+#: netedit.c:234 netedit.c:445 netedit.c:447
+msgid "WEP enabled"
+msgstr "WEP aktivoitu"
+
+#: netedit.c:235
+msgid "Use DHCP"
+msgstr "Käytä DHCP:tä"
+
+#: netedit.c:236
+msgid "DNS Server"
+msgstr "DNS-palvelin"
+
+#: netedit.c:240
+msgid "Ad-Hoc"
+msgstr "Spontaani"
+
+#: netedit.c:244
+msgid "Gateway"
+msgstr "Yhdyskäytävä"
+
+#: netedit.c:246
+msgid "Subnet mask"
+msgstr "Aliverkon peite"
+
+#: netedit.c:248
+msgid "IP Address"
+msgstr "IP-osoite"
+
+#: netedit.c:251
+msgid "WEP key"
+msgstr "WEP-avain"
+
+#: netedit.c:255
+msgid "Enter your desired IP address here, e.g. 192.168.1.2"
+msgstr "Anna tähän haluamasi IP-osoite, esim. 192.168.1.2"
+
+#: netedit.c:256
+msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
+msgstr "Anna tähän haluamasi aliverkkopeite, tavallisesti se on asetettu arvoon 255.255.255.0"
+
+#: netedit.c:257
+msgid "This field needs to contain the name of this wireless LAN."
+msgstr "Tässä kentässä on oltava tämän langattoman LAN-verkon nimi"
+
+#: netedit.c:258 netedit.c:259
+msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""
+msgstr "Valitse tässä verkkosi tyyppi, jos sinulla on tukiasemavalinta ”hallinnoitu”, suorille yhteyksille ”spontaani”"
+
+#: netedit.c:260
+msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."
+msgstr "Valitse tässä kanava, tarvitaan vain ennakoimattomassa tilassa. Huomaa, että kaikki kanavat eivät ole sallittuja kaikissa maissa."
+
+#: netedit.c:261
+msgid "Get IP setup using DHCP."
+msgstr "Hae IP-asetus käyttäen DHCP:tä."
+
+#: netedit.c:262
+msgid "Enter the IP of the default gateway to use."
+msgstr "Anna käytettävän oletusyhdyskäytävän IP-osoite."
+
+#: netedit.c:263
+msgid "Check this if WEP encryption is activated in this LAN."
+msgstr "Tarkista tämä, jos WEP-salaus on aktivoitu tässä LAN-verkossa."
+
+#: netedit.c:264
+msgid "Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
+msgstr "Anna tässä WEP-avain. Käytä heksadesimaalilukua tai aseta ascii-merkkijonona (s: <avainmerkkijono>)."
+
+#: netedit.c:265
+msgid "Enter the IP address of the primary nameserver to be used in this net here."
+msgstr "Anna tässä verkossa käytettävän ensisijaisen nimipalvelimen IP-osoite."
+
+#: netedit.c:268
+msgid "Network editor"
+msgstr "Verkkomuokkain"
+
+#: netedit.c:407
+msgid "This dialog provides some information about the selected wireless LAN."
+msgstr "Valintaikkuna tarjoaa jotain tietoa valitusta langattomasta LAN-verkosta."
+
+#: netedit.c:409
+msgid "Network information"
+msgstr "Verkkotiedot"
+
+#: netedit.c:429
+msgid "Max. signal"
+msgstr "Maks. signaali"
+
+#: netedit.c:434 netedit.c:437
+msgid "Speed"
+msgstr "Nopeus"
+
+#: netedit.c:438
+msgid "unknown"
+msgstr "tuntematon"
+
+#: netedit.c:445 netedit.c:452 netedit.c:460
+msgid "yes"
+msgstr "kyllä"
+
+#: netedit.c:447 netedit.c:455 netedit.c:462
+msgid "no"
+msgstr "ei"
+
+#: netedit.c:451 netedit.c:454
+msgid "IPSec detected"
+msgstr "IPSec havaittu"
+
+#: netedit.c:459 netedit.c:462
+msgid "DHCP detected"
+msgstr "DHCP havaittu"
+
+#: netedit.c:466 netedit.c:472
+msgid "Subnet"
+msgstr "Aliverkko"
+
+#: netedit.c:473
+msgid "<i>unknown</i>"
+msgstr "<i>tuntematon</i>"
+
+#: gpe-aerial.desktop.in.h:1
+msgid "Aerial"
+msgstr "Aerial"
+
+#: gpe-aerial.desktop.in.h:2
+msgid "Panel based wireless LAN communications control"
+msgstr "Paneeleita käyttävä LAN-viestinnän ohjain"

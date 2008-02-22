@@ -1,0 +1,265 @@
+# Simplified Chinese messages for gpe-aerial
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-aerial package.
+# Meng Jie <zuxyhere@eastday.com>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-aerial 0.2.10\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-06-12 01:19+0200\n"
+"PO-Revision-Date: 2005-02-28 19:55+0800\n"
+"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
+"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: d:\\msys\\source\\gpe-aerial-0.2.10\n"
+
+#: main.c:386
+msgid "Wireless networks"
+msgstr "无线网络"
+
+#: main.c:402
+msgid "This window shows all detected networks. It will be updated while the scanner is running. The colors tell you something about the possibility to connect to the net. Green=OK, yellow=maybe need some configuration, red=not possible."
+msgstr "这个窗口显示所有检测到的网络，并且在扫描过程中不断得到更新。不同的颜色表示您是否可能连接到该网络。绿色表示可以连接，黄色表示可能需要一些配置方能连接，红色表示不可能连接。"
+
+#: main.c:410 netedit.c:231 netedit.c:422 netedit.c:424
+msgid "Mode"
+msgstr "模式"
+
+#: main.c:420
+msgid "ESSID"
+msgstr "ESSID"
+
+#: main.c:431
+msgid "CH"
+msgstr "频道"
+
+#: main.c:442
+msgid "WEP"
+msgstr "WEP"
+
+#: main.c:463
+msgid "Unable to scan for devices."
+msgstr "无法扫描设备。"
+
+#: main.c:597
+msgid "Successfully connected."
+msgstr "成功建立连接。"
+
+#: main.c:611
+msgid "Ad-Hoc connections setup complete."
+msgstr "Ad-Hoc (点对点)连接设置完成。"
+
+#: main.c:620
+msgid "Could not connect to wireless LAN."
+msgstr "无法连接到无线局域网。"
+
+#: main.c:700
+msgid "Details..."
+msgstr "详细信息..."
+
+#: main.c:706
+msgid "Enter additional info"
+msgstr "输入其他信息"
+
+#: main.c:713
+msgid "Try connect..."
+msgstr "尝试连接..."
+
+#: main.c:768
+msgid "Scanning for networks..."
+msgstr "扫描网络..."
+
+#: main.c:867
+msgid "scanner died unexpectedly"
+msgstr "扫描异常中止"
+
+#: main.c:966
+msgid "Wireless LAN control"
+msgstr "无线局域网控制"
+
+#: main.c:972
+msgid "Switch scanner on"
+msgstr "打开扫描"
+
+#: main.c:974
+msgid "Switch scanner off"
+msgstr "关闭扫描"
+
+#: main.c:975
+msgid "Networks..."
+msgstr "网络..."
+
+#: main.c:976
+msgid "Remove from dock"
+msgstr "从停靠栏中删除"
+
+#: main.c:977
+msgid "Turn WLAN off"
+msgstr "关闭 WLAN"
+
+#: main.c:1022
+msgid "This is gpe-aerial - the wireless LAN selector."
+msgstr "这是 GPE 天线 — 无线局域网选择程序。"
+
+#: netedit.c:103
+msgid "The key you entered is not valid."
+msgstr "您输入的密钥无效。"
+
+#: netedit.c:114
+msgid "The IP address you entered is not valid."
+msgstr "您输入的 IP 地址无效。"
+
+#: netedit.c:133
+msgid "The subnet mask address you entered is not valid."
+msgstr "您输入的子网掩码无效。"
+
+#: netedit.c:152
+msgid "The gateway address you entered is not valid."
+msgstr "您输入的网关地址无效。"
+
+#: netedit.c:171
+msgid "The DNS server address you entered is not valid."
+msgstr "您输入的域名(DNS)服务器地址无效。"
+
+#: netedit.c:227
+msgid "SSID"
+msgstr "SSID"
+
+#: netedit.c:232
+msgid "Managed"
+msgstr "受管的"
+
+#: netedit.c:233 netedit.c:441
+msgid "Channel"
+msgstr "频道"
+
+#: netedit.c:234 netedit.c:445 netedit.c:447
+msgid "WEP enabled"
+msgstr "WEP 被启用"
+
+#: netedit.c:235
+msgid "Use DHCP"
+msgstr "使用 DHCP"
+
+#: netedit.c:236
+msgid "DNS Server"
+msgstr "域名服务器"
+
+#: netedit.c:240
+msgid "Ad-Hoc"
+msgstr "Ad-Hoc"
+
+#: netedit.c:244
+msgid "Gateway"
+msgstr "网关"
+
+#: netedit.c:246
+msgid "Subnet mask"
+msgstr "子网掩码"
+
+#: netedit.c:248
+msgid "IP Address"
+msgstr "IP 地址"
+
+#: netedit.c:251
+msgid "WEP key"
+msgstr "WEP 密钥"
+
+#: netedit.c:255
+msgid "Enter your desired IP address here, e.g. 192.168.1.2"
+msgstr "在这里输入您要使用的 IP 地址，例如 192.168.1.2"
+
+#: netedit.c:256
+msgid "Enter your desired subnet mask here, usually it is set to 255.255.255.0"
+msgstr "在这里输入您要使用的子网掩码，通常被设为 255.255.255.0"
+
+#: netedit.c:257
+msgid "This field needs to contain the name of this wireless LAN."
+msgstr "这一字段应包含此无线局域网的名称。"
+
+#: netedit.c:258 netedit.c:259
+msgid "Here you select the type of your net, if you have an accesspoint select \"managed\", for direct connections \"ad-hoc\""
+msgstr "您在这里选择网络类型，如果您有一个接入点请选择“受管的”，欲直接连接请选择“Ad-Hoc”"
+
+#: netedit.c:260
+msgid "Select channel here, only needed in ad-hoc mode. Note: Not all channels are allowed in all countries."
+msgstr "在这里选择频道，仅当使用 ad-hoc (点对点)模式时需要。注意：并非所有频道都允许在所有国家使用。"
+
+#: netedit.c:261
+msgid "Get IP setup using DHCP."
+msgstr "从 DHCP 获取 IP 设置。"
+
+#: netedit.c:262
+msgid "Enter the IP of the default gateway to use."
+msgstr "输入要使用的默认网关的 IP 地址。"
+
+#: netedit.c:263
+msgid "Check this if WEP encryption is activated in this LAN."
+msgstr "如果此局域网启用了 WEP 加密，请核选此项。"
+
+#: netedit.c:264
+msgid "Enter WEP key here. Use hex digits or set as ascii string (s: <keystring>)."
+msgstr "在这里输入 WEP 密钥。使用 16 进制数字或者设置为 ASCII 字符串(s: <密钥串>)。"
+
+#: netedit.c:265
+msgid "Enter the IP address of the primary nameserver to be used in this net here."
+msgstr "在这里输入此网络中首选域名服务器的 IP 地址。"
+
+#: netedit.c:268
+msgid "Network editor"
+msgstr "网络编辑器"
+
+#: netedit.c:407
+msgid "This dialog provides some information about the selected wireless LAN."
+msgstr "此对话框提供有关选中的无线局域网的一些信息。"
+
+#: netedit.c:409
+msgid "Network information"
+msgstr "网络信息"
+
+#: netedit.c:429
+msgid "Max. signal"
+msgstr "最大信号"
+
+#: netedit.c:434 netedit.c:437
+msgid "Speed"
+msgstr "速度"
+
+#: netedit.c:438
+msgid "unknown"
+msgstr "未知"
+
+#: netedit.c:445 netedit.c:452 netedit.c:460
+msgid "yes"
+msgstr "是"
+
+#: netedit.c:447 netedit.c:455 netedit.c:462
+msgid "no"
+msgstr "否"
+
+#: netedit.c:451 netedit.c:454
+msgid "IPSec detected"
+msgstr "检测到 IPSec"
+
+#: netedit.c:459 netedit.c:462
+msgid "DHCP detected"
+msgstr "检测到 DHCP"
+
+#: netedit.c:466 netedit.c:472
+msgid "Subnet"
+msgstr "子网"
+
+#: netedit.c:473
+msgid "<i>unknown</i>"
+msgstr "<i>未知</i>"
+
+#: gpe-aerial.desktop.in.h:1
+msgid "Aerial"
+msgstr "天线"
+
+#: gpe-aerial.desktop.in.h:2
+msgid "Panel based wireless LAN communications control"
+msgstr "基于面板的无线局域网连接控件"

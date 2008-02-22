@@ -17,7 +17,7 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=$PACKAGE
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="de sv ro cs nl pt ru fr sr es pt_BR vi rw sl"
+ALL_LINGUAS="de sv ro cs nl pt ru fr sr es pt_BR vi rw sl fi zh_CN"
 
 gpeaerial_localedir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(gpeaerial_localedir)
