@@ -1,7 +1,7 @@
 2008-02-22  Florian Boor <florian@kernelconcepts.de>
 
 	* Apply patch to make screen locking work with display
-	  rotatin/resizing. Fixes #124. Patch by Paul Skolovsky.
+	  rotatin/resizing. Fixes #152. Patch by Paul Skolovsky.
 
 2008-02-14  Florian Boor <florian@kernelconcepts.de>
 
