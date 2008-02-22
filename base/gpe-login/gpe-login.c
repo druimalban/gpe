@@ -558,7 +558,8 @@ filter (GdkXEvent *xevp, GdkEvent *ev, gpointer p)
 	{
 	  spawn_xkbd ();
 	  gtk_label_set_markup (GTK_LABEL (label_result), "");
-	  gtk_widget_set_usize (window, gdk_screen_width (), gdk_screen_height ());
+	  gtk_widget_set_size_request (window, gdk_screen_width (), gdk_screen_height ());
+	  gtk_window_resize (window, gdk_screen_width (), gdk_screen_height ());
 	  gtk_widget_show_all (window);
       if (ownerinfo)
         {  
