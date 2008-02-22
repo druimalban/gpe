@@ -2,6 +2,7 @@
 
 	* Apply patch to make screen locking work with display
 	  rotatin/resizing. Fixes #152. Patch by Paul Skolovsky.
+	* Apply patch to use xtscal directly. Fixes #124
 
 2008-02-14  Florian Boor <florian@kernelconcepts.de>
 

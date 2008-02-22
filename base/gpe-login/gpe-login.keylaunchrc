@@ -1,3 +1,3 @@
-key=????XF86AudioRecord:xcalibrate:/usr/bin/gpe-xcalibrate.sh
+key=????XF86AudioRecord:xcalibrate:/usr/bin/xtscal
 key=????XF86PowerDown:-:/usr/bin/apm --suspend
 key=????Held XF86PowerDown:-:bl toggle
