@@ -1,0 +1,193 @@
+# Chinese translations for gpe-todo package
+# gpe-todo 软件包的简体中文翻译.
+# Copyright (C) 2008 THE gpe-todo'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gpe-todo package.
+# Ji ZhengYu <zhengyuji@gmail.com>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-todo 0.54\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-06-20 16:51+0200\n"
+"PO-Revision-Date: 2008-02-08 21:28+0800\n"
+"Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../gpe-todo.desktop.in.h:1
+msgid "GPE To-do List"
+msgstr "GPE To-do 列表"
+
+#: ../gpe-todo.desktop.in.h:2 ../main.c:93
+msgid "To-do list"
+msgstr "To-do 列表"
+
+#: ../list-ui.c:123
+msgid "All items"
+msgstr "所有项目"
+
+#: ../list-ui.c:150
+msgid "Show completed"
+msgstr "显示已完成的"
+
+#: ../list-ui.c:188 ../todo-ui.c:327
+msgid "OK"
+msgstr "已完成"
+
+#: ../list-ui.c:189 ../todo-ui.c:328
+msgid "Cancel"
+msgstr "取消"
+
+#: ../list-ui.c:536
+msgid "Item"
+msgstr "项目"
+
+#: ../list-ui.c:537 ../list-ui.c:653
+msgid "Categories"
+msgstr "类目"
+
+#: ../list-ui.c:538
+msgid "View"
+msgstr "查看"
+
+#: ../list-ui.c:539
+msgid "Tools"
+msgstr "工具"
+
+#: ../list-ui.c:540
+msgid "Close"
+msgstr "关闭"
+
+#: ../list-ui.c:541
+msgid "Open..."
+msgstr "打开..."
+
+#: ../list-ui.c:542
+msgid "Add new"
+msgstr "加入的新特性"
+
+#: ../list-ui.c:543
+msgid "Edit categories"
+msgstr "编辑类目"
+
+#: ../list-ui.c:544
+msgid "Show toolbar"
+msgstr "显示工具条"
+
+#: ../list-ui.c:545
+msgid "Delete completed items"
+msgstr "删除已完成项目"
+
+#: ../list-ui.c:546
+msgid "Move completed items to the end"
+msgstr "将已完成项目移至底部"
+
+#: ../list-ui.c:622
+msgid "New"
+msgstr "新建"
+
+#: ../list-ui.c:632 ../todo-ui.c:330
+msgid "Delete"
+msgstr "删除"
+
+#: ../list-ui.c:645
+msgid "Refresh"
+msgstr "刷新"
+
+#: ../list-ui.c:679
+msgid "Show:"
+msgstr "显示:"
+
+#: ../list-ui.c:738
+msgid "Status"
+msgstr "状态"
+
+#: ../list-ui.c:744
+msgid "Summary"
+msgstr "概要"
+
+#: ../list-ui.c:756
+msgid "Due Date"
+msgstr "期限"
+
+#: ../list-ui.c:761
+msgid "Category"
+msgstr "类目"
+
+#: ../main.c:80
+msgid "ToDo"
+msgstr "ToDo"
+
+#: ../main.c:81
+msgid "List"
+msgstr "列表"
+
+#: ../todo-ui.c:154
+msgid "Not started"
+msgstr "未开始"
+
+#: ../todo-ui.c:155
+msgid "In progress"
+msgstr "进行中"
+
+#: ../todo-ui.c:156
+msgid "Completed"
+msgstr "完成"
+
+#: ../todo-ui.c:157
+msgid "Abandoned"
+msgstr "放弃"
+
+#: ../todo-ui.c:163
+msgid "High"
+msgstr "高级"
+
+#: ../todo-ui.c:164
+msgid "Standard"
+msgstr "标准"
+
+#: ../todo-ui.c:165
+msgid "Low"
+msgstr "低级"
+
+#: ../todo-ui.c:267
+msgid "Priority:"
+msgstr "优先权:"
+
+#: ../todo-ui.c:269
+msgid "Status:"
+msgstr "状态:"
+
+#: ../todo-ui.c:272
+msgid "Summary:"
+msgstr "概要:"
+
+#: ../todo-ui.c:273
+msgid "Details:"
+msgstr "细节:"
+
+#: ../todo-ui.c:302 ../todo-ui.c:305
+msgid "Categories:"
+msgstr "类目:"
+
+#: ../todo-ui.c:329
+msgid "Categories..."
+msgstr "类目..."
+
+#: ../todo-ui.c:358
+msgid "Due:"
+msgstr "到期:"
+
+#: ../todo-ui.c:373
+msgid "Define categories by tapping Categories button."
+msgstr "点击类目按钮来定义类目"
+
+#: ../todo-ui.c:520
+msgid "Edit Item"
+msgstr "编辑项目"
+
+#: ../todo-ui.c:531
+msgid "New item"
+msgstr "新项目"

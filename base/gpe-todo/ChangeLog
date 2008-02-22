@@ -1,3 +1,8 @@
+2008-02-22  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* list-ui.c: Set return values of key handler properly. Fixes #81
+        * Update translations
+
 2008-01-12  Florian Boor  <florian.boor@kernelconcepts.de>
 
         * gpe-tp.am: Update Translation Project support, update

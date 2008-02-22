@@ -635,9 +635,11 @@ window_key_press_event (GtkWidget *window, GdkEventKey *k, GtkWidget *data)
       case GDK_F6:
         gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (fullscreen_control), 
              !gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (fullscreen_control)));
-        break;
+        return TRUE;
+      break;
 #endif
       }
+    return FALSE;
 }
 
 static GtkItemFactoryEntry menu_items[] =

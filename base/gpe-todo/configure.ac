@@ -17,7 +17,7 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=$PACKAGE
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="cs de es fr id ja nl pt_BR pt ro ru sk sr sv vi wa zh_TW"
+ALL_LINGUAS="cs de es fr id ja nl pt_BR pt ro ru sk sr sv vi wa zh_TW zh_CN"
 
 gpetodo_localedir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(gpetodo_localedir)
