@@ -101,7 +101,7 @@ else
 	PROTO=bcsp
 	PROBE=no
 	;;
-    "HTC Universal")
+    "HTC Universal" | "MIO A701")
 	BLUETOOTH=yes
 	PORT=/dev/ttyS1
 	SCRIPT=/etc/bluetooth/TIInit_3.2.26.bts

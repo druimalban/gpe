@@ -1,5 +1,6 @@
 2008-02-24  Florian Boor  <fb@kernelconcepts.de>
 
+	* blueprobe.init: Support for MIO A701.
 	* blueprobe.init: Add patch to support h4000 series iPAQ. (from OE)
 	* blueprobe.c: Apply patch to build against uclibc (from OE)
 
