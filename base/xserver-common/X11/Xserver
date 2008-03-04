@@ -118,6 +118,9 @@ case `module_id` in
 	"Boundary Devices Neon board")
 		ARGS="$ARGS -dpi 100 -screen ${SCREEN_SIZE} -mouse tslib"
 		;;
+	"Hoeft&Wessel HW90350")
+		 ARGS="$ARGS -dpi 100 -screen ${SCREEN_SIZE} -mouse tslib"
+		 ;;
 	# This is a fallback for PCs
 	"")
 		if [ -f /usr/bin/Xvesa ]; then
