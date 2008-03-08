@@ -297,6 +297,25 @@ ID = 33
 Pattern = Boundary Devices Neon board
 Name = Neon                          
 Model =                        
-Type = neon                    
+Type = neon
 Manufacturer = Boundary Devices
 Features = 0x04
+
+[Mainstone II]                            
+ID = 34                                                          
+Pattern = Intel HCDDBBVA0 Development Platform (aka Mainstone)
+Name = Mainstone
+Model = II
+Type = eval
+Manufacturer = Intel
+Features = 0x05
+
+[Nokia N810]
+ID = 35
+Pattern = Nokia RX-44
+Name = N810
+Model =
+Type = nokia-tablet
+Manufacturer = Nokia
+Features = 0x04
+
