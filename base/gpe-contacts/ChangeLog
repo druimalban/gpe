@@ -1,3 +1,8 @@
+2008-03-14  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c, main-hildon.c (update_display): Keep selected entry. Fixes #146
+      (pop_singles): Make text selectable.
+
 2008-02-08  Graham Cobb  <g+770@cobb.uk.net>
 
 	* editing.c (pop_singles): fix previous change to allow all characters in email fields

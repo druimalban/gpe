@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2005, 2006, 2007 by Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2005, 2006, 2007, 2008 by Florian Boor <florian.boor@kernelconcepts.de>
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -366,6 +366,7 @@ pop_singles (GtkWidget *vbox, GSList *list, struct contacts_person *p)
               if (table == NULL) 
                  table = gtk_table_new (length, 2, FALSE);
               w = gtk_label_new (NULL);
+              gtk_label_set_selectable(GTK_LABEL(w), TRUE);
               gtk_misc_set_alignment(GTK_MISC(w),0.0,0.5);
               gtk_label_set_text(GTK_LABEL(w), tv->value);
               gtk_label_set_line_wrap(GTK_LABEL(w), TRUE);
@@ -976,11 +977,20 @@ schedule_search (GObject *obj)
 void
 update_display (void)
 {
+  GtkTreeIter iter;
+  GtkTreePath *path = NULL;
   GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
+
+  gtk_tree_selection_get_selected (sel, NULL, &iter);
+  path = gtk_tree_model_get_path (gtk_tree_view_get_model(GTK_TREE_VIEW(list_view)), &iter);
   update_categories ();
-  if (sel)
-    selection_made(sel, G_OBJECT(mainw));
   do_search (G_OBJECT (search_entry), search_entry);
+  if (path)
+    {
+      gtk_tree_selection_select_path (sel, path);
+      gtk_tree_path_free (path);
+    }
+  selection_made(sel, G_OBJECT(mainw));
 }
 
 static gboolean
