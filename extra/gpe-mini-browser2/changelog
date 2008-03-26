@@ -1,4 +1,13 @@
-Gpe-mini-browser2 v0.0.1- 29/01/2008 - Philippe De Swert
+Gpe-mini-browser2 v0.0.1
+
+- 27/03/2008 - Philippe De Swert
+
+* configure.ac : 
+	- Change .pc file dependency to new one for webkit
+* src/main.c : 	
+	- Fix issue with icon installation
+
+- 29/01/2008 - Philippe De Swert
 * src/main.c :
 	- Basic implementation
 	- Fullscreen functionality

@@ -31,7 +31,7 @@
 #include <gdk/gdk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <webkit.h>
+#include <webkit/webkit.h>
 
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
@@ -48,7 +48,7 @@ static bool smallscreen = FALSE;
 GtkToolItem *stop_reload_button;
 
 struct gpe_icon my_icons[] = {
-  {"gpe-mini-browser-icon", PREFIX "/share/pixmaps/gpe-mini-browser.png"},
+  {"gpe-mini-browser-icon", PREFIX "/share/pixmaps/gpe-mini-browser2.png"},
   {NULL, NULL}
 };
 
