@@ -1,5 +1,11 @@
 Gpe-mini-browser2 v0.0.1
 
+- 28/03/2008 - Philippe De Swert
+
+* src/main.c : 
+	- Add utility function to add http:// to urls to make 
+	  loading work correctly
+
 - 27/03/2008 - Philippe De Swert
 
 * configure.ac : 

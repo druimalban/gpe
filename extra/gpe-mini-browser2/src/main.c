@@ -92,7 +92,8 @@ static void preferences_cb (GtkWidget* widget, gpointer data);
 static void fullscreen_cb (GtkWidget* widget, gpointer data);
 static void browser_quit_cb (GtkWidget* widget, gpointer data);
 
-
+/* Utility functions */
+static const gchar *parse_url (const gchar * url);
 
 
 /* Implementations of static functions related to the UI */
@@ -257,7 +258,7 @@ static void load_text_entry_cb (GtkWidget* widget, gpointer data)
 
   }
   else
-    webkit_web_view_open (web_view, url);
+    webkit_web_view_open (web_view, parse_url(url));
 }
 
 static void back_cb (GtkWidget* widget, gpointer data)
@@ -300,6 +301,25 @@ static void fullscreen_cb (GtkWidget* widget, gpointer data)
 static void browser_quit_cb (GtkWidget* widget, gpointer data)
 {
   gtk_main_quit();
+}
+
+/*---------- Implementation of static utility functions ----------------------------*/
+
+const gchar *parse_url (const gchar * url)
+{
+  const gchar *p;
+
+
+  p = strchr (url, ':');
+  if (p)
+    {
+      return url;
+    }
+  else
+    {
+      p = g_strconcat ("http://", url, NULL);
+    }
+  return (p);
 }
 
 /*----------------------------------------------------------------------------------*/
