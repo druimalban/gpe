@@ -380,7 +380,7 @@ int main (int argc, char *argv[])
 
   /* load command line url if there is one */
   gchar *url = (gchar*) (argc != optind ? argv[optind] : "http://www.google.com/");
-  webkit_web_view_open (web_view, url);
+  webkit_web_view_open (web_view, parse_url(url));
 
   /* populate main window and show everything */
   gtk_container_add(GTK_CONTAINER(main_window), main_window_vbox);
