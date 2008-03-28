@@ -29,6 +29,8 @@
 
 #include "playlist.h"
 
+#undef IS_HILDON
+
 /* Forward.  */
 static void
 play_list_get_info_by_uid (PlayList *pl, char *uid,
