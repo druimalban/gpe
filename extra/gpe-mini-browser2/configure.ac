@@ -28,4 +28,4 @@ DEFINES="$DEFINES -DNDEBUG"
 AC_SUBST(MINIBROWSER_CFLAGS)
 AC_SUBST(MINIBROWSER_LIBS)
 
-AC_OUTPUT([Makefile src/Makefile po/Makefile.in ])
+AC_OUTPUT([Makefile src/Makefile po/Makefile.in gpe-mini-browser2.desktop.in ])

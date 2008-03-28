@@ -1,5 +1,7 @@
 SUBDIRS = src po
 
+desktop_in_files = gpe-mini-browser2.desktop.in
+
 pixmapsdir = $(datadir)/pixmaps
 pixmaps_DATA = gpe-mini-browser2.png
 
