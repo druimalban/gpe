@@ -1,5 +1,10 @@
 Gpe-mini-browser2 v0.0.1
 
+- 30/03/2008 - Philippe De Swert
+
+* src/main.c :
+	- Add fullscreen/kiosk mode
+
 - 28/03/2008 - Philippe De Swert
 
 * src/main.c : 

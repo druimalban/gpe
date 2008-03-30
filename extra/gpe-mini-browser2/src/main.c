@@ -44,6 +44,7 @@
 
 /* Function definitions and declarations */
 
+bool fullscreen_start = FALSE; /*global boolean for kiosk mode */
 static bool smallscreen = FALSE;
 GtkToolItem *stop_reload_button;
 
@@ -149,10 +150,13 @@ static GtkWidget * create_toolbar(void)
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), button, -1);
 
   /* fullscreen button */
-  button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT);
-  gtk_tool_button_set_label (GTK_TOOL_BUTTON (button), "fullscreen");
-  g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (fullscreen_cb), NULL);
-  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), button, -1);
+  if(!fullscreen_start)
+  {
+  	button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT);
+  	gtk_tool_button_set_label (GTK_TOOL_BUTTON (button), "fullscreen");
+  	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (fullscreen_cb), NULL);
+  	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), button, -1);
+  }
 
   return toolbar;
 }
@@ -335,7 +339,7 @@ int main (int argc, char *argv[])
     exit (1);
 
   /* parse command line options and input */
-  while ((opt = getopt (argc, argv, "bBsSvVh")) != -1)
+  while ((opt = getopt (argc, argv, "bBfFsSvVh")) != -1)
     {
       switch (opt)
         {
@@ -343,11 +347,15 @@ int main (int argc, char *argv[])
 	case 'B':
 	  smallscreen = FALSE;
 	  break;
+	case 'f':
+	case 'F':
+	  fullscreen_start = TRUE;
+	  break;
 	case 's':
 	case 'S':
 	  smallscreen = TRUE;
 	  break; 
-        case 'v':
+	case 'v':
 	case 'V':
           printf
             (("GPE-mini-browser2 version 0.0.1. (C) 2008, Philippe De Swert\n"));
@@ -361,6 +369,7 @@ int main (int argc, char *argv[])
           printf (("Use -v or -V for version info.\n"));
           printf (("Use -s or -S to force small screen version.\n"));
           printf (("Use -b or -B to force big screen version.\n"));
+	  printf (("Use -f or -F to start in fullscreen/kiosk mode.\n"));
           exit (0);
         }
     }
@@ -384,6 +393,10 @@ int main (int argc, char *argv[])
 
   /* populate main window and show everything */
   gtk_container_add(GTK_CONTAINER(main_window), main_window_vbox);
+
+  /* start in fullscreen if requested */
+  if (fullscreen_start)
+    gtk_window_fullscreen(GTK_WINDOW(main_window));
 
   gtk_widget_show_all(main_window);
   gtk_main();
