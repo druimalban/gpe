@@ -45,7 +45,7 @@
 /* Function definitions and declarations */
 
 bool kiosk_mode = FALSE; /*global boolean for kiosk mode */
-static bool smallscreen = FALSE;
+bool smallscreen = FALSE;
 GtkToolItem *stop_reload_button;
 
 struct gpe_icon my_icons[] = {
@@ -154,7 +154,7 @@ static GtkWidget * create_toolbar(void)
 
   	button = gtk_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT);
   	gtk_tool_button_set_label (GTK_TOOL_BUTTON (button), "fullscreen");
-  	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (fullscreen_cb), NULL);
+  	g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (fullscreen_cb), toolbar);
   	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), button, -1);
   }
 
@@ -289,16 +289,32 @@ static void preferences_cb (GtkWidget* widget, gpointer data)
 static void fullscreen_cb (GtkWidget* widget, gpointer data)
 {
   static bool fullscreen_status = FALSE;
+  static bool toolbar_hidden = FALSE;
+  static GtkWidget *unfullscreen_button, *fullscreen_popup;
 
   if(!fullscreen_status)
   {
     gtk_window_fullscreen(GTK_WINDOW(main_window));
     fullscreen_status = TRUE;
   }
-  else
+  else if(fullscreen_status && !toolbar_hidden)
   {
+    gtk_widget_hide(GTK_WIDGET(data));
+    fullscreen_popup = gtk_window_new (GTK_WINDOW_POPUP);
+    unfullscreen_button = gpe_button_new_from_stock (GTK_STOCK_ZOOM_FIT, GPE_BUTTON_TYPE_ICON);
+    /* the callback will keep the reference, which is very handy :) */
+    g_signal_connect (G_OBJECT (unfullscreen_button), "clicked", G_CALLBACK (fullscreen_cb), data);
+    gtk_container_add (GTK_CONTAINER (fullscreen_popup), unfullscreen_button);
+    gtk_widget_show_all (fullscreen_popup);
+    toolbar_hidden = TRUE;
+  }
+  else 
+  {
+    gtk_widget_destroy(fullscreen_popup);
+    gtk_widget_show(GTK_WIDGET(data));
     gtk_window_unfullscreen(GTK_WINDOW(main_window));   
     fullscreen_status = FALSE;
+    toolbar_hidden = FALSE;   
   }
 }
 
