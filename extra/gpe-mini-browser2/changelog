@@ -1,9 +1,13 @@
 GPE-mini-browser2 v0.0.1
 
 - 05/04/2008 - Philippe De Swert
+
+* src/main.c:
 	- Start adding tab support (first window is a notebook tab without decoration now)
 
 - 04/04/2008 - Philippe De Swert
+
+* src/main.c
 	- Add gpe-mini-browser1 fullscreen modes
 
 - 30/03/2008 - Philippe De Swert
