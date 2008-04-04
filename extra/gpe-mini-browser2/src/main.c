@@ -58,13 +58,11 @@ WebKitWebView *web_view; /* every new window/tab needs its own html render objec
 GtkWidget *url_entry; /* keeping track of the url entry box */
 GtkWidget *main_window; /* for fullscreen */
 GtkWidget *main_window_vbox; /* for packing and removing the loading progressbar */
+GtkNotebook *notebook; /* for adding and removing tabs */
 
 /* For the UI */
 
 static GtkWidget * create_toolbar(void);
-static GtkWidget * add_urlbox_button(GtkWidget *toolbar);
-
-static GtkWidget * create_tabs(GtkWidget *main_window);
 
 /* urlbox will be used on really small screens, urlbar will be used on bigger screens
    - urlbox uses a button to the toolbar to show a box to input an url 
@@ -72,25 +70,28 @@ static GtkWidget * create_tabs(GtkWidget *main_window);
    - urlbar is a regular urlbar as in any other web browser 
 */
 static GtkWidget * create_urlbox(void);
+static GtkWidget * add_urlbox_button(GtkWidget *toolbar);
 static GtkWidget * create_urlbar(void);
-static GtkWidget* create_htmlview(void);
+static GtkWidget * create_htmlview(void);
+static GtkWidget * create_tabs(void);
 
 static gboolean main_window_key_press_event (GtkWidget * widget, GdkEventKey * k,
                              		     GtkWidget * data);
 
 /* Callbacks */
-static void progress_changed_cb (WebKitWebView* page, gint progress, gpointer data);
-static void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame, const gchar* title, gpointer data);
 static void load_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data);
 static void link_hover_cb (WebKitWebView* page, const gchar* title, const gchar* link, gpointer data);
 
 static void load_text_entry_cb (GtkWidget* widget, gpointer data);
-
 static void back_cb (GtkWidget* widget, gpointer data);
 static void forward_cb (GtkWidget* widget, gpointer data);
 static void stop_reload_cb (GtkWidget* widget, gpointer data);
+
+static void progress_changed_cb (WebKitWebView* page, gint progress, gpointer data);
+static void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame, const gchar* title, gpointer data);
 static void preferences_cb (GtkWidget* widget, gpointer data);
 static void fullscreen_cb (GtkWidget* widget, gpointer data);
+static void show_hide_tabs_cb (GtkNotebook *notebook, GtkWidget *child, guint tab_num, gpointer tab_data);
 static void browser_quit_cb (GtkWidget* widget, gpointer data);
 
 /* Utility functions */
@@ -178,10 +179,8 @@ static GtkWidget * create_urlbar(void)
   gtk_box_pack_start (GTK_BOX (urlbox), url_entry, TRUE, TRUE, 5);
   gtk_box_pack_start (GTK_BOX (urlbox), okbutton, FALSE, FALSE, 10);
 
-  g_signal_connect (GTK_OBJECT (okbutton), "clicked",
-                    G_CALLBACK (load_text_entry_cb), NULL);
-  g_signal_connect (GTK_OBJECT (url_entry), "activate",
-                    G_CALLBACK (load_text_entry_cb), NULL);
+  g_signal_connect (G_OBJECT (okbutton), "clicked", G_CALLBACK (load_text_entry_cb), NULL);
+  g_signal_connect (G_OBJECT (url_entry), "activate", G_CALLBACK (load_text_entry_cb), NULL);
 
   gtk_widget_grab_focus (url_entry);
   /*final settings */
@@ -190,6 +189,38 @@ static GtkWidget * create_urlbar(void)
   gtk_widget_activate (okbutton);
 
   return (urlbox);
+}
+
+static GtkWidget* create_htmlview(void)
+{
+  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+  web_view = WEBKIT_WEB_VIEW (webkit_web_view_new ());
+  gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (web_view));
+
+  g_signal_connect (G_OBJECT (web_view), "title-changed", G_CALLBACK (title_changed_cb), web_view);
+  g_signal_connect (G_OBJECT (web_view), "load-progress-changed", G_CALLBACK (progress_changed_cb), web_view);
+  g_signal_connect (G_OBJECT (web_view), "load-committed", G_CALLBACK (load_cb), web_view);
+  g_signal_connect (G_OBJECT (web_view), "hovering-over-link", G_CALLBACK (link_hover_cb), web_view);
+
+  return scrolled_window;
+}
+
+
+static GtkWidget * create_tabs(void)
+{
+  notebook = GTK_NOTEBOOK(gtk_notebook_new());
+  gtk_notebook_set_scrollable(notebook, TRUE);
+  gtk_notebook_popup_enable(notebook);
+  gtk_notebook_set_show_tabs(notebook, FALSE);
+  gtk_container_add(GTK_CONTAINER(notebook), create_htmlview());
+
+  g_signal_connect (G_OBJECT (notebook), "page-added", G_CALLBACK (show_hide_tabs_cb), notebook);
+  g_signal_connect (G_OBJECT (notebook), "page-removed", G_CALLBACK (show_hide_tabs_cb), notebook);
+/*  g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (update_tab_data_cb), notebook); */
+
+  return GTK_WIDGET(notebook);
 }
 
 static gboolean
@@ -209,32 +240,7 @@ main_window_key_press_event (GtkWidget * widget, GdkEventKey * k,
   return FALSE;
 }
 
-static GtkWidget* create_htmlview(void)
-{
-  GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-
-  web_view = WEBKIT_WEB_VIEW (webkit_web_view_new ());
-  gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (web_view));
-
-  g_signal_connect (G_OBJECT (web_view), "title-changed", G_CALLBACK (title_changed_cb), web_view);
-  g_signal_connect (G_OBJECT (web_view), "load-progress-changed", G_CALLBACK (progress_changed_cb), web_view);
-  g_signal_connect (G_OBJECT (web_view), "load-committed", G_CALLBACK (load_cb), web_view);
-  g_signal_connect (G_OBJECT (web_view), "hovering-over-link", G_CALLBACK (link_hover_cb), web_view);
-
-  return scrolled_window;
-}
-
-/* Callback implementation */
-static void progress_changed_cb (WebKitWebView* page, gint progress, gpointer data)
-{
-
-}
-
-static void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame, const gchar* title, gpointer data)
-{
-
-}
+/*---------- Callback implementation -----------------------------------------------*/
 
 static void load_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
 {
@@ -265,6 +271,9 @@ static void load_text_entry_cb (GtkWidget* widget, gpointer data)
     webkit_web_view_open (web_view, parse_url(url));
 }
 
+
+/* navigation callbacks */
+
 static void back_cb (GtkWidget* widget, gpointer data)
 {
   webkit_web_view_go_back (web_view);
@@ -278,6 +287,18 @@ static void forward_cb (GtkWidget* widget, gpointer data)
 static void stop_reload_cb (GtkWidget* widget, gpointer data)
 {
   webkit_web_view_reload (web_view);
+}
+
+/* ui action callbacks */
+
+static void progress_changed_cb (WebKitWebView* page, gint progress, gpointer data)
+{
+
+}
+
+static void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame, const gchar* title, gpointer data)
+{
+
 }
 
 static void preferences_cb (GtkWidget* widget, gpointer data)
@@ -316,6 +337,18 @@ static void fullscreen_cb (GtkWidget* widget, gpointer data)
     fullscreen_status = FALSE;
     toolbar_hidden = FALSE;   
   }
+}
+
+static void show_hide_tabs_cb (GtkNotebook *notebook, GtkWidget *child, guint tab_num, gpointer tab_data)
+{
+  int tab_amount = 0;
+
+  tab_amount = gtk_notebook_get_n_pages(notebook);
+  if(tab_amount == 1)
+	gtk_notebook_set_show_tabs(notebook, FALSE);
+  else
+	gtk_notebook_set_show_tabs(notebook, TRUE);
+
 }
 
 static void browser_quit_cb (GtkWidget* widget, gpointer data)
@@ -401,7 +434,7 @@ int main (int argc, char *argv[])
   main_window_vbox = gtk_vbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (main_window_vbox), create_toolbar(), FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (main_window_vbox), create_urlbar(), FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (main_window_vbox), create_htmlview(), TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (main_window_vbox), create_tabs(), TRUE, TRUE, 0);
 
   /* load command line url if there is one */
   gchar *url = (gchar*) (argc != optind ? argv[optind] : "http://www.google.com/");
