@@ -126,9 +126,9 @@ void preferences_cb (GtkWidget* widget, gpointer data)
 
 void fullscreen_cb (GtkWidget* widget, gpointer data)
 {
-  bool fullscreen_status = FALSE;
-  bool toolbar_hidden = FALSE;
-  GtkWidget *unfullscreen_button, *fullscreen_popup = NULL;
+  static bool fullscreen_status = FALSE;
+  static bool toolbar_hidden = FALSE;
+  static GtkWidget *unfullscreen_button, *fullscreen_popup = NULL;
 
   if(!fullscreen_status)
   {
