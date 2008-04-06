@@ -28,8 +28,6 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
-#include <gdk/gdk.h>
-#include <gdk/gdkkeysyms.h>
 
 #include <webkit/webkit.h>
 
@@ -41,8 +39,10 @@
 
 
 #include "browser-data.h"
+#include "ui-callbacks.h"
+#include "utility-functions.h"
 
-/* Function definitions and declarations */
+/* definitions and function declarations */
 
 bool kiosk_mode = FALSE; /*global boolean for kiosk mode */
 bool smallscreen = FALSE;
@@ -54,13 +54,7 @@ struct gpe_icon my_icons[] = {
 };
 
 
-WebKitWebView *web_view; /* every new window/tab needs its own html render object */
-GtkWidget *url_entry; /* keeping track of the url entry box */
-GtkWidget *main_window; /* for fullscreen */
-GtkWidget *main_window_vbox; /* for packing and removing the loading progressbar */
-GtkNotebook *notebook; /* for adding and removing tabs */
-
-/* For the UI */
+/* For the UI creation */
 
 static GtkWidget * create_toolbar(void);
 
@@ -74,28 +68,6 @@ static GtkWidget * add_urlbox_button(GtkWidget *toolbar);
 static GtkWidget * create_urlbar(void);
 static GtkWidget * create_htmlview(void);
 static GtkWidget * create_tabs(void);
-
-static gboolean main_window_key_press_event (GtkWidget * widget, GdkEventKey * k,
-                             		     GtkWidget * data);
-
-/* Callbacks */
-static void load_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data);
-static void link_hover_cb (WebKitWebView* page, const gchar* title, const gchar* link, gpointer data);
-
-static void load_text_entry_cb (GtkWidget* widget, gpointer data);
-static void back_cb (GtkWidget* widget, gpointer data);
-static void forward_cb (GtkWidget* widget, gpointer data);
-static void stop_reload_cb (GtkWidget* widget, gpointer data);
-
-static void progress_changed_cb (WebKitWebView* page, gint progress, gpointer data);
-static void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame, const gchar* title, gpointer data);
-static void preferences_cb (GtkWidget* widget, gpointer data);
-static void fullscreen_cb (GtkWidget* widget, gpointer data);
-static void show_hide_tabs_cb (GtkNotebook *notebook, GtkWidget *child, guint tab_num, gpointer tab_data);
-static void browser_quit_cb (GtkWidget* widget, gpointer data);
-
-/* Utility functions */
-static const gchar *parse_url (const gchar * url);
 
 
 /* Implementations of static functions related to the UI */
@@ -221,158 +193,6 @@ static GtkWidget * create_tabs(void)
 /*  g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (update_tab_data_cb), notebook); */
 
   return GTK_WIDGET(notebook);
-}
-
-static gboolean
-main_window_key_press_event (GtkWidget * widget, GdkEventKey * k,
-                             GtkWidget * data)
-{
-  switch (k->keyval)
-    {
-    case GDK_BackSpace:
-      back_cb(widget, data);
-      return TRUE;
-    default:
-      return FALSE;
-
-    }
-  /* we should not get here */
-  return FALSE;
-}
-
-/*---------- Callback implementation -----------------------------------------------*/
-
-static void load_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
-{
-  const gchar *url = webkit_web_frame_get_uri(frame);
-  if (url)
-      gtk_entry_set_text (GTK_ENTRY (url_entry), url);
-}
-
-static void link_hover_cb (WebKitWebView* page, const gchar* title, const gchar* link, gpointer data)
-{
-    /* underflow is allowed
-    gtk_statusbar_pop (main_statusbar, status_context_id);
-    if (link)
-        gtk_statusbar_push (main_statusbar, status_context_id, link);
-   */
-}
-
-static void load_text_entry_cb (GtkWidget* widget, gpointer data)
-{
-  const gchar *url = gtk_entry_get_text (GTK_ENTRY (url_entry));
-  if (!strcmp(url,"about:"))
-  {
-     gpe_info_dialog (("GPE mini-browser v0.0.1\n\nHTML engine : WebKitGtk \n\nCopyright (c) Philippe De Swert\n<philippedeswert@scarlet.be>\n"));
-      return;
-
-  }
-  else
-    webkit_web_view_open (web_view, parse_url(url));
-}
-
-
-/* navigation callbacks */
-
-static void back_cb (GtkWidget* widget, gpointer data)
-{
-  webkit_web_view_go_back (web_view);
-}
-
-static void forward_cb (GtkWidget* widget, gpointer data)
-{
-  webkit_web_view_go_forward (web_view);
-}
-
-static void stop_reload_cb (GtkWidget* widget, gpointer data)
-{
-  webkit_web_view_reload (web_view);
-}
-
-/* ui action callbacks */
-
-static void progress_changed_cb (WebKitWebView* page, gint progress, gpointer data)
-{
-
-}
-
-static void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame, const gchar* title, gpointer data)
-{
-
-}
-
-static void preferences_cb (GtkWidget* widget, gpointer data)
-{
-  /* Not implemented yet warning */
-  gpe_info_dialog ("Sorry. Not implemented yet.\n");
-}
-
-static void fullscreen_cb (GtkWidget* widget, gpointer data)
-{
-  static bool fullscreen_status = FALSE;
-  static bool toolbar_hidden = FALSE;
-  static GtkWidget *unfullscreen_button, *fullscreen_popup;
-
-  if(!fullscreen_status)
-  {
-    gtk_window_fullscreen(GTK_WINDOW(main_window));
-    fullscreen_status = TRUE;
-  }
-  else if(fullscreen_status && !toolbar_hidden)
-  {
-    gtk_widget_hide(GTK_WIDGET(data));
-    fullscreen_popup = gtk_window_new (GTK_WINDOW_POPUP);
-    unfullscreen_button = gpe_button_new_from_stock (GTK_STOCK_ZOOM_FIT, GPE_BUTTON_TYPE_ICON);
-    /* the callback will keep the reference, which is very handy :) */
-    g_signal_connect (G_OBJECT (unfullscreen_button), "clicked", G_CALLBACK (fullscreen_cb), data);
-    gtk_container_add (GTK_CONTAINER (fullscreen_popup), unfullscreen_button);
-    gtk_widget_show_all (fullscreen_popup);
-    toolbar_hidden = TRUE;
-  }
-  else 
-  {
-    gtk_widget_destroy(fullscreen_popup);
-    gtk_widget_show(GTK_WIDGET(data));
-    gtk_window_unfullscreen(GTK_WINDOW(main_window));   
-    fullscreen_status = FALSE;
-    toolbar_hidden = FALSE;   
-  }
-}
-
-static void show_hide_tabs_cb (GtkNotebook *notebook, GtkWidget *child, guint tab_num, gpointer tab_data)
-{
-  int tab_amount = 0;
-
-  tab_amount = gtk_notebook_get_n_pages(notebook);
-  if(tab_amount == 1)
-	gtk_notebook_set_show_tabs(notebook, FALSE);
-  else
-	gtk_notebook_set_show_tabs(notebook, TRUE);
-
-}
-
-static void browser_quit_cb (GtkWidget* widget, gpointer data)
-{
-  gtk_main_quit();
-}
-
-/*---------- Implementation of static utility functions ----------------------------*/
-
-const gchar *parse_url (const gchar * url)
-{
-  const gchar *p;
-
-
-  p = strchr (url, ':');
-  if (p)
-    {
-      return url;
-    }
-  else
-    {
-      p = g_strconcat ("http://", url, NULL);
-    }
-  return (p);
 }
 
 /*----------------------------------------------------------------------------------*/

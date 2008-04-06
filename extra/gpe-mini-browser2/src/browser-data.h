@@ -23,6 +23,15 @@
                         GENERAL INCLUDES
 *****************************************************************/
 
+/* Global variables */
+
+WebKitWebView *web_view; /* every new window/tab needs its own html render object */
+GtkWidget *url_entry; /* keeping track of the url entry box */
+GtkWidget *main_window; /* for fullscreen */
+GtkWidget *main_window_vbox; /* for packing and removing the loading progressbar */
+GtkNotebook *notebook; /* for adding and removing tabs */
+
+
 struct browser_window
 {
   WebKitWebView* web_view;

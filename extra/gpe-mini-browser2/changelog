@@ -1,5 +1,20 @@
 GPE-mini-browser2 v0.0.1
 
+- 06/04/2008 - Philippe De Swert
+
+* src/main.c: 
+	- Split out ui-callbacks and utility functions to make it more readable
+* src/ui-callbacks.h:
+	- Added header file for ui-callbacks
+* src/ui-callbacks.h:
+	- Added file with the implementation of the ui-callbacks
+* src/utility-functions.h
+	- Added header file for utility function declarations
+* src/utility-functions.c
+	- Added implementations of the utility functions
+* src/Makefile.am
+	- Added support for the new files
+
 - 05/04/2008 - Philippe De Swert
 
 * src/main.c:
