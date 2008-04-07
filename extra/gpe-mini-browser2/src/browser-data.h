@@ -30,11 +30,18 @@ GtkWidget *url_entry; /* keeping track of the url entry box */
 GtkWidget *main_window; /* for fullscreen */
 GtkWidget *main_window_vbox; /* for packing and removing the loading progressbar */
 GtkNotebook *notebook; /* for adding and removing tabs */
+GtkWidget *current_tab; /* to modify the current tab */
+GList *tab_list; /* the list that contains the tabs */
 
+extern bool kiosk_mode; /*global boolean for kiosk mode */
+extern bool smallscreen;
 
+GtkToolItem *stop_reload_button;
+
+#if 0
 struct browser_window
 {
   WebKitWebView* web_view;
   GtkWidget *url_entry;
 };
-
+#endif

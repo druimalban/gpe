@@ -1,5 +1,18 @@
 GPE-mini-browser2 v0.0.1
 
+- 08/04/2008 - Philippe De Swert
+
+* src/main.c:
+	- Split out ui functions to own ui files
+* src/ui.c:
+	- New file with ui functions
+* src/ui.h:
+	- New file with ui function declarations
+* src/Makefile.am:
+	- Use new files for build
+* src/browser-data.h:
+	- Added necessary defines for kiosk and smallscreen mode
+
 - 06/04/2008 - Philippe De Swert
 
 * src/main.c: 
