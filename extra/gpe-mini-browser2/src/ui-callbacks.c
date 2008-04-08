@@ -174,7 +174,10 @@ void close_tab_cb (GtkWidget* widget, gpointer data)
 {
   int tab_number;
   gpointer *web_view_data;
-
+  
+  if((gtk_notebook_get_n_pages(notebook)) == 1) 
+	return; 
+ 
   tab_number = gtk_notebook_get_current_page(notebook);
   gtk_notebook_remove_page(notebook, tab_number);
   web_view_data = g_list_nth_data(tab_list, tab_number);  
