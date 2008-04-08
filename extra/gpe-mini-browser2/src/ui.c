@@ -106,12 +106,20 @@ GtkWidget * create_toolbar(void)
   	gtk_toolbar_insert (GTK_TOOLBAR (toolbar), button, -1);
   }
 
+  button = gtk_separator_tool_item_new ();
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), button, -1);
+
+  button = gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
+  gtk_tool_button_set_label (GTK_TOOL_BUTTON (button), "New tab");
+  g_signal_connect (G_OBJECT (button), "clicked", G_CALLBACK (new_tab_cb), toolbar);
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), button, -1);
+
   return toolbar;
 }
 
 GtkWidget * create_urlbar(void)
 {
-  GtkWidget *urlbox, *urllabel, *okbutton;
+  GtkWidget *urlbox, *urllabel, *okbutton, *close_tab_button;
 
   /* create all necessary widgets */
   urlbox = gtk_hbox_new (FALSE, 0);
@@ -120,14 +128,17 @@ GtkWidget * create_urlbar(void)
   url_entry = gtk_entry_new ();
   gtk_entry_set_activates_default (GTK_ENTRY (url_entry), TRUE);
   okbutton = gpe_button_new_from_stock (GTK_STOCK_OK, GPE_BUTTON_TYPE_BOTH);
+  close_tab_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_ICON);
 
   /* pack everything in the hbox */
   gtk_box_pack_start (GTK_BOX (urlbox), urllabel, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (urlbox), url_entry, TRUE, TRUE, 5);
-  gtk_box_pack_start (GTK_BOX (urlbox), okbutton, FALSE, FALSE, 10);
+  gtk_box_pack_start (GTK_BOX (urlbox), okbutton, FALSE, FALSE, 0);
+  gtk_box_pack_end (GTK_BOX (urlbox), close_tab_button, FALSE, FALSE, 0);
 
   g_signal_connect (G_OBJECT (okbutton), "clicked", G_CALLBACK (load_text_entry_cb), NULL);
   g_signal_connect (G_OBJECT (url_entry), "activate", G_CALLBACK (load_text_entry_cb), NULL);
+  g_signal_connect (G_OBJECT (close_tab_button), "clicked", G_CALLBACK (close_tab_cb), NULL);
 
   gtk_widget_grab_focus (url_entry);
   /*final settings */
@@ -162,10 +173,15 @@ GtkWidget * create_tabs(void)
   gtk_notebook_popup_enable(notebook);
   gtk_notebook_set_show_tabs(notebook, FALSE);
   gtk_container_add(GTK_CONTAINER(notebook), create_htmlview());
+ 
+  /* initialize list to keep tabs and their associated web_views 
+     the place in the list should be the same as the tab number  */
+  tab_list = NULL;
+  tab_list = g_list_append(tab_list, web_view);
 
   g_signal_connect (G_OBJECT (notebook), "page-added", G_CALLBACK (show_hide_tabs_cb), notebook);
   g_signal_connect (G_OBJECT (notebook), "page-removed", G_CALLBACK (show_hide_tabs_cb), notebook);
-/*  g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (update_tab_data_cb), notebook); */
+  g_signal_connect (G_OBJECT (notebook), "switch-page", G_CALLBACK (update_tab_data_cb), notebook); 
 
   return GTK_WIDGET(notebook);
 }

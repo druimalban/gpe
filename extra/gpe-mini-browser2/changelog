@@ -1,5 +1,14 @@
 GPE-mini-browser2 v0.0.1
 
+- 09/04/2008 - Philippe De Swert
+
+* src/ui.c:
+	- Changes for tab support
+* src/ui-callbacks.c:
+	- Changes for tab support
+* src/ui-callbacks.h:
+	- Added extra function definitions for tab support
+
 - 08/04/2008 - Philippe De Swert
 
 * src/main.c:

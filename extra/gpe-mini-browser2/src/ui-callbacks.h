@@ -35,6 +35,10 @@ void progress_changed_cb (WebKitWebView* page, gint progress, gpointer data);
 void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame, const gchar* title, gpointer data);
 void preferences_cb (GtkWidget* widget, gpointer data);
 void fullscreen_cb (GtkWidget* widget, gpointer data);
-void show_hide_tabs_cb (GtkNotebook *notebook, GtkWidget *child, guint tab_num, gpointer tab_data);
-void browser_quit_cb (GtkWidget* widget, gpointer data);
 
+void new_tab_cb (GtkWidget* widget, gpointer data);
+void close_tab_cb (GtkWidget* widget, gpointer data);
+void show_hide_tabs_cb (GtkNotebook* notebook, GtkWidget *child, guint tab_num, gpointer tab_data);
+void update_tab_data_cb (GtkNotebook* notebook, GtkNotebookPage* page, guint tab_num, gpointer tab_data);
+
+void browser_quit_cb (GtkWidget* widget, gpointer data);

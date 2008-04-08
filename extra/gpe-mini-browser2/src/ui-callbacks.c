@@ -41,6 +41,7 @@
 
 
 #include "browser-data.h"
+#include "ui.h"
 #include "ui-callbacks.h"
 #include "utility-functions.h"
 
@@ -156,6 +157,30 @@ void fullscreen_cb (GtkWidget* widget, gpointer data)
   }
 }
 
+void new_tab_cb (GtkWidget* widget, gpointer data)
+{
+  int tab_nr;
+
+  tab_nr = gtk_notebook_append_page(notebook, create_htmlview(), NULL);
+  tab_list = g_list_append(tab_list, web_view);
+
+  gtk_notebook_set_show_tabs(notebook, TRUE);
+  gtk_widget_show_all (GTK_WIDGET(notebook));
+  gtk_notebook_set_current_page(notebook, tab_nr);
+  gtk_entry_set_text (GTK_ENTRY(url_entry), "");
+}
+
+void close_tab_cb (GtkWidget* widget, gpointer data)
+{
+  int tab_number;
+  gpointer *web_view_data;
+
+  tab_number = gtk_notebook_get_current_page(notebook);
+  gtk_notebook_remove_page(notebook, tab_number);
+  web_view_data = g_list_nth_data(tab_list, tab_number);  
+  tab_list = g_list_remove(tab_list, web_view_data);
+}
+
 void show_hide_tabs_cb (GtkNotebook *notebook, GtkWidget *child, guint tab_num, gpointer tab_data)
 {
   int tab_amount = 0;
@@ -166,6 +191,18 @@ void show_hide_tabs_cb (GtkNotebook *notebook, GtkWidget *child, guint tab_num, 
   else
         gtk_notebook_set_show_tabs(notebook, TRUE);
 
+}
+
+void update_tab_data_cb (GtkNotebook* notebook, GtkNotebookPage* page, guint tab_num, gpointer tab_data)
+{
+  WebKitWebFrame *frame;
+
+  web_view = g_list_nth_data(tab_list, tab_num);
+  frame = webkit_web_view_get_main_frame(web_view);
+
+  const gchar *url = webkit_web_frame_get_uri(frame);
+  if (url)
+      gtk_entry_set_text (GTK_ENTRY (url_entry), url);  
 }
 
 void browser_quit_cb (GtkWidget* widget, gpointer data)
