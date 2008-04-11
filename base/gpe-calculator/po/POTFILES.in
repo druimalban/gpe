@@ -1,0 +1,17 @@
+gpe-calculator.desktop.in.in
+main.c
+calc_basic.c
+callbacks.c
+display.c
+general_functions.c
+interface.c
+math_functions.c
+support.c
+calc_basic.h
+callbacks.h
+display.h
+galculator.h
+general_functions.h
+interface.h
+math_functions.h
+support.h

@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Calculator
-Comment=GPE Calculator
+_Name=Calculator
+_Comment=GPE Calculator
 Exec=gpe-calculator
 Terminal=false
 Type=Application
