@@ -1,3 +1,7 @@
+2008-04-12	Florian Boor <florian@kernelconcepts.de>
+
+	- Add autotools support, patch contributed by David Marlin
+
 2006-05-20	Philippe De Swert <philippedeswert@scarlet.be>
 
 	- fix erronous host includes
