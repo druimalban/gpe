@@ -1,9 +1,9 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=IRC Client
-Comment=GPE IRC
+_Name=IRC Client
+_Comment=GPE IRC Client
 Exec=gpe-irc
-Terminal=0
+Terminal=false
 Type=Application
 Icon=gpe-irc.png
 Categories=Application;IRC;GPE;

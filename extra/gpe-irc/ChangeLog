@@ -1,3 +1,7 @@
+2008-04-12 Florian Boor <fb@kernelconcepts.de>
+
+	* Add autotools support, patch contributed by David Marlin
+
 2006-09-17 Philippe De Swert <philippedeswert@scarlet.be>
 
 	* dictionary.c : remove unused variables
