@@ -1,9 +1,9 @@
 [Desktop Entry]
-_Name=Mini Web Browser
+_Name=Mini Web Browser 2
 _Comment=Browse the web
 Exec=gpe-mini-browser2
 Terminal=false
 Type=Application
-Icon=gpe-mini-browser
+Icon=gpe-mini-browser2
 Categories=X-GPE;X-PIM;X-Internet;X-Browser;
 StartupNotify=true
