@@ -29,8 +29,6 @@
 
 #include "playlist.h"
 
-#undef IS_HILDON
-
 /* Forward.  */
 static void
 play_list_get_info_by_uid (PlayList *pl, char *uid,
@@ -51,9 +49,6 @@ struct _PlayList {
 
   sqlite *sqliteh;
   GstElement *playbin;
-#ifdef IS_HILDON
-  GstElement *source;
-#endif
   GstState last_state;
 
   int random;
@@ -432,12 +427,7 @@ playbin_ensure (PlayList *pl)
     {
 #ifdef IS_HILDON
       /* Evil, evil, evil, evil.  playbin is broken on the 770.  */
-      pl->playbin = gst_pipeline_new ("playbin");
-      pl->source = gst_element_factory_make ("gnomevfssrc", "source");
-      GstElement *sink = gst_element_factory_make ("dspmp3sink", "sink");
-
-      gst_bin_add_many (GST_BIN (pl->playbin), pl->source, sink, NULL);
-      gst_element_link_many (pl->source, sink, NULL);
+      pl->playbin = gst_element_factory_make ("playbinmaemo", "player");
 #else
       pl->playbin = gst_element_factory_make ("playbin", "player");
 #endif
@@ -450,8 +440,6 @@ playbin_ensure (PlayList *pl)
 gboolean
 play_list_set_sink (PlayList *pl, const gchar *sink)
 {
-  /* See above comment about how evil maemo is.  */
-#ifndef IS_HILDON
   GstElement *audiosink = gst_element_factory_make (sink, "sink");
   if (! audiosink)
     return FALSE;
@@ -459,7 +447,7 @@ play_list_set_sink (PlayList *pl, const gchar *sink)
   playbin_ensure (pl);
 
   g_object_set (G_OBJECT (pl->playbin), "audio-sink", audiosink, NULL);
-#endif
+
   return TRUE;
 }
 
@@ -534,11 +522,7 @@ play_list_play (PlayList *pl)
     }
 
   gst_element_set_state (pl->playbin, GST_STATE_NULL);
-#ifdef IS_HILDON
-  g_object_set (G_OBJECT (pl->source), "location", source, NULL);
-#else
   g_object_set (G_OBJECT (pl->playbin), "uri", source, NULL);
-#endif
   GstStateChangeReturn res = gst_element_set_state (pl->playbin,
 						    GST_STATE_PLAYING);
   if (res == GST_STATE_CHANGE_FAILURE)

@@ -1,3 +1,13 @@
+2008-04-16  Neal H. Walfield  <neal@gnu.org>
+
+        * src/playlist.c (IS_HILDON): Don't undefine.
+        (struct _PlayList) [IS_HILDON]: remove field source.
+        (playbin_ensure) [IS_HILDON]: Use playbinmaemo rather than
+        playbin.
+        (play_list_set_sink) [IS_HILDON]: Implement in the usual fashion.
+        (play_list_play) [IS_HILDON]: Use the "uri", not the "location",
+        property.
+
 2008-03-28  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* src/playlist.c (toplevel): Activate playbin for Maemo since it is
