@@ -1896,6 +1896,8 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 			}
 			current = list;
 			priv->familyname = mimedir_vcard_strjoin (" ", current->data);
+			/* Note: this code does not complain if fewer than 5 elements are present.
+			   This is deliberate: Palm generates N: lines with one element */
 			if (current->next) {
 				current = g_slist_next (current);
 				priv->givenname = mimedir_vcard_strjoin (" ", current->data);
@@ -2419,8 +2421,14 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 	}
 
 	if (priv->familyname == NULL) {
+	  /* Palm has a habit of leaving out the N: attribute, even though RFC 2426 says it is mandatory.
+	     So, let's try to work it out from the FN: or ORG: if present */
+	  if (priv->fn) priv->familyname = g_strdup(priv->fn);
+	  else if (priv->organization) priv->familyname = mimedir_vcard_strjoin (" ", priv->organization);
+	  else {
 		g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_ATTRIBUTE_MISSING, MIMEDIR_PROFILE_ERROR_ATTRIBUTE_MISSING_STR, "N");
 		return FALSE;
+	  }
 	}
 	if (priv->fn == NULL) {
 		/* According to RFC 2426, every VCard must have a FN attribute.
