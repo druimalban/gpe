@@ -24,10 +24,6 @@
 
 void calibrate ()
 {
-#ifndef __arm__
-	gpe_error_box ("Wrong system type, can't run calibration.");
-	return ; 
-#endif
 	if (suid_exec("XCAL","--??"))
 	  gpe_error_box(_("Sorry, wrong password."));
 }
