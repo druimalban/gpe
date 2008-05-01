@@ -1478,7 +1478,7 @@ event_db_new (const char *fname, GError **error)
     }
 
   /* Read EDB->ALARMS_FIRED_THROUGH.  */
-  edb->alarms_fired_through = time (NULL);
+  edb->alarms_fired_through = 0;
   if (version < 2)
     sqlite_exec (SQLITE_DB (edb)->sqliteh,
 		 "create table alarms_fired_through (time INTEGER)",
@@ -1491,7 +1491,7 @@ event_db_new (const char *fname, GError **error)
       if (argc == 1)
 	{
 	  int t = atoi (argv[0]);
-	  if (t > 0)
+	  if (t > edb->alarms_fired_through)
 	    edb->alarms_fired_through = t;
 	}
 
@@ -1501,6 +1501,7 @@ event_db_new (const char *fname, GError **error)
 		   "select time from alarms_fired_through",
 		   alarms_fired_through_callback, edb, &err))
     goto error;
+  if (edb->alarms_fired_through == 0) edb->alarms_fired_through = time (NULL);
 
   /* Unacknowledged alarms.  */
 

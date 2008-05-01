@@ -1,3 +1,11 @@
+2008-05-01  Graham Cobb  <g+770@cobb.uk.net>
+
+	* event-db.c (buzzer): update alarms_fired_through on all paths through buzzer, otherwise
+	it doesn't get updated when an event goes off and the event can get repeated
+
+	* sqlite.c (event_db_new): make alarms_fired_through_callback find the maximum time
+	from the rows in the table
+
 2008-02-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* sqlite.c (event_load_callback): correctly handle NULL values

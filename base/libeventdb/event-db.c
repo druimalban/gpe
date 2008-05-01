@@ -448,9 +448,6 @@ buzzer (gpointer data)
       else
 	{
 	  edb->period_end = now + PERIOD_LENGTH;
-
-	  /* And advance alarms_fired_through to NOW.  */
-	  event_db_set_alarms_fired_through (edb, now, NULL);
 	}
     }
 
@@ -500,6 +497,8 @@ buzzer (gpointer data)
     }
 
   edb->alarm = g_timeout_add ((next_alarm - now) * 1000, buzzer, edb);
+
+  event_db_set_alarms_fired_through (edb, now, NULL);
 
   /* Don't trigger this timeout again.  */
   return FALSE;
