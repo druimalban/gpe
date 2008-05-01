@@ -1501,7 +1501,15 @@ event_db_new (const char *fname, GError **error)
 		   "select time from alarms_fired_through",
 		   alarms_fired_through_callback, edb, &err))
     goto error;
-  if (edb->alarms_fired_through == 0) edb->alarms_fired_through = time (NULL);
+  if (edb->alarms_fired_through == 0)
+    edb->alarms_fired_through = time (NULL);
+  else {
+    if (sqlite_exec_printf (SQLITE_DB (edb)->sqliteh,
+		     "delete from alarms_fired_through "
+		     "where time < %d",
+		     NULL, NULL, &err, edb->alarms_fired_through ))
+      goto error;
+  }
 
   /* Unacknowledged alarms.  */
 

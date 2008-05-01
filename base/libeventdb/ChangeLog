@@ -1,3 +1,8 @@
+2008-05-02  Graham Cobb  <g+770@cobb.uk.net>
+
+	* sqlite.c (event_db_new): remove extra rows from alarms_fired_through after
+	we read it.
+
 2008-05-01  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event-db.c (buzzer): update alarms_fired_through on all paths through buzzer, otherwise
