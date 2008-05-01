@@ -1,3 +1,8 @@
+2008-05-01  Graham Cobb  <g+770@cobb.uk.net>
+
+	* alarm-dialog.c (ack_all_events_clicked): Correct handling of list of events
+	to be cleared.
+
 2008-01-15  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event-cal.c: On chinook, base event calendar widget on 

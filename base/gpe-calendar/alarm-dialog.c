@@ -165,11 +165,11 @@ ack_all_events_clicked (GtkWidget *button, gpointer d)
   AlarmDialog *alarm_dialog = ALARM_DIALOG (d);
 
   /* Clear all of the events.  */
-  GList *i;
-  for (i = alarm_dialog->events; i; i = g_list_next (i))
-    ack_event_clicked (button, i->data);
-  g_list_free (alarm_dialog->events);
-  alarm_dialog->events = NULL;
+  /* Note: ack_event_clicked removes the specified event from the list
+     so we can't just loop through the list.  Instead we just keep clearing
+     the first entry in the list until the list is empty */
+  while (alarm_dialog->events)
+    ack_event_clicked (button, alarm_dialog->events->data);
 
   /* Hide the dialog as well.  */
   gtk_widget_hide (GTK_WIDGET (alarm_dialog));
