@@ -22,3 +22,4 @@
  */
 
 const gchar *parse_url (const gchar * url);
+GtkWidget * add_close_button(void);

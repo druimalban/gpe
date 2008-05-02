@@ -38,6 +38,8 @@
 #include <gpe/picturebutton.h>
 #include <gpe/gpedialog.h>
 
+#include "ui-callbacks.h"
+
 const gchar *parse_url (const gchar * url)
 {
   const gchar *p;
@@ -55,4 +57,12 @@ const gchar *parse_url (const gchar * url)
   return (p);
 }
 
+GtkWidget * add_close_button(void)
+{
+  GtkWidget *close_tab_button;
 
+  close_tab_button = gpe_button_new_from_stock (GTK_STOCK_CLOSE, GPE_BUTTON_TYPE_ICON);
+  g_signal_connect (G_OBJECT (close_tab_button), "clicked", G_CALLBACK (close_tab_cb), NULL);
+
+  return close_tab_button;
+}

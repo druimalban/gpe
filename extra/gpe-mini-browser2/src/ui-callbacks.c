@@ -52,6 +52,9 @@ gboolean main_window_key_press_event_cb (GtkWidget * widget, GdkEventKey * k, Gt
     case GDK_BackSpace:
       back_cb(widget, data);
       return TRUE;
+    case GDK_t:
+      new_tab_cb(NULL, NULL);
+      return TRUE;		
     default:
       return FALSE;
 
@@ -116,7 +119,11 @@ void progress_changed_cb (WebKitWebView* page, gint progress, gpointer data)
 
 void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame, const gchar* title, gpointer data)
 {
+ GtkWidget * label;
 
+ label = gtk_label_new(title);
+ printf("title = %s\n", title);
+ gtk_notebook_set_tab_label (notebook, GTK_WIDGET(web_view), label);
 }
 
 void preferences_cb (GtkWidget* widget, gpointer data)
@@ -165,19 +172,23 @@ void new_tab_cb (GtkWidget* widget, gpointer data)
   tab_list = g_list_append(tab_list, web_view);
 
   gtk_notebook_set_show_tabs(notebook, TRUE);
+  gtk_notebook_set_tab_label(notebook, GTK_WIDGET(web_view), add_close_button());
   gtk_widget_show_all (GTK_WIDGET(notebook));
   gtk_notebook_set_current_page(notebook, tab_nr);
   gtk_entry_set_text (GTK_ENTRY(url_entry), "");
+
 }
 
 void close_tab_cb (GtkWidget* widget, gpointer data)
 {
   int tab_number;
   gpointer *web_view_data;
-  
+
+  /* TODO: last tab hides close button too now. Not needed anymore?  
   if((gtk_notebook_get_n_pages(notebook)) == 1) 
 	return; 
- 
+  */ 
+
   tab_number = gtk_notebook_get_current_page(notebook);
   gtk_notebook_remove_page(notebook, tab_number);
   web_view_data = g_list_nth_data(tab_list, tab_number);  
