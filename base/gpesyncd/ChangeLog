@@ -1,3 +1,9 @@
+2008-05-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* src/main.c (command_loop): On EOF perform a QUIT command
+	(command_loop): Find matching END:... even if there are leading or trailing spaces
+	Remove replace_newline
+
 2007-10-10  Graham Cobb  <g+770@cobb.uk.net>
 
 	* src/import.c (add_event): Use specified calendar for import

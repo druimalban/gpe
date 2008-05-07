@@ -286,18 +286,6 @@ get_next_token (gchar * str, guint * num)
   return data;
 }
 
-void
-replace_newline (gchar * str)
-{
-  gchar *c;
-  c = strchr (str, '\n');
-  while (c)
-    {
-      c[0] = ' ';
-      c = strchr (str, '\n');
-    }
-}
-
 /*! \brief executes a command
  *
  * \param ctx		The current context
@@ -556,7 +544,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
     }
   else
     {
-      replace_newline (cmd);
+      g_strstrip (cmd);
       g_string_printf (ctx->result, "Invalid command: %s\n", cmd);
     }
 
@@ -602,14 +590,15 @@ command_loop (gpesyncd_context * ctx)
     {
       g_string_assign (cmd_string, "");
 
-      gchar c = fgetc (ctx->ifp);
-      do
+      int c = fgetc (ctx->ifp);
+      while (c != '\n' && c != EOF)
 	{
 	  g_string_append_c (cmd_string, c);
 	  c = fgetc (ctx->ifp);
 	}
-      while (c != '\n');
-      g_string_append_c (cmd_string, c);
+
+      if (c == EOF) g_string_assign(cmd_string, "QUIT\n");
+      else g_string_append_c (cmd_string, c);
 
       /* Here we check if we are receiving data like a VCARD.
        * We look at the last word and if it is a
@@ -645,8 +634,8 @@ command_loop (gpesyncd_context * ctx)
 		      g_string_append_printf (cmd_string, "%s",
 					      read_buffer->str);
 
-		      replace_newline (read_buffer->str);
-		      replace_newline (end_string->str);
+		      g_strstrip (read_buffer->str);
+		      g_strstrip (end_string->str);
 		    }
 		  while (strcasecmp (read_buffer->str, end_string->str));
 
