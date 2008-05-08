@@ -1,3 +1,32 @@
+2008-05-08  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main-hildon.c (import_one_file): Add error parameter.
+	Pass on error parameter to import_vcard.
+	(on_import_vcard): Supply error parameter to import_one_file and
+	display any error in the dialog box
+	(main): When importing a file from the command line, use error parameter
+	to import_one_file and print success or error message to stdoout,not using 
+	a dialog box.
+
+	* main.c (import_one_file): Add error parameter.
+	Pass on error parameter to import_vcard.
+	(on_import_vcard): Supply error parameter to import_one_file and
+	display any error in the dialog box
+	(main): When importing a file from the command line, use error parameter
+	to import_one_file and print success or error message to stdoout,not using 
+	a dialog box.
+	NOTE: changes to main.c not tested, testing only done with main-hildon.c.
+	However, the same changes were made.
+
+	* import-vcard.c (do_import_vcard): Use contacts_commit_person instead of
+	direct SQL access to database.
+	(import_vcard): Open database.
+	(import_vcard): Add error parameter to import_vcard and do_import_vcard.
+	Caller now responsible for displaying error messages.
+
+	* import-vcard.h (GPECONTACT_IMPEXPORT_ERROR_DBOPEN_STR): Add error messages
+	(import_vcard): Add error parameter to import_vcard
+
 2008-03-14  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * main.c, main-hildon.c (update_display): Keep selected entry. Fixes #146

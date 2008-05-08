@@ -1287,11 +1287,11 @@ on_main_focus(GtkWindow *window,  GdkEventExpose *event,gpointer user_data)
 }
 
 static int 
-import_one_file(const gchar *filename)
+import_one_file(const gchar *filename, GError **error)
 {
   int result = 0;
 
-  result = import_vcard(filename);
+  result = import_vcard(filename, error);
 
   return result;
 
@@ -1307,6 +1307,7 @@ on_import_vcard (GtkWidget *widget, gpointer data)
   
   if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
     {
+      GError *error = NULL;
       gchar *errstr = NULL;
       int ec = 0, i = 0;
       gchar **files = 
@@ -1314,16 +1315,17 @@ on_import_vcard (GtkWidget *widget, gpointer data)
       gtk_widget_hide(filesel); 
       while (files[i])
         {
-          if (import_one_file(files[i]) < 0) 
+          if (import_one_file(files[i], &error) < 0) 
             {
               gchar *tmp;
               if (!errstr) 
                 errstr=g_strdup("");
               ec++;
-			  tmp = g_strdup_printf("%s\n%s",errstr,strrchr(files[i],'/')+1);
+	      tmp = g_strdup_printf("%s\n%s: %s",errstr,strrchr(files[i],'/')+1,error->message);
               if (errstr) 
                  g_free(errstr);
               errstr = tmp;
+	      g_clear_error(&error);
             }
           i++;  
         }
@@ -1695,23 +1697,20 @@ main (int argc, char *argv[])
   if (ifile)
     {
       int ret;
-      GtkWidget *dialog = NULL;
+      GError *error = NULL;
       
-      ret =  import_one_file(ifile);
-      if (ret)
-       dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
-	                                    GTK_BUTTONS_OK,
-	                                    _("Could not import file %s."),
-	                                     ifile);
-	  else
-        dialog = gtk_message_dialog_new(NULL,0,GTK_MESSAGE_INFO,
-	                                      GTK_BUTTONS_OK,
-	                                      _("File %s imported sucessfully."),
-	                                      ifile);
-      gtk_dialog_run(GTK_DIALOG(dialog));
-      gtk_widget_destroy(dialog);
-      
-      exit (EXIT_SUCCESS);
+      ret =  import_one_file(ifile, &error);
+      if (ret) 
+	{
+	  g_print(_("Could not import file %s: %s.\n"), ifile, error->message);
+	  g_error_free(error);
+	  exit (EXIT_FAILURE);
+	}
+      else
+	{
+	  g_print(_("File %s imported sucessfully.\n"), ifile);      
+	  exit (EXIT_SUCCESS);
+	}
     }
   
   export_init ();

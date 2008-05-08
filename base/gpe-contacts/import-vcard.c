@@ -21,6 +21,7 @@
 #include <gtk/gtk.h>
 #include <gpe/errorbox.h>
 #include <gpe/question.h>
+#include <gpe/contacts-db.h>
 
 #include <mimedir/mimedir-vcard.h>
 
@@ -28,113 +29,73 @@
 
 #include <sqlite.h>
 
+#include "import-vcard.h"
+
 #define _(x)  (x)
 
 #define DB_NAME "/.gpe/contacts"
 
-static int
-do_import_vcard (MIMEDirVCard *card)
+GQuark
+gpecontact_impexport_error_quark (void)
 {
-  sqlite *db;
-  GSList *tags, *i;
-  char *buf;
-  const gchar *home;
-  char *err = NULL;
-  int id;
-  char *name = NULL;
-  char *family_name = NULL;
-  char *given_name = NULL;
-  char *company = NULL;
+	static gchar qs[] = "gpecontact-impexport-error-quark";
 
-  home = g_get_home_dir ();
-  
-  buf = g_strdup_printf ("%s%s", home, DB_NAME);
+	return g_quark_from_static_string (qs);
+}
 
-  db = sqlite_open (buf, 0, &err);
-  g_free (buf);
-
-  if (db == NULL)
-    {
-      gpe_error_box (err);
-      free (err);
-      return -1;
-    }
- 
-  if (sqlite_exec (db, "insert into contacts_urn values (NULL, NULL, NULL, NULL)",
-                   NULL, NULL, &err) != SQLITE_OK)
-    {
-      gpe_error_box (err);
-      free (err);
-      sqlite_close (db);
-      return -2;
-    }
-
-  id = sqlite_last_insert_rowid (db);
+static int
+do_import_vcard (MIMEDirVCard *card, GError **error)
+{
+  GSList *tags;
 
   tags = vcard_to_tags (card);
 
-  for (i = tags; i; i = i->next)
-    {
-      gpe_tag_pair *t = i->data;
+  /* Set up the person object */
+  struct contacts_person *p = contacts_new_person();
+  p->data = tags;
 
-      sqlite_exec_printf (db, "insert into contacts values ('%d', '%q', '%q')", NULL, NULL, NULL,
-                          id, t->tag, t->value);
-    
-      if (!strcasecmp(t->tag, "NAME"))
-          name = g_strdup(t->value);
-      else if (!strcasecmp(t->tag, "FAMILY_NAME"))
-          family_name = g_strdup(t->value);
-      else if (!strcasecmp(t->tag, "GIVEN_NAME"))
-          given_name = g_strdup(t->value);
-      else if (!strcasecmp(t->tag, "COMPANY"))
-          company = g_strdup(t->value);
-    }
-    
-    if (!name) 
-      name = g_strdup_printf("%s %s", given_name ? given_name : "", 
-                             family_name ? family_name : "");
-    
-    if (sqlite_exec_printf (db,
-                             "update contacts_urn set name='%q', family_name='%q', company='%q' where (urn=%d)",
-				             NULL, NULL, &err, name, family_name, company, id))
-    {
-      gpe_error_box (err);
-      free (err);
-      sqlite_close (db);
-      return -2;
-    }
-  gpe_tag_list_free (tags);
+  /* Note that contacts_commit_person automatically deletes any
+     existing entries with this UID, assigns a new UID, creates
+     the MODIFIED tag and fills in the name, etc. from the tags */
 
-  sqlite_close (db);
+  if (!contacts_commit_person(p)) {
+    g_set_error(error, GPECONTACT_IMPEXPORT_ERROR, GPECONTACT_IMPEXPORT_ERROR_COMPER, GPECONTACT_IMPEXPORT_ERROR_COMPER_STR);
+    contacts_discard_person(p);
+    return -2;
+  }
+
+  contacts_discard_person(p);
+
   return 0;
 }
 
 int
-import_vcard (const gchar *filename)
+import_vcard (const gchar *filename, GError **error)
 {
-  GError *error = NULL;
+  GError *err = NULL;
   GList *cardlist, *l;
   MIMEDirVCard *card = NULL;
   int result = 0;
 
-  cardlist = mimedir_vcard_read_file (filename, &error);
+  if (contacts_db_open(FALSE) < 0) {
+    g_set_error(error, GPECONTACT_IMPEXPORT_ERROR, GPECONTACT_IMPEXPORT_ERROR_DBOPEN, GPECONTACT_IMPEXPORT_ERROR_DBOPEN_STR);
+    return -3;
+  }
 
-  if (error) {
-    fprintf (stderr, "import_vcard : %s\n",
-	     error->message);
-    g_error_free (error);
+  cardlist = mimedir_vcard_read_file (filename, &err);
+
+  if (err) {
+    g_propagate_error(error, err);
     return -1;
   }
 
   for (l = cardlist; l != NULL && result == 0; l = g_list_next (l)) {
 
-    if( l->data != NULL && MIMEDIR_IS_VCARD (l->data)) {
+    g_assert(l->data != NULL);
+    g_assert(MIMEDIR_IS_VCARD (l->data));
 
-	card = l->data;
-	result = do_import_vcard (card);
-      }
-    else
-      result = -3;
+    card = l->data;
+    result = do_import_vcard (card, error);
   }
 
   /* Cleanup */
