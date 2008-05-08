@@ -1503,7 +1503,9 @@ mimedir_vcard_read_file (const gchar *filename, GError **error)
 			return NULL;
 		}
 
-		if (g_io_channel_set_encoding (channel, NULL, error) != G_IO_STATUS_NORMAL) {
+		G_CONST_RETURN char *encoding;
+		g_get_charset(&encoding);
+		if (g_io_channel_set_encoding (channel, encoding, error) != G_IO_STATUS_NORMAL) {
 			g_io_channel_unref (channel);
 			return NULL;
 		}

@@ -45,7 +45,7 @@ typedef enum {
 	MIMEDIR_ATTRIBUTE_ERROR_LIST_TOO_LONG
 } MIMEDirAttributeError;
 
-#define MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR			_("syntax error (%s)")
+#define MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR			_("syntax error (%s) in \"%s\"")
 #define MIMEDIR_ATTRIBUTE_ERROR_ILLEGAL_CHAR_STR		_("illegal character 0x%02x for type \"%s\"")
 #define MIMEDIR_ATTRIBUTE_ERROR_INVALID_FORMAT_STR		_("invalid format for type \"%s\" in attribute %s")
 #define MIMEDIR_ATTRIBUTE_ERROR_UNKNOWN_ENCODING_STR		_("attribute %s could not be decoded, since its encoding is unknown")

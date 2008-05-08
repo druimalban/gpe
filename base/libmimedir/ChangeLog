@@ -1,3 +1,16 @@
+2008-05-08  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-attribute.c (decode_attribute_value): Only reconvert from original
+	encoding if Base64 or QP decoding has happened.  Otherwise data is already in UTF-8.
+
+2008-05-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-attribute.c (mimedir_attribute_get_value_structured_text): Allow same 
+	characters in attribute values that mimedir_attribute_get_value_text_list accepts (\n, \r, \t)
+
+	* mimedir/mimedir-attribute.h (MIMEDIR_ATTRIBUTE_ERROR_SYNTAX_STR): Improve syntax error reporting
+	to include context of error
+
 2008-04-28  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-vcard.c (mimedir_vcard_read_from_profile): Default missing N: attribute
