@@ -14,8 +14,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgpewidget 0.56\n"
-"POT-Creation-Date: 2003-03-30 15:33+0100\n"
+"Project-Id-Version: libgpewidget 0.46\n"
+"POT-Creation-Date: 2003-02-01 16:44+0000\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -23,31 +23,77 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: errorbox.c:42
-#, c-format
-msgid "GPE-ERROR: %s\n"
-msgstr ""
+#: errorbox.c:58
+msgid "Error"
+msgstr "Ikosa"
 
-#: pixmaps.c:82
+#: pixmaps.c:81
 #, fuzzy, c-format
 msgid "Unable to load icon \"%s\""
 msgstr "Kuri Ibirimo Agashushondanga"
 
-#: pixmaps.c:168
+#: pixmaps.c:167
 #, fuzzy, c-format
 msgid "Icon \"%s\" not loaded"
 msgstr "OYA"
 
-#: dirbrowser.c:166
-#, fuzzy
-msgid "No directory is selected."
-msgstr "bushyinguro ni Byahiswemo"
+#: dirbrowser.c:307
+msgid "OK"
+msgstr "OKE"
 
-#: what.c:78
+#: dirbrowser.c:315
+msgid "Cancel"
+msgstr "Kureka"
+
+#: what.c:69
 #, fuzzy
 msgid "No help available."
 msgstr "Ifashayobora Bihari"
 
-#: question.c:175
+# basctl/source\basicide\basidesh.src:RID_IMGBTN_REMOVEWATCH.text
+#: gtkdatesel.c:187
+#, fuzzy
+msgid "%Y"
+msgstr "%Y"
+
+# basctl/source\basicide\basidesh.src:RID_IMGBTN_REMOVEWATCH.text
+#: gtkdatesel.c:196
+#, fuzzy
+msgid "%b"
+msgstr "%b"
+
+# basctl/source\basicide\basidesh.src:RID_IMGBTN_REMOVEWATCH.text
+#: gtkdatesel.c:199
+#, fuzzy
+msgid "%B"
+msgstr "%B"
+
+# basctl/source\basicide\basidesh.src:RID_IMGBTN_REMOVEWATCH.text
+#: gtkdatesel.c:202
+#, fuzzy, c-format
+msgid "%m"
+msgstr "%m"
+
+# svtools/source\control\calendar.src:STR_SVT_CALENDAR_WEEK.text
+#: gtkdatesel.c:213
+#, fuzzy
+msgid "Week %V"
+msgstr "Icyumweru"
+
+# desktop/source\app\ssodlg.src:DLG_SSOLOGIN.text
+#: gtkdatesel.c:219
+#, fuzzy, c-format
+msgid "%a, %d"
+msgstr "%a,%d"
+
+#: question.c:136
 msgid "Question"
 msgstr ""
+
+#: question.c:137
+msgid "No"
+msgstr "Oya"
+
+#: question.c:137
+msgid "Yes"
+msgstr "Yego"

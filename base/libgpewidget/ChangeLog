@@ -1,5 +1,8 @@
 2008-05-13  Florian Boor <florian@kernelconcepts.de>
 
+	* gpe-tp.am: Switch to new translation code.
+	* confgure.ac: Add several new translations.
+	* po/*: Major translations update. 
 	* colorrenderer.c: Add sanity check to avoid potential segfault.
 
 2008-01-15  Graham Cobb  <g+770@cobb.uk.net>

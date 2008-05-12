@@ -1,0 +1,45 @@
+# -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for libgpewidget.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Matej Urbančič <matej.urban@gmail.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libgpewidget-0.56\n"
+"POT-Creation-Date: 2003-03-30 15:33+0100\n"
+"PO-Revision-Date: 2005-09-29 10:39+0100\n"
+"Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
+"Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n%100==4 ? 3 : 0);\n"
+"X-Poedit-Language: Slovenian\n"
+"X-Poedit-Country: SLOVENIA\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: errorbox.c:42
+#, c-format
+msgid "GPE-ERROR: %s\n"
+msgstr "GPE-NAPAKA: %s\n"
+
+#: pixmaps.c:82
+#, c-format
+msgid "Unable to load icon \"%s\""
+msgstr "Ne morem naložiti ikone \"%s\""
+
+#: pixmaps.c:168
+#, c-format
+msgid "Icon \"%s\" not loaded"
+msgstr "Ikona \"%s\" ni naložena"
+
+#: dirbrowser.c:166
+msgid "No directory is selected."
+msgstr "Ni izbranega imenika"
+
+#: what.c:78
+msgid "No help available."
+msgstr "Pomoč ni na voljo."
+
+#: question.c:175
+msgid "Question"
+msgstr "Vprašanje"

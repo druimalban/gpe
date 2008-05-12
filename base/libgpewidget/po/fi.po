@@ -1,0 +1,79 @@
+# translation of libgpewidget.pot to Finnish
+# Copyright © 2007 Free Software Foundation, Inc.
+# This file is distributed under the same license as the libgpewidget package.
+#
+# Jorma Karvonen <karvjorm@users.sf.net>, 2007.
+msgid ""
+msgstr ""
+"Project-Id-Version: libgpewidget 0.56\n"
+"POT-Creation-Date: 2003-03-30 15:33+0100\n"
+"PO-Revision-Date: 2007-11-04 15:00+0200\n"
+"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.2\n"
+
+#: errorbox.c:42
+#, c-format
+msgid "GPE-ERROR: %s\n"
+msgstr "GPE-VIRHE: %s\n"
+
+#: pixmaps.c:82
+#, c-format
+msgid "Unable to load icon \"%s\""
+msgstr "Ei voida ladata kuvaketta ”%s”"
+
+#: pixmaps.c:168
+#, c-format
+msgid "Icon \"%s\" not loaded"
+msgstr "Kuvake ”%s” ei ole ladattu"
+
+#: dirbrowser.c:166
+msgid "No directory is selected."
+msgstr "Hakemistoa ei ole valittu."
+
+#: what.c:78
+msgid "No help available."
+msgstr "Opaste ei ole käytettävissä."
+
+#: question.c:175
+msgid "Question"
+msgstr "Kysymys"
+
+#~ msgid "Selected colour"
+#~ msgstr "Valittu väri"
+
+#~ msgid "Selected colour value in the dialog."
+#~ msgstr "Valittu väriarvo dialog-ikkunassa."
+
+#~ msgid "Warning: unable to allocate colour.\n"
+#~ msgstr "Varoitus: ei voida varata väriä.\n"
+
+#~ msgid "Red"
+#~ msgstr "Punainen"
+
+#~ msgid "Green"
+#~ msgstr "Vihreä"
+
+#~ msgid "Blue"
+#~ msgstr "Sininen"
+
+#~ msgid "Colorlist"
+#~ msgstr "Väriluettelo"
+
+#~ msgid "List of colors to display."
+#~ msgstr "Näytettävien värien luettelo."
+
+#~ msgid "Width"
+#~ msgstr "Leveys"
+
+#~ msgid "Display cell width."
+#~ msgstr "Näytä soluleveys."
+
+#~ msgid "Height"
+#~ msgstr "Korkeus"
+
+#~ msgid "Display cell height."
+#~ msgstr "Näytä solukorkeus."
