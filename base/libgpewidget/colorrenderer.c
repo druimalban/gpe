@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2006, 2008 Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -149,8 +149,8 @@ cell_renderer_color_finalize (GObject *object)
       g_array_free (renderer->colorlist, TRUE);
       renderer->colorlist = NULL;
     }
-    
-  (* G_OBJECT_CLASS (num_parent_class)->finalize) (object);
+  if (num_parent_class) 
+    (* G_OBJECT_CLASS (num_parent_class)->finalize) (object);
 }
 
 static void

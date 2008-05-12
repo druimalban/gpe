@@ -1,3 +1,7 @@
+2008-05-13  Florian Boor <florian@kernelconcepts.de>
+
+	* colorrenderer.c: Add sanity check to avoid potential segfault.
+
 2008-01-15  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gtkdatecombo.c: On chinook use HildonCalendar instead of GtkCalendar
