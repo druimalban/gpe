@@ -11,7 +11,7 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=libgpewidget
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="cs da es ga id nl pt sk sv wa de fr hu pt_BR ro sr vi ky pl sl ja zh_TW fi zh_CN.po"
+ALL_LINGUAS="cs da es ga id nl pt sk sv wa de fr hu pt_BR ro sr vi ky pl sl ja zh_TW fi zh_CN"
 libgpewidgetlocaledir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(libgpewidgetlocaledir)
 
