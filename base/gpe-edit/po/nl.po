@@ -1,115 +1,130 @@
-# Dutch translation of gpe-edit.
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Dutch translations for gpe-edit.
 # This file is distributed under the same license as the gpe-edit package.
-# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
 #
+# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
+# Benno Schulenberg <benno@vertaalt.nl>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-edit 0.13\n"
-"POT-Creation-Date: 2003-02-20 20:31+0000\n"
-"PO-Revision-Date: 2003-07-30 17:35+0100\n"
-"Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
-"Language-Team: Dutch <vertaling@nl.linux.org>\n"
+"Project-Id-Version: gpe-edit-0.41\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-17 23:21+0100\n"
+"PO-Revision-Date: 2008-05-02 11:58+0200\n"
+"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
+"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: main.c:88 main.c:89
+#: ../gpe-edit.desktop.in.in.h:1
+msgid "GPE Text Editor"
+msgstr "GPE-tekstverwerker"
+
+#: ../gpe-edit.desktop.in.in.h:2
+msgid "Text Editor"
+msgstr "Tekstverwerker"
+
+#: ../main.c:78
+msgid "Help not (or incorrectly) installed. Or no helpviewer application registered."
+msgstr "Hulp is niet (of onjuist) geïnstalleerd.  Of er is geen hulptekstleesprogramma geregistreerd."
+
+#: ../main.c:99
 msgid "Untitled"
 msgstr "Naamloos"
 
-#: main.c:260
-msgid "Open File ..."
-msgstr "Bestand openen.."
+#: ../main.c:140
+msgid "Current file is modified, save?"
+msgstr "Huidig bestand is gewijzigd.  Opslaan?"
 
-#: main.c:289
-msgid "Save as .."
-msgstr "Opslaan als.."
-
-#: main.c:327
-msgid "Save current file before exiting?"
-msgstr "Huidige bestand opslaan alvorens af te sluiten?"
-
-#: main.c:327
+#: ../main.c:140 ../main.c:367
 msgid "Question"
 msgstr "Vraag"
 
-#: main.c:328
+#: ../main.c:271
+msgid "Open File ..."
+msgstr "Bestand openen..."
+
+#: ../main.c:322
+msgid "Save as..."
+msgstr "Opslaan als..."
+
+#: ../main.c:367
+msgid "Save current file before exiting?"
+msgstr "Huidig bestand opslaan alvorens af te sluiten?"
+
+#: ../main.c:368
 msgid "Don't save"
 msgstr "Niet opslaan"
 
-#: main.c:328 main.c:616
-msgid "Save"
-msgstr "Opslaan"
-
-#: main.c:390
+#: ../main.c:433
 msgid "Text not found"
 msgstr "Tekst niet gevonden"
 
-#: main.c:429
+#: ../main.c:473
 msgid "Unable to replace text"
 msgstr "Kan tekst niet vervangen"
 
-#: main.c:443 main.c:492
-msgid "Search for:"
-msgstr "Zoeken naar:"
+#: ../main.c:486
+msgid "Search for: "
+msgstr "Zoeken naar: "
 
-#: main.c:446 main.c:498
+#: ../main.c:489 ../main.c:546
 msgid "Find"
 msgstr "Zoeken"
 
-#: main.c:493
-msgid "Replace with:"
-msgstr "Vervangen met:"
+#: ../main.c:538
+msgid "Search for:"
+msgstr "Zoeken naar:"
 
-#: main.c:497 main.c:630
+#: ../main.c:540
+msgid "Replace with:"
+msgstr "Vervangen door:"
+
+#: ../main.c:545
 msgid "Replace"
 msgstr "Vervangen"
 
-#: main.c:608
-msgid "New"
-msgstr "Nieuw"
+#: ../main.c:671
+msgid "File editing field, additional functions are available by tap&hold or right click."
+msgstr "Bestandsbewerkingsveld; extra functies zijn beschikbaar door aantikken+vasthouden of rechtsklikken."
 
-#: main.c:609
+#: ../main.c:678
 msgid "New document"
 msgstr "Nieuw document"
 
-#: main.c:612
-msgid "Open"
-msgstr "Openen"
-
-#: main.c:613
+#: ../main.c:683
 msgid "Open file"
 msgstr "Bestand openen"
 
-#: main.c:617
+#: ../main.c:688
 msgid "Save current file"
-msgstr "Huidige bestand opslaan"
+msgstr "Huidig bestand opslaan"
 
-#: main.c:620
-msgid "Save as"
-msgstr "Opslaan als"
-
-#: main.c:621
+#: ../main.c:693
 msgid "Save current file as"
-msgstr "Huidige bestand opslaan als"
+msgstr "Huidig bestand opslaan als"
 
-#: main.c:626
-msgid "Search"
-msgstr "Zoeken"
-
-#: main.c:627
-msgid "Search for a string"
+#: ../main.c:704
+msgid "Search text for a string"
 msgstr "Zoeken naar tekst"
 
-#: main.c:631
+#: ../main.c:710
 msgid "Replace a string"
 msgstr "Een stuk tekst vervangen"
 
-#: gpe-edit.desktop.in.h:1
-msgid "GPE Text Editor"
-msgstr "GPE Tekstverwerker"
+#: ../main.c:725
+msgid "Copy selected, paste is possible by tap&hold"
+msgstr "Kopiëren is geselecteerd; plakken is mogelijk door aantikken+vasthouden"
 
-#: gpe-edit.desktop.in.h:2
-msgid "Text Editor"
-msgstr "Tekstverwerker"
+#: ../main.c:735
+msgid "Paste from clipboard"
+msgstr "Plakken vanaf het klembord"
+
+#: ../main.c:743
+msgid "Get help"
+msgstr "Hulpteksten lezen"
+
+#: ../main.c:751
+msgid "Exit gpe-edit"
+msgstr "GPE-edit afsluiten"
