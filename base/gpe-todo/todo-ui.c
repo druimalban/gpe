@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- *               2005, 2006          Florian Boor <florian@kernelconcepts.de>
+ *               2005, 2006, 2008 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -309,9 +309,9 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   if (large_screen)
     {
       if (mode_landscape)
-        gtk_window_set_default_size (GTK_WINDOW (window), 640, 440);
+        gtk_window_set_default_size (GTK_WINDOW (window), 480, 320);
       else
-        gtk_window_set_default_size (GTK_WINDOW (window), 440, 640);
+        gtk_window_set_default_size (GTK_WINDOW (window), 320, 480);
     }
   else
     gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
@@ -371,7 +371,7 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
 
   s = build_categories_string (t);
   if (!s)
-     s = g_strdup(_("Define categories by tapping the Categories button."));
+     s = g_strdup(_("(no category selected)"));
   gtk_label_set_text (GTK_LABEL (label_categories), s);
   g_free (s);
      

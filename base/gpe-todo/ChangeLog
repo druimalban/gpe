@@ -1,3 +1,8 @@
+2008-05-13  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* todo-ui.c: Fixe window sizing and some minor improvements.
+	Fixes #169
+
 2008-02-22  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* list-ui.c: Set return values of key handler properly. Fixes #81
