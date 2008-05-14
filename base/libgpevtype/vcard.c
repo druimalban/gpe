@@ -256,8 +256,8 @@ vcard_to_tags (MIMEDirVCard *vcard)
 	  g_object_get (G_OBJECT (address), "pobox", &pobox, NULL);
 	  g_object_get (G_OBJECT (address), "extended", &ext, NULL);
 	  g_object_get (G_OBJECT (address), "street", &street, NULL);
-	  g_object_get (G_OBJECT (address), "region", &region, NULL);
 	  g_object_get (G_OBJECT (address), "locality", &locality, NULL);
+	  g_object_get (G_OBJECT (address), "region", &region, NULL);
 	  g_object_get (G_OBJECT (address), "pcode", &code, NULL);
 	  g_object_get (G_OBJECT (address), "country", &country, NULL);
 
@@ -267,10 +267,10 @@ vcard_to_tags (MIMEDirVCard *vcard)
 	    s = append_str (s, ext);
 	  if (street)
 	    s = append_str (s, street);
-	  if (region)
-	    s = append_str (s, region);
 	  if (locality)
 	    s = append_str (s, locality);
+	  if (region)
+	    s = append_str (s, region);
 	  if (code)
 	    s = append_str (s, code);
 	  if (country)

@@ -1,3 +1,8 @@
+2008-05-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* vcard.c (vcard_to_tags): Put locality before region when creating
+	address from ADR fields.
+
 2008-02-20  Graham Cobb  <g+770@cobb.uk.net>
 
 	* vevent.c (event_import_from_vevent): Improve error message for missing dtstart
