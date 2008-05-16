@@ -1,0 +1,80 @@
+# Vietnamese Translation for gpe-clock-0.6.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# Clytie Siddall <clytie@riverland.net.au>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-clock 0.6\n"
+"POT-Creation-Date: 2003-09-06 00:02+0100\n"
+"PO-Revision-Date: 2006-07-12 17:28+0930\n"
+"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
+"Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"X-Generator: LocFactoryEditor 1.6b36\n"
+
+#: clock.c:261
+msgid "Unable to set alarm"
+msgstr "Không thể đặt báo động"
+
+#: clock.c:319
+msgid "Clock preferences"
+msgstr "Tùy thích đồng hồ"
+
+#: clock.c:324
+msgid "12-hour format"
+msgstr "Dạng 12-giờ"
+
+#: clock.c:326
+msgid "24-hour format"
+msgstr "Dạng 24-giờ"
+
+#: clock.c:328
+msgid "Show seconds"
+msgstr "Hiện giây"
+
+#: clock.c:432
+msgid "Time:"
+msgstr "Giờ :"
+
+#: clock.c:447
+msgid "Set alarm"
+msgstr "Đặt báo động"
+
+#: clock.c:453
+msgid "Alarm active"
+msgstr "Báo động hoạt động"
+
+#: clock.c:465
+msgid "Date:"
+msgstr "Ngày:"
+
+#: clock.c:467
+msgid "Weekly, on:"
+msgstr "Mỗi tuần, vào hôm:"
+
+#: clock.c:590
+msgid "Preferences"
+msgstr "Tùy thích"
+
+#: clock.c:591
+msgid "Set the time"
+msgstr "Đặt giờ"
+
+#: clock.c:592
+msgid "Alarm ..."
+msgstr "Báo động ..."
+
+#: clock.c:593
+msgid "Remove from panel"
+msgstr "Bỏ ra bảng"
+
+#: clock.c:614
+msgid ""
+"This is the clock.\n"
+"Tap here to set the alarm, set the time, change the display format, or remove this program from the panel."
+msgstr ""
+"Đây là đồng hồ.\n"
+"Bấm ở đây để đặt báo động, đặt giờ, đổi dạng trình bày, hay bỏ trình này ra bảng."

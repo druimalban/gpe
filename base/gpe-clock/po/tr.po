@@ -1,0 +1,80 @@
+# Turkish translation of gpe-clock.
+# Copyright (C) 2005 gpe-go GPL.
+# This file is distributed under the same license as the PACKAGE package.
+# Abdullah ULAS <potkal@bioinformatics.org>, 2005.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-clock 0.6\n"
+"POT-Creation-Date: 2003-09-06 00:02+0100\n"
+"PO-Revision-Date: 2005-04-06 17:22+0300\n"
+"Last-Translator: Abdullah ULAS <potkal@bioinformatics.org>\n"
+"Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-9\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: clock.c:261
+msgid "Unable to set alarm"
+msgstr "Alarm kurulamadý"
+
+#: clock.c:319
+msgid "Clock preferences"
+msgstr "Saat ayarlarý"
+
+#: clock.c:324
+msgid "12-hour format"
+msgstr "12-saat formatý"
+
+#: clock.c:326
+msgid "24-hour format"
+msgstr "24-saat formatý"
+
+#: clock.c:328
+msgid "Show seconds"
+msgstr "Saniyeleri göster"
+
+#: clock.c:432
+msgid "Time:"
+msgstr "Zaman"
+
+#: clock.c:447
+msgid "Set alarm"
+msgstr "Alarmý kur"
+
+#: clock.c:453
+msgid "Alarm active"
+msgstr "Alarm aktif"
+
+#: clock.c:465
+msgid "Date:"
+msgstr "Tarih"
+
+#: clock.c:467
+msgid "Weekly, on:"
+msgstr "Haftalýk, açýk"
+
+#: clock.c:590
+msgid "Preferences"
+msgstr "Ayarlar"
+
+#: clock.c:591
+msgid "Set the time"
+msgstr "Saati ayarla"
+
+#: clock.c:592
+msgid "Alarm ..."
+msgstr "Alarm ..."
+
+#: clock.c:593
+msgid "Remove from panel"
+msgstr "Panelden kaldýr"
+
+#: clock.c:614
+msgid ""
+"This is the clock.\n"
+"Tap here to set the alarm, set the time, change the display format, or remove this program from the panel."
+msgstr ""
+"Bu saattir.\n"
+"Buraya týklayarak alarmý kuarabilir, saati kurabilir, saat gösterme formatýný degiþtirebilir, yada bu programý panelden kaldýrabilirsiniz."
