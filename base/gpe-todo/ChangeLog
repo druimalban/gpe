@@ -1,3 +1,9 @@
+2008-05-17  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Release version 0.57
+	* Update Dutch translation
+	* Some packaging fixes
+
 2008-05-13  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* todo-ui.c: Fixe window sizing and some minor improvements.

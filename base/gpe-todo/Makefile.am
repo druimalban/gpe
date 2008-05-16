@@ -56,9 +56,9 @@ pixmaps_DATA = pixmaps/bar-box.png \
 pixmaps_extradir = $(datadir)/pixmaps
 
 
-EXTRA_DIST = $(desktop_DATA) \
+EXTRA_DIST = gpe-todo.desktop.in \
              $(pixmaps_DATA) \
-			 $(service_DATA) \
+             hildon/gpe-todo.desktop.in \
              $(pixmaps_extra_DATA) \
              intltool-extract.in \
              intltool-merge.in \

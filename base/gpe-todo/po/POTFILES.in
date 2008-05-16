@@ -1,4 +1,9 @@
+gpe-todo.desktop.in.in
+hildon/gpe-todo.desktop.in.in
 gpe-todo.desktop.in
+hildon/gpe-todo.desktop.in
+gpe-todo.desktop.in
+hildon/gpe-todo.desktop.in
 list-ui.c
 main.c
 todo-ui.c

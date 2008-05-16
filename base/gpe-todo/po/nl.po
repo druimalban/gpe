@@ -1,147 +1,194 @@
-# Dutch translation of gpe-todo.
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Dutch translations for gpe-todo.
 # This file is distributed under the same license as the gpe-todo package.
-# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
 #
+# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
+# Benno Schulenberg <benno@vertaalt.nl>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-todo 0.32\n"
-"POT-Creation-Date: 2003-02-14 19:50+0000\n"
-"PO-Revision-Date: 2003-08-05 14:31+0100\n"
-"Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
-"Language-Team: Dutch <vertaling@nl.linux.org>\n"
+"Project-Id-Version: gpe-todo-0.54\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2005-06-20 16:51+0200\n"
+"PO-Revision-Date: 2008-05-02 12:21+0200\n"
+"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
+"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: main.c:60
+#: ../gpe-todo.desktop.in.h:1
+msgid "GPE To-do List"
+msgstr "GPE-klussenlijst"
+
+#: ../gpe-todo.desktop.in.h:2 ../main.c:93
 msgid "To-do list"
-msgstr "Te-doen lijst"
+msgstr "Klussenlijst"
 
-#: todo-ui.c:269
-msgid "Select categories"
-msgstr "Categorieen selecteren"
-
-#: todo-ui.c:291
-msgid "Summary:"
-msgstr "Samenvatting:"
-
-#: todo-ui.c:292
-msgid "Details"
-msgstr "Details:"
-
-#: todo-ui.c:298
-msgid "Not started"
-msgstr "Niet gestart"
-
-#: todo-ui.c:298
-msgid "In progress"
-msgstr "bezig"
-
-#: todo-ui.c:299
-msgid "Completed"
-msgstr "Voltooid"
-
-#: todo-ui.c:321
-msgid "Due:"
-msgstr "Tijdstip:"
-
-#: todo-ui.c:336
-msgid "Categories:"
-msgstr "Categorieen:"
-
-#: todo-ui.c:429
-msgid "Edit to-do item"
-msgstr "Te-doen punt bewerken"
-
-#: todo-ui.c:436
-msgid "New item"
-msgstr "Nieuw punt"
-
-#: list-ui.c:52
+#: ../list-ui.c:123
 msgid "All items"
-msgstr "Alle punten"
+msgstr "Alle klussen"
 
-#: list-ui.c:81
-msgid "Permanently delete all completed items?"
-msgstr "Permanent alle voltooide punten verwijderen?"
+#: ../list-ui.c:150
+msgid "Show completed"
+msgstr "Voltooiden tonen"
 
-#: list-ui.c:81
-msgid "Confirm"
-msgstr "Bevestigen"
+#: ../list-ui.c:188 ../todo-ui.c:327
+msgid "OK"
+msgstr "OK"
 
-#: list-ui.c:82 configure.c:217
-msgid "Delete"
-msgstr "Verwijderen"
-
-#: list-ui.c:82
+#: ../list-ui.c:189 ../todo-ui.c:328
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: list-ui.c:333 configure.c:210
+#: ../list-ui.c:536
+msgid "Item"
+msgstr "Klus"
+
+#: ../list-ui.c:537 ../list-ui.c:653
+msgid "Categories"
+msgstr "Categorieën"
+
+#: ../list-ui.c:538
+msgid "View"
+msgstr "Beeld"
+
+#: ../list-ui.c:539
+msgid "Tools"
+msgstr "Extra"
+
+#: ../list-ui.c:540
+msgid "Close"
+msgstr "Sluiten"
+
+#: ../list-ui.c:541
+msgid "Open..."
+msgstr "Openen..."
+
+#: ../list-ui.c:542
+msgid "Add new"
+msgstr "Nieuwe klus toevoegen"
+
+#: ../list-ui.c:543
+msgid "Edit categories"
+msgstr "Categorieën bewerken"
+
+#: ../list-ui.c:544
+msgid "Show toolbar"
+msgstr "Werkbalk tonen"
+
+#: ../list-ui.c:545
+msgid "Delete completed items"
+msgstr "Voltooide klussen verwijderen"
+
+#: ../list-ui.c:546
+msgid "Move completed items to the end"
+msgstr "Voltooide klussen naar einde verplaatsen"
+
+#: ../list-ui.c:622
 msgid "New"
 msgstr "Nieuw"
 
-#: list-ui.c:334 list-ui.c:335
-msgid "Add a new item"
-msgstr "Een nieuw punt toevoegen"
+#: ../list-ui.c:632 ../todo-ui.c:330
+msgid "Delete"
+msgstr "Verwijderen"
 
-#: list-ui.c:340
-msgid "Configure"
-msgstr "Instellen"
+#: ../list-ui.c:645
+msgid "Refresh"
+msgstr "Verversen"
 
-#: list-ui.c:341 list-ui.c:342
-msgid "Configure categories"
-msgstr "Categorieen instellen"
+#: ../list-ui.c:679
+msgid "Show:"
+msgstr "Tonen:"
 
-#: list-ui.c:347
-msgid "Purge"
-msgstr "Opschonen"
+#: ../list-ui.c:738
+msgid "Status"
+msgstr "Status"
 
-#: list-ui.c:348 list-ui.c:349
-msgid "Purge completed items"
-msgstr "Voltooide punten opschonen"
+#: ../list-ui.c:744
+msgid "Summary"
+msgstr "Samenvatting"
 
-#: list-ui.c:354
-msgid "Re-sort"
-msgstr "Opnieuw sorteren"
+#: ../list-ui.c:756
+msgid "Due Date"
+msgstr "Vervaldatum"
 
-#: list-ui.c:355 list-ui.c:356
-msgid "Move completed items to the end of the list"
-msgstr "Voltooide punten verplaatsen naar einde lijst"
+#: ../list-ui.c:761
+msgid "Category"
+msgstr "Categorie"
 
-#: list-ui.c:361
-msgid "Exit"
-msgstr "Afsluiten"
+#: ../main.c:80
+msgid "ToDo"
+msgstr "Te doen"
 
-#: list-ui.c:362 list-ui.c:363
-msgid "Exit the program"
-msgstr "Het programma afsluiten"
+#: ../main.c:81
+msgid "List"
+msgstr "Lijst"
 
-#: configure.c:58
-msgid "Category name must not be blank"
-msgstr "Categorienaam mag niet leeg zijn"
+#: ../todo-ui.c:154
+msgid "Not started"
+msgstr "Niet gestart"
 
-#: configure.c:68
-msgid "A category by that name already exists"
-msgstr "Er bestaat al een categorie met die naam"
+#: ../todo-ui.c:155
+msgid "In progress"
+msgstr "Mee bezig"
 
-#: configure.c:106
-msgid "To-do list: Categories"
-msgstr "Te-doen lijst: Categorieen"
+#: ../todo-ui.c:156
+msgid "Completed"
+msgstr "Voltooid"
 
-#: configure.c:139
-msgid "New category"
-msgstr "Nieuwe categorie"
+#: ../todo-ui.c:157
+msgid "Abandoned"
+msgstr "Opgegeven"
 
-#: configure.c:172
-msgid "Categories"
-msgstr "Categorieen"
+#: ../todo-ui.c:163
+msgid "High"
+msgstr "Hoog"
 
-#: configure.c:211 configure.c:212
-msgid "Create a new category"
-msgstr "Een nieuwe categorie maken"
+#: ../todo-ui.c:164
+msgid "Standard"
+msgstr "Normaal"
 
-#: configure.c:218 configure.c:219
-msgid "Delete the selected category"
-msgstr "De geselecteerde categorie verwijderen"
+#: ../todo-ui.c:165
+msgid "Low"
+msgstr "Laag"
+
+#: ../todo-ui.c:267
+msgid "Priority:"
+msgstr "Prioriteit:"
+
+#: ../todo-ui.c:269
+msgid "Status:"
+msgstr "Status:"
+
+#: ../todo-ui.c:272
+msgid "Summary:"
+msgstr "Samenvatting:"
+
+#: ../todo-ui.c:273
+msgid "Details:"
+msgstr "Details:"
+
+#: ../todo-ui.c:302 ../todo-ui.c:305
+msgid "Categories:"
+msgstr "Categorieën:"
+
+#: ../todo-ui.c:329
+msgid "Categories..."
+msgstr "Categorieën..."
+
+#: ../todo-ui.c:358
+msgid "Due:"
+msgstr "Tijdstip:"
+
+#: ../todo-ui.c:373
+msgid "Define categories by tapping Categories button."
+msgstr "Definieer categorieën door de Categorieënknop aan te tikken."
+
+#: ../todo-ui.c:520
+msgid "Edit Item"
+msgstr "Klus bewerken"
+
+#: ../todo-ui.c:531
+msgid "New item"
+msgstr "Nieuwe klus"
