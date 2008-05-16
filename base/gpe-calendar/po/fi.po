@@ -1,20 +1,21 @@
-# translation of fi.po to suomi
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# translation of gpe-calendar-0.73rc2.pot to Finnish
+# Copyright © 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-calendar package.
+#
+# Jorma Karvonen <karvjorm@users.sf.net>, 2008.
 #: ../event-ui.c:185
-# Asmo Koskinen <asmo.koskinen@arkki.info>, 2007.
-# Elias Julkunen <elias.julkunen@gmail.com>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: fi\n"
+"Project-Id-Version: gpe-calendar 0.73rc2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-08 19:01+0200\n"
-"PO-Revision-Date: 2007-02-11 18:46+0200\n"
-"Last-Translator: Elias Julkunen <elias.julkunen@gmail.com>\n"
-"Language-Team: suomi\n"
+"POT-Creation-Date: 2006-07-03 16:10+0200\n"
+"PO-Revision-Date: 2008-01-15 20:09+0200\n"
+"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: ../gpe-calendar.desktop.in.in.h:1 ../hildon/gpe-calendar.desktop.in.in.h:1
 msgid "Calendar"
@@ -26,9 +27,9 @@ msgstr "GPE-kalenteri"
 
 #: ../hildon/gpe-calendar.desktop.in.in.h:2
 msgid "GPE Calendar Application"
-msgstr "GPE-kalenteri-sovellus"
+msgstr "GPE-kalenterisovellus"
 
-#: ../alarm-dialog.c:188 ../main.c:2328
+#: ../alarm-dialog.c:188 ../main.c:1788
 msgid "Alarms"
 msgstr "Hälytykset"
 
@@ -36,13 +37,13 @@ msgstr "Hälytykset"
 msgid "Acknowledge All"
 msgstr "Kuittaa kaikki"
 
-#: ../alarm-dialog.c:214 ../calendars-dialog.c:468
+#: ../alarm-dialog.c:214 ../calendars-dialog.c:467
 msgid "Dismiss"
-msgstr "Poistu"
+msgstr "Hylkää"
 
 #: ../alarm-dialog.c:285
 msgid "No alarms have gone off."
-msgstr "Yksikään hälytys ei ole lauennut."
+msgstr "Yhtään hälytystä ei ole käynnistynyt."
 
 #: ../alarm-dialog.c:371
 #, c-format
@@ -71,16 +72,19 @@ msgstr "Kuittaa"
 
 #: ../alarm-dialog.c:477
 msgid "Sleep:"
-msgstr "Nuku:"
+msgstr "Torkku:"
 
+#  Tämä liittyy siihen kuinka kauan torkutaan
 #: ../alarm-dialog.c:492
 msgid "Minutes"
 msgstr "Minuuttia"
 
+#  Tämä liittyy siihen kuinka kauan torkutaan
 #: ../alarm-dialog.c:493
 msgid "Hours"
 msgstr "Tuntia"
 
+#  Tämä liittyy siihen kuinka kauan torkutaan
 #: ../alarm-dialog.c:494
 msgid "Days"
 msgstr "Päivää"
@@ -88,482 +92,537 @@ msgstr "Päivää"
 #: ../calendar-delete-dialog.c:134
 #, c-format
 msgid ""
-" %s cannot be the new parent of %s's constituents: this would create a loop "
-"(try being your own grandparent).\n"
+" %s cannot be the new parent of %s's constituents: this would create a loop (try being your own grandparent).\n"
 "Please select a calendar which is not a descendent of %s."
 msgstr ""
-"%s ei voi olla uusi kanta kalenterille %s, koska syntyy silmukka.\n"
-"Valitse kalenteri, joka ei polveudu kalenterista %s."
+" %s ei voi olla %s-rakenneosien uusi polveutumislähde: tämä loisi silmukan (yritä itse olla oma isovanhempasi).\n"
+"Valitse kalenteri, joka ei ole %s:n jälkeläinen."
 
 #: ../calendar-delete-dialog.c:171
 #, c-format
 msgid "Delete Calendar %s"
 msgstr "Poista kalenteri %s"
 
+#  Tässä on selvä moka, koska vain osa tekstistä on suomennoksessa:
+#      char *s = g_strdup_printf (_("Delete %s%s%s"),
+# 				 cals ? "calendars" : "",
+# 				 cals && events ? " and " : "",
+# 				 events ? "events" : "");
+#  Myös "calendars" ja " and " ja "events" pitäisi suomentaa tässä
 #: ../calendar-delete-dialog.c:197
 #, c-format
 msgid "Delete %s%s%s"
 msgstr "Poista %s%s%s"
 
+# Myös tässä on samanlainen moka kuin edellisessä:
+#     s = g_strdup_printf (_("Reparent %s%s%s"),
+# 			   cals ? "calendars" : "",
+# 			   cals && events ? " and " : "",
+# 			   events ? "events" : "");
+#  Myös tässä "calendars" ja " and " ja "events" pitäisi suomentaa
 #: ../calendar-delete-dialog.c:207
 #, c-format
 msgid "Reparent %s%s%s"
-msgstr "Uusi kanta %s%s%s"
+msgstr "Uusi lähde %s%s%s"
 
-#: ../calendar-edit-dialog.c:258
+#: ../calendar-edit-dialog.c:252
 msgid "Calendar: New Calendar"
-msgstr "Kalenteri: uusi kalenteri"
+msgstr "Kalenteri: Uusi kalenteri"
 
-#: ../calendar-edit-dialog.c:289
+#: ../calendar-edit-dialog.c:275
 msgid "Title:"
-msgstr "Otsikko:"
+msgstr "Arvo:"
 
-#. Description.
-#: ../calendar-edit-dialog.c:300 ../event-ui.c:840
+#. Description textarea.
+#: ../calendar-edit-dialog.c:288 ../event-ui.c:717
 msgid "Description:"
 msgstr "Kuvaus:"
 
-#. Parent.
-#: ../calendar-edit-dialog.c:311
+#: ../calendar-edit-dialog.c:301
 msgid "Parent:"
-msgstr "Kanta:"
+msgstr "Lähde:"
 
-#. Color selection.
-#: ../calendar-edit-dialog.c:327
+#: ../calendar-edit-dialog.c:320
 msgid "Color:"
 msgstr "Väri:"
 
-#. mode.
-#: ../calendar-edit-dialog.c:348
+#: ../calendar-edit-dialog.c:341
 msgid "Type:"
 msgstr "Tyyppi:"
 
-#: ../calendar-edit-dialog.c:354
+#: ../calendar-edit-dialog.c:346
 msgid "Local"
 msgstr "Paikallinen"
 
-#: ../calendar-edit-dialog.c:355
+#: ../calendar-edit-dialog.c:347
 msgid "Subscribe"
-msgstr "Kirjaudu"
+msgstr "Tilaa"
 
-#: ../calendar-edit-dialog.c:356
+#: ../calendar-edit-dialog.c:348
 msgid "Publish"
 msgstr "Julkaise"
 
 #. Uncomment as we support other modes.
-#: ../calendar-edit-dialog.c:359
+#: ../calendar-edit-dialog.c:351
 msgid "Synchronize"
-msgstr "Tahdista"
+msgstr "Synkronoi"
 
-#. Don't show initially.
-#: ../calendar-edit-dialog.c:374
+#: ../calendar-edit-dialog.c:368
 msgid "URL:"
-msgstr "URL-osoite:"
+msgstr "URL:"
 
-#: ../calendar-edit-dialog.c:385
+#: ../calendar-edit-dialog.c:380
 msgid "Username:"
 msgstr "Käyttäjänimi:"
 
-#: ../calendar-edit-dialog.c:395
+#: ../calendar-edit-dialog.c:392
 msgid "Password:"
 msgstr "Salasana:"
 
 #. Don't show initially.
-#: ../calendar-edit-dialog.c:413
+#: ../calendar-edit-dialog.c:406
 msgid "Update:"
 msgstr "Päivitä:"
 
-#: ../calendar-edit-dialog.c:428
+#: ../calendar-edit-dialog.c:420
 msgid "times per year"
 msgstr "kertaa vuodessa"
 
-#: ../calendar-edit-dialog.c:429
+#: ../calendar-edit-dialog.c:421
 msgid "times per month"
 msgstr "kertaa kuukaudessa"
 
-#: ../calendar-edit-dialog.c:430
+#: ../calendar-edit-dialog.c:422
 msgid "times per week"
 msgstr "kertaa viikossa"
 
-#: ../calendar-edit-dialog.c:431
+#: ../calendar-edit-dialog.c:423
 msgid "times per day"
 msgstr "kertaa päivässä"
 
-#: ../calendar-edit-dialog.c:432
+#: ../calendar-edit-dialog.c:424
 msgid "times per hour"
 msgstr "kertaa tunnissa"
 
-#: ../calendar-edit-dialog.c:530
+#: ../calendar-edit-dialog.c:522
 msgid "Calendar: Edit Calendar"
-msgstr "Kalenteri: muokkaa kalenteria"
+msgstr "Kalenteri: Muokkaa kalenteria"
 
-#: ../calendars-dialog.c:300
+#: ../calendars-dialog.c:299 ../main.c:1680
 msgid "Calendars"
 msgstr "Kalenterit"
 
-#: ../calendars-dialog.c:336
+#: ../calendars-dialog.c:335
 msgid "Show All"
 msgstr "Näytä kaikki"
 
-#: ../calendars-widgets.c:385
+#: ../calendars-widgets.c:382
 #, c-format
 msgid "%ld minutes ago"
 msgstr "%ld minuuttia sitten"
 
-#: ../calendars-widgets.c:387
+#: ../calendars-widgets.c:384
 #, c-format
 msgid "%ld hours ago"
 msgstr "%ld tuntia sitten"
 
-#: ../calendars-widgets.c:389
+#: ../calendars-widgets.c:386
 #, c-format
 msgid "%ld days ago"
 msgstr "%ld päivää sitten"
 
-#: ../calendars-widgets.c:396
+#: ../calendars-widgets.c:393
 #, c-format
 msgid "%x"
 msgstr "%x"
 
-#: ../calendars-widgets.c:409
+#: ../calendars-widgets.c:406
 msgid "Up to date"
-msgstr "Päivitetty"
+msgstr "Ajan tasalla"
 
-#: ../calendars-widgets.c:411
+#: ../calendars-widgets.c:408
 msgid "Modified"
 msgstr "Muokattu"
 
-#: ../calendar-update.c:157
+#: ../calendar-update.c:158
 msgid "Calendar Syncronization"
-msgstr "Kalenterin tahdistus"
+msgstr "Kalenterisynkronointi"
 
-#: ../day_popup.c:85
+#: ../day_popup.c:89
 msgid "%a %d %B"
-msgstr "%Ana %d. %Bta"
+msgstr "%a, %Bn %d"
 
-#: ../day_popup.c:138 ../event-list.c:257
+#: ../day_popup.c:137 ../event-list.c:250
 #, c-format
 msgid "Until %s"
-msgstr "Saakka %s"
+msgstr "Päättyy: %s"
 
-#: ../day_view.c:254
-msgid " - "
-msgstr " - "
+#: ../day_view.c:238
+msgid "Until %b %d"
+msgstr "Päättyy: %d %b"
 
-#: ../event-list.c:192
+#: ../day_view.c:240
+#, c-format
+msgid "Until %d:%02d"
+msgstr "Päättyy: %d:%02d"
+
+#: ../event-list.c:189
 #, c-format
 msgid "%-m/%-d"
-msgstr "%-d.%-m."
+msgstr "%-d.%-m"
+
+#: ../event-list.c:190
+msgid "%b %-d"
+msgstr "%-d %b"
 
 #: ../event-list.c:193
-msgid "%b %-d"
-msgstr "%d. %Bta"
-
-#: ../event-list.c:196
 msgid "%m/%d/%t"
-msgstr "%d. %Bta %t"
+msgstr "%d.%m %t"
 
-#: ../event-list.c:197
+#: ../event-list.c:194
 msgid "%b %d, %y"
-msgstr "%d. %Bta %Y"
+msgstr "%d %b. %y"
 
-#: ../event-list.c:203 ../event-menu.c:230 ../month_view.c:816
+#: ../event-list.c:200
 msgid "%-H:%M"
-msgstr "%-H.%M"
+msgstr "%-H:%M"
 
-#: ../event-list.c:206
+#: ../event-list.c:203
 msgid "%-m/%-d %-H:%M"
-msgstr "%-d.%-m. %-H.%M"
+msgstr "%-d.%m %-H:%M"
+
+#: ../event-list.c:204
+msgid "%b %-d %-H:%M"
+msgstr "%-d %b. %-H:%M"
 
 #: ../event-list.c:207
-msgid "%b %-d %-H:%M"
-msgstr "%d. %Bta %-H.%M"
-
-#: ../event-list.c:210
 msgid "%-m/%-d/%y %-H:%M"
-msgstr "%-d.%-m.%Y %-H.%M"
+msgstr "%Y-%m-%d %-H:%M"
 
-#: ../event-list.c:211
+#: ../event-list.c:208
 msgid "%b %-d, %y %-H:%M"
-msgstr "%-d. %Bta %Y %-H.%M"
+msgstr "%-d %b. %Y %-H:%M"
 
-#: ../event-list.c:238 ../event-list.c:320 ../main.c:561 ../main.c:2351
+#: ../event-list.c:235 ../event-list.c:313 ../main.c:338 ../main.c:1811
 msgid "Today"
 msgstr "Tänään"
 
-#: ../event-list.c:752 ../event-ui.c:196 ../event-ui.c:910
+#  Tässä on kyse ilmeisesti ajanjaksosta
+#: ../event-list.c:741 ../event-ui.c:188 ../event-ui.c:780
 msgid "days"
-msgstr "päivät"
+msgstr "päivää"
 
-#: ../event-list.c:753 ../event-ui.c:911
+#  Tässä on kyse ilmeisesti ajanjaksosta
+#: ../event-list.c:742 ../event-ui.c:781
 msgid "weeks"
-msgstr "viikot"
+msgstr "viikkoa"
 
-#: ../event-list.c:754 ../event-ui.c:202
+#  Tässä on kyse ilmeisesti ajanjaksosta
+#: ../event-list.c:743 ../event-ui.c:194
 msgid "months"
-msgstr "kuukaudet"
+msgstr "kuukautta"
 
-#: ../event-list.c:755 ../event-ui.c:205
+#  Tässä on kyse ilmeisesti ajanjaksosta
+#: ../event-list.c:744 ../event-ui.c:197
 msgid "years"
-msgstr "vuodet"
+msgstr "vuotta"
 
-#: ../event-menu.c:56
+#: ../event-menu.c:57
 #, c-format
 msgid "Delete all occurrences of %s?"
-msgstr "Poista kaikki %s-tapahtumat?"
+msgstr "Poistetaanko kaikki %s-esiintymät?"
 
-#: ../event-menu.c:60 ../event-menu.c:82
+#: ../event-menu.c:60 ../event-menu.c:84
 msgid "Question"
 msgstr "Kysymys"
 
 #: ../event-menu.c:61
 msgid "Delete this occurrence"
-msgstr "Poista tämä tapahtuma"
+msgstr "Poista tämä esiintymä"
 
 #: ../event-menu.c:62
 msgid "Delete all occurrences"
-msgstr "Poista kaikki tapahtumat"
+msgstr "Poista kaikki esiintymät"
 
-#: ../event-menu.c:80
+#: ../event-menu.c:82
 #, c-format
 msgid "Delete %s?"
-msgstr "Poista %s?"
+msgstr "Poistetaanko %s?"
 
-#: ../event-menu.c:202 ../event-menu.c:224
-msgid "%b %d"
-msgstr "%b %d"
-
-#: ../event-menu.c:204 ../event-menu.c:232
-msgid "%b %d, %-H:%M"
-msgstr "%b %d, %-H.%M"
-
-#: ../event-menu.c:222 ../gtkdatesel.c:225
-#, c-format
-msgid "%d"
-msgstr "%d"
-
-#: ../event-menu.c:275 ../event-menu.c:363
+#: ../event-menu.c:254
 msgid "Edit"
 msgstr "Muokkaa"
 
-#: ../event-menu.c:287 ../event-menu.c:383
+#: ../event-menu.c:267
+msgid "Edit Event"
+msgstr "Muokkaa tapahtumaa"
+
+#: ../event-menu.c:275
+#, c-format
+msgid "Edit <i>%s</i>"
+msgstr "Muokkaa <i>%s</i>"
+
+#: ../event-menu.c:286
 msgid "Delete"
 msgstr "Poista"
 
-#: ../event-menu.c:299 ../event-ui.c:1671
+#: ../event-menu.c:299
+msgid "Delete Event"
+msgstr "Poista tapahtuma"
+
+#: ../event-menu.c:307
+#, c-format
+msgid "Delete <i>%s</i>"
+msgstr "Poista <i>%s</i>"
+
+#: ../event-menu.c:318 ../event-ui.c:1459
 msgid "Save"
 msgstr "Tallenna"
 
-#: ../event-menu.c:314
+#: ../event-menu.c:331
+msgid "Save Event"
+msgstr "Tallenna tapahtuma"
+
+#: ../event-menu.c:339
+#, c-format
+msgid "Save <i>%s</i>"
+msgstr "Tallenna <i>%s</i>"
+
+#: ../event-menu.c:353
 msgid "Send via Infra-red"
-msgstr "Lähetä infrapunan avulla"
+msgstr "Lähetä infrapunalähetyksenä"
 
-#: ../event-menu.c:327
+#: ../event-menu.c:366
 msgid "Send via Bluetooth"
-msgstr "Lähetä Bluetoothin avulla"
+msgstr "Lähetä Bluetooth-lähetyksenä"
 
-#: ../event-menu.c:342
+#: ../event-menu.c:381
 msgid "Move to Calendar..."
 msgstr "Siirrä kalenteriin..."
 
-#: ../event-menu.c:373
-msgid "Save as"
-msgstr "Tallenna nimellä"
+#: ../event-menu.c:390
+#, c-format
+msgid "Only Show <i>%s</i>"
+msgstr "Näytä vain <i>%s</i>"
 
-#: ../event-menu.c:394
-msgid "Only Show"
-msgstr "Näytä vain"
+#: ../event-menu.c:401
+#, c-format
+msgid "Hide <i>%s</i>"
+msgstr "Piilota <i>%s</i>"
 
-#: ../event-menu.c:405
-msgid "Hide"
-msgstr "Piilota"
-
-#: ../event-ui.c:156 ../event-ui.c:1010
+#: ../event-ui.c:148 ../event-ui.c:872
 msgid "Every"
-msgstr "Toistoväli"
+msgstr "Kaikki"
 
-#: ../event-ui.c:157
+#: ../event-ui.c:149
 msgid "First"
 msgstr "Ensimmäinen"
 
-#: ../event-ui.c:158
+#: ../event-ui.c:150
 msgid "Second"
 msgstr "Toinen"
 
-#: ../event-ui.c:159
+#: ../event-ui.c:151
 msgid "Third"
 msgstr "Kolmas"
 
-#: ../event-ui.c:160
+#: ../event-ui.c:152
 msgid "Fourth"
 msgstr "Neljäs"
 
-#: ../event-ui.c:161
+#: ../event-ui.c:153
 msgid "Last"
 msgstr "Viimeinen"
 
-#: ../event-ui.c:162
+#: ../event-ui.c:154
 msgid "Second to last"
 msgstr "Toisesta viimeiseen"
 
-#: ../event-ui.c:199
+#: ../event-ui.c:191
 msgid "weeks, on:"
-msgstr "viikot, käytössä:"
+msgstr "viikkoja, päivä:"
 
-#: ../event-ui.c:294
+#: ../event-ui.c:266
 msgid "End time must not be earlier than start time"
-msgstr "Lopetusaika ei saa olla aiemmin kuin aloitusaika"
+msgstr "Päättymisaika ei saa olla aikaisempi kuin aloitusaika"
 
-#: ../event-ui.c:304 ../event-ui.c:310
+#: ../event-ui.c:276 ../event-ui.c:282
 msgid ""
 "Event starts in the past!\n"
 "Save anyway?"
 msgstr ""
-"Tapahtuma alkaa menneisyydessä.\n"
-"Tallenna kuitenkin?"
+"Tapahtuma alkaa menneisyydessä!\n"
+"Tallennetaanko silti?"
 
 #. Location.
-#: ../event-ui.c:800
+#: ../event-ui.c:677
 msgid "Location:"
 msgstr "Sijainti:"
 
 #. Categories.
-#: ../event-ui.c:818
+#: ../event-ui.c:695
 msgid "Categories"
 msgstr "Luokat"
 
-#: ../event-ui.c:826
+#: ../event-ui.c:703
 msgid "Define categories by tapping the Categories button."
-msgstr "Määritä luokat napauttamalla Luokat-painiketta."
+msgstr "Määrittele luokat napauttamalla luokat-painikettta."
 
-#: ../event-ui.c:887 ../event-ui.c:1571
+#: ../event-ui.c:764 ../event-ui.c:1360
 msgid "Alarm"
 msgstr "Hälytys"
 
-#: ../event-ui.c:908
+#: ../event-ui.c:778
 msgid "minutes"
-msgstr "minuutit"
+msgstr "minuuttia"
 
-#: ../event-ui.c:909
+#: ../event-ui.c:779
 msgid "hours"
-msgstr "tunnit"
+msgstr "tuntia"
 
-#: ../event-ui.c:921
+#: ../event-ui.c:788
 msgid "before event"
 msgstr "ennen tapahtumaa"
 
-#: ../event-ui.c:963
+#: ../event-ui.c:825
 msgid "Recurrence type:"
-msgstr "Toiston tyyppi:"
+msgstr "Toistumistyyppi:"
 
-#: ../event-ui.c:969
+#: ../event-ui.c:831
 msgid "single occurrence"
-msgstr "yksittäinen tapahtuma"
+msgstr "Yksittäinen esiintymä"
 
-#: ../event-ui.c:970
+#: ../event-ui.c:832
 msgid "daily"
 msgstr "päivittäin"
 
-#: ../event-ui.c:971
+#: ../event-ui.c:833
 msgid "weekly"
-msgstr "viikottain"
+msgstr "viikoittain"
 
-#: ../event-ui.c:972
+#: ../event-ui.c:834
 msgid "monthly"
 msgstr "kuukausittain"
 
-#: ../event-ui.c:973
+#: ../event-ui.c:835
 msgid "yearly"
 msgstr "vuosittain"
 
-#: ../event-ui.c:1049
+#: ../event-ui.c:904
 msgid "M"
-msgstr "M"
+msgstr "Ma"
 
-#: ../event-ui.c:1049
+#  Voi olla joko tiistai tai torstai
+#: ../event-ui.c:904
 msgid "T"
 msgstr "T"
 
-#: ../event-ui.c:1049
+#: ../event-ui.c:904
 msgid "W"
-msgstr "K"
+msgstr "Ke"
 
-#: ../event-ui.c:1049
+#: ../event-ui.c:904
 msgid "F"
-msgstr "P"
+msgstr "Pe"
 
-#: ../event-ui.c:1049
+#  Voi olla joko lauantai tai sunnuntai
+#: ../event-ui.c:904
 msgid "S"
 msgstr "S"
 
+#. End date.
+#: ../event-ui.c:1016
+msgid "End Date"
+msgstr "Päättymispäivä"
+
 #. forever radio button
-#: ../event-ui.c:1175
+#: ../event-ui.c:1027
 msgid "forever"
-msgstr "aina"
+msgstr "ikuisesti"
 
-#: ../event-ui.c:1187
+#: ../event-ui.c:1039
 msgid "end after"
-msgstr "loppuu jälkeen"
+msgstr "loppu seuraa päivää"
 
-#: ../event-ui.c:1205
+#: ../event-ui.c:1051
 msgid "occurrences"
-msgstr "tapahtumat"
+msgstr "esiintymät"
 
-#: ../event-ui.c:1215
+#: ../event-ui.c:1061
 msgid "end on"
-msgstr "loppuu"
+msgstr "loppu päivänä"
 
 #. Event tab.
-#: ../event-ui.c:1325
+#: ../event-ui.c:1153
 msgid "Event"
 msgstr "Tapahtuma"
 
-#: ../event-ui.c:1358
+#: ../event-ui.c:1188
 msgid "Summary:"
 msgstr "Yhteenveto:"
 
-#: ../event-ui.c:1374
+#: ../event-ui.c:1204
 msgid "All day event"
 msgstr "Kaikki päivän tapahtumat"
 
 #. Start time.
-#: ../event-ui.c:1391
+#: ../event-ui.c:1219
 msgid "Start:"
-msgstr "Alkaa:"
+msgstr "Alku:"
 
-#: ../event-ui.c:1411 ../event-ui.c:1467
+#: ../event-ui.c:1232 ../event-ui.c:1273
 msgid "on:"
-msgstr "käytössä:"
+msgstr "päivänä:"
 
 #. End time.
-#: ../event-ui.c:1449
+#: ../event-ui.c:1259
 msgid "End:"
-msgstr "Päättyy:"
+msgstr "Loppu:"
 
-#: ../event-ui.c:1512
+#: ../event-ui.c:1304
 msgid "Calendar:"
 msgstr "Kalenteri:"
 
 #. Detail page.
-#: ../event-ui.c:1539
+#: ../event-ui.c:1328
 msgid "Details"
-msgstr "Tiedot"
+msgstr "Yksityiskohdat"
 
-#: ../event-ui.c:1613
+#: ../event-ui.c:1402
 msgid "Recurrence"
-msgstr "Toistuva"
+msgstr "Toistuminen"
 
-#: ../event-ui.c:1667
+#: ../event-ui.c:1449
 msgid "Cancel"
-msgstr "Peruuta"
+msgstr "Peru"
 
-#: ../event-ui.c:1730
+#: ../event-ui.c:1510
 msgid "Calendar: New event"
 msgstr "Kalenteri: Uusi tapahtuma"
 
-#: ../event-ui.c:1785
+#: ../event-ui.c:1544
 msgid "Calendar: Edit event"
 msgstr "Kalenteri: Muokkaa tapahtumaa"
+
+#: ../export-vcal.c:356 ../export-vcal.c:363
+#, c-format
+msgid "Opening %s"
+msgstr "Avataan %s"
+
+#: ../export-vcal.c:402
+#, c-format
+msgid "Save %s as..."
+msgstr "Tallenna %s nimellä..."
+
+#: ../export-vcal.c:418
+#, c-format
+msgid "Saving %s: %s"
+msgstr "Tallennetaan %s: %s"
+
+#: ../gtkdatesel.c:225
+#, c-format
+msgid "%d"
+msgstr "%d"
 
 #: ../gtkdatesel.c:273
 msgid "%b"
@@ -578,163 +637,164 @@ msgstr "%B"
 msgid "%m"
 msgstr "%m"
 
-#: ../main.c:555
+#: ../import-vcal.c:488
+msgid "Choose file"
+msgstr "Valitse tiedosto"
+
+#: ../import-vcal.c:526
+msgid "Import into calendar: "
+msgstr "Tuodaan kalenteriin: "
+
+#: ../import-vcal.c:556
+#, c-format
+msgid "Select Calendar for %s%s"
+msgstr "Valitse kalenteri kohteelle %s%s"
+
+#: ../import-vcal.c:623
+msgid "Import successful"
+msgstr "Tuo onnistuneesti"
+
+#: ../main.c:332
 msgid "Yesterday"
-msgstr "Eilinen"
+msgstr "Eilen"
 
-#: ../main.c:567
+#: ../main.c:344
 msgid "Tomorrow"
-msgstr "Huominen"
+msgstr "Huomenna"
 
-#: ../main.c:574
-msgid "%a %b %e"
-msgstr "%a %b %e"
-
-#: ../main.c:576
-msgid "%a %b %e, %Y"
-msgstr "%a %b %e, %Y"
-
-#: ../main.c:598
+#: ../main.c:372
 #, c-format
 msgid "Calendar - %s"
 msgstr "Kalenteri - %s"
 
-#: ../main.c:2180
+#: ../main.c:1623
 msgid "Main"
-msgstr "Pää"
+msgstr "Pääohjelma"
 
-#: ../main.c:2244
+#: ../main.c:1685
+msgid "Tap here to select the calendars to show."
+msgstr "Valitse näytettävä kalenteri napauttamalla tästä."
+
+#: ../main.c:1704
 msgid "Day"
 msgstr "Päivä"
 
-#: ../main.c:2252
+#: ../main.c:1712
 msgid "Tap here to select day-at-a-time view."
-msgstr "Napauta tästä valitaksesi päivä-näkymän."
+msgstr "Valitse ”päivä kerrallaan”-näyttö napauttamalla tästä."
 
-#: ../main.c:2262
+#: ../main.c:1722
 msgid "Week"
 msgstr "Viikko"
 
-#: ../main.c:2270
+#: ../main.c:1730
 msgid "Tap here to select week-at-a-time view."
-msgstr "Napauta tästä valitaksesi viikko-näkymän."
+msgstr "Valitse ”viikko kerrallaan”-näyttö napauttamalla tästä."
 
-#: ../main.c:2282
+#: ../main.c:1742
 msgid "Month"
 msgstr "Kuukausi"
 
-#: ../main.c:2290
+#: ../main.c:1750
 msgid "Tap here to select month-at-a-time view."
-msgstr "Napauta tästä valitaksesi kuukausi-näkymä."
+msgstr "Valitse ”kuukausi kerrallaan”-näyttö napauttamalla tästä."
 
-#: ../main.c:2301
+#: ../main.c:1761
 msgid "Agenda"
-msgstr "Esityslista"
+msgstr "Päiväjärjestys"
 
-#: ../main.c:2310
+#: ../main.c:1770
 msgid "Tap here to select the agenda."
-msgstr "Napauta tästä valitaksesi esityslistan."
+msgstr "Valitse päiväjärjestys napauttamalla tästä."
 
-#: ../main.c:2333
+#: ../main.c:1793
 msgid "Tap here to view alarms pending acknowledgement."
-msgstr "Napauta tästä nähdäksesi hälytykset, jotka perustuvat kuittauksiin."
+msgstr "Katso kuittausta odottavia hälytyksiä napauttamalla tästä."
 
-#: ../main.c:2355
+#: ../main.c:1815
 msgid "Switch to today."
 msgstr "Vaihda tähän päivään."
 
-#: ../main.c:2398
+#. File menu.
+#: ../main.c:1852
 msgid "_File"
-msgstr "_Tiedosto"
-
-#: ../main.c:2405
-msgid "New"
-msgstr "Uusi"
-
-#: ../main.c:2416
-msgid "Import"
-msgstr "Tuo"
-
-#: ../main.c:2440
-msgid "Close"
-msgstr "Sulje"
+msgstr "Tie_dosto"
 
 #. View menu.
-#: ../main.c:2451
+#: ../main.c:1885
 msgid "_View"
-msgstr "_Näytä"
+msgstr "Näky_mä"
 
 #. View -> Today.
-#: ../main.c:2459
+#: ../main.c:1892
 msgid "_Today"
-msgstr "_Tänään"
+msgstr "Tä_nään"
 
 #. View -> Day.
-#: ../main.c:2471
+#: ../main.c:1905
 msgid "_Day"
 msgstr "_Päivä"
 
 #. View -> Week.
-#: ../main.c:2481
+#: ../main.c:1915
 msgid "_Week"
-msgstr "_Viikko"
+msgstr "V_iikko"
 
 #. View -> Month.
-#: ../main.c:2491
+#: ../main.c:1925
 msgid "_Month"
-msgstr "_Kuukausi"
+msgstr "Kuuk_ausi"
 
 #. View -> Agenda.
-#: ../main.c:2501 ../main.c:2542
+#: ../main.c:1935 ../main.c:1976
 msgid "_Agenda"
-msgstr "_Esityslista"
+msgstr "Päivä_järjestys"
 
 #. View -> Sidebar.
-#: ../main.c:2515
+#: ../main.c:1949
 msgid "_Sidebar"
-msgstr "_Sivupalkki"
+msgstr "Sivupa_lkki"
 
 #. View -> Calendar.
-#: ../main.c:2524
+#: ../main.c:1958
 msgid "_Calendar"
-msgstr "_Kalenteri"
+msgstr "Kalen_teri"
 
 #. View -> Selector.
-#: ../main.c:2533
+#: ../main.c:1967
 msgid "Calendar _Selector"
 msgstr "Kalenteri_valitsin"
 
 #. Tools menu.
-#: ../main.c:2551
+#: ../main.c:1985
 msgid "_Tools"
-msgstr "_Työkalut"
+msgstr "T_yökalut"
 
 #. Tools -> Calendars.
-#: ../main.c:2558
+#: ../main.c:1992
 msgid "_Calendars"
-msgstr "_Kalenterit"
+msgstr "Kalente_rit"
 
 #. Tools -> Categories.
-#: ../main.c:2568
+#: ../main.c:2002
 msgid "Cate_gories"
-msgstr "Luo_kat"
+msgstr "L_uokat"
 
 #. Tools -> Alarms.
-#: ../main.c:2579
+#: ../main.c:2013
 msgid "_Alarms"
-msgstr "_Hälytykset"
+msgstr "Hälytyk_set"
 
 #. Tools -> Toolbar.
-#: ../main.c:2593
+#: ../main.c:2027
 msgid "_Toolbar"
-msgstr "_Työkalurivi"
+msgstr "Työ_kalupalkki"
 
 #. Tools -> Full Screen.
-#: ../main.c:2602
+#: ../main.c:2036
 msgid "_Full Screen"
-msgstr "_Täysi ruutu"
+msgstr "K_okonäyttö"
 
 #: ../xsettings.c:105
 msgid "Cannot create XSettings client"
-msgstr "Asiakasohjelmalle ei voida luoda X-asetuksia "
-
+msgstr "Ei voida luoda XSettings-asiakasta"
