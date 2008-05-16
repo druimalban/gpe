@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-sketchbook 0.2.5\n"
-"POT-Creation-Date: 2003-10-12 20:45+0300\n"
+"POT-Creation-Date: 2003-04-02 02:26+0300\n"
 "PO-Revision-Date: 2003-04-14 22:09+0800\n"
 "Last-Translator: Chao-Hsiung Liao <pesder.liao@msa.hinet.net>\n"
 "Language-Team: Chinese (traditional) <zh-l10n@linux.org.tw>\n"
@@ -13,135 +13,47 @@ msgstr ""
 "Content-Type: text/plain; charset=Big5\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/gpe-sketchbook.c:115
-#, fuzzy
-msgid "Sketchbook: preferences"
-msgstr "素描簿"
-
-#: src/gpe-sketchbook.c:119 gpe-sketchbook.desktop.in.h:2
+#: gpe-sketchbook.desktop.in.h:2 src/gpe-sketchbook.c:108
 msgid "Sketchbook"
 msgstr "素描簿"
 
-#: src/preferences.c:93
-msgid ""
-"Cannot create XSettings client.\n"
-"Use default preferences."
-msgstr ""
-
-#: src/preferences.c:188
-msgid ""
-"gpe-confd is not running.\n"
-"Cannot save the preferences."
-msgstr ""
-
-#: src/preferences.c:277
-msgid "Start with"
-msgstr ""
-
-#: src/preferences.c:280
-#, fuzzy
-msgid "Sketchpad"
-msgstr "素描簿"
-
-#: src/preferences.c:282
-msgid "Selector - list"
-msgstr ""
-
-#: src/preferences.c:284
-msgid "Selector - icons table"
-msgstr ""
-
-#: src/preferences.c:300
-msgid "Use joypad scrolling"
-msgstr ""
-
-#: src/preferences.c:307
-msgid "Grow on scroll"
-msgstr ""
-
-#: src/preferences.c:316
-msgid "OK"
-msgstr ""
-
-#: src/preferences.c:317 src/selector-cb.c:67 src/sketchpad-cb.c:244
-msgid "Cancel"
-msgstr "取消"
-
-#: src/selector.c:88
+#: src/selector.c:87
 #, c-format
 msgid "Cannot read the sketchbook directory: %s. Exit."
 msgstr "不能讀取素描簿目錄： %s。離開。"
 
-#. TRANSLATORS: %s are: [folder name] [error message]
-#: src/selector.c:95
+#: src/selector.c:93
 #, c-format
 msgid "Cannot create %s: %s. Exit."
 msgstr "不能建立 %s： %s。離開。"
 
-#. TRANSLATORS: default sketch label based on [date] and [time]
-#. example: "2003 10 12  at  18:48:51"
-#: src/selector.c:179
+#: src/selector.c:164
 #, c-format
 msgid "%s  at  %s"
 msgstr "%s 於 %s"
 
-#: src/selector-cb.c:66 src/sketchpad-cb.c:243
+#: src/selector-cb.c:70 src/sketchpad-cb.c:197
 msgid "Delete current sketch?"
 msgstr "刪除目前的素描？"
 
-#: src/selector-cb.c:66 src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
-#: src/sketchpad-cb.c:243
+#: src/selector-cb.c:70 src/sketchpad-cb.c:46 src/sketchpad-cb.c:76
+#: src/sketchpad-cb.c:197
 msgid "Question"
 msgstr "問題"
 
-#: src/selector-cb.c:67 src/sketchpad-cb.c:244 src/sketchpad-gui.c:468
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198
+msgid "Cancel"
+msgstr "取消"
+
+#: src/selector-cb.c:71 src/sketchpad-cb.c:198 src/sketchpad-gui.c:428
 msgid "Delete"
 msgstr "刪除"
 
-#: src/selector-gui.c:102
-msgid "New sketch"
-msgstr ""
-
-#: src/selector-gui.c:107
-msgid "Edit sketch"
-msgstr ""
-
-#: src/selector-gui.c:115
-#, fuzzy
-msgid "Delete selected sketch"
-msgstr "刪除目前的素描？"
-
-#: src/selector-gui.c:123
-msgid "Import from image"
-msgstr ""
-
-#: src/selector-gui.c:132
-msgid "Toggle view"
-msgstr ""
-
-#: src/selector-gui.c:146
-msgid "Preferences"
-msgstr ""
-
 #: src/sketchpad.c:184
-#, fuzzy
-msgid "Sketch"
-msgstr "素描簿"
-
-#: src/sketchpad.c:189
 msgid "new"
 msgstr "新增"
 
-#: src/sketchpad.c:220
-#, c-format
-msgid "Import of `%s' failed."
-msgstr ""
-
-#: src/sketchpad.c:237
-msgid "Image to import"
-msgstr ""
-
-#: src/sketchpad-cb.c:47
+#: src/sketchpad-cb.c:46
 msgid ""
 "Sketch modified,\n"
 "save before exiting?"
@@ -149,61 +61,26 @@ msgstr ""
 "素描已被修改過，\n"
 "是否在離開前儲存？"
 
-#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
 msgid "Discard"
 msgstr "放棄"
 
-#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78 src/sketchpad-gui.c:467
+#: src/sketchpad-cb.c:47 src/sketchpad-cb.c:77 src/sketchpad-gui.c:427
 msgid "Save"
 msgstr "儲存"
 
-#: src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:76
 msgid "Save current sketch?"
 msgstr "儲存目前的素描？"
 
-#: src/sketchpad-gui.c:266
-msgid "Select eraser"
-msgstr ""
-
-#: src/sketchpad-gui.c:268
-msgid "Select pencil"
-msgstr ""
-
-#: src/sketchpad-gui.c:270
-msgid "Brush size"
-msgstr ""
-
-#: src/sketchpad-gui.c:271
-msgid "Brush color"
-msgstr ""
-
-#: src/sketchpad-gui.c:430
-msgid "Sketch menu"
-msgstr ""
-
-#: src/sketchpad-gui.c:439
-msgid "Show list"
-msgstr ""
-
-#: src/sketchpad-gui.c:444
-msgid "Previous sketch"
-msgstr ""
-
-#: src/sketchpad-gui.c:449
-msgid "Next sketch"
-msgstr ""
-
-#: src/sketchpad-gui.c:465
+#: src/sketchpad-gui.c:426
 msgid "New"
 msgstr "新增"
 
-#: src/sketchpad-gui.c:466
-msgid "Import"
-msgstr ""
+#: src/sketchpad-gui.c:429
+msgid "Properties"
+msgstr "內容"
 
 #: gpe-sketchbook.desktop.in.h:1
 msgid "GPE Sketchbook"
 msgstr "GPE 素描簿"
-
-#~ msgid "Properties"
-#~ msgstr "內容"
