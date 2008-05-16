@@ -1,0 +1,173 @@
+# Gpe-mini-browser, the GPE basic browser translation file.
+# Copyright (C) 2007 Philippe De Swert
+# This file is distributed under the same license as the gpe-mini-browser package.
+# Philippe De Swert, <philippedeswert@scarlet.be>
+# Takeshi Hamasaki, <hma@syd.odn.ne.jp>, 2007
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-mini-browser 0.21\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-12-26 22:16+0900\n"
+"PO-Revision-Date: 2007-12-26 22:24+0900\n"
+"Last-Translator: Takeshi HAMASAKI <hma@syd.odn.ne.jp>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../gpe-mini-browser.desktop.in.h:1
+msgid "Browse the web"
+msgstr "ウェブを閲覧する"
+
+#: ../gpe-mini-browser.desktop.in.h:2
+msgid "Mini Web Browser"
+msgstr "ミニウェブブラウザ"
+
+#: ../hildon-mini-browser.c:131
+#: ../gpe-mini-browser.c:108
+#, c-format
+msgid "GPE-mini-browser version 0.21. (C)2005-2007, Philippe De Swert\n"
+msgstr "GPE-ミニブラウザ version 0.21. (C)2005-2007, Philippe De Swert\n"
+
+#: ../hildon-mini-browser.c:137
+#: ../gpe-mini-browser.c:114
+#, c-format
+msgid "GPE-mini-browser, basic web browser application. (c)2005-2007, Philippe De Swert\n"
+msgstr "GPE-ミニブラウザ, 基本的なウェブアプリケーション. (c)2005-2007, Philippe De Swert\n"
+
+#: ../hildon-mini-browser.c:138
+#: ../gpe-mini-browser.c:115
+#, c-format
+msgid "Usage: gpe-mini-browser <URL>\n"
+msgstr "起動法: gpe-mini-browser <URL>\n"
+
+#: ../hildon-mini-browser.c:139
+#: ../gpe-mini-browser.c:116
+#, c-format
+msgid "Use -v for version info.\n"
+msgstr "-v でバージョン情報を表示します。\n"
+
+#: ../hildon-mini-browser.c:244
+#: ../gpe-mini-browser.c:216
+#: ../interface-calls.c:463
+#: ../interface-calls.c:522
+msgid "Bookmarks"
+msgstr "ブックマーク"
+
+#: ../hildon-mini-browser.c:279
+#: ../gpe-mini-browser.c:264
+#: ../interface-calls.c:653
+#: ../interface-calls.c:688
+msgid "History"
+msgstr "履歴"
+
+#: ../loading-calls.c:69
+msgid "Could not open file"
+msgstr "ファイルを開くことができませんでした"
+
+#: ../loading-calls.c:80
+msgid ""
+"GPE mini-browser v0.21\n"
+"\n"
+"HTML engine : Gtk-webcore \n"
+"(http://gtk-webcore.sourceforge.net)\n"
+"\n"
+"Copyright (c) Philippe De Swert\n"
+"<philippedeswert@scarlet.be>\n"
+msgstr ""
+"GPE ミニブラウザ v0.21\n"
+"\n"
+"HTML エンジン : Gtk-webcore \n"
+"(http://gtk-webcore.sourceforge.net)\n"
+"\n"
+"Copyright (c) Philippe De Swert\n"
+"<philippedeswert@scarlet.be>\n"
+
+#: ../gpe-mini-browser.c:251
+msgid "Fullscreen"
+msgstr "全画面"
+
+#: ../interface-calls.c:68
+msgid "Where to go to?"
+msgstr "どこへ移動しますか?"
+
+#: ../interface-calls.c:77
+msgid "Enter url:"
+msgstr "URLを入力:"
+
+#: ../interface-calls.c:158
+msgid "loading"
+msgstr "読み込み中"
+
+#: ../interface-calls.c:220
+msgid "An error occured loading the webpage! Either the page contains errors or you need to check your connection or proxy settings."
+msgstr "ウェブページを読み込む時にエラーが発生しました。ページにエラーが含まれているか、接続・プロキシに問題があります。"
+
+#: ../interface-calls.c:299
+#: ../interface-calls.c:440
+msgid "Hide Url"
+msgstr "URLを隠す"
+
+#: ../interface-calls.c:377
+msgid " Url:"
+msgstr "URL:"
+
+#: ../interface-calls.c:429
+msgid "Show Url"
+msgstr "URLを表示"
+
+#: ../interface-calls.c:579
+msgid "Add a bookmark"
+msgstr "ブックマークを追加する"
+
+#: ../interface-calls.c:587
+msgid "Add current web page"
+msgstr "現在のページを追加する"
+
+#: ../interface-calls.c:593
+msgid "Add new :"
+msgstr "別のURL :"
+
+#: ../interface-calls.c:699
+msgid "Clear"
+msgstr "クリア"
+
+#: ../misc-calls.c:64
+msgid "Really delete this bookmark or category?"
+msgstr "本当にこのブックマークまたはカテゴリを削除しますか?"
+
+#: ../misc-calls.c:85
+msgid "error removing bookmark from db!\n"
+msgstr "ブックマークをデータベースから削除する時にエラーが発生しました!\n"
+
+#: ../misc-calls.c:124
+#: ../misc-calls.c:407
+msgid "No bookmark selected!"
+msgstr "ブックマークが選択されていません!"
+
+#: ../misc-calls.c:173
+msgid "Error accessing db!\n"
+msgstr "データベースにアクセスしている時にエラーが発生しました!\n"
+
+#: ../misc-calls.c:179
+msgid "No url filled in!\n"
+msgstr "URLが記入されていません!\n"
+
+#: ../settings.c:150
+msgid "Could not read settings! Make sure HOME is set in your environment"
+msgstr "設定を読み込むことができませんでした。環境変数HOMEが設定されていますか?"
+
+#: ../settings.c:212
+msgid "Could not save settings! Make sure HOME is set in your environment"
+msgstr "設定を保存することができませんでした。環境変数HOMEが設定されていますか?"
+
+#: ../settings.c:219
+msgid "Could not write file!"
+msgstr "ファイルを書くことができませんでした"
+
+#: ../settings.c:299
+msgid "Configuration"
+msgstr "設定"
+
