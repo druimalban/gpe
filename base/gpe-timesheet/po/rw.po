@@ -15,8 +15,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-timesheet 0.11\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-05-03 01:23+0100\n"
+"POT-Creation-Date: 2003-02-20 20:25+0000\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -24,65 +23,59 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:122 main.c:453 gpe-timesheet.desktop.in.h:2
+#: main.c:95 main.c:406 gpe-timesheet.desktop.in.h:2
 msgid "Time Tracker"
 msgstr ""
 
-#: main.c:152
+#: main.c:125
 msgid "Notes"
 msgstr "ibisobanuro"
 
-#: main.c:211
+#: main.c:138
+msgid "OK"
+msgstr "OKE"
+
+#: main.c:139
+msgid "Cancel"
+msgstr "Kureka"
+
+#: main.c:191
 #, fuzzy
 msgid "Clocking in:"
 msgstr "in"
 
-#: main.c:232
+#: main.c:210
 #, fuzzy
 msgid "Clocking out:"
 msgstr "Inyuma"
 
-#: main.c:296 main.c:398 main.c:399
+#: main.c:272 main.c:359 main.c:360
 msgid "New task"
 msgstr "Igikorwa gishya"
 
-#: main.c:296
+#: main.c:272
 msgid "Name"
 msgstr "Izina"
 
-#: main.c:403 main.c:404
+#: main.c:365 main.c:366
 #, fuzzy
 msgid "Delete task"
 msgstr "Igikorwa"
 
-#: main.c:409 main.c:410
+#: main.c:371 main.c:372
 #, fuzzy
 msgid "Clock on"
 msgstr "ku"
 
-#: main.c:415 main.c:416
+#: main.c:377 main.c:378
 #, fuzzy
 msgid "Clock off"
 msgstr "Bidakora"
 
-#: main.c:423 main.c:424
+#: main.c:383 main.c:384
 msgid "Note"
 msgstr "Igisobanuro"
-
-#: main.c:430
-msgid "Journal"
-msgstr ""
-
-#: main.c:431
-msgid "Show journal"
-msgstr ""
 
 #: gpe-timesheet.desktop.in.h:1
 msgid "GPE Timesheet"
 msgstr ""
-
-#~ msgid "OK"
-#~ msgstr "OKE"
-
-#~ msgid "Cancel"
-#~ msgstr "Kureka"

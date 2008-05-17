@@ -7,8 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-timesheet 0.11\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-05-03 01:23+0100\n"
+"POT-Creation-Date: 2003-02-20 20:25+0000\n"
 "PO-Revision-Date: 2005-04-05 14:23+0300\n"
 "Last-Translator: Abdullah Ulas <potkal@bioinformatics.org>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
@@ -16,60 +15,54 @@ msgstr ""
 "Content-Type: text/plain; charset=iso-8859-9\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:122 main.c:453 gpe-timesheet.desktop.in.h:2
+#: main.c:95 main.c:406 gpe-timesheet.desktop.in.h:2
 msgid "Time Tracker"
 msgstr "Zaman izleyicisi"
 
-#: main.c:152
+#: main.c:125
 msgid "Notes"
 msgstr "Notlar"
 
-#: main.c:211
+#: main.c:138
+msgid "OK"
+msgstr "Tamam"
+
+#: main.c:139
+msgid "Cancel"
+msgstr "Ýptal"
+
+#: main.c:191
 msgid "Clocking in:"
 msgstr "Saat gir"
 
-#: main.c:232
+#: main.c:210
 msgid "Clocking out:"
 msgstr "Saat çýk"
 
-#: main.c:296 main.c:398 main.c:399
+#: main.c:272 main.c:359 main.c:360
 msgid "New task"
 msgstr "Yeni görev"
 
-#: main.c:296
+#: main.c:272
 msgid "Name"
 msgstr "Ad"
 
-#: main.c:403 main.c:404
+#: main.c:365 main.c:366
 msgid "Delete task"
 msgstr "Görev sil"
 
-#: main.c:409 main.c:410
+#: main.c:371 main.c:372
 msgid "Clock on"
 msgstr "saatin bulunduðu"
 
-#: main.c:415 main.c:416
+#: main.c:377 main.c:378
 msgid "Clock off"
 msgstr "Saat kapat"
 
-#: main.c:423 main.c:424
+#: main.c:383 main.c:384
 msgid "Note"
 msgstr "Not"
-
-#: main.c:430
-msgid "Journal"
-msgstr ""
-
-#: main.c:431
-msgid "Show journal"
-msgstr ""
 
 #: gpe-timesheet.desktop.in.h:1
 msgid "GPE Timesheet"
 msgstr "GPE Zaman Çizelgesi"
-
-#~ msgid "OK"
-#~ msgstr "Tamam"
-
-#~ msgid "Cancel"
-#~ msgstr "Ýptal"

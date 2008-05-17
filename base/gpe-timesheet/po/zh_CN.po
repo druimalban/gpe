@@ -5,18 +5,15 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-timesheet 0.11\n"
+"Project-Id-Version: gpe-timesheet 0.18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2004-05-03 01:23+0100\n"
-"PO-Revision-Date: 2004-11-15 21:59+0800\n"
-"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
-"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"PO-Revision-Date: 2007-06-25 22:07+0800\n"
+"Last-Translator: Meng Jie <zuxy.meng@gmail.com>\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-Basepath: d:\\msys\\source\\gpe-timesheet-0.11\n"
-"X-Poedit-Language: Chinese\n"
-"X-Poedit-Country: CHINA\n"
 
 #: main.c:122 main.c:453 gpe-timesheet.desktop.in.h:2
 msgid "Time Tracker"
@@ -60,18 +57,12 @@ msgstr "备注"
 
 #: main.c:430
 msgid "Journal"
-msgstr ""
+msgstr "日志"
 
 #: main.c:431
 msgid "Show journal"
-msgstr ""
+msgstr "显示日志"
 
 #: gpe-timesheet.desktop.in.h:1
 msgid "GPE Timesheet"
 msgstr "GPE 时间表"
-
-#~ msgid "OK"
-#~ msgstr "确定"
-
-#~ msgid "Cancel"
-#~ msgstr "取消"
