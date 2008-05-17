@@ -18,7 +18,7 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=$PACKAGE
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="id pt zh_TW fr ro cs nl ga ru sr sk sv es"
+ALL_LINGUAS="id pt zh_TW fr ro cs nl ga ru sr sk sv es fi ja vi pt_BR zh_CN tr"
 
 gpetimesheet_localedir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(gpetimesheet_localedir)
