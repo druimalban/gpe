@@ -1,100 +1,153 @@
-# Kinyarwanda translations for gpe-login package.
-# Copyright (C) 2005 Free Software Foundation, Inc.
-# This file is distributed under the same license as the gpe-login package.
-# Steve Murphy <murf@e-tools.com>, 2005.
-# Steve performed initial rough translation from compendium built from translations provided by the following translators:
-# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
-# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
-# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
-# Carole Karema <karemacarole@hotmail.com>, 2005.
-# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
-# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
-# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
-# Antoine Bigirimana <antoine@e-tools.com>, 2005.
-#
-msgid ""
-msgstr ""
-"Project-Id-Version: gpe-login 0.60\n"
-"POT-Creation-Date: 2003-08-17 13:50+0100\n"
-"PO-Revision-Date: 2005-04-04 10:55-0700\n"
-"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
-"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Welcome to the Translation Project</title>
+  <meta name="robots" content="index,follow">
+ </head>
+ <body>
+  <table cellpadding=5 width="100%">
+    <tr align=left valign=bottom>
+     <td align=center valign=middle colspan=3 width="100%"
+	 bgcolor="#d7ffd7">
+      <h1>Translation Project</h1>
+     </td>
+    </tr>
 
-#: gpe-login.c:468 gpe-login.c:541
-msgid "Login incorrect"
-msgstr ""
+    <tr>
+     <td align=left valign=top width="15%" bgcolor="white">
+      <table align=left>
 
-#: gpe-login.c:570
-msgid "User already exists"
-msgstr ""
+	<tr><td><font size=-1>
+	   <a href="../html/welcome.html"><b>Welcome</b></a><br>
+	  </font></td></tr>
+	<tr><td height=5></td></tr>
 
-#: gpe-login.c:581
-#, fuzzy
-msgid "Passwords don't match"
-msgstr "BIHUYE"
+	<tr><td bgcolor="#c7ffd7"><b>Overview</b></td></tr>
+	<tr><td><font size=-1>
+	   <a href="../domain/index.html"><b>The Packages</b></a><br>
+	   <a href="../team/index.html"><b>The Teams</b></a><br>
+	   <a href="../html/whydisclaim.html"><b>The&nbsp;Disclaimer</b></a><br>
+	   <a href="../html/robot.html"><b>The Robot</b></a><br>
+	  </font></td></tr>
+	<tr><td height=5></td></tr>
 
-#: gpe-login.c:590
-#, fuzzy
-msgid "Empty password not allowed"
-msgstr "Ijambobanga... OYA"
+	<tr><td bgcolor="#c7ffd7"><b>Info for...</b></td></tr>
+	<tr><td><font size=-1>
+	   <a href="../html/maintainers.html"><b>Maintainers</b></a><br>
+	   <a href="../html/translators.html"><b>Translators</b></a><br>
+	   <a href="../html/leaders.html"><b>Coordinators</b></a><br>
+	 </font></td></tr>
+	<tr><td height=5></td></tr>
 
-#: gpe-login.c:1125
-msgid "Record"
-msgstr "Icyabitswe"
+	<tr><td bgcolor="#c7ffd7"><b>Documents</b></td></tr>
+	<tr><td><font size=-1>
+	   <a href="../html/files.html"><b>Site overview</b></a><br>
+	   <a href="../html/thanks.html"><b>Contributors</b></a><br>
+	   <a href="../html/changes.html"><b>Changes</b></a><br>
+	   <a href="../extra/matrix.html"><b>Matrix</b></a><br>
+	   <a href="../html/software.html"><b>Tools</b></a><br>
+	 </font></td></tr>
+	<tr><td height=5></td></tr>
 
-#: gpe-login.c:1126
-msgid "recalibrates touchscreen"
-msgstr ""
+	<tr><td bgcolor="#c7ffd7"><b>PO Files</b></td></tr>
+	<tr><td><font size=-1>
+	   <a href="../latest/"><b>Latest</b></a><br>
+	   <a href="../obsolete/"><b>Obsolete</b></a><br>
+	 </font></td></tr>
+	<tr><td height=5></td></tr>
 
-#. TRANSLATORS: please replace this with your own Pango language code:
-#: gpe-login.c:1162
-msgid "en"
-msgstr ""
+      </table>
+     </td>
 
-#: gpe-login.c:1396
-#, fuzzy
-msgid "Screen locked"
-msgstr "Gifunze"
+     <td align=left valign=top width="90%">
+      <h1>Welcome to the Translation Project</h1>
 
-#: gpe-login.c:1400 gpe-login.c:1516
-msgid "Username"
-msgstr "Izina ry'ukoresha"
+  <p>The Translation Project (the <b>TP</b>, for short) aims to get maintainers
+   and translators of free (open-source) software packages together, so that
+   most computer programs gradually become able to speak many languages.</p>
+   
+  <p>On these pages you find a
+   <a href="../domain/index.html">list of packages</a> for which
+   translations are handled by the Translation Project, and a
+   <a href="../team/index.html">list of teams</a> that handle the
+   different languages.  Each team page offers contact information, pointing
+   to mailing lists and home pages.</p>
+   
+  <p>There is an explanation of why translators
+   <a href="whydisclaim.html">need to disclaim</a> the copyright on
+   their translations for the FSF (not assign it, just disclaim it),
+   and an explanation of how to <a href="robot.html">deal with the robot</a>
+   that handles the PO-file submissions.</p>
+   
+  <p>There are also detailed explanations for
+   <a href="maintainers.html">package maintainers</a>, for
+   <a href="leaders.html">team coordinators</a>, and for
+   <a href="translators.html">individual translators</a>.
+   If you still have any questions, you can write to the
+   <a href="mailto:coordinator@translationproject.org">TP coordinators</a>.</p>
 
-#: gpe-login.c:1425 gpe-login.c:1518
-msgid "Password"
-msgstr "Ijambobanga"
+  <h3>Translation tools</h3>
 
-#: gpe-login.c:1439
-msgid "Language"
-msgstr "Ururimi"
+  <p>The Translation Project only handles translations for packages that have
+   been internationalized through the use of <tt><b>gettext</b></tt>.  See the
+   <a href="http://www.gnu.org/software/gettext/manual/html_node/index.html">
+   online manual</a> or run <tt><b>info&nbsp;gettext</b></tt> or your local
+   machine for all the details about this package.  If it's not already
+   installed on your machine, you can find the latest version via
+   <a href="http://www.gnu.org/order/ftp.html">GNU's mirror list</a>.</p>
 
-#: gpe-login.c:1460
-#, fuzzy
-msgid "Enter password with hard keys"
-msgstr "Ijambobanga... Na: Ikomeye Utubuto"
+  <p>To make translations for packages that have been <i>gettextized</i>,
+   translators can use just a simple editor, but programs like
+   <a href="http://kbabel.kde.org/">KBabel</a> or
+   <a href="http://www.poedit.net/">poEdit</a> make their work quite a bit
+   easier.  The <a href="software.html">Tools page</a> lists these programs.</p>
 
-#: gpe-login.c:1517
-#, fuzzy
-msgid "Full name"
-msgstr "Izina:"
+  <h3>Discussion</h3>
 
-#: gpe-login.c:1519
-msgid "Confirm password"
-msgstr "Kwemeza ijambobanga"
+  <p>If you are interested in discussions about translating and
+   translation-related software, consider joining the technical discussion list at
+   <a href="http://lists.sourceforge.net/lists/listinfo/translation-i18n">
+   http://lists.sourceforge.net/lists/listinfo/translation-i18n</a>.
+   Problems with localizing software packages, questions about the PO-file
+   format, and tools for helping the translator are on topic there.</p>
 
-#: gpe-login.c:1573
-msgid "New user"
-msgstr "ukoresha mushya"
+<!--
+  <p>The <a href=matrix.html>translation matrix</a> is updated from time to
+  time, but should not be considered as a definitive reference.</p>
+-->
 
-#: gpe-logout.desktop.in.h:1
-#, fuzzy
-msgid "Log out"
-msgstr "Kuvamo"
+  <h3>Acknowledgements</h3>
 
-#: gpe-logout.desktop.in.h:2
-#, fuzzy
-msgid "Log out of GPE"
-msgstr "Inyuma Bya"
+  <p>The Translation Project was started in 1996 by François Pinard, and run
+   by him for more than five years.  In 2001 Karl Eichwalder and Martin von
+   Löwis became the managers of the project.  Currently it is being run by
+   Benno Schulenberg, Karl Eichwalder, and Martin von Löwis.
+   These coordinators can be reached via
+   <a href="mailto:coordinator@translationproject.org">
+   &lt;coordinator@translationproject.org&gt;</a>.</p>
+   
+  <p>For many years this project was hosted at the
+   <a href="http://www.iro.umontreal.ca/">Department of Computer Science
+   and Operational Research (DIRO)</a> of the
+   <a href="http://www.umontreal.ca">University of Montr&#xe9;al</a>.
+   We thank the staff at DIRO for their long-time support.
+   Since the summer of 2007 the project is hosted by
+   <a href="http://www.vrijschrift.org/">Vrijschrift</a>, which is sponsored by
+   <a href="http://www.xs4all.nl/">XS4all</a>.</p>
+
+     </td>
+    </tr>
+
+    <tr align=left valign=bottom>
+     <td bgcolor="white"></td>
+     <td width="100%" bgcolor="white">
+      <p align=left><font size="-2">(Last updated on 2008-04-24 22:28 +0200.)</font></p>
+      <p align=right>
+       Your <a href="mailto:comments@translationproject.org">comments</a>
+       are welcome.</p>
+     </td>
+    </tr>
+  </table>
+ </body>
+</html>
