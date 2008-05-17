@@ -1,11 +1,10 @@
 PACKAGE = gpe-taskmanager
 PREFIX = /usr/local
 DEBUG = no
-GTK2 = yes
 CVSBUILD = yes
 VERSION = 0.20
 
-LINGUAS = nl cs fr de pt ro ru sr sk sv zh_CN
+LINGUAS = nl cs fr de pt ro ru sr sk sv zh_CN wa ko ky ja
 
 MEMBERS = gpe-taskmanager
 

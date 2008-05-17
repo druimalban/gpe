@@ -1,0 +1,32 @@
+# Translation of gpe-su into the walloon language.
+# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Pablo Saratxaga <pablo@walon.org>, 2007.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-taskmanager 0.14\n"
+"POT-Creation-Date: 2003-08-17 14:08+0100\n"
+"PO-Revision-Date: 2007-08-29 18:24+0200\n"
+"Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
+"Language-Team: Walloon <linux-wa@walon.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.0.2\n"
+
+#: gpe-taskmanager.c:226
+msgid "No program is selected"
+msgstr "Nou programe di tchoezi"
+
+#: gpe-taskmanager.c:246
+msgid "Icon"
+msgstr "Imådjete"
+
+#: gpe-taskmanager.c:250 gpe-taskmanager.c:276
+msgid "Running programs"
+msgstr "Programes en alaedje"
+
+#: gpe-taskmanager.c:260
+msgid "Kill program"
+msgstr "Touwer programe"
