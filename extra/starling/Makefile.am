@@ -16,3 +16,5 @@ DISTCLEANFILES = intltool-extract \
 
 clean-local:
 	$(RM) po/.intltool-merge-cache
+
+include gpe-dist.am

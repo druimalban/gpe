@@ -1,3 +1,7 @@
+2008-05-20  Florian Boor  <florian.boor@kernelconcepts.de>
+
+	* Release 0.3
+
 2008-04-16  Neal H. Walfield  <neal@gnu.org>
 
         * src/playlist.c (IS_HILDON): Don't undefine.
