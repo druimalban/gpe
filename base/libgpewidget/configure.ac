@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(libgpewidget, 0.115, gpe-list@linuxtogo.org)
+AC_INIT(libgpewidget, 0.116, gpe-list@linuxtogo.org)
 AC_CONFIG_SRCDIR([init.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
@@ -11,7 +11,7 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=libgpewidget
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="cs da es ga id nl pt sk sv wa de fr hu pt_BR ro sr vi ky pl sl ja zh_TW fi zh_CN"
+ALL_LINGUAS="cs da es ga id nl pt sk sv wa de fr hu pt_BR ro sr vi ky pl sl ja zh_TW fi zh_CN lt"
 libgpewidgetlocaledir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(libgpewidgetlocaledir)
 
