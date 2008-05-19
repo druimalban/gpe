@@ -135,14 +135,18 @@ menu_do_send_irda (void)
 }
 
 gboolean
-save_to_file(guint uid, const gchar *filename)
+save_to_file(guint uid, const gchar *filename, gboolean append)
 {
   gchar *card;
   int fd;
   
   card = export_to_vcard (uid);
 
-  fd = open (filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+  if (append)
+    fd = open (filename, O_WRONLY | O_CREAT | O_APPEND, 0666);
+  else
+    fd = open (filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+    
   if (fd < 0)
     goto error;
 
@@ -171,7 +175,7 @@ select_file_done (GtkWidget *w, GtkWidget *filesel)
 
   filename = gtk_file_selection_get_filename (GTK_FILE_SELECTION (filesel));
   
-  if (save_to_file(uid, filename))
+  if (save_to_file(uid, filename, FALSE))
     goto error;
   
   gtk_widget_destroy (filesel);

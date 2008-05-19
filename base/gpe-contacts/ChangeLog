@@ -1,3 +1,8 @@
+2008-05-20  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * main.c (do_export_vcard...): Implement exporting of current contact list.
+    * export.c/.h: Introduce flag to append export file.
+      
 2008-05-08  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main-hildon.c (import_one_file): Add error parameter.

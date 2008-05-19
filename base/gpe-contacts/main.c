@@ -1345,6 +1345,48 @@ on_import_vcard (GtkWidget *widget, gpointer data)
   update_display();
 }
 
+static void
+on_export_vcard (GtkWidget *widget, gpointer data)
+{
+  GtkWidget *filesel, *feedbackdlg;
+  gint i = 0, ec = 0;
+  GtkTreeIter iter;
+    
+  filesel = gtk_file_selection_new(_("Export to file..."));
+  gtk_file_selection_set_filename (GTK_FILE_SELECTION (filesel), "GPE.vcf");
+  gtk_file_selection_set_select_multiple(GTK_FILE_SELECTION(filesel), FALSE);
+  
+  if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
+    {
+      guint uid;
+      const gchar *filename = 
+        gtk_file_selection_get_filename(GTK_FILE_SELECTION(filesel));
+      gtk_widget_hide(filesel);
+      
+      gtk_tree_model_get_iter_first (GTK_TREE_MODEL(list_store), &iter);
+      do 
+        {
+          gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 1, &uid, -1);
+          if (save_to_file (uid, filename, i ? TRUE : FALSE))
+             ec++;
+          i++;
+        }
+      while (gtk_tree_model_iter_next (GTK_TREE_MODEL(list_store), &iter));
+        
+      if (ec)
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
+          GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
+          "%s %i %s %i",_("Export of"), i - ec, _("files ok, failed:"), ec);
+      else
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
+          GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
+          _("Export successful"));
+      gtk_dialog_run(GTK_DIALOG(feedbackdlg));
+      gtk_widget_destroy(feedbackdlg);
+    }
+  gtk_widget_destroy(filesel);
+}
+
 static GtkWidget *
 create_main (gboolean edit_structure)
 {
@@ -1475,6 +1517,15 @@ create_main (gboolean edit_structure)
   g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(on_import_vcard), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
 
+  /* export button */
+  pw = gtk_image_new_from_stock (GTK_STOCK_SAVE,
+                                 gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
+  b = gtk_tool_button_new(pw, _("Export"));
+  gtk_tool_item_set_tooltip(b, tooltips, 
+                            _("Export currently listed contacts to a file."), NULL);
+  g_signal_connect(G_OBJECT(b), "clicked", G_CALLBACK(on_export_vcard), NULL);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), b, -1);
+	
   /* another separator */
   b = gtk_separator_tool_item_new();
   gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(b), FALSE);
@@ -1733,7 +1784,7 @@ main (int argc, char *argv[])
         p = contacts_new_person();
       edit_person (p, _("My Card"), TRUE);
       gtk_main();
-      if (save_to_file(1, MY_VCARD))
+      if (save_to_file(1, MY_VCARD, FALSE))
         gpe_perror_box(_("Saving vcard failed"));
       exit (EXIT_SUCCESS);
     }
