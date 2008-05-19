@@ -1,3 +1,8 @@
+
+2008-05-19  Florian Boor <florian@kernelconcepts.de>
+
+	* gpeclockface.c: Use new Cairo API in GDK. Fixes #73
+
 2008-05-13  Florian Boor <florian@kernelconcepts.de>
 
 	* gpe-tp.am: Switch to new translation code.

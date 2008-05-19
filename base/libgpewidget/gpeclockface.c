@@ -68,7 +68,6 @@ struct _GpeClockFace
 
 #ifdef HAVE_CAIRO
   cairo_t *cr;
-  cairo_surface_t *surface;
 #endif
 
   GdkPixmap *backing_pixmap;
@@ -564,10 +563,7 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
   gcm = gdk_drawable_get_colormap (widget->window);
       
 #ifdef HAVE_CAIRO
-  clock->surface = cairo_xlib_surface_create (dpy, GDK_WINDOW_XWINDOW (clock->backing_pixmap), 
-					      gdk_x11_visual_get_xvisual (gv), 0, 
-					      gdk_x11_colormap_get_xcolormap (gcm));
-  clock->cr = cairo_create (clock->surface);
+  clock->cr = gdk_cairo_create (clock->backing_pixmap);
 #else
   clock->backing_poly_gc = gdk_gc_new (clock->backing_pixmap);
 #endif
@@ -586,7 +582,6 @@ gpe_clock_face_unprepare_xrender (GtkWidget *widget)
 
 #ifdef HAVE_CAIRO
   cairo_destroy (clock->cr);
-  cairo_surface_destroy (clock->surface);
 #else
   if (clock->backing_poly_gc)
     {
