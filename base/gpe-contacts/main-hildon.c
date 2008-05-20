@@ -1315,30 +1315,33 @@ on_import_vcard (GtkWidget *widget, gpointer data)
     {
       GError *error = NULL;
       gchar *errstr = NULL;
-      int ec = 0, i = 0;
-      gchar **files = 
+      gint ec = 0;
+      GSList *f;
+      GSList *files = 
         gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(filesel));
       gtk_widget_hide(filesel);
-      while (files && files[i])
+      f = files;
+      while (f && f->data)
         {
-          if (import_one_file(files[i], &error) < 0) 
+          if (import_one_file(f->data, &error) < 0) 
             {
               gchar *tmp;
               if (!errstr) 
                 errstr=g_strdup("");
               ec++;
-	      tmp = g_strdup_printf("%s\n%s: %s",errstr,strrchr(files[i],'/')+1,error->message);
+              tmp = g_strdup_printf("%s\n%s: %s", errstr, 
+                                    strrchr(f->data,'/') + 1, error->message);
               if (errstr) 
                  g_free(errstr);
               errstr = tmp;
-	      g_clear_error(&error);
+              g_clear_error(&error);
             }
-          i++;  
+          f = f->next;
         }
       if (ec)
         feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(mainw)),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
-          "%s %i %s\n%s",_("Import of"),ec,_("files failed:"),errstr);
+          "%s %i %s\n%s",_("Import of"), ec, _("files failed:"), errstr);
       else
         feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(mainw)),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
@@ -1378,6 +1381,52 @@ edit_categories (GtkWidget *w)
   gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 }
 
+static void
+on_export_vcard (GtkWidget *widget, gpointer data)
+{
+  GtkWidget *filesel, *feedbackdlg;
+  gint i = 0, ec = 0;
+  GtkTreeIter iter;
+  gchar *filename = g_strconcat(g_get_home_dir(), "GPE.vcf", NULL);
+    
+  filesel = hildon_file_chooser_dialog_new(GTK_WINDOW(gtk_widget_get_toplevel(widget)), 
+                                                      GTK_FILE_CHOOSER_ACTION_SAVE);
+  gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(filesel), TRUE);
+  gtk_file_chooser_set_filename (GTK_FILE_CHOOSER(filesel), filename);
+  gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(filesel), FALSE);
+  
+  if (gtk_dialog_run(GTK_DIALOG(filesel)) == GTK_RESPONSE_OK)
+    {
+      guint uid;
+      gchar *filename = 
+        gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(filesel));
+      gtk_widget_hide(filesel);
+      
+      gtk_tree_model_get_iter_first (GTK_TREE_MODEL(list_store), &iter);
+      do 
+        {
+          gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 1, &uid, -1);
+          if (save_to_file (uid, filename, i ? TRUE : FALSE))
+             ec++;
+          i++;
+        }
+      while (gtk_tree_model_iter_next (GTK_TREE_MODEL(list_store), &iter));
+        
+      if (ec)
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
+          GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
+          "%s %i %s %i",_("Export of"), i - ec, _("files ok, failed:"), ec);
+      else
+        feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
+          GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
+          _("Export successful"));
+      gtk_dialog_run(GTK_DIALOG(feedbackdlg));
+      gtk_widget_destroy(feedbackdlg);
+    }
+  g_free(filename);
+  gtk_widget_destroy(filesel);
+}
+
 /* create hildon application main menu */
 static void
 create_app_menu(HildonWindow *window)
@@ -1400,6 +1449,7 @@ create_app_menu(HildonWindow *window)
   GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
   GtkWidget *item_tools = gtk_menu_item_new_with_label(_("Tools"));
   GtkWidget *item_import = gtk_menu_item_new_with_label(_("Import VCard"));
+  GtkWidget *item_export = gtk_menu_item_new_with_label(_("Export listed contacts..."));
 
   gtk_menu_append (GTK_MENU(menu_contacts), item_open);
   gtk_menu_append (GTK_MENU(menu_contacts), item_add);
@@ -1413,6 +1463,7 @@ create_app_menu(HildonWindow *window)
   gtk_menu_append (menu_main, item_tools);
   gtk_menu_append (menu_main, item_close);
   gtk_menu_append (menu_tools, item_import);
+  gtk_menu_append (menu_tools, item_export);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_contacts), menu_contacts);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_categories), menu_categories);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_view), menu_view);
@@ -1428,6 +1479,7 @@ create_app_menu(HildonWindow *window)
   g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
   g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(delete_contact), NULL);
   g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcard), NULL);
+  g_signal_connect(G_OBJECT(item_export), "activate", G_CALLBACK(on_export_vcard), NULL);
   g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gtk_main_quit), NULL);
 
   gtk_widget_show_all (GTK_WIDGET(menu_main));  
@@ -1818,7 +1870,7 @@ main (int argc, char *argv[])
         p = contacts_new_person();
       edit_person (p, _("My Card"), TRUE);
       gtk_main();
-      if (save_to_file(1, MY_VCARD))
+      if (save_to_file(1, MY_VCARD, FALSE))
         gpe_perror_box(_("Saving vcard failed"));
       exit (EXIT_SUCCESS);
     }
