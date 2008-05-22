@@ -5,10 +5,13 @@ INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
            -DPACKAGE_LOCALE_DIR=\"@gpelogin_localedir@\"
 
-bin_PROGRAMS = gpe-login gpe-lock-display
+bin_PROGRAMS = gpe-login gpe-logout gpe-lock-display
 
 gpe_login_LDADD = @DEPS_LIBS@ -lgpe-ownerinfo -lcrypt
 gpe_login_SOURCES = gpe-login.c
+
+gpe_logout_LDADD = @DEPS_LIBS@
+gpe_logout_SOURCES = gpe-logout.c
 
 gpe_lock_display_LDADD = @DEPS_LOCK_LIBS@
 gpe_lock_display_SOURCES = gpe-lock-display.c
@@ -32,6 +35,13 @@ gpe_DATA = gpe-login.conf locale.alias
 sysdir = $(sysconfdir)/sysconfig
 sys_DATA = gpe-login.sysconfig
 
+pixmapsdir = $(datadir)/gpe/pixmaps/default
+pixmaps_DATA = \ 
+               pixmaps/session-back.png \
+               pixmaps/session-lock.png \
+               pixmaps/session-halt.png \
+               pixmaps/session-suspend.png
+
 
 EXTRA_DIST = \
              $(x11_SCRIPTS) \
@@ -41,6 +51,7 @@ EXTRA_DIST = \
              $(xinit_SCRIPTS) \
              $(gpe_DATA) \
              $(sys_DATA) \
+             $(pixmaps_DATA) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in

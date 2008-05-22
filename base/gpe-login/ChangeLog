@@ -1,3 +1,9 @@
+
+2008-05-22  Florian Boor <florian@kernelconcepts.de>
+
+	* Add logout/shutdown tool.
+	* Translation update.
+
 2008-02-22  Florian Boor <florian@kernelconcepts.de>
 
 	* Apply patch to make screen locking work with display
