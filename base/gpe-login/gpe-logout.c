@@ -58,12 +58,20 @@ cpanel_do_lock (GtkWidget *button, GtkWidget *panel)
   gtk_widget_destroy (panel);
 }
 
+static void 
+cpanel_do_logout (GtkWidget *button, GtkWidget *panel)
+{
+  gpe_popup_infoprint(GDK_DISPLAY(), _("Logout"));
+  gtk_widget_destroy (panel);
+  g_spawn_command_line_async ("gpe-logout.sh", NULL);
+}
+
 void
 controlpanel_open (void)
 {
   GtkWidget *cpanel, *vbox;
-  GtkWidget *bsuspend, *bpoweroff, *block, *bclose;
-  GtkWidget *imgsuspend, *imgpoweroff, *imglock, *imgclose;
+  GtkWidget *bsuspend, *bpoweroff, *block, *bclose, *blogout;
+  GtkWidget *imgsuspend, *imgpoweroff, *imglock, *imgclose, *imglogout;
 		
   cpanel = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   vbox = gtk_vbox_new (TRUE, gpe_get_boxspacing());
@@ -71,30 +79,36 @@ controlpanel_open (void)
   bsuspend = gtk_button_new_with_label (_("  Suspend"));
   bpoweroff = gtk_button_new_with_label (_("  Turn off"));
   block = gtk_button_new_with_label (_("  Lock"));
+  blogout = gtk_button_new_with_label (_("  Logout"));
   bclose = gtk_button_new_with_label (_("  Back"));
 
   imgsuspend = gtk_image_new_from_file (DEFAULT_THEME_DIR "session-suspend.png");
   imgpoweroff = gtk_image_new_from_file (DEFAULT_THEME_DIR "session-halt.png");
   imglock = gtk_image_new_from_file (DEFAULT_THEME_DIR "session-lock.png");
+  imglogout = gtk_image_new_from_file (DEFAULT_THEME_DIR "session-logout.png");
   imgclose = gtk_image_new_from_file (DEFAULT_THEME_DIR "session-back.png");
 
   gtk_button_set_image (GTK_BUTTON (bsuspend), imgsuspend);
   gtk_button_set_image (GTK_BUTTON (bpoweroff), imgpoweroff);
   gtk_button_set_image (GTK_BUTTON (block), imglock);
+  gtk_button_set_image (GTK_BUTTON (blogout), imglogout);
   gtk_button_set_image (GTK_BUTTON (bclose), imgclose);
   gtk_button_set_alignment (GTK_BUTTON (bsuspend), 0.0, 0.5);
   gtk_button_set_alignment (GTK_BUTTON (bpoweroff), 0.0, 0.5);
   gtk_button_set_alignment (GTK_BUTTON (block), 0.0, 0.5);
+  gtk_button_set_alignment (GTK_BUTTON (blogout), 0.0, 0.5);
   gtk_button_set_alignment (GTK_BUTTON (bclose), 0.0, 0.5);
 		
   gtk_box_pack_start (GTK_BOX (vbox), bsuspend, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), bpoweroff, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), block, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), blogout, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), bclose, TRUE, TRUE, 0);
 
   g_signal_connect (G_OBJECT (bsuspend), "clicked", G_CALLBACK (cpanel_do_suspend), cpanel);
   g_signal_connect (G_OBJECT (bpoweroff), "clicked", G_CALLBACK (cpanel_do_poweroff), cpanel);
   g_signal_connect (G_OBJECT (block), "clicked", G_CALLBACK (cpanel_do_lock), cpanel);
+  g_signal_connect (G_OBJECT (blogout), "clicked", G_CALLBACK (cpanel_do_logout), cpanel);
   g_signal_connect_swapped (G_OBJECT (bclose), "clicked", G_CALLBACK (gtk_widget_destroy), cpanel);
 
   g_signal_connect (G_OBJECT (cpanel), "destroy", G_CALLBACK (gtk_main_quit), NULL);

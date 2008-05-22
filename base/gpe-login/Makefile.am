@@ -40,6 +40,7 @@ pixmaps_DATA = \
                pixmaps/session-back.png \
                pixmaps/session-lock.png \
                pixmaps/session-halt.png \
+               pixmaps/session-logout.png \
                pixmaps/session-suspend.png
 
 
