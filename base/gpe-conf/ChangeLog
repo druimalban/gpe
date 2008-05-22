@@ -1,3 +1,6 @@
+2008-05-22  Florian Boor <florian@kernelconcepts.de>
+
+	* main.c, tasks.*: Add task for shut down the device.
 
 2008-04-30  Florian Boor <florian@kernelconcepts.de>
 

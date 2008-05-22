@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003 - 2006  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2006, 2008  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -101,7 +101,7 @@ struct Applet applets[]=
 		N_("Owner"), "ownerinfo", N_("Owner Information"),PREFIX "/share/pixmaps/gpe-config-ownerinfo.png"},
     { &Login_Setup_Build_Objects, &Login_Setup_Free_Objects, &Login_Setup_Save, &Login_Setup_Restore,
 		N_("Login"), "login-setup", N_("Login Setup"),PREFIX "/share/pixmaps/gpe-config-login-setup.png"},
-    { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore ,
+    { &Users_Build_Objects, &Users_Free_Objects, &Users_Save, &Users_Restore,
 		N_("Users"),"users" ,N_("User Administration"),PREFIX "/share/pixmaps/gpe-config-users.png"},
     { &GpeAdmin_Build_Objects, &GpeAdmin_Free_Objects, &GpeAdmin_Save, &GpeAdmin_Restore , 
 		N_("GPE") ,"admin",N_("GPE Conf Administration"),PREFIX "/share/pixmaps/gpe-config-admin.png"},
@@ -120,7 +120,9 @@ struct Applet applets[]=
     { NULL, NULL, NULL, NULL ,
 		N_("Task background image") ,"task_background", N_("Only select background image."), PREFIX "/share/pixmaps/gpe-config-admin.png"},
     { NULL, NULL, NULL, NULL ,
-		N_("Task backlight setting") ,"task_backlight", N_("Change backlight power and brightness."), PREFIX "/share/pixmaps/gpe-config-admin.png"}
+		N_("Task backlight setting") ,"task_backlight", N_("Change backlight power and brightness."), PREFIX "/share/pixmaps/gpe-config-admin.png"},
+    { NULL, NULL, NULL, NULL ,
+		N_("Task shutdown device") ,"task_shutdown", N_("Shut down device."), PREFIX "/share/pixmaps/gpe-config-admin.png"}
   };
 
 struct gpe_icon my_icons[] = {
@@ -156,7 +158,7 @@ void Save_Callback(GtkWidget *sender)
 }
 
 
-void Restore_Callback()
+void Restore_Callback(void)
 {
   while (gtk_events_pending())
 	  gtk_main_iteration_do(FALSE);
@@ -271,7 +273,7 @@ void initwindow()
 }
 
 
-void make_container()
+void make_container(void)
 {
   GtkToolItem *item;
 	
@@ -315,7 +317,7 @@ void make_container()
 
 
 void 
-main_one (int argc, char **argv,int applet)
+main_one (int argc, char **argv, int applet)
 {
   int handled = FALSE;
   gboolean special_flag = FALSE; /* Don't change to suid mode or similar. */  
@@ -326,7 +328,7 @@ main_one (int argc, char **argv,int applet)
 
   my_icons[count_icons - 1].filename = applets[applet].icon_file;
 
-  if (!strcmp(argv[1],"task_backlight"))
+  if (!strcmp(argv[1], "task_backlight"))
   {
 	  handled = TRUE;
 	  if (argc == 2)
@@ -345,6 +347,12 @@ main_one (int argc, char **argv,int applet)
 
   if (gpe_load_icons (my_icons) == FALSE)
     exit (1);
+
+  if (!strcmp(argv[1], "task_shutdown"))
+  {
+	  task_shutdown();
+	  exit(0);
+  }
 
   /* check if we are called to do a command line task */
   if (argc > 2)

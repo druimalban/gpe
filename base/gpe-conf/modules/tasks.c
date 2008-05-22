@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *	             2003, 2004  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003, 2004, 2008  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -89,3 +89,17 @@ task_backlight(char *par1, char *par2)
 		suid_exec ("SCRB", buf);
 	}
 }
+
+void
+task_shutdown(void)
+{
+	GtkWidget *dialog;
+
+	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION, 
+                                                         GTK_BUTTONS_YES_NO,
+                                                         _("Really power down?"));
+	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_YES)
+		suid_exec ("SHDN", "1");
+	gtk_widget_destroy (dialog);
+}
+

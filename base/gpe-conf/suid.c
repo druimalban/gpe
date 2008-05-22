@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003 - 2005, 2007  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2005, 2007, 2008  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -218,6 +218,10 @@ check_user_access (const char *cmd)
 	if (!strcmp (cmd, "CHPW"))
 		return TRUE;
 	
+	/* allow power controls */
+	if (!strcmp (cmd, "SHDN"))
+		return TRUE;
+
 	return global_user_access;
 }
 
@@ -446,6 +450,11 @@ suidloop (int write, int read)
 					pw = getpwnam(arg2);
 					if (pw)
 						update_passwd (pw, arg1);
+				}
+				else if (strcmp (cmd, "SHDN") == 0)  // shutdown device
+				{
+					fscanf (in, "%100s", arg2);
+					system ("poweroff");
 				}
 				else if (strcmp (cmd, "MODP") == 0)  /* modprobe kernel module */
 				{

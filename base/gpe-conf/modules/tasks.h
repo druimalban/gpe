@@ -4,6 +4,6 @@
 void task_change_nameserver(char *newns);
 void task_sound(char *action);
 void task_backlight(char *par1, char *par2);
-
+void task_shutdown(void);
 
 #endif
