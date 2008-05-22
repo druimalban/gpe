@@ -1,3 +1,8 @@
+2008-05-22  Florian Boor <floriankernelconcepts.de>
+
+	* Makefile: Install gpe-logout.sh to different name for use with new 
+          gpe-logout binary.
+
 2006-04-22  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.67 released.

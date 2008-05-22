@@ -34,7 +34,7 @@ install-program: gpe-logout.desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 gpe-logout.desktop $(DESTDIR)$(PREFIX)/share/applications
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install gpe-logout.sh $(DESTDIR)$(PREFIX)/bin/gpe-logout
+	install gpe-logout.sh $(DESTDIR)$(PREFIX)/bin/gpe-logout.sh
 	install gpe-auto-bluetooth.sh $(DESTDIR)$(PREFIX)/bin/gpe-auto-bluetooth
 
 clean: clean-po
