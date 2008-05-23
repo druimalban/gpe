@@ -1,3 +1,8 @@
+
+2008-05-23  Florian Boor <floriankernelconcepts.de>
+
+	* Version 0.68 released
+
 2008-05-22  Florian Boor <floriankernelconcepts.de>
 
 	* Makefile: Install gpe-logout.sh to different name for use with new 
