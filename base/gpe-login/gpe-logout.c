@@ -74,7 +74,13 @@ controlpanel_open (void)
   GtkWidget *imgsuspend, *imgpoweroff, *imglock, *imgclose, *imglogout;
 		
   cpanel = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  
+  gtk_window_set_keep_above (GTK_WINDOW(cpanel), TRUE);
+  gtk_window_set_position (GTK_WINDOW(cpanel), GTK_WIN_POS_CENTER);
+  gtk_window_set_decorated (GTK_WINDOW(cpanel), FALSE);
+
   vbox = gtk_vbox_new (TRUE, gpe_get_boxspacing());
+  gtk_container_set_border_width (GTK_CONTAINER(vbox), gpe_get_border());
 
   bsuspend = gtk_button_new_with_label (_("  Suspend"));
   bpoweroff = gtk_button_new_with_label (_("  Turn off"));
