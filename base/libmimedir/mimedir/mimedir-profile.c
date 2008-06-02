@@ -245,7 +245,7 @@ append_attribute (MIMEDirProfile *profile, MIMEDirAttribute *attribute, GError *
 		const gchar *string;
 
 		if (profile->priv->name) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, "BEGIN");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, "BEGIN", profile->priv->name);
 			return FALSE;
 		}
 

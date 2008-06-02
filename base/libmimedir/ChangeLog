@@ -1,3 +1,20 @@
+2008-06-02  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_parse_attribute): display old value for duplicate
+	attribute errors
+
+	* mimedir/mimedir-vcal.c (mimedir_vcal_parse_attribute): display old value for duplicate
+	attribute errors
+
+	* mimedir/mimedir-profile.c (append_attribute): display old value for duplicate
+	attribute errors
+
+	* mimedir/mimedir-vcard.c (mimedir_vcard_read_from_profile): display old value for duplicate
+	attribute errors
+
+	* mimedir/mimedir-profile.h (MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR): add old value to
+	error message string
+
 2008-05-08  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-attribute.c (decode_attribute_value): Only reconvert from original
