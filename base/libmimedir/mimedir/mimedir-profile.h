@@ -37,7 +37,7 @@ typedef enum {
 	MIMEDIR_PROFILE_ERROR_WRONG_PROFILE
 } MIMEDirProfileError;
 
-#define MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR	_("attribute %s defined twice; first occurrence: %s")
+#define MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR	_("attribute %s defined twice; this time with value: %s")
 #define MIMEDIR_PROFILE_ERROR_UNEXPECTED_END_STR	_("unexpected end of profile")
 #define MIMEDIR_PROFILE_ERROR_ATTRIBUTE_MISSING_STR	_("required attribute %s is missing")
 #define MIMEDIR_PROFILE_ERROR_UNMATCHED_END_STR		_("unmatched END attribute")

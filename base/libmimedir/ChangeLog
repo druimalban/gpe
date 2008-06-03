@@ -1,3 +1,11 @@
+2008-06-03  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_parse_attribute), 
+	mimedir/mimedir-vcal.c (mimedir_vcal_parse_attribute), mimedir/mimedir-profile.c 
+	(append_attribute), mimedir/mimedir-vcard.c (mimedir_vcard_read_from_profile), 
+	mimedir/mimedir-profile.h (MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR): add *latest* value to
+	error message string, instead of old value
+
 2008-06-02  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_parse_attribute): display old value for duplicate

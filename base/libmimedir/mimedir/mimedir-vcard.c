@@ -1834,7 +1834,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Name (6.2, 2.1.2) */
 		else if (!g_ascii_strcasecmp (name, "NAME")) {
 			if (priv->name != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->name);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -1857,7 +1857,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Source (6.1, 2.1.4) */
 		else if (!g_ascii_strcasecmp (name, "SOURCE")) {
 			if (priv->source != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->source);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -1873,7 +1873,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Name (3.1.1) */
 		else if (!g_ascii_strcasecmp (name, "FN")) {
 			if (priv->fn != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->fn);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -1887,7 +1887,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 			GSList *list, *current;
 
 			if (priv->familyname != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->familyname);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -1939,7 +1939,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Photo (3.1.4) */
 		else if (!g_ascii_strcasecmp (name, "PHOTO")) {
 			if (priv->photo || priv->photo_uri) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->photo_uri || "(unknown)");
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -1959,7 +1959,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Birthday (3.1.5) */
 		else if (!g_ascii_strcasecmp (name, "BDAY")) {
 			if (priv->birthday) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2033,7 +2033,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 			const gchar *s;
 
 			if (priv->mailer != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->mailer);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2050,7 +2050,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 			const gchar *type;
 
 			if (priv->timezone != G_MAXINT || priv->timezone_string != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->timezone_string || "(unknown)");
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2115,7 +2115,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Job Title (3.5.1) */
 		else if (!g_ascii_strcasecmp (name, "TITLE")) {
 			if (priv->jobtitle != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->jobtitle);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2127,7 +2127,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Job Role (3.5.2) */
 		else if (!g_ascii_strcasecmp (name, "ROLE")) {
 			if (priv->jobrole != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->jobrole);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2139,7 +2139,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Organization Logo (3.5.3) */
 		else if (!g_ascii_strcasecmp (name, "LOGO")) {
 			if (priv->logo || priv->logo_uri) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->logo_uri || "(unknown)");
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2161,7 +2161,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 			MIMEDirAttributeType type;
 
 			if (priv->agent || priv->agent_uri || priv->agent_string) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->agent_string || priv->agent_uri || "(unknown)");
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2195,7 +2195,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 			GSList *list, *current;
 
 			if (priv->organization != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->organization->data);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2248,7 +2248,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 			GString *s;
 
 			if (priv->note != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->note);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2277,7 +2277,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Product ID (3.6.3) */
 		else if (!g_ascii_strcasecmp (name, "PRODID")) {
 			if (priv->prodid) {
-				g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->prodid);
+				g_set_error (error, MIMEDIR_ATTRIBUTE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2291,7 +2291,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Revision (3.6.4) */
 		else if (!g_ascii_strcasecmp (name, "REV")) {
 			if (priv->revision) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2312,7 +2312,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Sort string (3.6.5) */
 		else if (!g_ascii_strcasecmp (name, "SORT-STRING")) {
 			if (priv->sort_string != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->sort_string);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2326,7 +2326,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Sound (3.6.6) */
 		else if (!g_ascii_strcasecmp (name, "SOUND")) {
 			if (priv->sound || priv->sound_uri) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->sound_uri || "(unknown)");
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2346,7 +2346,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* UID (3.6.7) */
 		else if (!g_ascii_strcasecmp (name, "UID")) {
 			if (priv->uid != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->uid);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2358,7 +2358,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* URL (3.6.8) */
 		else if (!g_ascii_strcasecmp (name, "URL")) {
 			if (priv->url != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->url);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 
@@ -2381,7 +2381,7 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		/* Access Classification (3.7.1) */
 		else if (!g_ascii_strcasecmp (name, "CLASS")) {
 			if (priv->klass != NULL) {
-				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->klass);
+				g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 				return FALSE;
 			}
 

@@ -1244,7 +1244,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 		const gchar *v;
 
 		if (priv->md_class != MIMEDIR_CLASS_PUBLIC) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1277,7 +1277,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "DESCRIPTION")) {
 		if (priv->description) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->description);
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1292,7 +1292,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 		GSList *list;
 
 		if (priv->latitude != 0.0 || priv->longitude != 0.0) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1323,7 +1323,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 		const gchar *altrep;
 
 		if (priv->location || priv->location_alt) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->location || priv->location_alt);
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1341,7 +1341,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 	else if (!g_ascii_strcasecmp (name, "PERCENT-COMPLETE")) {
 		gint percent;
 		if (priv->percent >= 0) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1402,7 +1402,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 		gchar *status;
 
 		if (priv->status != MIMEDIR_STATUS_UNKNOWN) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1438,7 +1438,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "SUMMARY")) {
 		if (priv->summary) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->summary);
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1455,7 +1455,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "COMPLETED")) {
 		if (priv->dtcompleted) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1472,7 +1472,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "DTEND")) {
 		if (priv->dtend) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1498,7 +1498,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "DUE")) {
 		if (priv->due) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1524,7 +1524,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "DTSTART")) {
 		if (priv->dtstart) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1552,7 +1552,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 		gint i;
 
 		if (priv->duration != 0) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1647,7 +1647,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 		const gchar *s;
 
 		if (priv->tzid) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->tzid);
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1671,7 +1671,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "TZOFFSETFROM")) {
 		if (priv->tzofffrom != 0) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1686,7 +1686,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "TZOFFSETTO")) {
 		if (priv->tzoffto != 0) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1701,7 +1701,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "TZURL")) {
 		if (priv->tzurl) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->tzurl);
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1730,7 +1730,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "CONTACT")) {
 		if (!priv->contact) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->contact);
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1773,7 +1773,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "UID")) {
 		if (priv->uid) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->uid);
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1814,7 +1814,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "RRULE")) {
 		if (priv->recurrence) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1830,7 +1830,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "ACTION")) {
 		if (priv->action) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->action);
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1845,7 +1845,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 		gint i;
 
 		if (priv->repeat > 0) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1871,7 +1871,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 		if (priv->trigger != 0 ||
 		    priv->trigger_dt   ||
 		    priv->trigger_end) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1906,7 +1906,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 		 !g_ascii_strcasecmp (name, "DCREATED")) { /* compat */
 
 		if (priv->created) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1928,7 +1928,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 	else if (!g_ascii_strcasecmp (name, "DTSTAMP")) {
 
 		if (priv->dtstamp) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1951,7 +1951,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "LAST-MODIFIED")) {
 		if (priv->last_modified) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -1976,7 +1976,7 @@ mimedir_vcomponent_parse_attribute (MIMEDirVComponent *vcomponent, MIMEDirAttrib
 
 	else if (!g_ascii_strcasecmp (name, "SEQUENCE")) {
 		if (priv->sequence >= 0) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, "(unknown)");
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 

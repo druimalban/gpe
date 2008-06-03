@@ -344,7 +344,7 @@ mimedir_vcal_parse_attribute (MIMEDirVCal *vcal, MIMEDirAttribute *attr, GError 
 
 	else if (!g_ascii_strcasecmp (name, "METHOD")) {
 		if (priv->method) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->method);
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
@@ -357,7 +357,7 @@ mimedir_vcal_parse_attribute (MIMEDirVCal *vcal, MIMEDirAttribute *attr, GError 
 
 	else if (!g_ascii_strcasecmp (name, "PRODID")) {
 		if (priv->prodid) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, priv->prodid);
+			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE, MIMEDIR_PROFILE_ERROR_DUPLICATE_ATTRIBUTE_STR, name, mimedir_attribute_get_value(attr));
 			return FALSE;
 		}
 
