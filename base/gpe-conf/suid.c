@@ -454,7 +454,7 @@ suidloop (int write, int read)
 				else if (strcmp (cmd, "SHDN") == 0)  // shutdown device
 				{
 					fscanf (in, "%100s", arg2);
-					system ("poweroff");
+					system ("/sbin/poweroff");
 				}
 				else if (strcmp (cmd, "MODP") == 0)  /* modprobe kernel module */
 				{
