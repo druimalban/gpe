@@ -1,3 +1,8 @@
+
+2008-06-06  Florian Boor <florian@kernelconcepts.de>
+
+	* gpe-logout.c: Improve window behaviour on large screens.
+
 2008-05-23  Florian Boor <florian@kernelconcepts.de>
 
 	* Release 0.92

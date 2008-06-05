@@ -3,7 +3,7 @@
  *
  * Logout and shutdown tool for GPE. 
  * 
- * (c) 2008 Florian Boor <florian.boor@kernelconcepte.de>
+ * (c) 2008 Florian Boor <florian.boor@kernelconcepts.de>
  * 
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -74,10 +74,16 @@ controlpanel_open (void)
   GtkWidget *imgsuspend, *imgpoweroff, *imglock, *imgclose, *imglogout;
 		
   cpanel = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  
+
+  /* If screen is large enough make the window appear as a dialog */
+  if (gdk_screen_width() > 320)
+    gtk_window_set_type_hint(GTK_WINDOW(cpanel), GDK_WINDOW_TYPE_HINT_DIALOG);  
+
   gtk_window_set_keep_above (GTK_WINDOW(cpanel), TRUE);
   gtk_window_set_position (GTK_WINDOW(cpanel), GTK_WIN_POS_CENTER);
   gtk_window_set_decorated (GTK_WINDOW(cpanel), FALSE);
+
+  gtk_window_set_default_size (GTK_WINDOW(cpanel), 240, 300);
 
   vbox = gtk_vbox_new (TRUE, gpe_get_boxspacing());
   gtk_container_set_border_width (GTK_CONTAINER(vbox), gpe_get_border());
