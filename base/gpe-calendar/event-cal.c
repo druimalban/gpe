@@ -296,3 +296,49 @@ gtk_event_cal_new (void)
 
   return widget;
 }
+
+void gtk_event_cal_get_date (GtkEventCal *calendar, guint *year, guint *month, guint *day)
+{
+#if defined(IS_HILDON) && HILDON_VER > 0
+  return hildon_calendar_get_date(HILDON_CALENDAR(calendar), year, month, day);
+#else
+  return gtk_calendar_get_date(GTK_CALENDAR(calendar), year, month, day);
+#endif
+}
+
+gboolean gtk_event_cal_select_month (GtkEventCal *calendar, guint month, guint year)
+{
+#if defined(IS_HILDON) && HILDON_VER > 0
+  return hildon_calendar_select_month(HILDON_CALENDAR(calendar), month, year);
+#else
+  return gtk_calendar_select_month(GTK_CALENDAR(calendar), month, year);
+#endif
+}
+
+void gtk_event_cal_select_day (GtkEventCal *calendar, guint day)
+{
+#if defined(IS_HILDON) && HILDON_VER > 0
+  return hildon_calendar_select_day(HILDON_CALENDAR(calendar), day);
+#else
+  return gtk_calendar_select_day(GTK_CALENDAR(calendar), day);
+#endif
+}
+
+void gtk_event_cal_set_display_options (GtkEventCal *calendar, GtkEventCalDisplayOptions flags)
+{
+#if defined(IS_HILDON) && HILDON_VER > 0
+  g_assert(HILDON_CALENDAR_SHOW_HEADING == GTK_EVENT_CAL_SHOW_HEADING);
+  g_assert(HILDON_CALENDAR_SHOW_DAY_NAMES == GTK_EVENT_CAL_SHOW_DAY_NAMES);
+  g_assert(HILDON_CALENDAR_NO_MONTH_CHANGE == GTK_EVENT_CAL_NO_MONTH_CHANGE);
+  g_assert(HILDON_CALENDAR_SHOW_WEEK_NUMBERS == GTK_EVENT_CAL_SHOW_WEEK_NUMBERS);
+  g_assert(HILDON_CALENDAR_WEEK_START_MONDAY == GTK_EVENT_CAL_WEEK_START_MONDAY);
+  return hildon_calendar_set_display_options(HILDON_CALENDAR(calendar), (HildonCalendarDisplayOptions)flags);
+#else
+  g_assert(GTK_CALENDAR_SHOW_HEADING == GTK_EVENT_CAL_SHOW_HEADING);
+  g_assert(GTK_CALENDAR_SHOW_DAY_NAMES == GTK_EVENT_CAL_SHOW_DAY_NAMES);
+  g_assert(GTK_CALENDAR_NO_MONTH_CHANGE == GTK_EVENT_CAL_NO_MONTH_CHANGE);
+  g_assert(GTK_CALENDAR_SHOW_WEEK_NUMBERS == GTK_EVENT_CAL_SHOW_WEEK_NUMBERS);
+  g_assert(GTK_CALENDAR_WEEK_START_MONDAY == GTK_EVENT_CAL_WEEK_START_MONDAY);
+  return gtk_calendar_set_display_options(GTK_CALENDAR(calendar), (GtkCalendarDisplayOptions)flags);
+#endif
+}

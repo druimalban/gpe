@@ -643,12 +643,12 @@ propagate_time (void)
   if (calendar)
     {
       /* Calendar needs an update?  */
-      gtk_calendar_get_date (GTK_CALENDAR (calendar), &year, &month, &day);
+      gtk_event_cal_get_date (calendar, &year, &month, &day);
       if (tm.tm_year != year - 1900 || tm.tm_mon != month)
-	gtk_calendar_select_month (GTK_CALENDAR (calendar),
+	gtk_event_cal_select_month (calendar,
 				   tm.tm_mon, tm.tm_year + 1900);
       if (tm.tm_mday != day)
-	gtk_calendar_select_day (GTK_CALENDAR (calendar), tm.tm_mday);
+	gtk_event_cal_select_day (calendar, tm.tm_mday);
     }
 
   GDate date;
@@ -695,7 +695,7 @@ calendar_changed (GtkWidget *cal, gpointer data)
 {
   unsigned int day, month, year;
   struct tm tm;
-  gtk_calendar_get_date (GTK_CALENDAR (cal), &year, &month, &day);
+  gtk_event_cal_get_date (GTK_EVENT_CAL(cal), &year, &month, &day);
   localtime_r (&viewtime, &tm);
   tm.tm_year = year - 1900;
   tm.tm_mon = month;
@@ -742,19 +742,26 @@ calendar_consider (void)
       /* Set the time.  We set the day to the first as we know that is
 	 always valid.  If we set the month and the current day is not
 	 valid, GtkCalendar complains.  Pah.  */
-      gtk_calendar_select_day (GTK_CALENDAR (calendar), 1);
-      gtk_calendar_select_month (GTK_CALENDAR (calendar),
+      gtk_event_cal_select_day (calendar, 1);
+      gtk_event_cal_select_month (calendar,
 				 g_date_get_month (&viewing) - 1,
 				 g_date_get_year (&viewing));
-      gtk_calendar_select_day (GTK_CALENDAR (calendar),
+      gtk_event_cal_select_day (calendar,
 			       g_date_get_day (&viewing));
 
       g_object_add_weak_pointer (G_OBJECT (calendar), (gpointer *) &calendar);
+      /* HildonCalendar needs to not only be able to take focus
+	 but actually to have focus  otherwise selected day and 
+	 day names do not display correctly!! */
+#if defined(IS_HILDON) && HILDON_VER > 0
+      GTK_WIDGET_SET_FLAGS (calendar, GTK_HAS_FOCUS);
+#else
       GTK_WIDGET_UNSET_FLAGS (calendar, GTK_CAN_FOCUS);
-      gtk_calendar_set_display_options (GTK_CALENDAR (calendar),
-					GTK_CALENDAR_SHOW_DAY_NAMES
+#endif
+      gtk_event_cal_set_display_options (calendar,
+					 GTK_EVENT_CAL_SHOW_DAY_NAMES
 					| (week_starts_sunday ? 0
-					   : GTK_CALENDAR_WEEK_START_MONDAY));
+					   : GTK_EVENT_CAL_WEEK_START_MONDAY));
       g_signal_connect (G_OBJECT (calendar),
 			"day-selected", G_CALLBACK (calendar_changed), NULL);
       gtk_container_add (calendar_container, GTK_WIDGET (calendar));

@@ -1,3 +1,12 @@
+2008-06-05  Graham Cobb  <g+770@cobb.uk.net>
+
+	* event-cal.c, event-cal.h: implement missing gtk_event_cal functions. 
+	Tidy up other warnings.
+
+	* main.c : replace calls to gtk_calendar_... functions with gtk_event_cal_... 
+	functions as GtkEventCal is no longer inherited from GtkCalendar on Hildon.
+	Assign focus to calendar in order to workround HildonCalendar bug.
+
 2008-05-01  Graham Cobb  <g+770@cobb.uk.net>
 
 	* alarm-dialog.c (ack_all_events_clicked): Correct handling of list of events
