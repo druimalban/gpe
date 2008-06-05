@@ -97,7 +97,8 @@ task_shutdown(void)
 
 	dialog = gtk_message_dialog_new (NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION, 
                                                          GTK_BUTTONS_YES_NO,
-                                                         _("Really power down?"));
+                                                         _("Are you sure you want to power down?\n" \
+                                                           "Unsaved data from applications will be lost."));
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_YES)
 		suid_exec ("SHDN", "1");
 	gtk_widget_destroy (dialog);
