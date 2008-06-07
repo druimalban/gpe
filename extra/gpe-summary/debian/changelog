@@ -1,3 +1,11 @@
+gpesummary (0.7.3) unstable; urgency=low
+
+  * add alarm monitoring
+  * reduce timer to once each minute
+  * full refresh when options changed
+
+ -- Graham Cobb <g+gpe@cobb.uk.net>  Sat, 7 Jun 2008 23:38:26 +0100
+
 gpesummary (0.7.2) unstable; urgency=low
 
   * increased startup speed

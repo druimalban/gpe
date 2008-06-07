@@ -98,10 +98,10 @@ static osso_context_t *osso;
 GSList *birthdaylist =NULL;
 gchar lastGPEDBupdate[6] = "xxxx";
 int todocount;
-struct tm tm;
 
 void printTime(gchar * comment) {
 /*
+     struct tm tm;
      struct timeval tv;
      gettimeofday(&tv, NULL);
      tm=*localtime(&tv.tv_sec);
@@ -237,8 +237,32 @@ static gboolean contacts_startclicked(GtkWidget *button, GdkEventButton *event, 
 	return FALSE;
 }
 
+static void
+alarm_fired (EventDB *edb, Event *ev)
+{
+	calendar_gpestart(NULL,NULL);
+}
+
+static gboolean
+alarms_process_pending (gpointer data)
+{
+  EventDB *event_db = EVENT_DB (data);
+
+  g_signal_connect (G_OBJECT (event_db), "alarm-fired",
+                    G_CALLBACK (alarm_fired), NULL);
+  GSList *list = event_db_list_unacknowledged_alarms (event_db, NULL);
+  list = g_slist_sort (list, event_alarm_compare_func);
+  GSList *i;
+  for (i = list; i; i = g_slist_next (i))
+    alarm_fired (event_db, EVENT (i->data));
+  event_list_unref (list);
+
+  /* Don't run again.  */
+  return FALSE;
+}
 
 gint show_todos(GtkWidget *vbox, gint count) {
+        struct tm tm;
 	if (doshow_todos==FALSE) return count;
 	time_t tmp = time (NULL);
 	memset (&tm, 0, sizeof (tm));	
@@ -352,6 +376,7 @@ void addBirthdaysAtDay(gchar *day) {
 }
 
 void prepare_birthdays() {
+        struct tm tm;
 	if (doshow_birthdays==FALSE) return;
 
 	char day1[5],day2[5],day3[5],day4[5],day5[5],day6[5],day7[5];
@@ -398,6 +423,7 @@ void prepare_birthdays() {
 }
 
 gboolean show_birthdays (GtkWidget *vbox,time_t start,gchar *title) {
+        struct tm tm;
 
 	if (doshow_birthdays==FALSE) return TRUE;
 	 
@@ -450,6 +476,7 @@ gboolean show_birthdays (GtkWidget *vbox,time_t start,gchar *title) {
 
 
 gint add_events(GtkWidget *vbox,EventDB *event_db, time_t start, time_t stop, gchar *title, gboolean showtitle, gint count) {
+        struct tm tm;
 	
 	if (doshow_appointments==FALSE) return count;
 	
@@ -547,6 +574,7 @@ gint add_events(GtkWidget *vbox,EventDB *event_db, time_t start, time_t stop, gc
 
 
 gint show_events(GtkWidget *vbox, gint count) {
+        struct tm tm;
 	time_t start = time (NULL);
 	memset (&tm, 0, sizeof (tm));	
 	tm=*localtime(&start);
@@ -598,7 +626,7 @@ gint show_events(GtkWidget *vbox, gint count) {
 
 	if (doshow_birthdays==TRUE) contacts_db_close ();
 	printTime("Events finished");
-	
+	g_idle_add (alarms_process_pending, event_db);
 	return count;
 	
 }
@@ -759,6 +787,7 @@ void show_all() {
 
 
 gint update_clock(gpointer data) {
+        struct tm tm;
 	if (mainwidget==NULL) { return FALSE;}  //already destroyed itself?
 
 	time_t start = time (NULL);
@@ -777,7 +806,6 @@ gint update_clock(gpointer data) {
 		show_all();
 	} else {
 		if (refresh_now==TRUE) {
-			refresh_now=FALSE;
 			show_all();
 		}
 	}	
@@ -797,7 +825,7 @@ gint update_clock(gpointer data) {
 void save_prefs() {
 	GKeyFile *keyfile;
 	//GKeyFileFlags flags;
-	GError *error = NULL;
+	//GError *error = NULL;
   
 	g_warning ("save_prefs 1");
 	/* Create a new GKeyFile object and a bitwise list of flags. */
@@ -981,7 +1009,7 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 	gtk_combo_box_append_text(GTK_COMBO_BOX(button),_("Show ~10 appointments/todos"));
 	gtk_combo_box_append_text(GTK_COMBO_BOX(button),_("Show ~12 appointments/todos"));
 	gtk_combo_box_append_text(GTK_COMBO_BOX(button),_("Show ~14 appointments/todos"));
-	gtk_combo_box_set_active(GTK_COMBO_BOX(button),round((doshow_countitems/2)-1));
+	gtk_combo_box_set_active(GTK_COMBO_BOX(button),((doshow_countitems+1)/2)-1);
 	gtk_widget_set_name(button, "buttons");	
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),button);
 	g_signal_connect( GTK_OBJECT( button ), "changed",   GTK_SIGNAL_FUNC( options_showcountchanged ), NULL );
@@ -993,7 +1021,9 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 	gtk_widget_destroy(dialog);
 
 	while (gtk_events_pending()) { gtk_main_iteration(); }
-	show_all();
+	refresh_now = TRUE; // Tells update_clock to also do show_all
+	update_clock(NULL);
+	//show_all();
 	
 	
 	//g_free(dialog);
@@ -1059,6 +1089,34 @@ int main (int argc, char *argv[])
 
 
 //Home Applet stuff
+static void add_home_applet_timer (void);
+
+/* Do updates for this minute */
+static gboolean home_applet_timer (gpointer data)
+{
+  update_clock(NULL);
+
+  /* Set new timer for next minute */
+  add_home_applet_timer();
+
+  /* Do not repeat this timer */
+  return FALSE;
+}
+
+/* Add a time entry for the transition to the next minute,
+   even if we are running late */
+static void add_home_applet_timer (void)
+{
+  GTimeVal now;
+  int delay;
+
+  g_get_current_time(&now);
+
+  delay = 60 - (now.tv_sec % 60);
+
+  g_timeout_add (delay * 1000, home_applet_timer, NULL);
+}
+
 void *
 		hildon_home_applet_lib_initialize (void *state_data,
 		int *state_size,
@@ -1100,7 +1158,7 @@ void *
 	//show_all();
 	update_clock(NULL); //->Also shows all because it runs show_all()
 	gtk_widget_show_all(GTK_WIDGET(mainwidget));
-	g_timeout_add(5000, update_clock, NULL);
+	add_home_applet_timer();
 	
 	return (void*)osso;
 }
