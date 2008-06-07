@@ -1,9 +1,0 @@
-Package: gpesummary
-Version: 0.7.0
-Section: user/pim
-Priority: optional
-Architecture: armel
-Depends: gpe-calendar, gpe-contacts, gpe-todo
-Installed-Size: 148
-Maintainer: Christoph Würstle <n800@axique.de>
-Description: GPE Summary applet for the N800
