@@ -1,3 +1,11 @@
+gpesummary (0.7.4) unstable; urgency=low
+
+  * create calendar database if missing
+  * refresh automatically if calendar database updated
+  * fix bugs 192, 193 and 194
+
+ -- Graham Cobb <g+gpe@cobb.uk.net>  Sun, 8 Jun 2008 18:05:00 +0100
+
 gpesummary (0.7.3) unstable; urgency=low
 
   * add alarm monitoring

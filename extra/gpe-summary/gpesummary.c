@@ -19,6 +19,9 @@
 #include <getopt.h>
 #include <string.h>
 #include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
@@ -61,6 +64,7 @@
 #define CALENDAR_FILE_ "/.gpe/calendar"
 #define CALENDAR_FILE() \
   g_strdup_printf ("%s" CALENDAR_FILE_, g_get_home_dir ())
+gchar *calendar_file = NULL;
   
 #define _(String) dgettext (PACKAGE,String)
 
@@ -98,6 +102,9 @@ static osso_context_t *osso;
 GSList *birthdaylist =NULL;
 gchar lastGPEDBupdate[6] = "xxxx";
 int todocount;
+
+time_t calendar_mtime = 0;
+EventDB *event_db = NULL;
 
 void printTime(gchar * comment) {
 /*
@@ -246,7 +253,8 @@ alarm_fired (EventDB *edb, Event *ev)
 static gboolean
 alarms_process_pending (gpointer data)
 {
-  EventDB *event_db = EVENT_DB (data);
+  // Do nothing if Event DB not open
+  if (event_db == NULL) return FALSE;
 
   g_signal_connect (G_OBJECT (event_db), "alarm-fired",
                     G_CALLBACK (alarm_fired), NULL);
@@ -256,6 +264,12 @@ alarms_process_pending (gpointer data)
   for (i = list; i; i = g_slist_next (i))
     alarm_fired (event_db, EVENT (i->data));
   event_list_unref (list);
+
+  /* Remember modification time of database */
+  struct stat statbuf;
+  if (stat(calendar_file,&statbuf) == 0) {
+    calendar_mtime = statbuf.st_mtime;
+  }
 
   /* Don't run again.  */
   return FALSE;
@@ -479,6 +493,7 @@ gint add_events(GtkWidget *vbox,EventDB *event_db, time_t start, time_t stop, gc
         struct tm tm;
 	
 	if (doshow_appointments==FALSE) return count;
+	if (!event_db) return count;
 	
 	memset (&tm, 0, sizeof (tm));
 
@@ -586,17 +601,15 @@ gint show_events(GtkWidget *vbox, gint count) {
 	g_warning("endtime");
 	g_warning(buf);*/
 	
-	EventDB *event_db = NULL;
-	char *filename = CALENDAR_FILE ();	
-	if (doshow_appointments==TRUE) {
-		GError **error = NULL;
-		event_db = event_db_new (filename, error);
-		if (! event_db)
-		{
-			g_critical ("Failed to open event database.");
-			exit (1);
-		}
-	}	
+	// Note we open the event DB (if we can find it), even if we are not showing appointments
+	if (!calendar_file) calendar_file = CALENDAR_FILE();
+	if (event_db) {
+	  g_object_unref(event_db);
+	  event_db = NULL;
+	}
+	GError **error = NULL;
+	// If the event DB doesn't exist, event_db_new will return NULL
+	event_db = event_db_new (calendar_file, error);
 
 	if (doshow_birthdays==TRUE) contacts_db_open(FALSE);
 	prepare_birthdays();
@@ -626,7 +639,7 @@ gint show_events(GtkWidget *vbox, gint count) {
 
 	if (doshow_birthdays==TRUE) contacts_db_close ();
 	printTime("Events finished");
-	g_idle_add (alarms_process_pending, event_db);
+	g_idle_add (alarms_process_pending, NULL);
 	return count;
 	
 }
@@ -799,17 +812,25 @@ gint update_clock(gpointer data) {
 	
 	//Check if day has changed
 	strftime (timestring, sizeof(timestring), "%m%d", &tm);	
-	
 	if (strncmp(timestring,lastGPEDBupdate,4)!=0) {
 		strftime (lastGPEDBupdate, sizeof(lastGPEDBupdate), "%m%d", &tm);	
 		printTime("new Day");
-		show_all();
-	} else {
-		if (refresh_now==TRUE) {
-			show_all();
-		}
-	}	
-	refresh_now=FALSE;
+		refresh_now = TRUE;
+	}
+
+	// Check if the Calendar database has been updated
+	if (!calendar_file) calendar_file = CALENDAR_FILE();
+	struct stat statbuf;
+	if (stat(calendar_file,&statbuf) == 0) {
+	  if (statbuf.st_mtime > calendar_mtime) {
+	    refresh_now = TRUE;
+	  }
+	}
+
+	if (refresh_now==TRUE) {
+	  refresh_now=FALSE;
+	  show_all();
+	}
 	
 	strftime (timestring, sizeof(timestring), "<b>%a, %d. %b. %H:%M</b>", &tm);	
 	if (strcmp(gtk_label_get_label(GTK_LABEL(headtitle)),timestring)!=0) {
