@@ -1,3 +1,9 @@
+gpesummary (0.7.5) unstable; urgency=low
+
+  * refresh automatically if todo database updated
+
+ -- Christoph Würstle <N800@axique.de>  Sat, 14 Jun 2008 17:18:56 +0100
+
 gpesummary (0.7.4) unstable; urgency=low
 
   * create calendar database if missing

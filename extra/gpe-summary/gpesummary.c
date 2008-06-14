@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 Christoph Würstle <n800@axique.de>
+ * Copyright (C) 2007-2008 Christoph Würstle <n800@axique.de>
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version
@@ -65,6 +65,11 @@
 #define CALENDAR_FILE() \
   g_strdup_printf ("%s" CALENDAR_FILE_, g_get_home_dir ())
 gchar *calendar_file = NULL;
+
+#define TODO_FILE_ "/.gpe/todo"
+#define TODO_FILE() \
+  g_strdup_printf ("%s" TODO_FILE_, g_get_home_dir ())
+gchar *todo_file = NULL;
   
 #define _(String) dgettext (PACKAGE,String)
 
@@ -90,7 +95,7 @@ gboolean doshow_alltodos=TRUE;
 
 gboolean doshow_buttons=FALSE;
 gint doshow_countitems=8;
-gboolean doshow_autorefresh=FALSE;
+//gboolean doshow_autorefresh=FALSE;
 gboolean doshow_extended=TRUE; //waste space
 gboolean doshow_vexpand=FALSE; //no option yet!
 
@@ -104,6 +109,7 @@ gchar lastGPEDBupdate[6] = "xxxx";
 int todocount;
 
 time_t calendar_mtime = 0;
+time_t todo_mtime = 0;
 EventDB *event_db = NULL;
 
 void printTime(gchar * comment) {
@@ -253,6 +259,11 @@ alarm_fired (EventDB *edb, Event *ev)
 static gboolean
 alarms_process_pending (gpointer data)
 {
+  struct stat statbuf2;
+  if (stat(todo_file,&statbuf2) == 0) {
+    todo_mtime = statbuf2.st_mtime;
+  }
+
   // Do nothing if Event DB not open
   if (event_db == NULL) return FALSE;
 
@@ -285,6 +296,7 @@ gint show_todos(GtkWidget *vbox, gint count) {
 	time_t todaystart = time (NULL)-tm.tm_hour*3600-tm.tm_min*60-tm.tm_sec;
 	todocount=0;
 	
+	if (!todo_file) todo_file = TODO_FILE();
 	todo_db_start ();
 	
 
@@ -677,7 +689,7 @@ void loadPrefs(){
 	doshow_todos = g_key_file_get_boolean(keyfile, "options","show_todos", error);
 	doshow_alltodos = g_key_file_get_boolean(keyfile, "options","show_alltodos", error);
 	doshow_buttons = g_key_file_get_boolean(keyfile, "options","show_buttons", error);
-	doshow_autorefresh = g_key_file_get_boolean(keyfile, "options","show_autorefresh", error);
+	//doshow_autorefresh = g_key_file_get_boolean(keyfile, "options","show_autorefresh", error);
 	doshow_countitems = g_key_file_get_integer(keyfile, "options", "show_countitems", error);
 	doshow_extended = g_key_file_get_boolean(keyfile, "options","show_extended", error);
 
@@ -686,19 +698,6 @@ void loadPrefs(){
 	g_string_free(label,TRUE);
 
 	g_warning ("load_prefs 5");
-}
-
-static gboolean refresh_clicked( GtkWidget      *button, 
-					GdkEventButton *event,
-					gpointer user_data ) {
-		
-	//hildon_banner_show_information(mainvbox,NULL,_("Refreshing"));
-	if (headtitle) {
-		gtk_label_set_text(GTK_LABEL(headtitle),_("Refreshing"));
-		gtk_widget_show(GTK_WIDGET(headtitle));
-	}
-	refresh_now=TRUE;
-	return FALSE;
 }
 
 
@@ -734,18 +733,6 @@ void show_all() {
                       G_CALLBACK (start_clock),
                       headtitle);	
 	
-	GtkWidget *refresh_image=gtk_image_new_from_icon_name("qgn_toolb_gene_refresh",
-				     GTK_ICON_SIZE_LARGE_TOOLBAR);
-	
-	GtkWidget *event_box = gtk_event_box_new ();
-	gtk_container_add (GTK_CONTAINER (event_box), refresh_image);
-	gtk_misc_set_alignment(GTK_MISC(refresh_image),0,0);
-	g_signal_connect (G_OBJECT (event_box), 
-                      "button_press_event",
-                      G_CALLBACK (refresh_clicked),
-                      refresh_image);
-	
-	gtk_box_pack_start(GTK_BOX(hbox), event_box, FALSE, FALSE, 0);	
 	
 	vbox_events = gtk_vbox_new (FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(mainvbox),vbox_events,TRUE,TRUE,0);
@@ -827,6 +814,15 @@ gint update_clock(gpointer data) {
 	  }
 	}
 
+	// Check if the Todo database has been updated
+	if (!todo_file) todo_file = TODO_FILE();
+	struct stat statbuf2;
+	if (stat(todo_file,&statbuf2) == 0) {
+	  if (statbuf2.st_mtime > todo_mtime) {
+	    refresh_now = TRUE;
+	  }
+	}
+
 	if (refresh_now==TRUE) {
 	  refresh_now=FALSE;
 	  show_all();
@@ -864,7 +860,7 @@ void save_prefs() {
 	g_key_file_set_boolean(keyfile, "options","show_todos", doshow_todos);
 	g_key_file_set_boolean(keyfile, "options","show_alltodos", doshow_alltodos);
 	g_key_file_set_boolean(keyfile, "options","show_buttons", doshow_buttons);
-	g_key_file_set_boolean(keyfile, "options","show_autorefresh", doshow_autorefresh);
+	//g_key_file_set_boolean(keyfile, "options","show_autorefresh", doshow_autorefresh);
 	g_key_file_set_boolean(keyfile, "options","show_extended", doshow_extended);
 	g_key_file_set_integer(keyfile, "options", "show_countitems", doshow_countitems);
 
@@ -923,10 +919,10 @@ static gboolean options_clicked( GtkWidget      *button,
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_buttons=FALSE; } else { doshow_buttons=TRUE;}
 	}
 
-	if (strcmp(label->str,"refresh")==0) { 
+	/*if (strcmp(label->str,"refresh")==0) { 
 		g_warning("refresh");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_autorefresh=FALSE; } else { doshow_autorefresh=TRUE;}
-	}	
+	}*/	
 
 	if (strcmp(label->str,"extended")==0) { 
 		g_warning("extended");
@@ -1010,11 +1006,11 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),doshow_buttons);
 	g_signal_connect( GTK_OBJECT( button ), "clicked",   GTK_SIGNAL_FUNC( options_clicked ), NULL );
 	
-	button = gtk_check_button_new_with_label(_("Autorefresh data (long loading)"));
-	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),button);
-	gtk_widget_set_name(button, "refresh");	
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),doshow_autorefresh);
-	g_signal_connect( GTK_OBJECT( button ), "clicked",   GTK_SIGNAL_FUNC( options_clicked ), NULL );	
+// 	button = gtk_check_button_new_with_label(_("Autorefresh data (long loading)"));
+// 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),button);
+// 	gtk_widget_set_name(button, "refresh");	
+// 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),doshow_autorefresh);
+// 	g_signal_connect( GTK_OBJECT( button ), "clicked",   GTK_SIGNAL_FUNC( options_clicked ), NULL );	
 
 	button = gtk_check_button_new_with_label(_("Extended view (needs more space)"));
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),button);
@@ -1239,7 +1235,7 @@ void
 void
 		hildon_home_applet_lib_foreground (void *applet_data)
 {
-	if (doshow_autorefresh==TRUE) refresh_clicked(NULL,NULL,NULL);
+	//if (doshow_autorefresh==TRUE) refresh_clicked(NULL,NULL,NULL);
 	return;
 }
 
