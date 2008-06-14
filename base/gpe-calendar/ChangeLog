@@ -1,3 +1,7 @@
+2008-06-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* Makefile.am (hildonhomelibdir): Remove home applet from build
+
 2008-06-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event-cal.c, event-cal.h: implement missing gtk_event_cal functions. 
