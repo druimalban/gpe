@@ -1,3 +1,8 @@
+2008-06-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* db.c (gpe_pim_categories_init): Add patch from Lars Persson Fink,
+	bug 182, to sort categories by name
+
 2008-01-10  Graham Cobb  <g+770@cobb.uk.net>
 
 	* ui.c: Fix usage of new color argument in 

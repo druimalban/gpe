@@ -150,7 +150,7 @@ gpe_pim_categories_init (void)
   /* update table layout if necessary */
   check_table_update ();
 
-  if (sqlite_exec (db, "select id,description,colour from category",
+  if (sqlite_exec (db, "select id,description,colour from category order by description desc",
                    load_one, &categories, &err))
     {
       gpe_error_box (err);
