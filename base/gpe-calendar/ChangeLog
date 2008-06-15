@@ -1,3 +1,8 @@
+2008-06-15  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (gpe_handle_close): Allow user to choose behaviour when 
+	close button is pressed
+
 2008-06-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* Makefile.am (hildonhomelibdir): Remove home applet from build

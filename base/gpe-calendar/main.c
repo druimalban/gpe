@@ -168,6 +168,13 @@ const gchar *TIMEFMT;
 
 static guint reload_source;
 
+static enum
+  {
+    close_ask,
+    close_exit,
+    close_iconise
+  } close_handling = close_ask;
+
 /* Schedule atd to wake us up when the next alarm goes off.  */
 static gboolean
 schedule_wakeup (gboolean reload)
@@ -1394,6 +1401,22 @@ conf_write (void)
   g_key_file_set_boolean (conf, "gpe-calendar", "event-list-disabled",
 			  event_list_disabled);
 
+  switch (close_handling)
+    {
+    case close_exit:
+      mode = "exit";
+      break;
+
+    case close_iconise:
+      mode = "iconise";
+      break;
+
+    default:
+      mode = "ask";
+    }
+
+  g_key_file_set_string (conf, "gpe-calendar", "close-handling", mode);
+
 #ifdef IS_HILDON
 #if HILDON_VER > 0
   //fixme
@@ -1448,6 +1471,89 @@ static void
 gpe_cal_deiconify (void)
 {
   gtk_window_deiconify (GTK_WINDOW (main_window));
+}
+
+/* Handle an attempt by the user to close the main window */
+static gboolean
+gpe_handle_close (GtkWidget *widget, GdkEvent *event, gpointer user_data)
+{
+  gint resp;
+  GtkWidget *exit_dialog, *exit_label, *exit_checkbox;
+
+  /* What is the user's saved preference for close handling? */
+  switch (close_handling) {
+
+  case close_exit: // Always exit
+    resp = GTK_RESPONSE_YES;
+    break;
+
+  case close_iconise: // Always iconise
+    resp = GTK_RESPONSE_NO;
+    break;
+
+  default: // Use a dialog to ask the user
+    exit_dialog = gtk_dialog_new_with_buttons (_("Really Close?"),
+							  GTK_WINDOW (main_window),
+							  GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+							  GTK_STOCK_CLOSE, GTK_RESPONSE_YES,
+							  _("Iconise"), GTK_RESPONSE_NO,
+							  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+							  NULL);
+
+#ifdef IS_HILDON
+    exit_label = gtk_label_new (_("For alarms to fire, either gpe-calendar or\n"
+					     "the gpesummary home applet must be running.\n\n"
+					     "If you are not running gpesummary you are\n"
+					     "recommended to select the Iconise button below.\n"));
+#else /* IS_HILDON */
+    exit_label = gtk_label_new (_("For alarms to fire, gpe-calendar must be running.\n\n"
+					     "You are recommended to select the Iconise button below.\n"));
+#endif /* IS_HILDON */
+    gtk_label_set_justify (GTK_LABEL (exit_label), GTK_JUSTIFY_CENTER);
+    gtk_container_add (GTK_CONTAINER (GTK_DIALOG(exit_dialog)->vbox),
+		       exit_label);
+
+    exit_checkbox = gtk_check_button_new_with_label (_("Do not ask this question again"));
+    gtk_container_add (GTK_CONTAINER (GTK_DIALOG(exit_dialog)->vbox),
+		       exit_checkbox);
+    
+    gtk_widget_show_all (exit_dialog);
+
+    resp = gtk_dialog_run(GTK_DIALOG(exit_dialog));
+
+    if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON(exit_checkbox))) {
+      /* Remember user's choice */
+      switch (resp) {
+      case GTK_RESPONSE_YES:
+	close_handling = close_exit;
+	break;
+      case GTK_RESPONSE_NO:
+	close_handling = close_iconise;
+	break;
+      default:
+	close_handling = close_ask;
+      }
+    }
+
+    gtk_widget_destroy(exit_dialog);
+  }
+
+
+  switch (resp) {
+
+  case GTK_RESPONSE_YES: 
+    gpe_cal_exit();
+    break;
+
+  case GTK_RESPONSE_NO:
+    gpe_cal_iconify();
+    break;
+
+  default: // Dialog cancelled
+    break;
+  }
+
+  return TRUE; // Cancel close processing
 }
 
 #ifdef IS_HILDON
@@ -2222,6 +2328,21 @@ main (int argc, char *argv[])
 	}
       else
 	window_y = i;
+
+      v = NULL;
+      v = g_key_file_get_string (conf, "gpe-calendar",
+				 "close-handling", NULL);
+      if (v)
+	{
+	  if (strcmp (v, "exit") == 0)
+	    close_handling = close_exit;
+	  else if (strcmp (v, "iconise") == 0)
+	    close_handling = close_iconise;
+	  else if (strcmp (v, "ask") == 0)
+	    close_handling = close_ask;
+
+	  g_free (v);
+	}
     }
   g_free (filename);
   g_key_file_free (conf);
@@ -2251,7 +2372,7 @@ main (int argc, char *argv[])
 #endif
   set_title ();
   g_signal_connect (G_OBJECT (main_window), "delete-event",
-                    G_CALLBACK (gpe_cal_iconify), NULL);
+                    G_CALLBACK (gpe_handle_close), NULL);
   gtk_widget_show (main_window);
   main_box = GTK_BOX (gtk_vbox_new (FALSE, 0));
 #if IS_HILDON
