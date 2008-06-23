@@ -1,5 +1,7 @@
 2008-06-23  Graham Cobb  <g+770@cobb.uk.net>
 
+	* Makefile.am (libeventdb_la_LDFLAGS): Increase version to 2.1.0.
+
 	* sqlite.c (do_list_unacknowledged_alarms): Remove unacknowledged alarms
 	if start time is wrong (as acknowledgement will never work in that case)
 

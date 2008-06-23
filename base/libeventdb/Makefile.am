@@ -4,7 +4,7 @@ lib_LTLIBRARIES = libeventdb.la
 
 INCLUDES = @EVENTDB_CFLAGS@ -D_XOPEN_SOURCE -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\" -D_GNU_SOURCE
 
-libeventdb_la_LDFLAGS = @EVENTDB_LIBS@ -version-info 2:0:0
+libeventdb_la_LDFLAGS = @EVENTDB_LIBS@ -version-info 3:0:1
 
 libeventdb_la_SOURCES = gpe/event-db.h		\
               event-cal.c			\
