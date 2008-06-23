@@ -1,3 +1,9 @@
+2008-06-22  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpesummary.c: Open database readonly
+	* gpesummary.c: Add the ability to log glib messages to a file,
+	for debugging.  Define LOG_HANDLER as the log file name to enable.
+
 2008-01-07  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c (printTime) : Remove reference to struct timezone

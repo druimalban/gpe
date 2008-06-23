@@ -113,6 +113,7 @@ time_t todo_mtime = 0;
 EventDB *event_db = NULL;
 
 void printTime(gchar * comment) {
+  g_message(comment);
 /*
      struct tm tm;
      struct timeval tv;
@@ -241,6 +242,7 @@ static gboolean todo_startclicked(GtkWidget *button, GdkEventButton *event, gpoi
 }
 
 static gboolean events_startclicked(GtkWidget *button, GdkEventButton *event, gpointer user_data ) {
+	g_message("events_startclicked");
 	calendar_gpestart(GTK_BUTTON(button), user_data);
 	return FALSE;
 }
@@ -253,6 +255,9 @@ static gboolean contacts_startclicked(GtkWidget *button, GdkEventButton *event, 
 static void
 alarm_fired (EventDB *edb, Event *ev)
 {
+  time_t tt = event_get_start(ev);
+  g_message("Alarm fired - %s",ctime(&tt));
+
 	calendar_gpestart(NULL,NULL);
 }
 
@@ -621,7 +626,7 @@ gint show_events(GtkWidget *vbox, gint count) {
 	}
 	GError **error = NULL;
 	// If the event DB doesn't exist, event_db_new will return NULL
-	event_db = event_db_new (calendar_file, error);
+	event_db = event_db_readonly (calendar_file, error);
 
 	if (doshow_birthdays==TRUE) contacts_db_open(FALSE);
 	prepare_birthdays();
@@ -1134,11 +1139,35 @@ static void add_home_applet_timer (void)
   g_timeout_add (delay * 1000, home_applet_timer, NULL);
 }
 
+static guint log_handler_id = 0;
+//#define LOG_HANDLER "/tmp/gpesummary.log"
+#ifdef LOG_HANDLER
+static void log_handler (const char *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
+{
+  static FILE *log = NULL;
+  time_t now = time(NULL);
+  struct tm tm;
+  char buf[200];
+
+  if (!log) log = fopen(LOG_HANDLER,"a");
+
+  tm=*localtime(&now);
+  strftime (buf, sizeof (buf), "%c", &tm);
+
+  fprintf(log, "[%s] %s:%x:%s\n", buf, log_domain, log_level, message);
+  fflush(log);
+}
+#endif
+
 void *
 		hildon_home_applet_lib_initialize (void *state_data,
 		int *state_size,
 		GtkWidget **widget)
 {
+#ifdef LOG_HANDLER
+  log_handler_id = g_log_set_handler (NULL, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL
+                     | G_LOG_FLAG_RECURSION, log_handler, NULL);
+#endif
 
 	g_type_init();
  	//setlocale(LC_ALL, "");
@@ -1201,6 +1230,8 @@ void
 		g_free (app);
 		app = NULL;
 	}*/ //FixME
+
+	if (log_handler_id) g_log_remove_handler(NULL, log_handler_id);
 }
 
 int
