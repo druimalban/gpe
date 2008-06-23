@@ -1,3 +1,17 @@
+2008-06-23  Graham Cobb  <g+770@cobb.uk.net>
+
+	* sqlite.c (do_list_unacknowledged_alarms): Remove unacknowledged alarms
+	if start time is wrong (as acknowledgement will never work in that case)
+
+	* sqlite.c (do_set_default_calendar): Add g_assert checks that no updates
+	are made to readonly databases.
+
+	* event-db.c, event.c, event.h: Handle readonly databases
+
+	* event-db.h (struct _EventDB): Add readonly flag to _EventDB
+
+	* gpe/event-db.h: Add event_db_readonly to open event database as read only.
+
 2008-05-02  Graham Cobb  <g+770@cobb.uk.net>
 
 	* sqlite.c (event_db_new): remove extra rows from alarms_fired_through after

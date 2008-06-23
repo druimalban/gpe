@@ -218,6 +218,9 @@ struct _EventDB
      fires, it is entered into the alarms_unacknowledged table and
      only removed once it has been acknowledged).  */
   time_t alarms_fired_through;
+
+  /* Event DB is read-only */
+  gboolean readonly;
 };
 
 /* E is an Event or an EventCalendar and is dirty (i.e. needs to be

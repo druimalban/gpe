@@ -372,7 +372,7 @@ event_db_finalize (GObject *object)
 
       EventSource *ev = EVENT_SOURCE (i->data);
       /* XXX: How to propagate any error correctly?  */
-      event_flush (EVENT (ev), NULL);
+      if (ev->modified) event_flush (EVENT (ev), NULL);
       g_object_remove_toggle_ref (G_OBJECT (ev),
 				  event_source_toggle_ref_notify, NULL);
       ev->edb = NULL;
@@ -405,11 +405,14 @@ static void
 event_db_set_alarms_fired_through (EventDB *edb, time_t t, GError **error)
 {
   GError *e = NULL;
-  EVENT_DB_GET_CLASS (edb)->acknowledge_alarms_through (edb, t, &e);
-  if (e)
+  if (!edb->readonly)
     {
-      SIGNAL_ERROR_GERROR (edb, error, e);
-      return;
+    EVENT_DB_GET_CLASS (edb)->acknowledge_alarms_through (edb, t, &e);
+    if (e)
+      {
+	SIGNAL_ERROR_GERROR (edb, error, e);
+	return;
+      }
     }
 
   edb->alarms_fired_through = t;
@@ -466,7 +469,8 @@ buzzer (gpointer data)
       if (start - alarm <= now)
 	{
 	  /* Mark it as unacknowledged.  */
-	  EVENT_DB_GET_CLASS (edb)->event_mark_unacknowledged (RESOLVE_CLONE(ev),
+	  if (!edb->readonly)
+	    EVENT_DB_GET_CLASS (edb)->event_mark_unacknowledged (RESOLVE_CLONE(ev),
 								   NULL);
 
 	  /* And signal the user a signal.  */

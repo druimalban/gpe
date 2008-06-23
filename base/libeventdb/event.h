@@ -131,12 +131,14 @@ extern GSList *event_list (EventSource *ev,
      __attribute__ ((visibility ("hidden")));
 
 #define LIVE(ev) (g_assert (! EVENT (ev)->dead))
+#define RW(ev) (g_assert (! ev->edb->readonly))
 
 /* Marks the event as well as the calendar in which lives as
    modified.  */
 #define STAMP(ev, error) \
   do \
     { \
+      RW(ev); \
       ev->last_modified = time (NULL); \
       if (! ev->modified) \
         { \

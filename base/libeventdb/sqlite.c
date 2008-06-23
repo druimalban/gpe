@@ -439,6 +439,7 @@ static void
 do_set_default_calendar (EventDB *edb, EventCalendar *ec, GError **error)
 {
   char *err;
+  g_assert (!edb->readonly);
   if (SQLITE_TRY
       (sqlite_exec_printf
        (SQLITE_DB (edb)->sqliteh,
@@ -478,6 +479,7 @@ static gboolean
 do_event_new (EventSource *ev, GError **error)
 {
   char *err;
+  g_assert (!ev->edb->readonly);
   if (SQLITE_TRY (sqlite_exec (SQLITE_DB (ev->edb)->sqliteh,
 			       "begin transaction;",
 			       NULL, NULL, &err)))
@@ -594,6 +596,8 @@ do_event_flush (EventSource *ev, GError **error)
   char *err;
   struct tm tm;
 
+  g_assert (!ev->edb->readonly);
+
   if (SQLITE_TRY
       (sqlite_exec
        (SQLITE_DB (ev->edb)->sqliteh, "begin transaction", NULL, NULL, &err)))
@@ -707,6 +711,7 @@ static void
 do_event_remove (EventSource *ev, GError **error)
 {
   char *err;
+  g_assert (!ev->edb->readonly);
   if (SQLITE_TRY
       (sqlite_exec_printf (SQLITE_DB (ev->edb)->sqliteh,
 			   "begin transaction;"
@@ -790,6 +795,13 @@ do_list_unacknowledged_alarms (EventDB *edb, GError **error)
 	g_warning ("%s: multiple instantiations of event %s!",
 		   __func__, argv[0]);
 
+      if (t != event_get_start (EVENT(l->data)))
+	{
+	  g_warning("%s: unacknowledged event %s has start time %u, should be %s",
+		    __func__, argv[0], (guint) event_get_start (EVENT(l->data)), argv[1]);
+	  goto remove;
+	}
+
       list = g_slist_concat (list, l);
 
       return 0;
@@ -837,16 +849,18 @@ do_list_unacknowledged_alarms (EventDB *edb, GError **error)
     {
       struct removal *r = i->data;
       char *err;
-      if (! abort && SQLITE_TRY
-	  (sqlite_exec_printf (SQLITE_DB (edb)->sqliteh,
-			       "delete from alarms_unacknowledged"
-			       " where uid=%d and start=%d",
-			       NULL, NULL, &err, r->uid, r->start)))
-	{
-	  g_warning ("%s: while removing stale entry uid=%d,start=%ld, %s",
-		     __func__, r->uid, r->start, err);
-	  g_free (err);
-	}
+      if (!edb->readonly) {
+	if (! abort && SQLITE_TRY
+	    (sqlite_exec_printf (SQLITE_DB (edb)->sqliteh,
+				 "delete from alarms_unacknowledged"
+				 " where uid=%d and start=%d",
+				 NULL, NULL, &err, r->uid, r->start)))
+	  {
+	    g_warning ("%s: while removing stale entry uid=%d,start=%ld, %s",
+		       __func__, r->uid, r->start, err);
+	    g_free (err);
+	  }
+      }
       g_free (r);
     }
   g_slist_free (removals);
@@ -859,6 +873,8 @@ do_event_mark_unacknowledged (EventSource *ev, GError **error)
 {
   int err;
   char *str;
+
+  g_assert (!ev->edb->readonly);
 
   err = SQLITE_TRY (sqlite_exec_printf (SQLITE_DB (ev->edb)->sqliteh,
 					"insert or replace"
@@ -877,6 +893,9 @@ static void
 do_event_mark_acknowledged (EventSource *ev, GError **error)
 {
   char *err;
+
+  g_assert (!ev->edb->readonly);
+
   if (SQLITE_TRY (sqlite_exec_printf (SQLITE_DB (ev->edb)->sqliteh,
 				      "delete from alarms_unacknowledged"
 				      " where uid=%d and start=%d",
@@ -896,6 +915,8 @@ do_acknowledge_alarms_through (EventDB *edb, time_t t, GError **error)
   int err;
   char *str;
 
+  g_assert (!edb->readonly);
+
   err = SQLITE_TRY
     (sqlite_exec_printf
      (SQLITE_DB (edb)->sqliteh,
@@ -912,6 +933,9 @@ static void
 do_event_calendar_new (EventCalendar *ec, GError **error)
 {
   char *err;
+
+  g_assert (!ec->edb->readonly);
+
   if (SQLITE_TRY
       (sqlite_exec_printf
        (SQLITE_DB (ec->edb)->sqliteh,
@@ -940,6 +964,9 @@ static void
 do_event_calendar_flush (EventCalendar *ec, GError **error)
 {
   char *err;
+
+  g_assert (!ec->edb->readonly);
+
   if (SQLITE_TRY
       (sqlite_exec_printf (SQLITE_DB (ec->edb)->sqliteh,
 			   "update calendars set"
@@ -972,6 +999,7 @@ static void
 do_event_calendar_delete (EventCalendar *ec, GError **error)
 {
   char *err;
+  g_assert (!ec->edb->readonly);
   if (SQLITE_TRY
       (sqlite_exec_printf
        (SQLITE_DB (ec->edb)->sqliteh,
@@ -1101,6 +1129,7 @@ static void
 do_event_calendar_flush_deleted (EventCalendar *ec, GError **error)
 {
   char *err = NULL;
+  g_assert (!ec->edb->readonly);
   SQLITE_TRY
     (sqlite_exec_printf (SQLITE_DB (ec->edb)->sqliteh,
 			 "delete from events_deleted where calendar=%d;",
@@ -1170,6 +1199,120 @@ sqlite_db_finalize (GObject *object)
   sqlite_close (db->sqliteh);
 }
 
+static int
+sqlite_db_version (EventDB *edb, char **err)
+{
+  int version = -1;
+  int dbinfo_callback (void *arg, int argc, char **argv, char **names)
+    {
+      if (argc == 1)
+	version = atoi (argv[0]);
+
+      return 0;
+    }
+  sqlite_exec (SQLITE_DB (edb)->sqliteh,
+		       "select version from calendar_dbinfo",
+		       dbinfo_callback, NULL, err);
+  return version;
+}
+
+static int
+sqlite_read_alarms_fired_through (EventDB *edb, char **err)
+{
+  edb->alarms_fired_through = 0;
+
+  int alarms_fired_through_callback (void *arg, int argc, char **argv,
+				     char **names)
+    {
+      EventDB *edb = EVENT_DB (arg);
+      if (argc == 1)
+	{
+	  int t = atoi (argv[0]);
+	  if (t > edb->alarms_fired_through)
+	    edb->alarms_fired_through = t;
+	}
+
+      return 0;
+    }
+
+  return sqlite_exec (SQLITE_DB (edb)->sqliteh,
+		      "select time from alarms_fired_through",
+		      alarms_fired_through_callback, edb, err);
+
+}
+
+static int
+sqlite_read_default_calendar (EventDB *edb, char **err)
+{
+  edb->default_calendar = EVENT_CALENDAR_NO_PARENT;
+
+  int default_calendar_callback (void *arg, int argc, char **argv,
+				 char **names)
+    {
+      EventDB *edb = EVENT_DB (arg);
+      if (argc == 1)
+	edb->default_calendar = atoi (argv[0]);
+
+      return 0;
+    }
+
+  return sqlite_exec (SQLITE_DB (edb)->sqliteh,
+		      "select default_calendar from default_calendar",
+		      default_calendar_callback, edb, err);
+
+}
+
+static int
+sqlite_load_calendars (EventDB *edb, char **err)
+{
+  int load_calendars_callback (void *arg, int argc, char **argv,
+			       char **names)
+    {
+      if (argc != 17)
+	{
+	  g_critical ("%s: Expected 17 arguments, got %d arguments",
+		      __func__, argc);
+	  return 0;
+	}
+
+      EventCalendar *ec
+	= EVENT_CALENDAR (g_object_new (event_calendar_get_type (), NULL));
+      ec->edb = edb;
+
+      char **v = argv;
+      ec->uid = atoi (*(v ++));
+      ec->title = g_strdup (*(v ++));
+      ec->description = g_strdup (*(v ++));
+      ec->url = g_strdup (*(v ++));
+      ec->username = g_strdup (*(v ++));
+      ec->password = g_strdup (*(v ++));
+      ec->parent_uid = atoi (*(v ++));
+      ec->hidden = atoi (*(v ++));
+      ec->has_color = atoi (*(v ++));
+      ec->red = atoi (*(v ++));
+      ec->green = atoi (*(v ++));
+      ec->blue = atoi (*(v ++));
+      ec->mode = atoi (*(v ++));
+      ec->sync_interval = atoi (*(v ++));
+      ec->last_pull = atoi (*(v ++));
+      ec->last_push = atoi (*(v ++));
+      ec->last_modified = atoi (*(v ++));
+
+      edb->calendars = g_slist_prepend (edb->calendars, ec);
+
+      return 0;
+    }
+
+  return sqlite_exec (SQLITE_DB (edb)->sqliteh,
+		      "select ROWID, title, description,"
+		      "  url, username, password,"
+		      "  parent, hidden,"
+		      "  has_color, red, green, blue,"
+		      "  mode, sync_interval, last_pull, last_push, last_modified"
+		      " from calendars", load_calendars_callback, NULL, err);
+
+}
+
 EventDB *
 event_db_new (const char *fname, GError **error)
 {
@@ -1199,27 +1342,15 @@ event_db_new (const char *fname, GError **error)
   sqlite_exec (SQLITE_DB (edb)->sqliteh,
 	       "create table calendar_dbinfo (version integer NOT NULL)",
 	       NULL, NULL, &err);
-  int version = -1;
-  int dbinfo_callback (void *arg, int argc, char **argv, char **names)
-    {
-      if (argc == 1)
-	version = atoi (argv[0]);
-
-      return 0;
-    }
   /* If the calendar_dbinfo table doesn't exist then we understand
      this to mean that this DB is uninitialized.  */
-  int e = sqlite_exec (SQLITE_DB (edb)->sqliteh,
-		       "select version from calendar_dbinfo",
-		       dbinfo_callback, NULL, &err);
-#ifdef USE_SQLITE3
-  /* The database may be in SQLITE2 format.  Try to convert it.  */
+  int version = sqlite_db_version(edb, &err);
 
-  if (e)
-    goto error;
-#else
-  if (e)
-    goto error;
+#ifdef USE_SQLITE3
+  if (version < 0)
+    {
+  /* The database may be in SQLITE2 format.  Try to convert it.  */
+    }
 #endif
 
   if (version == 2)
@@ -1478,29 +1609,14 @@ event_db_new (const char *fname, GError **error)
     }
 
   /* Read EDB->ALARMS_FIRED_THROUGH.  */
-  edb->alarms_fired_through = 0;
   if (version < 2)
     sqlite_exec (SQLITE_DB (edb)->sqliteh,
 		 "create table alarms_fired_through (time INTEGER)",
 		 NULL, NULL, NULL);
 
-  int alarms_fired_through_callback (void *arg, int argc, char **argv,
-				     char **names)
-    {
-      EventDB *edb = EVENT_DB (arg);
-      if (argc == 1)
-	{
-	  int t = atoi (argv[0]);
-	  if (t > edb->alarms_fired_through)
-	    edb->alarms_fired_through = t;
-	}
-
-      return 0;
-    }
-  if (sqlite_exec (SQLITE_DB (edb)->sqliteh,
-		   "select time from alarms_fired_through",
-		   alarms_fired_through_callback, edb, &err))
+  if (sqlite_read_alarms_fired_through(edb, &err))
     goto error;
+
   if (edb->alarms_fired_through == 0)
     edb->alarms_fired_through = time (NULL);
   else {
@@ -1530,21 +1646,9 @@ event_db_new (const char *fname, GError **error)
     sqlite_exec (SQLITE_DB (edb)->sqliteh,
 		 "create table default_calendar (default_calendar INTEGER)",
 		 NULL, NULL, NULL);
-  int default_calendar_callback (void *arg, int argc, char **argv,
-				 char **names)
-    {
-      EventDB *edb = EVENT_DB (arg);
-      if (argc == 1)
-	edb->default_calendar = atoi (argv[0]);
 
-      return 0;
-    }
-  edb->default_calendar = EVENT_CALENDAR_NO_PARENT;
-  if (sqlite_exec (SQLITE_DB (edb)->sqliteh,
-		   "select default_calendar from default_calendar",
-		   default_calendar_callback, edb, &err))
+  if (sqlite_read_default_calendar (edb, &err))
     goto error;
-
 
   /* Calendars.  */
 
@@ -1558,50 +1662,7 @@ event_db_new (const char *fname, GError **error)
 	       "  last_pull INTEGER, last_push INTEGER,"
 	       "  last_modified)",
 	       NULL, NULL, NULL);
-  int load_calendars_callback (void *arg, int argc, char **argv,
-			       char **names)
-    {
-      if (argc != 17)
-	{
-	  g_critical ("%s: Expected 17 arguments, got %d arguments",
-		      __func__, argc);
-	  return 0;
-	}
-
-      EventCalendar *ec
-	= EVENT_CALENDAR (g_object_new (event_calendar_get_type (), NULL));
-      ec->edb = edb;
-
-      char **v = argv;
-      ec->uid = atoi (*(v ++));
-      ec->title = g_strdup (*(v ++));
-      ec->description = g_strdup (*(v ++));
-      ec->url = g_strdup (*(v ++));
-      ec->username = g_strdup (*(v ++));
-      ec->password = g_strdup (*(v ++));
-      ec->parent_uid = atoi (*(v ++));
-      ec->hidden = atoi (*(v ++));
-      ec->has_color = atoi (*(v ++));
-      ec->red = atoi (*(v ++));
-      ec->green = atoi (*(v ++));
-      ec->blue = atoi (*(v ++));
-      ec->mode = atoi (*(v ++));
-      ec->sync_interval = atoi (*(v ++));
-      ec->last_pull = atoi (*(v ++));
-      ec->last_push = atoi (*(v ++));
-      ec->last_modified = atoi (*(v ++));
-
-      edb->calendars = g_slist_prepend (edb->calendars, ec);
-
-      return 0;
-    }
-  if (sqlite_exec (SQLITE_DB (edb)->sqliteh,
-		   "select ROWID, title, description,"
-		   "  url, username, password,"
-		   "  parent, hidden,"
-		   "  has_color, red, green, blue,"
-		   "  mode, sync_interval, last_pull, last_push, last_modified"
-		   " from calendars", load_calendars_callback, NULL, &err))
+  if (sqlite_load_calendars (edb, &err))
     {
       char *s = g_strdup_printf ("%s: Reading calendars: %s",
 				 __func__, err);
@@ -1651,6 +1712,96 @@ event_db_new (const char *fname, GError **error)
       SIGNAL_ERROR (edb, error, err);
       free (err);
     }
+  else
+      SIGNAL_ERROR (edb, error, "unspecified sqlite error");
+
+  if (SQLITE_DB (edb)->sqliteh)
+    sqlite_close (SQLITE_DB (edb)->sqliteh);
+
+  g_object_unref (edb);
+
+  return NULL;
+}
+
+EventDB *
+event_db_readonly (const char *fname, GError **error)
+{
+  EventDB *edb = EVENT_DB (g_object_new (TYPE_SQLITE_DB, NULL));
+  char *err = NULL;
+
+  edb->readonly = TRUE;
+
+#ifdef USE_SQLITE3
+  int e = sqlite3_open (fname, &SQLITE_DB (edb)->sqliteh);
+  if (e)
+    {
+      err = g_strdup (sqlite3_errmsg (SQLITE_DB (edb)->sqliteh));
+      sqlite3_close (SQLITE_DB (edb)->sqliteh);
+      SQLITE_DB (edb)->sqliteh = NULL;
+    }
+#else
+  SQLITE_DB (edb)->sqliteh = sqlite_open (fname, 0, &err);
+#endif
+  if (err)
+    goto error_before_transaction;
+
+  /* Get the calendar db version.  */
+  int version = sqlite_db_version(edb, &err);
+  if (version < 0)
+    goto error;
+
+  if (version != 4)
+    {
+      err = g_strdup_printf
+	(_("Unable to read database file: unknown version: %d"),
+	 version);
+      goto error;
+    }
+
+  /* Read EDB->ALARMS_FIRED_THROUGH.  */
+
+  if (sqlite_read_alarms_fired_through(edb, &err))
+    goto error;
+
+  if (edb->alarms_fired_through == 0)
+    edb->alarms_fired_through = time (NULL);
+
+  /* The default calendar.  */
+
+  if (sqlite_read_default_calendar (edb, &err))
+    goto error;
+
+  /* Calendars.  */
+
+  if (sqlite_load_calendars (edb, &err))
+    {
+      char *s = g_strdup_printf ("%s: Reading calendars: %s",
+				 __func__, err);
+      g_free (err);
+      err = s;
+      goto error;
+    }
+
+  /* If the default calendar was not set, set it now (after we've read
+     in the calendars).  */
+  if (edb->default_calendar == EVENT_CALENDAR_NO_PARENT)
+    {
+      EventCalendar *ec = event_db_get_default_calendar (edb, NULL, error);
+      if (! ec)
+	goto error;
+      g_object_unref (ec);
+    }
+    
+  return edb;
+ error:
+ error_before_transaction:
+  if (err)
+    {
+      SIGNAL_ERROR (edb, error, err);
+      free (err);
+    }
+  else
+      SIGNAL_ERROR (edb, error, "unspecified sqlite error");
 
   if (SQLITE_DB (edb)->sqliteh)
     sqlite_close (SQLITE_DB (edb)->sqliteh);

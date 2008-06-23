@@ -117,6 +117,9 @@ extern void event_db_error_punt (EventDB *edb, GError *error);
 /* Open a new database.  */
 extern EventDB *event_db_new (const char *filename, GError **error);
 
+/* Open database readonly.  */
+extern EventDB *event_db_new (const char *filename, GError **error);
+
 /* Return the event whose alarm will first go off at or after NOW.  */
 extern Event *event_db_next_alarm (EventDB *edb, time_t now,
 				   GError **error);
