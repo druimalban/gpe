@@ -1318,6 +1318,9 @@ alarm_dialog_required (void)
 static void
 alarm_fired (EventDB *edb, Event *ev)
 {
+  time_t tt = event_get_start(ev);
+  g_message("Alarm fired - %s",ctime(&tt));
+
   alarm_dialog_required ();
 
   alarm_dialog_add_event (alarm_dialog, ev);
@@ -1336,7 +1339,12 @@ alarms_process_pending (gpointer data)
   list = g_slist_sort (list, event_alarm_compare_func);
   GSList *i;
   for (i = list; i; i = g_slist_next (i))
-    alarm_fired (event_db, EVENT (i->data));
+    {
+      time_t tt = event_get_start(EVENT(i->data));
+      g_message("Unacknowledged event - %s",ctime(&tt));
+     
+      alarm_fired (event_db, EVENT (i->data));
+    }
   event_list_unref (list);
 
   /* Don't run again.  */
@@ -1869,6 +1877,27 @@ show_help_and_exit (void)
   exit (EXIT_SUCCESS);
 }
 
+//#define LOG_HANDLER "/tmp/gpe-calendar.log"
+#ifdef LOG_HANDLER
+/* This log handler is used to get logs when gpe-calendar is not being run from a terminal */
+static guint log_handler_id = 0;
+static void log_handler (const char *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
+{
+  static FILE *log = NULL;
+  time_t now = time(NULL);
+  struct tm tm;
+  char buf[200];
+
+  if (!log) log = fopen(LOG_HANDLER,"a");
+
+  tm=*localtime(&now);
+  strftime (buf, sizeof (buf), "%c", &tm);
+
+  fprintf(log, "[%s] %s:%x:%s\n", buf, log_domain, log_level, message);
+  fflush(log);
+}
+#endif
+
 int
 main (int argc, char *argv[])
 {
@@ -1877,6 +1906,11 @@ main (int argc, char *argv[])
   GtkTooltips *tooltips;    
 #ifdef IS_HILDON
   osso_context_t *osso_context;
+#endif
+
+#ifdef LOG_HANDLER
+  log_handler_id = g_log_set_handler (NULL, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL
+                     | G_LOG_FLAG_RECURSION, log_handler, NULL);
 #endif
 
   /* What thread?!  Yes, threads.  gpe-calendar is entirely event
