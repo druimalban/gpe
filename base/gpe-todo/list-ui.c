@@ -328,7 +328,7 @@ toggle_completed (GtkTreePath *path)
                            COL_STRIKETHROUGH, complete, 
                            COL_DATA, i,
                            COL_PRIORITY, priority,
-                           COL_PRIORITY_TEXT, state_map[i->state].string,
+                           COL_PRIORITY_TEXT, _( state_map[i->state].string ),
                            COL_DUE, time,
                            -1);
     }
@@ -452,7 +452,7 @@ refresh_items (void)
                               COL_STRIKETHROUGH, complete, 
                               COL_DATA, i,
                               COL_PRIORITY, priority,
-                              COL_PRIORITY_TEXT, state_map[i->state].string,
+                              COL_PRIORITY_TEXT, _( state_map[i->state].string ),
                               COL_DUE, time,
                               COL_CATEGORY, categories,
 							  COL_COLORS, colors,

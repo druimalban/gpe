@@ -1,3 +1,7 @@
+2008-06-23  Persson Fink Lars  <lars.p.fink@gmail.com>
+
+	* list-ui.c: Fixed translation of item status. Fixes #197
+
 2008-05-17  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Release version 0.57
