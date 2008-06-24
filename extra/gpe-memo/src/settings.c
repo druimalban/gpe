@@ -10,6 +10,8 @@
 * 2 of the License, or (at your option) any later version.
 */
 
+#include <unistd.h>
+#include <sys/stat.h>
 #include <glib/gkeyfile.h>
 #include <glib/gstrfuncs.h>
 #include <glib/gutils.h>
@@ -40,6 +42,8 @@ settings_init (void)
 
         if (!g_key_file_has_key (keyfile, GROUP, "memo-dir", NULL)) {
             filename = g_strdup_printf ("%s/%s", g_get_home_dir(), "Memo");
+            if (g_access(filename, F_OK))
+               g_mkdir(filename, S_IRWXU | S_IRWXG );
             g_key_file_set_string (keyfile, GROUP, "memo-dir", filename);
             g_free (filename);
         }
