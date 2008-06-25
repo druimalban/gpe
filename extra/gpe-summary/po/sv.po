@@ -1,0 +1,110 @@
+# sv translation of gpe-summary.
+# Copyright (C) 2008 THE gpe-summary'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gpe-summary package.
+# Lars Persson Fink <lars.p.fink@gmail.com>, 2008.
+# 
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-summary 0.7.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-06-23 20:43+0200\n"
+"PO-Revision-Date: 2008-06-23 20:32+0200\n"
+"Last-Translator: Lars Persson Fink <lars.p.fink@gmail.com>\n"
+"Language-Team: Swedish <sv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../gpesummary.c:178 ../gpesummary.c:346
+msgid "(no todos)"
+msgstr "(inga uppgifter)"
+
+#: ../gpesummary.c:479
+msgid " Birthday "
+msgstr " Födelsedag "
+
+#: ../gpesummary.c:589
+msgid " (no appointments)"
+msgstr " (inga möten)"
+
+#: ../gpesummary.c:765
+msgid "Calendar"
+msgstr "Kalender"
+
+#: ../gpesummary.c:769
+msgid "Todo"
+msgstr "Att-göra"
+
+#: ../gpesummary.c:773
+msgid "Contacts"
+msgstr "Kontakter"
+
+#. Create the widgets
+#: ../gpesummary.c:961
+msgid "GPE Summary Options"
+msgstr "GPE Summary Inställningar"
+
+#. Add the label, and show everything we've added to the dialog.
+#. gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),label);
+#: ../gpesummary.c:976
+msgid "View will be changed after clicking OK, please be patient."
+msgstr "Vyn kommer att uppdateras efter att OK blivit vald, ha tålamod"
+
+#: ../gpesummary.c:979
+msgid "Show birthdays (long loading)"
+msgstr "Visa födelsedagar (långsam uppdatering)"
+
+#: ../gpesummary.c:985
+msgid "Show appointments"
+msgstr "Visa möten"
+
+#: ../gpesummary.c:991
+msgid "Show todos"
+msgstr "Visa uppgifter"
+
+#: ../gpesummary.c:997
+msgid "Show all (unfinished) todos"
+msgstr "Visa alla (icke färdiga) uppgifter"
+
+#: ../gpesummary.c:1003
+msgid "Show start buttons"
+msgstr "Visa startknappar"
+
+#. button = gtk_check_button_new_with_label(_("Autorefresh data (long loading)"));
+#. gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),button);
+#. gtk_widget_set_name(button, "refresh");
+#. gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),doshow_autorefresh);
+#. g_signal_connect( GTK_OBJECT( button ), "clicked",   GTK_SIGNAL_FUNC( options_clicked ), NULL );
+#: ../gpesummary.c:1015
+msgid "Extended view (needs more space)"
+msgstr "Utökad vy (behöver mer utrymme)"
+
+#: ../gpesummary.c:1022
+msgid "Show ~2 appointments/todos"
+msgstr "Visa ~2 Möten/Uppgifter"
+
+#: ../gpesummary.c:1023
+msgid "Show ~4 appointments/todos"
+msgstr "Visa ~4 Möten/Uppgifter"
+
+#: ../gpesummary.c:1024
+msgid "Show ~6 appointments/todos"
+msgstr "Visa ~6 Möten/Uppgifter"
+
+#: ../gpesummary.c:1025
+msgid "Show ~8 appointments/todos"
+msgstr "Visa ~8 Möten/Uppgifter"
+
+#: ../gpesummary.c:1026
+msgid "Show ~10 appointments/todos"
+msgstr "Visa ~10 Möten/Uppgifter"
+
+#: ../gpesummary.c:1027
+msgid "Show ~12 appointments/todos"
+msgstr "Visa ~12 Möten/Uppgifter"
+
+#: ../gpesummary.c:1028
+msgid "Show ~14 appointments/todos"
+msgstr "Visa ~14 Möten/Uppgifter"
+

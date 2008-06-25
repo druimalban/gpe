@@ -1,3 +1,7 @@
+2008-06-24  Lars Persson Fink  <lars.p.fink@gmail.com>
+
+       * po/sv.po, configure.ac: Added Swedish translation
+
 2008-06-22  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c: Open database readonly

@@ -60,7 +60,7 @@ else
 fi
 
 AC_PROG_INTLTOOL([0.23])
-ALL_LINGUAS="en_GB de_DE en de fi_FI fi"
+ALL_LINGUAS="en_GB de_DE en de fi_FI fi sv"
 GETTEXT_PACKAGE=gpesummary
 AC_SUBST(GETTEXT_PACKAGE)
 AM_GLIB_GNU_GETTEXT()
