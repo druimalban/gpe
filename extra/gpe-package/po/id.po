@@ -1,161 +1,163 @@
-# Vietnamese translation for GPE Package.
-# Copyright © 2008 Free Software Foundation, Inc.
+# Pesan Bahasa Indonesia untuk gpe-package
+# Copyright (C) 2008 Arif E. Nugroho <arif_endro@yahoo.com>
 # This file is distributed under the same license as the gpe-package package.
-# Clytie Siddall <clytie@riverland.net.au>, 2006-2008.
-# 
+# Permission is granted to freely copy and distribute
+# this file and modified versions, provided that this
+# header is not removed and modified versions are marked
+# as such.
+# Arif E. Nugroho <arif_endro@yahoo.com>, 2008.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-package-0.4\n"
+"Project-Id-Version: gpe-package 0.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-08-01 21:31+0200\n"
-"PO-Revision-Date: 2008-06-18 17:27+0930\n"
-"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
-"Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
+"PO-Revision-Date: 2008-07-04 10:05+0700\n"
+"Last-Translator: Arif E. Nugroho <arif_endro@yahoo.com>\n"
+"Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: LocFactoryEditor 1.7b3\n"
 
 #: main.c:45
 msgid "Unable to fork"
-msgstr "Không thể tạo tiến trình con"
+msgstr "Tidak dapat membuat proses baru"
 
 #: interface.c:68
 msgid "Help for this application is not installed."
-msgstr "Chưa cài đặt trợ giúp về ứng dụng này."
+msgstr "Bantuan untuk aplikasi ini tidak terpasang."
 
 #: interface.c:129
 msgid "/_File"
-msgstr "/_Tập tin"
+msgstr "/_Berkas"
 
 #: interface.c:130
 msgid "/File/_Install file"
-msgstr "/_Tập tin/Cà_i đặt tập tin"
+msgstr "/Berkas/_Pasang berkas"
 
 #: interface.c:131
 msgid "/_File/s1"
-msgstr "/_Tập tin/s1"
+msgstr "/_Berkas/s1"
 
 #: interface.c:132
 msgid "/File/_Close"
-msgstr "/Tập tin/Đón_g"
+msgstr "/Berkas/_Tutup"
 
 #: interface.c:133
 msgid "/_Packages"
-msgstr "/_Gói"
+msgstr "/_Paket"
 
 #: interface.c:134
 msgid "/Packages/Show Insta_lled"
-msgstr "/Gói/Hiện gói đã _cài đặt"
+msgstr "/Paket/Lihat Terpa_sang"
 
 #: interface.c:135
 msgid "/Packages/Show _Not Installed"
-msgstr "/Gói/Hiệ_n gói chưa cài đặt"
+msgstr "/Paket/Lihat _Tidak Terpasang"
 
 #: interface.c:136
 msgid "/_Packages/s2"
-msgstr "/_Gói/s2"
+msgstr "/_Paket/s2"
 
 #: interface.c:137
 msgid "/Packages/_Search"
-msgstr "/_Gói/_Tìm"
+msgstr "/Paket/_Cari"
 
 #: interface.c:138 interface.c:143
 msgid "/_Packages/s3"
-msgstr "/_Gói/s3"
+msgstr "/_Paket/s3"
 
 #: interface.c:139
 msgid "/Packages/Show _Info"
-msgstr "/Gói/Hiện thông t_in"
+msgstr "/Paket/Lihat _Informasi"
 
 #: interface.c:140
 msgid "/_Packages/s4"
-msgstr "/_Gói/s4"
+msgstr "/_Paket/s4"
 
 #: interface.c:141
 msgid "/Packages/_Update lists"
-msgstr "/Gói/Cậ_p nhật danh sách"
+msgstr "/Paket/_Perbarui daftar"
 
 #: interface.c:142
 msgid "/Packages/Upgrade _System"
-msgstr "/Gói/Nâng cấp _hệ thống"
+msgstr "/Paket/Upgrade _System"
 
 #: interface.c:144
 msgid "/Packages/_Apply"
-msgstr "/Gói/Á_p dụng"
+msgstr "/Paket/_Terapkan"
 
 #: interface.c:145
 msgid "/_Help"
-msgstr "/Trợ g_iúp"
+msgstr "/_Bantuan"
 
 #: interface.c:146
 msgid "/_Help/Index"
-msgstr "/Trợ g_iúp/Chỉ mục"
+msgstr "/_Bantuan/Index"
 
 #: interface.c:147
 msgid "/_Help/About"
-msgstr "/Trợ g_iúp/Giới thiệu"
+msgstr "/_Bantuan/Tentang"
 
 #: interface.c:198
 msgid "Package information"
-msgstr "Thông tin gói"
+msgstr "Informasi paket"
 
 #: interface.c:241
 msgid "Working"
-msgstr "Đang chạy"
+msgstr "Sedang bekerja"
 
 #: interface.c:288
 msgid "Reading packages list..."
-msgstr "Đạng đọc danh sách các gói..."
+msgstr "Membaca daftar paket..."
 
 #: interface.c:294
 msgid "Updating package lists"
-msgstr "Đang cập nhật các danh sách gói"
+msgstr "Memperbarui daftar paket"
 
 #: interface.c:297
 msgid "Upgrading installed system"
-msgstr "Đang nâng cấp hệ thống đã cài đặt"
+msgstr "Upgrading installed system"
 
 #: interface.c:300
 msgid "Installing"
-msgstr "Đang cài đặt"
+msgstr "Memasang"
 
 #: interface.c:303
 msgid "Retrieving package information"
-msgstr "Đang lấy thông tin về gói"
+msgstr "Mengambil informasi paket"
 
 #: interface.c:306
 msgid "Working..."
-msgstr "Đang chạy..."
+msgstr "Sedang bekerja..."
 
 #: interface.c:402
 msgid "Updating views, please wait..."
-msgstr "Đang cập nhật các khung xem, hãy đợi..."
+msgstr "Memperbarui tampilan, mohon tunggu..."
 
 #: interface.c:518
 msgid "Search term:"
-msgstr "Chuỗi tìm kiếm:"
+msgstr "Kata yang dicari:"
 
 #: interface.c:529
 msgid "Regular expression"
-msgstr "Biểu thức chính quy"
+msgstr "Ekspresi regular"
 
 #: interface.c:633
 msgid "Command finished. Please check log messages for errors."
-msgstr "Câu lệnh đã chạy xong. Hãy kiểm tra thông điệp ghi lưu có lỗi chưa."
+msgstr "Perintah selesai. Tolong periksa pesan log untuk kesalahan."
 
 #: interface.c:653
 msgid "Package selection was changed. Really exit?"
-msgstr "Sự lựa chọn gói đã thay đổi. Thực sự thoát không?"
+msgstr "Pemilihan paket telah berubah. Yakin keluar?"
 
 #: interface.c:682
 msgid "IPKG backend failure, cannot continue."
-msgstr "Lỗi hậu phương IPKG nên không thể tiếp tục."
+msgstr "IPKG backend gagal, tidak dapat melanjutkan."
 
 #: interface.c:689
 msgid "Communication error, cannot continue."
-msgstr "Gặp lỗi giao thông nên không thể tiếp tục."
+msgstr "Komunikasi error, tidak dapat melanjutkan."
 
 #: interface.c:703
 msgid ""
@@ -163,118 +165,114 @@ msgid ""
 "Please consult the message log\n"
 "for hints what went wrong."
 msgstr ""
-"Gặp lỗi.\n"
-"Hãy xem bản ghi thông điệp\n"
-"để tìm thông tin về vấn đề."
+"Sebuah kesalahan terjadi.\n"
+"Tolong konsultasikan hal ini dengan pesan log\n"
+"untuk petunjuk apa yeng salah."
 
 #: interface.c:789
 msgid "The selected file could not be accessed."
-msgstr "Không thể truy cập đến tập tin được chọn."
+msgstr "Berkas yang ditunjuk tidak dapat diakses."
 
 #: interface.c:900
 msgid "Make sure your internet connection is up or your update source is available and press OK to continue."
-msgstr "Hãy kiểm tra xem máy tính có kết nối tới Internet, hoặc có sẵn nguồn cập nhật, sau đó bấm nút OK để tiếp tục."
+msgstr "Pastikan koneksi internet anda nyala atau sumber update anda ada dan tekan OK untuk melanjutkan."
 
 #: interface.c:916
 msgid "Some packages could not be updated, please check your configuration."
-msgstr "Một số gói không thể được cập nhật, hãy kiểm tra lại cấu hình."
+msgstr "Beberapa paket tidak dapat diupdate, tolong periksa konfigurasi anda."
 
-# Type: text
-# Description
 #: interface.c:919
 msgid "System updated sucessfully."
-msgstr "Hệ thống đã được cập nhật."
+msgstr "System telah terupdate dengan sukses."
 
 #: interface.c:945
 msgid "Some lists could not be updated, please check your configuration."
-msgstr "Một số danh sách không thể được cập nhật, hãy kiểm tra lại cấu hình."
+msgstr "Beberapa daftar tidak dapat di update, tolong periksa konfigurasi anda."
 
 #: interface.c:948
 msgid "Package lists updated successfully."
-msgstr "Các danh sách gói đã được cập nhật."
+msgstr "Daftar paket terupdate dengan sukses."
 
 #: interface.c:961
 msgid "changes could not be applied."
-msgstr "không thể áp dụng thay đổi."
+msgstr "perubahan tidak dapat diaplikasikan."
 
-# Type: text
-# Description
 #: interface.c:965
 msgid "Packages installed sucessfully."
-msgstr "Các gói đã được cài đặt."
+msgstr "Paket terinstall dengan sukses."
 
 #: interface.c:1060 gpe-package.desktop.in.h:2
 msgid "Package Manager"
-msgstr "Bộ Quản Lý Gói"
+msgstr "Manajer Paket"
 
 #: interface.c:1104
 msgid "List"
-msgstr "Danh sách"
+msgstr "Daftar"
 
 #: interface.c:1109
 msgid "Package List"
-msgstr "Danh sách gói"
+msgstr "Daftar Paket"
 
 #: interface.c:1135
 msgid "Inst."
-msgstr "Cài"
+msgstr "Inst."
 
 #: interface.c:1145 feededit.c:129 feededit.c:363
 msgid "Name"
-msgstr "Tên"
+msgstr "Nama"
 
 #: interface.c:1158
 msgid "Messages"
-msgstr "Thông điệp"
+msgstr "Pesan"
 
 #: interface.c:1163
 msgid "Messages Log"
-msgstr "Bản ghi thông điệp"
+msgstr "Pesan Log"
 
 #: interface.c:1173
 msgid "This window shows all messages from the packet manager."
-msgstr "Cửa sổ này hiển thị các thông điệp từ trình quản lý gói."
+msgstr "Jendela ini menunjukan seluruh pesan dari manajer paket."
 
 #: interface.c:1180
 msgid "Feeds"
-msgstr "Nguồn tin"
+msgstr "Feeds"
 
 #: filechooser.c:44 filechooser.c:63
 msgid "Choose packages"
-msgstr "Chọn gói"
+msgstr "Pilih paket"
 
 #: feededit.c:99
 msgid "Could not open"
-msgstr "Không thể mở"
+msgstr "Tidak dapat membuka"
 
 #: feededit.c:100
 msgid "for writing."
-msgstr "để ghi."
+msgstr "untuk menulis."
 
 #: feededit.c:120
 msgid "Feed Properties"
-msgstr "Thuộc tính nguồn tin"
+msgstr "Properti Feed"
 
 #: feededit.c:134
 msgid "Location (URL)"
-msgstr "Địa chỉ (URL)"
+msgstr "Alamat (URL)"
 
 #: feededit.c:139
 msgid "Compressed"
-msgstr "Đã nén"
+msgstr "Terkompres"
 
 #: feededit.c:242
 msgid "Delete selected feed?"
-msgstr "Xóa nguồn tin được chọn không?"
+msgstr "Hapus feed yang dipilih?"
 
 #: feededit.c:331
 msgid "Package Feeds"
-msgstr "Nguồn tin gói"
+msgstr "Paket feed"
 
 #: feededit.c:372
 msgid "Location"
-msgstr "Địa chỉ"
+msgstr "Lokasi"
 
 #: gpe-package.desktop.in.h:1
 msgid "Install and update packages"
-msgstr "Cài đặt và cập nhật gói"
+msgstr "Pasang dan update packages"
