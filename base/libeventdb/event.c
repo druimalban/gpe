@@ -1263,7 +1263,7 @@ event_add_category (Event *event, int category, GError **error)
       return;
     }
 
-  ev->categories = g_slist_prepend (ev->categories, (gpointer) category);
+  ev->categories = g_slist_prepend (ev->categories, GINT_TO_POINTER(category));
 
   STAMP (ev, error);
 }

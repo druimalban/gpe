@@ -407,7 +407,7 @@ do_events_enumerate (EventDB *edb,
 
       int uid = atoi (argv[0]);
 
-      ev = EVENT_SOURCE (g_hash_table_lookup (edb->events, (gpointer) uid));
+      ev = EVENT_SOURCE (g_hash_table_lookup (edb->events, GINT_TO_POINTER(uid)));
       if (ev)
 	/* Already loaded, just add a reference and return it.  */
 	g_object_ref (ev);
@@ -569,7 +569,7 @@ do_event_load_details (EventSource *ev, GError **error)
 	    ev->sequence = atoi (argv[1]);
 	  else if (!strcmp (argv[0], "category"))
 	    ev->categories = g_slist_prepend (ev->categories,
-					      (gpointer)atoi (argv[1]));
+					      GINT_TO_POINTER(atoi (argv[1])));
 	}
       return 0;
     }

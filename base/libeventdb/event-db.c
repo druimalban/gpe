@@ -583,7 +583,7 @@ event_load (EventDB *edb, guint uid, GError **error)
 {
   EventSource *ev;
 
-  ev = EVENT_SOURCE (g_hash_table_lookup (edb->events, (gpointer) uid));
+  ev = EVENT_SOURCE (g_hash_table_lookup (edb->events, GINT_TO_POINTER(uid)));
   if (ev)
     /* Already loaded, just add a reference and return it.  */
     {
