@@ -58,7 +58,8 @@ EXTRA_DIST = $(pixmap_DATA) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \
-             hildon/gpe.conf
+             hildon/gpe.conf \
+             po/libgpewidget.pot
 
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update po/.intltool-merge-cache *.d autom4te.cache ./po/stamp-it
 

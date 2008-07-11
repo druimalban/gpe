@@ -50,6 +50,627 @@ The GPE Colour selection dialog
 Color Dialog
 
 
+<!-- ##### SECTION ./tmpl/dirbrowser.sgml:Long_Description ##### -->
+<para>
+
+This interface provides a simple function to open a directory browser
+dialog.
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/dirbrowser.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/dirbrowser.sgml:Short_Description ##### -->
+
+Directory browser
+
+
+<!-- ##### SECTION ./tmpl/dirbrowser.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/dirbrowser.sgml:Title ##### -->
+Dirbrowser
+
+
+<!-- ##### SECTION ./tmpl/errorbox.sgml:Long_Description ##### -->
+<para>
+
+These functions are used to display error messages. The output will take place in 
+an error dialog and on stderr.
+
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/errorbox.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/errorbox.sgml:Short_Description ##### -->
+
+Display error messages.
+
+
+<!-- ##### SECTION ./tmpl/errorbox.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/errorbox.sgml:Title ##### -->
+Error Messages
+
+
+<!-- ##### SECTION ./tmpl/gpe-iconlist.sgml:Long_Description ##### -->
+<para>
+This widget is used to arrange icons in columns and rows. It provides functions 
+for user interactive actions clicking on a particular icon and methods to
+manage icons in the list. This one is deprecated, use GpeIconListView in
+new code.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpe-iconlist.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpe-iconlist.sgml:Short_Description ##### -->
+Widget to arrange icons in columns and rows. (deprecated, will be removed soon)
+
+
+<!-- ##### SECTION ./tmpl/gpe-iconlist.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gpe-iconlist.sgml:Title ##### -->
+GpeIconList
+
+
+<!-- ##### SECTION ./tmpl/gpeclockface.sgml:Long_Description ##### -->
+<para>
+A widget to display an analogue clock face.
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpeclockface.sgml:See_Also ##### -->
+<para>
+Used by: #GpeTimeSel widget, gpe-watch, gpe-clock
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpeclockface.sgml:Short_Description ##### -->
+Clock face widget
+
+
+<!-- ##### SECTION ./tmpl/gpeclockface.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gpeclockface.sgml:Title ##### -->
+GpeClockFace
+
+
+<!-- ##### SECTION ./tmpl/gpehelp.sgml:Long_Description ##### -->
+<para>
+Simple interface to provide a call for an external application 
+to display help information. Currently this is fixed to a list
+of help browsers (gpe-helpviewer, gpe-mini-browser, dillo, minimo). 
+The help system is configured in /etc/gpe/gpe-help.conf.
+For an example how to provide help for applications check out 
+gpe-edit.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpehelp.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpehelp.sgml:Short_Description ##### -->
+Call external help browser.
+
+
+<!-- ##### SECTION ./tmpl/gpehelp.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gpehelp.sgml:Title ##### -->
+GPE simple help
+
+
+<!-- ##### SECTION ./tmpl/gpeiconlistitem.sgml:Long_Description ##### -->
+<para>
+The GpeIconListItem represents a single item inside of a GpeIconListView.
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpeiconlistitem.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpeiconlistitem.sgml:Short_Description ##### -->
+Icon item to use with GpeIconListView
+
+
+<!-- ##### SECTION ./tmpl/gpeiconlistitem.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gpeiconlistitem.sgml:Title ##### -->
+GpeIconListItem
+
+
+<!-- ##### SECTION ./tmpl/gpeiconlistview.sgml:Long_Description ##### -->
+<para>
+This widget is used to arrange icons in columns and rows. It provides functions 
+for user interactive actions clicking on a particular icon and methods to
+manage icons in the list.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpeiconlistview.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpeiconlistview.sgml:Short_Description ##### -->
+Widget to arrange icons in columns and rows.
+
+
+<!-- ##### SECTION ./tmpl/gpeiconlistview.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gpeiconlistview.sgml:Title ##### -->
+GpeIconListView
+
+
+<!-- ##### SECTION ./tmpl/gpetimesel.sgml:Long_Description ##### -->
+<para>
+This widget is used to enter time values. It displays an editing field 
+for a time value and an extra button which opens a time selection popup.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpetimesel.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpetimesel.sgml:Short_Description ##### -->
+Time selection widget
+
+
+<!-- ##### SECTION ./tmpl/gpetimesel.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gpetimesel.sgml:Title ##### -->
+GpeTimeSel
+
+
+<!-- ##### SECTION ./tmpl/gpewindowlist.sgml:Long_Description ##### -->
+<para>
+An object maintaining a list of open windows. This can be used for 
+task managers and window selection applications.
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpewindowlist.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gpewindowlist.sgml:Short_Description ##### -->
+Application window list.
+
+
+<!-- ##### SECTION ./tmpl/gpewindowlist.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gpewindowlist.sgml:Title ##### -->
+GpeWindowList
+
+
+<!-- ##### SECTION ./tmpl/gtkdatecombo.sgml:Long_Description ##### -->
+<para>
+The GtkDateCombo widget is used to display a formated date value. The display 
+format used for the date depends on the locale setting. Additionally this
+widget provides a calendar popup for easy value changes. Direct editing
+of the date value in the display entry of the widget is supported too.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gtkdatecombo.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gtkdatecombo.sgml:Short_Description ##### -->
+Widget to display and alter a date.
+
+
+<!-- ##### SECTION ./tmpl/gtkdatecombo.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gtkdatecombo.sgml:Title ##### -->
+GtkDateCombo
+
+
+<!-- ##### SECTION ./tmpl/gtksimplemenu.sgml:Long_Description ##### -->
+<para>
+This widget provides a simple selection menu with an easy to use interface.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gtksimplemenu.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/gtksimplemenu.sgml:Short_Description ##### -->
+Simple menu widget
+
+
+<!-- ##### SECTION ./tmpl/gtksimplemenu.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/gtksimplemenu.sgml:Title ##### -->
+GtkSimpleMenu
+
+
+<!-- ##### SECTION ./tmpl/infoprint.sgml:Long_Description ##### -->
+<para>
+Infoprints are short text messages usually displayed in a corner of the screen
+to provide additional information for the user to show what is going on. These
+messages are displayed for a short time and disappear from screen without 
+user interaction. 
+</para>
+
+
+<!-- ##### SECTION ./tmpl/infoprint.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/infoprint.sgml:Short_Description ##### -->
+Displaying infoprints
+
+
+<!-- ##### SECTION ./tmpl/infoprint.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/infoprint.sgml:Title ##### -->
+Infoprints
+
+
+<!-- ##### SECTION ./tmpl/init.sgml:Long_Description ##### -->
+<para>
+Functions used for application initialisation.
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/init.sgml:See_Also ##### -->
+<para>
+Used by: Any GPE application.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/init.sgml:Short_Description ##### -->
+Initialisation of applications
+
+
+<!-- ##### SECTION ./tmpl/init.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/init.sgml:Title ##### -->
+Init
+
+
+<!-- ##### SECTION ./tmpl/picturebutton.sgml:Long_Description ##### -->
+<para>
+GPE uses compact buttons containing a label and a pixmap for dialog buttons.
+The PictureButton widget provides a simple interface dealing with these buttons.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/picturebutton.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/picturebutton.sgml:Short_Description ##### -->
+A small button with label and pixmap.
+
+
+<!-- ##### SECTION ./tmpl/picturebutton.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/picturebutton.sgml:Title ##### -->
+PictureButton
+
+
+<!-- ##### SECTION ./tmpl/pixmaps.sgml:Long_Description ##### -->
+<para>
+GPE provides a set of functions for maintaining a shared icons to avoid 
+loading icon sets multiple times. These icons are loaded into an internal
+storage list and identified by a name string.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/pixmaps.sgml:See_Also ##### -->
+<para>
+Used by: Most GPE applications.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/pixmaps.sgml:Short_Description ##### -->
+Handling pixmaps for applications.
+
+
+<!-- ##### SECTION ./tmpl/pixmaps.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/pixmaps.sgml:Title ##### -->
+Pixmaps
+
+
+<!-- ##### SECTION ./tmpl/popup.sgml:Long_Description ##### -->
+<para>
+Functions used for popup and dock windows.
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/popup.sgml:See_Also ##### -->
+<para>
+Used by: minilite, minimix
+</para>
+
+
+<!-- ##### SECTION ./tmpl/popup.sgml:Short_Description ##### -->
+Popup window tools.
+
+
+<!-- ##### SECTION ./tmpl/popup.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/popup.sgml:Title ##### -->
+Popup
+
+
+<!-- ##### SECTION ./tmpl/popup_menu.sgml:Long_Description ##### -->
+<para>
+In order to construct popup menus for various purposes libgpewidget contains
+some functions to make construction of this kind of menus easier.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/popup_menu.sgml:See_Also ##### -->
+<para>
+Used by: gpe-sketchbook, gpe-word
+</para>
+
+
+<!-- ##### SECTION ./tmpl/popup_menu.sgml:Short_Description ##### -->
+Functions to construct popup menus.
+
+
+<!-- ##### SECTION ./tmpl/popup_menu.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/popup_menu.sgml:Title ##### -->
+Popup menus
+
+
+<!-- ##### SECTION ./tmpl/question.sgml:Long_Description ##### -->
+<para>
+These functions provide support for displaying simple interactive question
+dialogs and handle the users answers.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/question.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/question.sgml:Short_Description ##### -->
+Question Dialogs
+
+
+<!-- ##### SECTION ./tmpl/question.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/question.sgml:Title ##### -->
+Question
+
+
+<!-- ##### SECTION ./tmpl/smallbox.sgml:Long_Description ##### -->
+<para>
+Functions to create a simple inputbox offering multiple selections or an
+input field.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/smallbox.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/smallbox.sgml:Short_Description ##### -->
+Small input box.
+
+
+<!-- ##### SECTION ./tmpl/smallbox.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/smallbox.sgml:Title ##### -->
+Smallbox
+
+
+<!-- ##### SECTION ./tmpl/spacing.sgml:Long_Description ##### -->
+<para>
+For creating graphical user interfaces with an unified look and feel it is 
+important to have a set of functions to provide spacing information.
+The GPE spacing functions provide a basic set of functions for determining 
+the most frquently used sizes for GUI development.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/spacing.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/spacing.sgml:Short_Description ##### -->
+Application GUI spacings
+
+
+<!-- ##### SECTION ./tmpl/spacing.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/spacing.sgml:Title ##### -->
+Spacing
+
+
+<!-- ##### SECTION ./tmpl/stylus.sgml:Long_Description ##### -->
+<para>
+Function to get information if GUI is set up for stylus 
+user input or not.
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/stylus.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/stylus.sgml:Short_Description ##### -->
+Stylus mode information.
+
+
+<!-- ##### SECTION ./tmpl/stylus.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/stylus.sgml:Title ##### -->
+Stylus Input
+
+
+<!-- ##### SECTION ./tmpl/translabel.sgml:Long_Description ##### -->
+<para>
+Support for widgets with "instant-apply" language switching.
+</para>
+
+
+<!-- ##### SECTION ./tmpl/translabel.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/translabel.sgml:Short_Description ##### -->
+Translation-aware GtkLabel variant
+
+
+<!-- ##### SECTION ./tmpl/translabel.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/translabel.sgml:Title ##### -->
+Translation label
+
+
+<!-- ##### SECTION ./tmpl/tray.sgml:Long_Description ##### -->
+<para>
+Some functions that provide easier handling of applications that dock 
+to some kind of tray or panel. (e.g. a notification area of a Gnome panel 
+or a Matchbox-Panel.)
+</para>
+
+
+<!-- ##### SECTION ./tmpl/tray.sgml:See_Also ##### -->
+<para>
+Used by: gpe-aerial, gpe-bluetooth, gpe-beam and gpe-buttonbox
+</para>
+
+
+<!-- ##### SECTION ./tmpl/tray.sgml:Short_Description ##### -->
+Useful functions dealing with trays.
+
+
+<!-- ##### SECTION ./tmpl/tray.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/tray.sgml:Title ##### -->
+Tray Tools
+
+
+<!-- ##### SECTION ./tmpl/windows.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/windows.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/windows.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/windows.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/windows.sgml:Title ##### -->
+windows
+
+
 <!-- ##### MACRO COLOR_F_TO_U ##### -->
 <para>
 
@@ -103,9 +724,170 @@ Maximum length of the colour description string.
 
 @dispose_has_run: 
 
+<!-- ##### STRUCT GPEIconListItem ##### -->
+<para>
+
+</para>
+
+@class: 
+@title: 
+@icon: 
+@udata: 
+@pb: 
+@pb_scaled: 
+@parent: 
+
+<!-- ##### STRUCT GPEIconListItemClass ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GPEIconListPrivate ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GPEIconListView ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GPEIconListViewClass ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GPEWindowList ##### -->
+<para>
+
+</para>
+
+@class: 
+@screen: 
+@net_client_list_atom: 
+@net_active_window_atom: 
+@windows: 
+
+<!-- ##### STRUCT GPEWindowListClass ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GPE_CLOCK_FACE ##### -->
+<para>
+Macro to cast a an object (usually GtkWidget*) to GpeClockFace type.
+</para>
+
+@obj: Object to cast.
+
+<!-- ##### VARIABLE GPE_GNOME_SCALING ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### MACRO GPE_ICONLIST_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO GPE_ICON_LIST_ITEM_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO GPE_ICON_LIST_VIEW_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO GPE_TYPE_CLOCK_FACE ##### -->
+<para>
+Type checking macro.
+</para>
+
+
+<!-- ##### MACRO GPE_WINDOW_LIST_CONST ##### -->
+<para>
+
+</para>
+
+@obj: 
+
+<!-- ##### MACRO GTK_CLOCK_GET_CLASS ##### -->
+<para>
+Macro to return class from object instance.
+</para>
+
+@obj: 
+
+<!-- ##### STRUCT GpeClockFace ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GpeClockFaceClass ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### STRUCT GpeColorDialog ##### -->
 <para>
 The widget struct has no public members which should accessed directly.
+</para>
+
+
+<!-- ##### STRUCT GpeTimeSel ##### -->
+<para>
+
+</para>
+
+@hbox: 
+@hour_adj: 
+@minute_adj: 
+@hour_spin: 
+@minute_spin: 
+@label: 
+@button: 
+@popup: 
+@clock: 
+@changing_time: 
+@hour_edit: 
+@minute_edit: 
+@p_hbox: 
+@dragging: 
+@editing: 
+
+<!-- ##### STRUCT GpeTimeSelClass ##### -->
+<!--
+<para>
+
+</para>
+-->
+
+
+<!-- ##### STRUCT GtkSimpleMenu ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT GtkSimpleMenuClass ##### -->
+<para>
+
 </para>
 
 
@@ -143,11 +925,34 @@ The widget struct has no public members which should accessed directly.
 @b: 
 @a: 
 
+<!-- ##### MACRO SCALING_SIZE ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### MACRO TYPE_COLOR_SLIDER ##### -->
 <para>
 
 </para>
 
+
+<!-- ##### STRUCT box_desc ##### -->
+<para>
+
+</para>
+
+@label: 
+@value: 
+
+<!-- ##### STRUCT box_desc2 ##### -->
+<para>
+
+</para>
+
+@label: 
+@value: 
+@suggestions: 
 
 <!-- ##### FUNCTION color_slider_get_type ##### -->
 <para>
@@ -199,6 +1004,43 @@ The widget struct has no public members which should accessed directly.
 @slider: 
 @map: 
 
+<!-- ##### FUNCTION gpe_application_init ##### -->
+<para>
+Initialise a GPE application. This function is called on startup of a GPE
+application. It replaces gtk_init() which is used in normal GTK applications.
+</para>
+
+@argc: argument count passed to main()
+@argv: argument array passed to main()
+@Returns: TRUE on success, FALSE on failure
+
+<!-- ##### FUNCTION gpe_clock_face_get_shape ##### -->
+<para>
+Returns the shape mask of the given clockface widget. This is used to set up 
+a shaped window only containing a GtkClockFace widget.
+</para>
+
+@clock: Widget
+@Returns: The widget's shape mask
+
+<!-- ##### FUNCTION gpe_clock_face_get_type ##### -->
+<para>
+Returns type for a GpeClockFace widget. Internally used to create a new 
+instance of a GpeClockFace.
+</para>
+
+@Returns: Object type
+
+<!-- ##### FUNCTION gpe_clock_face_new ##### -->
+<para>
+Create a new instance of a GpeClockFace widget.
+</para>
+
+@Param1: Adjustmennt for hour setting.
+@Param2: Adjustment for minute setting.
+@Param3: Adjustment for second setting.
+@Returns: New GpeClockFace widget.
+
 <!-- ##### FUNCTION gpe_clock_face_set_border ##### -->
 <para>
 
@@ -206,6 +1048,46 @@ The widget struct has no public members which should accessed directly.
 
 @clock: 
 @border: 
+
+<!-- ##### FUNCTION gpe_clock_face_set_do_grabs ##### -->
+<para>
+Set wether to allow user interactive moving of the hands or not.
+</para>
+
+@clock: Widget
+@yes: TRUE to allow, FALSE to deny
+
+<!-- ##### FUNCTION gpe_clock_face_set_hand_width ##### -->
+<para>
+Change the width of clock hands.
+</para>
+
+@clock: Widget
+@width: New with in pixels.
+
+<!-- ##### FUNCTION gpe_clock_face_set_label_hours ##### -->
+<para>
+Turn hour labels on the clockface on/off.
+</para>
+
+@clock: Widget
+@yes: TRUE to enable, FALSE to disable
+
+<!-- ##### FUNCTION gpe_clock_face_set_radius ##### -->
+<para>
+Sets the radius of the clockface (in pixels).
+</para>
+
+@clock: Widget
+@radius: New radius.
+
+<!-- ##### FUNCTION gpe_clock_face_set_use_background_image ##### -->
+<para>
+Set if the widget should use a background image.
+</para>
+
+@clock: Widget
+@yes: TRUE to enable, FALSE to disable
 
 <!-- ##### FUNCTION gpe_color_dialog_get_color_gdk ##### -->
 <para>
@@ -249,6 +1131,67 @@ The widget struct has no public members which should accessed directly.
 @color_dialog: 
 @colordesc: 
 
+<!-- ##### FUNCTION gpe_create_dir_browser ##### -->
+<para>
+Creates and opens a directory browser dialog.
+</para>
+
+@title: Dialog title
+@current_path: Path to start with.
+@mode: A selection mode to set in directory browser.
+@handler: Function to handle directory selection.
+@Returns: Dialof widget
+
+<!-- ##### FUNCTION gpe_error_box ##### -->
+<para>
+Creates and shows normal, blocking error dialog.
+</para>
+
+@text: Error message
+
+<!-- ##### FUNCTION gpe_error_box_fmt ##### -->
+<para>
+Shows a formated error message using a printf style argument list.
+</para>
+
+@format: Message format string
+@Varargs: Argument list
+
+<!-- ##### FUNCTION gpe_error_box_nonblocking ##### -->
+<para>
+Creates and shows a non-blocking error message.
+</para>
+
+@text: Error message
+
+<!-- ##### FUNCTION gpe_find_icon ##### -->
+<para>
+Get an icon by name from storage list.
+</para>
+
+@name: Icon name to find.
+@Returns: Pixbuf pointer on success, NULL on failure.
+
+<!-- ##### FUNCTION gpe_find_icon_pixmap ##### -->
+<para>
+[Deprecated - do not use.]
+</para>
+
+@name: 
+@pixmap: 
+@bitmap: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_find_icon_scaled ##### -->
+<para>
+As GTK uses icons in several sizes for different purposes this function
+renders a given icon to one of the common GTK icon sizes.
+</para>
+
+@name: Icon to use.
+@size: GTK icon size to use.
+@Returns: A new allocated pixbuf containing the icon of the desired size.
+
 <!-- ##### FUNCTION gpe_find_icon_scaled_free ##### -->
 <para>
 
@@ -257,6 +1200,579 @@ The widget struct has no public members which should accessed directly.
 @name: 
 @width: 
 @height: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_get_border ##### -->
+<para>
+Get the size of borders around widgets. This is used for borders around windows 
+and dialogs mostly.
+</para>
+
+@Returns: Border size in pixels.
+
+<!-- ##### FUNCTION gpe_get_boxspacing ##### -->
+<para>
+Returns spacings used to separate contents of boxes and tables.
+</para>
+
+@Returns: Spacing in pixels.
+
+<!-- ##### FUNCTION gpe_get_catindent ##### -->
+<para>
+Returns size for identing of GUI categories.
+</para>
+
+@Returns: Size in pixels.
+
+<!-- ##### FUNCTION gpe_get_catspacing ##### -->
+<para>
+Returns spacing between categories.
+</para>
+
+@Returns: Size in pixels.
+
+<!-- ##### FUNCTION gpe_get_client_window_list ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@list: 
+@nr: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_get_win_position ##### -->
+<para>
+Return a window's position.
+</para>
+
+@dpy: Display
+@win: Window to query for position
+@x: Pointer to X position
+@y: Pointer to Y position
+@Returns: TRUE on success, FALSE otherwise.
+
+<!-- ##### FUNCTION gpe_get_window_icon ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@w: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_get_window_name ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@w: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_get_window_property ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@w: 
+@property: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_get_wm_class ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@w: 
+@instance: 
+@class: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_get_wm_leader ##### -->
+<para>
+
+</para>
+
+@dpy: 
+@w: 
+@Returns: 
+
+<!-- ##### STRUCT gpe_icon ##### -->
+<para>
+
+</para>
+
+@shortname: 
+@filename: 
+@pixbuf: 
+
+<!-- ##### FUNCTION gpe_icon_list_item_button_press ##### -->
+<para>
+
+</para>
+
+@i: 
+@b: 
+
+<!-- ##### FUNCTION gpe_icon_list_item_button_release ##### -->
+<para>
+
+</para>
+
+@i: 
+@b: 
+
+<!-- ##### FUNCTION gpe_icon_list_item_get_pixbuf ##### -->
+<para>
+
+</para>
+
+@i: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_icon_list_item_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION gpe_icon_list_item_set_parent ##### -->
+<para>
+
+</para>
+
+@i: 
+@view: 
+
+<!-- ##### FUNCTION gpe_icon_list_item_set_pixbuf ##### -->
+<para>
+
+</para>
+
+@i: 
+@pixbuf: 
+
+<!-- ##### FUNCTION gpe_icon_list_view_add_item ##### -->
+<para>
+Add a new icon item to a GpeIconList widget.
+</para>
+
+@self: Widget
+@title: Short text to label the icon.
+@icon: Icon bitmap file.
+@udata: Pointer to user data passed to signal handlers.
+@Returns: New item widget
+
+<!-- ##### FUNCTION gpe_icon_list_view_add_item_pixbuf ##### -->
+<para>
+Add a new icon item to a GpeIconList widget using a GdkPixbuf for icon
+data instead of a file.
+</para>
+
+@self: Widget
+@title: Short text to label the icon.
+@icon: Icon pixbuf.
+@udata: Pointer to user data passed to signal handlers.
+@Returns: New item widget
+
+<!-- ##### FUNCTION gpe_icon_list_view_clear ##### -->
+<para>
+Removes all items from an icon list.
+</para>
+
+@self: Widget to clear
+
+<!-- ##### FUNCTION gpe_icon_list_view_new ##### -->
+<para>
+This function creates a new GpeIconListView widget.
+</para>
+
+@Returns: New widget
+
+<!-- ##### FUNCTION gpe_icon_list_view_popup_removed ##### -->
+<para>
+
+</para>
+
+@self: 
+
+<!-- ##### FUNCTION gpe_icon_list_view_remove_item ##### -->
+<para>
+Remove an item from a GpeIconListView.
+</para>
+
+@self: Widget
+@item: Item widget
+
+<!-- ##### FUNCTION gpe_icon_list_view_remove_item_with_udata ##### -->
+<para>
+Removes an item from an icon list identified by its user data.
+</para>
+
+@self: Widget
+@udata: Data pointer to identify item.
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_bg ##### -->
+<para>
+Change widget background to a pixmap from a file.
+</para>
+
+@self: Widget
+@bg: Bitmap file to display in background.
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_bg_color ##### -->
+<para>
+Change background color of icon list.
+</para>
+
+@self: Widget
+@color: 32 bit integer defining the color.
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_bg_pixmap ##### -->
+<para>
+Set the widget background from a GdkPixbuf.
+</para>
+
+@self: Widget
+@bg: Pixbuf to use for background.
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_border_color ##### -->
+<para>
+This function is used to set the colour of the icon lists border.
+</para>
+
+@self: Widget
+@color: New border color
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_border_width ##### -->
+<para>
+This function is used to change the width of the icon lists border.
+</para>
+
+@self: Widget
+@width: New width in pixels
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_embolden ##### -->
+<para>
+Turn bold text for selected items on/off.
+</para>
+
+@self: Widget
+@yes: Set TRUE to enable bold text, FALSE to disable.
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_icon_size ##### -->
+<para>
+Changes the size of the icons displayed in the icon list view.
+</para>
+
+@self: Widget
+@size: Size in pixels
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_icon_xmargin ##### -->
+<para>
+Change margin in X dimension for icons inside a GpeIconListView.
+</para>
+
+@self: Widget
+@margin: Margin in pixels
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_item_icon ##### -->
+<para>
+Updates the icon of a list view item.
+</para>
+
+@self: Widget
+@item: Item of icon list to become updated.
+@new_pixbuf: GdkPixbuf containing the new icon.
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_rows ##### -->
+<para>
+Sets the number of rows used for arranging icons.
+</para>
+
+@self: Widget
+@rows: Number of rows
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_show_title ##### -->
+<para>
+Turn titles on/off.
+</para>
+
+@self: Widget
+@yes: Set TRUE to enable, FALSE to disable.
+
+<!-- ##### FUNCTION gpe_icon_list_view_set_textpos ##### -->
+<para>
+This function sets the position of the descriptive text of items.
+</para>
+
+@self: Widget
+@textpos: Text position
+
+<!-- ##### FUNCTION gpe_icon_list_view_update_icon_item_with_udata ##### -->
+<para>
+Updates the icon of an item identified by its user data.
+</para>
+
+@self: Widget
+@pixbuf: GdkPixbuf containing the new icon.
+@udata: Data pointer to identify item.
+
+<!-- ##### FUNCTION gpe_iconlist_add_item ##### -->
+<para>
+Add a new icon item to a GpeIconList widget.
+</para>
+
+@self: Widget
+@title: Short text to label the icon.
+@icon: Icon bitmap file.
+@udata: Pointer to user data passed to signal handlers.
+@Returns: New item widget
+
+<!-- ##### FUNCTION gpe_iconlist_add_item_pixbuf ##### -->
+<para>
+Add a new icon item to a GpeIconList widget using a GdkPixbuf for icon
+data instead of a file.
+</para>
+
+@self: Widget
+@title: Short text to label the icon.
+@icon: Icon pixbuf.
+@udata: Pointer to user data passed to signal handlers.
+@Returns: New item widget
+
+<!-- ##### FUNCTION gpe_iconlist_clear ##### -->
+<para>
+Removes all items from an icon list.
+</para>
+
+@self: Widget to clear
+
+<!-- ##### FUNCTION gpe_iconlist_clicked ##### -->
+<para>
+Emits the clicked signal for a GpeIconList widget.
+</para>
+
+@self: Iconlist widget
+@udata: User data to pass to the signal handler.
+
+<!-- ##### MACRO gpe_iconlist_connect__clicked ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+
+<!-- ##### MACRO gpe_iconlist_connect__show_popup ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+
+<!-- ##### MACRO gpe_iconlist_connect_after__clicked ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+
+<!-- ##### MACRO gpe_iconlist_connect_after__show_popup ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+
+<!-- ##### MACRO gpe_iconlist_connect_data__clicked ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+@destroy_data: 
+@flags: 
+
+<!-- ##### MACRO gpe_iconlist_connect_data__show_popup ##### -->
+<para>
+
+</para>
+
+@object: 
+@func: 
+@data: 
+@destroy_data: 
+@flags: 
+
+<!-- ##### FUNCTION gpe_iconlist_new ##### -->
+<para>
+This function creates a new GpeIconList widget.
+</para>
+
+@Returns: New widget
+
+<!-- ##### FUNCTION gpe_iconlist_popup_removed ##### -->
+<para>
+
+</para>
+
+@self: 
+
+<!-- ##### FUNCTION gpe_iconlist_remove_item ##### -->
+<para>
+Remove an item from a GpeIconList.
+</para>
+
+@self: Widget
+@item: Item widget
+
+<!-- ##### FUNCTION gpe_iconlist_set_bg ##### -->
+<para>
+Change widget background to a pixmap from a file.
+</para>
+
+@self: Widget
+@bg: Bitmap file to display in background.
+
+<!-- ##### FUNCTION gpe_iconlist_set_bg_color ##### -->
+<para>
+Change background color of icon list.
+</para>
+
+@self: Widget
+@color: 32 bit integer defining the color.
+
+<!-- ##### FUNCTION gpe_iconlist_set_bg_pixmap ##### -->
+<para>
+Set the widget background from a GdkPixbuf.
+</para>
+
+@self: Widget
+@bg: Pixbuf to use for background.
+
+<!-- ##### FUNCTION gpe_iconlist_set_embolden ##### -->
+<para>
+Turn bold text for selected items on/off.
+</para>
+
+@self: Widget
+@yes: Set TRUE to enable bold text, FALSE to disable.
+
+<!-- ##### FUNCTION gpe_iconlist_set_icon_size ##### -->
+<para>
+Changes the size of the icons displayed in the icon list.
+</para>
+
+@self: Widget
+@size: Size in pixels
+
+<!-- ##### FUNCTION gpe_iconlist_set_icon_xmargin ##### -->
+<para>
+Change margin in X dimension for icons inside a GpeIconList.
+</para>
+
+@self: Widget
+@margin: Margin in pixels
+
+<!-- ##### FUNCTION gpe_iconlist_set_show_title ##### -->
+<para>
+Turn titles on/off.
+</para>
+
+@self: Widget
+@yes: Set TRUE to enable, FALSE to disable.
+
+<!-- ##### FUNCTION gpe_iconlist_show_popup ##### -->
+<para>
+Emits the show-popup signal for a GpeIconList widget.
+</para>
+
+@self: Iconlist widget
+@udata: User data to pass to the signal handler.
+
+<!-- ##### FUNCTION gpe_load_icons ##### -->
+<para>
+This function is used to load a set of icons into memory and makes them 
+accessible for the applications. Usually you will have a fixed set of pixmaps
+to load for each application on startup. The function will display an error 
+message if loading of an icon fails.
+</para>
+
+@Param1: List of icon defintions, terminated by NULL.
+@Returns: TRUE on success.
+
+<!-- ##### FUNCTION gpe_perror_box ##### -->
+<para>
+Shows an error message with perror style information.
+</para>
+
+@text: Error message
+
+<!-- ##### FUNCTION gpe_perror_box_nonblocking ##### -->
+<para>
+Shows an error message with perror style information, non-blocking version.
+</para>
+
+@text: Error message
+
+<!-- ##### FUNCTION gpe_popup_infoprint ##### -->
+<para>
+Displays an infoprint on a given X display. Usually you want to use current
+X display which is determined by GDK_DISPLAY().
+</para>
+
+@dpy: Xlib display
+@s: Message to show
+
+<!-- ##### FUNCTION gpe_popup_menu_position ##### -->
+<para>
+This functions is used to determine a popup menu's position on screen. This is
+usually used for constructing popup menus.
+</para>
+
+@menu: Popup menu to get position of.
+@x: Pointer to X position
+@y: Pointer to Y position
+@push: (unused)
+@p: Widget
+
+<!-- ##### FUNCTION gpe_question_ask ##### -->
+<para>
+Opens a blocking question dialog presenting a variable set of buttons to select
+an answer from. The buttons may contain icons. Button definitions are passed
+to the function in a list containing both label text and icon name for each button.
+The label ist the first part of the button definition, the icon name the second.
+To indicate a stock icon prepend the name by a '!' character.
+It is possible to add buttons without icons setting using NULL for the icon
+parameter.
+</para>
+
+@qn: Question text
+@title: Dialog title
+@iconname: GPE icon to use (needs to be loaded before calling this function)
+@Varargs: Variable list of icon definitions. Terminate list with NULL.
+@Returns: Position of button clicked.
+
+<!-- ##### FUNCTION gpe_question_ask_yn ##### -->
+<para>
+[Deprecated, do not use.]
+</para>
+
+@qn: 
 @Returns: 
 
 <!-- ##### FUNCTION gpe_render_icon ##### -->
@@ -272,12 +1788,170 @@ The widget struct has no public members which should accessed directly.
 =======
 >>>>>>> 1.4
 
+<!-- ##### FUNCTION gpe_saved_args ##### -->
+<para>
+Returns the arguments passed to gpe_application_init(). The returned values are
+pointers to the data stored by gpe_application_init(), don't modify them if
+you don't exactly know what are you doing.
+</para>
+
+@argc: Filled with number of arguments in argv.
+@argv: Argument vector.
+
 <!-- ##### FUNCTION gpe_set_theme ##### -->
 <para>
 
 </para>
 
 @theme_name: 
+
+<!-- ##### FUNCTION gpe_set_window_icon ##### -->
+<para>
+Set the icon of a window from a named icon in storage list.
+</para>
+
+@window: Window to set icon for.
+@icon: Icon name.
+
+<!-- ##### FUNCTION gpe_show_help ##### -->
+<para>
+</para>
+
+@appname: 
+@topic: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_stylus_mode ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION gpe_system_tray_cancel_message ##### -->
+<para>
+
+</para>
+
+@window: 
+@id: 
+
+<!-- ##### FUNCTION gpe_system_tray_dock ##### -->
+<para>
+
+</para>
+
+@window: 
+
+<!-- ##### FUNCTION gpe_system_tray_send_message ##### -->
+<para>
+
+</para>
+
+@window: 
+@text: 
+@timeout: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_time_sel_get_time ##### -->
+<para>
+Retrieve current time value from a GpeTimeSel. The time is split up into
+separate values for hour and minute.
+</para>
+
+@sel: Widget
+@hour: Value to hold selected hour.
+@minute: Value to hold selected minute.
+
+<!-- ##### FUNCTION gpe_time_sel_new ##### -->
+<para>
+This method is used to create a new GpeTimeSel widget.
+</para>
+
+@Returns: New widget
+
+<!-- ##### FUNCTION gpe_time_sel_set_time ##### -->
+<para>
+Set the time of the time selectior. We set hour and minute in separate 
+values passed to the method.
+</para>
+
+@sel: Widget
+@hour: Hour value to set.
+@minute: Minute value to set.
+
+<!-- ##### FUNCTION gpe_try_find_icon ##### -->
+<para>
+This function is used to get an icon which is not necessarily loaded when 
+the function is called. The icon is taken from internal storage if it is 
+already available and tried to load from a file with the same name like 
+the name passed to the function otherwise.
+</para>
+
+@name: Icon name to get.
+@error: Returned error information if function fails.
+@Returns: Pixbuf of icon or NULL on failure.
+
+<!-- ##### FUNCTION gpe_window_list_get_clients ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Returns: 
+
+<!-- ##### FUNCTION gpe_window_list_new ##### -->
+<para>
+
+</para>
+
+@Param1: 
+@Returns: 
+
+<!-- ##### FUNCTION gtk_date_combo_clear ##### -->
+<para>
+Remove all settings/values from a date combo.
+</para>
+
+@dp: Widget
+
+<!-- ##### FUNCTION gtk_date_combo_ignore_year ##### -->
+<para>
+If this function is enabled the widget will show and take dates without a 
+year value. This is used for recurring events like holidays and birthdays.
+Default behaviour is to have dates including a year.
+</para>
+
+@Param1: Widget
+@Param2: TRUE to enable, FALSE to disable
+
+<!-- ##### FUNCTION gtk_date_combo_new ##### -->
+<para>
+Creates a new GtkDateCombo widget.
+</para>
+
+@Returns: New Widget
+
+<!-- ##### FUNCTION gtk_date_combo_set_date ##### -->
+<para>
+Set the date of a GtkDateCombo widget. The date is defined with three separate 
+values representating year, month and date.
+</para>
+
+@Param1: Widget
+@year: Year value to set
+@month: Month value
+@day: Day
+
+<!-- ##### FUNCTION gtk_date_combo_week_starts_monday ##### -->
+<para>
+This method changes the display behaviour of the calendar popup.
+It will display a week starting sunday if set to FALSE, if set to TRUE
+weeks will be displayed starting monday.
+</para>
+
+@Param1: Widget
+@Param2: TRUE to have weeks starting monday, FALSE otherwise.
 
 <!-- ##### FUNCTION gtk_gpe_pixmap_get ##### -->
 <para>
@@ -338,6 +2012,31 @@ The widget struct has no public members which should accessed directly.
 @pixmap: 
 @val: 
 
+<!-- ##### FUNCTION gtk_label_new_with_translation ##### -->
+<para>
+
+</para>
+
+@domain: 
+@string: 
+@Returns: 
+
+<!-- ##### FUNCTION gtk_simple_menu_append_item ##### -->
+<para>
+
+</para>
+
+@sel: 
+@item: 
+@items: 
+
+<!-- ##### FUNCTION gtk_simple_menu_flush ##### -->
+<para>
+
+</para>
+
+@sel: 
+
 <!-- ##### FUNCTION gtk_simple_menu_get_result ##### -->
 <para>
 
@@ -345,4 +2044,107 @@ The widget struct has no public members which should accessed directly.
 
 @sel: 
 @Returns: 
+
+<!-- ##### FUNCTION gtk_simple_menu_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+<!-- ##### FUNCTION gtk_widget_add_translation_hook ##### -->
+<para>
+
+</para>
+
+@w: 
+@func: 
+@data: 
+
+<!-- ##### FUNCTION init_spacing ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION popup_menu_button_new ##### -->
+<para>
+Create a new menu button containing a given widget.
+</para>
+
+@child: Widget to put into the menu button.
+@Returns: New menu button.
+
+<!-- ##### FUNCTION popup_menu_button_new_from_stock ##### -->
+<para>
+Create a menu buton containing a stock item.
+</para>
+
+@stock_id: Id of the stock item to use.
+@Returns: New menu button.
+
+<!-- ##### FUNCTION popup_menu_button_new_type_color ##### -->
+<para>
+Create a menu button for color selection.
+</para>
+
+@Returns: A new menu button.
+
+<!-- ##### FUNCTION popup_menu_button_new_type_font ##### -->
+<para>
+Create a menu button for font selection.
+</para>
+
+@Returns: A new menu button.
+
+<!-- ##### FUNCTION popup_menu_close ##### -->
+<para>
+Close a popup menu.
+</para>
+
+@parent_button: Menu button the menu belongs to.
+
+<!-- ##### FUNCTION smallbox ##### -->
+<para>
+This function displays an input dialog box to query a user for text input.
+</para>
+
+@title: Dialog title
+@labeltext: Query text displayed inside the box.
+@dval: Default value
+@Returns: Entered text if user taps OK, NULL otherwise.
+
+<!-- ##### FUNCTION smallbox_x ##### -->
+<para>
+
+</para>
+
+@title: 
+@d: 
+@Returns: 
+
+<!-- ##### FUNCTION smallbox_x2 ##### -->
+<para>
+
+</para>
+
+@title: 
+@d: 
+@Returns: 
+
+<!-- ##### ENUM t_gpe_textpos ##### -->
+<para>
+Data type to define text postioning relative to a displayed icon.
+</para>
+
+@GPE_TEXT_BELOW: Show text below the icon.
+@GPE_TEXT_RIGHT: Show text right besides the icon.
+
+<!-- ##### FUNCTION toggle_popup_menu ##### -->
+<para>
+This function the status of the menu attached to a menu button. If the menu is
+shown the function hides it, if it is hidden the function shows it.
+</para>
+
+@parent_button: Menu button the menu belongs to.
 
