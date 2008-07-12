@@ -2114,6 +2114,9 @@ main (int argc, char *argv[])
           exit (1);
         }
 
+      if (gpe_pim_categories_init () == FALSE)
+	exit (1);
+
       void simple_error_output (EventDB *edb, char *err)
 	{
 	  fprintf (stderr, "%s\n", err);

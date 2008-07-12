@@ -1,3 +1,8 @@
+2008-07-12  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (main): Initialise categories library before processing command
+	line options such as -e
+
 2008-06-23  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (log_handler): Add the ability to log glib messages to a file,
