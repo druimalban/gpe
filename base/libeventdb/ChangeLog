@@ -1,3 +1,9 @@
+2008-07-12  Florian Boor <florian@linuxtogo.org>
+
+	* event-db.c, event.h, event-db.h:
+	Replace macros LIVE, RW, SIGNAL_ERROR, SIGNAL_ERROR_GERROR
+	with inline functions. Fixes #156
+
 2008-06-23  Graham Cobb  <g+770@cobb.uk.net>
 
 	* Makefile.am (libeventdb_la_LDFLAGS): Increase version to 2.1.0.

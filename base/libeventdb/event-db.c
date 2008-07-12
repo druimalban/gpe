@@ -799,3 +799,49 @@ event_db_list_event_calendars (EventDB *edb, GError **error)
 
   return l;
 }
+
+
+inline void SIGNAL_ERROR(EventDB *edb, GError **gerror, gchar *fmt , ... ) 
+{ 
+  va_list args;
+  va_start (args, fmt);
+
+  char *__e = g_strdup_vprintf (fmt, args);
+  va_end (args);
+  if (gerror)
+    g_set_error (gerror, ERROR_DOMAIN (), 0, 
+                 "%s: %s", __func__, __e);
+  else
+   {
+      char *buffer = g_strdup_printf ("%s: %s", __func__, __e);
+      g_signal_emit
+        (edb, EVENT_DB_GET_CLASS (edb)->error_signal, 0, buffer);
+      g_free (buffer);
+    }
+  g_free (__e);
+}
+
+inline void SIGNAL_ERROR_GERROR(EventDB *edb, GError **dest, GError *src)
+{
+  if ((dest))
+      g_propagate_error ((dest), (src));
+  else
+    {
+      char *buffer = g_strdup_printf ("%s:%s", __func__, (src)->message);
+      g_error_free ((src));
+      g_signal_emit
+        ((edb), EVENT_DB_GET_CLASS (edb)->error_signal, 0, buffer);
+      g_free (buffer);
+    }
+}
+
+inline void LIVE(EventSource *ev) 
+{
+  g_assert (! EVENT (ev)->dead);
+}
+
+inline void RW(EventSource *ev) 
+{
+  g_assert (! ev->edb->readonly);
+}
+

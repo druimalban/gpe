@@ -20,41 +20,6 @@
 #include "event.h"
 
 #define ERROR_DOMAIN() g_quark_from_static_string ("libeventdb")
-/* If an error occurs and the passed GError is NULL, we propagate
-   error by emitting a signal on EDB.  This must be used instead of
-   g_set_error.  */
-#define SIGNAL_ERROR(edb, gerror, args , ...) \
-  do \
-    { \
-      char *__e = g_strdup_printf (args, ##__VA_ARGS__); \
-      if (gerror) \
-        g_set_error (gerror, ERROR_DOMAIN (), 0, \
-                     "%s: %s", __func__, __e); \
-      else \
-        { \
-          char *buffer = g_strdup_printf ("%s: %s", __func__, __e); \
-          g_signal_emit \
-            (edb, EVENT_DB_GET_CLASS (edb)->error_signal, 0, buffer); \
-          g_free (buffer); \
-        } \
-      g_free (__e); \
-    } \
-  while (0)
-#define SIGNAL_ERROR_GERROR(edb, dest, src) \
-  do \
-    { \
-      if ((dest)) \
-        g_propagate_error ((dest), (src)); \
-      else \
-        { \
-          char *buffer = g_strdup_printf ("%s:%s", __func__, (src)->message); \
-          g_error_free ((src)); \
-          g_signal_emit \
-            ((edb), EVENT_DB_GET_CLASS (edb)->error_signal, 0, buffer); \
-          g_free (buffer); \
-        } \
-    } \
-  while (0)
 
 /* Enumerate the events in the event database EDB which MAY occur
    between (PERIOD_START and PERIOD_END].  If ALARMS is true, returns
@@ -244,4 +209,13 @@ extern void event_source_toggle_ref_notify (gpointer data,
 					    gboolean is_last_ref)
      __attribute__ ((visibility ("hidden")));
 
+/* If an error occurs and the passed GError is NULL, we propagate
+   error by emitting a signal on EDB.  This must be used instead of
+   g_set_error.  */
+extern inline void SIGNAL_ERROR(EventDB *edb, GError **gerror, gchar *fmt , ... );
+extern inline void SIGNAL_ERROR_GERROR(EventDB *edb, GError **dest, GError *src);
+
+extern inline void LIVE(EventSource *ev);
+extern inline void RW(EventSource *ev);
 #endif
+
