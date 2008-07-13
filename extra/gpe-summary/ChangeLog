@@ -1,3 +1,8 @@
+2008-07-13  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpesummary.c: Fix handling of events which cross day boundary (bug 206).
+	Change handling of all day events so they are reported on each day.
+
 2008-06-24  Lars Persson Fink  <lars.p.fink@gmail.com>
 
        * po/sv.po, configure.ac: Added Swedish translation

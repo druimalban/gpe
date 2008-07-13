@@ -558,10 +558,15 @@ gint add_events(GtkWidget *vbox,EventDB *event_db, time_t start, time_t stop, gc
 		 	  tm=*localtime(&start);
 		  	  strftime (buf, sizeof (buf), "%a", &tm); //%d.%m 
 			}
-			if ((event_get_start(ev)-start)>0) ignoreEvent=TRUE;
+		} else {
+		  // Ignore events which start before the start time (currently in progress)
+		  // or after the end time (should not happen?).
+		  if (event_get_start(ev) < start) ignoreEvent=TRUE;
+		  if (event_get_start(ev) > stop) ignoreEvent=TRUE;
 		}
 		strcat(buf," ");
 		  
+
 		if (ignoreEvent==FALSE) {
 			
 			count+=1;
@@ -607,10 +612,10 @@ gint add_events(GtkWidget *vbox,EventDB *event_db, time_t start, time_t stop, gc
 
 gint show_events(GtkWidget *vbox, gint count) {
         struct tm tm;
-	time_t start = time (NULL);
+	time_t start = time (NULL); // Now
 	memset (&tm, 0, sizeof (tm));	
 	tm=*localtime(&start);
-	time_t stop = time (NULL)+(23-tm.tm_hour)*3600+(59-tm.tm_min)*60+59-tm.tm_sec;
+	time_t stop = start + (23-tm.tm_hour)*3600+(59-tm.tm_min)*60+59-tm.tm_sec; // End of today
 	
 	/*char buf[200];
 	tm=*localtime(&stop);
@@ -618,7 +623,7 @@ gint show_events(GtkWidget *vbox, gint count) {
 	g_warning("endtime");
 	g_warning(buf);*/
 	
-	// Note we open the event DB (if we can find it), even if we are not showing appointments
+	// Note we re-open the event DB (if we can find it), even if we are not showing appointments
 	if (!calendar_file) calendar_file = CALENDAR_FILE();
 	if (event_db) {
 	  g_object_unref(event_db);
@@ -639,7 +644,7 @@ gint show_events(GtkWidget *vbox, gint count) {
 	//count=add_events(vbox,event_db,stop+2,stop+3600*24-2,"Tomorrow",titletoshow, count);
 		
 	//g_warning("Tomorrow %i",count);
-	stop=stop+2; //Make sure you are in the right day;
+	stop++; // Tomorrow
 	while ((count<doshow_countitems)&&(stop<start+3600*24*6)) {
 		char buf2[20];
 		//g_warning("Tomorrow %i",count);
@@ -650,7 +655,7 @@ gint show_events(GtkWidget *vbox, gint count) {
 		strftime (buf2, sizeof(buf2), "<i>%A</i>", &tm);
 		
 		titletoshow=show_birthdays(vbox,stop+20,buf2);
-		count=add_events(vbox,event_db,stop+50,stop+3600*24-50,buf2,titletoshow, count);
+		count=add_events(vbox,event_db,stop,stop+3600*24-1,buf2,titletoshow, count);
 		stop=stop+3600*24;
 	}
 
