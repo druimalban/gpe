@@ -1,87 +1,88 @@
-# Polish translation of gpe-go
-# Copyright (C) 2003,2006 The Free Software Foundation, Inc.
+# Japanese translations for gpe-go package
+# gpe-go パッケージに対する和訳.
+# Copyright (C) 2006 THE gpe-go'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-go package.
-# Arkadiusz Lipiec <A.Lipiec@elka.pw.edu.pl>, 2003
-# Andrzej Krzysztofowicz <ankry@mif.pg.gda.pl>, 2006
+# Takeshi Hamasaki <hma@syd.odn.ne.jp>, 2006.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-go 0.05\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-11-09 22:28+0200\n"
-"PO-Revision-Date: 2006-12-21 14:56+0100\n"
-"Last-Translator: Arkadiusz Lipiec <A.Lipiec@elka.pw.edu.pl>\n"
-"Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2006-09-03 23:59+0900\n"
+"Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: gpe-go.c:754
 #, c-format
 msgid "B:%d  W:%d "
-msgstr "B:%d  W:%d "
+msgstr "黒:%d  白:%d "
 
 #: gpe-go.c:1083
 #, c-format
 msgid "Cannot save the game into %s."
-msgstr "Nie mo�na zapisa� gry do pliku %s."
+msgstr "試合を %s に保存できません。"
 
 #: gpe-go.c:1357
 msgid "New..."
-msgstr "Nowy..."
+msgstr "新規..."
 
 #: gpe-go.c:1358
 msgid "Save..."
-msgstr "Zapisz..."
+msgstr "保存..."
 
 #: gpe-go.c:1359
 msgid "Load..."
-msgstr "Za�aduj..."
+msgstr "読み込み..."
 
 #: gpe-go.c:1419
 msgid "Game menu"
-msgstr "Menu gry"
+msgstr "試合メニュー"
 
 #: gpe-go.c:1427
 msgid "First"
-msgstr "Pierwszy"
+msgstr "最初の局面"
 
 #: gpe-go.c:1428 gpe-go.c:1429
 msgid "Go to the beginning of the game"
-msgstr "Id� na pocz�tek gry"
+msgstr "対局の最初へ"
 
 #: gpe-go.c:1435
 msgid "Undo"
-msgstr "Cofnij"
+msgstr "元に戻す"
 
 #: gpe-go.c:1441
 msgid "Redo"
-msgstr "Pon�w"
+msgstr "やり直す"
 
 #: gpe-go.c:1447
 msgid "Last"
-msgstr "Ostatni"
+msgstr "最近の局面"
 
 #: gpe-go.c:1448 gpe-go.c:1449
 msgid "Go to the end of the game"
-msgstr "Id� na koniec gry"
+msgstr "終局へ"
 
 #: gpe-go.c:1457
 msgid "B:0  W:0 "
-msgstr "B:0  W:0 "
+msgstr "黒:0  白:0 "
 
 #: gpe-go.c:1467
 msgid "Pass"
-msgstr ""
+msgstr "パス"
 
 #: gpe-go.c:1467
 msgid "Pass your turn"
-msgstr ""
+msgstr "パスする"
 
 #: gpe-go.desktop.in.h:1
 msgid "GPE Go"
-msgstr "GPE Go"
+msgstr "GPE 碁"
 
 #: gpe-go.desktop.in.h:2
 msgid "Go"
-msgstr "Go"
+msgstr "碁"

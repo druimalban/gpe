@@ -1,82 +1,81 @@
-# Polish translation of gpe-go
-# Copyright (C) 2003,2006 The Free Software Foundation, Inc.
+# Slovak translation of gpe-go.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-go package.
-# Arkadiusz Lipiec <A.Lipiec@elka.pw.edu.pl>, 2003
-# Andrzej Krzysztofowicz <ankry@mif.pg.gda.pl>, 2006
+# Ivan Masár <helix84@centrum.sk>, 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-go 0.05\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-11-09 22:28+0200\n"
-"PO-Revision-Date: 2006-12-21 14:56+0100\n"
-"Last-Translator: Arkadiusz Lipiec <A.Lipiec@elka.pw.edu.pl>\n"
-"Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2007-09-02 01:31+0100\n"
+"Last-Translator: Ivan Masár <helix84@centrum.sk>\n"
+"Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: gpe-go.c:754
 #, c-format
 msgid "B:%d  W:%d "
-msgstr "B:%d  W:%d "
+msgstr "Č:%d B:%d"
 
 #: gpe-go.c:1083
 #, c-format
 msgid "Cannot save the game into %s."
-msgstr "Nie mo�na zapisa� gry do pliku %s."
+msgstr "Nie je možné uložiť hru do %s."
 
 #: gpe-go.c:1357
 msgid "New..."
-msgstr "Nowy..."
+msgstr "Nová..."
 
 #: gpe-go.c:1358
 msgid "Save..."
-msgstr "Zapisz..."
+msgstr "Uložiť..."
 
 #: gpe-go.c:1359
 msgid "Load..."
-msgstr "Za�aduj..."
+msgstr "Načítať..."
 
 #: gpe-go.c:1419
 msgid "Game menu"
-msgstr "Menu gry"
+msgstr "Ponuka hry"
 
 #: gpe-go.c:1427
 msgid "First"
-msgstr "Pierwszy"
+msgstr "Prvý"
 
 #: gpe-go.c:1428 gpe-go.c:1429
 msgid "Go to the beginning of the game"
-msgstr "Id� na pocz�tek gry"
+msgstr "Prejsť na začiatok hry"
 
 #: gpe-go.c:1435
 msgid "Undo"
-msgstr "Cofnij"
+msgstr "Späť"
 
 #: gpe-go.c:1441
 msgid "Redo"
-msgstr "Pon�w"
+msgstr "Znova"
 
 #: gpe-go.c:1447
 msgid "Last"
-msgstr "Ostatni"
+msgstr "Posledný"
 
 #: gpe-go.c:1448 gpe-go.c:1449
 msgid "Go to the end of the game"
-msgstr "Id� na koniec gry"
+msgstr "Prejsť na koniec hry"
 
 #: gpe-go.c:1457
 msgid "B:0  W:0 "
-msgstr "B:0  W:0 "
+msgstr "Č:0  B:0 "
 
 #: gpe-go.c:1467
 msgid "Pass"
-msgstr ""
+msgstr "Vynechať ťah"
 
 #: gpe-go.c:1467
 msgid "Pass your turn"
-msgstr ""
+msgstr "Vynechať ťah"
 
 #: gpe-go.desktop.in.h:1
 msgid "GPE Go"

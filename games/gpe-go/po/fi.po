@@ -1,86 +1,86 @@
-# Polish translation of gpe-go
-# Copyright (C) 2003,2006 The Free Software Foundation, Inc.
+# translation of gpe-go-0.05.pot to Finnish
+# Copyright ¬© 2008 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-go package.
-# Arkadiusz Lipiec <A.Lipiec@elka.pw.edu.pl>, 2003
-# Andrzej Krzysztofowicz <ankry@mif.pg.gda.pl>, 2006
 #
+# Jorma Karvonen <karvjorm@users.sf.net>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-go 0.05\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-11-09 22:28+0200\n"
-"PO-Revision-Date: 2006-12-21 14:56+0100\n"
-"Last-Translator: Arkadiusz Lipiec <A.Lipiec@elka.pw.edu.pl>\n"
-"Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2008-01-01 16:05+0200\n"
+"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #: gpe-go.c:754
 #, c-format
 msgid "B:%d  W:%d "
-msgstr "B:%d  W:%d "
+msgstr "M:%d  V:%d "
 
 #: gpe-go.c:1083
 #, c-format
 msgid "Cannot save the game into %s."
-msgstr "Nie moøna zapisaÊ gry do pliku %s."
+msgstr "Ei voida tallentaa peli√§ tiedostoon %s."
 
 #: gpe-go.c:1357
 msgid "New..."
-msgstr "Nowy..."
+msgstr "Uusi..."
 
 #: gpe-go.c:1358
 msgid "Save..."
-msgstr "Zapisz..."
+msgstr "Tallenna..."
 
 #: gpe-go.c:1359
 msgid "Load..."
-msgstr "Za≥aduj..."
+msgstr "Lataa..."
 
 #: gpe-go.c:1419
 msgid "Game menu"
-msgstr "Menu gry"
+msgstr "Pelivalikko"
 
 #: gpe-go.c:1427
 msgid "First"
-msgstr "Pierwszy"
+msgstr "Ensimm√§inen"
 
 #: gpe-go.c:1428 gpe-go.c:1429
 msgid "Go to the beginning of the game"
-msgstr "Idº na pocz±tek gry"
+msgstr "Siirry pelin alkuun"
 
 #: gpe-go.c:1435
 msgid "Undo"
-msgstr "Cofnij"
+msgstr "Peru"
 
 #: gpe-go.c:1441
 msgid "Redo"
-msgstr "PonÛw"
+msgstr "Tee uudelleen"
 
 #: gpe-go.c:1447
 msgid "Last"
-msgstr "Ostatni"
+msgstr "Viimeinen"
 
 #: gpe-go.c:1448 gpe-go.c:1449
 msgid "Go to the end of the game"
-msgstr "Idº na koniec gry"
+msgstr "Siirry pelin loppuun"
 
 #: gpe-go.c:1457
 msgid "B:0  W:0 "
-msgstr "B:0  W:0 "
+msgstr "M:0  V:0 "
 
 #: gpe-go.c:1467
 msgid "Pass"
-msgstr ""
+msgstr "J√§t√§ v√§liin"
 
 #: gpe-go.c:1467
 msgid "Pass your turn"
-msgstr ""
+msgstr "J√§t√§ vuorosi v√§liin"
 
 #: gpe-go.desktop.in.h:1
 msgid "GPE Go"
-msgstr "GPE Go"
+msgstr "GPE Go-peli"
 
 #: gpe-go.desktop.in.h:2
 msgid "Go"

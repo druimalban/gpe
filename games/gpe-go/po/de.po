@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-go 0.04\n"
-"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"POT-Creation-Date: 2003-10-12 22:18+0300\n"
 "PO-Revision-Date: 2003-10-14 21:38+0200\n"
 "Last-Translator: Colin Marquardt <colin@marquardt-home.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -15,70 +15,42 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Report-Msgid-Bugs-To: \n"
 
-#: gpe-go.c:754
+#: gpe-go.c:734
 #, c-format
 msgid "B:%d  W:%d "
 msgstr "S:%d  W:%d "
 
-#: gpe-go.c:1083
+#: gpe-go.c:967
 #, c-format
 msgid "Cannot save the game into %s."
 msgstr "Kann Spiel nicht nach %s speichern."
 
-#: gpe-go.c:1357
-msgid "New..."
-msgstr ""
-
-#: gpe-go.c:1358
-#, fuzzy
-msgid "Save..."
-msgstr "Speichern unter..."
-
-#: gpe-go.c:1359
-msgid "Load..."
-msgstr ""
-
-#: gpe-go.c:1419
-msgid "Game menu"
-msgstr ""
-
-#: gpe-go.c:1427
-msgid "First"
-msgstr ""
-
-#: gpe-go.c:1428 gpe-go.c:1429
-msgid "Go to the beginning of the game"
-msgstr ""
-
-#: gpe-go.c:1435
+#: gpe-go.c:1066
 msgid "Undo"
 msgstr "Rückgängig"
 
-#: gpe-go.c:1441
+#: gpe-go.c:1080
 msgid "Redo"
 msgstr "Wiederholen"
 
-#: gpe-go.c:1447
-msgid "Last"
-msgstr ""
-
-#: gpe-go.c:1448 gpe-go.c:1449
-msgid "Go to the end of the game"
-msgstr ""
-
-#: gpe-go.c:1457
+#: gpe-go.c:1088
 msgid "B:0  W:0 "
 msgstr "S:0  W:0 "
 
-#: gpe-go.c:1467
-msgid "Pass"
-msgstr ""
+#: gpe-go.c:1109
+msgid "PASS"
+msgstr "Passen"
 
-#: gpe-go.c:1467
-msgid "Pass your turn"
-msgstr ""
+#: gpe-go.c:1122
+msgid "Save"
+msgstr "Speichern"
 
-#: gpe-go.desktop.in.h:1
+#: gpe-go.c:1126
+msgid "Save as..."
+msgstr "Speichern unter..."
+
+#: gpe-go.desktop.in.h:1 gpe-go-9.desktop.in.h:1 gpe-go-13.desktop.in.h:1
+#: gpe-go-19.desktop.in.h:1
 msgid "GPE Go"
 msgstr "GPE Go"
 
@@ -86,17 +58,14 @@ msgstr "GPE Go"
 msgid "Go"
 msgstr "Go"
 
-#~ msgid "PASS"
-#~ msgstr "Passen"
+#: gpe-go-9.desktop.in.h:2
+msgid "Go 9"
+msgstr "Go 9"
 
-#~ msgid "Save"
-#~ msgstr "Speichern"
+#: gpe-go-13.desktop.in.h:2
+msgid "Go 13"
+msgstr "Go 13"
 
-#~ msgid "Go 9"
-#~ msgstr "Go 9"
-
-#~ msgid "Go 13"
-#~ msgstr "Go 13"
-
-#~ msgid "Go 19"
-#~ msgstr "Go 19"
+#: gpe-go-19.desktop.in.h:2
+msgid "Go 19"
+msgstr "Go 19"

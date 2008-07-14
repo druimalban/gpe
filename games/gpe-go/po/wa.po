@@ -1,86 +1,86 @@
-# Polish translation of gpe-go
-# Copyright (C) 2003,2006 The Free Software Foundation, Inc.
-# This file is distributed under the same license as the gpe-go package.
-# Arkadiusz Lipiec <A.Lipiec@elka.pw.edu.pl>, 2003
-# Andrzej Krzysztofowicz <ankry@mif.pg.gda.pl>, 2006
+# Translation of gpe-su into the walloon language.
+# Copyright (C) 2007 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Pablo Saratxaga <pablo@walon.org>, 2007.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-go 0.05\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-11-09 22:28+0200\n"
-"PO-Revision-Date: 2006-12-21 14:56+0100\n"
-"Last-Translator: Arkadiusz Lipiec <A.Lipiec@elka.pw.edu.pl>\n"
-"Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2007-08-29 18:24+0200\n"
+"Last-Translator: Pablo Saratxaga <pablo@walon.org>\n"
+"Language-Team: Walloon <linux-wa@walon.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.0.2\n"
 
 #: gpe-go.c:754
 #, c-format
 msgid "B:%d  W:%d "
-msgstr "B:%d  W:%d "
+msgstr "N:%d  B:%d "
 
 #: gpe-go.c:1083
 #, c-format
 msgid "Cannot save the game into %s."
-msgstr "Nie moøna zapisaÊ gry do pliku %s."
+msgstr "Dji n' sai schaper l' djeu e %s."
 
 #: gpe-go.c:1357
 msgid "New..."
-msgstr "Nowy..."
+msgstr "Novea..."
 
 #: gpe-go.c:1358
 msgid "Save..."
-msgstr "Zapisz..."
+msgstr "Schaper..."
 
 #: gpe-go.c:1359
 msgid "Load..."
-msgstr "Za≥aduj..."
+msgstr "Tcherdj√Æ..."
 
 #: gpe-go.c:1419
 msgid "Game menu"
-msgstr "Menu gry"
+msgstr "Menu do djeu"
 
 #: gpe-go.c:1427
 msgid "First"
-msgstr "Pierwszy"
+msgstr "Prum√Æ"
 
 #: gpe-go.c:1428 gpe-go.c:1429
 msgid "Go to the beginning of the game"
-msgstr "Idº na pocz±tek gry"
+msgstr "Potch√Æ √• cmince do djeu"
 
 #: gpe-go.c:1435
 msgid "Undo"
-msgstr "Cofnij"
+msgstr "Disf√©"
 
 #: gpe-go.c:1441
 msgid "Redo"
-msgstr "PonÛw"
+msgstr "Rif√©"
 
 #: gpe-go.c:1447
 msgid "Last"
-msgstr "Ostatni"
+msgstr "Dierin"
 
 #: gpe-go.c:1448 gpe-go.c:1449
 msgid "Go to the end of the game"
-msgstr "Idº na koniec gry"
+msgstr "Potch√Æ al f√©n do djeu"
 
 #: gpe-go.c:1457
 msgid "B:0  W:0 "
-msgstr "B:0  W:0 "
+msgstr "N:0  B:0 "
 
 #: gpe-go.c:1467
 msgid "Pass"
-msgstr ""
+msgstr "Passer"
 
 #: gpe-go.c:1467
 msgid "Pass your turn"
-msgstr ""
+msgstr "Passer vosse to√ª"
 
 #: gpe-go.desktop.in.h:1
 msgid "GPE Go"
-msgstr "GPE Go"
+msgstr "Djeu d' go di GPE"
 
 #: gpe-go.desktop.in.h:2
 msgid "Go"
