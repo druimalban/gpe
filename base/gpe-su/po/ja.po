@@ -1,0 +1,28 @@
+# Japanese translations for gpe-su package
+# gpe-su パッケージに対する英訳.
+# Copyright (C) 2006 THE gpe-su'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gpe-su package.
+# Takeshi HAMASAKI <hma@syd.odn.ne.jp>, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-su 0.09\n"
+"POT-Creation-Date: 2003-09-06 00:36+0100\n"
+"PO-Revision-Date: 2006-07-31 01:04+0900\n"
+"Last-Translator: Takeshi HAMASAKI <hma@syd.odn.ne.jp>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-su.c:164
+msgid "Enter password for root:"
+msgstr "root のパスワードを入力してください:"
+
+#: gpe-su.desktop.in.h:1
+msgid "Root shell"
+msgstr "Root シェル"
+
+#: gpe-su.desktop.in.h:2
+msgid "gpe-su"
+msgstr "gpe-su"

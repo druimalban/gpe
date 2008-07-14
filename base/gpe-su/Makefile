@@ -2,9 +2,9 @@ PREFIX = /usr/local
 PACKAGE = gpe-su
 DEBUG = yes
 CVSBUILD = yes
-VERSION = 0.19
+VERSION = 0.20
 
-LINGUAS = nl pt fr sk cs de sv ro ru sr es zh_CN
+LINGUAS = nl pt fr sk cs de sv ro ru sr es zh_CN wa ko ky ja
 
 MEMBERS = gpe-su
 

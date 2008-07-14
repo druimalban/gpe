@@ -1,28 +1,20 @@
 # Finnish translation for gpe-su.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# Copyright (C) 2005 Lauri Nurmi <lanurmi@iki.fi>
 # This file is distributed under the same license as the gpe-su package.
-#
 # Lauri Nurmi <lanurmi@iki.fi>, 2005.
-# Elias Julkunen <elias.julkunen@gmail.com>. 2007.
 #
-
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-08-13 18:19+0200\n"
-"PO-Revision-Date: 2007-11-17 20:06+0200\n"
-"Last-Translator: Elias Julkunen <elias.julkunen@gmail.com>\n"
-"Language-Team: Finnish <LL@li.org>\n"
+"Project-Id-Version: gpe-su 0.09\n"
+"POT-Creation-Date: 2003-09-06 00:36+0100\n"
+"PO-Revision-Date: 2005-03-06 13:23+0200\n"
+"Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-su.c:166
-msgid "Permission Control"
-msgstr "Oikeuksien hallinta"
-
-#: gpe-su.c:170
+#: gpe-su.c:164
 msgid "Enter password for root:"
 msgstr "Anna pääkäyttäjän salasana:"
 
