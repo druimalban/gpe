@@ -1,5 +1,10 @@
 2008-07-15  Graham Cobb  <g+770@cobb.uk.net>
 
+	* event-ui.c (recur_combo_changed): Fix bug 200: do not translate "" when
+	setting increment_unit_postfix for single occurence.
+	(build_recurrence_page): Fix bug 199: initialise recurrence dialog correctly
+	for single occurrence.
+
 	* main.c (event_list_consider): Fix bug 70: do not manipulate event_list_container
 	when creating/destroying event_list and switching to/from event_view if the
 	container does not exist (e.g. no sidebar).  Make event_list_hidden into a true 

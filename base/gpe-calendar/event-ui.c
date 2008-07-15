@@ -200,7 +200,7 @@ recur_combo_changed (GtkWidget *widget, struct edit_state *s)
   switch (gtk_combo_box_get_active (s->recur_type))
     {
     case 0:
-      gtk_label_set_text (s->increment_unit_postfix, _(""));
+      gtk_label_set_text (s->increment_unit_postfix, "");
       break;
     case 1:
       gtk_label_set_text (s->increment_unit_postfix, _("days"));
@@ -1292,6 +1292,9 @@ build_recurrence_page (struct edit_state *s)
 				 event_get_recurrence_count (s->ev));
 #endif        
     }
+
+  /* show/hide the right widgets */
+  recur_combo_changed (GTK_WIDGET(combo), s);
 }
 
 static void
