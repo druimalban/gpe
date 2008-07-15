@@ -148,8 +148,8 @@ static int calendars_hidden;
 static GtkContainer *calendars_container;
 static GtkTreeView *calendars;
 static gboolean event_list_disabled;
-static int event_list_hidden;
-static GtkContainer *event_list_container;
+static int event_list_hidden = 1; // Initially hidden because no sidebar
+static GtkContainer *event_list_container = NULL;
 static EventList *event_list;
 
 static int main_toolbar_width;
@@ -970,10 +970,10 @@ event_list_consider (void)
 	/* Already destroyed, bye.  */
 	return FALSE;
 
-      gtk_container_remove (event_list_container,
-			    GTK_BIN (event_list_container)->child);
+      g_assert(event_list_container);
+      gtk_widget_destroy(GTK_WIDGET(event_list)); // Automatically removes it from event_list_container
       event_list = NULL;
-      gtk_widget_hide (GTK_WIDGET (event_list_container));
+      if (event_list_container) gtk_widget_hide (GTK_WIDGET (event_list_container));
 
       return FALSE;
     }
@@ -984,6 +984,7 @@ event_list_consider (void)
 	/* Already enabled, bye.  */
 	return TRUE;
 
+      g_assert(event_list_container);
       gtk_widget_show (GTK_WIDGET (event_list_container));
 
       event_list = EVENT_LIST (event_list_create (event_db));
@@ -1034,6 +1035,8 @@ sidebar_consider (void)
       gtk_container_remove (sidebar_container,
 			    GTK_BIN (sidebar_container)->child);
       gtk_widget_hide (GTK_WIDGET (sidebar_container));
+
+      event_list_hidden ++;
 
       calendar_consider ();
       calendars_consider ();
@@ -1092,6 +1095,8 @@ sidebar_consider (void)
       gtk_frame_set_shadow_type (GTK_FRAME (f), GTK_SHADOW_NONE);
       event_list_container = GTK_CONTAINER (f);
       gtk_paned_pack2 (pane2, GTK_WIDGET (f), TRUE, TRUE);
+
+      event_list_hidden --;
 
       event_list_consider ();
 
@@ -1177,11 +1182,15 @@ current_view_consider (void)
       if (IS_EVENT_LIST (current_view))
         {
           event_list_hidden --;
-          event_list = EVENT_LIST (current_view);
-          gtk_widget_reparent (GTK_WIDGET (event_list),
-                       GTK_WIDGET (event_list_container));
-          event_list_set_period_box_visible (event_list, FALSE);
-          gtk_widget_show (GTK_WIDGET (event_list_container));
+	  if (!event_list_hidden) {
+	    event_list = EVENT_LIST (current_view);
+	    gtk_widget_reparent (GTK_WIDGET (event_list),
+				 GTK_WIDGET (event_list_container));
+	    event_list_set_period_box_visible (event_list, FALSE);
+	    gtk_widget_show (GTK_WIDGET (event_list_container));
+	  }
+	  else
+	    gtk_container_remove (current_view_container, current_view);
         }
       else
         gtk_container_remove (current_view_container, current_view);

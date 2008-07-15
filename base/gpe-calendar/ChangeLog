@@ -1,3 +1,10 @@
+2008-07-15  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (event_list_consider): Fix bug 70: do not manipulate event_list_container
+	when creating/destroying event_list and switching to/from event_view if the
+	container does not exist (e.g. no sidebar).  Make event_list_hidden into a true 
+	counter: incremented if either the sidebar is disabled or the event list view is displayed.
+
 2008-07-12  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (main): Initialise categories library before processing command
