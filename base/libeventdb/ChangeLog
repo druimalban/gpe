@@ -1,3 +1,8 @@
+2008-07-15  Graham Cobb  <g+770@cobb.uk.net>
+
+	* event.c (event_flush): Do not crash when event is not modified,
+	only if database is readonly.
+
 2008-07-12  Florian Boor <florian@linuxtogo.org>
 
 	* event-db.c, event.h, event-db.h:

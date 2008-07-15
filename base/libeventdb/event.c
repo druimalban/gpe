@@ -235,7 +235,7 @@ event_flush (Event *event, GError **error)
 
   EventSource *ev = RESOLVE_CLONE (event);
 
-  g_assert(ev->modified);
+  g_assert (!ev->edb->readonly);
 
   if (! EVENT_DB_GET_CLASS (ev->edb)->event_flush (ev, error))
     return FALSE;
