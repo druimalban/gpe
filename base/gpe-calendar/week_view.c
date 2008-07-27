@@ -660,9 +660,9 @@ reload_events_hard (GtkWeekView *week_view)
   GDate period_start = focus;
   /* Normalize to sunday or monday as appropriate.  */
   g_date_subtract_days (&period_start,
-			(g_date_get_weekday (&focus)
-			 - (week_starts_sunday
-			    ? G_DATE_SUNDAY : G_DATE_MONDAY)) % 7);
+			(week_starts_sunday ?
+			    7 - (G_DATE_SUNDAY - g_date_get_weekday (&focus)) :
+			    (g_date_get_weekday (&focus) - G_DATE_MONDAY)) %7 );
 
   GDate period_end = period_start;
   g_date_add_days (&period_end, 7);

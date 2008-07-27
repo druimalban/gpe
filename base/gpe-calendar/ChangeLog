@@ -1,3 +1,11 @@
+2008-07-27  Graham Cobb  <g+770@cobb.uk.net>
+
+	* week_view.c (reload_events_hard): Include Andrew Olmsted's patch (bug 170) to
+	fix week display for week starting Sunday
+
+	* main.c (main): Include Andrew Olmsted's patch (bug 170) to add a "week start Sunday"
+	option to the View menu.  Additional changes & fixes to this support by GRC.
+
 2008-07-15  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event-ui.c (recur_combo_changed): Fix bug 200: do not translate "" when

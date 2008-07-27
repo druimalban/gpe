@@ -162,7 +162,7 @@ static GtkCheckMenuItem *fullscreen_button;
 static void propagate_time (void);
 
 guint week_offset;
-gboolean week_starts_sunday;
+gboolean week_starts_sunday = FALSE;
 gboolean day_view_combined_times;
 const gchar *TIMEFMT;
 
@@ -1002,6 +1002,13 @@ event_list_toggle (GtkCheckMenuItem *menuitem, gpointer data)
   event_list_disabled = ! gtk_check_menu_item_get_active (menuitem);
   event_list_consider ();
 }
+static void
+week_starts_toggle (GtkCheckMenuItem *menuitem, gpointer data)
+{
+	week_starts_sunday = gtk_check_menu_item_get_active (menuitem);
+	update_view ();
+}
+
 
 /* Sidebar:
 
@@ -1416,7 +1423,9 @@ conf_write (void)
   g_key_file_set_boolean (conf, "gpe-calendar", "calendars-disabled",
 			  calendars_disabled);
   g_key_file_set_boolean (conf, "gpe-calendar", "event-list-disabled",
-			  event_list_disabled);
+  			  event_list_disabled);
+  g_key_file_set_boolean (conf, "gpe-calendar", "week-starts-sunday", 
+			  week_starts_sunday);
 
   switch (close_handling)
     {
@@ -2343,6 +2352,16 @@ main (int argc, char *argv[])
 	}
       else
 	calendars_disabled = b;
+	
+      b = g_key_file_get_boolean (conf, "gpe-calendar", 
+				  "week-starts-sunday", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error=NULL;
+	}
+      else
+	week_starts_sunday = b;
 
       b = g_key_file_get_boolean (conf, "gpe-calendar",
 				  "event-list-disabled", &error);
@@ -2746,6 +2765,15 @@ main (int argc, char *argv[])
   gtk_widget_show (mitem);
 
   mitem = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* View -> Week Starts Sunday. */
+  mitem = gtk_check_menu_item_new_with_mnemonic (_("_Week starts on Sunday"));
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem),
+  				  week_starts_sunday);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+  			G_CALLBACK (week_starts_toggle), NULL);
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 
