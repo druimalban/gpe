@@ -1,3 +1,7 @@
+2008-08-03  Florian Boor  <fb@kernelconcepts.de>
+
+	* blueprobe.init: Support for iPAQ RX3000. (from OE bugzilla)<
+
 2008-02-24  Florian Boor  <fb@kernelconcepts.de>
 
 	* blueprobe.init: Support for MIO A701.
