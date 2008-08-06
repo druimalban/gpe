@@ -1,3 +1,10 @@
+2008-08-06  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.94 released.
+	
+2008-08-06  Phil Blundell  <pb@reciva.com>
+
+	* gpe-tp.am (dist-hook): New.
 
 2008-06-06  Florian Boor <florian@kernelconcepts.de>
 
