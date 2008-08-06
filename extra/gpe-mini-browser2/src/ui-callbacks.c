@@ -63,6 +63,24 @@ gboolean main_window_key_press_event_cb (GtkWidget * widget, GdkEventKey * k, Gt
   return FALSE;
 }
 
+void load_start_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
+{
+  /* when loading starts show stop button */
+  gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (stop_reload_button),
+                                "gtk-stop");
+  gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (stop_reload_button),
+                                   NULL);
+}
+
+void load_stop_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
+{
+  /* when loading stops show refresh/reload button again */
+  gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (stop_reload_button),
+                                "gtk-refresh");
+  gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (stop_reload_button),
+                                   NULL);
+}
+
 void load_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
 {
   const gchar *url = webkit_web_frame_get_uri(frame);
@@ -107,7 +125,14 @@ void forward_cb (GtkWidget* widget, gpointer data)
 
 void stop_reload_cb (GtkWidget* widget, gpointer data)
 {
-  webkit_web_view_reload (web_view);
+  const gchar *id;
+
+  id = gtk_tool_button_get_stock_id (GTK_TOOL_BUTTON (stop_reload_button));
+  if (!strcmp (id, "gtk-refresh"))
+    webkit_web_view_reload (web_view);
+  else
+    webkit_web_view_stop_loading (web_view);
+
 }
 
 /* ui action callbacks */
@@ -122,8 +147,10 @@ void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame, const
  GtkWidget * label;
 
  label = gtk_label_new(title);
+#ifdef DEBUG
  printf("title = %s\n", title);
- gtk_notebook_set_tab_label (notebook, GTK_WIDGET(web_view), label);
+#endif /* DEBUG */
+ gtk_notebook_set_tab_label(notebook, gtk_notebook_get_nth_page(notebook,  gtk_notebook_get_current_page(notebook)), label);
 }
 
 void preferences_cb (GtkWidget* widget, gpointer data)
@@ -184,10 +211,9 @@ void close_tab_cb (GtkWidget* widget, gpointer data)
   int tab_number;
   gpointer *web_view_data;
 
-  /* TODO: last tab hides close button too now. Not needed anymore?  
+  /* TODO: last tab hides close button. */ 
   if((gtk_notebook_get_n_pages(notebook)) == 1) 
 	return; 
-  */ 
 
   tab_number = gtk_notebook_get_current_page(notebook);
   gtk_notebook_remove_page(notebook, tab_number);

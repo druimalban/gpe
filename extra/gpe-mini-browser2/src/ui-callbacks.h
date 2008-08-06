@@ -24,6 +24,8 @@ gboolean main_window_key_press_event_cb (GtkWidget * widget, GdkEventKey * k,
                              		     GtkWidget * data);
 
 void load_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data);
+void load_start_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data);
+void load_stop_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data);
 void link_hover_cb (WebKitWebView* page, const gchar* title, const gchar* link, gpointer data);
 
 void load_text_entry_cb (GtkWidget* widget, gpointer data);

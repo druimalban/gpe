@@ -160,6 +160,8 @@ GtkWidget* create_htmlview(void)
   g_signal_connect (G_OBJECT (web_view), "title-changed", G_CALLBACK (title_changed_cb), web_view);
   g_signal_connect (G_OBJECT (web_view), "load-progress-changed", G_CALLBACK (progress_changed_cb), web_view);
   g_signal_connect (G_OBJECT (web_view), "load-committed", G_CALLBACK (load_cb), web_view);
+  g_signal_connect (G_OBJECT (web_view), "load-started", G_CALLBACK (load_start_cb), web_view);
+  g_signal_connect (G_OBJECT (web_view), "load-finished", G_CALLBACK (load_stop_cb), web_view);
   g_signal_connect (G_OBJECT (web_view), "hovering-over-link", G_CALLBACK (link_hover_cb), web_view);
 
   return scrolled_window;
@@ -172,6 +174,10 @@ GtkWidget * create_tabs(void)
   gtk_notebook_set_scrollable(notebook, TRUE);
   gtk_notebook_popup_enable(notebook);
   gtk_notebook_set_show_tabs(notebook, FALSE);
+  /* evaluate if we want homogeneous tabs. Also the function
+     is deprecated so we might run into issues.  
+  */
+  gtk_notebook_set_homogeneous_tabs(notebook, TRUE);
   gtk_container_add(GTK_CONTAINER(notebook), create_htmlview());
  
   /* initialize list to keep tabs and their associated web_views 

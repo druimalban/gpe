@@ -1,5 +1,12 @@
 GPE-mini-browser2 v0.0.1
 
+- 30/07/2008 - Philippe De Swert
+
+* src/ui.c:
+	- Tabs show title labels correctly now.
+* src/ui-callbacks.c:
+	- Tabs show title labels correctly now.
+
 - 09/04/2008 - Philippe De Swert
 
 * src/ui.c:
