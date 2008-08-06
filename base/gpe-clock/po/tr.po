@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Abdullah ULAS <potkal@bioinformatics.org>, 2005.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-clock 0.6\n"
