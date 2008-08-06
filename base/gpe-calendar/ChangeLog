@@ -1,3 +1,7 @@
+2008-08-06  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.92 released.
+
 2008-07-27  Graham Cobb  <g+770@cobb.uk.net>
 
 	* week_view.c (reload_events_hard): Include Andrew Olmsted's patch (bug 170) to

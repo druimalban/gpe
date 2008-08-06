@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(gpe-calendar,0.91,gpe-list@linuxtogo.org)
+AC_INIT(gpe-calendar,0.92,gpe-list@linuxtogo.org)
 
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
