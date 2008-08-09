@@ -1,3 +1,10 @@
+2008-08-10  Phil Blundell  <pb@reciva.com>
+
+	* po/Makefile.in.in: Add missing file, POT generation doesn't work
+	without it.
+
+	* po/gpe-todo.pot: Regenerated.
+
 2008-06-23  Persson Fink Lars  <lars.p.fink@gmail.com>
 
 	* list-ui.c: Fixed translation of item status. Fixes #197
