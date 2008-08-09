@@ -1,3 +1,9 @@
+2008-08-09  Phil Blundell  <pb@reciva.com>
+
+	* Makefile (BUILD) [CVSBUILD=yes]: Adjust path to suit new
+	location in svn tree.
+
+	* po/pt_BR.po, po/sv.po, po/ja.po, po/zh_CN.po: Update from TP.
 
 2006-04-10  Florian Boor <florian@kernelconcepts.de>
 

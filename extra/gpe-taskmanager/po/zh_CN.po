@@ -2,30 +2,40 @@
 # Copyright (C) 2003 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-taskmanager package.
 # Meng Jie <zuxyhere@eastday.com>, 2004.
+# LI Daobing <lidaobing@gmail.com>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-taskmanager 0.14\n"
-"POT-Creation-Date: 2003-08-17 14:08+0100\n"
-"PO-Revision-Date: 2004-11-03 23:17+0800\n"
-"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
-"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"Project-Id-Version: gpe-taskmanager 0.20\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-04-10 13:41+0200\n"
+"PO-Revision-Date: 2008-08-09 19:12+0800\n"
+"Last-Translator: LI Daobing <lidaobing@gmail.com>\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-taskmanager.c:226
+#: gpe-taskmanager.c:297 gpe-taskmanager.c:317
 msgid "No program is selected"
 msgstr "没有选择程序"
 
-#: gpe-taskmanager.c:246
+#: gpe-taskmanager.c:351
 msgid "Icon"
 msgstr "图标"
 
-#: gpe-taskmanager.c:250 gpe-taskmanager.c:276
+#: gpe-taskmanager.c:358 gpe-taskmanager.c:404
 msgid "Running programs"
 msgstr "运行程序"
 
-#: gpe-taskmanager.c:260
-msgid "Kill program"
-msgstr "结束程序"
+#: gpe-taskmanager.c:384
+msgid "Kill"
+msgstr "结束"
+
+#: gpe-taskmanager.desktop.in.h:1
+msgid "Lists running programs"
+msgstr "列出正在运行的程序"
+
+#: gpe-taskmanager.desktop.in.h:2
+msgid "Program manager"
+msgstr "程序管理器"

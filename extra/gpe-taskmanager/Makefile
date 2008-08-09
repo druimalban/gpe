@@ -19,7 +19,7 @@ DEPS = $(patsubst %,%.d,$(MEMBERS))
 SOURCES = $(patsubst %,%.c,$(MEMBERS))
 
 ifeq ($(CVSBUILD),yes)
-BUILD = ../build
+BUILD = ../../base/build
 else
 BUILD = build
 endif
