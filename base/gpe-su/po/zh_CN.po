@@ -2,19 +2,25 @@
 # Copyright (C) 2004 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-su package.
 # Meng Jie <zuxyhere@eastday.com>, 2004.
+# LI Daobing <lidaobing@gmail.com>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-su 0.09\n"
-"POT-Creation-Date: 2003-09-06 00:36+0100\n"
-"PO-Revision-Date: 2004-11-01 00:39+0800\n"
-"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
-"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"Project-Id-Version: gpe-su 0.20\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-07-14 22:34+0200\n"
+"PO-Revision-Date: 2008-08-09 19:08+0800\n"
+"Last-Translator: LI Daobing <lidaobing@gmail.com>\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-su.c:164
+#: gpe-su.c:189
+msgid "Permission Control"
+msgstr "权限控制"
+
+#: gpe-su.c:193
 msgid "Enter password for root:"
 msgstr "输入 root 的密码："
 
