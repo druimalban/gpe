@@ -1,0 +1,84 @@
+# Indonesian translations for gpe-login package.
+# Copyright (C) 2008 THE gpe-login'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gpe-login package.
+# Andhika Padmawan <andhika.padmawan@gmail.com>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-login 0.60\n"
+"POT-Creation-Date: 2003-08-17 13:50+0100\n"
+"PO-Revision-Date: 2008-08-10 16:13+0700\n"
+"Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
+"Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-login.c:468 gpe-login.c:541
+msgid "Login incorrect"
+msgstr "Log masuk salah"
+
+#: gpe-login.c:570
+msgid "User already exists"
+msgstr "Pengguna telah ada"
+
+#: gpe-login.c:581
+msgid "Passwords don't match"
+msgstr "Sandi lewat tak cocok"
+
+#: gpe-login.c:590
+msgid "Empty password not allowed"
+msgstr "Sandi lewat kosong tak diizinkan"
+
+#: gpe-login.c:1125
+msgid "Record"
+msgstr "Catatan"
+
+#: gpe-login.c:1126
+msgid "recalibrates touchscreen"
+msgstr "layar sentuh rekalibrasi"
+
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1162
+msgid "en"
+msgstr "id"
+
+#: gpe-login.c:1396
+msgid "Screen locked"
+msgstr "Layar terkunci"
+
+#: gpe-login.c:1400 gpe-login.c:1516
+msgid "Username"
+msgstr "Nama pengguna"
+
+#: gpe-login.c:1425 gpe-login.c:1518
+msgid "Password"
+msgstr "Sandi lewat"
+
+#: gpe-login.c:1439
+msgid "Language"
+msgstr "Bahasa"
+
+#: gpe-login.c:1460
+msgid "Enter password with hard keys"
+msgstr "Masukkan sandi lewat dengan tombol keras"
+
+#: gpe-login.c:1517
+msgid "Full name"
+msgstr "Nama lengkap"
+
+#: gpe-login.c:1519
+msgid "Confirm password"
+msgstr "Konfirmasi sandi lewat"
+
+#: gpe-login.c:1573
+msgid "New user"
+msgstr "Pengguna baru"
+
+#: gpe-logout.desktop.in.h:1
+msgid "Log out"
+msgstr "Log keluar"
+
+#: gpe-logout.desktop.in.h:2
+msgid "Log out of GPE"
+msgstr "Log keluar GPE"
