@@ -1,73 +1,72 @@
-# Swedish messages for gpe-contacts.
-# Copyright (C) 2003, 2004, 2006, 2008 Free Software Foundation, Inc.
+# Indonesian translations for gpe-contacts package.
+# Copyright (C) 2008 THE gpe-contacts'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-contacts package.
-# Christian Rose <menthos@menthos.com>, 2003, 2004.
-# Daniel Nylander <po@danielnylander.se>, 2006, 2008.
+# Andhika Padmawan <andhika.padmawan@gmail.com>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.47\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-08 18:43+0200\n"
-"PO-Revision-Date: 2008-08-09 13:05+0100\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
-"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"PO-Revision-Date: 2008-08-10 15:25+0700\n"
+"Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
+"Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
 msgid "Current size:"
-msgstr "Aktuell storlek:"
+msgstr "Ukuran saat ini:"
 
 #: ../configure.c:131
 msgid "kB (optimised)"
-msgstr "kB (optimerad)"
+msgstr "kB (dioptimalkan)"
 
 #: ../configure.c:177
 msgid "Detail panel:"
-msgstr "Detaljpanel:"
+msgstr "Detail panel:"
 
 #: ../configure.c:206
 msgid "NAME"
-msgstr "NAMN"
+msgstr "NAMA"
 
 #: ../configure.c:216
 msgid "Add"
-msgstr "Lägg till"
+msgstr "Tambah"
 
 #: ../configure.c:223
 msgid "Remove"
-msgstr "Ta bort"
+msgstr "Hapus"
 
 #: ../configure.c:245
 msgid "Label"
-msgstr "Etikett"
+msgstr "Label"
 
 #: ../configure.c:250
 msgid "Data item"
-msgstr "Dataobjekt"
+msgstr "Item data"
 
 #: ../configure.c:294
 msgid "Screen Layout"
-msgstr "Skärmlayout"
+msgstr "Tata letak layar"
 
 #: ../configure.c:300
 msgid "List position"
-msgstr "Listposition"
+msgstr "Posisi senarai"
 
 #: ../configure.c:303
 msgid "left"
-msgstr "vänster"
+msgstr "kiri"
 
 #: ../configure.c:305
 msgid "right"
-msgstr "höger"
+msgstr "kanan"
 
 #: ../configure.c:333
 msgid "Database Size"
-msgstr "Databasstorlek"
+msgstr "Ukuran Basis Data"
 
 #: ../configure.c:340
 msgid "kB"
@@ -75,55 +74,55 @@ msgstr "kB"
 
 #: ../configure.c:345
 msgid "Actions"
-msgstr "Åtgärder"
+msgstr "Aksi"
 
 #: ../configure.c:352
 msgid "Optimise database"
-msgstr "Optimera databas"
+msgstr "Optimalkan Basis data"
 
 #: ../configure.c:355
 msgid "Run"
-msgstr "Kör"
+msgstr "Jalan"
 
 #: ../configure.c:461
 msgid "Editing Layout"
-msgstr "Redigeringslayout"
+msgstr "Sunting Tata Letak"
 
 #: ../configure.c:463
 msgid "Setup"
-msgstr "Konfiguration"
+msgstr "Pengaturan"
 
 #: ../configure.c:464
 msgid "Database"
-msgstr "Databas"
+msgstr "Basis Data"
 
 #: ../configure.c:496
 msgid "Contacts: Configuration"
-msgstr "Kontakter: Konfiguration"
+msgstr "Kontak: Konfigurasi"
 
 #: ../edit-vcard.desktop.in.in.h:1
 msgid "Edit personal vcard"
-msgstr "Redigera personligt vcard"
+msgstr "Sunting vcard personal"
 
 #: ../edit-vcard.desktop.in.in.h:2
 msgid "My VCard"
-msgstr "Mitt vcard"
+msgstr "VCard Saya"
 
 #: ../editing.c:135 ../main.c:1440
 msgid "Details"
-msgstr "Detaljer"
+msgstr "Detail"
 
 #: ../editing.c:368
 msgid "no year"
-msgstr "inget år"
+msgstr "tanpa tahun"
 
 #: ../editing.c:427
 msgid "Image"
-msgstr "Bild"
+msgstr "Citra"
 
 #: ../editing.c:540 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Batal"
 
 #: ../editing.c:541 ../namedetail.c:64
 msgid "OK"
@@ -131,187 +130,184 @@ msgstr "OK"
 
 #: ../editing.c:651 ../main.c:561 ../main.c:688
 msgid "Categories"
-msgstr "Kategorier"
+msgstr "Kategori"
 
 #: ../editing.c:1439
 msgid "Select image"
-msgstr "Välj bild"
+msgstr "Pilih citra"
 
 #: ../export.c:190
 msgid "Save as..."
-msgstr "Spara som..."
+msgstr "Simpan sebagai..."
 
 #. create dialog window
 #: ../finddlg.c:37
 msgid "Find Contacts"
-msgstr "Sök kontakter"
+msgstr "Temukan Kontak"
 
 #. supply action area
 #: ../finddlg.c:49
 msgid "Search for:"
-msgstr "Sök efter:"
+msgstr "Telusuri untuk:"
 
 #: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1376
 #: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
-msgstr "Kontakter"
+msgstr "Kontak"
 
 #: ../gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts"
-msgstr "GPE-kontakter"
+msgstr "Kontak GPE"
 
 #: ../main.c:77 ../main.c:179
 msgid "Edit Contact"
-msgstr "Redigera kontakt"
+msgstr "Sunting Kontak"
 
 #: ../main.c:83 ../main.c:195
 msgid "Really delete this contact?"
-msgstr "Verkligen ta bort denna kontakt?"
+msgstr "Yakin hapus kontak ini?"
 
 #: ../main.c:83 ../main.c:195 ../structure.c:176
 msgid "Confirm"
-msgstr "Bekräfta"
+msgstr "Konfirmasi"
 
 #: ../main.c:135
 msgid "All categories"
-msgstr "Alla kategorier"
+msgstr "Semua kategori"
 
 #: ../main.c:157
 msgid "New Contact"
-msgstr "Ny kontakt"
+msgstr "Kontak Baru"
 
 #: ../main.c:572
 msgid "No contact selected."
-msgstr "Ingen kontakt markerad."
+msgstr "Tak ada kontak terpilih."
 
 #. create and set up dialog
 #: ../main.c:644 ../main.c:1512 ../main.c:1585
 msgid "Contact"
-msgstr "Kontakt"
+msgstr "Kontak"
 
 #: ../main.c:1295
 msgid "Choose file"
-msgstr "Välj fil"
+msgstr "Pilih berkas"
 
 #: ../main.c:1323
 msgid "Import of"
-msgstr "Importering av"
+msgstr "Impor dari"
 
 #: ../main.c:1323
 msgid "files failed:"
-msgstr "filer misslyckades:"
+msgstr "berkas gagal:"
 
 #: ../main.c:1327
 msgid "Import successful"
-msgstr "Importering lyckades"
+msgstr "Impor berhasil"
 
 #: ../main.c:1393
 msgid "Tap this button to add a new contact."
-msgstr "Tryck på denna knapp för att lägga till en ny kontakt."
+msgstr "Klik tombol ini untuk menambah kontak baru."
 
 #: ../main.c:1402
 msgid "Tap here to edit the selected contact."
-msgstr "Tryck här för att redigera den markerade kontakten."
+msgstr "Klik di sini untuk menyunting kontak terpilih."
 
 #: ../main.c:1412
 msgid "Tap here to delete the selected contact."
-msgstr "Tryck här för att ta bort den markerade kontakten."
+msgstr "Klik di sini untuk menghapus kontak terpilih."
 
 #: ../main.c:1432
 msgid "Find a contact by searching for any data."
-msgstr "Hitta en kontakt genom att söka efter några data."
+msgstr "Temukan kontak dengan menelusuri data apapun."
 
 #: ../main.c:1442
 msgid "Tap here to show contacts details."
-msgstr "Tryck här för att visa kontaktdetaljer."
+msgstr "Klik di sini untuk menampilkan detail kontak."
 
 #: ../main.c:1452
 msgid "Tap here to configure this program."
-msgstr "Tryck här för att konfigurera detta program."
+msgstr "Klik di sini untuk mengatur program ini."
 
 #: ../main.c:1460
 msgid "Import"
-msgstr "Importera"
+msgstr "Impor"
 
 #: ../main.c:1462
 msgid "Open file to import a contact from it."
-msgstr "Öppna en fil att importera en kontakt från."
+msgstr "Buka berkas untuk mengimpor kontak darinya."
 
 #: ../main.c:1475
 msgid "Tap here to exit gpe-contacts."
-msgstr "Tryck här för att avsluta gpe-contacts."
+msgstr "Klik di sini untuk keluar gpe-contacts."
 
 #. * find and categories section *
 #: ../main.c:1541
 msgid "Find:"
-msgstr "Sök:"
+msgstr "Temukan:"
 
 #: ../main.c:1548
 msgid "in"
-msgstr "i"
+msgstr "di"
 
 #: ../main.c:1694
 #, c-format
 msgid "Could not import file %s."
-msgstr "Kunde inte importera fil: %s."
+msgstr "Tak dapat mengimpor berkas %s."
 
 #: ../main.c:1699
 #, c-format
 msgid "File %s imported sucessfully."
-msgstr "Fil %s importerades."
+msgstr "Berkas %s sukses diimpor."
 
 #: ../main.c:1725
 msgid "My Card"
-msgstr "Mitt kort"
+msgstr "Kartu Saya"
 
 #: ../main.c:1728
 msgid "Saving vcard failed"
-msgstr "Misslyckades med att spara vcard"
+msgstr "Gagal menyimpan vcard"
 
 #. TRANSLATORS: These abbreviations are a list of common titles used in a name
 #: ../namedetail.c:30
 msgid "Dr."
-msgstr "Dr"
+msgstr "Dr."
 
 #: ../namedetail.c:30
 msgid "Miss"
-msgstr "Fröken"
+msgstr "Nona"
 
 #: ../namedetail.c:30
 msgid "Mr."
-msgstr "Herr"
+msgstr "Tn."
 
 #: ../namedetail.c:30
 msgid "Mrs."
-msgstr "Fru"
+msgstr "Ny."
 
-# Förslag från Göran... kan betyda både "Fru" och "Fröken".
 #: ../namedetail.c:30
 msgid "Ms."
-msgstr "Fr"
+msgstr "Nn."
 
 #: ../namedetail.c:30
 msgid "Prof."
 msgstr "Prof."
 
-# Blir väl inte bättre än så.
 #: ../namedetail.c:30
 msgid "Sir"
-msgstr "Sir"
+msgstr "Tuan"
 
 #. TRANSLATORS: This is a list of common name suffixes
 #: ../namedetail.c:32
 msgid "Jr."
-msgstr "junior"
+msgstr "Jr."
 
-# Osäker...
 #: ../namedetail.c:32
 msgid "Esq."
 msgstr "Esq."
 
 #: ../namedetail.c:32
 msgid "Sr."
-msgstr "senior"
+msgstr "Sr."
 
 #: ../namedetail.c:32
 msgid "I"
@@ -327,196 +323,76 @@ msgstr "III"
 
 #: ../namedetail.c:62 ../namedetail.c:69
 msgid "Edit Name Details"
-msgstr "Redigera namndetaljer"
+msgstr "Sunting Detail Nama"
 
 #: ../namedetail.c:97
 msgid "First name:"
-msgstr "Förnamn:"
+msgstr "Nama depan:"
 
 #: ../namedetail.c:98
 msgid "Middle name:"
-msgstr "Mellannamn:"
+msgstr "Nama tengah:"
 
 #: ../namedetail.c:99
 msgid "Last name:"
-msgstr "Efternamn:"
+msgstr "Nama belakang:"
 
 #: ../namedetail.c:100
 msgid "Suffix:"
-msgstr "Suffix:"
+msgstr "Awalan:"
 
 #: ../namedetail.c:101
 msgid "Title:"
-msgstr "Titel:"
+msgstr "Gelar:"
 
 #: ../structure.c:105 ../structure.c:235
 msgid "New page"
-msgstr "Ny sida"
+msgstr "Halaman baru"
 
 #: ../structure.c:105 ../structure.c:124 ../structure.c:149
 msgid "Title"
-msgstr "Titel"
+msgstr "Judul"
 
 #: ../structure.c:124
 msgid "New group"
-msgstr "Ny grupp"
+msgstr "Grup baru"
 
 #: ../structure.c:136 ../structure.c:166
 msgid "No container selected"
-msgstr "Ingen behållare markerad"
+msgstr "Tak ada isi yang dipilih"
 
 #: ../structure.c:150
 msgid "Tag"
-msgstr "Tagg"
+msgstr "Tag"
 
 #: ../structure.c:152
 msgid "New field"
-msgstr "Nytt fält"
+msgstr "Medan baru"
 
 #: ../structure.c:176
 msgid "Really delete this field?"
-msgstr "Verkligen ta bort detta fält?"
+msgstr "Yakin hapus medan ini?"
 
 #: ../structure.c:177
 msgid "Delete"
-msgstr "Ta bort"
+msgstr "Hapus"
 
 #: ../structure.c:234
 msgid "Page"
-msgstr "Sida"
+msgstr "Halaman"
 
 #: ../structure.c:235
 msgid "Tap here to add a page."
-msgstr "Tryck här för att lägga till en sida."
+msgstr "Klik di sini untuk menambah halaman."
 
 #: ../structure.c:251
 msgid "Delete item"
-msgstr "Ta bort objekt"
+msgstr "Hapus item"
 
 #: ../structure.c:251
 msgid "Tap here to delete the selected item."
-msgstr "Tryck här för att ta bort det markerade objektet."
+msgstr "Klik di sini untuk menghapus item terpilih."
 
 #: ../hildon/gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts Application"
-msgstr "GPE-kontaktprogram"
-
-#~ msgid "Category name must not be blank"
-#~ msgstr "Kategorinamn får inte vara blankt"
-
-#~ msgid "A category by that name already exists"
-#~ msgstr "En kategori med det namnet finns redan"
-
-#~ msgid "Name:"
-#~ msgstr "Namn:"
-
-#~ msgid "New category"
-#~ msgstr "Ny kategori"
-
-#~ msgid "Tap here to add a new category."
-#~ msgstr "Tryck här för att lägga till en ny kategori."
-
-#~ msgid "Delete category"
-#~ msgstr "Ta bort kategori"
-
-#~ msgid "Tap here to delete the selected category."
-#~ msgstr "Tryck här för att ta bort den markerade kategorin."
-
-#~ msgid "Select categories"
-#~ msgstr "Välj kategorier"
-
-#~ msgid "Name"
-#~ msgstr "Namn"
-
-#~ msgid "Phone"
-#~ msgstr "Telefon"
-
-#~ msgid "EMail"
-#~ msgstr "E-post"
-
-#~ msgid "Edit"
-#~ msgstr "Redigera"
-
-#~ msgid "Properties"
-#~ msgstr "Egenskaper"
-
-#~ msgid "Close"
-#~ msgstr "Stäng"
-
-#~ msgid "<b>Detail panel:</b>"
-#~ msgstr "<b>Detaljpanel:</b>"
-
-#~ msgid "New contact"
-#~ msgstr "Ny kontakt"
-
-#~ msgid "Tap here to show contact details."
-#~ msgstr "Tryck här för att visa kontaktdetaljer."
-
-#~ msgid "My card"
-#~ msgstr "Mitt kort"
-
-#~ msgid "Detail panel"
-#~ msgstr "Detaljpanel"
-
-#~ msgid "Size"
-#~ msgstr "Storlek"
-
-#~ msgid "First name"
-#~ msgstr "Förnamn"
-
-#~ msgid "Middle name"
-#~ msgstr "Mellannamn"
-
-#~ msgid "Last name"
-#~ msgstr "Efternamn"
-
-#~ msgid "more detailed name options"
-#~ msgstr "mer detaljerade namnalternativ"
-
-#~ msgid "Summary"
-#~ msgstr "Sammanfattning"
-
-#~ msgid "Birthday"
-#~ msgstr "Födelsedag"
-
-#~ msgid "Schedule"
-#~ msgstr "Schema"
-
-#~ msgid "automatic appointment"
-#~ msgstr "automatiskt möte"
-
-#~ msgid "Personal"
-#~ msgstr "Personligt"
-
-#~ msgid "Pages"
-#~ msgstr "Sidor"
-
-#~ msgid "New Category"
-#~ msgstr "Ny kategori"
-
-#~ msgid "Really delete this category?"
-#~ msgstr "Verkligen ta bort denna kategori?"
-
-#~ msgid "Edit contact"
-#~ msgstr "Redigera kontakt"
-
-#~ msgid "Delete contact"
-#~ msgstr "Ta bort kontakt"
-
-#~ msgid "ABC"
-#~ msgstr "ABC"
-
-#~ msgid "DEF"
-#~ msgstr "DEF"
-
-#~ msgid "GHIJ"
-#~ msgstr "GHIJ"
-
-#~ msgid "KLMN"
-#~ msgstr "KLMN"
-
-#~ msgid "OPQR"
-#~ msgstr "OPQR"
-
-#~ msgid "STUV"
-#~ msgstr "STUV"
+msgstr "Aplikasi Kontak GPE"

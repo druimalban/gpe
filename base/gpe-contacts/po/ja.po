@@ -1,17 +1,17 @@
-# Swedish messages for gpe-contacts.
-# Copyright (C) 2003, 2004, 2006, 2008 Free Software Foundation, Inc.
+# Japanese translations for gpe-contacts package
+# gpe-contacts パッケージのための和訳.
+# Copyright (C) 2008 THE gpe-contacts'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-contacts package.
-# Christian Rose <menthos@menthos.com>, 2003, 2004.
-# Daniel Nylander <po@danielnylander.se>, 2006, 2008.
+# Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-contacts 0.47\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-08 18:43+0200\n"
-"PO-Revision-Date: 2008-08-09 13:05+0100\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
-"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"PO-Revision-Date: 2008-08-09 22:23+0900\n"
+"Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
+"Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,111 +19,123 @@ msgstr ""
 #. TRANSLATORS: kB = kilo bytes
 #: ../configure.c:130 ../configure.c:340
 msgid "Current size:"
-msgstr "Aktuell storlek:"
+msgstr "現在のサイズ:"
 
 #: ../configure.c:131
 msgid "kB (optimised)"
-msgstr "kB (optimerad)"
+msgstr "キロバイト(最適化済み)"
 
 #: ../configure.c:177
+#, fuzzy
 msgid "Detail panel:"
-msgstr "Detaljpanel:"
+msgstr "ドック (パネル)"
 
 #: ../configure.c:206
+#, fuzzy
 msgid "NAME"
-msgstr "NAMN"
+msgstr "NAME"
 
 #: ../configure.c:216
 msgid "Add"
-msgstr "Lägg till"
+msgstr "追加"
 
 #: ../configure.c:223
 msgid "Remove"
-msgstr "Ta bort"
+msgstr "削除"
 
 #: ../configure.c:245
 msgid "Label"
-msgstr "Etikett"
+msgstr "ラベル"
 
 #: ../configure.c:250
 msgid "Data item"
-msgstr "Dataobjekt"
+msgstr "データ項目"
 
 #: ../configure.c:294
+#, fuzzy
 msgid "Screen Layout"
-msgstr "Skärmlayout"
+msgstr "配置スタイル"
 
 #: ../configure.c:300
+#, fuzzy
 msgid "List position"
-msgstr "Listposition"
+msgstr "カーソル位置"
 
 #: ../configure.c:303
 msgid "left"
-msgstr "vänster"
+msgstr "左"
 
 #: ../configure.c:305
 msgid "right"
-msgstr "höger"
+msgstr "右"
 
 #: ../configure.c:333
 msgid "Database Size"
-msgstr "Databasstorlek"
+msgstr "データベースのサイズ"
 
 #: ../configure.c:340
 msgid "kB"
-msgstr "kB"
+msgstr "キロバイト"
 
 #: ../configure.c:345
+#, fuzzy
 msgid "Actions"
-msgstr "Åtgärder"
+msgstr "アクション"
 
 #: ../configure.c:352
 msgid "Optimise database"
-msgstr "Optimera databas"
+msgstr "データベース最適化"
 
 #: ../configure.c:355
+#, fuzzy
 msgid "Run"
-msgstr "Kör"
+msgstr "実行"
 
 #: ../configure.c:461
+#, fuzzy
 msgid "Editing Layout"
-msgstr "Redigeringslayout"
+msgstr "配置スタイル"
 
 #: ../configure.c:463
+#, fuzzy
 msgid "Setup"
-msgstr "Konfiguration"
+msgstr "セットアップ"
 
 #: ../configure.c:464
 msgid "Database"
-msgstr "Databas"
+msgstr "データベース"
 
 #: ../configure.c:496
+#, fuzzy
 msgid "Contacts: Configuration"
-msgstr "Kontakter: Konfiguration"
+msgstr "音質設定"
 
 #: ../edit-vcard.desktop.in.in.h:1
+#, fuzzy
 msgid "Edit personal vcard"
-msgstr "Redigera personligt vcard"
+msgstr "XMPP vCard の編集"
 
 #: ../edit-vcard.desktop.in.in.h:2
+#, fuzzy
 msgid "My VCard"
-msgstr "Mitt vcard"
+msgstr "VCard ビューア"
 
 #: ../editing.c:135 ../main.c:1440
 msgid "Details"
-msgstr "Detaljer"
+msgstr "詳細"
 
 #: ../editing.c:368
+#, fuzzy
 msgid "no year"
-msgstr "inget år"
+msgstr "選択した年"
 
 #: ../editing.c:427
 msgid "Image"
-msgstr "Bild"
+msgstr "画像"
 
 #: ../editing.c:540 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "キャンセル"
 
 #: ../editing.c:541 ../namedetail.c:64
 msgid "OK"
@@ -131,392 +143,291 @@ msgstr "OK"
 
 #: ../editing.c:651 ../main.c:561 ../main.c:688
 msgid "Categories"
-msgstr "Kategorier"
+msgstr "カテゴリ"
 
 #: ../editing.c:1439
 msgid "Select image"
-msgstr "Välj bild"
+msgstr "画像を選択"
 
 #: ../export.c:190
 msgid "Save as..."
-msgstr "Spara som..."
+msgstr "名前を付けて保存..."
 
 #. create dialog window
 #: ../finddlg.c:37
 msgid "Find Contacts"
-msgstr "Sök kontakter"
+msgstr "連絡先を探す"
 
 #. supply action area
 #: ../finddlg.c:49
 msgid "Search for:"
-msgstr "Sök efter:"
+msgstr "検索文字列:"
 
 #: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1376
 #: ../hildon/gpe-contacts.desktop.in.in.h:1
 msgid "Contacts"
-msgstr "Kontakter"
+msgstr "連絡先"
 
 #: ../gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts"
-msgstr "GPE-kontakter"
+msgstr "GPE 連絡先"
 
 #: ../main.c:77 ../main.c:179
 msgid "Edit Contact"
-msgstr "Redigera kontakt"
+msgstr "連絡先を編集"
 
 #: ../main.c:83 ../main.c:195
+#, fuzzy
 msgid "Really delete this contact?"
-msgstr "Verkligen ta bort denna kontakt?"
+msgstr "本当にこのヘッダを削除しますか？"
 
 #: ../main.c:83 ../main.c:195 ../structure.c:176
+#, fuzzy
 msgid "Confirm"
-msgstr "Bekräfta"
+msgstr "確認"
 
 #: ../main.c:135
+#, fuzzy
 msgid "All categories"
-msgstr "Alla kategorier"
+msgstr "<nobr>%n カテゴリ</nobr>"
 
 #: ../main.c:157
 msgid "New Contact"
-msgstr "Ny kontakt"
+msgstr "新しい連絡先"
 
 #: ../main.c:572
 msgid "No contact selected."
-msgstr "Ingen kontakt markerad."
+msgstr "連絡先が選択されていません。"
 
 #. create and set up dialog
 #: ../main.c:644 ../main.c:1512 ../main.c:1585
 msgid "Contact"
-msgstr "Kontakt"
+msgstr "連絡先"
 
 #: ../main.c:1295
+#, fuzzy
 msgid "Choose file"
-msgstr "Välj fil"
+msgstr "ファイルを選択する"
 
 #: ../main.c:1323
+#, fuzzy
 msgid "Import of"
-msgstr "Importering av"
+msgstr "インポート(_I)"
 
 #: ../main.c:1323
+#, fuzzy
 msgid "files failed:"
-msgstr "filer misslyckades:"
+msgstr "読み込み失敗"
 
 #: ../main.c:1327
 msgid "Import successful"
-msgstr "Importering lyckades"
+msgstr "インポート成功"
 
 #: ../main.c:1393
 msgid "Tap this button to add a new contact."
-msgstr "Tryck på denna knapp för att lägga till en ny kontakt."
+msgstr "新しい連絡先を追加するには、ここをタップします。"
 
 #: ../main.c:1402
 msgid "Tap here to edit the selected contact."
-msgstr "Tryck här för att redigera den markerade kontakten."
+msgstr "選択した連絡先を編集するには、ここをタップします。"
 
 #: ../main.c:1412
 msgid "Tap here to delete the selected contact."
-msgstr "Tryck här för att ta bort den markerade kontakten."
+msgstr "選択した連絡先を削除するには、ここをタップします。"
 
 #: ../main.c:1432
 msgid "Find a contact by searching for any data."
-msgstr "Hitta en kontakt genom att söka efter några data."
+msgstr ""
 
 #: ../main.c:1442
 msgid "Tap here to show contacts details."
-msgstr "Tryck här för att visa kontaktdetaljer."
+msgstr "選択した連絡先の詳細を表示するには、ここをタップします。"
 
 #: ../main.c:1452
 msgid "Tap here to configure this program."
-msgstr "Tryck här för att konfigurera detta program."
+msgstr ""
 
 #: ../main.c:1460
 msgid "Import"
-msgstr "Importera"
+msgstr "インポート"
 
 #: ../main.c:1462
 msgid "Open file to import a contact from it."
-msgstr "Öppna en fil att importera en kontakt från."
+msgstr ""
 
 #: ../main.c:1475
 msgid "Tap here to exit gpe-contacts."
-msgstr "Tryck här för att avsluta gpe-contacts."
+msgstr ""
 
 #. * find and categories section *
 #: ../main.c:1541
 msgid "Find:"
-msgstr "Sök:"
+msgstr "検索:"
 
 #: ../main.c:1548
+#, fuzzy
 msgid "in"
-msgstr "i"
+msgstr "in"
 
 #: ../main.c:1694
 #, c-format
 msgid "Could not import file %s."
-msgstr "Kunde inte importera fil: %s."
+msgstr "ファイル %s をインポートできません。"
 
 #: ../main.c:1699
-#, c-format
+#, fuzzy, c-format
 msgid "File %s imported sucessfully."
-msgstr "Fil %s importerades."
+msgstr "インポートされたデータファイルの内容"
 
 #: ../main.c:1725
+#, fuzzy
 msgid "My Card"
-msgstr "Mitt kort"
+msgstr "次のカード(&N)"
 
 #: ../main.c:1728
 msgid "Saving vcard failed"
-msgstr "Misslyckades med att spara vcard"
+msgstr "vCard の保存に失敗"
 
 #. TRANSLATORS: These abbreviations are a list of common titles used in a name
 #: ../namedetail.c:30
+#, fuzzy
 msgid "Dr."
-msgstr "Dr"
+msgstr "Dr."
 
 #: ../namedetail.c:30
+#, fuzzy
 msgid "Miss"
-msgstr "Fröken"
+msgstr "Miss"
 
 #: ../namedetail.c:30
+#, fuzzy
 msgid "Mr."
-msgstr "Herr"
+msgstr "Mr."
 
 #: ../namedetail.c:30
+#, fuzzy
 msgid "Mrs."
-msgstr "Fru"
+msgstr "Mrs."
 
-# Förslag från Göran... kan betyda både "Fru" och "Fröken".
 #: ../namedetail.c:30
+#, fuzzy
 msgid "Ms."
-msgstr "Fr"
+msgstr "Ms."
 
 #: ../namedetail.c:30
+#, fuzzy
 msgid "Prof."
 msgstr "Prof."
 
-# Blir väl inte bättre än så.
 #: ../namedetail.c:30
 msgid "Sir"
-msgstr "Sir"
+msgstr ""
 
 #. TRANSLATORS: This is a list of common name suffixes
 #: ../namedetail.c:32
+#, fuzzy
 msgid "Jr."
-msgstr "junior"
+msgstr "Jr."
 
-# Osäker...
 #: ../namedetail.c:32
 msgid "Esq."
-msgstr "Esq."
+msgstr ""
 
 #: ../namedetail.c:32
+#, fuzzy
 msgid "Sr."
-msgstr "senior"
+msgstr "Sr."
 
 #: ../namedetail.c:32
+#, fuzzy
 msgid "I"
 msgstr "I"
 
 #: ../namedetail.c:32
+#, fuzzy
 msgid "II"
 msgstr "II"
 
 #: ../namedetail.c:32
+#, fuzzy
 msgid "III"
 msgstr "III"
 
 #: ../namedetail.c:62 ../namedetail.c:69
+#, fuzzy
 msgid "Edit Name Details"
-msgstr "Redigera namndetaljer"
+msgstr "連絡先の名前を編集"
 
 #: ../namedetail.c:97
 msgid "First name:"
-msgstr "Förnamn:"
+msgstr "名:"
 
 #: ../namedetail.c:98
 msgid "Middle name:"
-msgstr "Mellannamn:"
+msgstr "ミドルネーム:"
 
 #: ../namedetail.c:99
 msgid "Last name:"
-msgstr "Efternamn:"
+msgstr "姓:"
 
 #: ../namedetail.c:100
+#, fuzzy
 msgid "Suffix:"
-msgstr "Suffix:"
+msgstr "サフィックス(&S):"
 
 #: ../namedetail.c:101
 msgid "Title:"
-msgstr "Titel:"
+msgstr "タイトル:"
 
 #: ../structure.c:105 ../structure.c:235
 msgid "New page"
-msgstr "Ny sida"
+msgstr "新しいページ"
 
 #: ../structure.c:105 ../structure.c:124 ../structure.c:149
 msgid "Title"
-msgstr "Titel"
+msgstr "タイトル"
 
 #: ../structure.c:124
 msgid "New group"
-msgstr "Ny grupp"
+msgstr "新規グループ"
 
 #: ../structure.c:136 ../structure.c:166
+#, fuzzy
 msgid "No container selected"
-msgstr "Ingen behållare markerad"
+msgstr "接続先が選択されていません。"
 
 #: ../structure.c:150
 msgid "Tag"
-msgstr "Tagg"
+msgstr "タグ"
 
 #: ../structure.c:152
 msgid "New field"
-msgstr "Nytt fält"
+msgstr "新規フィールド"
 
 #: ../structure.c:176
 msgid "Really delete this field?"
-msgstr "Verkligen ta bort detta fält?"
+msgstr "本当にこのフィールドを削除しますか？"
 
 #: ../structure.c:177
 msgid "Delete"
-msgstr "Ta bort"
+msgstr "削除"
 
 #: ../structure.c:234
 msgid "Page"
-msgstr "Sida"
+msgstr "ページ"
 
 #: ../structure.c:235
 msgid "Tap here to add a page."
-msgstr "Tryck här för att lägga till en sida."
+msgstr "ページを追加するには、ここをタップします。"
 
 #: ../structure.c:251
 msgid "Delete item"
-msgstr "Ta bort objekt"
+msgstr "項目を削除"
 
 #: ../structure.c:251
 msgid "Tap here to delete the selected item."
-msgstr "Tryck här för att ta bort det markerade objektet."
+msgstr "選択した項目を削除するには、ここをタップします。"
 
 #: ../hildon/gpe-contacts.desktop.in.in.h:2
 msgid "GPE Contacts Application"
-msgstr "GPE-kontaktprogram"
-
-#~ msgid "Category name must not be blank"
-#~ msgstr "Kategorinamn får inte vara blankt"
-
-#~ msgid "A category by that name already exists"
-#~ msgstr "En kategori med det namnet finns redan"
-
-#~ msgid "Name:"
-#~ msgstr "Namn:"
-
-#~ msgid "New category"
-#~ msgstr "Ny kategori"
-
-#~ msgid "Tap here to add a new category."
-#~ msgstr "Tryck här för att lägga till en ny kategori."
-
-#~ msgid "Delete category"
-#~ msgstr "Ta bort kategori"
-
-#~ msgid "Tap here to delete the selected category."
-#~ msgstr "Tryck här för att ta bort den markerade kategorin."
-
-#~ msgid "Select categories"
-#~ msgstr "Välj kategorier"
-
-#~ msgid "Name"
-#~ msgstr "Namn"
-
-#~ msgid "Phone"
-#~ msgstr "Telefon"
-
-#~ msgid "EMail"
-#~ msgstr "E-post"
-
-#~ msgid "Edit"
-#~ msgstr "Redigera"
-
-#~ msgid "Properties"
-#~ msgstr "Egenskaper"
-
-#~ msgid "Close"
-#~ msgstr "Stäng"
-
-#~ msgid "<b>Detail panel:</b>"
-#~ msgstr "<b>Detaljpanel:</b>"
-
-#~ msgid "New contact"
-#~ msgstr "Ny kontakt"
-
-#~ msgid "Tap here to show contact details."
-#~ msgstr "Tryck här för att visa kontaktdetaljer."
-
-#~ msgid "My card"
-#~ msgstr "Mitt kort"
-
-#~ msgid "Detail panel"
-#~ msgstr "Detaljpanel"
-
-#~ msgid "Size"
-#~ msgstr "Storlek"
-
-#~ msgid "First name"
-#~ msgstr "Förnamn"
-
-#~ msgid "Middle name"
-#~ msgstr "Mellannamn"
-
-#~ msgid "Last name"
-#~ msgstr "Efternamn"
-
-#~ msgid "more detailed name options"
-#~ msgstr "mer detaljerade namnalternativ"
-
-#~ msgid "Summary"
-#~ msgstr "Sammanfattning"
-
-#~ msgid "Birthday"
-#~ msgstr "Födelsedag"
-
-#~ msgid "Schedule"
-#~ msgstr "Schema"
-
-#~ msgid "automatic appointment"
-#~ msgstr "automatiskt möte"
-
-#~ msgid "Personal"
-#~ msgstr "Personligt"
-
-#~ msgid "Pages"
-#~ msgstr "Sidor"
-
-#~ msgid "New Category"
-#~ msgstr "Ny kategori"
-
-#~ msgid "Really delete this category?"
-#~ msgstr "Verkligen ta bort denna kategori?"
-
-#~ msgid "Edit contact"
-#~ msgstr "Redigera kontakt"
-
-#~ msgid "Delete contact"
-#~ msgstr "Ta bort kontakt"
-
-#~ msgid "ABC"
-#~ msgstr "ABC"
-
-#~ msgid "DEF"
-#~ msgstr "DEF"
-
-#~ msgid "GHIJ"
-#~ msgstr "GHIJ"
-
-#~ msgid "KLMN"
-#~ msgstr "KLMN"
-
-#~ msgid "OPQR"
-#~ msgstr "OPQR"
-
-#~ msgid "STUV"
-#~ msgstr "STUV"
+msgstr "GPE 連絡先 アプリケーション"
