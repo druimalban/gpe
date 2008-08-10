@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(gpe-contacts,0.47,gpe-list@linuxtogo.org)
+AC_INIT(gpe-contacts,0.48,gpe-list@linuxtogo.org)
 
 AC_CONFIG_SRCDIR([main.c])
 AM_CONFIG_HEADER(config.h)
@@ -18,14 +18,13 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=$PACKAGE
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="cs es fi hu pt_BR ro rw sr vi zh_TW de fr nl pt ru sk sv zh_CN"
+ALL_LINGUAS=$(ls ${srcdir}/po/*.po | sed 's/.*\/po\///;s/\.po//')
 
 gpecontacts_localedir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(gpecontacts_localedir)
 
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL([0.23])
- dbus-glib-1
 AC_MSG_CHECKING([if D-Bus support has been enabled]);
 AC_ARG_ENABLE(
   dbus,
