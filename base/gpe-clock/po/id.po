@@ -1,85 +1,84 @@
-# Simplified Chinese translation for gpe-clock 0.6
-# Copyright (C) 2004 Free Software Foundation, Inc.
+# Indonesian translations for gpe-clock package.
+# Copyright (C) 2008 THE gpe-clock'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-clock package.
-# Meng Jie <zuxyhere@eastday.com>, 2004.
-# LI Daobing <lidaobing@gmail.com>, 2008.
+# Andhika Padmawan <andhika.padmawan@gmail.com>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-clock 0.25\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-05-01 18:01+0100\n"
-"PO-Revision-Date: 2008-08-09 19:24+0800\n"
-"Last-Translator: LI Daobing <lidaobing@gmail.com>\n"
-"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2008-08-10 14:58+0700\n"
+"Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
+"Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: clock.c:361
 msgid "Unable to set alarm"
-msgstr "无法设置定时提醒"
+msgstr "Tak dapat mengatur alarm"
 
 #: clock.c:493
 msgid "Clock preferences"
-msgstr "时钟程序首选"
+msgstr "Pengaturan jam"
 
 #: clock.c:498
 msgid "12-hour format"
-msgstr "12 小时制"
+msgstr "Format 12-jam"
 
 #: clock.c:500
 msgid "24-hour format"
-msgstr "24 小时制"
+msgstr "Format 24-jam"
 
 #: clock.c:502
 msgid "Analogue format"
-msgstr "钟表模式"
+msgstr "Format analog"
 
 #: clock.c:505
 msgid "Show seconds"
-msgstr "显示秒数"
+msgstr "Tampilkan detik"
 
 #: clock.c:643
 msgid "Time:"
-msgstr "时间："
+msgstr "Waktu:"
 
 #: clock.c:651
 msgid "Set alarm"
-msgstr "设置定时提醒"
+msgstr "Atur alarm"
 
 #: clock.c:657
 msgid "Alarm active"
-msgstr "定时提醒已激活"
+msgstr "Alarm aktif"
 
 #: clock.c:674
 msgid "Date:"
-msgstr "日期："
+msgstr "Tanggal:"
 
 #: clock.c:676
 msgid "Weekly, on:"
-msgstr "于每周："
+msgstr "Mingguan, pada:"
 
 #: clock.c:877
 msgid "Preferences"
-msgstr "首选"
+msgstr "Pengaturan"
 
 #: clock.c:878
 msgid "Set the time"
-msgstr "设置时间"
+msgstr "Atur waktu"
 
 #: clock.c:879
 msgid "Alarm ..."
-msgstr "定时提醒..."
+msgstr "Alarm ..."
 
 #: clock.c:895
 msgid "Alarm clock"
-msgstr "提醒时钟"
+msgstr "Jam alarm"
 
 #: clock.c:942
 msgid ""
 "This is the clock.\n"
 "Tap here to set the alarm, set the time, or change the display format."
 msgstr ""
-"这是时钟程序。\n"
-"点击这里设置定时提醒，设置时间，改变显示格式。"
+"Ini adalah jam.\n"
+"Klik di sini untuk mengatur alarm, mengatur waktu, atau mengubah format tampilan."
