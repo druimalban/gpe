@@ -1,23 +1,32 @@
-# Translation to Brazilian Portuguese (pt_BR)
-# Copyright (C) 2004 Free Software Foundation, Inc.
+# Brazilian Portuguese translation for gpe-su.
+# This file is distributed under the same license as the gpe-su package.
+# Copyright (C) 2004-2008 Free Software Foundation, Inc.
 # Marcus Moreira de Souza <marcus@frb.br>, 2004.
 # based on the translation to Portuguese (pt) by
 # Luis Oliveira <luismbo@netcabo.pt>, 2003.
 #
+# Fabrício Godoy <skarllot@gmail.com>, 2008.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-su 0.09\n"
-"POT-Creation-Date: 2003-09-06 00:36+0100\n"
-"PO-Revision-Date: 2004-09-02 17:26-0300\n"
-"Last-Translator: Marcus Moreira de Souza <marcus@frb.br>\n"
+"Project-Id-Version: gpe-su 0.20\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-07-14 22:34+0200\n"
+"PO-Revision-Date: 2008-08-09 11:46-0300\n"
+"Last-Translator: Fabrício Godoy <skarllot@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-15\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: gpe-su.c:164
+#: gpe-su.c:189
+msgid "Permission Control"
+msgstr "Controle de Permissão"
+
+#: gpe-su.c:193
 msgid "Enter password for root:"
-msgstr "Insira a senha do root:"
+msgstr "Digite a senha do root:"
 
 #: gpe-su.desktop.in.h:1
 msgid "Root shell"
