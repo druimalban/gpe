@@ -1,0 +1,40 @@
+# Indonesian translations for gpe-taskmanager package.
+# Copyright (C) 2008 THE gpe-taskmanager'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gpe-taskmanager package.
+# Andhika Padmawan <andhika.padmawan@gmail.com>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-taskmanager 0.20\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-04-10 13:41+0200\n"
+"PO-Revision-Date: 2008-08-10 16:37+0700\n"
+"Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
+"Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-taskmanager.c:297 gpe-taskmanager.c:317
+msgid "No program is selected"
+msgstr "Tak ada program terpilih"
+
+#: gpe-taskmanager.c:351
+msgid "Icon"
+msgstr "Ikon"
+
+#: gpe-taskmanager.c:358 gpe-taskmanager.c:404
+msgid "Running programs"
+msgstr "Program berjalan"
+
+#: gpe-taskmanager.c:384
+msgid "Kill"
+msgstr "Matikan"
+
+#: gpe-taskmanager.desktop.in.h:1
+msgid "Lists running programs"
+msgstr "Senarai program berjalan"
+
+#: gpe-taskmanager.desktop.in.h:2
+msgid "Program manager"
+msgstr "Manajer program"
