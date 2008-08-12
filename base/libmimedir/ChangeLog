@@ -1,3 +1,12 @@
+2008-08-12  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-attribute.c (get_attribute_string): Handle mixture of QP and normal
+	line folding from buggy apps such as Zimbra.
+
+2008-08-02  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-vcal.c (mimedir_vcal_read_file): Fix specifying current locale.
+
 2008-07-15  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-vcomponent.c (mimedir_vcomponent_parse_attribute): Fix Bug 183:

@@ -892,13 +892,33 @@ get_attribute_string (const gchar *string, GString *gstring)
 		if (qp) {
 			g_assert (gstring->len >= 1);
 
-			if (gstring->str[gstring->len - 1] != '=')
-				break;
-			gstring->str[gstring->len - 1] = '\0';
-			gstring->len--;
+			/* Some creators just use QP line folding rules, 
+			   others mix QP line folding with our normal line
+			   folding so try to support either.
 
-			if (string[pos] == ' ' || string[pos] == '\t')
-				pos++;
+			   Note, this does not break conformant QP implementations
+			   but strange things can happen if a non-conformant
+			   implementation breaks a line after the = of an =XX sequence.  */
+
+			if (gstring->str[gstring->len - 1] == '=') {
+
+			  /* QP line folding */
+			  gstring->str[gstring->len - 1] = '\0';
+			  gstring->len--;
+
+			  if (string[pos] == ' ' || string[pos] == '\t')
+			    pos++;
+
+			} else {
+
+			  /* Not QP line folding, let's try standard line folding */
+
+			  /* If next byte is not a white space, we're done */
+			  if (string[pos] != ' ' && string[pos] != '\t')
+			    break;
+			  pos++;
+
+			}
 		} else if (basesixfour) {
 			if (string[pos] == ' ' || string[pos] == '\t')
 				pos++;
