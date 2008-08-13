@@ -1,3 +1,13 @@
+2008-08-13  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.58 released.
+
+2008-08-13  Phil Blundell  <pb@reciva.com>
+
+	* Makefile.am (EXTRA_DIST): Add POT file.
+	* configure.ac (ALL_LINGUAS): Auto-detect all PO files.
+	* po/Makefile.in.in (DISTFILES): Remove po/ChangeLog.
+
 2008-08-10  Phil Blundell  <pb@reciva.com>
 
 	* po/Makefile.in.in: Add missing file, POT generation doesn't work

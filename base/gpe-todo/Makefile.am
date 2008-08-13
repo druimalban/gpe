@@ -65,8 +65,8 @@ EXTRA_DIST = gpe-todo.desktop.in \
              intltool-update.in \
              hildon/gpe-todo.desktop.in.in \
              hildon/com.nokia.gpe-todo.service.in \
-             hildon/gpe-todo.png
-			 
+             hildon/gpe-todo.png \
+	     po/gpe-todo.pot
 
 DISTCLEANFILES = intltool-extract \
                  intltool-merge \

@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(gpe-todo,0.57,gpe-list@linuxtogo.org)
+AC_INIT(gpe-todo,0.58,gpe-list@linuxtogo.org)
 AC_CONFIG_SRCDIR([main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
@@ -17,7 +17,7 @@ AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=$PACKAGE
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="cs de es fr id ja nl pt_BR pt ro ru sk sr sv vi wa zh_TW zh_CN"
+ALL_LINGUAS="$(ls ${srcdir}/po/*.po | sed 's/.*\/po\///;s/\.po//' | tr \\n ' ')"
 
 gpetodo_localedir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(gpetodo_localedir)
