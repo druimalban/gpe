@@ -2,14 +2,15 @@
 # libgpewidget パッケージのための和訳.
 # Copyright (C) 2008 THE libgpewidget's COPYRIGHT HOLDER
 # This file is distributed under the same license as the libgpewidget package.
-# Takeshi HAMASAKI <hma@syd.odn.ne.jp>, 2008.
+# Takeshi HAMASAKI <hmatrjp@users.sourceforge.jp>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libgpewidget 0.56\n"
-"POT-Creation-Date: 2003-03-30 15:33+0100\n"
-"PO-Revision-Date: 2008-02-01 21:12+0900\n"
-"Last-Translator: Takeshi HAMASAKI <hma@syd.odn.ne.jp>\n"
+"Project-Id-Version: libgpewidget 0.117\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-07-11 13:00+0200\n"
+"PO-Revision-Date: 2008-08-05 10:01+0900\n"
+"Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -17,29 +18,47 @@ msgstr ""
 "X-Poedit-Language: Japanese\n"
 "X-Poedit-Country: JAPAN\n"
 
-#: errorbox.c:42
+#: ../colordialog.c:164 ../colordialog.c:177
+msgid "Selected colour"
+msgstr "選択された色"
+
+#: ../colordialog.c:165 ../colordialog.c:178
+msgid "Selected colour value in the dialog."
+msgstr "選択ダイアログで選択された色。"
+
+#: ../colordialog.c:351
+msgid "Red"
+msgstr "赤"
+
+#: ../colordialog.c:354
+msgid "Green"
+msgstr "緑"
+
+#: ../colordialog.c:357
+msgid "Blue"
+msgstr "青"
+
+#: ../colordialog.c:600
+msgid "Select colour"
+msgstr "色を選択"
+
+#: ../dirbrowser.c:189
+msgid "No directory is selected."
+msgstr "ディレクトリが選択されていません"
+
+#: ../errorbox.c:45
 #, c-format
 msgid "GPE-ERROR: %s\n"
 msgstr "GPE エラー: %s\n"
 
-#: pixmaps.c:82
+#: ../pixmaps.c:223
 #, c-format
-msgid "Unable to load icon \"%s\""
-msgstr "アイコン \"%s\" を読み込むことができません"
+msgid "Icon \"%s\" not loaded."
+msgstr "アイコン \"%s\" が読み込まれていません。"
 
-#: pixmaps.c:168
-#, c-format
-msgid "Icon \"%s\" not loaded"
-msgstr "アイコン \"%s\" は読み込まれていません"
-
-#: dirbrowser.c:166
-msgid "No directory is selected."
-msgstr "ディレクトリが選択されていません"
-
-#: what.c:78
-msgid "No help available."
-msgstr "ヘルプはありません。"
-
-#: question.c:175
+#: ../question.c:178
 msgid "Question"
 msgstr "確認"
+
+#~ msgid "No help available."
+#~ msgstr "ヘルプはありません。"

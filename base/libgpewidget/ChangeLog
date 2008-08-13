@@ -1,3 +1,8 @@
+2008-08-13  Phil Blundell  <pb@reciva.com>
+
+	* configure.ac (ALL_LINGUAS): Auto-detect all PO files.
+	* po/ga.po, po/sv.po, po/ja.po, po/zh_CN.po: Update from TP.
+	* mkinstalldirs: Remove from version control.
 
 2008-07-11 Florian Boor <florian@kernelconcepts.de>
 
