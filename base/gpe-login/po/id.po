@@ -5,80 +5,107 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-login 0.60\n"
-"POT-Creation-Date: 2003-08-17 13:50+0100\n"
-"PO-Revision-Date: 2008-08-10 16:13+0700\n"
+"Project-Id-Version: gpe-login 0.94\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-03-16 16:36+0100\n"
+"PO-Revision-Date: 2008-08-10 21:43+0700\n"
 "Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
 "Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:468 gpe-login.c:541
+#: gpe-login.c:524 gpe-login.c:604
 msgid "Login incorrect"
 msgstr "Log masuk salah"
 
-#: gpe-login.c:570
-msgid "User already exists"
-msgstr "Pengguna telah ada"
-
-#: gpe-login.c:581
+#: gpe-login.c:657 gpe-login.c:739
 msgid "Passwords don't match"
 msgstr "Sandi lewat tak cocok"
 
-#: gpe-login.c:590
+#: gpe-login.c:666 gpe-login.c:748
 msgid "Empty password not allowed"
 msgstr "Sandi lewat kosong tak diizinkan"
 
-#: gpe-login.c:1125
-msgid "Record"
-msgstr "Catatan"
+#: gpe-login.c:728
+msgid "User already exists"
+msgstr "Pengguna telah ada"
 
-#: gpe-login.c:1126
-msgid "recalibrates touchscreen"
-msgstr "layar sentuh rekalibrasi"
+#: gpe-login.c:1336
+msgid "Holding down the stylus for greater than"
+msgstr "Memegang stilus lebih lama dari"
 
-#. TRANSLATORS: please replace this with your own Pango language code:
-#: gpe-login.c:1162
-msgid "en"
-msgstr "id"
+#: gpe-login.c:1337
+msgid "5 seconds"
+msgstr "5 detik"
 
-#: gpe-login.c:1396
-msgid "Screen locked"
-msgstr "Layar terkunci"
+#: gpe-login.c:1338
+msgid ", or holding"
+msgstr ", atau memegang"
 
-#: gpe-login.c:1400 gpe-login.c:1516
-msgid "Username"
-msgstr "Nama pengguna"
+#: gpe-login.c:1339
+msgid "record"
+msgstr "catatan"
 
-#: gpe-login.c:1425 gpe-login.c:1518
+#: gpe-login.c:1340
+msgid ", recalibrates the touchscreen."
+msgstr ", rekalibrasi layar sentuh."
+
+#: gpe-login.c:1362
+msgid "System setup"
+msgstr "Pengaturan sistem"
+
+#: gpe-login.c:1367
+msgid ""
+"Please choose a password for the\n"
+"<i>root</i> account.\n"
+"\n"
+"This will be needed when performing\n"
+"system administration.\n"
+msgstr ""
+"Silakan pilih sandi lewat untuk\n"
+"akun <i>root</i>.\n"
+"\n"
+"Ini akan dibutuhkan ketika melakukan\n"
+"administrasi sistem.\n"
+
+#: gpe-login.c:1368 gpe-login.c:1435 gpe-login.c:1901
 msgid "Password"
 msgstr "Sandi lewat"
 
-#: gpe-login.c:1439
-msgid "Language"
-msgstr "Bahasa"
+#: gpe-login.c:1369
+msgid "Confirm"
+msgstr "Konfirmasi"
 
-#: gpe-login.c:1460
-msgid "Enter password with hard keys"
-msgstr "Masukkan sandi lewat dengan tombol keras"
+#: gpe-login.c:1433 gpe-login.c:1878
+msgid "Username"
+msgstr "Nama pengguna"
 
-#: gpe-login.c:1517
+#: gpe-login.c:1434
 msgid "Full name"
 msgstr "Nama lengkap"
 
-#: gpe-login.c:1519
+#: gpe-login.c:1436
 msgid "Confirm password"
 msgstr "Konfirmasi sandi lewat"
 
-#: gpe-login.c:1573
-msgid "New user"
-msgstr "Pengguna baru"
+#: gpe-login.c:1437 gpe-login.c:1915
+msgid "Language"
+msgstr "Bahasa"
 
-#: gpe-logout.desktop.in.h:1
-msgid "Log out"
-msgstr "Log keluar"
+#: gpe-login.c:1501
+msgid "New user details"
+msgstr "Detail pengguna baru"
 
-#: gpe-logout.desktop.in.h:2
-msgid "Log out of GPE"
-msgstr "Log keluar GPE"
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1604
+msgid "en"
+msgstr "id"
+
+#: gpe-login.c:1874
+msgid "Screen locked"
+msgstr "Layar terkunci"
+
+#: gpe-login.c:1936
+msgid "Enter password with hard keys"
+msgstr "Masukkan sandi lewat dengan tombol keras"

@@ -1,84 +1,120 @@
 # Swedish messages for gpe-login.
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-login package.
 # Christian Rose <menthos@menthos.com>, 2003.
+# Daniel Nylander <po@danielnylander.se>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-login 0.48\n"
-"POT-Creation-Date: 2003-03-30 15:44+0100\n"
-"PO-Revision-Date: 2003-07-10 15:40+0200\n"
-"Last-Translator: Christian Rose <menthos@menthos.com>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"Project-Id-Version: gpe-login 0.94\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-03-16 16:36+0100\n"
+"PO-Revision-Date: 2008-08-10 14:07+0100\n"
+"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:480 gpe-login.c:553
+#: gpe-login.c:524 gpe-login.c:604
 msgid "Login incorrect"
 msgstr "Felaktig inloggning"
 
-#: gpe-login.c:582
-msgid "User already exists"
-msgstr "Användaren finns redan"
-
-#: gpe-login.c:593
+#: gpe-login.c:657 gpe-login.c:739
 msgid "Passwords don't match"
 msgstr "Lösenorden stämmer inte överens"
 
-#: gpe-login.c:602
+#: gpe-login.c:666 gpe-login.c:748
 msgid "Empty password not allowed"
 msgstr "Tomt lösenord är inte tillåtet"
 
-#: gpe-login.c:1058
-msgid "Record"
-msgstr "Spela in"
+#: gpe-login.c:728
+msgid "User already exists"
+msgstr "Användaren finns redan"
 
-#: gpe-login.c:1059
-msgid "recalibrates touchscreen"
-msgstr "omkalibrerar pekskärmen"
+#: gpe-login.c:1336
+msgid "Holding down the stylus for greater than"
+msgstr "Håll ner pekpennan längre än"
 
-# Misstänker att detta kan vara koden för standardspråket eller något. Väntar
-# på svar från upphovsmännen.
-#: gpe-login.c:1095
-msgid "en"
-msgstr "sv"
+#: gpe-login.c:1337
+msgid "5 seconds"
+msgstr "5 sekunder"
 
-#: gpe-login.c:1329
-msgid "Screen locked"
-msgstr "Skärmen låst"
+#: gpe-login.c:1338
+msgid ", or holding"
+msgstr "eller håll ner"
 
-#: gpe-login.c:1333 gpe-login.c:1448
-msgid "Username"
-msgstr "Användarnamn"
+#: gpe-login.c:1339
+msgid "record"
+msgstr "spela in"
 
-#: gpe-login.c:1358 gpe-login.c:1450
+#: gpe-login.c:1340
+msgid ", recalibrates the touchscreen."
+msgstr ", omkalibrerar pekskärmen."
+
+#: gpe-login.c:1362
+msgid "System setup"
+msgstr "Systemkonfiguration"
+
+#: gpe-login.c:1367
+msgid ""
+"Please choose a password for the\n"
+"<i>root</i> account.\n"
+"\n"
+"This will be needed when performing\n"
+"system administration.\n"
+msgstr ""
+"Välj ett lösenord för kontot\n"
+"<i>root</i>.\n"
+"\n"
+"Detta kommer att behövas vid\n"
+"administration av systemet.\n"
+
+#: gpe-login.c:1368 gpe-login.c:1435 gpe-login.c:1901
 msgid "Password"
 msgstr "Lösenord"
 
-#: gpe-login.c:1372
-msgid "Language"
-msgstr "Språk"
+#: gpe-login.c:1369
+msgid "Confirm"
+msgstr "Bekräfta"
 
-#: gpe-login.c:1392
-msgid "Enter password with hard keys"
-msgstr "Ange lösenord med hårda tangenter"
+#: gpe-login.c:1433 gpe-login.c:1878
+msgid "Username"
+msgstr "Användarnamn"
 
-#: gpe-login.c:1449
+#: gpe-login.c:1434
 msgid "Full name"
 msgstr "Fullständigt namn"
 
-#: gpe-login.c:1451
+#: gpe-login.c:1436
 msgid "Confirm password"
 msgstr "Bekräfta lösenord"
 
-#: gpe-login.c:1505
-msgid "New user"
-msgstr "Ny användare"
+#: gpe-login.c:1437 gpe-login.c:1915
+msgid "Language"
+msgstr "Språk"
 
-#: gpe-logout.desktop.in.h:1
-msgid "Log out"
-msgstr "Logga ut"
+#: gpe-login.c:1501
+msgid "New user details"
+msgstr "Detaljer för ny användare"
 
-#: gpe-logout.desktop.in.h:2
-msgid "Log out of GPE"
-msgstr "Logga ut från GPE"
+# Misstänker att detta kan vara koden för standardspråket eller något. Väntar
+# på svar från upphovsmännen.
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1604
+msgid "en"
+msgstr "sv"
+
+#: gpe-login.c:1874
+msgid "Screen locked"
+msgstr "Skärmen låst"
+
+#: gpe-login.c:1936
+msgid "Enter password with hard keys"
+msgstr "Ange lösenord med hårda tangenter"
+
+#~ msgid "Log out"
+#~ msgstr "Logga ut"
+
+#~ msgid "Log out of GPE"
+#~ msgstr "Logga ut från GPE"

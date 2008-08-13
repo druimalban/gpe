@@ -1332,13 +1332,11 @@ locale_read_user (const char *username)
 static void
 calibrate_hint_hook (GtkWidget *w, gpointer data)
 {
-  gchar *p = g_strdup_printf ("<span lang='%s'>%s <i>%s</i> %s <i>%s</i> %s</span>",
+  gchar *p = g_strdup_printf ("<span lang='%s'>%s</span>",
 			      pango_lang_code,
-			      _("Holding down the stylus for greater than"),
-			      _("5 seconds"),
-			      _(", or holding"),
-			      _("record"),
-			      _(", recalibrates the touchscreen."));
+			      _("Holding down the stylus for longer than "
+			        "<i>5 seconds</i>, or holding <i>record</i>, "
+			        "recalibrates the touchscreen."));
 
   gtk_label_set_markup (GTK_LABEL (w), p);
 

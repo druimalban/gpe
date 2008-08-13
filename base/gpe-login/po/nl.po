@@ -1,84 +1,118 @@
-# Dutch translation of gpe-login.
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Dutch translations for gpe-login-0.94.
 # This file is distributed under the same license as the gpe-login package.
-# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
 #
+# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
+# Benno Schulenberg <benno@vertaalt.nl>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-login 0.60\n"
-"POT-Creation-Date: 2003-08-17 13:50+0100\n"
-"PO-Revision-Date: 2003-09-06 09:53+0100\n"
-"Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
-"Language-Team: Dutch <vertaling@nl.linux.org>\n"
+"Project-Id-Version: gpe-login-0.94\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-03-16 16:36+0100\n"
+"PO-Revision-Date: 2008-08-10 16:20+0200\n"
+"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
+"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: gpe-login.c:468 gpe-login.c:541
+#: gpe-login.c:524 gpe-login.c:604
 msgid "Login incorrect"
-msgstr "Inloggegevens onjuist"
+msgstr "Aanmeldingsgegevens zijn onjuist"
 
-#: gpe-login.c:570
-msgid "User already exists"
-msgstr "Gebruiker bestaat al"
-
-#: gpe-login.c:581
+#: gpe-login.c:657 gpe-login.c:739
 msgid "Passwords don't match"
 msgstr "Wachtwoorden komen niet overeen"
 
-#: gpe-login.c:590
+#: gpe-login.c:666 gpe-login.c:748
 msgid "Empty password not allowed"
-msgstr "Lege wachtwoorden niet toegestaan"
+msgstr "Een leeg wachtwoord is niet toegestaan"
 
-#: gpe-login.c:1125
-msgid "Record"
-msgstr "Vastleggen"
+#: gpe-login.c:728
+msgid "User already exists"
+msgstr "Gebruiker bestaat al"
 
-#: gpe-login.c:1126
-msgid "recalibrates touchscreen"
-msgstr "het aanraakscherm kalibreren"
+#: gpe-login.c:1336
+msgid "Holding down the stylus for greater than"
+msgstr "De stylus langer dan"
 
-#. TRANSLATORS: please replace this with your own Pango language code:
-#: gpe-login.c:1162
-msgid "en"
-msgstr "nl"
+#: gpe-login.c:1337
+msgid "5 seconds"
+msgstr "5 seconden neerdrukken"
 
-#: gpe-login.c:1396
-msgid "Screen locked"
-msgstr "Scherm geblokkeerd"
+#: gpe-login.c:1338
+msgid ", or holding"
+msgstr ", of"
 
-#: gpe-login.c:1400 gpe-login.c:1516
-msgid "Username"
-msgstr "Gebruikersnaam"
+#: gpe-login.c:1339
+msgid "record"
+msgstr "opname ingedrukt houden"
 
-#: gpe-login.c:1425 gpe-login.c:1518
+#: gpe-login.c:1340
+msgid ", recalibrates the touchscreen."
+msgstr ", herkalibreert het aanraakscherm."
+
+#: gpe-login.c:1362
+msgid "System setup"
+msgstr "Systeeminstellingen"
+
+#: gpe-login.c:1367
+msgid ""
+"Please choose a password for the\n"
+"<i>root</i> account.\n"
+"\n"
+"This will be needed when performing\n"
+"system administration.\n"
+msgstr ""
+"Kies een wachtwoord voor <i>root</i>.\n"
+"\n"
+"Dit wachtwoord is nodig om het\n"
+"systeem te kunnen beheren.\n"
+
+#: gpe-login.c:1368 gpe-login.c:1435 gpe-login.c:1901
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: gpe-login.c:1439
-msgid "Language"
-msgstr "Taal"
+#: gpe-login.c:1369
+msgid "Confirm"
+msgstr "Bevestigen"
 
-#: gpe-login.c:1460
-msgid "Enter password with hard keys"
-msgstr "Voer het wachtwoord in met de harde toetsen"
+#: gpe-login.c:1433 gpe-login.c:1878
+msgid "Username"
+msgstr "Gebruikersnaam"
 
-#: gpe-login.c:1517
+#: gpe-login.c:1434
 msgid "Full name"
 msgstr "Volledige naam"
 
-#: gpe-login.c:1519
+#: gpe-login.c:1436
 msgid "Confirm password"
 msgstr "Bevestig het wachtwoord"
 
-#: gpe-login.c:1573
-msgid "New user"
-msgstr "Nieuwe gebruiker"
+#: gpe-login.c:1437 gpe-login.c:1915
+msgid "Language"
+msgstr "Taal"
 
-#: gpe-logout.desktop.in.h:1
-msgid "Log out"
-msgstr "Uitloggen"
+#: gpe-login.c:1501
+msgid "New user details"
+msgstr "Details van nieuwe gebruiker"
 
-#: gpe-logout.desktop.in.h:2
-msgid "Log out of GPE"
-msgstr "Uitloggen uit GPE"
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: gpe-login.c:1604
+msgid "en"
+msgstr "nl"
+
+#: gpe-login.c:1874
+msgid "Screen locked"
+msgstr "Scherm is geblokkeerd"
+
+#: gpe-login.c:1936
+msgid "Enter password with hard keys"
+msgstr "Voer het wachtwoord in met de harde toetsen"
+
+#~ msgid "Log out"
+#~ msgstr "Afmelden"
+
+#~ msgid "Log out of GPE"
+#~ msgstr "Afmelden uit GPE"

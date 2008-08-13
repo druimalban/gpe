@@ -1,3 +1,18 @@
+2008-08-13  Phil Blundell  <pb@reciva.com>
+
+	* po/gpe-login.pot: Update.
+
+2008-08-13  Phil Blundell  <pb@reciva.com>
+
+	* gpe-login.c (calibrate_hint_hook): Use a single string for
+	better translatability.  Patch from Benno Schulenberg of the
+	Translation Project.
+
+	* configure.ac (ALL_LINGUAS): Auto-detect all PO files.
+
+	* po/id.po, po/ja.po, po/sv.po, po/nl.po: Update from TP.
+	* po/Makefile.in.in: New.
+
 2008-08-10  Phil Blundell  <pb@reciva.com>
 
 	* po/id.po: New translation, courtesy Andhika Padmawan.
