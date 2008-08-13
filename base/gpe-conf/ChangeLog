@@ -1,7 +1,11 @@
+2008-08-14  Florian Boor <florian@kernelconcepts.de>
+
+	* po/id.po: Add Indonesian translation contributed by Andhika
+	  Padmawan.
 
 2008-06-06      Florian Boor <florian.boor@kernelconcepts.de>
 
-	* tasks.c: More verbouse question.
+	* tasks.c: More verbose question.
 
 2008-06-05      Florian Boor <florian.boor@kernelconcepts.de>
 	
