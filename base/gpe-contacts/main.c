@@ -1332,7 +1332,7 @@ on_import_vcard (GtkWidget *widget, gpointer data)
       if (ec)
         feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
-          "%s %i %s\n%s",_("Import of"),ec,_("files failed:"),errstr);
+          _("Import of %i files failed:\n%s"), ec, errstr);
       else
         feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
@@ -1376,7 +1376,7 @@ on_export_vcard (GtkWidget *widget, gpointer data)
       if (ec)
         feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 
-          "%s %i %s %i",_("Export of"), i - ec, _("files ok, failed:"), ec);
+          _("Export of %i files OK.  Failed: %i"), i - ec, ec);
       else
         feedbackdlg = gtk_message_dialog_new(GTK_WINDOW(mainw),
           GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, 

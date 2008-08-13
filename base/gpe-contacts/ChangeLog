@@ -1,3 +1,9 @@
+2008-08-13  Phil Blundell  <pb@reciva.com>
+
+	* main.c (on_import_vcard): Fix i18n problem resulting from
+	chopped-up strings.  Patch from Benno Schulenberg of the
+	Translation Project.
+
 2008-08-10  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.48 released.
