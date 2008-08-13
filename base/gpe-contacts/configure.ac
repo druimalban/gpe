@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT(gpe-contacts,0.48,gpe-list@linuxtogo.org)
+AC_INIT(gpe-contacts,0.49,gpe-list@linuxtogo.org)
 
 AC_CONFIG_SRCDIR([main.c])
 AM_CONFIG_HEADER(config.h)
