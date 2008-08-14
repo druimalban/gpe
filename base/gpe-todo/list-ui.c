@@ -827,6 +827,8 @@ top_level (GtkWidget *window)
       }
       
     renderer = cell_renderer_color_new ();
+    /* xgettext: TRANSLATORS: "C" in the next line is an abbreviation for "Colour", 
+       please select an appropriate 1- or 2- character label for your own language.  */
     col = gtk_tree_view_column_new_with_attributes (_("C"), renderer,
                                                     "colorlist", COL_COLORS, NULL);
     gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
