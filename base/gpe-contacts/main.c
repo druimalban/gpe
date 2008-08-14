@@ -1755,11 +1755,13 @@ main (int argc, char *argv[])
 	{
 	  g_print(_("Could not import file %s: %s.\n"), ifile, error->message);
 	  g_error_free(error);
+	  contacts_db_close();
 	  exit (EXIT_FAILURE);
 	}
       else
 	{
 	  g_print(_("File %s imported sucessfully.\n"), ifile);      
+	  contacts_db_close();
 	  exit (EXIT_SUCCESS);
 	}
     }
