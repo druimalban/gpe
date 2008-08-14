@@ -2,7 +2,7 @@ PREFIX = /usr/local
 PACKAGE = blueprobe
 DEBUG = no
 CVSBUILD = yes
-VERSION = 0.18
+VERSION = 0.19
 
 MEMBERS = blueprobe
 
