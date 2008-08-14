@@ -1,16 +1,16 @@
 # Japanese translations for gpe-todo package
-# gpe-todo パッケージに対する英訳.
-# Copyright (C) 2006 THE gpe-todo'S COPYRIGHT HOLDER
+# gpe-todo パッケージのための和訳
+# Copyright (C) 2006-2008 THE gpe-todo'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-todo package.
-# Takeshi HAMASAKI <hma@syd.odn.ne.jp>, 2006.
+# Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>, 2006-2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-todo-0.54\n"
+"Project-Id-Version: gpe-todo-0.58\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-06-20 16:51+0200\n"
-"PO-Revision-Date: 2006-07-25 08:03+0900\n"
-"Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
+"POT-Creation-Date: 2008-08-13 19:30+0100\n"
+"PO-Revision-Date: 2008-08-14 09:41+0900\n"
+"Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -18,111 +18,122 @@ msgstr ""
 "X-Poedit-Language: Japanese\n"
 "X-Poedit-Country: JAPAN\n"
 
-#: ../gpe-todo.desktop.in.h:1
+#: ../gpe-todo.desktop.in.in.h:1 ../hildon/gpe-todo.desktop.in.in.h:1
+#: ../gpe-todo.desktop.in.h:1 ../hildon/gpe-todo.desktop.in.h:1
 msgid "GPE To-do List"
 msgstr "GPE To-do リスト"
 
-#: ../gpe-todo.desktop.in.h:2 ../main.c:93
+#: ../gpe-todo.desktop.in.in.h:2 ../hildon/gpe-todo.desktop.in.in.h:2
+#: ../gpe-todo.desktop.in.h:2 ../hildon/gpe-todo.desktop.in.h:2 ../main.c:101
 msgid "To-do list"
 msgstr "To-do リスト"
 
-#: ../list-ui.c:123
+#: ../list-ui.c:158
 msgid "All items"
 msgstr "すべての項目"
 
-#: ../list-ui.c:150
+#: ../list-ui.c:185
 msgid "Show completed"
 msgstr "済んだものを表示"
 
-#: ../list-ui.c:188 ../todo-ui.c:327
+#: ../list-ui.c:223 ../todo-ui.c:328
 msgid "OK"
 msgstr "完了"
 
-#: ../list-ui.c:189 ../todo-ui.c:328
+#: ../list-ui.c:224 ../todo-ui.c:329
 msgid "Cancel"
 msgstr "取消"
 
-#: ../list-ui.c:536
+#: ../list-ui.c:581
 msgid "Item"
 msgstr "項目"
 
-#: ../list-ui.c:537 ../list-ui.c:653
+#: ../list-ui.c:582 ../list-ui.c:718
 msgid "Categories"
 msgstr "カテゴリ"
 
-#: ../list-ui.c:538
+#: ../list-ui.c:583
 msgid "View"
 msgstr "表示"
 
-#: ../list-ui.c:539
+#: ../list-ui.c:584
 msgid "Tools"
 msgstr "ツール"
 
-#: ../list-ui.c:540
+#: ../list-ui.c:585
 msgid "Close"
 msgstr "閉じる"
 
-#: ../list-ui.c:541
+#: ../list-ui.c:586
 msgid "Open..."
 msgstr "開く.."
 
-#: ../list-ui.c:542
+#: ../list-ui.c:587
 msgid "Add new"
 msgstr "新しい項目の追加"
 
-#: ../list-ui.c:543
+#: ../list-ui.c:588
 msgid "Edit categories"
 msgstr "カテゴリの編集"
 
-#: ../list-ui.c:544
+#: ../list-ui.c:589
 msgid "Show toolbar"
 msgstr "ツールバーを表示"
 
-#: ../list-ui.c:545
+#: ../list-ui.c:590
+msgid "Fullscreen"
+msgstr "全画面"
+
+#: ../list-ui.c:591
 msgid "Delete completed items"
 msgstr "済んだ項目の削除"
 
-#: ../list-ui.c:546
+#: ../list-ui.c:592
 msgid "Move completed items to the end"
 msgstr "済んだ項目を後ろへ移動"
 
-#: ../list-ui.c:622
+#: ../list-ui.c:688
 msgid "New"
 msgstr "新規"
 
-#: ../list-ui.c:632 ../todo-ui.c:330
+#: ../list-ui.c:698 ../todo-ui.c:331
 msgid "Delete"
 msgstr "消去"
 
-#: ../list-ui.c:645
+#: ../list-ui.c:710
 msgid "Refresh"
 msgstr "更新"
 
-#: ../list-ui.c:679
+#: ../list-ui.c:744
 msgid "Show:"
 msgstr "表示:"
 
-#: ../list-ui.c:738
+#: ../list-ui.c:804
 msgid "Status"
 msgstr "状態"
 
-#: ../list-ui.c:744
+#: ../list-ui.c:810
 msgid "Summary"
 msgstr "概要"
 
-#: ../list-ui.c:756
+#: ../list-ui.c:822
 msgid "Due Date"
 msgstr "いつまでに"
 
-#: ../list-ui.c:761
+#. TRANSLATORS: "C" stands for Color.
+#: ../list-ui.c:830
+msgid "C"
+msgstr "色"
+
+#: ../list-ui.c:837
 msgid "Category"
 msgstr "カテゴリ"
 
-#: ../main.c:80
+#: ../main.c:88
 msgid "ToDo"
 msgstr "ToDo"
 
-#: ../main.c:81
+#: ../main.c:90
 msgid "List"
 msgstr "リスト "
 
@@ -154,42 +165,45 @@ msgstr "普通"
 msgid "Low"
 msgstr "低い"
 
-#: ../todo-ui.c:267
+#: ../todo-ui.c:268
 msgid "Priority:"
 msgstr "優先度:"
 
-#: ../todo-ui.c:269
+#: ../todo-ui.c:270
 msgid "Status:"
 msgstr "状態:"
 
-#: ../todo-ui.c:272
+#: ../todo-ui.c:273
 msgid "Summary:"
 msgstr "概要:"
 
-#: ../todo-ui.c:273
+#: ../todo-ui.c:274
 msgid "Details:"
 msgstr "詳細:"
 
-#: ../todo-ui.c:302 ../todo-ui.c:305
+#: ../todo-ui.c:303 ../todo-ui.c:306
 msgid "Categories:"
 msgstr "カテゴリ:"
 
-#: ../todo-ui.c:329
+#: ../todo-ui.c:330
 msgid "Categories..."
 msgstr "カテゴリ..."
 
-#: ../todo-ui.c:358
+#: ../todo-ui.c:359
 msgid "Due:"
 msgstr "いつまでに"
 
-#: ../todo-ui.c:373
-msgid "Define categories by tapping Categories button."
-msgstr "カテゴリ ボタンをタップしてカテゴリを定義してください。"
+#: ../todo-ui.c:374
+msgid "(no category selected)"
+msgstr "(カテゴリが選択されていません)"
 
-#: ../todo-ui.c:520
+#: ../todo-ui.c:528
 msgid "Edit Item"
 msgstr "選択した項目を編集"
 
-#: ../todo-ui.c:531
+#: ../todo-ui.c:539
 msgid "New item"
 msgstr "新しい項目"
+
+#~ msgid "Define categories by tapping Categories button."
+#~ msgstr "カテゴリ ボタンをタップしてカテゴリを定義してください。"
