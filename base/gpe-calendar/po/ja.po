@@ -2,23 +2,25 @@
 # gpe-calendar パッケージに対する和訳.
 # Copyright (C) 2006 THE gpe-calendar'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-calendar package.
-# Takeshi HAMASAKI <hma@syd.odn.ne.jp>, 2006.
+# Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>, 2006-2008.
 #
-#: ../event-ui.c:185
+#: ../event-ui.c:193
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-calendar 0.73rc2\n"
+"Project-Id-Version: gpe-calendar 0.91\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-07-03 16:10+0200\n"
-"PO-Revision-Date: 2006-08-29 22:36+0900\n"
-"Last-Translator: Takeshi Hamasaki <hma@syd.odn.ne.jp>\n"
+"POT-Creation-Date: 2007-06-08 19:01+0200\n"
+"PO-Revision-Date: 2008-08-08 05:29+0900\n"
+"Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-Basepath: /stuff/stable/tmp/work/armv5te-angstrom-linux-gnueabi/gpe-calendar-0.91-r0/gpe-calendar-0.91/po\n"
 
 #: ../gpe-calendar.desktop.in.in.h:1 ../hildon/gpe-calendar.desktop.in.in.h:1
+#: ../event-menu.c:352
 msgid "Calendar"
 msgstr "カレンダ"
 
@@ -30,37 +32,34 @@ msgstr "GPE カレンダ"
 msgid "GPE Calendar Application"
 msgstr "GPE カレンダ アプリケーション"
 
-#: ../alarm-dialog.c:188 ../main.c:1788
+#: ../alarm-dialog.c:188 ../main.c:2328
 msgid "Alarms"
 msgstr "アラーム"
 
 #: ../alarm-dialog.c:208
-#, fuzzy
 msgid "Acknowledge All"
-msgstr "全てのファイル"
+msgstr "すべて確認"
 
-#: ../alarm-dialog.c:214 ../calendars-dialog.c:467
+#: ../alarm-dialog.c:214 ../calendars-dialog.c:468
 msgid "Dismiss"
 msgstr "取り消し"
 
 #: ../alarm-dialog.c:285
-#, fuzzy
 msgid "No alarms have gone off."
-msgstr "       --no-proxy                プロクシを使わない\n"
+msgstr "アラームは鳴っていません。"
 
 #: ../alarm-dialog.c:371
 #, c-format
 msgid "%s%s%s%s%s%s%s%s"
-msgstr ""
+msgstr "%s%s%s%s%s%s%s%s"
 
 #: ../alarm-dialog.c:372
 msgid "<b>Summary</b>: "
 msgstr "<b>要約</b>:"
 
 #: ../alarm-dialog.c:375
-#, fuzzy
 msgid "<b>Description</b>: "
-msgstr "説明"
+msgstr "<b>説明</b>:"
 
 #: ../alarm-dialog.c:378
 msgid "<b>Location</b>: "
@@ -68,15 +67,15 @@ msgstr "<b>場所</b>:"
 
 #: ../alarm-dialog.c:464
 msgid "Show Event"
-msgstr "イベントを表示"
+msgstr "予定を表示"
 
 #: ../alarm-dialog.c:470
 msgid "Acknowledge"
-msgstr ""
+msgstr "確認"
 
 #: ../alarm-dialog.c:477
 msgid "Sleep:"
-msgstr ""
+msgstr "スリープ:"
 
 #: ../alarm-dialog.c:492
 msgid "Minutes"
@@ -96,6 +95,8 @@ msgid ""
 " %s cannot be the new parent of %s's constituents: this would create a loop (try being your own grandparent).\n"
 "Please select a calendar which is not a descendent of %s."
 msgstr ""
+" %s は %s の構成要素の新しい親になることはできません: ループになります（自分自身の祖父母になろうとしています）。\n"
+"%s の子孫ではないカレンダを選択してください。"
 
 #: ../calendar-delete-dialog.c:171
 #, c-format
@@ -103,342 +104,321 @@ msgid "Delete Calendar %s"
 msgstr "カレンダ %s を削除"
 
 #: ../calendar-delete-dialog.c:197
-#, fuzzy, c-format
+#, c-format
 msgid "Delete %s%s%s"
-msgstr "削除"
+msgstr "%s%s%s を削除します"
 
 #: ../calendar-delete-dialog.c:207
 #, c-format
 msgid "Reparent %s%s%s"
-msgstr ""
+msgstr "%s%s%s の親を再設定"
 
-#: ../calendar-edit-dialog.c:252
+#: ../calendar-edit-dialog.c:258
 msgid "Calendar: New Calendar"
 msgstr "カレンダ: 新規カレンダ"
 
-#: ../calendar-edit-dialog.c:275
+#: ../calendar-edit-dialog.c:289
 msgid "Title:"
 msgstr "タイトル:"
 
+#. Description.
 #. Description textarea.
-#: ../calendar-edit-dialog.c:288 ../event-ui.c:717
+#: ../calendar-edit-dialog.c:300 ../event-ui.c:840
 msgid "Description:"
 msgstr "説明:"
 
-#: ../calendar-edit-dialog.c:301
+#. Parent.
+#: ../calendar-edit-dialog.c:311
 msgid "Parent:"
 msgstr "親:"
 
-#: ../calendar-edit-dialog.c:320
+#. Color selection.
+#: ../calendar-edit-dialog.c:327
 msgid "Color:"
 msgstr "色:"
 
-#: ../calendar-edit-dialog.c:341
+#. mode.
+#: ../calendar-edit-dialog.c:348
 msgid "Type:"
 msgstr "タイプ:"
 
-#: ../calendar-edit-dialog.c:346
-#, fuzzy
+#: ../calendar-edit-dialog.c:354
 msgid "Local"
 msgstr "ローカル"
 
-#: ../calendar-edit-dialog.c:347
+#: ../calendar-edit-dialog.c:355
 msgid "Subscribe"
-msgstr ""
+msgstr "購読"
 
-#: ../calendar-edit-dialog.c:348
+#: ../calendar-edit-dialog.c:356
 msgid "Publish"
-msgstr ""
+msgstr "公開"
 
 #. Uncomment as we support other modes.
-#: ../calendar-edit-dialog.c:351
+#: ../calendar-edit-dialog.c:359
 msgid "Synchronize"
 msgstr "同期"
 
-#: ../calendar-edit-dialog.c:368
+#. Don't show initially.
+#: ../calendar-edit-dialog.c:374
 msgid "URL:"
 msgstr "URL:"
 
-#: ../calendar-edit-dialog.c:380
+#: ../calendar-edit-dialog.c:385
 msgid "Username:"
 msgstr "ユーザーネーム:"
 
-#: ../calendar-edit-dialog.c:392
+#: ../calendar-edit-dialog.c:395
 msgid "Password:"
 msgstr "パスワード:"
 
 #. Don't show initially.
-#: ../calendar-edit-dialog.c:406
+#: ../calendar-edit-dialog.c:413
 msgid "Update:"
 msgstr "更新:"
 
-#: ../calendar-edit-dialog.c:420
+#: ../calendar-edit-dialog.c:428
 msgid "times per year"
-msgstr "1年の回数"
+msgstr "回/1年"
 
-#: ../calendar-edit-dialog.c:421
+#: ../calendar-edit-dialog.c:429
 msgid "times per month"
-msgstr "1ヶ月の回数"
+msgstr "回/1ヶ月"
 
-#: ../calendar-edit-dialog.c:422
+#: ../calendar-edit-dialog.c:430
 msgid "times per week"
-msgstr "1週間の回数"
+msgstr "回/1週間"
 
-#: ../calendar-edit-dialog.c:423
+#: ../calendar-edit-dialog.c:431
 msgid "times per day"
-msgstr "1日の回数"
+msgstr "回/1日"
 
-#: ../calendar-edit-dialog.c:424
+#: ../calendar-edit-dialog.c:432
 msgid "times per hour"
-msgstr "1時間の回数"
+msgstr "回/1時間"
 
-#: ../calendar-edit-dialog.c:522
+#: ../calendar-edit-dialog.c:530
 msgid "Calendar: Edit Calendar"
 msgstr "カレンダ: カレンダの編集"
 
-#: ../calendars-dialog.c:299 ../main.c:1680
+#: ../calendars-dialog.c:300
 msgid "Calendars"
 msgstr "カレンダ"
 
-#: ../calendars-dialog.c:335
+#: ../calendars-dialog.c:336
 msgid "Show All"
 msgstr "すべてを表示"
 
-#: ../calendars-widgets.c:382
+#: ../calendars-widgets.c:385
 #, c-format
 msgid "%ld minutes ago"
 msgstr "%ld 分前"
 
-#: ../calendars-widgets.c:384
+#: ../calendars-widgets.c:387
 #, c-format
 msgid "%ld hours ago"
 msgstr "%ld 時間前"
 
-#: ../calendars-widgets.c:386
+#: ../calendars-widgets.c:389
 #, c-format
 msgid "%ld days ago"
 msgstr "%ld 日前"
 
-#: ../calendars-widgets.c:393
+#: ../calendars-widgets.c:396
 #, c-format
 msgid "%x"
-msgstr ""
+msgstr "%x"
 
-#: ../calendars-widgets.c:406
+#: ../calendars-widgets.c:409
 msgid "Up to date"
 msgstr "更新済み"
 
-#: ../calendars-widgets.c:408
-#, fuzzy
+#: ../calendars-widgets.c:411
 msgid "Modified"
-msgstr "最終変更日"
+msgstr "変更があります"
 
-#: ../calendar-update.c:158
-#, fuzzy
+#: ../calendar-update.c:157
 msgid "Calendar Syncronization"
-msgstr "calendar:YM"
+msgstr "カレンダーを同期"
 
-#: ../day_popup.c:89
+#: ../day_popup.c:85
 msgid "%a %d %B"
-msgstr ""
+msgstr "%B %d日 (%a)"
 
-#: ../day_popup.c:137 ../event-list.c:250
+#: ../day_popup.c:138 ../event-list.c:257
 #, c-format
 msgid "Until %s"
 msgstr "%s まで"
 
-#: ../day_view.c:238
-msgid "Until %b %d"
-msgstr "%b月 %d日まで"
+#: ../day_view.c:254
+msgid " - "
+msgstr " - "
 
-#: ../day_view.c:240
-#, fuzzy, c-format
-msgid "Until %d:%02d"
-msgstr "%s%d:%02d 分"
-
-#: ../event-list.c:189
+#: ../event-list.c:192
 #, c-format
 msgid "%-m/%-d"
-msgstr ""
-
-#: ../event-list.c:190
-msgid "%b %-d"
-msgstr ""
+msgstr "%-m/%-d"
 
 #: ../event-list.c:193
-msgid "%m/%d/%t"
-msgstr ""
+msgid "%b %-d"
+msgstr "%b %-d日"
 
-#: ../event-list.c:194
+#: ../event-list.c:196
+msgid "%m/%d/%t"
+msgstr "%m/%d/%t"
+
+#: ../event-list.c:197
 msgid "%b %d, %y"
 msgstr "%y年 %b月%d日"
 
-#: ../event-list.c:200
+#: ../event-list.c:203 ../event-menu.c:230 ../month_view.c:816
 msgid "%-H:%M"
-msgstr ""
+msgstr "%-H:%M"
 
-#: ../event-list.c:203
+#: ../event-list.c:206
 msgid "%-m/%-d %-H:%M"
-msgstr ""
-
-#: ../event-list.c:204
-msgid "%b %-d %-H:%M"
-msgstr ""
+msgstr "%-m/%-d %-H:%M"
 
 #: ../event-list.c:207
+msgid "%b %-d %-H:%M"
+msgstr "%b %-d日 %-H:%M"
+
+#: ../event-list.c:210
 msgid "%-m/%-d/%y %-H:%M"
-msgstr ""
+msgstr "'%y/%-m/%-d %-H:%M"
 
-#: ../event-list.c:208
+#: ../event-list.c:211
 msgid "%b %-d, %y %-H:%M"
-msgstr ""
+msgstr "%y年 %b %-d, %-H:%M"
 
-#: ../event-list.c:235 ../event-list.c:313 ../main.c:338 ../main.c:1811
+#: ../event-list.c:238 ../event-list.c:320 ../main.c:561 ../main.c:2351
 msgid "Today"
 msgstr "今日"
 
-#: ../event-list.c:741 ../event-ui.c:188 ../event-ui.c:780
-#, fuzzy
+#: ../event-list.c:752 ../event-ui.c:196 ../event-ui.c:910
 msgid "days"
-msgstr "日"
+msgstr "日ごと"
 
-#: ../event-list.c:742 ../event-ui.c:781
+#: ../event-list.c:753 ../event-ui.c:911
 msgid "weeks"
 msgstr "週"
 
-#: ../event-list.c:743 ../event-ui.c:194
+#: ../event-list.c:754 ../event-ui.c:202
 msgid "months"
 msgstr "月"
 
-#: ../event-list.c:744 ../event-ui.c:197
+#: ../event-list.c:755 ../event-ui.c:205
 msgid "years"
 msgstr "年"
 
-#: ../event-menu.c:57
-#, fuzzy, c-format
+#: ../event-menu.c:56
+#, c-format
 msgid "Delete all occurrences of %s?"
-msgstr "すべてのブックマークを削除します."
+msgstr "%s のすべての繰り返し予定を削除?"
 
-#: ../event-menu.c:60 ../event-menu.c:84
+#: ../event-menu.c:60 ../event-menu.c:82
 msgid "Question"
 msgstr "質問"
 
 #: ../event-menu.c:61
-#, fuzzy
 msgid "Delete this occurrence"
-msgstr "この画像を削除"
+msgstr "繰り返し予定の今回だけを削除"
 
 #: ../event-menu.c:62
-#, fuzzy
 msgid "Delete all occurrences"
-msgstr "すべてのブックマークを削除します."
+msgstr "繰り返し予定のすべてを削除"
 
-#: ../event-menu.c:82
+#: ../event-menu.c:80
 #, c-format
 msgid "Delete %s?"
 msgstr "%s を削除しますか?"
 
-#: ../event-menu.c:254
+#: ../event-menu.c:202 ../event-menu.c:224
+msgid "%b %d"
+msgstr "%b%d日"
+
+#: ../event-menu.c:204 ../event-menu.c:232
+msgid "%b %d, %-H:%M"
+msgstr "%b %d日, %-H:%M"
+
+#: ../event-menu.c:222 ../gtkdatesel.c:225
+#, c-format
+msgid "%d"
+msgstr "%d"
+
+#: ../event-menu.c:275 ../event-menu.c:363
 msgid "Edit"
 msgstr "編集"
 
-#: ../event-menu.c:267
-msgid "Edit Event"
-msgstr "イベントを編集"
-
-#: ../event-menu.c:275
-#, c-format
-msgid "Edit <i>%s</i>"
-msgstr "編集 <i>%s</i>"
-
-#: ../event-menu.c:286
+#: ../event-menu.c:287 ../event-menu.c:383
 msgid "Delete"
 msgstr "削除"
 
-#: ../event-menu.c:299
-msgid "Delete Event"
-msgstr "イベントを削除"
-
-#: ../event-menu.c:307
-#, c-format
-msgid "Delete <i>%s</i>"
-msgstr "削除 <i>%s</i>"
-
-#: ../event-menu.c:318 ../event-ui.c:1459
+#: ../event-menu.c:299 ../event-ui.c:1671
 msgid "Save"
 msgstr "保存"
 
-#: ../event-menu.c:331
-msgid "Save Event"
-msgstr "イベントを保存"
-
-#: ../event-menu.c:339
-#, c-format
-msgid "Save <i>%s</i>"
-msgstr "保存 <i>%s</i>"
-
-#: ../event-menu.c:353
+#: ../event-menu.c:314
 msgid "Send via Infra-red"
 msgstr "赤外線で送る"
 
-#: ../event-menu.c:366
+#: ../event-menu.c:327
 msgid "Send via Bluetooth"
 msgstr "Bluetooth で送る"
 
-#: ../event-menu.c:381
-#, fuzzy
+#: ../event-menu.c:342
 msgid "Move to Calendar..."
-msgstr "移動 <b>中心</b>を%s, %s"
+msgstr "指定するカレンダに移動..."
 
-#: ../event-menu.c:390
-#, c-format
-msgid "Only Show <i>%s</i>"
-msgstr "<i>%s</i> だけを表示"
+#: ../event-menu.c:373
+msgid "Save as"
+msgstr "名前を付けて保存"
 
-#: ../event-menu.c:401
-#, c-format
-msgid "Hide <i>%s</i>"
-msgstr "<i>%s</i> を隠す"
+#: ../event-menu.c:394
+msgid "Only Show"
+msgstr "これだけを表示: "
 
-#: ../event-ui.c:148 ../event-ui.c:872
-#, fuzzy
+#: ../event-menu.c:405
+msgid "Hide"
+msgstr "隠す"
+
+#: ../event-ui.c:156 ../event-ui.c:1010
 msgid "Every"
-msgstr "回転の単位:"
+msgstr "頻度:"
 
-#: ../event-ui.c:149
+#: ../event-ui.c:157
 msgid "First"
-msgstr "1番目"
+msgstr "1番目の"
 
-#: ../event-ui.c:150
+#: ../event-ui.c:158
 msgid "Second"
-msgstr "2番目"
+msgstr "2番目の"
 
-#: ../event-ui.c:151
+#: ../event-ui.c:159
 msgid "Third"
-msgstr "3番目"
+msgstr "3番目の"
 
-#: ../event-ui.c:152
+#: ../event-ui.c:160
 msgid "Fourth"
-msgstr "4番目"
+msgstr "4番目の"
 
-#: ../event-ui.c:153
+#: ../event-ui.c:161
 msgid "Last"
-msgstr "最後"
+msgstr "最後の"
 
-#: ../event-ui.c:154
+#: ../event-ui.c:162
 msgid "Second to last"
-msgstr "2番目から最後"
+msgstr "最後から2番目の"
 
-#: ../event-ui.c:191
-#, fuzzy
+#: ../event-ui.c:199
 msgid "weeks, on:"
-msgstr "%s の Debconf"
+msgstr "週ごと、曜日は:"
 
-#: ../event-ui.c:266
+#: ../event-ui.c:294
 msgid "End time must not be earlier than start time"
 msgstr "終了時刻は開始時刻よりも早くてはいけません"
 
-#: ../event-ui.c:276 ../event-ui.c:282
+#: ../event-ui.c:304 ../event-ui.c:310
 msgid ""
 "Event starts in the past!\n"
 "Save anyway?"
@@ -447,356 +427,376 @@ msgstr ""
 "それでも保存しますか?"
 
 #. Location.
-#: ../event-ui.c:677
+#: ../event-ui.c:800
 msgid "Location:"
 msgstr "場所:"
 
 #. Categories.
-#: ../event-ui.c:695
+#: ../event-ui.c:818
 msgid "Categories"
 msgstr "カテゴリ"
 
-#: ../event-ui.c:703
+#: ../event-ui.c:826
 msgid "Define categories by tapping the Categories button."
 msgstr "カテゴリ ボタンをタップしてカテゴリを定義してください。"
 
-#: ../event-ui.c:764 ../event-ui.c:1360
+#: ../event-ui.c:887 ../event-ui.c:1571
 msgid "Alarm"
 msgstr "アラーム"
 
-#: ../event-ui.c:778
+#: ../event-ui.c:908
 msgid "minutes"
 msgstr "分"
 
-#: ../event-ui.c:779
+#: ../event-ui.c:909
 msgid "hours"
 msgstr "時"
 
-#: ../event-ui.c:788
-#, fuzzy
+#: ../event-ui.c:921
 msgid "before event"
-msgstr "イベントをクォート"
+msgstr "前に知らせる"
 
-#: ../event-ui.c:825
-#, fuzzy
+#: ../event-ui.c:963
 msgid "Recurrence type:"
-msgstr "バックアップタイプ"
+msgstr "繰り返しの種類:"
 
-#: ../event-ui.c:831
-#, fuzzy
+#: ../event-ui.c:969
 msgid "single occurrence"
-msgstr "シングル・クリック"
+msgstr "1回だけ"
 
-#: ../event-ui.c:832
+#: ../event-ui.c:970
 msgid "daily"
 msgstr "日ごと"
 
-#: ../event-ui.c:833
+#: ../event-ui.c:971
 msgid "weekly"
 msgstr "週ごと"
 
-#: ../event-ui.c:834
+#: ../event-ui.c:972
 msgid "monthly"
 msgstr "月ごと"
 
-#: ../event-ui.c:835
+#: ../event-ui.c:973
 msgid "yearly"
 msgstr "年ごと"
 
-#: ../event-ui.c:904
+#: ../event-ui.c:1049
 msgid "M"
-msgstr ""
+msgstr "M"
 
-#: ../event-ui.c:904
+#: ../event-ui.c:1049
 msgid "T"
-msgstr ""
+msgstr "T"
 
-#: ../event-ui.c:904
-#, fuzzy
+#: ../event-ui.c:1049
 msgid "W"
 msgstr "W"
 
-#: ../event-ui.c:904
+#: ../event-ui.c:1049
 msgid "F"
-msgstr ""
+msgstr "F"
 
-#: ../event-ui.c:904
+#: ../event-ui.c:1049
 msgid "S"
-msgstr ""
-
-#. End date.
-#: ../event-ui.c:1016
-#, fuzzy
-msgid "End Date"
-msgstr "日付と時間"
+msgstr "S"
 
 #. forever radio button
-#: ../event-ui.c:1027
+#: ../event-ui.c:1175
 msgid "forever"
 msgstr "永遠に"
 
-#: ../event-ui.c:1039
-#, fuzzy
+#: ../event-ui.c:1187
 msgid "end after"
-msgstr "%s 後のゴミ"
+msgstr "残り"
 
-#: ../event-ui.c:1051
+#: ../event-ui.c:1205
 msgid "occurrences"
-msgstr ""
+msgstr "回"
 
-#: ../event-ui.c:1061
+#: ../event-ui.c:1215
 msgid "end on"
-msgstr "終了する日"
+msgstr "この日で終わる"
 
 #. Event tab.
-#: ../event-ui.c:1153
+#: ../event-ui.c:1323
 msgid "Event"
 msgstr "イベント"
 
-#: ../event-ui.c:1188
+#: ../event-ui.c:1358
 msgid "Summary:"
 msgstr "概要:"
 
-#: ../event-ui.c:1204
+#: ../event-ui.c:1374
 msgid "All day event"
 msgstr "終日のイベント"
 
 #. Start time.
-#: ../event-ui.c:1219
+#: ../event-ui.c:1391
 msgid "Start:"
 msgstr "開始:"
 
-#: ../event-ui.c:1232 ../event-ui.c:1273
-#, fuzzy
+#: ../event-ui.c:1411 ../event-ui.c:1467
 msgid "on:"
-msgstr "対象"
+msgstr "に:"
 
 #. End time.
-#: ../event-ui.c:1259
+#: ../event-ui.c:1449
 msgid "End:"
 msgstr "終了:"
 
-#: ../event-ui.c:1304
+#: ../event-ui.c:1512
 msgid "Calendar:"
 msgstr "カレンダ:"
 
 #. Detail page.
-#: ../event-ui.c:1328
+#: ../event-ui.c:1539
 msgid "Details"
 msgstr "詳細"
 
-#: ../event-ui.c:1402
+#: ../event-ui.c:1613
 msgid "Recurrence"
-msgstr ""
+msgstr "繰り返し"
 
-#: ../event-ui.c:1449
+#: ../event-ui.c:1667
 msgid "Cancel"
 msgstr "取消"
 
-#: ../event-ui.c:1510
+#: ../event-ui.c:1730
 msgid "Calendar: New event"
 msgstr "カレンダ: 新規イベント"
 
-#: ../event-ui.c:1544
+#: ../event-ui.c:1785
 msgid "Calendar: Edit event"
 msgstr "カレンダ: イベントの編集"
 
-#: ../export-vcal.c:356 ../export-vcal.c:363
-#, c-format
-msgid "Opening %s"
-msgstr "%s をオープンしています"
-
-#: ../export-vcal.c:402
-#, c-format
-msgid "Save %s as..."
-msgstr "%s を名前をつけて保存..."
-
-#: ../export-vcal.c:418
-#, fuzzy, c-format
-msgid "Saving %s: %s"
-msgstr "%s を保存中"
-
-#: ../gtkdatesel.c:225
-#, c-format
-msgid "%d"
-msgstr "%d"
-
 #: ../gtkdatesel.c:273
 msgid "%b"
-msgstr ""
+msgstr "%b"
 
 #: ../gtkdatesel.c:276
 msgid "%B"
-msgstr ""
+msgstr "%B"
 
 #: ../gtkdatesel.c:279
 #, c-format
 msgid "%m"
-msgstr ""
+msgstr "%m"
 
-#: ../import-vcal.c:488
-msgid "Choose file"
-msgstr "ファイルを選択する"
-
-#: ../import-vcal.c:526
-msgid "Import into calendar: "
-msgstr "カレンダにインポートする:"
-
-#: ../import-vcal.c:556
-#, fuzzy, c-format
-msgid "Select Calendar for %s%s"
-msgstr "エクスポートするファイルを選択"
-
-#: ../import-vcal.c:623
-#, fuzzy
-msgid "Import successful"
-msgstr "登録の完了"
-
-#: ../main.c:332
+#: ../main.c:555
 msgid "Yesterday"
 msgstr "昨日"
 
-#: ../main.c:344
+#: ../main.c:567
 msgid "Tomorrow"
 msgstr "明日"
 
-#: ../main.c:372
+#: ../main.c:574
+msgid "%a %b %e"
+msgstr "%b %e (%a)"
+
+#: ../main.c:576
+msgid "%a %b %e, %Y"
+msgstr "%Y年 %b%e日(%a)"
+
+#: ../main.c:598
 #, c-format
 msgid "Calendar - %s"
 msgstr "カレンダ - %s"
 
-#: ../main.c:1623
-#, fuzzy
+#: ../main.c:2180
 msgid "Main"
-msgstr "\t# -- メイン --\n"
+msgstr "メイン"
 
-#: ../main.c:1685
-msgid "Tap here to select the calendars to show."
-msgstr "表示するカレンダを選択する"
-
-#: ../main.c:1704
+#: ../main.c:2244
 msgid "Day"
 msgstr "日"
 
-#: ../main.c:1712
+#: ../main.c:2252
 msgid "Tap here to select day-at-a-time view."
 msgstr "一度に日を表示する"
 
-#: ../main.c:1722
+#: ../main.c:2262
 msgid "Week"
 msgstr "週"
 
-#: ../main.c:1730
+#: ../main.c:2270
 msgid "Tap here to select week-at-a-time view."
 msgstr "一度に週を表示する"
 
-#: ../main.c:1742
+#: ../main.c:2282
 msgid "Month"
 msgstr "月"
 
-#: ../main.c:1750
+#: ../main.c:2290
 msgid "Tap here to select month-at-a-time view."
 msgstr "一度に月を表示する"
 
-#: ../main.c:1761
+#: ../main.c:2301
 msgid "Agenda"
-msgstr ""
+msgstr "日程表"
 
-#: ../main.c:1770
-#, fuzzy
+#: ../main.c:2310
 msgid "Tap here to select the agenda."
-msgstr "(ここではたぶん%dを選びます)\n"
+msgstr "ここをタップして、日程表を選択してください。"
 
-#: ../main.c:1793
+#: ../main.c:2333
 msgid "Tap here to view alarms pending acknowledgement."
-msgstr ""
+msgstr "通知を延期しているアラームを表示する"
 
-#: ../main.c:1815
+#: ../main.c:2355
 msgid "Switch to today."
 msgstr "今日に飛ぶ"
 
-#. File menu.
-#: ../main.c:1852
+#: ../main.c:2398
 msgid "_File"
 msgstr "ファイル(_F)"
 
+#: ../main.c:2405
+msgid "New"
+msgstr "新規"
+
+#: ../main.c:2416
+msgid "Import"
+msgstr "インポート"
+
+#: ../main.c:2440
+msgid "Close"
+msgstr "閉じる"
+
 #. View menu.
-#: ../main.c:1885
+#: ../main.c:2451
 msgid "_View"
 msgstr "表示(_V)"
 
 #. View -> Today.
-#: ../main.c:1892
+#: ../main.c:2458
 msgid "_Today"
 msgstr "今日(_T)"
 
 #. View -> Day.
-#: ../main.c:1905
+#: ../main.c:2471
 msgid "_Day"
 msgstr "日(_D)"
 
 #. View -> Week.
-#: ../main.c:1915
+#: ../main.c:2481
 msgid "_Week"
 msgstr "週(_W)"
 
 #. View -> Month.
-#: ../main.c:1925
+#: ../main.c:2491
 msgid "_Month"
 msgstr "月(_M)"
 
 #. View -> Agenda.
-#: ../main.c:1935 ../main.c:1976
+#: ../main.c:2501 ../main.c:2542
 msgid "_Agenda"
-msgstr ""
+msgstr "日程表(_A)"
 
 #. View -> Sidebar.
-#: ../main.c:1949
+#: ../main.c:2515
 msgid "_Sidebar"
 msgstr "サイドバー(_S)"
 
 #. View -> Calendar.
-#: ../main.c:1958
+#: ../main.c:2524
 msgid "_Calendar"
 msgstr "カレンダ(_C)"
 
 #. View -> Selector.
-#: ../main.c:1967
-#, fuzzy
+#: ../main.c:2533
 msgid "Calendar _Selector"
-msgstr "セレクタの設定"
+msgstr "カレンダセレクタ(_S)"
 
 #. Tools menu.
-#: ../main.c:1985
+#: ../main.c:2551
 msgid "_Tools"
 msgstr "ツール(_T)"
 
 #. Tools -> Calendars.
-#: ../main.c:1992
+#: ../main.c:2558
 msgid "_Calendars"
-msgstr ""
+msgstr "カレンダ(_C)"
 
 #. Tools -> Categories.
-#: ../main.c:2002
+#: ../main.c:2568
 msgid "Cate_gories"
 msgstr "カテゴリ(_G)"
 
 #. Tools -> Alarms.
-#: ../main.c:2013
+#: ../main.c:2579
 msgid "_Alarms"
 msgstr "アラーム(_A)"
 
 #. Tools -> Toolbar.
-#: ../main.c:2027
+#: ../main.c:2593
 msgid "_Toolbar"
 msgstr "ツールバー(_T)"
 
 #. Tools -> Full Screen.
-#: ../main.c:2036
+#: ../main.c:2602
 msgid "_Full Screen"
 msgstr "フル スクリーン(_F)"
 
 #: ../xsettings.c:105
-#, fuzzy
 msgid "Cannot create XSettings client"
-msgstr "警告: cat ディレクトリ %s を作成できません"
+msgstr "XSettingsのクライアントを作成できません"
+
+#~ msgid "Until %b %d"
+#~ msgstr "%b月 %d日まで"
+
+#, fuzzy
+#~ msgid "Until %d:%02d"
+#~ msgstr "%s%d:%02d 分"
+
+#~ msgid "Edit Event"
+#~ msgstr "イベントを編集"
+
+#~ msgid "Edit <i>%s</i>"
+#~ msgstr "編集 <i>%s</i>"
+
+#~ msgid "Delete Event"
+#~ msgstr "イベントを削除"
+
+#~ msgid "Delete <i>%s</i>"
+#~ msgstr "削除 <i>%s</i>"
+
+#~ msgid "Save Event"
+#~ msgstr "イベントを保存"
+
+#~ msgid "Save <i>%s</i>"
+#~ msgstr "保存 <i>%s</i>"
+
+#~ msgid "Hide <i>%s</i>"
+#~ msgstr "<i>%s</i> を隠す"
+
+#, fuzzy
+#~ msgid "End Date"
+#~ msgstr "日付と時間"
+
+#~ msgid "Opening %s"
+#~ msgstr "%s をオープンしています"
+
+#~ msgid "Save %s as..."
+#~ msgstr "%s を名前をつけて保存..."
+
+#, fuzzy
+#~ msgid "Saving %s: %s"
+#~ msgstr "%s を保存中"
+
+#~ msgid "Choose file"
+#~ msgstr "ファイルを選択する"
+
+#~ msgid "Import into calendar: "
+#~ msgstr "カレンダにインポートする:"
+
+#, fuzzy
+#~ msgid "Select Calendar for %s%s"
+#~ msgstr "エクスポートするファイルを選択"
+
+#, fuzzy
+#~ msgid "Import successful"
+#~ msgstr "登録の完了"
+
+#~ msgid "Tap here to select the calendars to show."
+#~ msgstr "表示するカレンダを選択する"
