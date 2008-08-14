@@ -1,3 +1,7 @@
+2008-08-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (main): Close database after command line import
+
 2008-08-14  Phil Blundell  <pb@reciva.com>
 
 	* po/Makefile.in.in (EXTRA_DISTFILES): Remove po/ChangeLog.

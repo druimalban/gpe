@@ -2279,6 +2279,7 @@ main (int argc, char *argv[])
     {
       import_file_list (import_files, selected_calendar);
       g_slist_free (import_files);
+      g_object_unref (event_db);
       exit (EXIT_SUCCESS);
     }
 	
