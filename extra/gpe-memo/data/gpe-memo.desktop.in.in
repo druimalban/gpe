@@ -1,0 +1,7 @@
+[Desktop Entry]
+_Name=Voice Memo
+Exec=@prefix@/bin/gpe-memo
+Terminal=0
+Type=Application
+Icon=gpe-memo.png
+Categories=Utility;GPE

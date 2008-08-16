@@ -1,9 +1,22 @@
-AC_INIT(gpe-memo, 0.1,[skyhusker@rm-fr.net])
+AC_INIT(gpe-memo, 0.2,[skyhusker@rm-fr.net])
 AC_CONFIG_SRCDIR([src/main.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AC_PROG_INSTALL
 AC_PROG_CC
 AC_LANG(C)
+
+# i8n stuff
+AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
+GETTEXT_PACKAGE=$PACKAGE
+AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
+AC_SUBST(GETTEXT_PACKAGE)
+ALL_LINGUAS="$(ls ${srcdir}/po/*.po | sed 's/.*\/po\///;s/\.po//' | tr \\n ' ')"
+gpememo_localedir='${prefix}/${DATADIRNAME}/locale'
+AC_SUBST(gpememo_localedir)
+
+AM_GLIB_GNU_GETTEXT
+AC_PROG_INTLTOOL([0.23])
+
 
 dnl Check for libgsm
 AC_CHECK_HEADER(gsm/gsm.h, [AC_DEFINE(HAVE_GSM_GSM_H)],
@@ -28,5 +41,8 @@ dnl Generate the output files.
 AC_CONFIG_FILES([
 Makefile
 src/Makefile
+data/Makefile
+po/Makefile.in
+data/gpe-memo.desktop.in
 ])
 AC_OUTPUT
