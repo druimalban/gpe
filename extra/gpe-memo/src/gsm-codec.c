@@ -14,7 +14,7 @@
 # elif HAVE_GSM_GSM_H
 #  include <gsm/gsm.h>
 # else
-#  error Can't find gsm.h
+#  error Unable to find gsm.h
 #endif
 #include <glib.h>
 #include <string.h>

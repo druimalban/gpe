@@ -6,3 +6,8 @@ EXTRA_DIST = intltool-extract.in \
            
 include gpe-dist.am
 include gpe-tp.am
+
+DISTCLEANFILES = intltool-update \
+                 intltool-merge \
+                 intltool-extract
+                 
