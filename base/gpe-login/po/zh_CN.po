@@ -2,83 +2,126 @@
 # Copyright (C) 2003 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-login package.
 # Meng Jie <zuxyhere@eastday.com>, 2004.
+# LI Daobing <lidaobing@gmail.com>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-login 0.60\n"
-"POT-Creation-Date: 2003-08-17 13:50+0100\n"
-"PO-Revision-Date: 2004-11-03 22:29+0800\n"
-"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
-"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"Project-Id-Version: gpe-login 0.95\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-08-13 19:10+0100\n"
+"PO-Revision-Date: 2008-08-14 21:32+0800\n"
+"Last-Translator: LI Daobing <lidaobing@gmail.com>\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:468 gpe-login.c:541
+#: ../gpe-logout.c:41
+msgid "Suspend"
+msgstr "休眠"
+
+#: ../gpe-logout.c:49
+msgid "Power down..."
+msgstr "关机..."
+
+#: ../gpe-logout.c:64
+msgid "Logout"
+msgstr "注销"
+
+#: ../gpe-logout.c:91
+msgid "  Suspend"
+msgstr "  休眠"
+
+#: ../gpe-logout.c:92
+msgid "  Turn off"
+msgstr "  关机"
+
+#: ../gpe-logout.c:93
+msgid "  Lock"
+msgstr "  锁定"
+
+#: ../gpe-logout.c:94
+msgid "  Logout"
+msgstr "  注销"
+
+#: ../gpe-logout.c:95
+msgid "  Back"
+msgstr "  回退"
+
+#: ../gpe-login.c:524 ../gpe-login.c:605
 msgid "Login incorrect"
 msgstr "登录名错误"
 
-#: gpe-login.c:570
-msgid "User already exists"
-msgstr "用户已存在"
-
-#: gpe-login.c:581
+#: ../gpe-login.c:658 ../gpe-login.c:740
 msgid "Passwords don't match"
 msgstr "密码不匹配"
 
-#: gpe-login.c:590
+#: ../gpe-login.c:667 ../gpe-login.c:749
 msgid "Empty password not allowed"
 msgstr "不允许使用空密码"
 
-#: gpe-login.c:1125
-msgid "Record"
-msgstr "记录"
+#: ../gpe-login.c:729
+msgid "User already exists"
+msgstr "用户已存在"
 
-#: gpe-login.c:1126
-msgid "recalibrates touchscreen"
-msgstr "重新校准触摸屏"
+#: ../gpe-login.c:1337
+msgid "Holding down the stylus for longer than <i>5 seconds</i>, or holding <i>record</i>, recalibrates the touchscreen."
+msgstr "按住笔尖<i>5秒</i>以上，或者按住<i>record</i>，重新校准触摸屏。"
 
-#. TRANSLATORS: please replace this with your own Pango language code:
-#: gpe-login.c:1162
-msgid "en"
-msgstr "en"
+#: ../gpe-login.c:1361
+msgid "System setup"
+msgstr "系统设置"
 
-#: gpe-login.c:1396
-msgid "Screen locked"
-msgstr "屏幕已锁定"
+#: ../gpe-login.c:1366
+msgid ""
+"Please choose a password for the\n"
+"<i>root</i> account.\n"
+"\n"
+"This will be needed when performing\n"
+"system administration.\n"
+msgstr ""
+"请为<i>root</i>账号设置密码。\n"
+"\n"
+"进行系统管理时需要该密码。\n"
 
-#: gpe-login.c:1400 gpe-login.c:1516
-msgid "Username"
-msgstr "用户名"
-
-#: gpe-login.c:1425 gpe-login.c:1518
+#: ../gpe-login.c:1367 ../gpe-login.c:1434 ../gpe-login.c:1900
 msgid "Password"
 msgstr "密码"
 
-#: gpe-login.c:1439
-msgid "Language"
-msgstr "语言"
+#: ../gpe-login.c:1368
+msgid "Confirm"
+msgstr "确认"
 
-#: gpe-login.c:1460
-msgid "Enter password with hard keys"
-msgstr "使用硬键输入密码"
+#: ../gpe-login.c:1432 ../gpe-login.c:1877
+msgid "Username"
+msgstr "用户名"
 
-#: gpe-login.c:1517
+#: ../gpe-login.c:1433
 msgid "Full name"
 msgstr "全名"
 
-#: gpe-login.c:1519
+#: ../gpe-login.c:1435
 msgid "Confirm password"
 msgstr "确认密码"
 
-#: gpe-login.c:1573
-msgid "New user"
-msgstr "新用户"
+#: ../gpe-login.c:1436 ../gpe-login.c:1914
+msgid "Language"
+msgstr "语言"
 
-#: gpe-logout.desktop.in.h:1
-msgid "Log out"
-msgstr "注销"
+#: ../gpe-login.c:1500
+msgid "New user details"
+msgstr "新用户详细信息"
 
-#: gpe-logout.desktop.in.h:2
-msgid "Log out of GPE"
-msgstr "注销 GPE 会话"
+#. (LanguageCode)
+#. TRANSLATORS: please replace this with your own Pango language code:
+#: ../gpe-login.c:1603
+msgid "en"
+msgstr "zh_CN"
+
+#: ../gpe-login.c:1873
+msgid "Screen locked"
+msgstr "屏幕已锁定"
+
+#: ../gpe-login.c:1935
+msgid "Enter password with hard keys"
+msgstr "使用硬键输入密码"

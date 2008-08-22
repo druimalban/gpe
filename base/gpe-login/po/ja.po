@@ -6,57 +6,73 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-login 0.94\n"
+"Project-Id-Version: gpe-login 0.95\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-03-16 16:36+0100\n"
-"PO-Revision-Date: 2008-08-10 20:50+0900\n"
+"POT-Creation-Date: 2008-08-13 19:10+0100\n"
+"PO-Revision-Date: 2008-08-14 09:33+0900\n"
 "Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: gpe-login.c:524 gpe-login.c:604
+#: ../gpe-logout.c:41
+msgid "Suspend"
+msgstr "サスペンド"
+
+#: ../gpe-logout.c:49
+msgid "Power down..."
+msgstr "電源を落します..."
+
+#: ../gpe-logout.c:64
+msgid "Logout"
+msgstr "ログアウト"
+
+#: ../gpe-logout.c:91
+msgid "  Suspend"
+msgstr " サスペンド"
+
+#: ../gpe-logout.c:92
+msgid "  Turn off"
+msgstr " 電源OFF"
+
+#: ../gpe-logout.c:93
+msgid "  Lock"
+msgstr " ロック"
+
+#: ../gpe-logout.c:94
+msgid "  Logout"
+msgstr " ログアウト"
+
+#: ../gpe-logout.c:95
+msgid "  Back"
+msgstr " 戻る"
+
+#: ../gpe-login.c:524 ../gpe-login.c:605
 msgid "Login incorrect"
 msgstr "ログイン失敗"
 
-#: gpe-login.c:657 gpe-login.c:739
+#: ../gpe-login.c:658 ../gpe-login.c:740
 msgid "Passwords don't match"
 msgstr "パスワードが合っていません"
 
-#: gpe-login.c:666 gpe-login.c:748
+#: ../gpe-login.c:667 ../gpe-login.c:749
 msgid "Empty password not allowed"
 msgstr "空のパスワードは使えません"
 
-#: gpe-login.c:728
+#: ../gpe-login.c:729
 msgid "User already exists"
 msgstr "ユーザーは既に存在します"
 
-#: gpe-login.c:1336
-msgid "Holding down the stylus for greater than"
-msgstr "スタイラスペンを"
+#: ../gpe-login.c:1337
+msgid "Holding down the stylus for longer than <i>5 seconds</i>, or holding <i>record</i>, recalibrates the touchscreen."
+msgstr "スタイラスペンを <i>5 秒</i>より長く押し続けるか、<i>record</i>を押すと、タッチスクリーンの再調整を行います。"
 
-#: gpe-login.c:1337
-msgid "5 seconds"
-msgstr "5 秒"
-
-#: gpe-login.c:1338
-msgid ", or holding"
-msgstr "より長く押し続けるか、"
-
-#: gpe-login.c:1339
-msgid "record"
-msgstr "記録"
-
-#: gpe-login.c:1340
-msgid ", recalibrates the touchscreen."
-msgstr "を押すと、タッチスクリーンの再調整を行います。"
-
-#: gpe-login.c:1362
+#: ../gpe-login.c:1361
 msgid "System setup"
 msgstr "システム設定"
 
-#: gpe-login.c:1367
+#: ../gpe-login.c:1366
 msgid ""
 "Please choose a password for the\n"
 "<i>root</i> account.\n"
@@ -69,71 +85,47 @@ msgstr ""
 "\n"
 "システム管理操作を行う時に必要になります。\n"
 
-#: gpe-login.c:1368 gpe-login.c:1435 gpe-login.c:1901
+#: ../gpe-login.c:1367 ../gpe-login.c:1434 ../gpe-login.c:1900
 msgid "Password"
 msgstr "パスワード"
 
-#: gpe-login.c:1369
+#: ../gpe-login.c:1368
 msgid "Confirm"
 msgstr "確認"
 
-#: gpe-login.c:1433 gpe-login.c:1878
+#: ../gpe-login.c:1432 ../gpe-login.c:1877
 msgid "Username"
 msgstr "ユーザー名"
 
-#: gpe-login.c:1434
+#: ../gpe-login.c:1433
 msgid "Full name"
 msgstr "本名(フルネーム)"
 
-#: gpe-login.c:1436
+#: ../gpe-login.c:1435
 msgid "Confirm password"
 msgstr "パスワード(確認)"
 
-#: gpe-login.c:1437 gpe-login.c:1915
+#: ../gpe-login.c:1436 ../gpe-login.c:1914
 msgid "Language"
 msgstr "言語"
 
-#: gpe-login.c:1501
+#: ../gpe-login.c:1500
 msgid "New user details"
 msgstr "新規ユーザの詳細"
 
+#. (LanguageCode)
 #. TRANSLATORS: please replace this with your own Pango language code:
-#: gpe-login.c:1604
+#: ../gpe-login.c:1603
 msgid "en"
 msgstr "ja"
 
-#: gpe-login.c:1874
+#: ../gpe-login.c:1873
 msgid "Screen locked"
 msgstr "スクリーンはロックされています"
 
-#: gpe-login.c:1936
+#: ../gpe-login.c:1935
 msgid "Enter password with hard keys"
 msgstr "ハードウェアキーボードからパスワードを入力"
 
-#, fuzzy
-#~ msgid "Log out"
-#~ msgstr "ログアウト"
-
 #~ msgid "Log out of GPE"
 #~ msgstr "GPE からログアウト"
-
-#~ msgid "Suspend"
-#~ msgstr "サスペンド"
-
-#~ msgid "Power down..."
-#~ msgstr "電源を落します..."
-
-#~ msgid "  Suspend"
-#~ msgstr " サスペンド"
-
-#~ msgid "  Turn off"
-#~ msgstr " 電源OFF"
-
-#~ msgid "  Lock"
-#~ msgstr " ロック"
-
-#~ msgid "  Logout"
-#~ msgstr " ログアウト"
-
-#~ msgid "  Back"
-#~ msgstr " 戻る"
