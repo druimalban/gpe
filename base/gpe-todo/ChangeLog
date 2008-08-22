@@ -1,3 +1,7 @@
+2008-08-22  Phil Blundell  <pb@reciva.com>
+
+	* po/nl.po: Update from TP.
+
 2008-08-14  Phil Blundell  <pb@reciva.com>
 
 	* list-ui.c (top_level): Add explanatory comment to guide
