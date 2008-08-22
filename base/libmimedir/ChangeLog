@@ -1,3 +1,10 @@
+2008-08-22  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-utils.c & .h (mimedir_utils_is_token_char): Take g_unichar argument.
+
+	* mimedir/mimedir-attribute.c (accept_tokenchar): Do not enforce RFC rules on valid characters
+	in token names.
+
 2008-08-12  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-attribute.c (get_attribute_string): Handle mixture of QP and normal

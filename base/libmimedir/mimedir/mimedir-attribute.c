@@ -758,26 +758,35 @@ mimedir_attribute_internal_append_parameter (MIMEDirAttribute *attribute, const 
 /*
  * Parsing
  */
+static inline gboolean accept_tokenchar(const gunichar uc, const gchar *full_line)
+{
+  /* Many implementations do not follow the rules for tokens.
+     So, we accept almost anything in a token but display a warning if it
+     isn't a valid token character */
+
+  if ( uc == '\0' || (!g_unichar_isprint(uc)) || uc == '=' || uc == ':' || uc == ';' || uc == '.' )
+    return FALSE;
+
+  if (!mimedir_utils_is_token_char(uc))
+    g_log("Ignoring invalid token character '%c' in line %s", uc, full_line);
+
+  return TRUE;
+}
 
 static gchar *
 get_next_token (const gchar *line, gsize *len)
 {
 	GString *string;
-
-	if (len)
-		*len = 0;
+	const gchar *full_line = line;
 
 	string = g_string_new (NULL);
 
-	while ((line[0] >= 'A' && line[0] <= 'Z') ||
-	       (line[0] >= 'a' && line[0] <= 'z') ||
-	       (line[0] >= '0' && line[0] <= '9') ||
-	       line[0] == '-') {
-		g_string_append_c (string, line[0]);
-		if (len)
-			*len += 1;
-		line++;
+	while (accept_tokenchar(g_utf8_get_char(line), full_line)) {
+		g_string_append_unichar (string, g_utf8_get_char(line));
+		line = g_utf8_next_char(line);
 	}
+
+	if (len) *len = string->len;
 
 	if (!string->str || string->str[0] == '\0') {
 		g_string_free (string, TRUE);

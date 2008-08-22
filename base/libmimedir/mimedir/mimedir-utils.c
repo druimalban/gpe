@@ -245,7 +245,7 @@ mimedir_utils_free_object_slist (GSList *list)
  * Return value: %TRUE if the character is a token character, %FALSE otherwise
  **/
 gboolean
-mimedir_utils_is_token_char (gchar c)
+mimedir_utils_is_token_char (gunichar c)
 {
 	if ((c >= 'A' && c <= 'Z') ||
 	    (c >= 'a' && c <= 'z') ||

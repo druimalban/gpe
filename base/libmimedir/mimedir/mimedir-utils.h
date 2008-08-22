@@ -36,7 +36,7 @@ void	 mimedir_utils_free_object_list		(GList        *list);
 GSList	*mimedir_utils_copy_object_slist	(const GSList *list);
 void	 mimedir_utils_free_object_slist	(GSList       *list);
 
-gboolean mimedir_utils_is_token_char		(gchar c);
+gboolean mimedir_utils_is_token_char		(gunichar c);
 
 gboolean mimedir_utils_is_token			(const gchar *string);
 gboolean mimedir_utils_is_safe			(const gchar *string);
