@@ -1,240 +1,234 @@
 # Swedish messages for gpe-beam.
-# Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004, 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-beam package.
 # Christian Rose <menthos@menthos.com>, 2003, 2004.
+# Daniel Nylander <po@danielnylander.se>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-beam 0.2.6\n"
+"Project-Id-Version: gpe-beam 0.2.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-16 14:18+0200\n"
-"PO-Revision-Date: 2004-12-15 00:49+0100\n"
-"Last-Translator: Christian Rose <menthos@menthos.com>\n"
-"Language-Team: Swedish <sv@li.org>\n"
+"POT-Creation-Date: 2006-08-23 15:25+0200\n"
+"PO-Revision-Date: 2008-08-22 09:39+0100\n"
+"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:167
+#: main.c:168
 msgid "Error"
 msgstr "Fel"
 
-#: main.c:172
+#: main.c:173
 msgid "Failed"
 msgstr "Misslyckades"
 
-#: main.c:175
+#: main.c:176
 msgid "Done"
-msgstr "Klar"
+msgstr "Färdig"
 
-#: main.c:178
+#: main.c:179
 msgid "Connecting..."
 msgstr "Ansluter..."
 
-#: main.c:182
+#: main.c:183
 msgid "Disconnecting..."
 msgstr "Kopplar från..."
 
-#: main.c:185
+#: main.c:186
 msgid "Sending..."
 msgstr "Skickar..."
 
-#: main.c:188
+#: main.c:189
 msgid "Receiving"
 msgstr "Tar emot"
 
-#: main.c:197
+#: main.c:198
 msgid "Waiting for incoming connection"
 msgstr "Väntar på inkommande anslutning"
 
-#: main.c:200
+#: main.c:201
 msgid "Connected"
 msgstr "Ansluten"
 
-#: main.c:203
+#: main.c:204
 msgid "Disconnecting"
 msgstr "Kopplar från"
 
-#: main.c:224
+#: main.c:225
 msgid "Telephony"
 msgstr "Telefoni"
 
-#: main.c:230
+#: main.c:231
 msgid "File Server"
 msgstr "Filserver"
 
-#: main.c:236
+#: main.c:237
 msgid "IrCOMM"
 msgstr "IrCOMM"
 
-#: main.c:242
+#: main.c:243
 msgid "IrOBEX"
 msgstr "IrOBEX"
 
-#: main.c:251
+#: main.c:252
 msgid "PnP"
 msgstr "PnP"
 
-#: main.c:257
+#: main.c:258
 msgid "PDA/Palmtop"
 msgstr "Handdator/Palmtop"
 
-#: main.c:263
+#: main.c:264
 msgid "Computer"
 msgstr "Dator"
 
-#: main.c:269
+#: main.c:270
 msgid "Printer"
 msgstr "Skrivare"
 
-#: main.c:275
+#: main.c:276
 msgid "Modem"
 msgstr "Modem"
 
-#: main.c:281
+#: main.c:282
 msgid "Fax"
 msgstr "Fax"
 
-#: main.c:287
+#: main.c:288
 msgid "LAN Access"
 msgstr "LAN-åtkomst"
 
-#: main.c:361
+#: main.c:362
 msgid "Transmitted file"
 msgstr "Sänd fil"
 
-#: main.c:370
+#: main.c:371
 msgid "Could not transmit file"
 msgstr "Kunde inte sända fil"
 
-#: main.c:396 main.c:447
+#: main.c:397 main.c:448
 msgid "Unable to start file transmit."
 msgstr "Kan inte påbörja filsändning."
 
-#: main.c:419
-msgid "IR Receive and Transmit........."
-msgstr "IR-mottagning och -sändning..."
-
-#: main.c:462
+#: main.c:420 main.c:463
 msgid "IR Receive and Transmit....."
 msgstr "IR-mottagning och -sändning..."
 
-#: main.c:471 main.c:473
+#: main.c:472 main.c:474
 msgid "Error opening IR client."
 msgstr "Fel vid öppnande av IR-klient."
 
-#: main.c:480
+#: main.c:481
 msgid "Select file to transmit"
 msgstr "Välj fil att sända"
 
-#: main.c:504
+#: main.c:508
 msgid "Could not start import tool."
 msgstr "Kunde inte starta importverktyg."
 
-#: main.c:511
-msgid "vCard was imported successfully."
-msgstr "vCard importerades utan problem."
-
-#: main.c:519
-msgid "Import of vCard failed."
-msgstr "Import av vCard misslyckades."
-
-#: main.c:548
+#: main.c:532
 #, c-format
-msgid "File '%s' looks like a vCard, do you want to import it?"
-msgstr "Filen \"%s\" ser ut som ett vCard, vill du importera den?"
+msgid "File '%s' looks like a mimedir (vCard, vCal) filedo you want to import it?"
+msgstr "Filen \"%s\" ser ut som ett vCard eller vCal. Vill du importera den?"
 
-#: main.c:568 main.c:630
+#: main.c:552 main.c:614
 msgid "Unable to start receiver."
 msgstr "Kan inte starta mottagare."
 
-#: main.c:582
+#: main.c:566
 msgid "IR Receive and transmit control"
 msgstr "Styrning av IR-mottagning och -sändning"
 
-#: main.c:592 main.c:595
+#: main.c:576 main.c:579
 msgid "Error opening IR server."
 msgstr "Fel vid öppnande av IR-server."
 
-#: main.c:607
+#: main.c:591
 msgid "Received file"
 msgstr "Mottagen fil"
 
-#: main.c:645
+#: main.c:629
 msgid "Transmitting VCard"
 msgstr "Sänder VCard"
 
-#: main.c:743
+#: main.c:645
+msgid "Unable to start sender."
+msgstr "Kan inte starta sändare."
+
+#: main.c:737
 msgid "Name:"
 msgstr "Namn:"
 
-#: main.c:744
+#: main.c:738
 msgid "Services:"
 msgstr "Tjänster:"
 
-#: main.c:745
+#: main.c:739
 msgid "Address:"
 msgstr "Adress:"
 
-#: main.c:752
+#: main.c:746
 msgid "Peer Information"
 msgstr "Information om motpart"
 
-#: main.c:755
+#: main.c:749
 msgid "Peer Actions"
 msgstr "Motpartsåtgärder"
 
-#: main.c:763 main.c:991
+#: main.c:757 main.c:985
 msgid "Send File"
 msgstr "Skicka fil"
 
-#: main.c:771 main.c:992
+#: main.c:765 main.c:986
 msgid "Receive File"
 msgstr "Mottag fil"
 
-#: main.c:821 main.c:886
+#: main.c:815 main.c:880
 msgid "IR transceiver on"
 msgstr "IR-överförare på"
 
-#: main.c:823 main.c:910
+#: main.c:817 main.c:904
 msgid "IR transceiver off"
 msgstr "IR-överförare av"
 
-#: main.c:834
+#: main.c:828
 msgid "Infrared Control"
 msgstr "Infrarödstyrning"
 
-#: main.c:983
+#: main.c:977
 msgid "IrDa tool"
 msgstr "IrDa-verktyg"
 
-#: main.c:988
+#: main.c:982
 msgid "Switch IR on"
 msgstr "Slå på IR"
 
-#: main.c:989
+#: main.c:983
 msgid "Switch IR off"
 msgstr "Slå av IR"
 
-#: main.c:990
+#: main.c:984
 msgid "Send vCard"
 msgstr "Skicka vCard"
 
-#: main.c:993
+#: main.c:987
 msgid "Controls..."
 msgstr "Styrningar..."
 
-#: main.c:994
+#: main.c:988
 msgid "Remove from dock"
 msgstr "Ta bort från dockan"
 
-#: main.c:1061
+#: main.c:1055
 msgid "This is the infrared communications control."
 msgstr "Detta är styrningen för infraröd kommunikation."
 
 #: dbus.c:76
 #, c-format
-msgid "Failed to acquire service: %s"
-msgstr "Misslyckades med att få tag i tjänst: %s"
+msgid "Failed to request name: %s"
+msgstr "Misslyckades med att begära namn: %s"
 
 #: dbus.c:82
 #, c-format
@@ -249,61 +243,17 @@ msgstr "IrDa-styrning"
 msgid "Panel based infrared communications control"
 msgstr "Panelbaserad styrning för infraröd kommunikation"
 
+#~ msgid "IR Receive and Transmit........."
+#~ msgstr "IR-mottagning och -sändning..."
+
+#~ msgid "vCard was imported successfully."
+#~ msgstr "vCard importerades utan problem."
+
+#~ msgid "Import of vCard failed."
+#~ msgstr "Import av vCard misslyckades."
+
 #~ msgid "IR Receive and Transmit..."
 #~ msgstr "IR-mottagning och -sändning..."
 
 #~ msgid "Transmitting vCard"
 #~ msgstr "Sänder vCard"
-
-# Felrapporterat, http://handhelds.org/bugzilla/show_bug.cgi?id=1037
-#~ msgid "<b>Peer Information</b>"
-#~ msgstr "<b>Information om motpart</b>"
-
-# Felrapporterat, http://handhelds.org/bugzilla/show_bug.cgi?id=1037
-#~ msgid "<b>Peer Actions</b>"
-#~ msgstr "<b>Motpartsåtgärder</b>"
-
-#~ msgid "Connecting"
-#~ msgstr "Ansluter"
-
-#~ msgid "Sending"
-#~ msgstr "Skickar"
-
-#~ msgid "Receiving..."
-#~ msgstr "Tar emot..."
-
-#~ msgid "Filename"
-#~ msgstr "Filnamn"
-
-#~ msgid "PDA"
-#~ msgstr "Handdator"
-
-#~ msgid "Palmtop"
-#~ msgstr "Palmtop"
-
-#~ msgid "Access"
-#~ msgstr "Åtkomst"
-
-#~ msgid "Unable to start file transmit"
-#~ msgstr "Kan inte påbörja filsändning"
-
-#~ msgid "IR Receive and Transmit"
-#~ msgstr "IR-mottagning och -sändning"
-
-#~ msgid "Error opening IR client"
-#~ msgstr "Fel vid öppnande av IR-klient"
-
-#~ msgid "The file %s looks like a VCARD, may I import it?"
-#~ msgstr "Filen %s ser ut som ett VCARD, får jag importera den?"
-
-#~ msgid "Name"
-#~ msgstr "Namn"
-
-#~ msgid "Service:"
-#~ msgstr "Tjänst:"
-
-#~ msgid "Services"
-#~ msgstr "Tjänster"
-
-#~ msgid "Service"
-#~ msgstr "Tjänst"

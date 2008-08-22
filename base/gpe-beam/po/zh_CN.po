@@ -1,241 +1,234 @@
 # Simplified Chinese(zh-CN) messages for gpe-beam
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Copyright (C) 2008 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-beam package.
 # Meng Jie <zuxyhere@eastday.com>, 2004.
+# Ji ZhengYu <zhengyuji@gmail.com>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-beam 0.2.6\n"
+"Project-Id-Version: gpe-beam 0.2.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-16 14:18+0200\n"
-"PO-Revision-Date: 2004-11-05 21:41+0800\n"
-"Last-Translator: Meng Jie <zuxyhere@eastday.com>\n"
-"Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
+"POT-Creation-Date: 2006-08-23 15:25+0200\n"
+"PO-Revision-Date: 2008-08-22 14:16中国标准时间\n"
+"Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.c:167
+#: main.c:168
 msgid "Error"
 msgstr "错误"
 
-#: main.c:172
+#: main.c:173
 msgid "Failed"
 msgstr "失败"
 
-#: main.c:175
+#: main.c:176
 msgid "Done"
 msgstr "完成"
 
-#: main.c:178
+#: main.c:179
 msgid "Connecting..."
 msgstr "正在连接"
 
-#: main.c:182
+#: main.c:183
 msgid "Disconnecting..."
 msgstr "正在断开"
 
-#: main.c:185
+#: main.c:186
 msgid "Sending..."
 msgstr "正在发送……"
 
-#: main.c:188
+#: main.c:189
 msgid "Receiving"
 msgstr "正在接收"
 
-#: main.c:197
+#: main.c:198
 msgid "Waiting for incoming connection"
 msgstr "正在等待传入连接"
 
-#: main.c:200
+#: main.c:201
 msgid "Connected"
 msgstr "已连接"
 
-#: main.c:203
+#: main.c:204
 msgid "Disconnecting"
 msgstr "正在断开"
 
-#: main.c:224
+#: main.c:225
 msgid "Telephony"
 msgstr "电话"
 
-#: main.c:230
+#: main.c:231
 msgid "File Server"
 msgstr "文件服务器"
 
-#: main.c:236
+#: main.c:237
 msgid "IrCOMM"
 msgstr "IrCOMM"
 
-#: main.c:242
+#: main.c:243
 msgid "IrOBEX"
 msgstr "IrOBEX"
 
-#: main.c:251
+#: main.c:252
 msgid "PnP"
 msgstr "PnP"
 
-#: main.c:257
+#: main.c:258
 msgid "PDA/Palmtop"
 msgstr "PDA/掌上电脑"
 
-#: main.c:263
+#: main.c:264
 msgid "Computer"
 msgstr "电脑"
 
-#: main.c:269
+#: main.c:270
 msgid "Printer"
 msgstr "打印机"
 
-#: main.c:275
+#: main.c:276
 msgid "Modem"
 msgstr "调制解调器"
 
-#: main.c:281
+#: main.c:282
 msgid "Fax"
 msgstr "传真机"
 
-#: main.c:287
+#: main.c:288
 msgid "LAN Access"
 msgstr "局域网访问"
 
-#: main.c:361
+#: main.c:362
 msgid "Transmitted file"
 msgstr "传输的文件"
 
-#: main.c:370
+#: main.c:371
 msgid "Could not transmit file"
 msgstr "无法传输文件"
 
-#: main.c:396 main.c:447
+#: main.c:397 main.c:448
 msgid "Unable to start file transmit."
 msgstr "无法启动文件传输。"
 
-#: main.c:419
-msgid "IR Receive and Transmit........."
-msgstr "红外接收和传输…………"
-
-#: main.c:462
+#: main.c:420 main.c:463
 msgid "IR Receive and Transmit....."
 msgstr "红外接收和传输…………"
 
-#: main.c:471 main.c:473
+#: main.c:472 main.c:474
 msgid "Error opening IR client."
 msgstr "打开红外客户端时出错。"
 
-#: main.c:480
+#: main.c:481
 msgid "Select file to transmit"
 msgstr "选择要传输的文件"
 
-#: main.c:504
+#: main.c:508
 msgid "Could not start import tool."
 msgstr "无法启动导入工具。"
 
-#: main.c:511
-msgid "vCard was imported successfully."
-msgstr "vCard 名片已成功导入。"
-
-#: main.c:519
-msgid "Import of vCard failed."
-msgstr "导入 vCard 名片失败。"
-
-#: main.c:548
+#: main.c:532
 #, c-format
-msgid "File '%s' looks like a vCard, do you want to import it?"
-msgstr "文件 %s 似乎是一个 vCard 名片，您希望导入它吗？"
+msgid "File '%s' looks like a mimedir (vCard, vCal) filedo you want to import it?"
+msgstr "文件‘%s’似乎是个 mimedir (vCard, vCal) 文件，您希望导入它吗？"
 
-#: main.c:568 main.c:630
+#: main.c:552 main.c:614
 msgid "Unable to start receiver."
 msgstr "无法启动接收器。"
 
-#: main.c:582
+#: main.c:566
 msgid "IR Receive and transmit control"
 msgstr "红外接收和传输控制"
 
-#: main.c:592 main.c:595
+#: main.c:576 main.c:579
 msgid "Error opening IR server."
 msgstr "打开红外服务器端时出错。"
 
-#: main.c:607
+#: main.c:591
 msgid "Received file"
 msgstr "接收的文件"
 
-#: main.c:645
+#: main.c:629
 msgid "Transmitting VCard"
 msgstr "正在传送 vCard 名片"
 
-#: main.c:743
+#: main.c:645
+msgid "Unable to start sender."
+msgstr "无法启动发送器。"
+
+#: main.c:737
 msgid "Name:"
 msgstr "姓名："
 
-#: main.c:744
+#: main.c:738
 msgid "Services:"
 msgstr "服务："
 
-#: main.c:745
+#: main.c:739
 msgid "Address:"
 msgstr "地址："
 
-#: main.c:752
+#: main.c:746
 msgid "Peer Information"
 msgstr "对等端信息"
 
-#: main.c:755
+#: main.c:749
 msgid "Peer Actions"
 msgstr "对等端动作"
 
-#: main.c:763 main.c:991
+#: main.c:757 main.c:985
 msgid "Send File"
 msgstr "发送文件"
 
-#: main.c:771 main.c:992
+#: main.c:765 main.c:986
 msgid "Receive File"
 msgstr "接收文件"
 
-#: main.c:821 main.c:886
+#: main.c:815 main.c:880
 msgid "IR transceiver on"
 msgstr "红外收发器，在"
 
-#: main.c:823 main.c:910
+#: main.c:817 main.c:904
 msgid "IR transceiver off"
 msgstr "红外收发器关闭"
 
-#: main.c:834
+#: main.c:828
 msgid "Infrared Control"
 msgstr "红外控制"
 
-#: main.c:983
+#: main.c:977
 msgid "IrDa tool"
 msgstr "IrDA 工具"
 
-#: main.c:988
+#: main.c:982
 msgid "Switch IR on"
 msgstr "打开红外"
 
-#: main.c:989
+#: main.c:983
 msgid "Switch IR off"
 msgstr "关闭红外"
 
-#: main.c:990
+#: main.c:984
 msgid "Send vCard"
 msgstr "发送 vCard 名片"
 
-#: main.c:993
+#: main.c:987
 msgid "Controls..."
 msgstr "控制……"
 
-#: main.c:994
+#: main.c:988
 msgid "Remove from dock"
 msgstr "从坞中删除"
 
-#: main.c:1061
+#: main.c:1055
 msgid "This is the infrared communications control."
 msgstr "这是红外通信控制工具。"
 
 #: dbus.c:76
 #, c-format
-msgid "Failed to acquire service: %s"
-msgstr "无法获取服务：%s"
+msgid "Failed to request name: %s"
+msgstr "无法查寻名称：%s"
 
 #: dbus.c:82
 #, c-format
@@ -249,3 +242,12 @@ msgstr "IrDA 控制"
 #: gpe-beam.desktop.in.h:2
 msgid "Panel based infrared communications control"
 msgstr "基于面板的红外通信控制"
+
+#~ msgid "IR Receive and Transmit........."
+#~ msgstr "红外接收和传输…………"
+
+#~ msgid "vCard was imported successfully."
+#~ msgstr "vCard 名片已成功导入。"
+
+#~ msgid "Import of vCard failed."
+#~ msgstr "导入 vCard 名片失败。"

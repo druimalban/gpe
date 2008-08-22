@@ -1,69 +1,67 @@
-# Dutch translations for gpe-beam-0.2.9.
+# Indonesian translations for gpe-beam package.
+# Copyright (C) 2008 THE gpe-beam'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-beam package.
+# Andhika Padmawan <andhika.padmawan@gmail.com>, 2008.
 #
-# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
-# Benno Schulenberg <benno@vertaalt.nl>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-beam-0.2.9\n"
+"Project-Id-Version: gpe-beam 0.2.9\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-08-23 15:25+0200\n"
-"PO-Revision-Date: 2008-08-21 22:10+0200\n"
-"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
-"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
+"PO-Revision-Date: 2008-08-22 20:50+0700\n"
+"Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
+"Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: main.c:168
 msgid "Error"
-msgstr "Fout"
+msgstr "Galat"
 
 #: main.c:173
 msgid "Failed"
-msgstr "Mislukt"
+msgstr "Gagal"
 
 #: main.c:176
 msgid "Done"
-msgstr "Voltooid"
+msgstr "Selesai"
 
 #: main.c:179
 msgid "Connecting..."
-msgstr "Bezig met verbinden..."
+msgstr "Menghubungi..."
 
 #: main.c:183
 msgid "Disconnecting..."
-msgstr "Sluiten van verbinding..."
+msgstr "Memutuskan..."
 
 #: main.c:186
 msgid "Sending..."
-msgstr "Bezig met verzenden..."
+msgstr "Mengirim..."
 
 #: main.c:189
 msgid "Receiving"
-msgstr "Bezig met ontvangen"
+msgstr "Menerima"
 
 #: main.c:198
 msgid "Waiting for incoming connection"
-msgstr "Wachten op inkomende verbinding"
+msgstr "Menunggu koneksi masuk"
 
 #: main.c:201
 msgid "Connected"
-msgstr "Verbonden"
+msgstr "Terhubung"
 
 #: main.c:204
 msgid "Disconnecting"
-msgstr "Sluiten van verbinding"
+msgstr "Terputus"
 
 #: main.c:225
 msgid "Telephony"
-msgstr "Telefoon"
+msgstr "Telefoni"
 
 #: main.c:231
 msgid "File Server"
-msgstr "Bestandsserver"
+msgstr "Server Berkas"
 
 #: main.c:237
 msgid "IrCOMM"
@@ -83,11 +81,11 @@ msgstr "PDA/Palmtop"
 
 #: main.c:264
 msgid "Computer"
-msgstr "Computer"
+msgstr "Komputer"
 
 #: main.c:270
 msgid "Printer"
-msgstr "Printer"
+msgstr "Pencetak"
 
 #: main.c:276
 msgid "Modem"
@@ -95,157 +93,151 @@ msgstr "Modem"
 
 #: main.c:282
 msgid "Fax"
-msgstr "Fax"
+msgstr "Faks"
 
 #: main.c:288
 msgid "LAN Access"
-msgstr "LAN-toegang"
+msgstr "Akses LAN"
 
 #: main.c:362
 msgid "Transmitted file"
-msgstr "Verzonden bestand"
+msgstr "Berkas terpancar"
 
 #: main.c:371
 msgid "Could not transmit file"
-msgstr "Kan bestand niet verzenden"
+msgstr "Tak dapat memancarkan berkas"
 
 #: main.c:397 main.c:448
 msgid "Unable to start file transmit."
-msgstr "Kan verzending van bestand niet starten."
+msgstr "Tak dapat memulai pemancar berkas."
 
 #: main.c:420 main.c:463
 msgid "IR Receive and Transmit....."
-msgstr "IR ontvangen en verzenden....."
+msgstr "Menerima dan Memancarkan IR....."
 
 #: main.c:472 main.c:474
 msgid "Error opening IR client."
-msgstr "Fout bij openen van IR-cliënt."
+msgstr "Galat membuka klien IR."
 
 #: main.c:481
 msgid "Select file to transmit"
-msgstr "Selecteer bestand om te verzenden"
+msgstr "Memilih berkas yang dipancarkan"
 
 #: main.c:508
 msgid "Could not start import tool."
-msgstr "Kan importeergereedschap niet starten."
+msgstr "Tak dapat memulai alat impor."
 
 #: main.c:532
 #, c-format
 msgid "File '%s' looks like a mimedir (vCard, vCal) filedo you want to import it?"
-msgstr "Bestand '%s' ziet er uit als vCard of vCal.  Wilt u het importeren?"
+msgstr "Berkas '%s' tampak seperti mimedir (vCard, vCal) filedo anda ingin mengimpornya?"
 
 #: main.c:552 main.c:614
 msgid "Unable to start receiver."
-msgstr "Kan ontvanger niet starten."
+msgstr "Tak dapat memulai penerima."
 
 #: main.c:566
 msgid "IR Receive and transmit control"
-msgstr "Beheer van ontvangen/verzenden via IR"
+msgstr "Kendali penerima dan pemancar IR"
 
 #: main.c:576 main.c:579
 msgid "Error opening IR server."
-msgstr "Fout bij openen van IR-server."
+msgstr "Galat membuka server IR."
 
 #: main.c:591
 msgid "Received file"
-msgstr "Ontvangen bestand"
+msgstr "Menerima berkas"
 
 #: main.c:629
 msgid "Transmitting VCard"
-msgstr "Verzenden van vCard"
+msgstr "Memancarkan VCard"
 
 #: main.c:645
 msgid "Unable to start sender."
-msgstr "Kan verzender niet starten."
+msgstr "Tak dapat memulai pengirim."
 
 #: main.c:737
 msgid "Name:"
-msgstr "Naam:"
+msgstr "Nama:"
 
 #: main.c:738
 msgid "Services:"
-msgstr "Services:"
+msgstr "Layanan:"
 
 #: main.c:739
 msgid "Address:"
-msgstr "Adres:"
+msgstr "Alamat:"
 
 #: main.c:746
 msgid "Peer Information"
-msgstr "Informatie over andere computer"
+msgstr "Informasi Rakan"
 
 #: main.c:749
 msgid "Peer Actions"
-msgstr "Acties van andere computer"
+msgstr "Aksi Rakan"
 
 #: main.c:757 main.c:985
 msgid "Send File"
-msgstr "Bestand verzenden"
+msgstr "Kirim Berkas"
 
 #: main.c:765 main.c:986
 msgid "Receive File"
-msgstr "Bestand ontvangen"
+msgstr "Terima Berkas"
 
 #: main.c:815 main.c:880
 msgid "IR transceiver on"
-msgstr "IR-zender/ontvanger aan"
+msgstr "Pemancar - penerima IR hidup"
 
 #: main.c:817 main.c:904
 msgid "IR transceiver off"
-msgstr "IR-zender/ontvanger uit"
+msgstr "Pemancar - penerima IR mati"
 
 #: main.c:828
 msgid "Infrared Control"
-msgstr "Infraroodbeheer"
+msgstr "Kendali Infra Merah"
 
 #: main.c:977
 msgid "IrDa tool"
-msgstr "IrDa-gereedschap"
+msgstr "Alat IrDa"
 
 #: main.c:982
 msgid "Switch IR on"
-msgstr "IR aanzetten"
+msgstr "Saklar IR hidup"
 
 #: main.c:983
 msgid "Switch IR off"
-msgstr "IR uitzetten"
+msgstr "Saklar IR mati"
 
 #: main.c:984
 msgid "Send vCard"
-msgstr "vCard verzenden"
+msgstr "Kirim vCard"
 
 #: main.c:987
 msgid "Controls..."
-msgstr "Beheerders..."
+msgstr "Kendali..."
 
 #: main.c:988
 msgid "Remove from dock"
-msgstr "Verwijderen uit systeemvak"
+msgstr "Hapus dari dok"
 
 #: main.c:1055
 msgid "This is the infrared communications control."
-msgstr "Dit is het infraroodcommunicatiebeheer."
+msgstr "Ini adalah kendali komunikasi infra merah."
 
 #: dbus.c:76
 #, c-format
 msgid "Failed to request name: %s"
-msgstr "Opvragen van naam is mislukt: %s"
+msgstr "Gagal untuk memesan nama: %s"
 
 #: dbus.c:82
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
-msgstr "Kan geen verbinding maken met sessieberichtenbus: %s"
+msgstr "Gagal membuka koneksi ke bus pesan sesi: %s"
 
 #: gpe-beam.desktop.in.h:1
 msgid "IrDa control"
-msgstr "IrDa-beheer"
+msgstr "Kendali IrDa"
 
 #: gpe-beam.desktop.in.h:2
 msgid "Panel based infrared communications control"
-msgstr "Paneelgebaseerd infraroodcommunicatiebeheer"
-
-#~ msgid "vCard was imported successfully."
-#~ msgstr "vCard is met succes geïmporteerd."
-
-#~ msgid "Import of vCard failed."
-#~ msgstr "Importeren van vCard is mislukt."
+msgstr "Panel berbasis kendali komunikasi infra merah"

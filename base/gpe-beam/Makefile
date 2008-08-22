@@ -7,7 +7,8 @@ PREFIX = /usr/local
 DESTDIR = /
 CONTROL = control1
 
-LINGUAS = cs de sv ro nl pt ru fr sr es pt_BR zh_CN vi rw sl fi
+LINGUAS="$(ls ${srcdir}/po/*.po | sed 's/.*\/po\///;s/\.po//' | tr \\n ' ')"
+
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
