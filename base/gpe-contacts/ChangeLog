@@ -1,3 +1,9 @@
+2008-08-22  Phil Blundell  <pb@reciva.com>
+
+	* po/gpe-contacts.pot: Update.
+
+	* po/sv.po, po/ja.po, po/id.po, po/zh_CN.po: Update from TP.
+
 2008-08-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (main): Close DB after command line import

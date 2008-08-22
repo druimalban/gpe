@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-10 10:19+0100\n"
+"POT-Creation-Date: 2008-08-22 08:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -194,11 +194,10 @@ msgid "Choose file"
 msgstr ""
 
 #: ../main.c:1335
-msgid "Import of"
-msgstr ""
-
-#: ../main.c:1335
-msgid "files failed:"
+#, c-format
+msgid ""
+"Import of %i files failed:\n"
+"%s"
 msgstr ""
 
 #: ../main.c:1339
@@ -210,11 +209,8 @@ msgid "Export to file..."
 msgstr ""
 
 #: ../main.c:1379
-msgid "Export of"
-msgstr ""
-
-#: ../main.c:1379
-msgid "files ok, failed:"
+#, c-format
+msgid "Export of %i files OK.  Failed: %i"
 msgstr ""
 
 #: ../main.c:1383
@@ -279,16 +275,16 @@ msgstr ""
 msgid "Could not import file %s: %s.\n"
 msgstr ""
 
-#: ../main.c:1762
+#: ../main.c:1763
 #, c-format
 msgid "File %s imported sucessfully.\n"
 msgstr ""
 
-#: ../main.c:1785
+#: ../main.c:1787
 msgid "My Card"
 msgstr ""
 
-#: ../main.c:1788
+#: ../main.c:1790
 msgid "Saving vcard failed"
 msgstr ""
 

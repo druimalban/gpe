@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-contacts 0.47\n"
+"Project-Id-Version: gpe-contacts 0.49\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-08 18:43+0200\n"
-"PO-Revision-Date: 2008-08-09 22:23+0900\n"
+"POT-Creation-Date: 2008-08-13 22:29+0100\n"
+"PO-Revision-Date: 2008-08-15 09:07+0900\n"
 "Last-Translator: Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>\n"
 "Language-Team: Japanese <translation-team-ja@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -52,22 +52,20 @@ msgid "Data item"
 msgstr "データ項目"
 
 #: ../configure.c:294
-#, fuzzy
 msgid "Screen Layout"
-msgstr "配置スタイル"
+msgstr "画面配置"
 
 #: ../configure.c:300
-#, fuzzy
 msgid "List position"
-msgstr "カーソル位置"
+msgstr "一覧の位置を"
 
 #: ../configure.c:303
 msgid "left"
-msgstr "左"
+msgstr "左に"
 
 #: ../configure.c:305
 msgid "right"
-msgstr "右"
+msgstr "右に"
 
 #: ../configure.c:333
 msgid "Database Size"
@@ -97,78 +95,74 @@ msgid "Editing Layout"
 msgstr "配置スタイル"
 
 #: ../configure.c:463
-#, fuzzy
 msgid "Setup"
-msgstr "セットアップ"
+msgstr "設定"
 
 #: ../configure.c:464
 msgid "Database"
 msgstr "データベース"
 
 #: ../configure.c:496
-#, fuzzy
 msgid "Contacts: Configuration"
-msgstr "音質設定"
+msgstr "連絡先: 設定"
 
-#: ../edit-vcard.desktop.in.in.h:1
-#, fuzzy
+#: ../edit-vcard.desktop.in.in.h:1 ../edit-vcard.desktop.in.h:1
 msgid "Edit personal vcard"
-msgstr "XMPP vCard の編集"
+msgstr "個人の vCard の編集"
 
-#: ../edit-vcard.desktop.in.in.h:2
-#, fuzzy
+#: ../edit-vcard.desktop.in.in.h:2 ../edit-vcard.desktop.in.h:2
 msgid "My VCard"
-msgstr "VCard ビューア"
+msgstr "マイ VCard"
 
-#: ../editing.c:135 ../main.c:1440
+#: ../editing.c:156 ../main.c:1494
 msgid "Details"
 msgstr "詳細"
 
-#: ../editing.c:368
+#: ../editing.c:389
 #, fuzzy
 msgid "no year"
-msgstr "選択した年"
+msgstr "年は関係ない"
 
-#: ../editing.c:427
+#: ../editing.c:448
 msgid "Image"
 msgstr "画像"
 
-#: ../editing.c:540 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:561 ../finddlg.c:44 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: ../editing.c:541 ../namedetail.c:64
+#: ../editing.c:562 ../finddlg.c:42 ../namedetail.c:64
 msgid "OK"
 msgstr "OK"
 
-#: ../editing.c:651 ../main.c:561 ../main.c:688
+#: ../editing.c:672 ../main.c:562 ../main.c:689
 msgid "Categories"
 msgstr "カテゴリ"
 
-#: ../editing.c:1439
+#: ../editing.c:1460
 msgid "Select image"
 msgstr "画像を選択"
 
-#: ../export.c:190
+#: ../export.c:194
 msgid "Save as..."
 msgstr "名前を付けて保存..."
 
-#. create dialog window
-#: ../finddlg.c:37
+#: ../finddlg.c:38 ../finddlg.c:47
 msgid "Find Contacts"
 msgstr "連絡先を探す"
 
 #. supply action area
-#: ../finddlg.c:49
+#: ../finddlg.c:61
 msgid "Search for:"
 msgstr "検索文字列:"
 
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1376
-#: ../hildon/gpe-contacts.desktop.in.in.h:1
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1430
+#: ../hildon/gpe-contacts.desktop.in.in.h:1 ../gpe-contacts.desktop.in.h:1
+#: ../hildon/gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr "連絡先"
 
-#: ../gpe-contacts.desktop.in.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2 ../gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE 連絡先"
 
@@ -177,114 +171,129 @@ msgid "Edit Contact"
 msgstr "連絡先を編集"
 
 #: ../main.c:83 ../main.c:195
-#, fuzzy
 msgid "Really delete this contact?"
-msgstr "本当にこのヘッダを削除しますか？"
+msgstr "本当にこの連絡先を削除しますか？"
 
 #: ../main.c:83 ../main.c:195 ../structure.c:176
-#, fuzzy
 msgid "Confirm"
 msgstr "確認"
 
 #: ../main.c:135
-#, fuzzy
 msgid "All categories"
-msgstr "<nobr>%n カテゴリ</nobr>"
+msgstr "すべてのカテゴリ"
 
 #: ../main.c:157
 msgid "New Contact"
 msgstr "新しい連絡先"
 
-#: ../main.c:572
+#: ../main.c:573
 msgid "No contact selected."
 msgstr "連絡先が選択されていません。"
 
 #. create and set up dialog
-#: ../main.c:644 ../main.c:1512 ../main.c:1585
+#: ../main.c:645 ../main.c:1575 ../main.c:1648
 msgid "Contact"
 msgstr "連絡先"
 
-#: ../main.c:1295
-#, fuzzy
+#: ../main.c:1305
 msgid "Choose file"
 msgstr "ファイルを選択する"
 
-#: ../main.c:1323
-#, fuzzy
-msgid "Import of"
-msgstr "インポート(_I)"
+#: ../main.c:1335
+#, c-format
+msgid ""
+"Import of %i files failed:\n"
+"%s"
+msgstr ""
+"%i 個のファイルのインポートに失敗しました:\n"
+"%s"
 
-#: ../main.c:1323
-#, fuzzy
-msgid "files failed:"
-msgstr "読み込み失敗"
-
-#: ../main.c:1327
+#: ../main.c:1339
 msgid "Import successful"
 msgstr "インポート成功"
 
-#: ../main.c:1393
+#: ../main.c:1355
+msgid "Export to file..."
+msgstr "ファイルにエクスポートする..."
+
+#: ../main.c:1379
+#, c-format
+msgid "Export of %i files OK.  Failed: %i"
+msgstr "エクスポート: %i 個のファイル成功。%i 個は失敗。"
+
+#: ../main.c:1383
+msgid "Export successful"
+msgstr "エクスポート成功"
+
+#: ../main.c:1447
 msgid "Tap this button to add a new contact."
 msgstr "新しい連絡先を追加するには、ここをタップします。"
 
-#: ../main.c:1402
+#: ../main.c:1456
 msgid "Tap here to edit the selected contact."
 msgstr "選択した連絡先を編集するには、ここをタップします。"
 
-#: ../main.c:1412
+#: ../main.c:1466
 msgid "Tap here to delete the selected contact."
 msgstr "選択した連絡先を削除するには、ここをタップします。"
 
-#: ../main.c:1432
+#: ../main.c:1486
 msgid "Find a contact by searching for any data."
-msgstr ""
+msgstr "任意のデータで検索して連絡先を探す"
 
-#: ../main.c:1442
+#: ../main.c:1496
 msgid "Tap here to show contacts details."
 msgstr "選択した連絡先の詳細を表示するには、ここをタップします。"
 
-#: ../main.c:1452
+#: ../main.c:1506
 msgid "Tap here to configure this program."
-msgstr ""
+msgstr "このプログラムを設定するには ここをタップしてください。"
 
-#: ../main.c:1460
+#: ../main.c:1514
 msgid "Import"
 msgstr "インポート"
 
-#: ../main.c:1462
+#: ../main.c:1516
 msgid "Open file to import a contact from it."
-msgstr ""
+msgstr "ファイルを開いて連絡先をインポートする。"
 
-#: ../main.c:1475
+#: ../main.c:1523
+msgid "Export"
+msgstr "エクスポート"
+
+#: ../main.c:1525
+msgid "Export currently listed contacts to a file."
+msgstr "現在一覧されている連絡先をファイルにエクスポートする"
+
+#: ../main.c:1538
 msgid "Tap here to exit gpe-contacts."
-msgstr ""
+msgstr "gpe-contacts を終了するにはここをタップしてください。"
 
 #. * find and categories section *
-#: ../main.c:1541
+#: ../main.c:1604
 msgid "Find:"
 msgstr "検索:"
 
-#: ../main.c:1548
+#: ../main.c:1611
 #, fuzzy
 msgid "in"
 msgstr "in"
 
-#: ../main.c:1694
+#: ../main.c:1756
 #, c-format
-msgid "Could not import file %s."
-msgstr "ファイル %s をインポートできません。"
+msgid "Could not import file %s: %s.\n"
+msgstr "ファイル %s をインポートできません。:%s\n"
 
-#: ../main.c:1699
-#, fuzzy, c-format
-msgid "File %s imported sucessfully."
-msgstr "インポートされたデータファイルの内容"
+#: ../main.c:1762
+#, c-format
+msgid "File %s imported sucessfully.\n"
+msgstr "ファイル %s のインポートに成功しました。\n"
 
-#: ../main.c:1725
-#, fuzzy
+#: ../main.c:1785
 msgid "My Card"
-msgstr "次のカード(&N)"
+msgstr "マイ カード"
 
-#: ../main.c:1728
+#: ../main.c:1788
 msgid "Saving vcard failed"
 msgstr "vCard の保存に失敗"
 
@@ -339,19 +348,16 @@ msgid "Sr."
 msgstr "Sr."
 
 #: ../namedetail.c:32
-#, fuzzy
 msgid "I"
-msgstr "I"
+msgstr "一世"
 
 #: ../namedetail.c:32
-#, fuzzy
 msgid "II"
-msgstr "II"
+msgstr "二世"
 
 #: ../namedetail.c:32
-#, fuzzy
 msgid "III"
-msgstr "III"
+msgstr "三世"
 
 #: ../namedetail.c:62 ../namedetail.c:69
 #, fuzzy
@@ -371,9 +377,8 @@ msgid "Last name:"
 msgstr "姓:"
 
 #: ../namedetail.c:100
-#, fuzzy
 msgid "Suffix:"
-msgstr "サフィックス(&S):"
+msgstr "接尾辞:"
 
 #: ../namedetail.c:101
 msgid "Title:"
@@ -429,5 +434,10 @@ msgid "Tap here to delete the selected item."
 msgstr "選択した項目を削除するには、ここをタップします。"
 
 #: ../hildon/gpe-contacts.desktop.in.in.h:2
+#: ../hildon/gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts Application"
 msgstr "GPE 連絡先 アプリケーション"
+
+#, fuzzy
+#~ msgid "Import of"
+#~ msgstr "インポート(_I)"

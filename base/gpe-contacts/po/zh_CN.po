@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the gpe-contacts package.
 # Meng Jie <zuxyhere@eastday.com>, 2004.
 # LI Daobing <lidaobing@gmail.com>, 2008.
+# Ji ZhengYu <zhengyuji@gmail.com>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-contacts 0.47\n"
+"Project-Id-Version: gpe-contacts 0.49\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-08 18:43+0200\n"
-"PO-Revision-Date: 2008-08-09 19:30+0800\n"
-"Last-Translator: LI Daobing <lidaobing@gmail.com>\n"
+"POT-Creation-Date: 2008-08-13 22:29+0100\n"
+"PO-Revision-Date: 2008-08-15 17:48中国标准时间\n"
+"Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
 "Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,62 +102,62 @@ msgstr "数据库"
 msgid "Contacts: Configuration"
 msgstr "联系人：配置"
 
-#: ../edit-vcard.desktop.in.in.h:1
+#: ../edit-vcard.desktop.in.in.h:1 ../edit-vcard.desktop.in.h:1
 msgid "Edit personal vcard"
 msgstr "编辑个人名片"
 
-#: ../edit-vcard.desktop.in.in.h:2
+#: ../edit-vcard.desktop.in.in.h:2 ../edit-vcard.desktop.in.h:2
 msgid "My VCard"
 msgstr "我的名片"
 
-#: ../editing.c:135 ../main.c:1440
+#: ../editing.c:156 ../main.c:1494
 msgid "Details"
 msgstr "详细信息"
 
-#: ../editing.c:368
+#: ../editing.c:389
 msgid "no year"
 msgstr "无年份"
 
-#: ../editing.c:427
+#: ../editing.c:448
 msgid "Image"
 msgstr "图片"
 
-#: ../editing.c:540 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:561 ../finddlg.c:44 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "取消"
 
-#: ../editing.c:541 ../namedetail.c:64
+#: ../editing.c:562 ../finddlg.c:42 ../namedetail.c:64
 msgid "OK"
 msgstr "确定"
 
-#: ../editing.c:651 ../main.c:561 ../main.c:688
+#: ../editing.c:672 ../main.c:562 ../main.c:689
 msgid "Categories"
 msgstr "类别"
 
-#: ../editing.c:1439
+#: ../editing.c:1460
 msgid "Select image"
 msgstr "选择图片"
 
-#: ../export.c:190
+#: ../export.c:194
 msgid "Save as..."
 msgstr "另存为..."
 
-#. create dialog window
-#: ../finddlg.c:37
+#: ../finddlg.c:38 ../finddlg.c:47
 msgid "Find Contacts"
 msgstr "查找联系人"
 
 #. supply action area
-#: ../finddlg.c:49
+#: ../finddlg.c:61
 msgid "Search for:"
 msgstr "寻找："
 
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1376
-#: ../hildon/gpe-contacts.desktop.in.in.h:1
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1430
+#: ../hildon/gpe-contacts.desktop.in.in.h:1 ../gpe-contacts.desktop.in.h:1
+#: ../hildon/gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr "联系人"
 
-#: ../gpe-contacts.desktop.in.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2 ../gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE 联系人"
 
@@ -180,91 +181,113 @@ msgstr "所有类别"
 msgid "New Contact"
 msgstr "新建联系人"
 
-#: ../main.c:572
+#: ../main.c:573
 msgid "No contact selected."
 msgstr "未选择联系人。"
 
 #. create and set up dialog
-#: ../main.c:644 ../main.c:1512 ../main.c:1585
+#: ../main.c:645 ../main.c:1575 ../main.c:1648
 msgid "Contact"
 msgstr "联系人"
 
-#: ../main.c:1295
+#: ../main.c:1305
 msgid "Choose file"
 msgstr "选择文件"
 
-#: ../main.c:1323
-msgid "Import of"
-msgstr "导入"
+#: ../main.c:1335
+#, c-format
+msgid ""
+"Import of %i files failed:\n"
+"%s"
+msgstr ""
+"导入 %i 个文件失败：\n"
+"%s"
 
-#: ../main.c:1323
-msgid "files failed:"
-msgstr "文件失败："
-
-#: ../main.c:1327
+#: ../main.c:1339
 msgid "Import successful"
 msgstr "导入成功"
 
-#: ../main.c:1393
+#: ../main.c:1355
+msgid "Export to file..."
+msgstr "导出至文件..."
+
+#: ../main.c:1379
+#, c-format
+msgid "Export of %i files OK.  Failed: %i"
+msgstr "成功导出 %i 个文件，%i 个失败"
+
+#: ../main.c:1383
+msgid "Export successful"
+msgstr "导出成功"
+
+#: ../main.c:1447
 msgid "Tap this button to add a new contact."
 msgstr "轻击此按钮添加一个新的联系人。"
 
-#: ../main.c:1402
+#: ../main.c:1456
 msgid "Tap here to edit the selected contact."
 msgstr "轻击此处编辑选择的联系人。"
 
-#: ../main.c:1412
+#: ../main.c:1466
 msgid "Tap here to delete the selected contact."
 msgstr "轻击此处删除选择的联系人。"
 
-#: ../main.c:1432
+#: ../main.c:1486
 msgid "Find a contact by searching for any data."
 msgstr "通过搜索所有数据来查找联系人。"
 
-#: ../main.c:1442
+#: ../main.c:1496
 msgid "Tap here to show contacts details."
 msgstr "轻击此处显示联系人的详细信息。"
 
-#: ../main.c:1452
+#: ../main.c:1506
 msgid "Tap here to configure this program."
 msgstr "轻击此处配置此程序。"
 
-#: ../main.c:1460
+#: ../main.c:1514
 msgid "Import"
 msgstr "导入"
 
-#: ../main.c:1462
+#: ../main.c:1516
 msgid "Open file to import a contact from it."
 msgstr "打开文件以从中导入联系人"
 
-#: ../main.c:1475
+#: ../main.c:1523
+msgid "Export"
+msgstr "导出"
+
+#: ../main.c:1525
+msgid "Export currently listed contacts to a file."
+msgstr "将当前列出的联系人导出至文件。"
+
+#: ../main.c:1538
 msgid "Tap here to exit gpe-contacts."
 msgstr "轻击此处退出 GPE 联系人。"
 
 #. * find and categories section *
-#: ../main.c:1541
+#: ../main.c:1604
 msgid "Find:"
 msgstr "查找："
 
-#: ../main.c:1548
+#: ../main.c:1611
 msgid "in"
 msgstr "在"
 
-#: ../main.c:1694
+#: ../main.c:1756
 #, c-format
-msgid "Could not import file %s."
-msgstr "无法导入文件 %s。"
+msgid "Could not import file %s: %s.\n"
+msgstr "无法导入文件 %s: %s。\n"
 
-#: ../main.c:1699
+#: ../main.c:1762
 #, c-format
-msgid "File %s imported sucessfully."
-msgstr "文件 %s 已被成功导入"
+msgid "File %s imported sucessfully.\n"
+msgstr "文件 %s 已被成功导入。\n"
 
-#: ../main.c:1725
+#: ../main.c:1785
 msgid "My Card"
 msgstr "我的名片"
 
-#: ../main.c:1728
+#: ../main.c:1788
 msgid "Saving vcard failed"
 msgstr "保存 vCard 名片失败。"
 
@@ -328,7 +351,7 @@ msgstr "编辑姓名详细信息"
 
 #: ../namedetail.c:97
 msgid "First name:"
-msgstr "名："
+msgstr "姓："
 
 #: ../namedetail.c:98
 msgid "Middle name:"
@@ -336,7 +359,7 @@ msgstr "中名："
 
 #: ../namedetail.c:99
 msgid "Last name:"
-msgstr "姓："
+msgstr "名："
 
 #: ../namedetail.c:100
 msgid "Suffix:"
@@ -395,5 +418,9 @@ msgid "Tap here to delete the selected item."
 msgstr "轻击此处删除所选项。"
 
 #: ../hildon/gpe-contacts.desktop.in.in.h:2
+#: ../hildon/gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts Application"
 msgstr "GPE 联系人程序"
+
+#~ msgid "Import of"
+#~ msgstr "导入"

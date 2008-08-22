@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-contacts 0.47\n"
+"Project-Id-Version: gpe-contacts 0.49\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-08 18:43+0200\n"
-"PO-Revision-Date: 2008-08-09 13:05+0100\n"
+"POT-Creation-Date: 2008-08-13 22:29+0100\n"
+"PO-Revision-Date: 2008-08-15 08:53+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -101,62 +101,62 @@ msgstr "Databas"
 msgid "Contacts: Configuration"
 msgstr "Kontakter: Konfiguration"
 
-#: ../edit-vcard.desktop.in.in.h:1
+#: ../edit-vcard.desktop.in.in.h:1 ../edit-vcard.desktop.in.h:1
 msgid "Edit personal vcard"
 msgstr "Redigera personligt vcard"
 
-#: ../edit-vcard.desktop.in.in.h:2
+#: ../edit-vcard.desktop.in.in.h:2 ../edit-vcard.desktop.in.h:2
 msgid "My VCard"
 msgstr "Mitt vcard"
 
-#: ../editing.c:135 ../main.c:1440
+#: ../editing.c:156 ../main.c:1494
 msgid "Details"
 msgstr "Detaljer"
 
-#: ../editing.c:368
+#: ../editing.c:389
 msgid "no year"
 msgstr "inget år"
 
-#: ../editing.c:427
+#: ../editing.c:448
 msgid "Image"
 msgstr "Bild"
 
-#: ../editing.c:540 ../namedetail.c:66 ../structure.c:177
+#: ../editing.c:561 ../finddlg.c:44 ../namedetail.c:66 ../structure.c:177
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ../editing.c:541 ../namedetail.c:64
+#: ../editing.c:562 ../finddlg.c:42 ../namedetail.c:64
 msgid "OK"
 msgstr "OK"
 
-#: ../editing.c:651 ../main.c:561 ../main.c:688
+#: ../editing.c:672 ../main.c:562 ../main.c:689
 msgid "Categories"
 msgstr "Kategorier"
 
-#: ../editing.c:1439
+#: ../editing.c:1460
 msgid "Select image"
 msgstr "Välj bild"
 
-#: ../export.c:190
+#: ../export.c:194
 msgid "Save as..."
 msgstr "Spara som..."
 
-#. create dialog window
-#: ../finddlg.c:37
+#: ../finddlg.c:38 ../finddlg.c:47
 msgid "Find Contacts"
 msgstr "Sök kontakter"
 
 #. supply action area
-#: ../finddlg.c:49
+#: ../finddlg.c:61
 msgid "Search for:"
 msgstr "Sök efter:"
 
-#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1376
-#: ../hildon/gpe-contacts.desktop.in.in.h:1
+#: ../gpe-contacts.desktop.in.in.h:1 ../main.c:1430
+#: ../hildon/gpe-contacts.desktop.in.in.h:1 ../gpe-contacts.desktop.in.h:1
+#: ../hildon/gpe-contacts.desktop.in.h:1
 msgid "Contacts"
 msgstr "Kontakter"
 
-#: ../gpe-contacts.desktop.in.in.h:2
+#: ../gpe-contacts.desktop.in.in.h:2 ../gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts"
 msgstr "GPE-kontakter"
 
@@ -180,91 +180,113 @@ msgstr "Alla kategorier"
 msgid "New Contact"
 msgstr "Ny kontakt"
 
-#: ../main.c:572
+#: ../main.c:573
 msgid "No contact selected."
 msgstr "Ingen kontakt markerad."
 
 #. create and set up dialog
-#: ../main.c:644 ../main.c:1512 ../main.c:1585
+#: ../main.c:645 ../main.c:1575 ../main.c:1648
 msgid "Contact"
 msgstr "Kontakt"
 
-#: ../main.c:1295
+#: ../main.c:1305
 msgid "Choose file"
 msgstr "Välj fil"
 
-#: ../main.c:1323
-msgid "Import of"
-msgstr "Importering av"
+#: ../main.c:1335
+#, c-format
+msgid ""
+"Import of %i files failed:\n"
+"%s"
+msgstr ""
+"Importering av %i filer misslyckades:\n"
+"%s"
 
-#: ../main.c:1323
-msgid "files failed:"
-msgstr "filer misslyckades:"
-
-#: ../main.c:1327
+#: ../main.c:1339
 msgid "Import successful"
 msgstr "Importering lyckades"
 
-#: ../main.c:1393
+#: ../main.c:1355
+msgid "Export to file..."
+msgstr "Exportera till fil..."
+
+#: ../main.c:1379
+#, c-format
+msgid "Export of %i files OK.  Failed: %i"
+msgstr "Exportering av %i filer OK.  Misslyckades: %i"
+
+#: ../main.c:1383
+msgid "Export successful"
+msgstr "Exportering lyckades"
+
+#: ../main.c:1447
 msgid "Tap this button to add a new contact."
 msgstr "Tryck på denna knapp för att lägga till en ny kontakt."
 
-#: ../main.c:1402
+#: ../main.c:1456
 msgid "Tap here to edit the selected contact."
 msgstr "Tryck här för att redigera den markerade kontakten."
 
-#: ../main.c:1412
+#: ../main.c:1466
 msgid "Tap here to delete the selected contact."
 msgstr "Tryck här för att ta bort den markerade kontakten."
 
-#: ../main.c:1432
+#: ../main.c:1486
 msgid "Find a contact by searching for any data."
 msgstr "Hitta en kontakt genom att söka efter några data."
 
-#: ../main.c:1442
+#: ../main.c:1496
 msgid "Tap here to show contacts details."
 msgstr "Tryck här för att visa kontaktdetaljer."
 
-#: ../main.c:1452
+#: ../main.c:1506
 msgid "Tap here to configure this program."
 msgstr "Tryck här för att konfigurera detta program."
 
-#: ../main.c:1460
+#: ../main.c:1514
 msgid "Import"
 msgstr "Importera"
 
-#: ../main.c:1462
+#: ../main.c:1516
 msgid "Open file to import a contact from it."
 msgstr "Öppna en fil att importera en kontakt från."
 
-#: ../main.c:1475
+#: ../main.c:1523
+msgid "Export"
+msgstr "Exportera"
+
+#: ../main.c:1525
+msgid "Export currently listed contacts to a file."
+msgstr "Exportering av listade kontakter till en fil."
+
+#: ../main.c:1538
 msgid "Tap here to exit gpe-contacts."
 msgstr "Tryck här för att avsluta gpe-contacts."
 
 #. * find and categories section *
-#: ../main.c:1541
+#: ../main.c:1604
 msgid "Find:"
 msgstr "Sök:"
 
-#: ../main.c:1548
+#: ../main.c:1611
 msgid "in"
 msgstr "i"
 
-#: ../main.c:1694
+#: ../main.c:1756
 #, c-format
-msgid "Could not import file %s."
-msgstr "Kunde inte importera fil: %s."
+msgid "Could not import file %s: %s.\n"
+msgstr "Kunde inte importera filen %s: %s.\n"
 
-#: ../main.c:1699
+#: ../main.c:1762
 #, c-format
-msgid "File %s imported sucessfully."
-msgstr "Fil %s importerades."
+msgid "File %s imported sucessfully.\n"
+msgstr "Filen %s importerades.\n"
 
-#: ../main.c:1725
+#: ../main.c:1785
 msgid "My Card"
 msgstr "Mitt kort"
 
-#: ../main.c:1728
+#: ../main.c:1788
 msgid "Saving vcard failed"
 msgstr "Misslyckades med att spara vcard"
 
@@ -398,8 +420,12 @@ msgid "Tap here to delete the selected item."
 msgstr "Tryck här för att ta bort det markerade objektet."
 
 #: ../hildon/gpe-contacts.desktop.in.in.h:2
+#: ../hildon/gpe-contacts.desktop.in.h:2
 msgid "GPE Contacts Application"
 msgstr "GPE-kontaktprogram"
+
+#~ msgid "Import of"
+#~ msgstr "Importering av"
 
 #~ msgid "Category name must not be blank"
 #~ msgstr "Kategorinamn får inte vara blankt"
