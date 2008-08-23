@@ -1,3 +1,11 @@
+2008-08-23  Phil Blundell  <pb@reciva.com>
+
+	* main.c (device_clicked): Remove stray space from menu label.
+	Reported by Benno Schulenberg.
+	* obex-unknown.c (import_unknown): Likewise for dialog title.	
+	* po/gpe-bluetooth.pot: Regenerate.
+	* gpe-tp.am: Adopt latest norms.
+	
 2007-06-08  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release version 0.55.

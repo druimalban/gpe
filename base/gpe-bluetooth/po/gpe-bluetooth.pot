@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-08 19:08+0200\n"
+"POT-Creation-Date: 2008-08-23 23:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,22 +24,22 @@ msgstr ""
 msgid "Panel based Bluetooth control"
 msgstr ""
 
-#: ../dbus.c:118 ../dbus.c:148
+#: ../dbus.c:117 ../dbus.c:147
 #, c-format
 msgid "Failed to request name: %s"
 msgstr ""
 
-#: ../dbus.c:120 ../dbus.c:150
+#: ../dbus.c:119 ../dbus.c:149
 #, c-format
 msgid "Failed to acquire service: %s"
 msgstr ""
 
-#: ../dbus.c:127
+#: ../dbus.c:126
 #, c-format
 msgid "Failed to open connection to system message bus: %s"
 msgstr ""
 
-#: ../dbus.c:157
+#: ../dbus.c:156
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
 msgstr ""
@@ -106,7 +106,7 @@ msgid "Device information"
 msgstr ""
 
 #: ../main.c:379
-msgid "Details ..."
+msgid "Details..."
 msgstr ""
 
 #: ../main.c:436 ../obexclient.c:379
@@ -213,10 +213,11 @@ msgid "<no name>"
 msgstr ""
 
 #: ../obex-unknown.c:78
-msgid "Save as ..."
+msgid "Save as..."
 msgstr ""
 
 #: ../obex-vcal.c:85
+#, c-format
 msgid "Received a calendar entry.  Import it?"
 msgstr ""
 

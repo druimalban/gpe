@@ -75,7 +75,7 @@ import_unknown (const char *name, const gchar *data, size_t len)
 
       default_name = g_strdup_printf ("%s/%s", home, name);
 
-      filesel = gtk_file_selection_new (_("Save as ..."));
+      filesel = gtk_file_selection_new (_("Save as..."));
 
       gtk_file_selection_set_filename (GTK_FILE_SELECTION (filesel), default_name);
 

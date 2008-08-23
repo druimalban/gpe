@@ -376,7 +376,7 @@ device_clicked (GtkWidget *widget, GdkEventButton *e, gpointer data)
 
   device_menu = gtk_menu_new ();
 
-  details = gtk_menu_item_new_with_label (_("Details ..."));
+  details = gtk_menu_item_new_with_label (_("Details..."));
   g_signal_connect (G_OBJECT (details), "activate", G_CALLBACK (show_device_info), bd);
   gtk_widget_show (details);
   gtk_menu_append (GTK_MENU (device_menu), details);
