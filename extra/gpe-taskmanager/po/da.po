@@ -1,45 +1,43 @@
-# Dutch translations for gpe-taskmanager-0.20.
+# Danish translation of GPE-taskmanager.
+# Copyright (C) 2008 GPE.
 # This file is distributed under the same license as the gpe-taskmanager package.
+# Joe Hansen <joedalton2@yahoo.dk>, 2008.
 #
-# Elros Cyriatan <cyriatan@fastmail.fm>, 2003.
-# Benno Schulenberg <benno@vertaalt.nl>, 2008.
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-taskmanager-0.20\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-04-10 13:41+0200\n"
-"PO-Revision-Date: 2008-08-10 16:30+0200\n"
-"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
-"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
+"PO-Revision-Date: 2008-08-19 00:00+0000\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: gpe-taskmanager.c:297 gpe-taskmanager.c:317
 msgid "No program is selected"
-msgstr "Er is geen programma geselecteerd"
+msgstr "Intet program er valgt"
 
 #: gpe-taskmanager.c:351
 msgid "Icon"
-msgstr "Pictogram"
+msgstr "Ikon"
 
+# Igangsatte programmer
 #: gpe-taskmanager.c:358 gpe-taskmanager.c:404
 msgid "Running programs"
-msgstr "Lopende programma's"
+msgstr "Kørende programmer"
 
+# kan egentlig bedre lide Slå ned
 #: gpe-taskmanager.c:384
 msgid "Kill"
-msgstr "Elimineren"
+msgstr "Dræb"
 
+# Vis igangsatte programmer
 #: gpe-taskmanager.desktop.in.h:1
 msgid "Lists running programs"
-msgstr "Toont lopende programma's"
+msgstr "Vis kørende programmer"
 
 #: gpe-taskmanager.desktop.in.h:2
 msgid "Program manager"
-msgstr "Programmabeheer"
-
-#~ msgid "Kill program"
-#~ msgstr "Programma elimineren"
+msgstr "Programhåndtering"
