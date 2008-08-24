@@ -1,3 +1,7 @@
+2008-08-24  Phil Blundell  <pb@reciva.com>
+
+	* Version 0.56 released.
+
 2008-08-23  Phil Blundell  <pb@reciva.com>
 
 	* main.c (device_clicked): Remove stray space from menu label.
