@@ -1,3 +1,8 @@
+2008-08-28  Phil Blundell  <pb@reciva.com>
+
+	* po/nl.po: New translation, courtesy Benno Schulenberg.
+	* po/zh_CN.po: Likewise, courtesy Ji ZhengYu.
+
 2008-08-24  Phil Blundell  <pb@reciva.com>
 
 	* Version 0.56 released.
@@ -39,6 +44,7 @@
 	* Makefile.am: Minor tweak to pass distcheck.
 	* tp/*: Add smart i18n stuff.
 	* po/gpe-bluetooth.pot: Update.
+	
 
 2006-06-27  Florian Boor <florian.boor@kernelconcepts.de>
 

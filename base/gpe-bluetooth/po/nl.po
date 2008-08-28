@@ -1,265 +1,266 @@
-# Swedish translation for gpe-bluetooth.
-# Copyright (C) 2006, 2008 Free Software Foundation, Inc.
+# Dutch translations for gpe-bluetooth-0.56.
 # This file is distributed under the same license as the gpe-bluetooth package.
-# Daniel Nylander <po@danielnylander.se>, 2006, 2008.
 #
+# Benno Schulenberg <benno@vertaalt.nl>, 2008.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-bluetooth 0.56\n"
+"Project-Id-Version: gpe-bluetooth-0.56\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-23 23:10+0100\n"
-"PO-Revision-Date: 2008-08-25 20:29+0100\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
-"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"PO-Revision-Date: 2008-08-25 22:41+0200\n"
+"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
+"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../gpe-bluetooth.desktop.in.h:1 ../main.c:720
 msgid "Bluetooth control"
-msgstr "Blåtandskontroll"
+msgstr "Bluetooth-beheer"
 
 #: ../gpe-bluetooth.desktop.in.h:2
 msgid "Panel based Bluetooth control"
-msgstr "Panelbaserad blåtandskontroll"
+msgstr "Bluetooth-beheer via panelen"
 
 #: ../dbus.c:117 ../dbus.c:147
 #, c-format
 msgid "Failed to request name: %s"
-msgstr "Misslyckades med att fråga efter namn: %s"
+msgstr "Opvragen van naam is mislukt: %s"
 
 #: ../dbus.c:119 ../dbus.c:149
 #, c-format
 msgid "Failed to acquire service: %s"
-msgstr "Misslyckades med att ta över tjänst: %s"
+msgstr "Verkrijgen van service is mislukt: %s"
 
 #: ../dbus.c:126
 #, c-format
 msgid "Failed to open connection to system message bus: %s"
-msgstr "Misslyckades med att öppna anslutning till systemmeddelandebussen: %s"
+msgstr "Kan geen verbinding maken met systeemberichtenbus: %s"
 
 #: ../dbus.c:156
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
-msgstr "Misslyckades med att öppna anslutning till sessionsmeddelandebussen: %s"
+msgstr "Kan geen verbinding maken met sessieberichtenbus: %s"
 
 #: ../headset.c:108 ../lap.c:109 ../pan.c:317
 #, c-format
 msgid "Connecting to %s"
-msgstr "Ansluter till %s"
+msgstr "Verbinden met %s"
 
 #: ../headset.c:127 ../lap.c:128 ../pan.c:336
 msgid "Connection failed\n"
-msgstr "Anslutning misslyckades\n"
+msgstr "Verbinden is mislukt\n"
 
 #: ../headset.c:148
 #, c-format
 msgid "HEADSET connection to %s lost"
-msgstr "HEADSET-anslutning till %s förlorades"
+msgstr "Headsetverbinding met %s is weggevallen"
 
 #: ../headset.c:164
 #, c-format
 msgid "HEADSET connection to %s re-established"
-msgstr "HEADSET-anslutning till %s återetablerades"
+msgstr "Headsetverbinding met %s is opnieuw gemaakt"
 
 #: ../headset.c:201
 msgid "Disconnect HEADSET"
-msgstr "Koppla från HEADSET"
+msgstr "Headsetverbinding verbreken"
 
 #: ../headset.c:206
 msgid "Connect HEADSET"
-msgstr "Anslut HEADSET"
+msgstr "Met headset verbinden"
 
 #: ../lap.c:149
 #, c-format
 msgid "LAP connection to %s lost"
-msgstr "LAP-anslutning till %s förlorades"
+msgstr "LAP-verbinding met %s is weggevallen"
 
 #: ../lap.c:165
 #, c-format
 msgid "LAP connection to %s re-established"
-msgstr "LAP-anslutning till %s återetablerades"
+msgstr "LAP-verbinding met %s is opnieuw gemaakt"
 
 #: ../lap.c:202
 msgid "Disconnect LAP"
-msgstr "Koppla från LAP"
+msgstr "LAP-verbinding verbreken"
 
 #: ../lap.c:207
 msgid "Connect LAP"
-msgstr "Anslut LAP"
+msgstr "Met LAP verbinden"
 
 #: ../main.c:203
 msgid "No kernel support for Bluetooth"
-msgstr "Inget stöd i kärnan för blåtand"
+msgstr "Deze kernel ondersteunt Bluetooth niet"
 
 #: ../main.c:220
 msgid "Couldn't exec "
-msgstr "Kunde inte köra "
+msgstr "Kan programma niet uitvoeren"
 
 #: ../main.c:224
 msgid "Energising radio"
-msgstr "Startar upp radio"
+msgstr "Starten van radio"
 
 #: ../main.c:339
 msgid "Device information"
-msgstr "Enhetsinformation"
+msgstr "Apparaatinformatie"
 
 #: ../main.c:379
 msgid "Details..."
-msgstr "Detaljer..."
+msgstr "Details..."
 
 #: ../main.c:436 ../obexclient.c:379
 msgid "Scanning for devices"
-msgstr "Söker efter enheter"
+msgstr "Zoeken naar apparaten"
 
 #: ../main.c:447 ../obexclient.c:391
 msgid "Inquiry failed"
-msgstr "Förfrågan misslyckades"
+msgstr "Opvragen van informatie is mislukt"
 
 #: ../main.c:455 ../obexclient.c:399
 msgid "HCI device open failed"
-msgstr "Öppning av HCI-enhet misslyckades"
+msgstr "Openen van HCI-apparaat is mislukt"
 
 #: ../main.c:482 ../obexclient.c:420
 msgid "unknown"
-msgstr "okänt"
+msgstr "onbekend"
 
 #: ../main.c:504
 msgid "Retrieving service information"
-msgstr "Tar emot tjänsteinformation"
+msgstr "Ophalen van service-informatie"
 
 #: ../main.c:550
 msgid "Bluetooth devices"
-msgstr "Blåtandsenheter"
+msgstr "Bluetooth-apparaten"
 
 #: ../main.c:571
 msgid "Unable to scan for devices"
-msgstr "Kunde inte söka efter enheter"
+msgstr "Kan niet naar apparaten zoeken"
 
 #: ../main.c:608
 msgid "hciattach died unexpectedly"
-msgstr "hciattach dog oväntat"
+msgstr "'hciattach' is onverwacht beëindigd"
 
 #: ../main.c:619
 msgid "Radio startup failed"
-msgstr "Radiouppstart misslyckades"
+msgstr "Starten van radio is mislukt"
 
 #: ../main.c:727
 msgid "Switch radio on"
-msgstr "Slå på radio"
+msgstr "Radio inschakelen"
 
 #: ../main.c:728
 msgid "Switch radio off"
-msgstr "Slå av radio"
+msgstr "Radio uitschakelen"
 
 #: ../main.c:729
 msgid "Devices..."
-msgstr "Enheter..."
+msgstr "Apparaten..."
 
 #: ../main.c:748
 msgid "Remove from panel"
-msgstr "Ta bort från panel"
+msgstr "Verwijderen van paneel"
 
 #: ../main.c:763
 msgid ""
 "This is the Bluetooth control.\n"
 "Tap here to turn the radio on and off, or to see a list of Bluetooth devices."
 msgstr ""
-"Det här är Blåtandskontrollen.\n"
-"Klicka här för att slå radion på eller av, eller för att se en lista över blåtandsenheter."
+"Dit is het Bluetooth-beheer.\n"
+"Druk hier om de radio in of uit te schakelen, of om een lijst met Bluetooth-apparaten te zien."
 
 #: ../obexclient.c:158
 msgid "Sending data"
-msgstr "Skickar data"
+msgstr "Verzenden van gegevens"
 
 #: ../obexclient.c:228
 msgid "Connecting"
-msgstr "Ansluter"
+msgstr "Verbinden"
 
 #: ../obexclient.c:235
 msgid "Selected device lacks OBEX support"
-msgstr "Vald enhet saknar OBEX-stöd"
+msgstr "Het gekozen apparaat heeft geen OBEX-ondersteuning"
 
 #: ../obexclient.c:243
 msgid "Unable to create OBEX object"
-msgstr "Kunde inte skapa OBEX-objekt"
+msgstr "Kan geen OBEX-object aanmaken"
 
 #: ../obexclient.c:250
 msgid "Unable to connect"
-msgstr "Kunde inte ansluta"
+msgstr "Kan geen verbinding maken"
 
 #: ../obexclient.c:314
 msgid "No destination selected"
-msgstr "Inget mål valt"
+msgstr "Geen bestemming gekozen"
 
 #: ../obexclient.c:478
 msgid "Select destination"
-msgstr "Välj mål"
+msgstr "Kies een bestemming"
 
 #: ../obexclient.c:623
 msgid "Send my vCard"
-msgstr "Skicka mitt vCard"
+msgstr "Mijn vCard verzenden"
 
 #: ../obexserver.c:266
 msgid "Couldn't register OBEX service"
-msgstr "Kunde inte registrera OBEX-tjänst"
+msgstr "Kan OBEX-service niet registreren"
 
 #: ../obex-unknown.c:60
 #, c-format
 msgid "Received a file '%s' (%d bytes).  Save it?"
-msgstr "Tog emot filen \"%s\" (%d byte).  Spara den?"
+msgstr "Bestand '%s' (%d bytes) werd ontvangen.  Deze opslaan?"
 
 #: ../obex-unknown.c:60
 msgid "<no name>"
-msgstr "<inget namn>"
+msgstr "<naamloos>"
 
 #: ../obex-unknown.c:78
 msgid "Save as..."
-msgstr "Spara som..."
+msgstr "Opslaan als..."
 
 #: ../obex-vcal.c:85
 #, c-format
 msgid "Received a calendar entry.  Import it?"
-msgstr "Tog emot ett kalenderinlägg.  Importera det?"
+msgstr "Een kalenderitem werd ontvangen.  Deze importeren?"
 
 #: ../obex-vcard.c:142
 #, c-format
 msgid "Received a business card for %s.  Import it?"
-msgstr "Tog emot ett visitkort för %s.  Importera det?"
+msgstr "Een visitekaartje voor %s werd ontvangen.  Deze importeren?"
 
 #: ../pan.c:359
 #, c-format
 msgid "PAN connection to %s lost: %s"
-msgstr "PAN-anslutning till %s förlorades: %s"
+msgstr "PAN-verbinding met %s is weggevallen: %s"
 
 #: ../pan.c:363
 #, c-format
 msgid "PAN connection to %s lost"
-msgstr "PAN-anslutning till %s förlorades"
+msgstr "PAN-verbinding met %s is weggevallen"
 
 #: ../pan.c:379
 #, c-format
 msgid "PAN connection to %s re-established"
-msgstr "PAN-anslutning till %s återetablerad"
+msgstr "PAN-verbinding met %s is opnieuw gemaakt"
 
 #: ../pan.c:415
 msgid "Disconnect PAN"
-msgstr "Koppla från PAN"
+msgstr "PAN-verbinding verbreken"
 
 #: ../pan.c:420
 msgid "Connect PAN"
-msgstr "Anslut PAN"
+msgstr "Verbinden met PAN"
 
 #: ../pin-ui.c:155
 msgid "Bluetooth PIN"
-msgstr "PIN-kod för blåtand"
+msgstr "Bluetooth-PIN"
 
 #: ../pin-ui.c:166
 #, c-format
 msgid "Outgoing connection to %s"
-msgstr "Utgående anslutning till %s"
+msgstr "Uitgaande verbinding met %s"
 
 #: ../pin-ui.c:167
 #, c-format
 msgid "Incoming connection from %s"
-msgstr "Inkommande anslutning från %s"
+msgstr "Binnenkomende verbinding van %s"

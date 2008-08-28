@@ -20,3 +20,5 @@ progress.c
 rfcomm.c
 rfcomm-helper.c
 sdp.c
+bluez-pin-gpe.glade
+

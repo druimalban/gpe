@@ -1,265 +1,265 @@
-# Swedish translation for gpe-bluetooth.
-# Copyright (C) 2006, 2008 Free Software Foundation, Inc.
+# Chinese translations for gpe-bluetooth package.
+# Copyright (C) 2008 THE SOFTWARE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-bluetooth package.
-# Daniel Nylander <po@danielnylander.se>, 2006, 2008.
+# Ji ZhengYu <zhengyuji@gmail.com>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-bluetooth 0.56\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-08-23 23:10+0100\n"
-"PO-Revision-Date: 2008-08-25 20:29+0100\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
-"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"PO-Revision-Date: 2008-08-26 20:17+0800\n"
+"Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
+"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../gpe-bluetooth.desktop.in.h:1 ../main.c:720
 msgid "Bluetooth control"
-msgstr "Blåtandskontroll"
+msgstr "蓝牙控制"
 
 #: ../gpe-bluetooth.desktop.in.h:2
 msgid "Panel based Bluetooth control"
-msgstr "Panelbaserad blåtandskontroll"
+msgstr "基于蓝牙控制的面板"
 
 #: ../dbus.c:117 ../dbus.c:147
 #, c-format
 msgid "Failed to request name: %s"
-msgstr "Misslyckades med att fråga efter namn: %s"
+msgstr "无法查寻名称: %s"
 
 #: ../dbus.c:119 ../dbus.c:149
 #, c-format
 msgid "Failed to acquire service: %s"
-msgstr "Misslyckades med att ta över tjänst: %s"
+msgstr "无法请求服务: %s"
 
 #: ../dbus.c:126
 #, c-format
 msgid "Failed to open connection to system message bus: %s"
-msgstr "Misslyckades med att öppna anslutning till systemmeddelandebussen: %s"
+msgstr "无法连接至系统消息总线: %s"
 
 #: ../dbus.c:156
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
-msgstr "Misslyckades med att öppna anslutning till sessionsmeddelandebussen: %s"
+msgstr "无法连接至会话消息总线: %s"
 
 #: ../headset.c:108 ../lap.c:109 ../pan.c:317
 #, c-format
 msgid "Connecting to %s"
-msgstr "Ansluter till %s"
+msgstr "正在连接至 %s"
 
 #: ../headset.c:127 ../lap.c:128 ../pan.c:336
 msgid "Connection failed\n"
-msgstr "Anslutning misslyckades\n"
+msgstr "连接失败\n"
 
 #: ../headset.c:148
 #, c-format
 msgid "HEADSET connection to %s lost"
-msgstr "HEADSET-anslutning till %s förlorades"
+msgstr "至 %s 的 HEADSET 连接丢失"
 
 #: ../headset.c:164
 #, c-format
 msgid "HEADSET connection to %s re-established"
-msgstr "HEADSET-anslutning till %s återetablerades"
+msgstr "至 %s 的 HEADSET 连接重新开始"
 
 #: ../headset.c:201
 msgid "Disconnect HEADSET"
-msgstr "Koppla från HEADSET"
+msgstr "断开 HEADSET"
 
 #: ../headset.c:206
 msgid "Connect HEADSET"
-msgstr "Anslut HEADSET"
+msgstr "连接 HEADSET"
 
 #: ../lap.c:149
 #, c-format
 msgid "LAP connection to %s lost"
-msgstr "LAP-anslutning till %s förlorades"
+msgstr "至 %s 的 LAP 连接丢失"
 
 #: ../lap.c:165
 #, c-format
 msgid "LAP connection to %s re-established"
-msgstr "LAP-anslutning till %s återetablerades"
+msgstr "至 %s 的 LAP 连接重新开始"
 
 #: ../lap.c:202
 msgid "Disconnect LAP"
-msgstr "Koppla från LAP"
+msgstr "断开 LAP"
 
 #: ../lap.c:207
 msgid "Connect LAP"
-msgstr "Anslut LAP"
+msgstr "连接 LAP"
 
 #: ../main.c:203
 msgid "No kernel support for Bluetooth"
-msgstr "Inget stöd i kärnan för blåtand"
+msgstr "没有内核蓝牙支持"
 
 #: ../main.c:220
 msgid "Couldn't exec "
-msgstr "Kunde inte köra "
+msgstr "无法执行 "
 
 #: ../main.c:224
 msgid "Energising radio"
-msgstr "Startar upp radio"
+msgstr "增强无线信号"
 
 #: ../main.c:339
 msgid "Device information"
-msgstr "Enhetsinformation"
+msgstr "设备信息"
 
 #: ../main.c:379
 msgid "Details..."
-msgstr "Detaljer..."
+msgstr "详细..."
 
 #: ../main.c:436 ../obexclient.c:379
 msgid "Scanning for devices"
-msgstr "Söker efter enheter"
+msgstr "正在搜寻设备"
 
 #: ../main.c:447 ../obexclient.c:391
 msgid "Inquiry failed"
-msgstr "Förfrågan misslyckades"
+msgstr "查寻失败"
 
 #: ../main.c:455 ../obexclient.c:399
 msgid "HCI device open failed"
-msgstr "Öppning av HCI-enhet misslyckades"
+msgstr "HCI 设备无法打开"
 
 #: ../main.c:482 ../obexclient.c:420
 msgid "unknown"
-msgstr "okänt"
+msgstr "未知"
 
 #: ../main.c:504
 msgid "Retrieving service information"
-msgstr "Tar emot tjänsteinformation"
+msgstr "获取设备信息"
 
 #: ../main.c:550
 msgid "Bluetooth devices"
-msgstr "Blåtandsenheter"
+msgstr "蓝牙设备"
 
 #: ../main.c:571
 msgid "Unable to scan for devices"
-msgstr "Kunde inte söka efter enheter"
+msgstr "无法搜寻设备"
 
 #: ../main.c:608
 msgid "hciattach died unexpectedly"
-msgstr "hciattach dog oväntat"
+msgstr "hciattach 非正常中止"
 
 #: ../main.c:619
 msgid "Radio startup failed"
-msgstr "Radiouppstart misslyckades"
+msgstr "开启无线失败"
 
 #: ../main.c:727
 msgid "Switch radio on"
-msgstr "Slå på radio"
+msgstr "打开无线"
 
 #: ../main.c:728
 msgid "Switch radio off"
-msgstr "Slå av radio"
+msgstr "关闭无线"
 
 #: ../main.c:729
 msgid "Devices..."
-msgstr "Enheter..."
+msgstr "设备..."
 
 #: ../main.c:748
 msgid "Remove from panel"
-msgstr "Ta bort från panel"
+msgstr "从面板删除"
 
 #: ../main.c:763
 msgid ""
 "This is the Bluetooth control.\n"
 "Tap here to turn the radio on and off, or to see a list of Bluetooth devices."
 msgstr ""
-"Det här är Blåtandskontrollen.\n"
-"Klicka här för att slå radion på eller av, eller för att se en lista över blåtandsenheter."
+"这是蓝牙控制。\n"
+"点击此处打开或关闭无线，或者查看蓝牙设备列表。"
 
 #: ../obexclient.c:158
 msgid "Sending data"
-msgstr "Skickar data"
+msgstr "正在发送数据"
 
 #: ../obexclient.c:228
 msgid "Connecting"
-msgstr "Ansluter"
+msgstr "正在连接"
 
 #: ../obexclient.c:235
 msgid "Selected device lacks OBEX support"
-msgstr "Vald enhet saknar OBEX-stöd"
+msgstr "所选设备缺少 OBEX 支持"
 
 #: ../obexclient.c:243
 msgid "Unable to create OBEX object"
-msgstr "Kunde inte skapa OBEX-objekt"
+msgstr "无法创建 OBEX 对象"
 
 #: ../obexclient.c:250
 msgid "Unable to connect"
-msgstr "Kunde inte ansluta"
+msgstr "无法连接"
 
 #: ../obexclient.c:314
 msgid "No destination selected"
-msgstr "Inget mål valt"
+msgstr "未选中目的地"
 
 #: ../obexclient.c:478
 msgid "Select destination"
-msgstr "Välj mål"
+msgstr "选择目的地"
 
 #: ../obexclient.c:623
 msgid "Send my vCard"
-msgstr "Skicka mitt vCard"
+msgstr "发送我的名片(vCard)"
 
 #: ../obexserver.c:266
 msgid "Couldn't register OBEX service"
-msgstr "Kunde inte registrera OBEX-tjänst"
+msgstr "无法注册 OBEX 服务"
 
 #: ../obex-unknown.c:60
 #, c-format
 msgid "Received a file '%s' (%d bytes).  Save it?"
-msgstr "Tog emot filen \"%s\" (%d byte).  Spara den?"
+msgstr "接收到一个文件 ‘%s’(%d 个字节)。保存吗？"
 
 #: ../obex-unknown.c:60
 msgid "<no name>"
-msgstr "<inget namn>"
+msgstr "<未命名>"
 
 #: ../obex-unknown.c:78
 msgid "Save as..."
-msgstr "Spara som..."
+msgstr "保存为..."
 
 #: ../obex-vcal.c:85
 #, c-format
 msgid "Received a calendar entry.  Import it?"
-msgstr "Tog emot ett kalenderinlägg.  Importera det?"
+msgstr "接收到一个日程记录。导入吗？"
 
 #: ../obex-vcard.c:142
 #, c-format
 msgid "Received a business card for %s.  Import it?"
-msgstr "Tog emot ett visitkort för %s.  Importera det?"
+msgstr "接收到一张 %s 的商务名片。导入吗？"
 
 #: ../pan.c:359
 #, c-format
 msgid "PAN connection to %s lost: %s"
-msgstr "PAN-anslutning till %s förlorades: %s"
+msgstr "至 %s 的 PAN 连接丢失: %s"
 
 #: ../pan.c:363
 #, c-format
 msgid "PAN connection to %s lost"
-msgstr "PAN-anslutning till %s förlorades"
+msgstr "至 %s 的 PAN 连接丢失"
 
 #: ../pan.c:379
 #, c-format
 msgid "PAN connection to %s re-established"
-msgstr "PAN-anslutning till %s återetablerad"
+msgstr "至 %s 的 PAN 连接重新开始"
 
 #: ../pan.c:415
 msgid "Disconnect PAN"
-msgstr "Koppla från PAN"
+msgstr "断开 PAN"
 
 #: ../pan.c:420
 msgid "Connect PAN"
-msgstr "Anslut PAN"
+msgstr "连接 PAN"
 
 #: ../pin-ui.c:155
 msgid "Bluetooth PIN"
-msgstr "PIN-kod för blåtand"
+msgstr "蓝牙 PIN"
 
 #: ../pin-ui.c:166
 #, c-format
 msgid "Outgoing connection to %s"
-msgstr "Utgående anslutning till %s"
+msgstr "向外连接至 %s"
 
 #: ../pin-ui.c:167
 #, c-format
 msgid "Incoming connection from %s"
-msgstr "Inkommande anslutning från %s"
+msgstr "从 %s 连入"
