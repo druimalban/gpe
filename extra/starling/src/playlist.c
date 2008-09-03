@@ -1,5 +1,5 @@
 /* playlist.c - Playlist support.
-   Copyright (C) 2007 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2007, 2008 Neal H. Walfield <neal@walfield.org>
    Copyright (C) 2006 Alberto García Hierro <skyhusker@handhelds.org>
 
    This file is part of GPE.
@@ -1022,6 +1022,25 @@ play_list_add_file (PlayList *pl, const gchar *file, int index,
   play_list_add (pl, sources, 1, index, error);
 }
 
+static int
+has_audio_extension (const char *filename)
+{
+  const char *whitelist[] = { ".ogg", ".OGG",
+			      ".mp3", ".MP3",
+			      ".rm", ".RM",
+			      ".wav", ".WAV"
+  };
+
+  int i;
+  for (i = 0; i < sizeof (whitelist) / sizeof (whitelist[0]); i ++)
+    if (g_str_has_suffix (filename, whitelist[i]))
+      return 1;
+
+  if (i == sizeof (whitelist) / sizeof (whitelist[0]))
+    /* Unknown extension.  */
+    return 0;
+}
+
 int
 play_list_add_recursive (PlayList *pl, const gchar *path, int pos,
 			 GError **error)
@@ -1053,13 +1072,28 @@ play_list_add_recursive (PlayList *pl, const gchar *path, int pos,
       g_dir_close (dir);
       return count;
     }
+  else
+    {
+      struct stat stat;
+      int ret = g_stat (path, &stat);
+      if (ret < 0)
+	/* Failed to read it.  Perhaps we don't have permission.  */
+	return 0;
+
+      if (! S_ISREG (stat.st_mode))
+	/* Not a regular file.  */
+	return 0;
+    }
     
   if (g_str_has_suffix (path, ".m3u"))
     /* Ignore m3u files: we will normally get the files simply by
        recursing.  */
     return 0;
 
-  play_list_add_file (pl, path, pos, error);
+  if (has_audio_extension (path))
+    /* Ignore files that do not appear to be audio files.  */
+    play_list_add_file (pl, path, pos, error);
+
   return 1;
 }
     
