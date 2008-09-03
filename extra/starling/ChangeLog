@@ -1,5 +1,10 @@
 2008-09-03  Neal H. Walfield  <neal@gnu.org>
 
+	* HACKING: List required packages and note that autogen.sh needs
+	to be run.
+
+2008-09-03  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.c (has_audio_extension): New function.
 	(play_list_add_recursive): If we fail to open PATH as a directory,
 	check if it is a regular, readable file.  Also check if PATH has a

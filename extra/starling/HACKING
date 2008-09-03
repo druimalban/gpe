@@ -1,10 +1,17 @@
-In order to build this software you'll need:
-    * libgpe
-    * libsoup
-    * gtk+-2
-    * gstreamer-0.10
-    * sqlite
+In order to build this software you'll need (the package names
+correspond to Ubuntu):
 
+    * libsoup2.2-dev
+    * libgtk2.0-dev
+    * libgstreamer0.10-dev
+    * libgstreamer-plugins-base0.10-dev
+    * libsqlite-dev
+    * libglib2.0-dev
+    * intltool
+
+Then run:
+
+  ./autogen.sh in the root of the source directory.
 
 Files are structured as follows:
     * playlist.{h,c} implement the PlayList object, which handles al the
