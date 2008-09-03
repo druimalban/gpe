@@ -28,7 +28,7 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 pixmapsdir = $(datadir)/pixmaps
 pixmaps_DATA =	gpe-irc.png
 
-pixmapsextradir = $(datadir)/pixmaps/default/irc/
+pixmapsextradir = $(datadir)/gpe/pixmaps/default/irc/
 pixmapsextra_DATA = \
 		pixmaps/globe.png \
 		pixmaps/quote.png
