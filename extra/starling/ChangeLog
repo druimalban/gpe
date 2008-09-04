@@ -1,5 +1,26 @@
 2008-09-04  Neal H. Walfield  <neal@gnu.org>
 
+	* src/Makefile.am (AM_CFLAGS): New variable.
+	(starling_SOURCES): Add cache.h and cache.c.
+	* src/cache.h: New file.
+	* src/cache.c: Likewise.
+	* src/playlist.c: Include "cache.h".
+	(struct info_cache_entry): New struction.
+	(info_cache_evict): New function.
+	(info_cache): New local variable.
+	(parse_tags): Shootdown affected entries.
+	(play_list_add):
+	(play_list_swap_pos): Likewise.
+	(play_list_remove): Likewise.
+	(play_list_clear): Likewise.
+	(play_list_get_info): See if the entry is in the cache.  If so,
+	use it.  If not and the entry exists, add it to the cache.
+
+	(play_list_add): Emit TOTAL number of row-inserted events.
+	(has_audio_extension): If we complete the loop, just return 0.
+
+2008-09-04  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.c (play_list_add): Don't add files that are already
 	present in the database.
 

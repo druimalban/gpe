@@ -6,8 +6,8 @@
 
    GPE is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
 
    GPE is distributed in the hope that it will be useful, but WITHOUT
    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
@@ -15,8 +15,8 @@
    License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA. */
+   along with this program.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #define ERROR_DOMAIN() g_quark_from_static_string ("playlist")
 
@@ -28,6 +28,42 @@
 #include <sqlite.h>
 
 #include "playlist.h"
+
+#include "cache.h"
+
+struct info_cache_entry
+{
+  char *source;
+  char *uid;
+  char *artist;
+  char *title;
+  char *album;
+  int duration;
+};
+
+void
+info_cache_evict (void *object)
+{
+  struct info_cache_entry *e = object;
+
+  free (e->source);
+  free (e->uid);
+  free (e->artist);
+  free (e->title);
+  free (e->album);
+  free (e);
+}
+
+static struct simple_cache info_cache;
+
+static void info_cache_constructor (void) __attribute__ ((constructor));
+
+static void
+info_cache_constructor (void)
+{
+  simple_cache_init (&info_cache, info_cache_evict);
+}
+
 
 /* Forward.  */
 static void
@@ -219,6 +255,8 @@ parse_tags (PlayList *pl, GstMessage *message, char *uid)
       if (uid)
 	play_list_get_info_by_uid (pl, uid, &i,
 				   NULL, NULL, NULL, NULL, NULL);
+
+      simple_cache_shootdown (&info_cache, i);
 
       GtkTreePath *path
 	= gtk_tree_path_new_from_indices (i, -1);
@@ -955,14 +993,23 @@ play_list_add (PlayList *pl, char *sources[], int count,
     sqlite_exec (pl->sqliteh,
 		 "commit transaction;", NULL, NULL, NULL);
 
+  if (index != pl->count)
+    /* Inserted in the middle.  */
+    simple_cache_drop (&info_cache);
+
   pl->count += total;
+
+  
 
   GtkTreePath *path = gtk_tree_path_new_from_indices (index, -1);
 
-  GtkTreeIter iter;
-  ITER_INIT (pl, &iter, index);
+  for (i = 0; i < total; i ++)
+    {
+      GtkTreeIter iter;
+      ITER_INIT (pl, &iter, index);
 
-  gtk_tree_model_row_inserted (GTK_TREE_MODEL (pl), path, &iter);
+      gtk_tree_model_row_inserted (GTK_TREE_MODEL (pl), path, &iter);
+    }
 
   g_free (path);
 }
@@ -1070,9 +1117,8 @@ has_audio_extension (const char *filename)
     if (g_str_has_suffix (filename, whitelist[i]))
       return 1;
 
-  if (i == sizeof (whitelist) / sizeof (whitelist[0]))
-    /* Unknown extension.  */
-    return 0;
+  /* Unknown extension.  */
+  return 0;
 }
 
 int
@@ -1163,7 +1209,7 @@ play_list_save_m3u (PlayList *self, const gchar *path)
     g_string_free (string, TRUE);
 #endif
 }
-
+
 void
 play_list_swap_pos (PlayList *pl, gint left, gint right)
 {
@@ -1172,6 +1218,9 @@ play_list_swap_pos (PlayList *pl, gint left, gint right)
 
   if (left == right)
     return;
+
+  simple_cache_shootdown (&info_cache, left);
+  simple_cache_shootdown (&info_cache, right);
 
   char *err = NULL;
   sqlite_exec_printf (pl->sqliteh,
@@ -1209,6 +1258,8 @@ play_list_remove (PlayList *pl, gint index)
 {
   g_return_if_fail (0 <= index && index < pl->count);
 
+  simple_cache_drop (&info_cache);
+
   char *err = NULL;
   sqlite_exec_printf (pl->sqliteh,
 		      "begin transaction;"
@@ -1243,6 +1294,8 @@ play_list_clear (PlayList *pl)
       return;
     }
 
+  simple_cache_drop (&info_cache);
+
   GtkTreePath *path = gtk_tree_path_new_from_indices (0, -1);
 
   for (; pl->count; pl->count --)
@@ -1257,6 +1310,25 @@ play_list_get_info (PlayList *pl, gint index, char **source, char **uid,
 {
   if (index < 0)
     index = pl->position;
+
+  struct info_cache_entry *e = simple_cache_find (&info_cache, index);
+  if (e)
+    {
+      if (source)
+	*source = e->source ? strdup (e->source) : NULL;
+      if (uid)
+	*uid = e->uid ? strdup (e->uid) : NULL;
+      if (artist)
+	*artist = e->artist ? strdup (e->artist) : NULL;
+      if (title)
+	*title = e->title ? strdup (e->title) : NULL;
+      if (album)
+	*album = e->album ? strdup (e->album) : NULL;
+      if (duration)
+	*duration = e->duration;
+
+      return;
+    }
 
   if (source)
     *source = NULL;
@@ -1296,6 +1368,19 @@ play_list_get_info (PlayList *pl, gint index, char **source, char **uid,
       i ++;
       if (duration)
 	*duration = argv[i] ? atoi (argv[i]) : 0;
+
+      struct info_cache_entry *e = malloc (sizeof (struct info_cache_entry));
+      if (e)
+	{
+	  e->source = argv[0] ? g_strdup (argv[0]) : NULL;
+	  e->uid = argv[1] ? g_strdup (argv[1]) : NULL;
+	  e->artist = argv[2] ? g_strdup (argv[2]) : NULL;
+	  e->title = argv[3] ? g_strdup (argv[3]) : NULL;
+	  e->album = argv[4] ? g_strdup (argv[4]) : NULL;
+	  e->duration = argv[5] ? atoi (argv[5]) : 0;
+
+	  simple_cache_add (&info_cache, index, e);
+	}
 
       return 1;
     }
