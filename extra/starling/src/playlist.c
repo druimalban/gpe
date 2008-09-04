@@ -849,10 +849,45 @@ static void
 play_list_add (PlayList *pl, char *sources[], int count,
 	       gint index, GError **error)
 {
+  /* Ignore any entries that do already exist in the DB.  */
+  char *s[count];
+  int total = 0;
+
+  int i;
+  for (i = 0; i < count; i ++)
+    {
+      int source_exists (void *arg, int argc, char **argv, char **names)
+      {
+	return 1;
+      }
+
+      char *err = NULL;
+      int ret = sqlite_exec_printf (pl->sqliteh,
+				    "select * from playlist"
+				    "  where source = '%q';",
+				    source_exists, NULL, &err,
+				    sources[i]);
+      if (ret == 0)
+	/* Entry does not exist.  */
+	s[total ++] = sources[i];
+
+      if (ret != SQLITE_ABORT && err)
+	fprintf (stderr, "%s:%d: %s", __FUNCTION__, __LINE__, err);
+
+      if (err)
+	sqlite_freemem (err);
+    }
+
+  if (total == 0)
+    /* Nothing to do.  */
+    return;
+
+
   /* We can't insert with a position great than the number of entries
      in the database.  */
-  if (index > pl->count)
-    index = pl->count;
+  int pl_count = play_list_count (pl);
+  if (index > pl_count)
+    index = pl_count;
 
   char *err = NULL;
   sqlite_exec (pl->sqliteh, "begin transaction;",
@@ -867,7 +902,7 @@ play_list_add (PlayList *pl, char *sources[], int count,
   /* XXX: We should stat the SOURCE first to get the metadata.  */
   if (index <= 0)
     /* Append.  */
-    index = pl->count;
+    index = pl_count;
   else
     /* Insert at a specific position.  */
     {
@@ -875,20 +910,19 @@ play_list_add (PlayList *pl, char *sources[], int count,
 			  "update playlist set idx = idx + %d"
 			  " where idx >= %d;",
 			  NULL, NULL, &err,
-			  count, index + 1);
+			  total, index + 1);
       if (err)
 	goto error;
     }
 
-  int i;
-  for (i = 0; i < count; i ++)
+  for (i = 0; i < total; i ++)
     {
       char *uid = make_uid ();
       sqlite_exec_printf (pl->sqliteh,
 			  "insert into playlist"
 			  " (idx, uid, source) values (%d, '%q', '%q');",
 			  NULL, NULL, &err,
-			  index + 1 + i, uid, sources[i]);
+			  index + 1 + i, uid, s[i]);
       if (err)
 	{
 	  g_free (uid);
@@ -896,7 +930,7 @@ play_list_add (PlayList *pl, char *sources[], int count,
 	}
 
       /* Right now, we only stat local files.  */
-      if (strncmp (FILE_PREFIX, sources[i], sizeof (FILE_PREFIX) - 1) == 0)
+      if (strncmp (FILE_PREFIX, s[i], sizeof (FILE_PREFIX) - 1) == 0)
 	{
 	  if (! pl->meta_data_reader)
 	    pl->meta_data_reader = g_idle_add (meta_data_reader, pl);
@@ -921,7 +955,7 @@ play_list_add (PlayList *pl, char *sources[], int count,
     sqlite_exec (pl->sqliteh,
 		 "commit transaction;", NULL, NULL, NULL);
 
-  pl->count += count;
+  pl->count += total;
 
   GtkTreePath *path = gtk_tree_path_new_from_indices (index, -1);
 
