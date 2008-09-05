@@ -1,0 +1,745 @@
+# Danish translation of GPE-calendar.
+# Copyright (C) 2008 GPE.
+# This file is distributed under the same license as the gpe-calendar package.
+# Joe Hansen <joedalton2@yahoo.dk>, 2008.
+#
+# Konventioner
+# occurrence -> forekomst
+#: ../event-ui.c:193
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-calendar-0.91\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-06-08 19:01+0200\n"
+"PO-Revision-Date: 2008-08-24 00:00+0000\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../gpe-calendar.desktop.in.in.h:1 ../hildon/gpe-calendar.desktop.in.in.h:1
+#: ../event-menu.c:352
+msgid "Calendar"
+msgstr "Kalender"
+
+#: ../gpe-calendar.desktop.in.in.h:2
+msgid "GPE Calendar"
+msgstr "GPE-kalender"
+
+#: ../hildon/gpe-calendar.desktop.in.in.h:2
+msgid "GPE Calendar Application"
+msgstr "GPE-kalenderprogram"
+
+#: ../alarm-dialog.c:188 ../main.c:2328
+msgid "Alarms"
+msgstr "Alarmer"
+
+#: ../alarm-dialog.c:208
+msgid "Acknowledge All"
+msgstr "Anerkende alle"
+
+#: ../alarm-dialog.c:214 ../calendars-dialog.c:468
+msgid "Dismiss"
+msgstr "Fjerne"
+
+#: ../alarm-dialog.c:285
+msgid "No alarms have gone off."
+msgstr "Ingen alarmer er gået i gang."
+
+#: ../alarm-dialog.c:371
+#, c-format
+msgid "%s%s%s%s%s%s%s%s"
+msgstr "%s%s%s%s%s%s%s%s"
+
+#: ../alarm-dialog.c:372
+msgid "<b>Summary</b>: "
+msgstr "<b>Sammendrag</b>: "
+
+#: ../alarm-dialog.c:375
+msgid "<b>Description</b>: "
+msgstr "<b>Beskrivelse</b>: "
+
+#: ../alarm-dialog.c:378
+msgid "<b>Location</b>: "
+msgstr "<b>Sted</b>: "
+
+#: ../alarm-dialog.c:464
+msgid "Show Event"
+msgstr "Vis begivenhed"
+
+#: ../alarm-dialog.c:470
+msgid "Acknowledge"
+msgstr "Anerkende"
+
+#: ../alarm-dialog.c:477
+msgid "Sleep:"
+msgstr "Sov:"
+
+#: ../alarm-dialog.c:492
+msgid "Minutes"
+msgstr "Minutter"
+
+#: ../alarm-dialog.c:493
+msgid "Hours"
+msgstr "Timer"
+
+#: ../alarm-dialog.c:494
+msgid "Days"
+msgstr "Dage"
+
+#: ../calendar-delete-dialog.c:134
+#, c-format
+msgid ""
+" %s cannot be the new parent of %s's constituents: this would create a loop (try being your own grandparent).\n"
+"Please select a calendar which is not a descendent of %s."
+msgstr ""
+" %s kan ikke være den nye forælder af %s' medlemskreds: Dette ville skabe en løkke (prøv at være din egen bedsteforælder).\n"
+"Vælg venligst en kalender som ikke er en efterkommer af %s."
+
+#: ../calendar-delete-dialog.c:171
+#, c-format
+msgid "Delete Calendar %s"
+msgstr "Slet kalender %s"
+
+#: ../calendar-delete-dialog.c:197
+#, c-format
+msgid "Delete %s%s%s"
+msgstr "Slet %s%s%s"
+
+#: ../calendar-delete-dialog.c:207
+#, c-format
+msgid "Reparent %s%s%s"
+msgstr "Giv ny forælder til %s%s%s"
+
+#: ../calendar-edit-dialog.c:258
+msgid "Calendar: New Calendar"
+msgstr "Kalender: Ny kalender"
+
+#: ../calendar-edit-dialog.c:289
+msgid "Title:"
+msgstr "Titel:"
+
+#. Description.
+#. Description textarea.
+#: ../calendar-edit-dialog.c:300 ../event-ui.c:840
+msgid "Description:"
+msgstr "Beskrivelse:"
+
+#. Parent.
+#: ../calendar-edit-dialog.c:311
+msgid "Parent:"
+msgstr "Forælder:"
+
+#. Color selection.
+#: ../calendar-edit-dialog.c:327
+msgid "Color:"
+msgstr "Farve:"
+
+#. mode.
+#: ../calendar-edit-dialog.c:348
+msgid "Type:"
+msgstr "Type:"
+
+#: ../calendar-edit-dialog.c:354
+msgid "Local"
+msgstr "Lokal"
+
+#: ../calendar-edit-dialog.c:355
+msgid "Subscribe"
+msgstr "Abonnere"
+
+#: ../calendar-edit-dialog.c:356
+msgid "Publish"
+msgstr "Udgiv"
+
+#. Uncomment as we support other modes.
+#: ../calendar-edit-dialog.c:359
+msgid "Synchronize"
+msgstr "Synkroniser"
+
+#. Don't show initially.
+#: ../calendar-edit-dialog.c:374
+msgid "URL:"
+msgstr "URL:"
+
+#: ../calendar-edit-dialog.c:385
+msgid "Username:"
+msgstr "Brugernavn:"
+
+#: ../calendar-edit-dialog.c:395
+msgid "Password:"
+msgstr "Adgangskode:"
+
+#. Don't show initially.
+#: ../calendar-edit-dialog.c:413
+msgid "Update:"
+msgstr "Opdater:"
+
+#: ../calendar-edit-dialog.c:428
+msgid "times per year"
+msgstr "gange per år"
+
+#: ../calendar-edit-dialog.c:429
+msgid "times per month"
+msgstr "gange per måned"
+
+#: ../calendar-edit-dialog.c:430
+msgid "times per week"
+msgstr "gange per uge"
+
+#: ../calendar-edit-dialog.c:431
+msgid "times per day"
+msgstr "gange per dag"
+
+#: ../calendar-edit-dialog.c:432
+msgid "times per hour"
+msgstr "gange per time"
+
+#: ../calendar-edit-dialog.c:530
+msgid "Calendar: Edit Calendar"
+msgstr "Kalender: Rediger kalender"
+
+#: ../calendars-dialog.c:300
+msgid "Calendars"
+msgstr "Kalendere"
+
+#: ../calendars-dialog.c:336
+msgid "Show All"
+msgstr "Vis alle"
+
+#: ../calendars-widgets.c:385
+#, c-format
+msgid "%ld minutes ago"
+msgstr "%ld minutter siden"
+
+#: ../calendars-widgets.c:387
+#, c-format
+msgid "%ld hours ago"
+msgstr "%ld timer siden"
+
+#: ../calendars-widgets.c:389
+#, c-format
+msgid "%ld days ago"
+msgstr "%ld dage siden"
+
+#: ../calendars-widgets.c:396
+#, c-format
+msgid "%x"
+msgstr "%x"
+
+#: ../calendars-widgets.c:409
+msgid "Up to date"
+msgstr "Opdateret"
+
+#: ../calendars-widgets.c:411
+msgid "Modified"
+msgstr "Ændret"
+
+#: ../calendar-update.c:157
+msgid "Calendar Syncronization"
+msgstr "Kalendersynkronisering"
+
+#: ../day_popup.c:85
+msgid "%a %d %B"
+msgstr "%a %d %B"
+
+#: ../day_popup.c:138 ../event-list.c:257
+#, c-format
+msgid "Until %s"
+msgstr "Indtil %s"
+
+#: ../day_view.c:254
+msgid " - "
+msgstr " - "
+
+#: ../event-list.c:192
+#, c-format
+msgid "%-m/%-d"
+msgstr "%-m/%-d"
+
+#: ../event-list.c:193
+msgid "%b %-d"
+msgstr "%b %-d"
+
+#: ../event-list.c:196
+msgid "%m/%d/%t"
+msgstr "%m/%d/%t"
+
+#: ../event-list.c:197
+msgid "%b %d, %y"
+msgstr "%b %d, %y"
+
+#: ../event-list.c:203 ../event-menu.c:230 ../month_view.c:816
+msgid "%-H:%M"
+msgstr "%-H:%M"
+
+#: ../event-list.c:206
+msgid "%-m/%-d %-H:%M"
+msgstr "%-m/%-d %-H:%M"
+
+#: ../event-list.c:207
+msgid "%b %-d %-H:%M"
+msgstr "%b %-d %-H:%M"
+
+#: ../event-list.c:210
+msgid "%-m/%-d/%y %-H:%M"
+msgstr "%-m/%-d/%y %-H:%M"
+
+#: ../event-list.c:211
+msgid "%b %-d, %y %-H:%M"
+msgstr "%b %-d, %y %-H:%M"
+
+#: ../event-list.c:238 ../event-list.c:320 ../main.c:561 ../main.c:2351
+msgid "Today"
+msgstr "I dag"
+
+#: ../event-list.c:752 ../event-ui.c:196 ../event-ui.c:910
+msgid "days"
+msgstr "dage"
+
+#: ../event-list.c:753 ../event-ui.c:911
+msgid "weeks"
+msgstr "uger"
+
+#: ../event-list.c:754 ../event-ui.c:202
+msgid "months"
+msgstr "måneder"
+
+#: ../event-list.c:755 ../event-ui.c:205
+msgid "years"
+msgstr "år"
+
+#: ../event-menu.c:56
+#, c-format
+msgid "Delete all occurrences of %s?"
+msgstr "Slet alle forekomster af %s?"
+
+#: ../event-menu.c:60 ../event-menu.c:82
+msgid "Question"
+msgstr "Spørgsmål"
+
+#: ../event-menu.c:61
+msgid "Delete this occurrence"
+msgstr "Slet denne forekomst"
+
+#: ../event-menu.c:62
+msgid "Delete all occurrences"
+msgstr "Slet alle forekomster"
+
+#: ../event-menu.c:80
+#, c-format
+msgid "Delete %s?"
+msgstr "Slet %s?"
+
+#: ../event-menu.c:202 ../event-menu.c:224
+msgid "%b %d"
+msgstr "%b %d"
+
+# Er der noget i den her som skal oversættes. Er H hour og M minutes
+#: ../event-menu.c:204 ../event-menu.c:232
+msgid "%b %d, %-H:%M"
+msgstr "%b %d, %-H:%M"
+
+#: ../event-menu.c:222 ../gtkdatesel.c:225
+#, c-format
+msgid "%d"
+msgstr "%d"
+
+#: ../event-menu.c:275 ../event-menu.c:363
+msgid "Edit"
+msgstr "Rediger"
+
+#: ../event-menu.c:287 ../event-menu.c:383
+msgid "Delete"
+msgstr "Slet"
+
+#: ../event-menu.c:299 ../event-ui.c:1671
+msgid "Save"
+msgstr "Gem"
+
+#: ../event-menu.c:314
+msgid "Send via Infra-red"
+msgstr "Send via infrarød"
+
+#: ../event-menu.c:327
+msgid "Send via Bluetooth"
+msgstr "Send via Bluetooth"
+
+#: ../event-menu.c:342
+msgid "Move to Calendar..."
+msgstr "Flyt til kalender..."
+
+#: ../event-menu.c:373
+msgid "Save as"
+msgstr "Gem som"
+
+#: ../event-menu.c:394
+msgid "Only Show"
+msgstr "Vis kun"
+
+#: ../event-menu.c:405
+msgid "Hide"
+msgstr "Skjul"
+
+#: ../event-ui.c:156 ../event-ui.c:1010
+msgid "Every"
+msgstr "Alle"
+
+#: ../event-ui.c:157
+msgid "First"
+msgstr "Første"
+
+#: ../event-ui.c:158
+msgid "Second"
+msgstr "Anden"
+
+#: ../event-ui.c:159
+msgid "Third"
+msgstr "Tredje"
+
+#: ../event-ui.c:160
+msgid "Fourth"
+msgstr "Fjerde"
+
+#: ../event-ui.c:161
+msgid "Last"
+msgstr "Sidste"
+
+#: ../event-ui.c:162
+msgid "Second to last"
+msgstr "Sidste mulighed"
+
+#: ../event-ui.c:199
+msgid "weeks, on:"
+msgstr "uger, på:"
+
+#: ../event-ui.c:294
+msgid "End time must not be earlier than start time"
+msgstr "Sluttid må ikke være tidligere end starttid"
+
+#: ../event-ui.c:304 ../event-ui.c:310
+msgid ""
+"Event starts in the past!\n"
+"Save anyway?"
+msgstr ""
+"Begivenhed påbegyndt i fortiden!\n"
+"Gem alligevel?"
+
+#. Location.
+#: ../event-ui.c:800
+msgid "Location:"
+msgstr "Sted:"
+
+#. Categories.
+#: ../event-ui.c:818
+msgid "Categories"
+msgstr "Kategorier"
+
+#: ../event-ui.c:826
+msgid "Define categories by tapping the Categories button."
+msgstr "Definer kategorier ved at taste på kategoriknappen."
+
+#: ../event-ui.c:887 ../event-ui.c:1571
+msgid "Alarm"
+msgstr "Alarm"
+
+#: ../event-ui.c:908
+msgid "minutes"
+msgstr "minutter"
+
+#: ../event-ui.c:909
+msgid "hours"
+msgstr "timer"
+
+#: ../event-ui.c:921
+msgid "before event"
+msgstr "før begivenhed"
+
+#: ../event-ui.c:963
+msgid "Recurrence type:"
+msgstr "Gentagelsestype:"
+
+#: ../event-ui.c:969
+msgid "single occurrence"
+msgstr "enkel forekomst"
+
+#: ../event-ui.c:970
+msgid "daily"
+msgstr "daglig"
+
+#: ../event-ui.c:971
+msgid "weekly"
+msgstr "ugelig"
+
+#: ../event-ui.c:972
+msgid "monthly"
+msgstr "månedlig"
+
+#: ../event-ui.c:973
+msgid "yearly"
+msgstr "årlig"
+
+#: ../event-ui.c:1049
+msgid "M"
+msgstr "M"
+
+#: ../event-ui.c:1049
+msgid "T"
+msgstr "T"
+
+#: ../event-ui.c:1049
+msgid "W"
+msgstr "U"
+
+# ikke afklaret endeligt
+#: ../event-ui.c:1049
+msgid "F"
+msgstr "F"
+
+# ikke afklaret endeligt
+#: ../event-ui.c:1049
+msgid "S"
+msgstr "S"
+
+#. forever radio button
+#: ../event-ui.c:1175
+msgid "forever"
+msgstr "altid"
+
+#: ../event-ui.c:1187
+msgid "end after"
+msgstr "slutter efter"
+
+#: ../event-ui.c:1205
+msgid "occurrences"
+msgstr "forekomster"
+
+#: ../event-ui.c:1215
+msgid "end on"
+msgstr "slutter den"
+
+#. Event tab.
+#: ../event-ui.c:1323
+msgid "Event"
+msgstr "Begivenhed"
+
+#: ../event-ui.c:1358
+msgid "Summary:"
+msgstr "Sammendrag:"
+
+#: ../event-ui.c:1374
+msgid "All day event"
+msgstr "Heldagsbegivenhed"
+
+#. Start time.
+#: ../event-ui.c:1391
+msgid "Start:"
+msgstr "Start:"
+
+#: ../event-ui.c:1411 ../event-ui.c:1467
+msgid "on:"
+msgstr "tændt:"
+
+#. End time.
+#: ../event-ui.c:1449
+msgid "End:"
+msgstr "Slut:"
+
+#: ../event-ui.c:1512
+msgid "Calendar:"
+msgstr "Kalender:"
+
+#. Detail page.
+#: ../event-ui.c:1539
+msgid "Details"
+msgstr "Detaljer"
+
+#: ../event-ui.c:1613
+msgid "Recurrence"
+msgstr "Gentagelse"
+
+#: ../event-ui.c:1667
+msgid "Cancel"
+msgstr "Afbryd"
+
+#: ../event-ui.c:1730
+msgid "Calendar: New event"
+msgstr "Kalender: Ny begivenhed"
+
+#: ../event-ui.c:1785
+msgid "Calendar: Edit event"
+msgstr "Kalender: Redigér begivenhed"
+
+#: ../gtkdatesel.c:273
+msgid "%b"
+msgstr "%b"
+
+#: ../gtkdatesel.c:276
+msgid "%B"
+msgstr "%B"
+
+#: ../gtkdatesel.c:279
+#, c-format
+msgid "%m"
+msgstr "%m"
+
+#: ../main.c:555
+msgid "Yesterday"
+msgstr "I går"
+
+#: ../main.c:567
+msgid "Tomorrow"
+msgstr "I morgen"
+
+#: ../main.c:574
+msgid "%a %b %e"
+msgstr "%a %b %e"
+
+#: ../main.c:576
+msgid "%a %b %e, %Y"
+msgstr "%a %b %e, %Y"
+
+#: ../main.c:598
+#, c-format
+msgid "Calendar - %s"
+msgstr "Kalender - %s"
+
+#: ../main.c:2180
+msgid "Main"
+msgstr "Hoved"
+
+#: ../main.c:2244
+msgid "Day"
+msgstr "Dag"
+
+#: ../main.c:2252
+msgid "Tap here to select day-at-a-time view."
+msgstr "Tast her for at vælge en-dag-ad-gangen oversigt."
+
+#: ../main.c:2262
+msgid "Week"
+msgstr "Uge"
+
+#: ../main.c:2270
+msgid "Tap here to select week-at-a-time view."
+msgstr "Tast her for at vælge en-uge-ad-gangen oversigt."
+
+#: ../main.c:2282
+msgid "Month"
+msgstr "Måned"
+
+#: ../main.c:2290
+msgid "Tap here to select month-at-a-time view."
+msgstr "Tast her for at vælge en-måned-ad-gangen oversigt."
+
+#: ../main.c:2301
+msgid "Agenda"
+msgstr "Agenda"
+
+#: ../main.c:2310
+msgid "Tap here to select the agenda."
+msgstr "Tast her for at vælge agendaen."
+
+#: ../main.c:2333
+msgid "Tap here to view alarms pending acknowledgement."
+msgstr "Tast her for at vise umiddelbart forestående alarmer."
+
+#: ../main.c:2355
+msgid "Switch to today."
+msgstr "Skift til i dag."
+
+#: ../main.c:2398
+msgid "_File"
+msgstr "_Fil"
+
+#: ../main.c:2405
+msgid "New"
+msgstr "Ny"
+
+#: ../main.c:2416
+msgid "Import"
+msgstr "Import"
+
+#: ../main.c:2440
+msgid "Close"
+msgstr "Luk"
+
+#. View menu.
+#: ../main.c:2451
+msgid "_View"
+msgstr "_Vis"
+
+#. View -> Today.
+#: ../main.c:2458
+msgid "_Today"
+msgstr "_I dag"
+
+#. View -> Day.
+#: ../main.c:2471
+msgid "_Day"
+msgstr "_Dag"
+
+#. View -> Week.
+#: ../main.c:2481
+msgid "_Week"
+msgstr "_Uge"
+
+#. View -> Month.
+#: ../main.c:2491
+msgid "_Month"
+msgstr "_Måned"
+
+#. View -> Agenda.
+#: ../main.c:2501 ../main.c:2542
+msgid "_Agenda"
+msgstr "_Agenda"
+
+#. View -> Sidebar.
+#: ../main.c:2515
+msgid "_Sidebar"
+msgstr "_Sidepanel"
+
+#. View -> Calendar.
+#: ../main.c:2524
+msgid "_Calendar"
+msgstr "_Kalender"
+
+#. View -> Selector.
+#: ../main.c:2533
+msgid "Calendar _Selector"
+msgstr "Kalender_vælger"
+
+#. Tools menu.
+#: ../main.c:2551
+msgid "_Tools"
+msgstr "_Værktøjer"
+
+#. Tools -> Calendars.
+#: ../main.c:2558
+msgid "_Calendars"
+msgstr "_Kalendere"
+
+#. Tools -> Categories.
+#: ../main.c:2568
+msgid "Cate_gories"
+msgstr "Kate_gorier"
+
+#. Tools -> Alarms.
+#: ../main.c:2579
+msgid "_Alarms"
+msgstr "_Alarmer"
+
+#. Tools -> Toolbar.
+#: ../main.c:2593
+msgid "_Toolbar"
+msgstr "_Værktøjslinje"
+
+#. Tools -> Full Screen.
+#: ../main.c:2602
+msgid "_Full Screen"
+msgstr "_Fuldskærm"
+
+#: ../xsettings.c:105
+msgid "Cannot create XSettings client"
+msgstr "Kunne ikke oprette XSettings-klient"
