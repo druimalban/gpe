@@ -149,7 +149,7 @@ void
 categories_menu (void)
 {
   GtkWidget *menu = gtk_menu_new ();
-  GSList *l;
+  GSList *l = gpe_pim_categories_list (), *iter;
   GtkWidget *i;
   gboolean found;
 
@@ -160,17 +160,18 @@ categories_menu (void)
   g_signal_connect (G_OBJECT (i), "activate", G_CALLBACK (set_category), (gpointer)-1);
   gtk_widget_show (i);
 
-  for (l = gpe_pim_categories_list (); l; l = l->next)
+  for (iter = l; iter; iter = iter->next)
     {
-      struct gpe_pim_category *t = l->data;
-      i = gtk_menu_item_new_with_label (t->name);
+      gint id = (gint) iter->data;
+      i = gtk_menu_item_new_with_label (gpe_pim_category_name(id));
       gtk_menu_append (GTK_MENU (menu), i);
-      g_signal_connect (G_OBJECT (i), "activate", G_CALLBACK (set_category), (gpointer)t->id);
+      g_signal_connect (G_OBJECT (i), "activate", G_CALLBACK (set_category), (gpointer)id);
       gtk_widget_show (i);
 
-      if (t->id == selected_category)
+      if (id == selected_category)
         found = TRUE;
     }
+  g_slist_free (l);
 
   if (!found && selected_category != -1)
     {
