@@ -1,0 +1,209 @@
+# translation of gpe-sketchbook-0.2.7.pot to Finnish
+# Copyright © 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-sketchbook package.
+#
+# Jorma Karvonen <karvjorm@users.sf.net>, 2008.
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-sketchbook 0.2.7\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-10-12 20:45+0300\n"
+"PO-Revision-Date: 2008-01-01 19:46+0200\n"
+"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+
+#: src/gpe-sketchbook.c:115
+msgid "Sketchbook: preferences"
+msgstr "Luonnoskirja: asetukset"
+
+#: src/gpe-sketchbook.c:119 gpe-sketchbook.desktop.in.h:2
+msgid "Sketchbook"
+msgstr "Luonnoskirja"
+
+#: src/preferences.c:93
+msgid ""
+"Cannot create XSettings client.\n"
+"Use default preferences."
+msgstr ""
+"Ei voida luoda XSettings-asiakasta.\n"
+"Käytä oletusasetuksia."
+
+#: src/preferences.c:188
+msgid ""
+"gpe-confd is not running.\n"
+"Cannot save the preferences."
+msgstr ""
+"gpe-confd-ohjelmaa ei suoriteta.\n"
+"Ei voida tallentaa asetuksia."
+
+#: src/preferences.c:277
+msgid "Start with"
+msgstr "Aloitetaan kohteella"
+
+#: src/preferences.c:280
+msgid "Sketchpad"
+msgstr "Luonnoslehtiö"
+
+#: src/preferences.c:282
+msgid "Selector - list"
+msgstr "Valitsin - luettelo"
+
+#: src/preferences.c:284
+msgid "Selector - icons table"
+msgstr "Valitsin - kuvaketaulu"
+
+#: src/preferences.c:300
+msgid "Use joypad scrolling"
+msgstr "Käytä ohjausaluevieritystä"
+
+#: src/preferences.c:307
+msgid "Grow on scroll"
+msgstr "Kasvata vieritystä"
+
+#: src/preferences.c:316
+msgid "OK"
+msgstr "Hyväksy"
+
+#: src/preferences.c:317 src/selector-cb.c:67 src/sketchpad-cb.c:244
+msgid "Cancel"
+msgstr "Peru"
+
+#: src/selector.c:88
+#, c-format
+msgid "Cannot read the sketchbook directory: %s. Exit."
+msgstr "Ei voida lukea luonnoskirjakansiota: %s. Poistutaan."
+
+#. TRANSLATORS: %s are: [folder name] [error message]
+#: src/selector.c:95
+#, c-format
+msgid "Cannot create %s: %s. Exit."
+msgstr "Ei voida luoda %s: %s. Poistutaan."
+
+#. TRANSLATORS: default sketch label based on [date] and [time]
+#. example: "2003 10 12  at  18:48:51"
+#: src/selector.c:179
+#, c-format
+msgid "%s  at  %s"
+msgstr "%s  kohteessa  %s"
+
+#: src/selector-cb.c:66 src/sketchpad-cb.c:243
+msgid "Delete current sketch?"
+msgstr "Poistetaanko nykyinen luonnos?"
+
+#: src/selector-cb.c:66 src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:243
+msgid "Question"
+msgstr "Kysymys"
+
+#: src/selector-cb.c:67 src/sketchpad-cb.c:244 src/sketchpad-gui.c:468
+msgid "Delete"
+msgstr "Poista"
+
+#: src/selector-gui.c:102
+msgid "New sketch"
+msgstr "Uusi luonnos"
+
+#: src/selector-gui.c:107
+msgid "Edit sketch"
+msgstr "Muokkaa luonnosta"
+
+#: src/selector-gui.c:115
+msgid "Delete selected sketch"
+msgstr "Poista valittu luonnos"
+
+#: src/selector-gui.c:123
+msgid "Import from image"
+msgstr "Tuo kuvatiedostosta"
+
+#: src/selector-gui.c:132
+msgid "Toggle view"
+msgstr "Vaihda näkymää"
+
+#: src/selector-gui.c:146
+msgid "Preferences"
+msgstr "Asetukset"
+
+#: src/sketchpad.c:184
+msgid "Sketch"
+msgstr "Luonnos"
+
+#: src/sketchpad.c:189
+msgid "new"
+msgstr "uusi"
+
+#: src/sketchpad.c:220
+#, c-format
+msgid "Import of `%s' failed."
+msgstr "Kuvan ”%s” tuominen ei onnistunut."
+
+#: src/sketchpad.c:237
+msgid "Image to import"
+msgstr "Tuotava kuva"
+
+#: src/sketchpad-cb.c:47
+msgid ""
+"Sketch modified,\n"
+"save before exiting?"
+msgstr ""
+"Luonnosta on muokattu,\n"
+"tallennetaanko ennen poistumista?"
+
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78
+msgid "Discard"
+msgstr "Hylkää"
+
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78 src/sketchpad-gui.c:467
+msgid "Save"
+msgstr "Tallenna"
+
+#: src/sketchpad-cb.c:77
+msgid "Save current sketch?"
+msgstr "Tallennetaanko nykyinen luonnos?"
+
+#: src/sketchpad-gui.c:266
+msgid "Select eraser"
+msgstr "Valitse pyyhin"
+
+#: src/sketchpad-gui.c:268
+msgid "Select pencil"
+msgstr "Valitse sivellin"
+
+#: src/sketchpad-gui.c:270
+msgid "Brush size"
+msgstr "Sivellinkoko"
+
+#: src/sketchpad-gui.c:271
+msgid "Brush color"
+msgstr "Sivellinväri"
+
+#: src/sketchpad-gui.c:430
+msgid "Sketch menu"
+msgstr "Luonnosvalikko"
+
+#: src/sketchpad-gui.c:439
+msgid "Show list"
+msgstr "Näytä luettelo"
+
+#: src/sketchpad-gui.c:444
+msgid "Previous sketch"
+msgstr "Edellinen luonnos"
+
+#: src/sketchpad-gui.c:449
+msgid "Next sketch"
+msgstr "Seuraava luonnos"
+
+#: src/sketchpad-gui.c:465
+msgid "New"
+msgstr "Uusi"
+
+#: src/sketchpad-gui.c:466
+msgid "Import"
+msgstr "Tuo"
+
+#: gpe-sketchbook.desktop.in.h:1
+msgid "GPE Sketchbook"
+msgstr "GPE-luonnoskirja"

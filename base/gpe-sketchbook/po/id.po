@@ -1,56 +1,55 @@
-# Swedish messages for gpe-sketchbook.
-# Copyright (C) 2003, 2008 Free Software Foundation, Inc.
+# Indonesian translations for gpe-sketchbook package.
+# Copyright (C) 2008 THE gpe-sketchbook'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gpe-sketchbook package.
-# Christian Rose <menthos@menthos.com>, 2003.
-# Daniel Nylander <po@danielnylander.se>, 2008.
+# Andhika Padmawan <andhika.padmawan@gmail.com>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-sketchbook 0.2.9\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2005-11-04 22:39+0100\n"
-"PO-Revision-Date: 2008-08-22 09:41+0100\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
-"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"PO-Revision-Date: 2008-08-22 21:05+0700\n"
+"Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
+"Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/gpe-sketchbook.c:181
 msgid "Sketchbook: preferences"
-msgstr "Skissblock: inställningar"
+msgstr "Sketchbook: pengaturan"
 
 #: src/gpe-sketchbook.c:185
 msgid "Sketchbook"
-msgstr "Skissblock"
+msgstr "Sketchbook"
 
 #: src/gpe-sketchbook.c:187 src/gpe-sketchbook.c:210 src/sketchpad.c:207
 msgid "Sketch"
-msgstr "Skiss"
+msgstr "Sketsa"
 
 #: src/preferences.c:332
 msgid "Start with"
-msgstr "Börja med"
+msgstr "Mulai dengan"
 
 #: src/preferences.c:335
 msgid "Sketchpad"
-msgstr "Skissyta"
+msgstr "Sketchpad"
 
 #: src/preferences.c:337
 msgid "Selector - list"
-msgstr "Väljare - lista"
+msgstr "Pemilih - senarai"
 
 #: src/preferences.c:339
 msgid "Selector - icons table"
-msgstr "Väljare - ikontabell"
+msgstr "Pemilih - tabel ikon"
 
 #: src/preferences.c:355
 msgid "Use joypad scrolling"
-msgstr "Använd styrspaksrullning"
+msgstr "Gunakan penggulung joypad"
 
 #: src/preferences.c:362
 msgid "Grow on scroll"
-msgstr "Väx vid rullning"
+msgstr "Mengembang ketika gulung"
 
 #: src/preferences.c:371
 msgid "OK"
@@ -58,34 +57,34 @@ msgstr "OK"
 
 #: src/preferences.c:372 src/selector-cb.c:66 src/sketchpad-cb.c:282
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Batal"
 
 #. TRANSLATORS: %s are: [folder name] [error message]
 #: src/selector.c:143
 #, c-format
 msgid "Cannot create %s: %s. Exit."
-msgstr "Kan inte skapa %s: %s. Avsluta."
+msgstr "Tak dapat membuat %s: %s. Keluar."
 
 #: src/selector-cb.c:65 src/sketchpad-cb.c:281
 msgid "Delete current sketch?"
-msgstr "Ersätt aktuell skiss?"
+msgstr "Hapus sketsa saat ini?"
 
 #: src/selector-cb.c:65 src/sketchpad-cb.c:47 src/sketchpad-cb.c:83
 #: src/sketchpad-cb.c:281
 msgid "Question"
-msgstr "Fråga"
+msgstr "Pertanyaan"
 
 #: src/selector-cb.c:66 src/sketchpad-cb.c:282
 msgid "Delete"
-msgstr "Ta bort"
+msgstr "Hapus"
 
 #: src/selector-gui.c:103 src/sketchpad-gui.c:580
 msgid "Import"
-msgstr "Importera"
+msgstr "Impor"
 
 #: src/selector-gui.c:180
 msgid "View"
-msgstr "Visa"
+msgstr "Tampilan"
 
 #. TRANSLATORS: "U" stands for "Updated"
 #. *  It is the title for the column that displays last update timestamp.
@@ -98,245 +97,215 @@ msgstr "U"
 
 #: src/selector-gui.c:288
 msgid "Title"
-msgstr "Titel"
+msgstr "Judul"
 
 #: src/sketchpad.c:212
 msgid "new"
-msgstr "ny"
+msgstr "baru"
 
 #: src/sketchpad.c:261
 #, c-format
 msgid "Import of `%s' failed."
-msgstr "Import av \"%s\" misslyckades."
+msgstr "Impor `%s' gagal."
 
 #: src/sketchpad.c:278
 msgid "Image to import"
-msgstr "Bild att importera"
+msgstr "Citra yang akan diimpor"
 
 #: src/sketchpad-cb.c:47
 msgid ""
 "Sketch modified,\n"
 "save before exiting?"
 msgstr ""
-"Skissen ändrad,\n"
-"spara innan avslutande?"
+"Sketsa diubah,\n"
+"simpan sebelum keluar?"
 
 #: src/sketchpad-cb.c:48 src/sketchpad-cb.c:84
 msgid "Discard"
-msgstr "Förkasta"
+msgstr "Abaikan"
 
 #: src/sketchpad-cb.c:48 src/sketchpad-cb.c:84
 msgid "Save"
-msgstr "Spara"
+msgstr "Simpan"
 
 #: src/sketchpad-cb.c:83
 msgid "Save current sketch?"
-msgstr "Spara aktuell skiss?"
+msgstr "Simpan sketsa saat ini?"
 
 #: src/sketchpad-cb.c:179
 msgid "New sketch"
-msgstr "Ny skiss"
+msgstr "Sketsa baru"
 
 #: src/sketchpad-gui.c:211 src/sketchpad-gui.c:554
 msgid "Show list"
-msgstr "Visa lista"
+msgstr "Tampilkan senarai"
 
 #: src/sketchpad-gui.c:213
 msgid "Show sketches list"
-msgstr "Visa skisslista"
+msgstr "Tampilkan senarai sketsa"
 
 #: src/sketchpad-gui.c:216 src/sketchpad-gui.c:545
 msgid "Sketch menu"
-msgstr "Skissmeny"
+msgstr "Menu sketsa"
 
 #: src/sketchpad-gui.c:220
 msgid "Sketch file menu"
-msgstr "Skissfilsmeny"
+msgstr "Menu berkas sketsa"
 
 #: src/sketchpad-gui.c:232
 msgid "Pencil"
-msgstr "Penna"
+msgstr "Pensil"
 
 #: src/sketchpad-gui.c:235 src/sketchpad-gui.c:369
 msgid "Select pencil"
-msgstr "Välj penna"
+msgstr "Pilih pensil"
 
 #: src/sketchpad-gui.c:242
 msgid "Eraser"
-msgstr "Suddgummi"
+msgstr "Penghapus"
 
 #: src/sketchpad-gui.c:245 src/sketchpad-gui.c:367
 msgid "Select eraser"
-msgstr "Välj sudd"
+msgstr "Pilih penghapus"
 
 #: src/sketchpad-gui.c:253
 msgid "Size"
-msgstr "Storlek"
+msgstr "Ukuran"
 
 #: src/sketchpad-gui.c:256
 msgid "Select a pencil size"
-msgstr "Välj en pennstorlek"
+msgstr "Pilih ukuran pensil"
 
 #: src/sketchpad-gui.c:266
 msgid "Colour"
-msgstr "Färg"
+msgstr "Warna"
 
 #: src/sketchpad-gui.c:269
 msgid "Select a colour"
-msgstr "Välj en färg"
+msgstr "Pilih warna"
 
 #: src/sketchpad-gui.c:275
 msgid "Display previous sketch"
-msgstr "Visa föregående skiss"
+msgstr "Tampilkan sketsa sebelumnya"
 
 #: src/sketchpad-gui.c:280
 msgid "Display next sketch"
-msgstr "Visa nästa skiss"
+msgstr "Tampilkan sketsa selanjutnya"
 
 #: src/sketchpad-gui.c:371
 msgid "Brush size"
-msgstr "Penselstorlek"
+msgstr "Ukuran sikat"
 
 #: src/sketchpad-gui.c:372
 msgid "Brush color"
-msgstr "Penselfärg"
+msgstr "Warna sikat"
 
 #: src/sketchpad-gui.c:462
 msgid "small"
-msgstr "liten"
+msgstr "kecil"
 
 #: src/sketchpad-gui.c:463
 msgid "medium"
-msgstr "medel"
+msgstr "sedang"
 
 #: src/sketchpad-gui.c:464
 msgid "large"
-msgstr "stor"
+msgstr "besar"
 
 #: src/sketchpad-gui.c:465
 msgid "very large"
-msgstr "mycket stor"
+msgstr "sangat besar"
 
 #: src/sketchpad-gui.c:559
 msgid "Previous sketch"
-msgstr "Föregående skiss"
+msgstr "Sketsa sebelumnya"
 
 #: src/sketchpad-gui.c:564
 msgid "Next sketch"
-msgstr "Nästa skiss"
+msgstr "Sketsa selanjutnya"
 
 #: src/sketchpad-gui.c:613
 msgid "Small"
-msgstr "Liten"
+msgstr "Kecil"
 
 #: src/sketchpad-gui.c:617
 msgid "Medium"
-msgstr "Medel"
+msgstr "Sedang"
 
 #: src/sketchpad-gui.c:621
 msgid "Large"
-msgstr "Stor"
+msgstr "Besar"
 
 #: src/sketchpad-gui.c:625
 msgid "Extra large"
-msgstr "Extra stor"
+msgstr "Sangat besar"
 
 #: src/sketchpad-gui.c:691
 msgid "Black"
-msgstr "Svart"
+msgstr "Hitam"
 
 #: src/sketchpad-gui.c:692
 msgid "Blue"
-msgstr "Blå"
+msgstr "Biru"
 
 #: src/sketchpad-gui.c:693
 msgid "Green"
-msgstr "Grön"
+msgstr "Hijau"
 
 #: src/sketchpad-gui.c:694
 msgid "Red"
-msgstr "Röd"
+msgstr "Merah"
 
 #: src/sketchpad-gui.c:695
 msgid "Orange"
-msgstr "Orange"
+msgstr "Oranye"
 
 #: src/sketchpad-gui.c:696
 msgid "Yellow"
-msgstr "Gul"
+msgstr "Kuning"
 
 #: gpe-sketchbook.desktop.in.h:1
 msgid "GPE Sketchbook"
-msgstr "GPE-skissblock"
+msgstr "GPE Sketchbook"
 
 #: gpe-sketchbook.desktop.in.h:2
 msgid "Sketch Book"
-msgstr "Skissblock"
+msgstr "Buku Sketsa"
 
 #~ msgid ""
 #~ "Cannot create XSettings client.\n"
 #~ "Use default preferences."
 #~ msgstr ""
-#~ "Kan inte skapa XSettings-klient.\n"
-#~ "Använd standardinställningar."
+#~ "Tak dapat membuat klien XSettings.\n"
+#~ "Gunakan pengaturan standar."
 
 #~ msgid ""
 #~ "gpe-confd is not running.\n"
 #~ "Cannot save the preferences."
 #~ msgstr ""
-#~ "gpe-confd körs inte.\n"
-#~ "Kan inte spara inställningarna."
+#~ "gpe-confd tak berjalan.\n"
+#~ "Tak dapat menyimpan pengaturan."
 
 #~ msgid "Cannot read the sketchbook directory: %s. Exit."
-#~ msgstr "Kan inte läsa skissblockskatalogen: %s. Avsluta."
+#~ msgstr "Tak dapat membaca direktori sketchbook: %s. Keluar."
 
 #~ msgid "%s  at  %s"
-#~ msgstr "%s vid %s"
+#~ msgstr "%s  di  %s"
 
 #~ msgid "Edit sketch"
-#~ msgstr "Redigera skiss"
+#~ msgstr "Sunting sketsa"
 
 #~ msgid "Delete selected sketch"
-#~ msgstr "Ta bort markerad skiss"
+#~ msgstr "Hapus sketsa terpilih"
 
 #~ msgid "Import from image"
-#~ msgstr "Importera från bild"
+#~ msgstr "Impor dari citra"
 
 #~ msgid "Toggle view"
-#~ msgstr "Växla vy"
+#~ msgstr "Ubah tampilan"
 
 #~ msgid "Preferences"
-#~ msgstr "Inställningar"
+#~ msgstr "Pengaturan"
 
 #~ msgid "New"
-#~ msgstr "Ny"
-
-#~ msgid "Preferences..."
-#~ msgstr "Inställningar..."
-
-#~ msgid "List"
-#~ msgstr "Lista"
-
-#~ msgid "Icons table"
-#~ msgstr "Ikontabell"
-
-#~ msgid "Icon table"
-#~ msgstr "Ikontabell"
-
-#~ msgid "New..."
-#~ msgstr "Ny..."
-
-#~ msgid "Edit"
-#~ msgstr "Redigera"
-
-#~ msgid "Brush"
-#~ msgstr "Pensel"
-
-#~ msgid "Properties"
-#~ msgstr "Egenskaper"
-
-#~ msgid "%s at %s"
-#~ msgstr "%s vid %s"
-
-#~ msgid "Don't save"
-#~ msgstr "Spara inte"
+#~ msgstr "Baru"
