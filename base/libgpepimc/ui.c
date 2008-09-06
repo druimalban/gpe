@@ -508,59 +508,20 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
 
 	  if (id == -1)
 	    {
-              GSList *new_categories;
-	      struct gpe_pim_category *c = NULL;
-
 	      gpe_pim_category_new (title, &id);
 	      gpe_pim_category_set_colour (id, col);
-
-              new_categories = gpe_pim_categories_list ();
-              for (i = new_categories; i; i = i->next)
-                {
-                  c = i->data;
-
-                  if (c->id == id)
-                    break;
-                }
-              g_slist_free (new_categories);
-
-              if (i)
-                c->colour = g_strdup (col);
 	    }
 	  else
 	    {
-	      struct gpe_pim_category *c = NULL;
+	      /* Seen this id */
+	      old_categories = g_slist_remove(old_categories, (gpointer)id);
 
-	      for (i = old_categories; i; i = i->next)
-            {
-              c = i->data;
-              
-              if (c->id == id)
-                break;
-            }
+	      if (strcmp(gpe_pim_category_name(id), title))
+		gpe_pim_category_rename (id, title);
 
-	      if (i)
-            {
-              old_categories = g_slist_remove_link (old_categories, i);
-              g_slist_free (i);
-              
-              if (strcmp (c->name, title))
-                {
-                  g_free ((void *)c->name);
-                  c->name = g_strdup (title);
-                  gpe_pim_category_rename (id, title);
-                }
-              if ((!c->colour) || (col && (strcmp (c->colour, col))))
-                {
-                  if (c->colour) 
-                    g_free ((void *)c->colour);
-                  c->colour = g_strdup (col);
+              if (col && strcmp(gpe_pim_category_colour(id), col))
                   gpe_pim_category_set_colour (id, col);
-                }
             }
-	      else
-            selected = FALSE;		/* category was deleted by second party */
-	    }
 	  if (selected)
 	    selected_categories = g_slist_prepend (selected_categories, (gpointer)id);
 
@@ -569,11 +530,10 @@ categories_dialog_ok (GtkWidget *w, gpointer p)
 	} while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
     }
 
+  /* Delete categories we haven't seen */
   for (i = old_categories; i; i = i->next)
     {
-      struct gpe_pim_category *c = i->data;
-
-      gpe_pim_category_delete (c);
+      gpe_pim_category_delete ((gint)i->data);
     }
 
   g_slist_free (old_categories);
@@ -709,15 +669,15 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
   list = gpe_pim_categories_list ();
   for (iter = list; iter != NULL; iter = iter->next)
     {
-      struct gpe_pim_category *c = iter->data;
+      gint id = (gint) iter->data;
       GtkTreeIter titer;
 
       gtk_list_store_append (list_store, &titer);
       gtk_list_store_set (list_store, &titer, 
-			  LS_CHECKED, g_slist_find (selected_categories, (gpointer)c->id) ? TRUE : FALSE,
-			  LS_NAME, c->name, 
-			  LS_ID, c->id,
-              LS_COLOR, c->colour, -1);
+			  LS_CHECKED, g_slist_find (selected_categories, (gpointer)id) ? TRUE : FALSE,
+			  LS_NAME, gpe_pim_category_name(id), 
+			  LS_ID, id,
+              LS_COLOR, gpe_pim_category_colour(id), -1);
     }
   g_slist_free (list);
 

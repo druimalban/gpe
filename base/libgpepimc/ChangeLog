@@ -1,3 +1,25 @@
+2008-09-05  Graham Cobb  <g+770@cobb.uk.net>
+
+	* debian/control: change binary package name to libgpepimc1
+
+	* Makefile.am (libgpepimc_la_LDFLAGS): set -version-info to
+	1:0:0 as these changes are incompatible with previous library
+	version
+
+	* internal.h: Move gpe_pim_category_delete to pim-categories.h
+	Move struct gpe_pim_category from pim-categories.h
+
+	* gpe/pim-categories.h: Move gpe_pim_category_delete from internal.h
+	Move struct gpe_pim_category to internal.h
+
+	* db.c (gpe_pim_categories_refresh): Add gpe_pim_categories_refresh.
+	Also, make categories data structure opaque: gpe_pim_category_rename, 
+	gpe_pim_category_set_colour and gpe_pim_category_delete update 
+	in-memory categories; gpe_pim_categories_list returns list of category ids;
+	gpe_pim_category_delete takes id, not category address.
+	(check_table_update): remove unused variable declarations.
+	
+
 2008-06-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* db.c (gpe_pim_categories_init): Add patch from Lars Persson Fink,

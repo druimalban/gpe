@@ -24,13 +24,6 @@
 
 #include <glib.h>
 
-struct gpe_pim_category
-{
-  const gchar *name;
-  guint id;
-  const gchar *colour;
-};
-
 /* basic functions */
 extern gboolean gpe_pim_categories_init (void);
 extern GSList *gpe_pim_categories_list (void);
@@ -39,6 +32,7 @@ extern gboolean gpe_pim_category_new (const gchar *title, gint *id);
 extern const gchar *gpe_pim_category_name (gint id);
 extern gint gpe_pim_category_id (const gchar *name);
 extern gboolean gpe_pim_category_rename (gint id, gchar *new_name);
+extern void gpe_pim_category_delete (gint id);
 
 /* colour functions */
 extern gboolean gpe_pim_category_set_colour (gint id, const gchar *new_colour);

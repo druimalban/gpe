@@ -65,7 +65,6 @@ check_table_update (void)
 {
   gint r;
   gchar *err = NULL;
-  GSList *entries = NULL, *iter = NULL;
 
   /* check if we have the colour field */
   r = sqlite_exec (db, "select colour from category", NULL, NULL, &err);
@@ -113,6 +112,45 @@ check_table_update (void)
     }
 }
 
+static void gpe_pim_category_free(struct gpe_pim_category *c)
+{
+    g_free((gpointer)c->name);
+    g_free((gpointer)c->colour);
+
+    g_free(c);
+
+    categories = g_slist_remove(categories, c);
+}
+
+/* Reload (or initially load) the categories from the database */
+static gboolean 
+gpe_pim_categories_refresh (void)
+{
+  /* Note: this routine is designed to be called to refresh the list whenever the PIM
+     application is about to create a new object (event, contact, etc.).
+     It should really check to see if the database has been modified since it was last
+     refeshed, but as category lists are normally quite small it doesn't.  
+
+     In future, if this is not acceptable, it would be possible to add a table to record
+     the last database update time and check that before discarding and reloading the
+     categories */
+  gchar *err;
+
+  while (categories) {
+    gpe_pim_category_free((struct gpe_pim_category *)categories->data);
+  }
+
+  if (sqlite_exec (db, "select id,description,colour from category order by description desc",
+                   load_one, &categories, &err))
+    {
+      gpe_error_box (err);
+      free (err);
+      return FALSE;
+    }
+  
+  return TRUE;
+}
+
 gboolean 
 gpe_pim_categories_init (void)
 {
@@ -150,42 +188,27 @@ gpe_pim_categories_init (void)
   /* update table layout if necessary */
   check_table_update ();
 
-  if (sqlite_exec (db, "select id,description,colour from category order by description desc",
-                   load_one, &categories, &err))
-    {
-      gpe_error_box (err);
-      free (err);
-      return FALSE;
-    }
-  
-  return TRUE;
+  return gpe_pim_categories_refresh();
 }
 
 GSList *
 gpe_pim_categories_list (void)
 {
-  return g_slist_copy (categories);
-}
+  GSList *ids = NULL, *iter;
 
-const gchar *
-gpe_pim_category_name (gint id)
-{
-  GSList *iter;
+  gpe_pim_categories_refresh();
 
   for (iter = categories; iter; iter = iter->next)
     {
       struct gpe_pim_category *c = iter->data;
 
-      if (c->id == id)
-        return c->name;
+      ids = g_slist_append(ids, (gpointer)c->id);
     }
 
-  return NULL;
+  return ids;
 }
 
-gint
-gpe_pim_category_id (const gchar *name)
-{
+static struct gpe_pim_category *gpe_pim_category_by_name (const gchar *name) {
   GSList *iter;
 
   for (iter = categories; iter; iter = iter->next)
@@ -193,8 +216,42 @@ gpe_pim_category_id (const gchar *name)
       struct gpe_pim_category *c = iter->data;
 
       if (!strcasecmp (c->name, name))
-        return c->id;
+        return c;
     }
+
+  return NULL;
+}
+
+static struct gpe_pim_category *gpe_pim_category_by_id (gint id) {
+  GSList *iter;
+
+  for (iter = categories; iter; iter = iter->next)
+    {
+      struct gpe_pim_category *c = iter->data;
+
+      if (c->id == id)
+        return c;
+    }
+
+  return NULL;
+}
+
+const gchar *
+gpe_pim_category_name (gint id)
+{
+  struct gpe_pim_category *c = gpe_pim_category_by_id(id);
+
+  if (c) return c->name;
+
+  return NULL;
+}
+
+gint
+gpe_pim_category_id (const gchar *name)
+{
+  struct gpe_pim_category *c = gpe_pim_category_by_name(name);
+
+  if (c) return c->id;
 
   return -1;
 }
@@ -210,15 +267,9 @@ gpe_pim_category_id (const gchar *name)
 const gchar *
 gpe_pim_category_colour (gint id)
 {
-  GSList *iter;
+  struct gpe_pim_category *c = gpe_pim_category_by_id(id);
 
-  for (iter = categories; iter; iter = iter->next)
-    {
-      struct gpe_pim_category *c = iter->data;
-
-      if (c->id == id)
-        return c->colour;
-    }
+  if (c) return c->colour;
 
   return NULL;
 }
@@ -267,11 +318,13 @@ gpe_pim_category_new (const gchar *name, gint *id)
  * field in the given category.
  */
 void 
-gpe_pim_category_delete (struct gpe_pim_category *c)
+gpe_pim_category_delete (gint id)
 {
+  struct gpe_pim_category *c = gpe_pim_category_by_id(id);
+
   sqlite_exec_printf (db, "delete from category where id='%d'", NULL, NULL, NULL, c->id);
 
-  categories = g_slist_remove (categories, c);
+  gpe_pim_category_free(c);
 }
 
 /**
@@ -289,8 +342,7 @@ gpe_pim_category_rename (gint id, gchar *new_name)
   gchar *err;
   gint r;
 
-  r = gpe_pim_category_id(new_name);
-  if (r >= 0)
+  if (gpe_pim_category_by_name(new_name))
     {
       gpe_error_box ("Destination category already exists");
       return FALSE;
@@ -306,6 +358,12 @@ gpe_pim_category_rename (gint id, gchar *new_name)
       g_free (err);
       return FALSE;
     }
+
+  struct gpe_pim_category *c = gpe_pim_category_by_id(id);
+
+  g_free((gpointer)c->name);
+  c->name = g_strdup(new_name);
+
   return TRUE;
 }
 
@@ -335,5 +393,11 @@ gpe_pim_category_set_colour (gint id, const gchar *new_colour)
       g_free (err);
       return FALSE;
     }
+
+  struct gpe_pim_category *c = gpe_pim_category_by_id(id);
+
+  g_free((gpointer)c->colour);
+  c->colour = g_strdup(new_colour);
+
   return TRUE;
 }
