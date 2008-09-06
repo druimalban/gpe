@@ -1,0 +1,86 @@
+# Indonesian translations for gpe-go package.
+# Copyright (C) 2008 THE gpe-go'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the gpe-go package.
+# Andhika Padmawan <andhika.padmawan@gmail.com>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-go 0.05\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2003-11-09 22:28+0200\n"
+"PO-Revision-Date: 2008-08-10 16:05+0700\n"
+"Last-Translator: Andhika Padmawan <andhika.padmawan@gmail.com>\n"
+"Language-Team: Indonesian <translation-team-id@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: gpe-go.c:754
+#, c-format
+msgid "B:%d  W:%d "
+msgstr "H:%d  P:%d "
+
+#: gpe-go.c:1083
+#, c-format
+msgid "Cannot save the game into %s."
+msgstr "Tak dapat menyimpan permainan ke %s."
+
+#: gpe-go.c:1357
+msgid "New..."
+msgstr "Baru..."
+
+#: gpe-go.c:1358
+msgid "Save..."
+msgstr "Simpan..."
+
+#: gpe-go.c:1359
+msgid "Load..."
+msgstr "Muat..."
+
+#: gpe-go.c:1419
+msgid "Game menu"
+msgstr "Menu permainan"
+
+#: gpe-go.c:1427
+msgid "First"
+msgstr "Pertama"
+
+#: gpe-go.c:1428 gpe-go.c:1429
+msgid "Go to the beginning of the game"
+msgstr "Pergi ke awal permainan"
+
+#: gpe-go.c:1435
+msgid "Undo"
+msgstr "Tak Jadi"
+
+#: gpe-go.c:1441
+msgid "Redo"
+msgstr "Jadi Lagi"
+
+#: gpe-go.c:1447
+msgid "Last"
+msgstr "Terakhir"
+
+#: gpe-go.c:1448 gpe-go.c:1449
+msgid "Go to the end of the game"
+msgstr "Pergi ke akhir permainan"
+
+#: gpe-go.c:1457
+msgid "B:0  W:0 "
+msgstr "H:0  P:0 "
+
+#: gpe-go.c:1467
+msgid "Pass"
+msgstr "Lewat"
+
+#: gpe-go.c:1467
+msgid "Pass your turn"
+msgstr "Lewati giliran anda"
+
+#: gpe-go.desktop.in.h:1
+msgid "GPE Go"
+msgstr "GPE Go"
+
+#: gpe-go.desktop.in.h:2
+msgid "Go"
+msgstr "Go"

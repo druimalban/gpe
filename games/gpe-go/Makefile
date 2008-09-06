@@ -15,7 +15,7 @@ CVSBUILD = yes
 endif
 
 
-LINGUAS = cs de pl ro sv nl fr pt ru sr
+LINGUAS = cs da de id pl ro sv nl fr pt ru sr 
 
 MEMBERS = gpe-go sgf sgf-handler model board
 
