@@ -1,13 +1,24 @@
 /*
- * Copyright (C) 2006 Alberto García Hierro
- *      <skyhusker@handhelds.org>
- * Copyright (C) 2007 Neal H. Walfield <neal@walfield.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version
- * 2 of the License, or (at your option) any later version.
- */
+   Copyright (C) 2006 Alberto García Hierro
+        <skyhusker@handhelds.org>
+   Copyright (C) 2007, 2008 Neal H. Walfield <neal@walfield.org>
+  
+   This file is part of GPE.
+
+   GPE is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   GPE is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see
+   <http://www.gnu.org/licenses/>.  */
+
 
 #include <string.h>
 #include <locale.h>
@@ -918,10 +929,12 @@ main(int argc, char *argv[])
 		    G_CALLBACK (playlist_activated_cb), st);
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->treeview), FALSE);
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->treeview), TRUE);
+  gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->treeview), TRUE);
 
   gtk_widget_grab_focus (GTK_WIDGET (st->treeview));
 
   GtkTreeViewColumn *col = gtk_tree_view_column_new ();
+  gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
   gtk_tree_view_append_column (GTK_TREE_VIEW (st->treeview), col);
   renderer = gtk_cell_renderer_text_new ();
   g_object_set (renderer, "cell-background", "gray", NULL);

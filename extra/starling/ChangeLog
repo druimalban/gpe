@@ -1,3 +1,8 @@
+2008-09-06  Neal H. Walfield  <neal@gnu.org>
+
+	* src/main.c (main): Put ST->TREEVIEW in fixed height mode.  Set
+	its column's sizing to be fixed.
+
 2008-09-04  Neal H. Walfield  <neal@gnu.org>
 
 	* src/Makefile.am (AM_CFLAGS): New variable.
