@@ -1,5 +1,61 @@
 2008-09-06  Neal H. Walfield  <neal@gnu.org>
 
+	* src/playlist.h (PL_COL_TRACK): Define.
+	(play_list_add_m3u): Remove parameter index.  Update users.
+	(void play_list_add_uri): Likewise.
+	(play_list_add_file): Likewise.
+	(play_list_add_recursive): Likewise.
+	(play_list_swap_pos): Remove function.
+	(play_list_get_info): Change UID to an int *.  Add parameter
+	track.  Update callers.
+	* src/playlist.c (struct info_cache_entry): Add field track.
+	Remove field uid.
+	(info_cache_evict): Don't free E->UID.
+	(play_list_get_info_by_uid): Update declaration to take additional
+	parameter TRACK and to remove parameter INDEX.
+	(struct _PlayList): Add fields SIZE, IDX_UID_MAP and UID_IDX_HASH.
+	(play_list_init): Don't set PL->COUNT to -1.
+	(play_list_finalize): Free PL->IDX_UID_MAP and PL->UID_IDX_HASH.
+	(play_list_idx_uid_refresh): New function.
+	(play_list_idx_to_uid): Likewise.
+	(play_list_uid_to_idx): Likewise.
+	(play_list_idx_uid_refresh): Also save the track number.  Assume
+	UID is valid.  Update callers to make this so.  Invalidate the
+	model as appropriate.  Call play_list_idx_to_uid_refresh.
+	(play_list_bus_cb): Pass the correct UID when calling PARSE_TAGS.
+	(play_list_create_table): Rename playlist table to files.  Add
+	table dirs.  Update schema.  Bump version number.
+	(play_list_count): If PL->IDX_UID_MAP is not valid, call
+	PLAY_LIST_IDX_TO_UID_REFRESH and then return whatever PL->COUNT is.
+	(play_list_play): Don't access the database directly.  Instead use
+	play_list_get_info.
+	(make_uid): Remove function.
+	(meta_data_reader): Assume PL->META_DATA_READER_PENDING contains
+	integers, not strings.
+	(play_list_add): Remove parameter COUNT.  Use the new row's ROWID
+	as its UID.  Update PL->IDX_UID_MAP and PL->UID_IDX_HAHS
+	appropriately.  Update model.
+	(play_list_add_m3u): Remove parameter POS.
+	(play_list_add_uri): Remove parameter INDEX.
+	(play_list_add_file): Remove parameter INDEX.
+	(play_list_add_recursive): Remove parameter POS.
+	(play_list_swap_pos): Remove function.
+	(play_list_remove): Don't drop the cache.  Just shootdown the
+	entry with uid UID.  Update PL->IDX_UID_MAP and PL->UID_IDX_HASH.
+	(play_list_clear): Don't update the mode.  Just call
+	play_list_idx_uid_refresh.
+	(play_list_get_info_by_uid): Manage the entry cache by UIDs, not
+	INDEXes.  Update appropriately.
+	(play_list_get_info): Implement in terms of
+	play_list_get_info_by_uid.
+	(get_value): Don't include GTK_TREE_MODEL_ITERS_PERSIST in the
+	flags that we support.
+	(get_column_type): Support PL_COL_TRACK.  Return G_TYPE_INT for
+	PL_COL_UID.
+	(get_value): Support PL_COL_TRACK.  Return PL_COL_UID as an int.
+
+2008-09-06  Neal H. Walfield  <neal@gnu.org>
+
 	* src/main.c (main): Put ST->TREEVIEW in fixed height mode.  Set
 	its column's sizing to be fixed.
 

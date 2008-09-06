@@ -1,13 +1,23 @@
 /*
- * Copyright 2007 Neal H. Walfield <neal@walfield.org>
- * Copyright (C) 2006 Alberto García Hierro
- *      <skyhusker@handhelds.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version
- * 2 of the License, or (at your option) any later version.
- */
+   Copyright 2007 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006 Alberto García Hierro
+        <skyhusker@handhelds.org>
+
+   This file is part of GPE.
+
+   GPE is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   GPE is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #ifndef PLAYLIST_H
 #define PLAYLIST_H
@@ -47,8 +57,9 @@ enum
     PL_COL_SOURCE,
     PL_COL_UID,
     PL_COL_ARTIST,
-    PL_COL_TITLE,
     PL_COL_ALBUM,
+    PL_COL_TRACK,
+    PL_COL_TITLE,
     PL_COL_DURATION,
     PL_COL_COUNT
   };
@@ -122,44 +133,36 @@ extern gboolean play_list_query_duration (PlayList *self, GstFormat *fmt,
 
 /** play_list_add_m3u:
 
-  Add M3U file FILE to playlist PL at position INDEX.  If INDEX is -1,
-  then entries are appended to PL.  Any error is returned in ERROR.
+  Add M3U file FILE to playlist PL.  Any error is returned in ERROR.
   Returns the number of entries added to PL.
  */
-extern int play_list_add_m3u (PlayList *self, const gchar *file, gint index,
+extern int play_list_add_m3u (PlayList *self, const gchar *file,
 			      GError **error);
 
 /** play_list_add_uri:
 
-  Add URI to playlist PL at position INDEX.  If INDEX is -1, then URI
-  is appended to PL.  Any error is returned in ERROR.
+  Add URI to playlist PL.  Any error is returned in ERROR.
  */
-extern void play_list_add_uri (PlayList *pl, const gchar *uri, gint index,
+extern void play_list_add_uri (PlayList *pl, const gchar *uri,
 			       GError **error);
 
 /** play_list_add_file:
 
-  Add FILE to playlist PL at position INDEX.  If INDEX is -1, then
-  FILE is appended to PL.  Any error is returned in ERROR.
+  Add FILE to playlist PL.  If INDEX is -1, then FILE is appended to
+  PL.  Any error is returned in ERROR.
  */
 extern void play_list_add_file (PlayList *self, const gchar *file,
-				gint index, GError **error);
+				GError **error);
 
 /** play_list_add_recursive:
 
-  Add files under PATH to playlist PL at position INDEX.  If INDEX is
-  -1, then entries are appended to PL.  Any error is returned in
+  Add files under PATH to playlist PL.  Any error is returned in
   ERROR.  Returns the number of entries added to PL.
  */
 extern int play_list_add_recursive (PlayList *pl, const gchar *path,
-				    int index, GError **error);
+				    GError **error);
 
 extern void play_list_save_m3u (PlayList *self, const gchar *path);
-
-/** play_list_swap_pos:
-
-  Swap the positions of entries LEFT and RIGHT in playlist PL.  */
-extern void play_list_swap_pos (PlayList *pl, gint left, gint right);
 
 /** play_list_remove:
 
@@ -179,10 +182,10 @@ extern void play_list_clear (PlayList *pl);
   returned.  Any of SOURCE, UID, ARIST, TITLE, ALBUM, DURATION may be
   NULL to indicate don't cares.  The caller must free the returned
   strings.  */
-extern void play_list_get_info (PlayList *pl, gint index,
-				char **source, char **uid,
-				char **artist, char **title, char **album,
-				int *duration);
+extern void play_list_get_info (PlayList *pl, int index, int *uid,
+				char **source,
+				char **artist, char **album,
+				int *track, char **title, int *duration);
 
 #endif
 

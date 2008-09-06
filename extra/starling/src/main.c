@@ -109,7 +109,7 @@ playlist_add_cb (GtkWidget *w, Starling *st, GtkFileChooserAction action)
       {
 	GError *error = NULL;
 	char *file = i->data;
-        play_list_add_recursive (st->pl, file, -1, &error);
+        play_list_add_recursive (st->pl, file, &error);
 	if (error)
 	  {
 	    g_warning ("Reading %s: %s", file, error->message);
@@ -397,7 +397,7 @@ scale_update_cb (Starling *st)
 	char *artist;
 	char *title;
 	play_list_get_info (st->pl, -1,
-			    NULL, NULL, &artist, &title, NULL, NULL);
+			    NULL, NULL, &artist, NULL, NULL, &title, NULL);
 
 	st->enqueued = TRUE;
 	lastfm_enqueue (artist, title, total_seconds, st);
@@ -423,8 +423,8 @@ playlist_state_changed_cb (PlayList *pl, const GstState state, Starling *st)
       char *title_buffer;
       char *uri_buffer;
 
-      play_list_get_info (pl, -1, &uri_buffer, NULL,
-			  &artist_buffer, &title_buffer, NULL, NULL);
+      play_list_get_info (pl, -1, NULL, &uri_buffer,
+			  &artist_buffer, NULL, NULL, &title_buffer, NULL);
       char *uri = uri_buffer;
       if (! uri)
 	uri = "unknown";
