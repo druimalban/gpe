@@ -79,12 +79,9 @@ get_categories (GtkWidget *w)
 {
   GtkTreeIter iter;
   GtkListStore *list_store;
-  GSList *old_categories, *i;
   GSList *selected_categories = NULL;
 
   list_store = g_object_get_data (G_OBJECT (w), "list_store");
-
-  old_categories = gpe_pim_categories_list ();
 
   if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
     {
@@ -97,26 +94,6 @@ get_categories (GtkWidget *w)
           gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 0,
                               &selected, 1, &title, 2, &id, -1);
     
-            {
-              struct gpe_pim_category *c = NULL;
-    
-              for (i = old_categories; i; i = i->next)
-                {
-                  c = i->data;
-        
-                  if (c->id == id)
-                    break;
-                }
-    
-              if (i)
-                {
-                  old_categories = g_slist_remove_link (old_categories, i);
-                  g_slist_free (i);
-                }
-              else
-                selected = FALSE;	/* category was deleted by second party */
-            }
-    
           if (selected)
             selected_categories =
               g_slist_prepend (selected_categories, (gpointer) id);
@@ -124,8 +101,6 @@ get_categories (GtkWidget *w)
         }
       while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
     }
-
-  g_slist_free (old_categories);
 
   return selected_categories;
 }
@@ -143,15 +118,15 @@ populate_pim_categories_list (GtkWidget *w, GSList * selected_categories)
   gtk_list_store_clear(list_store);
   for (iter = list; iter; iter = iter->next)
     {
-      struct gpe_pim_category *c = iter->data;
+      gint id = (gint) iter->data;
       GtkTreeIter titer;
 
       gtk_list_store_append (list_store, &titer);
 
       gtk_list_store_set (list_store, &titer,
                           0, g_slist_find (selected_categories, 
-                                           (gpointer) c->id) ? TRUE : FALSE,
-                          1, c->name, 2, c->id, -1);
+                                           (gpointer)id) ? TRUE : FALSE,
+                          1, gpe_pim_category_name(id), 2, id, -1);
     }
     
   g_slist_free (list);

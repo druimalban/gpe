@@ -136,8 +136,8 @@ update_categories (void)
 
   for (iter = categories; iter; iter = iter->next)
     {
-      struct gpe_pim_category *c = iter->data;
-      gtk_simple_menu_append_item (GTK_SIMPLE_MENU (menu), c->name);
+      gint id = (gint) iter->data;
+      gtk_simple_menu_append_item (GTK_SIMPLE_MENU (menu), gpe_pim_category_name(id));
     }
 
   g_slist_free (categories);
@@ -744,12 +744,12 @@ selection_made (GtkTreeSelection *sel, GObject *o)
 }
 
 static gboolean
-match_for_search (struct contacts_person *p, const gchar *text, struct gpe_pim_category *cat)
+match_for_search (struct contacts_person *p, const gchar *text, gint catid)
 {
   gchar *fn;
   gchar *name;
   gchar *company;
-  if ((text == NULL) && (cat == NULL)) /* some speedup */
+  if ((text == NULL) && (catid == -1)) /* some speedup */
     return TRUE;
   
   if (text)
@@ -783,7 +783,7 @@ match_for_search (struct contacts_person *p, const gchar *text, struct gpe_pim_c
       if (company) g_free(company);
     }
 
-  if (cat)
+  if (catid != -1)
     {
       GSList *l;
       gboolean found = FALSE;
@@ -794,7 +794,7 @@ match_for_search (struct contacts_person *p, const gchar *text, struct gpe_pim_c
           if (!strcasecmp (v->tag, "CATEGORY") && v->value)
             {
               guint c = atoi (v->value);
-              if (c == cat->id)
+              if (c == catid)
                 {
                   found = TRUE;
                   break;
@@ -816,7 +816,6 @@ do_search (GObject *obj, GtkWidget *entry)
   guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
   gchar *cat_id = NULL;
   GSList *sel_entries = NULL, *iter = NULL;
-  struct gpe_pim_category *c = NULL;
   GtkTreePath *path;
 
   if (category)
@@ -826,8 +825,7 @@ do_search (GObject *obj, GtkWidget *entry)
 
       if (ll) 
         {
-          c = ll->data;
-          cat_id = g_strdup_printf("%u", c->id);
+          cat_id = g_strdup_printf("%u", (gint)ll->data);
         }
 
       g_slist_free (l);
@@ -871,7 +869,7 @@ do_find (void)
   guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
   gchar *cat_id = NULL;
   GSList *all_entries = NULL, *iter = NULL;
-  struct gpe_pim_category *c = NULL;
+  gint c = -1;
   GtkTreePath *path;
 
   if (category)
@@ -881,8 +879,8 @@ do_find (void)
 
       if (ll)
         {
-          c = ll->data;
-          cat_id = g_strdup_printf("%u", c->id);
+	  c = (gint)ll->data;
+          cat_id = g_strdup_printf("%u", c);
         }
 
       g_slist_free (l);

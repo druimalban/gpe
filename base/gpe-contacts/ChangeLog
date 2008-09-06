@@ -1,3 +1,13 @@
+2008-09-06  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (update_categories): Adapt to new gpe_pim_categories_list
+	Change match_for_search to receive category id instead of address.
+
+	* pimc-ui.c (populate_pim_categories_list): Adapt to new gpe_pim_categories_list
+
+	* main-hildon.c (update_categories): Adapt to new gpe_pim_categories_list
+	Change match_for_search to receive category id instead of address.
+
 2008-08-22  Phil Blundell  <pb@reciva.com>
 
 	* po/gpe-contacts.pot: Update.
