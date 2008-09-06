@@ -1,3 +1,7 @@
+2008-09-06  Phil Blundell  <pb@reciva.com>
+
+	* po/da.po: Update from TP.
+
 2008-08-13  Phil Blundell  <pb@reciva.com>
 
 	* configure.ac (ALL_LINGUAS): Auto-detect all PO files.
