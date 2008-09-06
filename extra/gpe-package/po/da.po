@@ -1,0 +1,274 @@
+# Danish translation of GPE-package.
+# Copyright (C) 2008 GPE.
+# This file is distributed under the same license as the gpe-package package.
+# Joe Hansen <joedalton2@yahoo.dk>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gpe-package-0.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-08-01 21:31+0200\n"
+"PO-Revision-Date: 2008-08-25 00:00+0000\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: main.c:45
+msgid "Unable to fork"
+msgstr "Kan ikke forgrene"
+
+#: interface.c:68
+msgid "Help for this application is not installed."
+msgstr "Hjælp til dette program er ikke installeret."
+
+#: interface.c:129
+msgid "/_File"
+msgstr "/_Fil"
+
+#: interface.c:130
+msgid "/File/_Install file"
+msgstr "/Fil/_Installationsfil"
+
+#: interface.c:131
+msgid "/_File/s1"
+msgstr "/_Fil/s1"
+
+#: interface.c:132
+msgid "/File/_Close"
+msgstr "/Fil/_Luk"
+
+#: interface.c:133
+msgid "/_Packages"
+msgstr "/_Pakker"
+
+#: interface.c:134
+msgid "/Packages/Show Insta_lled"
+msgstr "/Pakker/Vis insta_llerede"
+
+#: interface.c:135
+msgid "/Packages/Show _Not Installed"
+msgstr "/Pakker/Vis _ikke installerede"
+
+#: interface.c:136
+msgid "/_Packages/s2"
+msgstr "/_Pakker/s2"
+
+#: interface.c:137
+msgid "/Packages/_Search"
+msgstr "/Pakker/_Søg"
+
+#: interface.c:138 interface.c:143
+msgid "/_Packages/s3"
+msgstr "/_Pakker/s3"
+
+#: interface.c:139
+msgid "/Packages/Show _Info"
+msgstr "/Pakker/Vis _info"
+
+#: interface.c:140
+msgid "/_Packages/s4"
+msgstr "/_Pakker/S4"
+
+#: interface.c:141
+msgid "/Packages/_Update lists"
+msgstr "/Pakker/_Opdater lister"
+
+#: interface.c:142
+msgid "/Packages/Upgrade _System"
+msgstr "/Pakker/Opgrader _system"
+
+#: interface.c:144
+msgid "/Packages/_Apply"
+msgstr "/Pakker/_Anvende"
+
+#: interface.c:145
+msgid "/_Help"
+msgstr "/_Hjælp"
+
+#: interface.c:146
+msgid "/_Help/Index"
+msgstr "/_Hjælp/Indeks"
+
+#: interface.c:147
+msgid "/_Help/About"
+msgstr "/_Hjælp/Om"
+
+#: interface.c:198
+msgid "Package information"
+msgstr "Pakkeinformation"
+
+#: interface.c:241
+msgid "Working"
+msgstr "Arbejder"
+
+#: interface.c:288
+msgid "Reading packages list..."
+msgstr "Læser pakkeliste..."
+
+#: interface.c:294
+msgid "Updating package lists"
+msgstr "Opdater pakkeliste"
+
+#: interface.c:297
+msgid "Upgrading installed system"
+msgstr "Opgraderer systemet"
+
+#: interface.c:300
+msgid "Installing"
+msgstr "Installerer"
+
+#: interface.c:303
+msgid "Retrieving package information"
+msgstr "Henter pakkeinformation"
+
+#: interface.c:306
+msgid "Working..."
+msgstr "Arbejder..."
+
+#: interface.c:402
+msgid "Updating views, please wait..."
+msgstr "Opdaterer visninger, vent venligst..."
+
+#: interface.c:518
+msgid "Search term:"
+msgstr "Søgeterm:"
+
+#: interface.c:529
+msgid "Regular expression"
+msgstr "Regulært udtryk"
+
+#: interface.c:633
+msgid "Command finished. Please check log messages for errors."
+msgstr "Kommando afsluttet. Tjek venligst logbeskeder for fejl."
+
+#: interface.c:653
+msgid "Package selection was changed. Really exit?"
+msgstr "Pakkevalg blev ændret. Forlad?"
+
+#: interface.c:682
+msgid "IPKG backend failure, cannot continue."
+msgstr "IPKG-bagende fejl, kan ikke fortsætte."
+
+#: interface.c:689
+msgid "Communication error, cannot continue."
+msgstr "Kommunikationsfejl, kan ikke fortsætte."
+
+#: interface.c:703
+msgid ""
+"An error occurred.\n"
+"Please consult the message log\n"
+"for hints what went wrong."
+msgstr ""
+"En fejl opstod.\n"
+"Konsulter venligst beskedloggen\n"
+"For ideer om hvad der gik galt."
+
+#: interface.c:789
+msgid "The selected file could not be accessed."
+msgstr "Den valgte fil kunne ikke tilgås."
+
+#: interface.c:900
+msgid "Make sure your internet connection is up or your update source is available and press OK to continue."
+msgstr "Vær sikker på at din internetforbindelse kører eller din opdateringskilde er tilgængelig og tast så o.k. for at fortsætte."
+
+#: interface.c:916
+msgid "Some packages could not be updated, please check your configuration."
+msgstr "Nogle pakker kunne ikke opdateres, tjek venligst din konfiguration."
+
+#: interface.c:919
+msgid "System updated sucessfully."
+msgstr "System opdateret."
+
+#: interface.c:945
+msgid "Some lists could not be updated, please check your configuration."
+msgstr "Nogle lister kunne ikke opdateres, tjek venligst din konfiguration."
+
+#: interface.c:948
+msgid "Package lists updated successfully."
+msgstr "Pakkelister blev opdateret."
+
+#: interface.c:961
+msgid "changes could not be applied."
+msgstr "ændringer kunne ikke gennemføres."
+
+#: interface.c:965
+msgid "Packages installed sucessfully."
+msgstr "Pakker blev installeret."
+
+#: interface.c:1060 gpe-package.desktop.in.h:2
+msgid "Package Manager"
+msgstr "Pakkehåndtering"
+
+#: interface.c:1104
+msgid "List"
+msgstr "Liste"
+
+#: interface.c:1109
+msgid "Package List"
+msgstr "Pakkeliste"
+
+#: interface.c:1135
+msgid "Inst."
+msgstr "Inst."
+
+#: interface.c:1145 feededit.c:129 feededit.c:363
+msgid "Name"
+msgstr "Navn"
+
+#: interface.c:1158
+msgid "Messages"
+msgstr "Beskeder"
+
+#: interface.c:1163
+msgid "Messages Log"
+msgstr "Beskedlog"
+
+#: interface.c:1173
+msgid "This window shows all messages from the packet manager."
+msgstr "Dette vindue viser alle beskeder fra pakkehåndteringen."
+
+#: interface.c:1180
+msgid "Feeds"
+msgstr "Feed"
+
+#: filechooser.c:44 filechooser.c:63
+msgid "Choose packages"
+msgstr "Vælg pakker"
+
+#: feededit.c:99
+msgid "Could not open"
+msgstr "Kunne ikke åbne"
+
+#: feededit.c:100
+msgid "for writing."
+msgstr "til skrivning."
+
+#: feededit.c:120
+msgid "Feed Properties"
+msgstr "Feed-egenskaber"
+
+#: feededit.c:134
+msgid "Location (URL)"
+msgstr "Sted (URL)"
+
+#: feededit.c:139
+msgid "Compressed"
+msgstr "Pakket"
+
+#: feededit.c:242
+msgid "Delete selected feed?"
+msgstr "Slet valgte feed?"
+
+#: feededit.c:331
+msgid "Package Feeds"
+msgstr "Pakke-feed"
+
+#: feededit.c:372
+msgid "Location"
+msgstr "Sted"
+
+#: gpe-package.desktop.in.h:1
+msgid "Install and update packages"
+msgstr "Installer og opdater pakker"
