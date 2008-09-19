@@ -1,6 +1,6 @@
 /*
- *
  * gpe-mini-browser2 v0.0.1
+ *
  * - Basic web browser for GPE and small screen GTK devices based on WebKitGtk -
  * - This file contains the browser wide includes
  *
@@ -35,13 +35,14 @@ GList *tab_list; /* the list that contains the tabs */
 
 extern bool kiosk_mode; /*global boolean for kiosk mode */
 extern bool smallscreen;
+extern bool active_pbar; /* announce active pbar, to avoid several loading bars */
 
 GtkToolItem *stop_reload_button;
 
-#if 0
-struct browser_window
+struct status_box
 {
   WebKitWebView* web_view;
-  GtkWidget *url_entry;
+  bool pbar_exists;
+  GtkWidget *statusbox; /* contains the progressbar */
+  GtkWidget *pbar; /* progressbar */
 };
-#endif

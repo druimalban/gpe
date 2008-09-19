@@ -47,6 +47,7 @@
 
 bool kiosk_mode = FALSE; /*global boolean for kiosk mode */
 bool smallscreen = FALSE;
+bool active_pbar = FALSE;
 
 struct gpe_icon my_icons[] = {
   {"gpe-mini-browser-icon", PREFIX "/share/pixmaps/gpe-mini-browser2.png"},
@@ -114,7 +115,7 @@ int main (int argc, char *argv[])
   gtk_box_pack_start (GTK_BOX (main_window_vbox), create_urlbar(), FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (main_window_vbox), create_tabs(), TRUE, TRUE, 0);
 
-  /* load command line url if there is one */
+  /* load command line url if there is one, otherwise load google */
   gchar *url = (gchar*) (argc != optind ? argv[optind] : "http://www.google.com/");
   webkit_web_view_open (web_view, parse_url(url));
 

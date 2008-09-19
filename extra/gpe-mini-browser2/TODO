@@ -1,46 +1,17 @@
 TODO:
 
-* improve progressbar display
-* some sort of status indication if clicking on links with infoprint or equivalent
-* categories to order bookmarks & bookmark sort
-* Hide bookmarks behind a description
-* Download file option (wget ?)
-* bookmarks integration with gpe-contacts
-* strip -s gpe-mini-browser on install
-* Split main header file to better represent the functions available in the files
-* Create NOWRITE option
+* Download manager
+* Statusbar
+* Better load/reload behaviour (more tab specific)
+* Preferences
+* History
+* Bookmarks
 
 DONE:
 
-* add javascript support
-* pop-up progress window at the bottom of the screen
-* "normal" url window for big screens
-* window title set to identify website
-* add zoom in/out buttons if bigger screen or in landscape mode
-* add hildon interface support (Nokia 770)
-* two fullscreen modes
-* remove exit button
-* moved to new GTK toolbar/toolitem API (allows to get to buttons that might be off-screen)
-* hybrid stop/reload button (there is space now for a bookmarks button)
-* hiding of url-bar in Hildon/ big-screen mode
-* bookmarks 
-* bookmarks with Hildon interface
-* zoom buttons in small-screen interface
-* alternating background color for the bookmarks
-* GtkEntryCompletion
-* history (special case of bookmarks)
-* default optimisation for size and use -Wall to identify possible problems
-* ability to set home page from bookmarks
-* Move all created file to ~/.gpe/gpe-mini-browser instead of ~/.gpe
-* Put application specific info in the install file (document --disable-bookmarks and --enable-hildon)
-* config file to keep zoom/font settings 
-* create configuration screen
-* history management (clean up history, button to remove it, avoid doubles (well most :-))
-* support multiple windows
+* Gtk/Webkit backend
+* Tabs!
+* Window title bar updates according to the current tab in focus
+* Avoid long titles in tabs to allow for more tabs on small screens, and at the
+  same time avoiding they get too small.
 
-POSTPONED / PARTIALLY DONE:
-
-* switch rendering method according to screen size (requested by Florian)
--> provisions are in the code, however not yet implemented in gtk-webcore
-* cookie support. Working cookie support is in. However gtk-webcore does not handle
-  them gracefully yet.

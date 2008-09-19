@@ -70,6 +70,7 @@ void load_start_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
                                 "gtk-stop");
   gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (stop_reload_button),
                                    NULL);
+  
 }
 
 void load_stop_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
@@ -79,11 +80,13 @@ void load_stop_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
                                 "gtk-refresh");
   gtk_tool_button_set_icon_widget (GTK_TOOL_BUTTON (stop_reload_button),
                                    NULL);
+  active_pbar = FALSE;
 }
 
 void load_cb (WebKitWebView* page, WebKitWebFrame* frame, gpointer data)
 {
   const gchar *url = webkit_web_frame_get_uri(frame);
+
   if (url)
       gtk_entry_set_text (GTK_ENTRY (url_entry), url);
 }
@@ -102,7 +105,7 @@ void load_text_entry_cb (GtkWidget* widget, gpointer data)
   const gchar *url = gtk_entry_get_text (GTK_ENTRY (url_entry));
   if (!strcmp(url,"about:"))
   {
-     gpe_info_dialog (("GPE mini-browser v0.0.1\n\nHTML engine : WebKitGtk \n\nCopyright (c) Philippe De Swert\n<philippedeswert@scarlet.be>\n"));
+     gpe_info_dialog (("GPE mini-browser v0.0.1\n\nHTML engine : WebKitGtk \n\nCopyright (c)  2008 \n\nPhilippe De Swert\n<philippedeswert@scarlet.be>\n"));
       return;
 
   }
@@ -139,17 +142,28 @@ void stop_reload_cb (GtkWidget* widget, gpointer data)
 
 void progress_changed_cb (WebKitWebView* page, gint progress, gpointer data)
 {
-
+//  if(active_pbar)
+//    gtk_progress_bar_set_fraction ((GtkProgressBar *) pbar, (double) progress/100);
 }
 
 void title_changed_cb (WebKitWebView* web_view, WebKitWebFrame* web_frame, const gchar* title, gpointer data)
 {
  GtkWidget * label;
-
- label = gtk_label_new(title);
+ gchar *title2 = malloc(sizeof(char) * 26);
+ 
 #ifdef DEBUG
  printf("title = %s\n", title);
 #endif /* DEBUG */
+ strncpy (title2, title, 25);
+ title2[25] = '\0';
+ label = gtk_label_new(title2);
+#ifdef DEBUG
+ printf("title = %s\n", title2);
+#endif /* DEBUG */
+ title = g_strconcat(title, " - mini-browser2", NULL);
+ gtk_window_set_title(GTK_WINDOW(main_window), title);
+ g_free(title2);
+ 
  gtk_notebook_set_tab_label(notebook, gtk_notebook_get_nth_page(notebook,  gtk_notebook_get_current_page(notebook)), label);
 }
 
@@ -242,7 +256,16 @@ void update_tab_data_cb (GtkNotebook* notebook, GtkNotebookPage* page, guint tab
 
   const gchar *url = webkit_web_frame_get_uri(frame);
   if (url)
-      gtk_entry_set_text (GTK_ENTRY (url_entry), url);  
+      gtk_entry_set_text(GTK_ENTRY (url_entry), url);  
+  else
+      gtk_entry_set_text(GTK_ENTRY (url_entry), " ");
+  url = webkit_web_frame_get_title(frame);
+  if (url)
+  {
+     url = g_strconcat(url, " - mini-browser2", NULL);
+     gtk_window_set_title(GTK_WINDOW(main_window), url);
+  }
+  g_free((gpointer *)url);
 }
 
 void browser_quit_cb (GtkWidget* widget, gpointer data)

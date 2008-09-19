@@ -1,5 +1,16 @@
 GPE-mini-browser2 v0.0.1
 
+- 09/08/2008 - Philippe De Swert
+
+* TODO:
+	- TODO updated for gpe-mini-browser2, replaced copy from gpe-mini-browser
+* src/ui.c:
+* src/main.c:
+	- Updated comments to reflect reality
+* src/ui-callbacks.c:
+	- Update title on the main window depending on the selected tab
+	- Keep tab titles short enough so we can have more tabs on a small screen
+
 - 30/07/2008 - Philippe De Swert
 
 * src/ui.c:

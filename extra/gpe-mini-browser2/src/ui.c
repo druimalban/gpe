@@ -149,7 +149,7 @@ GtkWidget * create_urlbar(void)
   return (urlbox);
 }
 
-GtkWidget* create_htmlview(void)
+GtkWidget * create_htmlview(void)
 {
   GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -157,12 +157,12 @@ GtkWidget* create_htmlview(void)
   web_view = WEBKIT_WEB_VIEW (webkit_web_view_new ());
   gtk_container_add (GTK_CONTAINER (scrolled_window), GTK_WIDGET (web_view));
 
-  g_signal_connect (G_OBJECT (web_view), "title-changed", G_CALLBACK (title_changed_cb), web_view);
-  g_signal_connect (G_OBJECT (web_view), "load-progress-changed", G_CALLBACK (progress_changed_cb), web_view);
-  g_signal_connect (G_OBJECT (web_view), "load-committed", G_CALLBACK (load_cb), web_view);
-  g_signal_connect (G_OBJECT (web_view), "load-started", G_CALLBACK (load_start_cb), web_view);
-  g_signal_connect (G_OBJECT (web_view), "load-finished", G_CALLBACK (load_stop_cb), web_view);
-  g_signal_connect (G_OBJECT (web_view), "hovering-over-link", G_CALLBACK (link_hover_cb), web_view);
+  g_signal_connect (G_OBJECT (web_view), "title-changed", G_CALLBACK (title_changed_cb), scrolled_window);
+  g_signal_connect (G_OBJECT (web_view), "load-progress-changed", G_CALLBACK (progress_changed_cb), scrolled_window);
+  g_signal_connect (G_OBJECT (web_view), "load-committed", G_CALLBACK (load_cb), scrolled_window);
+  g_signal_connect (G_OBJECT (web_view), "load-started", G_CALLBACK (load_start_cb), scrolled_window);
+  g_signal_connect (G_OBJECT (web_view), "load-finished", G_CALLBACK (load_stop_cb), scrolled_window);
+  g_signal_connect (G_OBJECT (web_view), "hovering-over-link", G_CALLBACK (link_hover_cb), scrolled_window);
 
   return scrolled_window;
 }
@@ -176,6 +176,7 @@ GtkWidget * create_tabs(void)
   gtk_notebook_set_show_tabs(notebook, FALSE);
   /* evaluate if we want homogeneous tabs. Also the function
      is deprecated so we might run into issues.  
+     Might be a bad idea with websites with very long titles.
   */
   gtk_notebook_set_homogeneous_tabs(notebook, TRUE);
   gtk_container_add(GTK_CONTAINER(notebook), create_htmlview());
@@ -191,3 +192,22 @@ GtkWidget * create_tabs(void)
 
   return GTK_WIDGET(notebook);
 }
+
+GtkWidget * create_statusbar(GtkWidget *tabwindow)
+{
+    GtkWidget *statusbox, *pbar, *label;
+
+    statusbox = gtk_hbox_new (FALSE, 0);
+    pbar = gtk_progress_bar_new ();
+    label = gtk_label_new ("loading");
+
+    gtk_box_pack_end (GTK_BOX (tabwindow), statusbox, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (statusbox), label, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (statusbox), GTK_WIDGET (pbar), FALSE, FALSE, 0);
+
+    gtk_widget_show (statusbox);
+    gtk_widget_show (GTK_WIDGET (pbar));
+    gtk_widget_show (label);
+
+    return statusbox;
+} 
