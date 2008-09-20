@@ -83,6 +83,9 @@ struct _MusicDB
   GQueue *meta_data_reader_pending;
   /* The idle handler.  */
   guint meta_data_reader;
+
+  /* The idle handler.  */
+  guint fs_scanner;
 };
 
 static void music_db_dispose (GObject *obj);
@@ -159,6 +162,9 @@ music_db_finalize (GObject *object)
   if (db->meta_data_reader)
     g_source_remove (db->meta_data_reader);
 
+  if (db->fs_scanner)
+    g_source_remove (db->fs_scanner);
+
   if (db->meta_data_reader_pending)
     {
       char *d;
@@ -224,6 +230,38 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 	       NULL, NULL, NULL);
 }
 
+struct fs_scanner
+{
+  MusicDB *db;
+  sqlite *sqliteh;
+};
+
+/* Forward.  */
+static gboolean fs_scanner (gpointer data);
+
+static int
+busy_handler (void *cookie, const char *table, int retries)
+{
+  /* If this is the main thread, then we'd like to recursively invoke
+     the main loop, however, not everything is reentrant so...  */
+
+  if (retries > 4)
+    retries = 4;
+
+  /* In milliseconds.  */
+  int timeout = 100 << (retries - 1);
+
+  /* Sleep and then try again.  */
+  struct timespec ts;
+  ts.tv_nsec = (timeout % 1000) * (1000000ULL);
+  ts.tv_sec = timeout / 1000;
+
+  nanosleep (&ts, &ts);
+
+  return 1;
+}
+
+
 MusicDB *
 music_db_open (const char *file, GError **error)
 {
@@ -238,6 +276,8 @@ music_db_open (const char *file, GError **error)
       sqlite_freemem (err);
       goto error;
     }
+
+  sqlite_busy_handler (db->sqliteh, busy_handler, NULL);
 
   /* Get the DB's version.  */
   sqlite_exec (db->sqliteh,
@@ -279,6 +319,24 @@ music_db_open (const char *file, GError **error)
 	goto generic_error;
     }
 
+  err = NULL;
+  sqlite *sqliteh = sqlite_open (file, 0, &err);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      g_free (err);
+    }
+  else
+    {
+      sqlite_busy_handler (db->sqliteh, busy_handler, NULL);
+
+      struct fs_scanner *fs = calloc (sizeof (*fs), 1);
+      fs->db = db;
+      fs->sqliteh = sqliteh;
+
+      db->fs_scanner = g_idle_add (fs_scanner, fs);
+    }
+
   return db;
 
  generic_error:
@@ -318,6 +376,64 @@ music_db_count (MusicDB *db)
 
   return db->count;
 }
+
+/* Forward.  */
+static int music_db_add_recursive_internal (MusicDB *db, sqlite *sqliteh,
+					    const gchar *path,
+					    GError **error);
+
+static gpointer
+fs_scanner_thread (gpointer data)
+{
+  struct fs_scanner *fs = data;
+  MusicDB *db = MUSIC_DB (fs->db);
+  sqlite *sqliteh = fs->sqliteh;
+
+  GQueue *q = g_queue_new ();
+
+  int cb (void *arg, int argc, char **argv, char **names)
+  {
+    g_queue_push_tail (q, g_strdup (argv[0]));
+    return 0;
+  }
+
+  char *err = NULL;
+  sqlite_exec_printf (sqliteh, "select (filename) from dirs;",
+		      cb, NULL, &err);
+  if (err)
+    {
+      g_debug ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+    }
+
+  while (! g_queue_is_empty (q))
+    {
+      char *filename = g_queue_pop_head (q);
+      music_db_add_recursive_internal (db, sqliteh, filename, NULL);
+      g_free (filename);
+    }
+
+  g_queue_free (q);
+
+  sqlite_close (sqliteh);
+  g_free (fs);
+
+  return NULL;
+}
+
+/* Idle function which is called when meta data should be read.  */
+static gboolean
+fs_scanner (gpointer data)
+{
+  struct fs_scanner *fs = data;
+  MusicDB *db = MUSIC_DB (fs->db);
+  db->fs_scanner = 0;
+
+  g_thread_create (fs_scanner_thread, fs, FALSE, NULL);
+
+  return false;
+}
+
 
 /* Idle function which is called when meta data should be read.  */
 static gboolean
@@ -452,7 +568,8 @@ meta_data_reader (gpointer data)
 }
 
 static void
-music_db_add (MusicDB *db, char *sources[], int count, GError **error)
+music_db_add (MusicDB *db, sqlite *sqliteh,
+	      char *sources[], int count, GError **error)
 {
   /* Ignore any entries that do already exist in the DB.  */
   char *s[count];
@@ -467,7 +584,7 @@ music_db_add (MusicDB *db, char *sources[], int count, GError **error)
       }
 
       char *err = NULL;
-      int ret = sqlite_exec_printf (db->sqliteh,
+      int ret = sqlite_exec_printf (sqliteh,
 				    "select * from files"
 				    "  where source = '%q';",
 				    source_exists, NULL, &err,
@@ -490,7 +607,7 @@ music_db_add (MusicDB *db, char *sources[], int count, GError **error)
 
 
   char *err = NULL;
-  sqlite_exec (db->sqliteh, "begin transaction;",
+  sqlite_exec (sqliteh, "begin transaction;",
 	       NULL, NULL, &err);
   if (err)
     {
@@ -501,13 +618,13 @@ music_db_add (MusicDB *db, char *sources[], int count, GError **error)
 
   for (i = 0; i < total; i ++)
     {
-      sqlite_exec_printf (db->sqliteh,
+      sqlite_exec_printf (sqliteh,
 			  "insert into files (source) values ('%q');",
 			  NULL, NULL, &err, s[i]);
       if (err)
 	break;
 
-      int uid = sqlite_last_insert_rowid (db->sqliteh);
+      int uid = sqlite_last_insert_rowid (sqliteh);
 
       if (db->count != -1)
 	db->count ++;
@@ -531,7 +648,7 @@ music_db_add (MusicDB *db, char *sources[], int count, GError **error)
     }
 
   if (! err)
-    sqlite_exec (db->sqliteh,
+    sqlite_exec (sqliteh,
 		 "commit transaction;", NULL, NULL, &err);
 
   if (err)
@@ -539,7 +656,7 @@ music_db_add (MusicDB *db, char *sources[], int count, GError **error)
       g_set_error (error, ERROR_DOMAIN (), 0, "%s", err);
       sqlite_freemem (err);
 
-      sqlite_exec (db->sqliteh,
+      sqlite_exec (sqliteh,
 		   "rollback transaction;", NULL, NULL, NULL);
 
       return;
@@ -616,11 +733,12 @@ void
 music_db_add_uri (MusicDB *db, const char *uri, GError **error)
 {
   char *sources[1] = { (char *) uri };
-  music_db_add (db, sources, 1, error);
+  music_db_add (db, db->sqliteh, sources, 1, error);
 }
 
-void
-music_db_add_file (MusicDB *db, const gchar *file, GError **error)
+static void
+music_db_add_file_internal (MusicDB *db, sqlite *sqliteh,
+			    const gchar *file, GError **error)
 {
 #define P "file://"
   char source[sizeof (P) + strlen (file)];
@@ -630,7 +748,13 @@ music_db_add_file (MusicDB *db, const gchar *file, GError **error)
   /* XXX: We need to escape this!  Filenames with '%' will silently
      fail.  */
   char *sources[1] = { source };
-  music_db_add (db, sources, 1, error);
+  music_db_add (db, sqliteh, sources, 1, error);
+}
+
+void
+music_db_add_file (MusicDB *db, const gchar *file, GError **error)
+{
+  music_db_add_file_internal (db, db->sqliteh, file, error);
 }
 
 static int
@@ -652,7 +776,8 @@ has_audio_extension (const char *filename)
 }
 
 static int
-music_db_add_recursive_internal (MusicDB *db, const gchar *path, GError **error)
+music_db_add_recursive_internal (MusicDB *db, sqlite *sqliteh,
+				 const gchar *path, GError **error)
 {
   int count = 0;
   GDir *dir = g_dir_open (path, 0, NULL);
@@ -663,7 +788,8 @@ music_db_add_recursive_internal (MusicDB *db, const gchar *path, GError **error)
 	{
 	  char *filename = g_strdup_printf ("%s/%s", path, file);
 	  GError *tmp_error = NULL;
-	  count += music_db_add_recursive_internal (db, filename, &tmp_error);
+	  count += music_db_add_recursive_internal (db, sqliteh,
+						    filename, &tmp_error);
 	  g_free (filename);
 	  if (tmp_error)
 	    {
@@ -699,7 +825,7 @@ music_db_add_recursive_internal (MusicDB *db, const gchar *path, GError **error)
 
   if (has_audio_extension (path))
     /* Ignore files that do not appear to be audio files.  */
-    music_db_add_file (db, path, error);
+    music_db_add_file_internal (db, sqliteh, path, error);
 
   return 1;
 }
@@ -711,7 +837,6 @@ music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
      then don't add PATH.  */
   int exists (void *arg, int argc, char **argv, char **names)
   {
-    printf ("%s matches %s\n", path, argv[0]);
     return 1;
   }
 
@@ -719,7 +844,7 @@ music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
   int ret = sqlite_exec_printf (db->sqliteh,
 				"select * from dirs"
 				/* PATH is a prefix of FILENAME.  */
-				"  where '%q/' GLOB filename || '*';",
+				"  where '%q/' GLOB filename || '/*';",
 				exists, NULL, &err, path);
   if (ret == 0)
     /* Directory does not exist, add it.  Delete any entries for which
@@ -727,8 +852,8 @@ music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
     {
       char *err = NULL;
       sqlite_exec_printf (db->sqliteh,
-			  "delete from dirs where filename GLOB '%q/*';"
-			  "insert into dirs (filename) values ('%q/');",
+			  "delete from dirs where filename || '/' GLOB '%q/*';"
+			  "insert into dirs (filename) values ('%q');",
 			  NULL, NULL, &err, path, path);
       if (err)
 	{
@@ -742,7 +867,7 @@ music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
       sqlite_freemem (err);
     }
 
-  return music_db_add_recursive_internal (db, path, error);
+  return music_db_add_recursive_internal (db, db->sqliteh, path, error);
 }
 
 void

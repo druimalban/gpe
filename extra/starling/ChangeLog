@@ -1,5 +1,27 @@
 2008-09-20  Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (struct _MusicDB): Add field fs_scanner.
+	(music_db_finalize): If DB->FS_SCANNER is not 0, remove the
+	source.
+	(struct fs_scanner): New structure.
+	(busy_handler): New function.
+	(music_db_open): Set DB->SQLITEH's busy handler to it.  Set up an
+	idle call back to fs_scanner.  Allocate an extra sqlite instance
+	for it.
+	(fs_scanner_thread): New function.
+	(fs_scanner): Likewise.
+	(music_db_add): Take additional parameter sqliteh.  Use it instead
+	of DB->SQLITEH.  Update callers.
+	(music_db_add_file): Move body of this function to...
+	(music_db_add_file_internal): ... this new function.
+	(music_db_add_file): Implement in terms of the new function.
+	(music_db_add_recursive_internal): Take additional parameter
+	sqliteh.  Use it instead of DB->SQLITEH.  Update callers.
+	(music_db_add_recursive): Don't append a '/' to PATH when
+	inserting in the database.  Update path matching code accordingly.
+
+2008-09-20  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_add_recursive): Move body of
 	functionality from here...
 	(music_db_add_recursive_internal): ... to this new function.
@@ -9,7 +31,7 @@
 	a filename that dominates it) is not already there.  Remove any
 	filenames that PATH dominates.
 
-2008-09-20  Walfield  <neal@gnu.org>
+2008-09-20  Neal H. Walfield  <neal@gnu.org>
 
 	* config.h: Restore file.  Only define CONFIGDIR.
 	* src/starling.h: Don't include <libintl.h>.
@@ -22,7 +44,7 @@
 	* src/starling.c (CONFIG_FILE): Define.
 	* src/lastfm.c: Include "starling.h".
 
-2008-09-19  Walfield  <neal@gnu.org>
+2008-09-19  Neal H. Walfield  <neal@gnu.org>
 
 	Split playlist.c into playlist.c, musicdb.c, player.c and
 	starling.c.  Move main.c and config.c into starling.c.
