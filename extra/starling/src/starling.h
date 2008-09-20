@@ -25,11 +25,6 @@
 #include <glib-object.h>
 #include <stdbool.h>
 
-#include <libintl.h>
-#define _(String)   String
-#define gettext_noop(String)    String
-#define N_(String)  gettext_noop(String)
-
 typedef struct _Starling Starling;
 
 /** starling_new:

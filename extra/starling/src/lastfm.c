@@ -21,6 +21,7 @@
 #include "config.h"
 #include "md5.h"
 #include "errorbox.h"
+#include "starling.h"
 #include <time.h>
 
 #define TABLE_NAME "lastfm"

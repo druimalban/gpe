@@ -195,6 +195,8 @@ starling_set_sink (Starling *st, char *sink)
   player_set_sink (st->player, sink);
 }
 
+#define CONFIG_FILE "starlingrc"
+
 #define KEYRANDOM "random"
 #define KEYLASTPATH "last-path"
 #define KEYSINK "sink"
