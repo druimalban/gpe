@@ -1,3 +1,203 @@
+2008-09-19  Walfield  <neal@gnu.org>
+
+	Split playlist.c into playlist.c, musicdb.c, player.c and
+	starling.c.  Move main.c and config.c into starling.c.
+	* src/playlist.h: Include "musicdb.h".
+	(struct _PlayListClass): Remove fields new_stream_signal_id,
+	deleted_stream_signal_id, cleared_signal_id, swap_signal_id,
+	state_changed_signal_id, and eos_signal_id.
+	(play_list_open): Move declaration from here...
+	* src/musicdb.h (music_db_open): ... to this file.  Update users.
+	* src/playlist.h (play_list_new): New declaration.
+	(play_list_set_random): Move declaration from here...
+	* src/starling.h (starling_random_set): ... to here.
+	* src/playlist.h (play_list_get_random): Move declaration from
+	here...
+	* src/starling.h (starling_random): ... to here.
+	* src/playlist.h (play_list_play): Move declaration from here...
+	* src/player.h (player_play): ... to here.
+	* src/playlist.h (play_list_pause): Move declaration from here...
+	* src/player.h (player_pause): ... to here.
+	* src/playlist.h (play_list_unpause): Move declaration from
+	here...
+	* src/player.h (player_unpause): ... to here.
+	* src/playlist.h (play_list_play_pause_toggle): Move declaration
+	from here...
+	* src/player.h (player_play_pause_toggle): ... to here.
+	* src/playlist.h (play_list_next): Move declaration from here...
+	* src/starling.h (starling_next): ... to here.
+	* src/playlist.h (play_list_prev): Move declaration from here...
+	* src/starling.h (starling_prev): ... to here.
+	* src/playlist.h (play_list_seek): Move declaration from here...
+	* src/starling.h (player_seek): ... to here.
+	* src/playlist.h (play_list_query_position): Move declaration from
+	here...
+	* src/starling.h (player_query_position): ... to here.
+	* src/playlist.h (play_list_query_duration): Move declaration from
+	here...
+	* src/starling.h (player_query_duration): ... to here.
+	* src/playlist.h (play_list_add_m3u): Move declaration from
+	here...
+	* src/musicdb.h (music_db_add_m3u): ... to here.
+	* src/playlist.h (play_list_add_uri): Move declaration from
+	here...
+	* src/musicdb.h (music_db_add_uri): ... to here.
+	* src/playlist.h (play_list_add_file): Move declaration from
+	here...
+	* src/musicdb.h (music_db_add_file): ... to here.
+	* src/playlist.h (play_list_add_recursive): Move declaration from
+	here...
+	* src/musicdb.h (music_db_add_recursive): ... to here.
+	* src/playlist.h (play_list_remove): Move declaration from
+	here...
+	* src/musicdb.h (music_db_remove): ... to here.
+	* src/playlist.c: Don't include "cache.h".  Include "musicdb.h".
+	(struct info_cache_entry, info_cache_evict, info_cache)
+	(info_cache_constructor): Move from here...
+	* src/musicdb.c: ... to this new file.
+	* src/playlist.c (struct _PlayList): Remove fields sqliteh,
+	playbin, last_state, random, meta_data_reader,
+	meta_data_reader_pending.  Add fields db, new_entry_signal_id
+	changed_entry_signal_id, deleted_entry_signal_id,
+	cleared_signal_id, reschedule_timeout, and reschedule_requests.
+	(play_list_class_init): Move initialization for "state-changed"
+	and "eos" signals from here...
+	* src/player.c (player_class_init): ... to here.
+	* src/playlist.c (play_list_init): Move gstreamer initialization
+	from here...
+	* src/player.c (player_init): ... to here.
+	* src/playlist.c (play_list_dispose): Disconnect the signal
+	handlers connected to PL->DB.  Remove any reschedule timeout.
+	Unref PL->DB.
+	(play_list_finalize): Move meta-data clean up, sqlite clean up and
+	playbin clean up from here...
+	* src/player.c (music_db_finalize): ... to here.
+	* src/playlist.c (play_list_idx_uid_refresh): Move functionality
+	from this function...
+	(do_refresh): ... to this new function.  Only execute if
+	PL->RESCHEDULE_REQUEST is less than or equal to 10.  If so, divide
+	by 2 and then return scheduling another call.  Don't access the
+	database directly, instead use music_db_for_each.  Update
+	PL->COUNT correctly.  Clear PL->RESCHEDULE_TIMEOUT and
+	PL->RESCHEDULE_REQUESTS.
+	(play_list_idx_uid_refresh): Schedule a call to do_refresh.  Take
+	additional parameter now.  If true, refresh immediately otherwise,
+	do so lazily.
+	(parse_tags): Move from here...
+	* src/musicdb.c (parse_tags): ... to here.  Don't access database
+	directly, instead call music_db_set_info_from_tags.
+	* src/playlist.c (play_list_bus_cb): Move from here...
+	* src/player.c (player_bus_cb): ... to here.  On tag availability,
+	emit a "tags" signal.  Update "state-changed" and "eos" signal
+	invocations.
+	* src/playlist.c (new_entry): New function.
+	(changed_entry): Likewise.
+	(deleted_entry): Likewise.
+	(cleared): Likewise.
+	(play_list_create_table): Move from here...
+	* src/musicdb.c (music_db_create_table): ... to here.
+	* src/playlist.c (play_list_open): Move from here...
+	* src/musicdb.c (music_db_open): ... to here.  Don't create the
+	config table.
+	* src/playlist.c (playbin_ensure): Move from here...
+	* src/player.c (playbin_ensure): ... to here.
+	* src/playlist.c (play_list_set_sink): Move from here...
+	* src/player.c (player_set_sink): ... to here.
+	* src/playlist.c (play_list_new): New function.
+	(play_list_set_random): Remove function.
+	(play_list_get_random): Likewise.
+	* src/playlist.c (playlist_play): Move from here...
+	* src/starling.c (starling_play): ... to here.  Take a Starling *,
+	not a Playlist *.  Change to use player_set_source and
+	player_play.
+	* src/playlist.c (play_list_pause): Move from here...
+	* src/starling.c (player_pause): ... to here.
+	* src/playlist.c (play_list_unpause): Move from here...
+	* src/starling.c (player_unpause): ... to here.
+	* src/playlist.c (play_list_play_pause_toggle): Move from here...
+	* src/starling.c (player_play_pause_toggle): ... to here.
+	* src/playlist.c (play_list_playing): Move from here...
+	* src/starling.c (player_playing): ... to here.
+	* src/playlist.c (do_goto): Move body from here...
+	(play_list_goto): ... to here.  Don't start playing.
+	* src/playlist.c (play_list_random_next): Move from here...
+	* src/starling.c (do_random_next): ... to here.
+	* src/playlist.c (play_list_next): Move from here...
+	* src/starling.c (starling_next): ... to here.
+	* src/playlist.c (play_list_prev): Move from here...
+	* src/starling.c (starling_prev): ... to here.
+	* src/playlist.c (play_list_seek): Move from here...
+	* src/starling.c (player_seek): ... to here.
+	* src/playlist.c (play_list_query_position): Move from here...
+	* src/starling.c (player_query_position): ... to here.
+	* src/playlist.c (play_list_query_duration): Move from here...
+	* src/starling.c (player_query_duration): ... to here.
+	* src/playlist.c (meta_data_reader): Move from here...
+	* src/musicdb.c (meta_data_reader): ... to here.  When tags are
+	available, call music_db_set_info_from_tags to save the tags.
+	* src/playlist.c (play_list_add): Move from here...
+	* src/musicdb.c (music_db_add): ... to here.  Don't update the
+	model.  Instead, emit a "new-entry" signal.
+	* src/playlist.c (play_list_add_m3u): Move from here...
+	* src/musicdb.c (music_db_add_m3u): ... to here.
+	* src/playlist.c (play_list_add_uri): Move from here...
+	* src/musicdb.c (music_db_add_uri): ... to here.
+	* src/playlist.c (play_list_add_file): Move from here...
+	* src/musicdb.c (music_db_add_file): ... to here.
+	* src/playlist.c (has_audio_extension): Move from here...
+	* src/musicdb.c (has_audio_extension): ... to here.
+	* src/playlist.c (play_list_add_recursive): Move from here...
+	* src/musicdb.c (music_db_add_recursive): ... to here.
+	* src/playlist.c (play_list_save_m3u): Remove function.
+	* src/playlist.c (play_list_remove): Move from here...
+	* src/musicdb.c (music_db_remove): ... to here.  Don't update the
+	model or index map.  Instead, emit a "deleted-entry" signal.
+	Don't drop the cache, just shootdown the entry.
+	* src/playlist.c (play_list_clear): Move from here...
+	* src/musicdb.c (music_db_clear): ... to here.
+	* src/playlist.c (play_list_get_info_by_uid): Move from here...
+	* src/musicdb.c (music_db_get_info): ... to here.
+	* src/playlist.c (play_list_get_info): Implement in terms of
+	music_db_get_info.
+	* src/playlist.c (get_iter): If PATH's depth is not 1, return
+	FALSE.  If INDICES is NULL, return FALSE.
+	* src/playlist.c (get_value): Call play_list_idx_to_uid to get the
+	uid associated with the entry at position I.  Call
+	music_db_get_info, not play_list_get_info to get the info.
+	* src/main.c: Move all functions except main from this file to...
+	* src/starling.c: ... this new file.
+	* src/main.c (main): Just perform general initialization,
+	instantiate a starling instance and start the gtk main loop.
+	* src/starling.h (struct _Starling): Move definition from here...
+	* src/starling.c: ... to here.  Add fields player, mdb and pl.
+	Remove field keyfile and random.
+	(starling_random): New function.
+	(starling_random_set): Likewise.
+	* src/config.c (KEYRANDOM, KEYLASTPATH, KEYSINK, KEYLFMUSER)
+	(KEYLFMPASSWD, KEY_WIDTH, KEY_HEIGHT): Move from here...
+	* src/starling.c: ... to here.
+	* src/config.c (config_load): Move from here...
+	* src/starling.c (deserialize): ... to here.  Only keep the key
+	file around for the duration of the function.  Also restore the
+	view's position and current track.  Update users.
+	* src/config.c (config_save, config_store_lastfm): Move from
+	here...
+	* src/starling.c (serialize): ... to here.  Only keep the key
+	file around for the duration of the function.  Also save the
+	view's position and current track.  Update users.
+	* src/config.c: Remove file.
+	* src/config.h: Remove file.
+	* src/marshal.list (VOID:OBJECT,INT): Remove interface.
+	(VOID:INT,INT): Likewise.
+	(VOID:POINTER,INT): New interface.
+	(VOID:POINTER,OBJECT): Likewise.
+	* src/Makefile.am: Remove files config.h, and config.c.  Add fiels
+	starling.c, musicdb.h, musicdb.c, player.h, player.c, marshal.c,
+	and marshal.h.
+	(nodist_starling_SOURCES): Remove variable.
+	* src/config.c: Remove file.
+	* src/config.h: Likewise.
+
 2008-09-06  Neal H. Walfield  <neal@gnu.org>
 
 	* src/playlist.h (PL_COL_TRACK): Define.

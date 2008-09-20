@@ -4,16 +4,19 @@ AM_CFLAGS = -Wall -O0
 
 starling_LDADD = $(DEPS_LIBS) $(HILDON_LIBS) 
 starling_SOURCES = main.c \
-		utils.c playlist.c config.c \
-		lyrics.c lastfm.c md5.c errorbox.c \
-		starling.h \
-		utils.h playlist.h config.h \
-		lyrics.h lastfm.h md5.h errorbox.h \
-		cache.h cache.c
+		starling.h starling.c \
+		musicdb.h musicdb.c \
+		player.h player.c \
+		playlist.h playlist.c \
+		utils.h utils.c \
+		lyrics.h lyrics.c \
+		lastfm.h lastfm.c \
+		errorbox.h errorbox.c \
+		cache.h cache.c \
+		marshal.c marshal.h \
+		md5.h md5.c
 
 INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS)
-
-nodist_starling_SOURCES = marshal.c
 
 BUILT_SOURCES = marshal.h marshal.c
 

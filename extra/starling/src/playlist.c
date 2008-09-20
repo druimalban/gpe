@@ -28,48 +28,7 @@
 #include <sqlite.h>
 
 #include "playlist.h"
-
-#include "cache.h"
-
-struct info_cache_entry
-{
-  char *source;
-  char *artist;
-  char *album;
-  char *title;
-  int track;
-  int duration;
-};
-
-void
-info_cache_evict (void *object)
-{
-  struct info_cache_entry *e = object;
-
-  free (e->source);
-  free (e->artist);
-  free (e->album);
-  free (e->title);
-  free (e);
-}
-
-static struct simple_cache info_cache;
-
-static void info_cache_constructor (void) __attribute__ ((constructor));
-
-static void
-info_cache_constructor (void)
-{
-  simple_cache_init (&info_cache, info_cache_evict);
-}
-
-
-/* Forward.  */
-static void play_list_get_info_by_uid (PlayList *pl, int uid,
-				       char **source,
-				       char **artist, char **album,
-				       int *track, char **title,
-				       int *duration);
+#include "musicdb.h"
 
 #define ITER_INIT(model, iter, i) \
   do \
@@ -82,27 +41,29 @@ static void play_list_get_info_by_uid (PlayList *pl, int uid,
 struct _PlayList {
   GObject parent;
 
-  sqlite *sqliteh;
-  GstElement *playbin;
-  GstState last_state;
+  MusicDB *db;
 
-  int random;
   /* Position in the playlist.  */
   int position;
 
-  /* Number of entries in playlist.  If -1, invalid.  */
+  /* The number of entries in the playlist.  */
   int count;
-  /* Number of cells in the IDX_UID_MAP.  */
+
+  /* Number of cells in the IDX_UID_MAP (COUNT <= SIZE).  */
   int size;
-  /* Map from indexes to uid (ROWID).  */
+  /* Map from indexes to UID.  */
   int *idx_uid_map;
-  /* Hash mapping UIDs (ROWID) to indexes.  */
+  /* Hash mapping UIDs to indexes.  */
   GHashTable *uid_idx_hash;
 
-  /* UIDs of files whose metadata we should try to read.  */
-  /* The idle handler.  */
-  guint meta_data_reader;
-  GQueue *meta_data_reader_pending;
+  gint new_entry_signal_id;
+  gint changed_entry_signal_id;
+  gint deleted_entry_signal_id;
+  gint cleared_signal_id;
+
+  gint reschedule_timeout;
+  /* Number of reschedules requests since last reschedule.  */
+  gint reschedule_requests;
 };
 
 static void play_list_dispose (GObject *obj);
@@ -124,40 +85,34 @@ play_list_class_init (PlayListClass *klass)
   object_class->finalize = play_list_finalize;
   object_class->dispose = play_list_dispose;
 
-  PlayListClass *play_list_class = PLAY_LIST_CLASS (klass);
-
-  play_list_class->state_changed_signal_id
-    = g_signal_new ("state-changed",
-		    G_TYPE_FROM_CLASS (klass),
-		    G_SIGNAL_RUN_FIRST,
-		    0, NULL, NULL,
-		    g_cclosure_marshal_VOID__ENUM,
-		    G_TYPE_NONE, 1,
-		    G_TYPE_INT);
-    
-  play_list_class->eos_signal_id
-    = g_signal_new ("eos",
-		    G_TYPE_FROM_CLASS (klass),
-		    G_SIGNAL_RUN_FIRST,
-		    0, NULL, NULL,
-		    g_cclosure_marshal_VOID__VOID,
-		    G_TYPE_NONE, 0);
+  // PlayListClass *play_list_class = PLAY_LIST_CLASS (klass);
 }
 
 static void
 play_list_init (PlayList *pl)
 {
-  static int gst_init_init;
-  if (! gst_init_init)
-    {
-      gst_init (NULL, NULL);
-      gst_init_init = 1;
-    }
 }
 
 static void
 play_list_dispose (GObject *obj)
 {
+  PlayList *pl = PLAY_LIST (obj);
+
+  if (pl->new_entry_signal_id)
+    g_signal_handler_disconnect (pl->db, pl->new_entry_signal_id);
+  if (pl->changed_entry_signal_id)
+    g_signal_handler_disconnect (pl->db, pl->changed_entry_signal_id);
+  if (pl->deleted_entry_signal_id)
+    g_signal_handler_disconnect (pl->db, pl->deleted_entry_signal_id);
+  if (pl->cleared_signal_id)
+    g_signal_handler_disconnect (pl->db, pl->cleared_signal_id);
+
+  if (pl->reschedule_timeout)
+    g_source_remove (pl->reschedule_timeout);
+
+  if (pl->db)
+    g_object_unref (pl->db);
+
   /* Chain up to the parent class */
   G_OBJECT_CLASS (play_list_parent_class)->dispose (obj);
 }
@@ -169,39 +124,24 @@ play_list_finalize (GObject *object)
 
   G_OBJECT_CLASS (play_list_parent_class)->finalize (object);
 
-  if (pl->meta_data_reader)
-    g_source_remove (pl->meta_data_reader);
-
-  if (pl->meta_data_reader_pending)
-    {
-      char *d;
-      do
-	{
-	  d = g_queue_pop_head (pl->meta_data_reader_pending);
-	  g_free (d);
-	}
-      while (d);
-
-      g_queue_free (pl->meta_data_reader_pending);
-    }
-
-  if (pl->sqliteh)
-    sqlite_close (pl->sqliteh);
-
-  if (pl->playbin)
-    {
-      gst_element_set_state (pl->playbin, GST_STATE_NULL);
-      gst_object_unref (pl->playbin);
-    }
-
   free (pl->idx_uid_map);
   if (pl->uid_idx_hash)
     g_hash_table_destroy (pl->uid_idx_hash);
 }
 
-static void
-play_list_idx_uid_refresh (PlayList *pl)
+static gboolean
+do_refresh (gpointer data)
 {
+  PlayList *pl = PLAY_LIST (data);
+
+  if (pl->reschedule_requests > 10)
+    /* There have been a lot of reschedule requests recently.  Delay
+       the actual reschedule a bit.  */
+    {
+      pl->reschedule_requests >>= 1;
+      return TRUE;
+    }
+
   int old_count = pl->count;
 
   int *old_idx_uid_map = pl->idx_uid_map;
@@ -210,92 +150,59 @@ play_list_idx_uid_refresh (PlayList *pl)
     g_hash_table_destroy (pl->uid_idx_hash);
   pl->uid_idx_hash = g_hash_table_new (NULL, NULL);
 
-  {
-    int callback (void *arg, int argc, char **argv, char **names)
-    {
-      pl->count = atoi (argv[0]);
+  pl->count = music_db_count (pl->db);
 
-      return 0;
-    }
-
-    char *err = NULL;
-    sqlite_exec (pl->sqliteh,
-		 "select count (*) from files",
-		 callback, NULL, &err);
-    if (err)
-      {
-	pl->count = 0;
-
-	g_critical ("%s", err);
-	sqlite_freemem (err);
-	return;
-      }
-  }
-  int count = pl->count;
-
-  pl->size = count + 128;
+  pl->size = pl->count + 128;
   pl->idx_uid_map = malloc (pl->size * sizeof (pl->idx_uid_map[0]));
 
   int idx = 0;
-  int callback (void *arg, int argc, char **argv, char **names)
-  {
-    g_assert (argc == 1);
-    g_assert (idx < count);
 
-    int uid = atoi (argv[0]);
+  int cb (int uid, struct music_db_info *info)
+  {
     pl->idx_uid_map[idx] = uid;
     g_hash_table_insert (pl->uid_idx_hash, (gpointer) uid, (gpointer) idx);
     idx ++;
 
     return 0;
   }
-  char *err = NULL;
-  sqlite_exec (pl->sqliteh,
-	       "select ROWID from files"
-	       " order by artist, album, track, title, source;",
-	       callback, NULL, &err);
-  if (err)
-    {
-      fprintf (stderr, "%s:%d: %s", __FUNCTION__, __LINE__, err);
-      free (err);
-    }
-  g_assert (idx == count);
-
+  enum mdb_fields order[]
+    = { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
+  music_db_for_each (pl->db, cb, order);
 
   /* We need to emit some signals now so the thing using this model
-     will stay in sync.  We brute force it has calculate the
+     will stay in sync.  We brute force it as calculating the
      differences is a) non-trivial and b) likely more expensive than
      the naive approach.  */
 
-  if (old_count < count)
+  if (old_count < pl->count)
     /* There are some new rows.  Add those first.  */
     {
       GtkTreePath *path = gtk_tree_path_new_from_indices (old_count, -1);
       GtkTreeIter iter;
-      ITER_INIT (pl, &iter, 0);
+      ITER_INIT (pl, &iter, old_count);
 
       int i;
-      for (i = old_count; i < count; i ++)
+      for (i = old_count; i < pl->count; i ++)
 	gtk_tree_model_row_inserted (GTK_TREE_MODEL (pl), path, &iter);
 
       g_free (path);
     }
-  else if (old_count > count)
+  else if (old_count > pl->count)
     {
-      GtkTreePath *path = gtk_tree_path_new_from_indices (count, -1);
+      GtkTreePath *path = gtk_tree_path_new_from_indices (pl->count, -1);
 
       int i;
-      for (i = count; i < old_count; i ++)
+      for (i = pl->count; i < old_count; i ++)
 	gtk_tree_model_row_deleted (GTK_TREE_MODEL (pl), path);
 
       g_free (path);
     }
 
   int min_count;
-  if (old_count < count)
+  if (old_count < pl->count)
     min_count = old_count;
   else
-    min_count = count;
+    min_count = pl->count;
 
   int i;
   for (i = 0; i < min_count; i ++)
@@ -303,7 +210,7 @@ play_list_idx_uid_refresh (PlayList *pl)
       {
 	GtkTreePath *path = gtk_tree_path_new_from_indices (i, -1);
 	GtkTreeIter iter;
-	ITER_INIT (pl, &iter, 0);
+	ITER_INIT (pl, &iter, i);
 
 	gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
 
@@ -312,7 +219,32 @@ play_list_idx_uid_refresh (PlayList *pl)
 
   free (old_idx_uid_map);
 
-  simple_cache_drop (&info_cache);
+  /* Remove timeout source.  */
+  pl->reschedule_timeout = 0;
+  pl->reschedule_requests = 0;
+  return FALSE;
+}
+
+/* Schedule a playlist refresh.  We do this at most once every few
+   seconds.  */
+static void
+play_list_idx_uid_refresh_schedule (PlayList *pl, bool now)
+{
+  if (now)
+    {
+      if (pl->reschedule_timeout)
+	{
+	  g_source_remove (pl->reschedule_timeout);
+	  pl->reschedule_timeout = 0;
+	}
+
+      pl->reschedule_requests = 0;
+      do_refresh (pl);
+    }
+  else if (! pl->reschedule_timeout)
+    pl->reschedule_timeout = g_timeout_add (100, do_refresh, pl);
+  else
+    pl->reschedule_requests ++;
 }
 
 /* Return the UID of the record at index IDX.  */
@@ -334,398 +266,77 @@ play_list_uid_to_idx (PlayList *pl, int uid)
 }
 
 static void
-parse_tags (PlayList *pl, GstMessage *message, int uid)
+new_entry (MusicDB *db, gint uid, gpointer data)
 {
-  char *artist = NULL;
-  char *title = NULL;
-  char *album = NULL;
-  char *genre = NULL;
-  char *track = NULL;
+  PlayList *pl = PLAY_LIST (data);
 
-  void for_each_tag (const GstTagList *list,
-		     const gchar *tag, gpointer data)
-    {
-      gchar **value = NULL;
-
-      if (strcmp (tag, "artist") == 0)
-	value = &artist;
-      else if (strcmp (tag, "title") == 0)
-	value = &title;
-      else if (strcmp (tag, "album") == 0)
-	value = &album;
-      else if (strcmp (tag, "genre") == 0)
-	value = &genre;
-      else if (strcmp (tag, "track-number") == 0)
-	value = &track;
-
-      if (! value)
-	return;
-
-      if (gst_tag_get_type (tag) == G_TYPE_STRING)
-	gst_tag_list_get_string_index (list, tag, 0, value);
-      else
-	*value = g_strdup_value_contents
-	  (gst_tag_list_get_value_index (list, tag, 0));
-    }
-
-  GstTagList *tags;
-  gst_message_parse_tag (message, &tags);
-  gst_tag_list_foreach (tags, for_each_tag, NULL);
-
-  if (artist || title || album || genre || track)
-    {
-      char *err = NULL;
-      sqlite_exec_printf (pl->sqliteh,
-			  "update files"
-			  " set artist = %Q, title = %Q,"
-			  "  album = %Q, genre = %Q, track = %Q"
-			  " where ROWID = %d;",
-			  NULL, NULL, &err,
-			  artist, title, album, genre, track,
-			  (int) uid);
-      if (err)
-	{
-	  g_warning ("%s: %s", __FUNCTION__, err);
-	  sqlite_freemem (err);
-	}
-
-      free (artist);
-      free (title);
-      free (album);
-      free (genre);
-      free (track);
-
-      simple_cache_shootdown (&info_cache, uid);
-
-      int idx = play_list_uid_to_idx (pl, uid);
-      GtkTreePath *path = gtk_tree_path_new_from_indices (idx, -1);
-      GtkTreeIter iter;
-      ITER_INIT (pl, &iter, idx);
-      gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
-      g_free (path);
-
-      play_list_idx_uid_refresh (pl);
-    }
-}
-
-static gboolean
-play_list_bus_cb (GstBus *bus, GstMessage *message, gpointer data)
-{
-    PlayList *pl = PLAY_LIST (data);
-
-    switch (GST_MESSAGE_TYPE (message))
-      {
-      case GST_MESSAGE_ERROR:
-	{
-	  GError *err = NULL;
-	  gchar *debug;
-	  gst_message_parse_error (message, &err, &debug);
-
-	  g_debug ("%s: %s (%s)\n", __func__, err->message, debug);
-
-	  g_error_free (err);
-	  g_free (debug);
-
-	  play_list_next (pl);
-	  break;
-	}
-
-      case GST_MESSAGE_STATE_CHANGED:
-	if (GST_MESSAGE_SRC (message) == GST_OBJECT (pl->playbin))
-	  {
-	    GstState state, pending;
-	    gst_message_parse_state_changed (message, NULL, &state, &pending);
-
-	    if (pending == GST_STATE_VOID_PENDING)
-	      {
-		pl->last_state = state;
-
-		g_signal_emit
-		  (pl, PLAY_LIST_GET_CLASS (pl)->state_changed_signal_id,
-		   0, state);
-	      }
-	  }
-	break;
-
-      case GST_MESSAGE_EOS:
-	g_signal_emit (pl, PLAY_LIST_GET_CLASS (pl)->eos_signal_id, 0);
-	break;
-
-      case GST_MESSAGE_TAG:
-	parse_tags (pl, message, play_list_idx_to_uid (pl, pl->position));
-	break;
-
-      default:
-	break;
-      }
-
-    return TRUE;
+  play_list_idx_uid_refresh_schedule (pl, false);
 }
 
 static void
-play_list_create_table (PlayList *pl, gboolean drop_first, GError **error)
+changed_entry (MusicDB *db, gint uid, gpointer data)
 {
-  char *err = NULL;
-  /* Create the main table.  */
-  if (drop_first)
-    sqlite_exec (pl->sqliteh,
-		 "begin transaction;"
-		 "drop table files;"
-		 "drop table dirs;",
-		 NULL, NULL, &err);
-  else
-    sqlite_exec (pl->sqliteh,
-		 "begin transaction;",
-		 NULL, NULL, &err);
+  PlayList *pl = PLAY_LIST (data);
 
-  if (err)
-    {
-      g_critical ("%s: %s", __FUNCTION__, err);
-      g_set_error (error, ERROR_DOMAIN (), 0, "%s", err);
-      sqlite_freemem (err);
-      sqlite_exec (pl->sqliteh,
-		   "rollback transaction;",
-		   NULL, NULL, NULL);
-      return;
-    }
+  int idx = play_list_uid_to_idx (pl, uid);
 
-  sqlite_exec (pl->sqliteh,
-	       /* Create the main table for the files.  */
-	       "create table files "
-	       " (source STRING NOT NULL UNIQUE, "
-	       /* Metadata.  */ 
-	       "  artist STRING COLLATE NOCASE, "
-	       "  album STRING COLLATE NOCASE, "
-	       "  track INTEGER, "
-	       "  title STRING COLLATE NOCASE, "
-	       "  genre STRING COLLATE NOCASE, "
-	       "  duration INTEGER, "
-	       "  rating INTEGER,"
-	       /* To determine if the information is up to date.  */
-	       "  mtime INTEGER);"
+  GtkTreePath *path = gtk_tree_path_new_from_indices (idx, -1);
+  GtkTreeIter iter;
+  ITER_INIT (pl, &iter, idx);
 
-	       /* Create the table for the directories.  */
-	       "create table dirs (filename STRING); "
-	       "commit transaction;",
-	       NULL, NULL, NULL);
+  gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
+
+  g_free (path);
 }
 
+static void
+deleted_entry (MusicDB *db, gint uid, gpointer data)
+{
+  PlayList *pl = PLAY_LIST (data);
+
+  play_list_idx_uid_refresh_schedule (pl, false);
+}
+
+static void
+cleared (MusicDB *db, gpointer data)
+{
+  PlayList *pl = PLAY_LIST (data);
+
+  play_list_idx_uid_refresh_schedule (pl, true);
+}
+
+
 PlayList *
-play_list_open (const char *file, GError **error)
+play_list_new (MusicDB *db)
 {
   PlayList *pl = PLAY_LIST (g_object_new (PLAY_LIST_TYPE, NULL));
 
-  char *err = NULL;
-  pl->sqliteh = sqlite_open (file, 0, &err);
-  if (err)
-    {
-      g_set_error (error, ERROR_DOMAIN (), 0, "Opening %s: %s",
-		   file, err);
-      sqlite_freemem (err);
-      goto error;
-    }
+  g_object_ref (db);
+  pl->db = db;
 
-  /* Get the DB's version.  */
-  sqlite_exec (pl->sqliteh,
-	       "create table playlist_version (version integer NOT NULL)",
-	       NULL, NULL, NULL);
-  int version = -1;
-  int dbinfo_callback (void *arg, int argc, char **argv, char **names)
-    {
-      if (argc == 1)
-	version = atoi (argv[0]);
-
-      return 0;
-    }
-  /* If the play_list_version table doesn't exist then we
-     understand this to mean that this DB is uninitialized.  */
-  sqlite_exec (pl->sqliteh,
-	       "select version from playlist_version",
-	       dbinfo_callback, NULL, &err);
-  if (err)
-    goto generic_error;
-
-  if (version < 2)
-    {
-      if (version == 1)
-	sqlite_exec (pl->sqliteh, "drop table playlist", NULL, NULL, NULL);
-
-      GError *tmp_error = NULL;
-      play_list_create_table (pl, FALSE, &tmp_error);
-      if (tmp_error)
-	{
-	  g_propagate_error (error, tmp_error);
-	  goto error;
-	}
-
-      /* And the config.  */
-      sqlite_exec (pl->sqliteh,
-		   "create table playlist_config "
-		   " (key, STRING, value STRING);",
-		   NULL, NULL, NULL);
-      if (err)
-	goto generic_error;
-
-      sqlite_exec (pl->sqliteh,
-		   "insert into playlist_version values (2);",
-		   NULL, NULL, &err);
-      if (err)
-	goto generic_error;
-    }
-
-  int config_callback (void *arg, int argc, char **argv, char **names)
-    {
-      if (argc != 2)
-	return 0;
-
-      if (strcmp (argv[0], "random") == 0)
-	pl->random = atoi (argv[1]);
-      else if (strcmp (argv[0], "position") == 0)
-	pl->position = atoi (argv[1]);
-
-      return 0;
-    }
-
-  sqlite_exec (pl->sqliteh,
-	       "select * from playlist_config",
-	       dbinfo_callback, NULL, &err);
-  if (err)
-    goto generic_error;
+  pl->new_entry_signal_id
+    = g_signal_connect (G_OBJECT (db), "new-entry",
+			G_CALLBACK (new_entry), pl);
+  pl->changed_entry_signal_id
+    = g_signal_connect (G_OBJECT (db), "changed-entry",
+			G_CALLBACK (changed_entry), pl);
+  pl->deleted_entry_signal_id
+    = g_signal_connect (G_OBJECT (db), "deleted-entry",
+			G_CALLBACK (deleted_entry), pl);
+  pl->cleared_signal_id
+    = g_signal_connect (G_OBJECT (db), "cleared",
+			G_CALLBACK (cleared), pl);
 
   return pl;
-
- generic_error:
-  g_set_error (error, ERROR_DOMAIN (), 0, "%s: %s", file, err);
-  sqlite_freemem (err);
-
- error:
-  g_object_unref (pl);
-  return NULL;
-}
-
-static void
-playbin_ensure (PlayList *pl)
-{
-  if (! pl->playbin)
-    {
-#ifdef IS_HILDON
-      /* Evil, evil, evil, evil.  playbin is broken on the 770.  */
-      pl->playbin = gst_element_factory_make ("playbinmaemo", "player");
-#else
-      pl->playbin = gst_element_factory_make ("playbin", "player");
-#endif
-      GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pl->playbin));
-      gst_bus_add_watch (bus, play_list_bus_cb, pl);
-      gst_object_unref (bus);
-    }
-}
-
-gboolean
-play_list_set_sink (PlayList *pl, const gchar *sink)
-{
-  GstElement *audiosink = gst_element_factory_make (sink, "sink");
-  if (! audiosink)
-    return FALSE;
-
-  playbin_ensure (pl);
-
-  g_object_set (G_OBJECT (pl->playbin), "audio-sink", audiosink, NULL);
-
-  return TRUE;
-}
-
-void
-play_list_set_random (PlayList *pl, gboolean random)
-{
-  pl->random = random;
-}
-
-gboolean
-play_list_get_random (PlayList *pl)
-{
-  return pl->random;
 }
 
 gint
 play_list_count (PlayList *pl)
 {
   if (! pl->idx_uid_map)
-    play_list_idx_uid_refresh (pl);
+    play_list_idx_uid_refresh_schedule (pl, true);
 
   return pl->count;
-}
-
-gboolean
-play_list_play (PlayList *pl)
-{
-  playbin_ensure (pl);
-
-  char *source = NULL;
-  play_list_get_info (pl, pl->position, NULL, &source, NULL,
-		      NULL, NULL, NULL, NULL);
-  if (! source)
-    {
-      g_warning ("%s: No SOURCE found for entry %d",
-		 __FUNCTION__, pl->position);
-      return FALSE;
-    }
-
-  gst_element_set_state (pl->playbin, GST_STATE_NULL);
-  g_object_set (G_OBJECT (pl->playbin), "uri", source, NULL);
-  GstStateChangeReturn res = gst_element_set_state (pl->playbin,
-						    GST_STATE_PLAYING);
-  if (res == GST_STATE_CHANGE_FAILURE)
-    {
-      g_warning ("%s: Failed to play %s", __FUNCTION__, source);
-      return FALSE;
-    }
-
-  g_free (source);
-  return TRUE;
-}
-
-void
-play_list_pause (PlayList *pl)
-{
-  if (pl->last_state == GST_STATE_PLAYING && pl->playbin)
-    gst_element_set_state (pl->playbin, GST_STATE_PAUSED);
-}
-
-void
-play_list_unpause (PlayList *pl)
-{
-  if (pl->playbin)
-    {
-      if (pl->last_state != GST_STATE_PLAYING)
-	gst_element_set_state (pl->playbin, GST_STATE_PLAYING);
-    }
-  else
-    play_list_play (pl);
-}
-
-void
-play_list_play_pause_toggle (PlayList *pl)
-{
-  if (! pl->playbin)
-    {
-      play_list_play (pl);
-      return;
-    }
-
-  if (play_list_playing (pl))
-    gst_element_set_state (pl->playbin, GST_STATE_PAUSED);
-  else
-    gst_element_set_state (pl->playbin, GST_STATE_PLAYING);
-}
-
-gboolean
-play_list_playing (PlayList *pl)
-{
-  GstState state = GST_STATE_PAUSED;
-  if (pl->playbin)
-    gst_element_get_state (pl->playbin, &state, NULL, GST_CLOCK_TIME_NONE);
-
-  return state == GST_STATE_PLAYING;
 }
 
 gint
@@ -734,692 +345,53 @@ play_list_get_current (PlayList *pl)
   return pl->position;
 }
 
-static int
-do_goto (PlayList *pl, int n)
-{
-  g_return_val_if_fail (0 <= n && n <= play_list_count (pl), FALSE);
-
-  int o = pl->position;
-  pl->position = n;
-
-  GtkTreePath *path = gtk_tree_path_new_from_indices (o, -1);
-  GtkTreeIter iter;
-  ITER_INIT (pl, &iter, o);
-  gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
-  g_free (path);
-
-  path = gtk_tree_path_new_from_indices (n, -1);
-  ITER_INIT (pl, &iter, n);
-  gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
-  g_free (path);
-
-  return play_list_play (pl);
-}
-
 void
 play_list_goto (PlayList *pl, gint n)
 {
-  do_goto (pl, n);
-
-  if (! play_list_play (pl))
-    play_list_next (pl);
-}
-
-static gint
-play_list_random_next (PlayList *pl)
-{
-  if (play_list_count (pl) == 0)
-    return 0;
-
-  static int rand_init;
-  if (! rand_init)
-    {
-      srand (time (NULL));
-      rand_init = 1;
-    }
-
-  return rand () % play_list_count (pl);
-}
-    
-void
-play_list_next (PlayList *pl)
-{
-  int c = play_list_count (pl);
-  int n;
-  do
-    {
-      if (pl->random)
-	n = play_list_random_next (pl);
-      else
-	{
-	  n = pl->position + 1;
-
-	  if (n >= play_list_count (pl))
-	    n = 0;
-	}
-
-      c --;
-    }
-  while (! do_goto (pl, n) && c > 0);
-}
-
-void
-play_list_prev (PlayList *pl)
-{
-  int c = play_list_count (pl);
-  int n;
-  do
-    {
-      if (pl->random)
-	n = play_list_random_next (pl);
-      else
-	{
-	  n = pl->position - 1;
-
-	  if (n < 0)
-	    n = play_list_count (pl) - 1;
-	}
-
-      c --;
-    }
-  while (! do_goto (pl, n) && c > 0);
-}
-
-gboolean
-play_list_seek (PlayList *pl, GstFormat format, gint64 pos)
-{
-  if (! pl->playbin)
-    return TRUE;
-
-  return gst_element_seek (GST_ELEMENT (pl->playbin), 1.0, format,
-			   GST_SEEK_FLAG_FLUSH, GST_SEEK_TYPE_SET,
-			   pos, GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);
-}
-
-gboolean
-play_list_query_position (PlayList *pl, GstFormat *fmt, gint64 *pos)
-{
-  if (! pl->playbin)
-    {
-      *pos = 0;
-      return TRUE;
-    }
-  return gst_element_query_position (pl->playbin, fmt, pos); 
-}
-
-gboolean
-play_list_query_duration (PlayList *pl, GstFormat *fmt, gint64 *pos, gint n)
-{
-  if (! pl->playbin)
-    return FALSE;
-  return gst_element_query_duration (pl->playbin, fmt, pos);
-}
-
-/* Idle function which is called when meta data should be read.  */
-static gboolean
-meta_data_reader (gpointer data)
-{
-  PlayList *pl = PLAY_LIST (data);
-
-  GstElement *pipeline = NULL;
-  GstElement *src;
-  GstBus *bus;
-
-  /* 200702 - NHW
-
-     A streamer's tags are typically delivered before we reach the
-     PAUSED state.  Thus, we just need to wait until the paused state
-     is reached.  Unfortunately, there is a bug in the oggdemuxer such
-     that if the stream is immediately changed to the NULL state, we
-     get a crash.  It is scheduled to be fix in 0.10.12.  We can work
-     around it be going to the PLAY.  The tradeoff is that it is a bit
-     more expensive.  */
-  guint major, minor, micro, nano;
-  gst_version (&major, &minor, &micro, &nano);
-  GstState target_state = GST_STATE_PAUSED;
-  if (major == 0 && minor < 12)
-    target_state = GST_STATE_PLAYING;
-
-  while (! g_queue_is_empty (pl->meta_data_reader_pending))
-    {
-      int *uidp = g_queue_pop_head (pl->meta_data_reader_pending);
-      g_assert (uidp);
-      int uid = *uidp;
-      g_free (uidp);
-
-      char *source = NULL;
-      play_list_get_info_by_uid (pl, uid, 
-				 &source, NULL, NULL, NULL, NULL, NULL);
-      if (! source)
-	/* Hmm, entry disappeared.  It's possible: the user may have
-	   removed it before we got to processing it.  */
-	continue;
-
-      if (! pipeline)
-	{
-	  /* We read the data from a file, send it to decodebin which
-	     selects the appropriate decoder and then send the result
-	     to /dev/null.  */
-	  pipeline = gst_pipeline_new ("meta_data_pipeline");
-	  src = gst_element_factory_make ("filesrc", "filesrc");
-	  GstElement *decodebin = gst_element_factory_make ("decodebin",
-							    "decodebin");
-	  GstElement *sink = gst_element_factory_make ("fakesink", "sink");
-
-	  gst_bin_add_many (GST_BIN (pipeline), src, decodebin, sink, NULL);
-	  gst_element_link_many (src, decodebin, sink, NULL);
-
-	  bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
-	}
-
-#define FILE_PREFIX "file://"
-      g_assert (strlen (source) > sizeof (FILE_PREFIX) - 1);
-      g_object_set (G_OBJECT (src),
-		    "location", source + sizeof (FILE_PREFIX) - 1, NULL);
-      g_free (source);
-
-      GstStateChangeReturn res = gst_element_set_state (pipeline,
-							target_state);
-      if (res == GST_STATE_CHANGE_FAILURE)
-	{
-	  g_warning ("%s: Failed to play %d", __FUNCTION__, (int) uid);
-	  continue;
-	}
-
-      int c = 0;
-      for (;;)
-	{
-	  c ++;
-	  GstMessage *msg = gst_bus_poll (bus,
-					  GST_MESSAGE_EOS | GST_MESSAGE_ERROR
-					  | GST_MESSAGE_TAG
-					  | GST_MESSAGE_STATE_CHANGED,
-					  /* Wait about two seconds.  */
-					  2 * 1000 * 1000 * 1000);
-	  if (! msg)
-	    break;
-
-	  switch (GST_MESSAGE_TYPE (msg))
-	    {
-	    case GST_MESSAGE_TAG:
-	      parse_tags (pl, msg, uid);
-	      continue;
-
-	    case GST_MESSAGE_STATE_CHANGED:
-	      /* Once we've reached the paused state, for most
-		 formats, most of the time, all tags will have been
-		 reported.  (The exception is essentially streams--but
-		 we are only looking at files anyways so this should
-		 be relatively rare.)  */
-	      {
-		GstState state, pending;
-		gst_message_parse_state_changed (msg, NULL, &state, &pending);
-		if (! (pending == GST_STATE_VOID_PENDING
-		       && state == target_state))
-		  continue;
-	      }
-	      break;
-
-	    default:
-	      break;
-	    }
-
-	  break;
-	}
-
-      res = gst_element_set_state (pipeline, GST_STATE_NULL);
-      if (res == GST_STATE_CHANGE_FAILURE)
-	g_warning ("Failed to put pipeline in NULL state.");
-    }
-
-  pl->meta_data_reader = 0;
-
-  if (pipeline)
-    {
-      gst_object_unref (pipeline);
-      gst_object_unref (bus);
-    }
-
-  return FALSE;
-}
-
-static void
-play_list_add (PlayList *pl, char *sources[], int count, GError **error)
-{
-  /* Ignore any entries that do already exist in the DB.  */
-  char *s[count];
-  int total = 0;
-
-  int i;
-  for (i = 0; i < count; i ++)
-    {
-      int source_exists (void *arg, int argc, char **argv, char **names)
-      {
-	return 1;
-      }
-
-      char *err = NULL;
-      int ret = sqlite_exec_printf (pl->sqliteh,
-				    "select * from files"
-				    "  where source = '%q';",
-				    source_exists, NULL, &err,
-				    sources[i]);
-      if (ret == 0)
-	/* Entry does not exist.  */
-	s[total ++] = sources[i];
-
-      if (ret != SQLITE_ABORT && err)
-	fprintf (stderr, "%s:%d: %s", __FUNCTION__, __LINE__, err);
-
-      if (err)
-	sqlite_freemem (err);
-    }
-
-  if (total == 0)
-    /* Nothing to do.  */
+  if (n == pl->position)
     return;
 
+  GtkTreePath *path = gtk_tree_path_new_from_indices (pl->position, -1);
+  GtkTreeIter iter;
+  ITER_INIT (pl, &iter, pl->position);
+
+  gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
+
+  g_free (path);
 
 
-  char *err = NULL;
-  sqlite_exec (pl->sqliteh, "begin transaction;",
-	       NULL, NULL, &err);
-  if (err)
-    {
-      g_set_error (error, ERROR_DOMAIN (), 0, "%s", err);
-      sqlite_freemem (err);
-      return;
-    }
+  pl->position = n;
 
-  for (i = 0; i < total; i ++)
-    {
-      sqlite_exec_printf (pl->sqliteh,
-			  "insert into files (source) values ('%q');",
-			  NULL, NULL, &err, s[i]);
-      if (err)
-	break;
 
-      int uid = sqlite_last_insert_rowid (pl->sqliteh);
+  path = gtk_tree_path_new_from_indices (pl->position, -1);
+  ITER_INIT (pl, &iter, pl->position);
 
-      /* Add the new entry to the model.  We append it.  The next time
-	 the DB is read, it will end up at the right place.  */
-      /* Ensure that PL->IDX_UID_MAP is valid.  */
-      play_list_idx_to_uid (pl, 0);
-      if (pl->size == pl->count)
-	{
-	  pl->size += 128;
-	  pl->idx_uid_map = g_realloc (pl->idx_uid_map,
-				       pl->size * sizeof (pl->idx_uid_map[0]));
-	}
-      g_assert (pl->count < pl->size);
-      int idx = pl->count ++;
-      pl->idx_uid_map[idx] = uid;
-      g_hash_table_insert (pl->uid_idx_hash, (gpointer) uid, (gpointer) idx);
+  gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
 
-      /* Note that there is a new row.  */
-      GtkTreePath *path = gtk_tree_path_new_from_indices (idx, -1);
-      GtkTreeIter iter;
-      ITER_INIT (pl, &iter, idx);
-      gtk_tree_model_row_inserted (GTK_TREE_MODEL (pl), path, &iter);
-      g_free (path);
-
-      /* Queue the file in the meta-data crawler (if appropriate).  */
-      if (strncmp (FILE_PREFIX, s[i], sizeof (FILE_PREFIX) - 1) == 0)
-	{
-	  if (! pl->meta_data_reader)
-	    pl->meta_data_reader = g_idle_add (meta_data_reader, pl);
-
-	  if (! pl->meta_data_reader_pending)
-	    pl->meta_data_reader_pending = g_queue_new ();
-
-	  int *uidp = g_malloc (sizeof (int));
-	  *uidp = uid;
-	  g_queue_push_tail (pl->meta_data_reader_pending, uidp);
-	}
-    }
-
-  if (! err)
-    sqlite_exec (pl->sqliteh,
-		 "commit transaction;", NULL, NULL, &err);
-
-  if (err)
-    {
-      g_set_error (error, ERROR_DOMAIN (), 0, "%s", err);
-      sqlite_freemem (err);
-
-      sqlite_exec (pl->sqliteh,
-		   "rollback transaction;", NULL, NULL, NULL);
-
-      return;
-    }
-
-  if (total == 0)
-    return;
-}
-
-int
-play_list_add_m3u (PlayList *pl, const gchar *path, GError **error) 
-{
-  gchar *content;
-  gchar **lines;
-  gint ii;
-  gsize size;
-
-  GError *tmp_error = NULL;
-  if (! g_file_get_contents (path, &content, &size, &tmp_error))
-    {
-      g_debug ("Error reading file %s: %s\n", path,
-	       tmp_error->message);
-      g_propagate_error (error, tmp_error);
-      return 0;
-    }
-
-  lines = g_strsplit (content, "\n", 2048); /* This should be enough */ 
-  g_free (content);
-
-  /* In case we have relative file names (which we likely do), get the
-     base.  */
-  char *end = strrchr (path, '/');
-  if (end)
-    *end = '\0';
-
-  int count = 0;
-  for (ii = 0; lines[ii]; ii++)
-    {
-      char *f = lines[ii];
-      while (*f == ' ')
-	f ++;
-
-      /* Ignore comments.  */
-      if (*f != '#' && *f)
-	{
-	  int l = strlen (f);
-	  if (f[l - 1] == '\r')
-	    /* Chop off any trailing cr.  */
-	    f[l -- - 1] = 0;
-	  /* And any trailing spaces.  */
-	  while (f[l - 1] == ' ')
-	    f[l -- - 1] = 0;
-
-	  char *filename;
-	  if (*f != '/')
-	    /* Relative path.  */
-	    filename = g_strdup_printf ("%s/%s", path, f);
-	  else
-	    filename = f;
-
-	  play_list_add_file (pl, filename, error);
-	  count ++;
-	  if (*f != '/')
-	    g_free (filename);
-	}
-    }
-
-  g_strfreev (lines);
-
-  return count;
-}
-
-void
-play_list_add_uri (PlayList *pl, const char *uri, GError **error)
-{
-  char *sources[1] = { (char *) uri };
-  play_list_add (pl, sources, 1, error);
-}
-
-void
-play_list_add_file (PlayList *pl, const gchar *file, GError **error)
-{
-#define P "file://"
-  char source[sizeof (P) + strlen (file)];
-  strcpy (source, P);
-  strcpy (source + sizeof (P) - 1, file);
-
-  /* XXX: We need to escape this!  Filenames with '%' will silently
-     fail.  */
-  char *sources[1] = { source };
-  play_list_add (pl, sources, 1, error);
-}
-
-static int
-has_audio_extension (const char *filename)
-{
-  const char *whitelist[] = { ".ogg", ".OGG",
-			      ".mp3", ".MP3",
-			      ".rm", ".RM",
-			      ".wav", ".WAV"
-  };
-
-  int i;
-  for (i = 0; i < sizeof (whitelist) / sizeof (whitelist[0]); i ++)
-    if (g_str_has_suffix (filename, whitelist[i]))
-      return 1;
-
-  /* Unknown extension.  */
-  return 0;
-}
-
-int
-play_list_add_recursive (PlayList *pl, const gchar *path, GError **error)
-{
-  int count = 0;
-  GDir *dir = g_dir_open (path, 0, NULL);
-  if (dir)
-    {
-      const char *file;
-      while ((file = g_dir_read_name (dir)))
-	{
-	  char *filename = g_strdup_printf ("%s/%s", path, file);
-	  GError *tmp_error = NULL;
-	  count += play_list_add_recursive (pl, filename, &tmp_error);
-	  g_free (filename);
-	  if (tmp_error)
-	    {
-	      g_propagate_error (error, tmp_error);
-	      break;
-	    }
-
-	  /* We really want this to be a background job.  Invoke the
-	     main loop.  */
-	  g_main_context_iteration (NULL, FALSE);
-	}
-        
-      g_dir_close (dir);
-      return count;
-    }
-  else
-    {
-      struct stat stat;
-      int ret = g_stat (path, &stat);
-      if (ret < 0)
-	/* Failed to read it.  Perhaps we don't have permission.  */
-	return 0;
-
-      if (! S_ISREG (stat.st_mode))
-	/* Not a regular file.  */
-	return 0;
-    }
-    
-  if (g_str_has_suffix (path, ".m3u"))
-    /* Ignore m3u files: we will normally get the files simply by
-       recursing.  */
-    return 0;
-
-  if (has_audio_extension (path))
-    /* Ignore files that do not appear to be audio files.  */
-    play_list_add_file (pl, path, error);
-
-  return 1;
-}
-    
-void
-play_list_save_m3u (PlayList *self, const gchar *path)
-{
-  /* XXX: Implement me.  */
-#if 0
-    PlayListPrivate *priv = PLAY_LIST_GET_PRIVATE (self);
-    GList *cur;
-    GString *string = NULL;
-
-    if (g_list_length (priv->tracks) == 0) {
-        /* Remove the previous playlist */
-        g_unlink (path);
-        return;
-    }
-
-    string = g_string_new ("");
-
-    //g_debug ("PlayList length: %d\n", g_list_length (priv->tracks));
-
-    //play_list_dump (self);
-    
-    for (cur = priv->tracks; cur; cur = cur->next) {
-        Stream *s = cur->data;
-        string = g_string_append (string, s->source + 7);
-        string = g_string_append (string, "\n");
-    }
-
-    g_file_set_contents (path, string->str, string->len, NULL);
-
-    g_string_free (string, TRUE);
-#endif
-}
-
-void
-play_list_remove (PlayList *pl, gint index)
-{
-  int uid = play_list_idx_to_uid (pl, index);
-
-  g_return_if_fail (0 <= index && index < pl->count);
-
-  char *err = NULL;
-  sqlite_exec_printf (pl->sqliteh,
-		      "delete from files where ROWID = %d;",
-		      NULL, NULL, &err, (int) uid);
-  if (err)
-    {
-      g_warning ("%s: %s", __func__, err);
-      sqlite_freemem (err);
-    }
-
-  simple_cache_shootdown (&info_cache, uid);
-
-  pl->count --;
-  memmove (&pl->idx_uid_map[index], &pl->idx_uid_map[index + 1],
-	   (pl->count - index) * sizeof (pl->idx_uid_map[0]));
-  g_hash_table_remove (pl->uid_idx_hash, (gpointer) uid);
-
-  GtkTreePath *path = gtk_tree_path_new_from_indices (index, -1);
-  gtk_tree_model_row_deleted (GTK_TREE_MODEL (pl), path);
   g_free (path);
 }
 
 void
-play_list_clear (PlayList *pl)
+play_list_remove (PlayList *pl, gint idx)
 {
-  GError *tmp_error = NULL;
-  play_list_create_table (pl, TRUE, &tmp_error);
-  /* XXX */
-  if (tmp_error)
-    {
-      g_error_free (tmp_error);
-      return;
-    }
-
-  simple_cache_drop (&info_cache);
-  play_list_idx_uid_refresh (pl);
-}
-
-static void
-play_list_get_info_by_uid (PlayList *pl, int uid,
-			   char **source, char **artist, char **album,
-			   int *track, char **title, int *duration)
-{
-  struct info_cache_entry *e = simple_cache_find (&info_cache, uid);
-  if (! e)
-    {
-      e = g_malloc (sizeof (struct info_cache_entry));
-
-      if (source)
-	*source = NULL;
-      if (artist)
-	*artist = NULL;
-      if (album)
-	*album = NULL;
-      if (track)
-	*track = 0;
-      if (title)
-	*title = NULL;
-      if (duration)
-	*duration = 0;
-
-      int callback (void *arg, int argc, char **argv, char **names)
-      {
-	int i = 0;
-	e->source = argv[i] ? g_strdup (argv[i]) : NULL;
-
-	i ++;
-	e->artist = argv[i] ? g_strdup (argv[i]) : NULL;
-
-	i ++;
-	e->album = argv[i] ? g_strdup (argv[i]) : NULL;
-
-	i ++;
-	e->track = argv[i] ? atoi (argv[i]) : 0;
-
-	i ++;
-	e->title = argv[i] ? g_strdup (argv[i]) : NULL;
-
-	i ++;
-	e->duration = argv[i] ? atoi (argv[i]) : 0;
-
-	return 1;
-      }
-
-      char *err = NULL;
-      sqlite_exec_printf (pl->sqliteh,
-			  "select source, artist, album, "
-			  "  track, title, duration "
-			  " from files where ROWID = %d;",
-			  callback, NULL, &err, (int) uid);
-      if (err)
-	{
-	  g_warning ("%s: %s", __FUNCTION__, err);
-	  sqlite_freemem (err);
-	}
-
-      simple_cache_add (&info_cache, uid, e);
-    }
-
-  if (source)
-    *source = e->source ? strdup (e->source) : NULL;
-  if (artist)
-    *artist = e->artist ? strdup (e->artist) : NULL;
-  if (album)
-    *album = e->album ? strdup (e->album) : NULL;
-  if (track)
-    *track = e->track;
-  if (title)
-    *title = e->title ? strdup (e->title) : NULL;
-  if (duration)
-    *duration = e->duration;
+  music_db_remove (pl->db, play_list_idx_to_uid (pl, idx));
 }
 
 void
-play_list_get_info (PlayList *pl, gint index, int *uid,
+play_list_get_info (PlayList *pl, int idx, int *uidp,
 		    char **source,
 		    char **artist, char **album,
 		    int *track, char **title, int *duration)
 {
-  if (index < 0)
-    index = pl->position;
+  if (idx == -1)
+    idx = play_list_get_current (pl);
 
-  int u = play_list_idx_to_uid (pl, index);
-  if (uid)
-    *uid = u;
+  int uid = play_list_idx_to_uid (pl, idx);
+  if (uidp)
+    *uidp = uid;
 
-  play_list_get_info_by_uid (pl, u, source,
-			     artist, album, track, title, duration);
+  music_db_get_info (pl->db, uid, source, artist, album,
+		     track, title, duration);
 }
 
 /* Tree model interface.  */
@@ -1465,14 +437,18 @@ get_iter (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *path)
 {
   ITER_INIT (tree_model, iter, -1);
 
+  if (gtk_tree_path_get_depth (path) != 1)
+    return FALSE;
+
   gint *indices = gtk_tree_path_get_indices (path);
-  if (indices[0] == -1)
+  if (! indices)
     return FALSE;
 
   if (indices[0] >= play_list_count (PLAY_LIST (tree_model)))
     return FALSE;
 
   ITER_INIT (tree_model, iter, indices[0]);
+
   return TRUE;
 }
 
@@ -1493,6 +469,8 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
 
   g_return_if_fail (i != -1);
 
+  int uid = play_list_idx_to_uid (pl, i);
+
   switch (column)
     {
     case PL_COL_INDEX:
@@ -1502,8 +480,6 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
 
     case PL_COL_UID:
       {
-	int uid;
-	play_list_get_info (pl, i, &uid, NULL, NULL, NULL, NULL, NULL, NULL);
 	g_value_init (value, G_TYPE_INT);
 	g_value_set_int (value, uid);
 	return;
@@ -1512,7 +488,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_SOURCE:
       {
 	char *s;
-	play_list_get_info (pl, i, NULL, &s, NULL, NULL, NULL, NULL, NULL);
+	music_db_get_info (pl->db, uid, &s, NULL, NULL, NULL, NULL, NULL);
 	g_value_init (value, G_TYPE_STRING);
 	g_value_take_string (value, s);
 	return;
@@ -1521,7 +497,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_ARTIST:
       {
 	char *s;
-	play_list_get_info (pl, i, NULL, NULL, &s, NULL, NULL, NULL, NULL);
+	music_db_get_info (pl->db, uid, NULL, &s, NULL, NULL, NULL, NULL);
 	g_value_init (value, G_TYPE_STRING);
 	g_value_take_string (value, s);
 	return;
@@ -1530,7 +506,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_ALBUM:
       {
 	char *s;
-	play_list_get_info (pl, i, NULL, NULL, NULL, &s, NULL, NULL, NULL);
+	music_db_get_info (pl->db, uid, NULL, NULL, &s, NULL, NULL, NULL);
 	g_value_init (value, G_TYPE_STRING);
 	g_value_take_string (value, s);
 	return;
@@ -1539,7 +515,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_TRACK:
       {
 	int t;
-	play_list_get_info (pl, i, NULL, NULL, NULL, NULL, &t, NULL, NULL);
+	music_db_get_info (pl->db, uid, NULL, NULL, NULL, &t, NULL, NULL);
 	g_value_init (value, G_TYPE_INT);
 	g_value_set_int (value, t);
 	return;
@@ -1548,7 +524,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_TITLE:
       {
 	char *s;
-	play_list_get_info (pl, i, NULL, NULL, NULL, NULL, NULL, &s, NULL);
+	music_db_get_info (pl->db, uid, NULL, NULL, NULL, NULL, &s, NULL);
 	g_value_init (value, G_TYPE_STRING);
 	g_value_take_string (value, s);
 	return;
@@ -1557,7 +533,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_DURATION:
       {
 	int d;
-	play_list_get_info (pl, i, NULL, NULL, NULL, NULL, NULL, NULL, &d);
+	music_db_get_info (pl->db, uid, NULL, NULL, NULL, NULL, NULL, &d);
 	g_value_init (value, G_TYPE_INT);
 	g_value_set_int (value, d);
 	return;

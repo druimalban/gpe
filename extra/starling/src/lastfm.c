@@ -160,7 +160,9 @@ lastfm_enqueue (const gchar *artist, const gchar *title, gint length, Starling *
 
     sqlite_finalize (vm, NULL);
     
+#if 0
     lastfm_show_count (GTK_LABEL (st->web_count), lastfm_count());
+#endif
 }
 
 gint
@@ -373,7 +375,9 @@ lastfm_submit (const gchar *username, const gchar *passwd, Starling *st)
     session = soup_session_async_new ();
     msg = soup_message_new (SOUP_METHOD_GET, uri);
 
+#if 0
     data->label = st->web_count;
+#endif
 
     soup_session_queue_message (session, msg, got_handshake_response, (gpointer) data);
 
