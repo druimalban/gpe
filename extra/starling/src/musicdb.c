@@ -509,7 +509,8 @@ music_db_add (MusicDB *db, char *sources[], int count, GError **error)
 
       int uid = sqlite_last_insert_rowid (db->sqliteh);
 
-      db->count ++;
+      if (db->count != -1)
+	db->count ++;
 
       g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->new_entry_signal_id, 0,
 		     uid);
@@ -650,8 +651,8 @@ has_audio_extension (const char *filename)
   return 0;
 }
 
-int
-music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
+static int
+music_db_add_recursive_internal (MusicDB *db, const gchar *path, GError **error)
 {
   int count = 0;
   GDir *dir = g_dir_open (path, 0, NULL);
@@ -662,7 +663,7 @@ music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
 	{
 	  char *filename = g_strdup_printf ("%s/%s", path, file);
 	  GError *tmp_error = NULL;
-	  count += music_db_add_recursive (db, filename, &tmp_error);
+	  count += music_db_add_recursive_internal (db, filename, &tmp_error);
 	  g_free (filename);
 	  if (tmp_error)
 	    {
@@ -701,6 +702,47 @@ music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
     music_db_add_file (db, path, error);
 
   return 1;
+}
+
+int
+music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
+{
+  /* If there exists a directory (FILENAME) which is a prefix of PATH,
+     then don't add PATH.  */
+  int exists (void *arg, int argc, char **argv, char **names)
+  {
+    printf ("%s matches %s\n", path, argv[0]);
+    return 1;
+  }
+
+  char *err = NULL;
+  int ret = sqlite_exec_printf (db->sqliteh,
+				"select * from dirs"
+				/* PATH is a prefix of FILENAME.  */
+				"  where '%q/' GLOB filename || '*';",
+				exists, NULL, &err, path);
+  if (ret == 0)
+    /* Directory does not exist, add it.  Delete any entries for which
+       PATH is a prefix.  */
+    {
+      char *err = NULL;
+      sqlite_exec_printf (db->sqliteh,
+			  "delete from dirs where filename GLOB '%q/*';"
+			  "insert into dirs (filename) values ('%q/');",
+			  NULL, NULL, &err, path, path);
+      if (err)
+	{
+	  g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, path);
+	  sqlite_freemem (err);
+	}
+    }
+  else if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+    }
+
+  return music_db_add_recursive_internal (db, path, error);
 }
 
 void

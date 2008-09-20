@@ -1,5 +1,16 @@
 2008-09-20  Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (music_db_add_recursive): Move body of
+	functionality from here...
+	(music_db_add_recursive_internal): ... to this new function.
+	Update to call this function, not music_db_add_recursive,
+	recursively.
+	(music_db_add_recursive): Add FILENAME to the dirs table if it (or
+	a filename that dominates it) is not already there.  Remove any
+	filenames that PATH dominates.
+
+2008-09-20  Walfield  <neal@gnu.org>
+
 	* config.h: Restore file.  Only define CONFIGDIR.
 	* src/starling.h: Don't include <libintl.h>.
 	(_): Move from here...
