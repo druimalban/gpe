@@ -286,6 +286,8 @@ changed_entry (MusicDB *db, gint uid, gpointer data)
 
   gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
 
+  play_list_idx_uid_refresh_schedule (pl, false);
+
   g_free (path);
 }
 

@@ -1,4 +1,8 @@
-2008-09-20  Walfield  <neal@gnu.org>
+2008-09-20  Neal H. Walfield  <neal@gnu.org>
+
+	* src/playlist.c (changed_entry): Schedule a refresh.
+
+2008-09-20  Neal H. Walfield  <neal@gnu.org>
 
 	* src/musicdb.c (struct _MusicDB): Add field fs_scanner.
 	(music_db_finalize): If DB->FS_SCANNER is not 0, remove the
