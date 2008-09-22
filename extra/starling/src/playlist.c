@@ -180,7 +180,7 @@ do_refresh (gpointer data)
     {
       enum mdb_fields order[]
 	= { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
-      music_db_for_each (pl->db, cb, order);
+      music_db_for_each (pl->db, cb, order, NULL);
     }
   else
     music_db_queue_for_each (pl->db, cb);

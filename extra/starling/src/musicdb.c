@@ -1234,7 +1234,8 @@ info_callback (void *arg, int argc, char **argv, char **names)
 int
 music_db_for_each (MusicDB *db,
 		   int (*user_callback) (int uid, struct music_db_info *info),
-		   enum mdb_fields *order)
+		   enum mdb_fields *order,
+		   const char *constraint)
 {
   struct obstack sql;
 
@@ -1243,6 +1244,9 @@ music_db_for_each (MusicDB *db,
   obstack_printf (&sql,
 		  "select ROWID, source, artist, album, track,"
 		  " title, duration from files ");
+
+  if (constraint)
+    obstack_printf (&sql, "where %s ", constraint);
 
   if (order)
     {

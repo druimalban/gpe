@@ -943,26 +943,21 @@ queue_album_cb (GtkWidget *widget, gpointer d)
   struct menu_info *info = d;
   Starling *st = info->st;
 
-  bool saw = false;
-
   int callback (int uid, struct music_db_info *i)
   {
-    if (strcmp (i->artist, info->artist) == 0
-	&& strcmp (i->album, info->album) == 0)
-      {
-	music_db_play_queue_enqueue (st->db, uid);
-	saw = true;
-      }
-    else if (saw)
-      /* They are sorted by artist, we already saw the artist and this
-	 one doesn't match.  We're done.  */
-      return 1;
+    g_assert (strcmp (i->artist, info->artist) == 0);
+    g_assert (strcmp (i->album, info->album) == 0);
+
+    music_db_play_queue_enqueue (st->db, uid);
 
     return 0;
   }
 
   enum mdb_fields order[] = { MDB_ARTIST, MDB_ALBUM, 0 };
-  music_db_for_each (st->db, callback, order);
+  char *s = sqlite_mprintf ("artist = '%q' and album = '%q'",
+			    info->artist, info->album);
+  music_db_for_each (st->db, callback, order, s);
+  sqlite_freemem (s);
 }
 
 static void
@@ -971,25 +966,18 @@ queue_artist_cb (GtkWidget *widget, gpointer d)
   struct menu_info *info = d;
   Starling *st = info->st;
 
-  bool saw = false;
-
   int callback (int uid, struct music_db_info *i)
   {
-    if (strcmp (i->artist, info->artist) == 0)
-      {
-	music_db_play_queue_enqueue (st->db, uid);
-	saw = true;
-      }
-    else if (saw)
-      /* They are sorted by artist, we already saw the artist and this
-	 one doesn't match.  We're done.  */
-      return 1;
+    g_assert (strcmp (i->artist, info->artist) == 0);
+    music_db_play_queue_enqueue (st->db, uid);
 
     return 0;
   }
 
   enum mdb_fields order[] = { MDB_ARTIST, 0 };
-  music_db_for_each (st->db, callback, order);
+  char *s = sqlite_mprintf ("artist = '%q'", info->artist);
+  music_db_for_each (st->db, callback, order, s);
+  sqlite_freemem (s);
 }
 
 static gboolean

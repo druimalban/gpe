@@ -1,5 +1,15 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.h (music_db_for_each): Add parameter constraint.
+	Update users.
+	* src/musicdb.c (music_db_for_each): Add parameter constraint.  If
+	not NULL, use it when constructing the SQL statement.
+	* src/starling.c (queue_album_cb): Don't match in the callback
+	function, use music_db_for_each's constraint parameter.
+	(queue_artist_cb): Likewise.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h (struct _MusicDBClass): Add fields
 	added_to_queue_signal_id and removed_from_queue_signal_id.
 	* src/musicdb.c (music_db_class_init): Register signals

@@ -164,10 +164,13 @@ extern void music_db_set_info_from_tags (MusicDB *db, int uid,
 					 GstTagList *tags);
 
 /* Call CB for each entry in database DB.  Order the results according
-   to ORDER, which is a zero-terminated array of enum mdb_fields.  */
+   to ORDER, which is a zero-terminated array of enum mdb_fields.  If
+   CONSTRAINT is non-NULL, it is where SQL clause (without the where),
+   e.g., `artist in ("Foo", "Bar")'.  */
 extern int music_db_for_each (MusicDB *db,
 			      int (*cb) (int uid, struct music_db_info *info),
-			      enum mdb_fields *order);
+			      enum mdb_fields *order,
+			      const char *constraint);
 
 /* Enqueue UID to the end of the play queue.  */
 extern void music_db_play_queue_enqueue (MusicDB *db, int uid);
