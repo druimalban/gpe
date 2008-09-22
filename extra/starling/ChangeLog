@@ -1,5 +1,16 @@
 2008-09-21  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct menu_info): New structure.
+	(menu_destroy): New function.
+	(queue_song_cb): Likewise.
+	(queue_album_cb): Likewise.
+	(queue_artist_cb): Likewise.
+	(library_button_press_event): Likewise.
+	(starling_run): Connect library_button_press_event to
+	ST->LIBRARY_VIEW's "button-press-event" event.
+
+2008-09-21  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_create_table): Drop table queue.
 	(music_db_play_queue_enqueue): Correct sql syntax.
 

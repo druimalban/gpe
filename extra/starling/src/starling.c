@@ -910,6 +910,169 @@ title_data_func (GtkCellLayout *cell_layout,
 		NULL);
 }
 
+struct menu_info
+{
+  Starling *st;
+  int uid;
+  char *artist;
+  char *album;
+};
+
+static void
+menu_destroy (GtkWidget *widget, gpointer d)
+{
+  struct menu_info *info = d;
+  g_free (info->artist);
+  g_free (info->album);
+  g_free (info);
+  gtk_widget_destroy (widget);
+}
+
+static void
+queue_song_cb (GtkWidget *widget, gpointer d)
+{
+  struct menu_info *info = d;
+  Starling *st = info->st;
+
+  music_db_play_queue_enqueue (st->db, info->uid);
+}
+
+static void
+queue_album_cb (GtkWidget *widget, gpointer d)
+{
+  struct menu_info *info = d;
+  Starling *st = info->st;
+
+  bool saw = false;
+
+  int callback (int uid, struct music_db_info *i)
+  {
+    if (strcmp (i->artist, info->artist) == 0
+	&& strcmp (i->album, info->album) == 0)
+      {
+	music_db_play_queue_enqueue (st->db, uid);
+	saw = true;
+      }
+    else if (saw)
+      /* They are sorted by artist, we already saw the artist and this
+	 one doesn't match.  We're done.  */
+      return 1;
+
+    return 0;
+  }
+
+  enum mdb_fields order[] = { MDB_ARTIST, MDB_ALBUM, 0 };
+  music_db_for_each (st->db, callback, order);
+}
+
+static void
+queue_artist_cb (GtkWidget *widget, gpointer d)
+{
+  struct menu_info *info = d;
+  Starling *st = info->st;
+
+  bool saw = false;
+
+  int callback (int uid, struct music_db_info *i)
+  {
+    if (strcmp (i->artist, info->artist) == 0)
+      {
+	music_db_play_queue_enqueue (st->db, uid);
+	saw = true;
+      }
+    else if (saw)
+      /* They are sorted by artist, we already saw the artist and this
+	 one doesn't match.  We're done.  */
+      return 1;
+
+    return 0;
+  }
+
+  enum mdb_fields order[] = { MDB_ARTIST, 0 };
+  music_db_for_each (st->db, callback, order);
+}
+
+static gboolean
+library_button_press_event (GtkWidget *widget, GdkEventButton *event,
+			    Starling *st)
+{
+  if (event->button == 3)
+    {
+      GtkTreePath *path;
+      if (! gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (st->library_view),
+					   event->x, event->y,
+					   &path, NULL, NULL, NULL))
+	return FALSE;
+
+      g_assert (gtk_tree_path_get_depth (path) == 1);
+
+      gint *indices = gtk_tree_path_get_indices (path);
+      int idx = indices[0];
+
+      gtk_tree_path_free (path);
+
+      struct menu_info *info = g_malloc (sizeof (*info));
+      char *title;
+      info->st = st;
+      play_list_get_info (st->pl, idx, &info->uid, NULL,
+			  &info->artist, &info->album,
+			  NULL, &title, NULL);
+
+      GtkMenu *menu = GTK_MENU (gtk_menu_new ());
+      int i = 0;
+
+      /* Create a "queue this song button."  */
+      GtkWidget *button = gtk_menu_item_new_with_label ("");
+      char *str = g_strdup_printf (_("Queue <i>%.20s%s</i>"),
+				   title, strlen (title) > 20 ? "..." : "");
+      gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
+      g_free (str);
+      g_signal_connect (G_OBJECT (button), "activate",
+			G_CALLBACK (queue_song_cb), info);
+      gtk_widget_show (button);
+      gtk_menu_attach (menu, button, 0, 1, i, i + 1);
+      i ++;
+
+      /* Create a "queue this album button."  */
+      button = gtk_menu_item_new_with_label ("");
+      str = g_strdup_printf (_("Queue album <i>%.20s%s</i>"),
+			     info->album,
+			     strlen (info->album) > 20 ? "..." : "");
+      gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
+      g_free (str);
+      g_signal_connect (G_OBJECT (button), "activate",
+			G_CALLBACK (queue_album_cb), info);
+      gtk_widget_show (button);
+      gtk_menu_attach (menu, button, 0, 1, i, i + 1);
+      i ++;
+
+      /* Create a "queue this artist button."  */
+      button = gtk_menu_item_new_with_label ("");
+      str = g_strdup_printf (_("Queue songs by <i>%.20s%s</i>"),
+			     info->artist,
+			     strlen (info->artist) > 20 ? "..." : "");
+      gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
+      g_free (str);
+      g_signal_connect (G_OBJECT (button), "activate",
+			G_CALLBACK (queue_artist_cb), info);
+      gtk_widget_show (button);
+      gtk_menu_attach (menu, button, 0, 1, i, i + 1);
+      i ++;
+
+      g_free (title);
+
+      g_signal_connect (G_OBJECT (menu), "selection-done",
+			G_CALLBACK (menu_destroy), info);
+
+      gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
+		      event->button, event->time);
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
+
 Starling *
 starling_run (void)
 {
@@ -1230,6 +1393,8 @@ starling_run (void)
   st->library_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->pl));
   g_signal_connect (G_OBJECT (st->library_view), "row-activated",
 		    G_CALLBACK (activated_cb), st);
+  g_signal_connect (G_OBJECT (st->library_view), "button-press-event",
+		    G_CALLBACK (library_button_press_event), st);
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->library_view), FALSE);
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->library_view), TRUE);
   gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->library_view), TRUE);
