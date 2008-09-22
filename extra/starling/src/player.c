@@ -269,7 +269,12 @@ void
 player_unpause (Player *pl)
 {
   if (! pl->playbin)
-    return;
+    /* Nothing is loaded.  */
+    {
+      g_signal_emit (pl, PLAYER_GET_CLASS (pl)->eos_signal_id, 0,
+		     pl->cookie);
+      return;
+    }
 
   if (pl->last_state != GST_STATE_PLAYING)
     gst_element_set_state (pl->playbin, GST_STATE_PLAYING);

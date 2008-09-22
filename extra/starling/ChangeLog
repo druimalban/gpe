@@ -1,5 +1,10 @@
 2008-09-21  Neal H. Walfield  <neal@gnu.org>
 
+	* src/player.c (player_unpause): If PL->PLAYBIN is false, emit an
+	"eos" signal.
+
+2008-09-21  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h (music_db_play_queue_enqueue): New declaration.
 	(music_db_play_queue_dequeue): Likewise.
 	(music_db_play_queue_count): Likewise.
