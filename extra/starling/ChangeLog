@@ -1,5 +1,10 @@
 2008-09-21  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (music_db_create_table): Drop table queue.
+	(music_db_play_queue_enqueue): Correct sql syntax.
+
+2008-09-21  Neal H. Walfield  <neal@gnu.org>
+
 	* src/player.c (player_unpause): If PL->PLAYBIN is false, emit an
 	"eos" signal.
 

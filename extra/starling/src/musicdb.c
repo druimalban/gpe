@@ -192,6 +192,7 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 		 "begin transaction;"
 		 "drop table files;"
 		 "drop table dirs;",
+		 "drop table queue;",
 		 NULL, NULL, &err);
   else
     sqlite_exec (db->sqliteh,
@@ -1294,7 +1295,7 @@ void
 music_db_play_queue_enqueue (MusicDB *db, int uid)
 {
   char *err = NULL;
-  sqlite_exec_printf (db->sqliteh, "insert into queue %d",
+  sqlite_exec_printf (db->sqliteh, "insert into queue (uid) values (%d)",
 		      NULL, NULL, &err, uid);
   if (err)
     {
