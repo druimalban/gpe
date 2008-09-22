@@ -63,6 +63,9 @@ struct _Starling {
   GtkWidget *playpause;
   GtkWidget *scale;
   gboolean scale_pressed;
+
+  GtkWidget *notebook;
+
   GtkScrolledWindow *library_view_window;
   GtkWidget *library_view;
   GtkScrolledWindow *queue_view_window;
@@ -639,6 +642,13 @@ playpause_cb (GtkWidget *w, Starling *st)
     player_unpause (st->player);
   else
     player_pause (st->player);
+}
+
+static void
+jump_to_current (Starling *st)
+{
+  starling_scroll_to_playing (st);
+  gtk_notebook_set_current_page (GTK_NOTEBOOK (st->notebook), 0);
 }
 
 static gboolean
@@ -1347,20 +1357,11 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->duration),
 		      FALSE, FALSE, 0);
 
-
-  /* The notebook containing the tabs.  */
-  GtkWidget *notebook = gtk_notebook_new ();
-  gtk_container_add (GTK_CONTAINER (main_box), GTK_WIDGET (notebook));
-
-
-  /* Library view tab.  */
-
-  vbox = gtk_vbox_new (FALSE, 5);
-
+  /* The currently playing song.  */
   /* Stuff the title label in an hbox to prevent it from being
      centered.  */
   hbox = GTK_BOX (gtk_hbox_new (FALSE, 5));
-  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), FALSE, FALSE, 0);
+  gtk_box_pack_start (main_box, GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
   st->title = gtk_label_new (_("Not playing"));
@@ -1374,9 +1375,18 @@ starling_run (void)
 			gtk_image_new_from_stock (GTK_STOCK_JUMP_TO,
 						  GTK_ICON_SIZE_BUTTON));
   g_signal_connect_swapped (G_OBJECT (jump_to), "clicked",
-			    G_CALLBACK (starling_scroll_to_playing), st);
+			    G_CALLBACK (jump_to_current), st);
   gtk_box_pack_start (hbox, jump_to, FALSE, FALSE, 0);
 
+
+  /* The notebook containing the tabs.  */
+  st->notebook = gtk_notebook_new ();
+  gtk_container_add (GTK_CONTAINER (main_box), GTK_WIDGET (st->notebook));
+
+
+  /* Library view tab.  */
+
+  vbox = gtk_vbox_new (FALSE, 5);
 
   st->library_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->pl));
   g_signal_connect (G_OBJECT (st->library_view), "row-activated",
@@ -1417,7 +1427,7 @@ starling_run (void)
 		    G_CALLBACK (save_cb), st);
 #endif
     
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox,
+  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
 			    gtk_label_new (_("Player")));
 
 
@@ -1450,7 +1460,7 @@ starling_run (void)
   gtk_container_add (GTK_CONTAINER (scrolled), st->queue_view);
   gtk_container_add (GTK_CONTAINER (vbox), scrolled);
     
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox,
+  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
 			    gtk_label_new (_("Queue")));
 
   /* Lyrics tab */
@@ -1468,7 +1478,7 @@ starling_run (void)
 
   gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 3);
 
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox,
+  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
 			    gtk_label_new (_("Lyrics")));
 
   /* Web services tab (for now, last.fm) */
@@ -1503,7 +1513,7 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (vbox), st->web_count, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), st->web_submit, FALSE, FALSE, 0);
     
-  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox,
+  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
 			    gtk_label_new (_("last.fm")));
 
 
