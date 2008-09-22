@@ -76,9 +76,6 @@ struct _MusicDB
 
   sqlite *sqliteh;
 
-  /* Number of entries in the DB.  If -1, invalid.  */
-  int count;
-
   /* UIDs of files whose metadata we should try to read.  */
   GQueue *meta_data_reader_pending;
   /* The idle handler.  */
@@ -158,7 +155,6 @@ music_db_class_init (MusicDBClass *klass)
 static void
 music_db_init (MusicDB *db)
 {
-  db->count = -1;
 }
 
 static void
@@ -369,32 +365,34 @@ music_db_open (const char *file, GError **error)
 }
 
 gint
-music_db_count (MusicDB *db)
+music_db_count (MusicDB *db, const char *constraint)
 {
-  if (db->count == -1)
+  if (constraint && ! *constraint)
+    constraint = NULL;
+
+  int count = 0;
+
+  int callback (void *arg, int argc, char **argv, char **names)
+  {
+    count = atoi (argv[0]);
+
+    return 0;
+  }
+
+  char *err = NULL;
+  sqlite_exec_printf (db->sqliteh,
+		      "select count (*) from files %s%s",
+		      callback, NULL, &err,
+		      constraint ? "where " : "",
+		      constraint ? constraint : "");
+  if (err)
     {
-      db->count = 0;
-
-      int callback (void *arg, int argc, char **argv, char **names)
-      {
-	db->count = atoi (argv[0]);
-
-	return 0;
-      }
-
-      char *err = NULL;
-      sqlite_exec (db->sqliteh,
-		   "select count (*) from files",
-		   callback, NULL, &err);
-      if (err)
-	{
-	  g_critical ("%s", err);
-	  sqlite_freemem (err);
-	  return 0;
-	}
+      g_critical ("%s", err);
+      sqlite_freemem (err);
+      return 0;
     }
 
-  return db->count;
+  return count;
 }
 
 /* Forward.  */
@@ -645,9 +643,6 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 	break;
 
       int uid = sqlite_last_insert_rowid (sqliteh);
-
-      if (db->count != -1)
-	db->count ++;
 
       g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->new_entry_signal_id, 0,
 		     uid);
@@ -905,9 +900,6 @@ music_db_remove (MusicDB *db, gint uid)
       sqlite_freemem (err);
     }
 
-  if (db->count > 0)
-    db->count --;
-
   simple_cache_shootdown (&info_cache, uid);
 
   g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->deleted_entry_signal_id, 0, uid);
@@ -924,8 +916,6 @@ music_db_clear (MusicDB *db)
       g_error_free (tmp_error);
       return;
     }
-
-  db->count = 0;
 
   simple_cache_drop (&info_cache);
   g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->cleared_signal_id, 0);
@@ -1237,6 +1227,9 @@ music_db_for_each (MusicDB *db,
 		   enum mdb_fields *order,
 		   const char *constraint)
 {
+  if (constraint && ! *constraint)
+    constraint = NULL;
+
   struct obstack sql;
 
   obstack_init (&sql);

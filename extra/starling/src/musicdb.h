@@ -73,8 +73,11 @@ extern MusicDB *music_db_open (const char *file, GError **error);
 
 /** music_db_count:
 
-  Returns the number of entries in the music db.  */
-extern gint music_db_count (MusicDB *db) __attribute__ ((pure));
+  Returns the number of entries in the music db that match constraint
+  CONSTAINT.  See music_db_for_each for valid values of
+  constraint.  */
+extern gint music_db_count (MusicDB *db,
+			    const char *constraint) __attribute__ ((pure));
 
 
 /** music_db_add_m3u:

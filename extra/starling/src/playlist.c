@@ -47,6 +47,9 @@ struct _PlayList {
   /* Position in the playlist.  */
   int position;
 
+  /* The visible entries.  */
+  char *constraint;
+
   /* The number of entries in the playlist.  */
   int count;
 
@@ -121,6 +124,8 @@ play_list_dispose (GObject *obj)
   if (pl->db)
     g_object_unref (pl->db);
 
+  g_free (pl->constraint);
+
   /* Chain up to the parent class */
   G_OBJECT_CLASS (play_list_parent_class)->dispose (obj);
 }
@@ -159,7 +164,7 @@ do_refresh (gpointer data)
   pl->uid_idx_hash = g_hash_table_new (NULL, NULL);
 
   if (pl->mode == PLAY_LIST_LIBRARY)
-    pl->count = music_db_count (pl->db);
+    pl->count = music_db_count (pl->db, pl->constraint);
   else
     pl->count = music_db_play_queue_count (pl->db);
 
@@ -180,7 +185,7 @@ do_refresh (gpointer data)
     {
       enum mdb_fields order[]
 	= { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
-      music_db_for_each (pl->db, cb, order, NULL);
+      music_db_for_each (pl->db, cb, order, pl->constraint);
     }
   else
     music_db_queue_for_each (pl->db, cb);
@@ -390,6 +395,26 @@ play_list_new (MusicDB *db, enum play_list_mode mode)
     }
 
   return pl;
+}
+
+void
+play_list_constrain (PlayList *pl, const char *constraint)
+{
+  if (constraint && ! *constraint)
+    constraint = NULL;
+
+  if (! pl->constraint && ! constraint)
+    return;
+  if (pl->constraint && constraint && strcmp (pl->constraint, constraint) == 0)
+    return;
+
+  g_free (pl->constraint);
+  if (constraint)
+    pl->constraint = g_strdup (constraint);
+  else
+    pl->constraint = NULL;
+
+  play_list_idx_uid_refresh_schedule (pl, true);
 }
 
 gint

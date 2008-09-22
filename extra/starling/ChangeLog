@@ -1,5 +1,29 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.h (music_db_count): Take additional parameter
+	constraint.
+	* src/musicdb.c (struct _MusicDB): Remove field count.
+	(music_db_init): Don't initialize DB->COUNT.
+	(music_db_count): Take additional parameter constraint.  If not
+	NULL or the empty string, add to the SQL query.  Don't save result
+	in DB->COUNT.
+	(music_db_add): Don't update DB->COUNT.
+	(music_db_remove): Likewise.
+	(music_db_clear): Likewise.
+	(music_db_for_each): If CONSTRAINT is the empty string, treat it
+	as if it were NULL.
+	* src/playlist.h (play_list_constrain): New declaration.
+	* src/playlist.c (struct _PlayList): Add field constraint.
+	(play_list_dispose): Free PL->CONSTRAINT.
+	(do_refresh): Pass PL->CONSTRAINT to music_db_count and
+	music_db_for_each.
+	(play_list_constrain): New function.
+	* src/starling.c (search_text_changed): New function.
+	(starling_run): Add a search box.  Connect it to
+	search_text_changed.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct _Starling): Add field notebook.
 	(jump_to_current): New function.
 	(starling_run): Put the title and "jump to current" button in the

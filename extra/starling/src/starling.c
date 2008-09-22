@@ -651,6 +651,23 @@ jump_to_current (Starling *st)
   gtk_notebook_set_current_page (GTK_NOTEBOOK (st->notebook), 0);
 }
 
+static void
+search_text_changed (GtkEditable *search, gpointer data)
+{
+  Starling *st = data;
+
+  const char *text = gtk_entry_get_text (GTK_ENTRY (search));
+
+  char *constraint = sqlite_mprintf ("artist like '%%%q%%'"
+				     "or album like '%%%q%%'"
+				     "or title like '%%%q%%'",
+				     text, text, text);
+
+  play_list_constrain (st->pl, constraint);
+
+  sqlite_freemem (constraint);
+}
+
 static gboolean
 scale_button_released_cb (GtkRange *range, GdkEventButton *event,
         Starling *st)
@@ -1384,9 +1401,23 @@ starling_run (void)
   gtk_container_add (GTK_CONTAINER (main_box), GTK_WIDGET (st->notebook));
 
 
-  /* Library view tab.  */
+  /* Library view tab.  Place a search field at the top and the
+     library view at the bottom.  */
 
   vbox = gtk_vbox_new (FALSE, 5);
+
+  /* The currently playing song.  */
+  /* Stuff the title label in an hbox to prevent it from being
+     centered.  */
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, 5));
+  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (hbox));
+
+  GtkWidget *search = gtk_entry_new ();
+  g_signal_connect (G_OBJECT (search), "changed",
+		    G_CALLBACK (search_text_changed), st);
+  gtk_box_pack_start (hbox, search, TRUE, TRUE, 0);
+
 
   st->library_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->pl));
   g_signal_connect (G_OBJECT (st->library_view), "row-activated",
