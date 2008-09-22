@@ -161,5 +161,27 @@ extern void music_db_set_info_from_tags (MusicDB *db, int uid,
 extern int music_db_for_each (MusicDB *db,
 			      int (*cb) (int uid, struct music_db_info *info),
 			      enum mdb_fields *order);
+
+/* Enqueue UID to the end of the play queue.  */
+extern void music_db_play_queue_enqueue (MusicDB *db, int uid);
+ 
+/* Dequeue an element from the play queue, return its UID.  Returns
+   0 if the queue is empty or an error occurs.  */
+extern int music_db_play_queue_dequeue (MusicDB *db);
 
+/* Returns the number of elements in the play queue.  */
+extern int music_db_play_queue_count (MusicDB *db);
+
+/* Returns the UID of the OFFSET element in the queue (0 based).  If
+   the returned value is zero, there is no such element at that
+   offset.  */
+extern int music_db_play_queue_query (MusicDB *db, int offset);
+
+/* Removes the element at OFFSET in the play queue.  */
+extern void music_db_play_queue_remove (MusicDB *db, int offset);
+
+/* Iterate over each entry in the queue, in order.  */
+extern int music_db_queue_for_each (MusicDB *db,
+				    int (*cb) (int uid,
+					       struct music_db_info *info));
 #endif

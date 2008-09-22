@@ -226,7 +226,10 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 
 	       /* Create the table for the directories.  */
 	       "create table dirs (filename STRING); "
-	       "commit transaction;",
+	       "commit transaction;"
+
+	       /* Create a table for the play queue.  */
+	       "create table queue (uid INTEGER)",
 	       NULL, NULL, NULL);
 }
 
@@ -1160,12 +1163,64 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
     }
 }
 
+struct info_callback_data
+{
+  int (*user_callback) (int uid, struct music_db_info *info);
+  int ret;
+};
+
+static int
+info_callback (void *arg, int argc, char **argv, char **names)
+{
+  struct info_callback_data *data = arg;
+
+  g_assert (argc == 7);
+
+  struct music_db_info info;
+
+  int uid = atoi (argv[0]);
+
+  info.fields = 0;
+
+  info.source = argv[1];
+  if (info.source)
+    info.fields |= MDB_SOURCE;
+
+  info.artist = argv[2];
+  if (info.artist)
+    info.fields |= MDB_ARTIST;
+
+  info.album = argv[3];
+  if (info.album)
+    info.fields |= MDB_ALBUM;
+
+  if (argv[4])
+    {
+      info.track = atoi (argv[4]);
+      info.fields |= MDB_TRACK;
+    }
+
+  info.title = argv[5];
+  if (info.title)
+    info.fields |= MDB_TITLE;
+
+  if (argv[6])
+    {
+      info.duration = atoi (argv[6]);
+      info.fields |= MDB_DURATION;
+    }
+
+  data->ret = data->user_callback (uid, &info);
+  return data->ret;
+}
+
 int
 music_db_for_each (MusicDB *db,
 		   int (*user_callback) (int uid, struct music_db_info *info),
 		   enum mdb_fields *order)
 {
   struct obstack sql;
+
   obstack_init (&sql);
 
   obstack_printf (&sql,
@@ -1215,54 +1270,15 @@ music_db_for_each (MusicDB *db,
 	}
     }
 
-  int ret = 0;
-  int callback (void *arg, int argc, char **argv, char **names)
-  {
-    g_assert (argc == 7);
-
-    struct music_db_info info;
-
-    int uid = atoi (argv[0]);
-
-    info.fields = 0;
-
-    info.source = argv[1];
-    if (info.source)
-      info.fields |= MDB_SOURCE;
-
-    info.artist = argv[2];
-    if (info.artist)
-      info.fields |= MDB_ARTIST;
-
-    info.album = argv[3];
-    if (info.album)
-      info.fields |= MDB_ALBUM;
-
-    if (argv[4])
-      {
-	info.track = atoi (argv[4]);
-	info.fields |= MDB_TRACK;
-      }
-
-    info.title = argv[5];
-    if (info.title)
-      info.fields |= MDB_TITLE;
-
-    if (argv[6])
-      {
-	info.duration = atoi (argv[6]);
-	info.fields |= MDB_DURATION;
-      }
-
-    ret = user_callback (uid, &info);
-    return ret;
-  }
-
   obstack_1grow (&sql, 0);
   char *statement = obstack_finish (&sql);
 
+  struct info_callback_data data;
+  data.ret = 0;
+  data.user_callback = user_callback;
+
   char *err = NULL;
-  sqlite_exec (db->sqliteh, statement, callback, NULL, &err);
+  sqlite_exec (db->sqliteh, statement, info_callback, &data, &err);
   if (err)
     {
       fprintf (stderr, "%s:%d: %s", __FUNCTION__, __LINE__, err);
@@ -1271,5 +1287,143 @@ music_db_for_each (MusicDB *db,
 
   obstack_free (&sql, NULL);
 
-  return ret;
+  return data.ret;
+}
+
+void
+music_db_play_queue_enqueue (MusicDB *db, int uid)
+{
+  char *err = NULL;
+  sqlite_exec_printf (db->sqliteh, "insert into queue %d",
+		      NULL, NULL, &err, uid);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+    }
+}
+
+int
+music_db_play_queue_dequeue (MusicDB *db)
+{
+  int rowid = 0;
+  int uid = 0;
+  int callback (void *arg, int argc, char **argv, char **names)
+  {
+    rowid = atoi (argv[0]);
+    uid = atoi (argv[1]);
+    return 0;
+  }
+
+  char *err = NULL;
+  sqlite_exec (db->sqliteh, "select ROWID, uid from queue limit 1;",
+	       callback, NULL, &err);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+
+      return 0;
+    }
+
+  sqlite_exec_printf (db->sqliteh,
+		      "delete from queue where rowid = %d;",
+		      NULL, NULL, &err, rowid);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+    }
+
+  return uid;
+}
+
+int
+music_db_play_queue_count (MusicDB *db)
+{
+  int count = 0;
+  int callback (void *arg, int argc, char **argv, char **names)
+  {
+    count = atoi (argv[0]);
+    return 0;
+  }
+
+  char *err = NULL;
+  sqlite_exec (db->sqliteh, "select count(*) from queue",
+	       callback, NULL, &err);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+
+      return 0;
+    }
+
+  return count;
+}
+
+int
+music_db_play_queue_query (MusicDB *db, int offset)
+{
+  int uid = 0;
+  int callback (void *arg, int argc, char **argv, char **names)
+  {
+    uid = atoi (argv[0]);
+    return 0;
+  }
+
+  char *err = NULL;
+  sqlite_exec_printf (db->sqliteh,
+		      "select uid from queue limit 1 offset %d;",
+		      callback, NULL, &err, offset);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+
+      return 0;
+    }
+
+  return uid;
+}
+
+void
+music_db_play_queue_remove (MusicDB *db, int offset)
+{
+  char *err = NULL;
+  sqlite_exec_printf (db->sqliteh,
+		      "delete from queue where ROWID in "
+		      " (select ROWID from queue limit 1 offset %d);",
+		      NULL, NULL, &err, offset);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+
+      return;
+    }
+}
+
+int
+music_db_queue_for_each (MusicDB *db,
+			 int (*user_callback) (int uid,
+					       struct music_db_info *info))
+{
+  struct info_callback_data data;
+  data.ret = 0;
+  data.user_callback = user_callback;
+
+  char *err = NULL;
+  sqlite_exec (db->sqliteh,
+	       "select files.ROWID, files.source, files.artist, "
+	       "  files.album, files.track, files.title, files.duration "
+	       " from queue left join files on queue.uid = files.rowid;",
+	       info_callback, &data, &err);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      free (err);
+    }
+
+  return data.ret;
 }

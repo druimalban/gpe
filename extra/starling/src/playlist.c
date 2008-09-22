@@ -25,7 +25,6 @@
 #include <gtk/gtktreemodel.h>
 #include <gst/gst.h>
 #include <gst/audio/gstaudiosink.h>
-#include <sqlite.h>
 
 #include "playlist.h"
 #include "musicdb.h"
@@ -43,6 +42,8 @@ struct _PlayList {
 
   MusicDB *db;
 
+  enum play_list_mode mode;
+
   /* Position in the playlist.  */
   int position;
 
@@ -53,7 +54,8 @@ struct _PlayList {
   int size;
   /* Map from indexes to UID.  */
   int *idx_uid_map;
-  /* Hash mapping UIDs to indexes.  */
+  /* Hash mapping UIDs to indexes.  If in queue mode, the maps to one
+     index.  */
   GHashTable *uid_idx_hash;
 
   gint new_entry_signal_id;
@@ -150,7 +152,10 @@ do_refresh (gpointer data)
     g_hash_table_destroy (pl->uid_idx_hash);
   pl->uid_idx_hash = g_hash_table_new (NULL, NULL);
 
-  pl->count = music_db_count (pl->db);
+  if (pl->mode == PLAY_LIST_LIBRARY)
+    pl->count = music_db_count (pl->db);
+  else
+    pl->count = music_db_play_queue_count (pl->db);
 
   pl->size = pl->count + 128;
   pl->idx_uid_map = malloc (pl->size * sizeof (pl->idx_uid_map[0]));
@@ -165,9 +170,14 @@ do_refresh (gpointer data)
 
     return 0;
   }
-  enum mdb_fields order[]
-    = { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
-  music_db_for_each (pl->db, cb, order);
+  if (pl->mode == PLAY_LIST_LIBRARY)
+    {
+      enum mdb_fields order[]
+	= { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
+      music_db_for_each (pl->db, cb, order);
+    }
+  else
+    music_db_queue_for_each (pl->db, cb);
 
   /* We need to emit some signals now so the thing using this model
      will stay in sync.  We brute force it as calculating the
@@ -259,10 +269,16 @@ play_list_idx_to_uid (PlayList *pl, int idx)
   return pl->idx_uid_map[idx];
 }
 
-static int
-play_list_uid_to_idx (PlayList *pl, int uid)
+int
+play_list_uid_to_index (PlayList *pl, int uid)
 {
-  return (int) g_hash_table_lookup (pl->uid_idx_hash, (gpointer) uid);
+  gpointer key;
+  gpointer value;
+  if (! g_hash_table_lookup_extended (pl->uid_idx_hash, (gpointer) uid,
+				      &key, &value))
+    return -1;
+  else
+    return (int) value;
 }
 
 static void
@@ -278,7 +294,11 @@ changed_entry (MusicDB *db, gint uid, gpointer data)
 {
   PlayList *pl = PLAY_LIST (data);
 
-  int idx = play_list_uid_to_idx (pl, uid);
+  /* In queue mode, there may be several indexes that reference the
+     same track.  The refresh will catch the others.  */
+  int idx = play_list_uid_to_index (pl, uid);
+  if (idx == -1)
+    return;
 
   GtkTreePath *path = gtk_tree_path_new_from_indices (idx, -1);
   GtkTreeIter iter;
@@ -309,9 +329,12 @@ cleared (MusicDB *db, gpointer data)
 
 
 PlayList *
-play_list_new (MusicDB *db)
+play_list_new (MusicDB *db, enum play_list_mode mode)
 {
   PlayList *pl = PLAY_LIST (g_object_new (PLAY_LIST_TYPE, NULL));
+
+  g_assert (mode == PLAY_LIST_LIBRARY || mode == PLAY_LIST_QUEUE);
+  pl->mode = mode;
 
   g_object_ref (db);
   pl->db = db;
@@ -376,7 +399,10 @@ play_list_goto (PlayList *pl, gint n)
 void
 play_list_remove (PlayList *pl, gint idx)
 {
-  music_db_remove (pl->db, play_list_idx_to_uid (pl, idx));
+  if (pl->mode == PLAY_LIST_LIBRARY)
+    music_db_remove (pl->db, play_list_idx_to_uid (pl, idx));
+  else
+    music_db_play_queue_remove (pl->db, idx);
 }
 
 void

@@ -38,13 +38,14 @@ extern bool starling_random (Starling *st);
 /* Set whether random mode is enabled to VALUE.  */
 extern void starling_random_set (Starling *st, bool enabled);
 
-/* Start playing.  */
+/* Start playing the currently selected entry.  */
 extern gboolean starling_play (Starling *st);
 
-/* Go to the next track.  */
+/* Select the next track according to the play queue and random
+   mode.  */
 extern void starling_next (Starling *st);
 
-/* Go to the previos track.  */
+/* Go to the previous track.  */
 extern void starling_prev (Starling *st);
 
 /* Scroll the main view to the currently playing track.  */

@@ -63,8 +63,10 @@ struct _Starling {
   GtkWidget *playpause;
   GtkWidget *scale;
   gboolean scale_pressed;
-  GtkScrolledWindow *treeview_window;
-  GtkWidget *treeview;
+  GtkScrolledWindow *library_view_window;
+  GtkWidget *library_view;
+  GtkScrolledWindow *queue_view_window;
+  GtkWidget *queue_view;
   GtkWidget *random;
   gchar *fs_last_path;
   GtkWidget *textview;
@@ -80,8 +82,9 @@ struct _Starling {
 #endif
 
   Player *player;
-  MusicDB *mdb;
+  MusicDB *db;
   PlayList *pl;
+  PlayList *queue;
 };
 
 bool
@@ -99,11 +102,12 @@ starling_random_set (Starling *st, bool value)
   gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (st->random), value);
 }
 
-gboolean
-starling_play (Starling *st)
+static gboolean
+starling_load (Starling *st)
 {
   char *source = NULL;
   int uid;
+
   play_list_get_info (st->pl, -1, &uid, &source, NULL,
 		      NULL, NULL, NULL, NULL);
   if (! source)
@@ -113,10 +117,19 @@ starling_play (Starling *st)
     }
 
   player_set_source (st->player, source, (gpointer) uid);
-  player_play (st->player);
 
   g_free (source);
   return TRUE;
+}
+
+gboolean
+starling_play (Starling *st)
+{
+  bool ret = starling_load (st);
+  if (ret)
+    ret = player_play (st->player);
+
+  return ret;
 }
 
 static bool
@@ -129,64 +142,64 @@ do_goto (Starling *st, int n)
   return starling_play (st);
 }
 
-static gint
-do_random_next (Starling *st)
+static void
+starling_advance (Starling *st, int delta)
 {
   if (play_list_count (st->pl) == 0)
-    return 0;
+    return;
 
-  static int rand_init;
-  if (! rand_init)
+  int idx;
+  do
     {
-      srand (time (NULL));
-      rand_init = 1;
-    }
+      idx = -1;
 
-  return rand () % play_list_count (st->pl);
+      int uid = music_db_play_queue_dequeue (st->db);
+      if (uid)
+	idx = play_list_uid_to_index (st->pl, uid);
+
+      if (idx == -1)
+	{
+	  if (starling_random (st))
+	    {
+	      static int rand_init;
+	      if (! rand_init)
+		{
+		  srand (time (NULL));
+		  rand_init = 1;
+		}
+
+	      idx = rand () % play_list_count (st->pl);
+	    }
+	  else
+	    {
+	      idx = play_list_get_current (st->pl) + delta;
+
+	      if (delta > 0)
+		{
+		  if (idx >= play_list_count (st->pl))
+		    idx = 0;
+		}
+	      else
+		{
+		  if (idx < 0)
+		    idx = play_list_count (st->pl) - 1;
+		}
+	    }
+	}
+    }
+  while (! do_goto (st, idx));
 }
-    
+
 void
 starling_next (Starling *st)
 {
-  int c = play_list_count (st->pl);
-  int n;
-  do
-    {
-      if (starling_random (st))
-	n = do_random_next (st);
-      else
-	{
-	  n = play_list_get_current (st->pl) + 1;
-
-	  if (n >= play_list_count (st->pl))
-	    n = 0;
-	}
-
-      c --;
-    }
-  while (! do_goto (st, n) && c > 0);
+  starling_advance (st, 1);
 }
 
 void
 starling_prev (Starling *st)
 {
-  int c = play_list_count (st->pl);
-  int n;
-  do
-    {
-      if (starling_random (st))
-	n = do_random_next (st);
-      else
-	{
-	  n = play_list_get_current (st->pl) - 1;
-
-	  if (n < 0)
-	    n = play_list_count (st->pl) - 1;
-	}
-
-      c --;
-    }
-  while (! do_goto (st, n) && c > 0);
+  starling_advance (st, -1);
 }
 
 void
@@ -227,7 +240,7 @@ deserialize_bottom_half (gpointer data)
 
   GtkAdjustment *vadj
     = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
-		      (st->treeview_window));
+		      (st->library_view_window));
   gtk_adjustment_set_value (vadj, bh->vadj_val);
 
   g_free (data);
@@ -311,6 +324,7 @@ deserialize (Starling *st)
   play_list_goto (st->pl,
 		  g_key_file_get_integer (keyfile,
 					  GROUP, KEY_CURRENT_ENTRY, NULL));
+  starling_load (st);
 
 
   struct deserialize_bottom_half *bf = calloc (sizeof (*bf), 1);
@@ -372,7 +386,7 @@ serialize (Starling *st)
   /* Position.  */
   GtkAdjustment *vadj
     = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
-		      (st->treeview_window));
+		      (st->library_view_window));
   char *value = g_strdup_printf ("%f", gtk_adjustment_get_value (vadj));
   g_key_file_set_string (keyfile, GROUP, KEY_POSITION, value);
   g_free (value);
@@ -397,7 +411,7 @@ starling_scroll_to_playing (Starling *st)
 
   GtkAdjustment *vadj
     = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
-		      (st->treeview_window));
+		      (st->library_view_window));
   int pos = play_list_get_current (st->pl);
   gtk_adjustment_set_value
     (vadj,
@@ -439,7 +453,7 @@ add_cb (GtkWidget *w, Starling *st, GtkFileChooserAction action)
       {
 	GError *error = NULL;
 	char *file = i->data;
-        music_db_add_recursive (st->mdb, file, &error);
+        music_db_add_recursive (st->db, file, &error);
 	if (error)
 	  {
 	    g_warning ("Reading %s: %s", file, error->message);
@@ -500,7 +514,7 @@ set_random_cb (GtkWidget *w, Starling *st)
 static void
 remove_cb (GtkWidget *w, Starling *st)
 {
-  int pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->treeview));
+  int pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->library_view));
   if (pos >= 0)
     play_list_remove (st->pl, pos);
 }
@@ -508,7 +522,7 @@ remove_cb (GtkWidget *w, Starling *st)
 static void
 clear_cb (GtkWidget *w, Starling *st)
 {   
-  music_db_clear (st->mdb);
+  music_db_clear (st->db);
 }
 
 #ifdef IS_HILDON
@@ -728,7 +742,7 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
       char *title_buffer;
       char *uri_buffer;
 
-      music_db_get_info (st->mdb, (gint) uid, &uri_buffer,
+      music_db_get_info (st->db, (gint) uid, &uri_buffer,
 			 &artist_buffer, NULL, NULL, &title_buffer, NULL);
       char *uri = uri_buffer;
       if (! uri)
@@ -910,7 +924,7 @@ starling_run (void)
   char *file = g_strdup_printf ("%s/.starling/playlist", home);
 
   GError *err = NULL;
-  st->mdb = music_db_open (file, &err);
+  st->db = music_db_open (file, &err);
   g_free (file);
   if (err)
     {
@@ -920,7 +934,8 @@ starling_run (void)
       exit (1);
     }
 
-  st->pl = play_list_new (st->mdb);
+  st->pl = play_list_new (st->db, PLAY_LIST_LIBRARY);
+  st->queue = play_list_new (st->db, PLAY_LIST_QUEUE);
 
   st->player = player_new ();
 
@@ -929,7 +944,7 @@ starling_run (void)
   g_signal_connect (G_OBJECT (st->player), "state-changed",
 		    G_CALLBACK (player_state_changed), st);
   g_signal_connect_swapped (G_OBJECT (st->player), "tags",
-			    G_CALLBACK (music_db_set_info_from_tags), st->mdb);
+			    G_CALLBACK (music_db_set_info_from_tags), st->db);
     
   /* Build the GUI.  */
   GtkWidget *hbox1 = NULL;
@@ -1181,8 +1196,15 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->duration),
 		      FALSE, FALSE, 0);
 
-  vbox = gtk_vbox_new (FALSE, 5);
 
+  /* The notebook containing the tabs.  */
+  GtkWidget *notebook = gtk_notebook_new ();
+  gtk_container_add (GTK_CONTAINER (main_box), GTK_WIDGET (notebook));
+
+
+  /* Library view tab.  */
+
+  vbox = gtk_vbox_new (FALSE, 5);
 
   /* Stuff the title label in an hbox to prevent it from being
      centered.  */
@@ -1204,18 +1226,19 @@ starling_run (void)
 			    G_CALLBACK (starling_scroll_to_playing), st);
   gtk_box_pack_start (hbox, jump_to, FALSE, FALSE, 0);
 
-  st->treeview = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->pl));
-  g_signal_connect (G_OBJECT (st->treeview), "row-activated",
-		    G_CALLBACK (activated_cb), st);
-  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->treeview), FALSE);
-  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->treeview), TRUE);
-  gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->treeview), TRUE);
 
-  gtk_widget_grab_focus (GTK_WIDGET (st->treeview));
+  st->library_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->pl));
+  g_signal_connect (G_OBJECT (st->library_view), "row-activated",
+		    G_CALLBACK (activated_cb), st);
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->library_view), FALSE);
+  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->library_view), TRUE);
+  gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->library_view), TRUE);
+
+  gtk_widget_grab_focus (GTK_WIDGET (st->library_view));
 
   GtkTreeViewColumn *col = gtk_tree_view_column_new ();
   gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
-  gtk_tree_view_append_column (GTK_TREE_VIEW (st->treeview), col);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (st->library_view), col);
   renderer = gtk_cell_renderer_text_new ();
   g_object_set (renderer, "cell-background", "gray", NULL);
   gtk_tree_view_column_pack_start (col, renderer, FALSE);
@@ -1225,12 +1248,12 @@ starling_run (void)
 				      NULL, NULL);
     
   scrolled = gtk_scrolled_window_new (NULL, NULL);
-  st->treeview_window = GTK_SCROLLED_WINDOW (scrolled);
+  st->library_view_window = GTK_SCROLLED_WINDOW (scrolled);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
 				  GTK_POLICY_AUTOMATIC,
 				  GTK_POLICY_AUTOMATIC);
     
-  gtk_container_add (GTK_CONTAINER (scrolled), st->treeview);
+  gtk_container_add (GTK_CONTAINER (scrolled), st->library_view);
   gtk_container_add (GTK_CONTAINER (vbox), scrolled);
     
   /* XXX: Currently disable as "save as" functionality is
@@ -1241,11 +1264,41 @@ starling_run (void)
 		    G_CALLBACK (save_cb), st);
 #endif
     
-  GtkWidget *notebook = gtk_notebook_new ();
   gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox,
 			    gtk_label_new (_("Player")));
 
-  gtk_container_add (GTK_CONTAINER (main_box), GTK_WIDGET (notebook));
+
+  /* Play queue tab.  */
+
+  vbox = gtk_vbox_new (FALSE, 5);
+
+  st->queue_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->queue));
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->queue_view), FALSE);
+  gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->queue_view), TRUE);
+  gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->queue_view), TRUE);
+
+  col = gtk_tree_view_column_new ();
+  gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (st->queue_view), col);
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set (renderer, "cell-background", "gray", NULL);
+  gtk_tree_view_column_pack_start (col, renderer, FALSE);
+  gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
+				      renderer,
+				      title_data_func,
+				      NULL, NULL);
+    
+  scrolled = gtk_scrolled_window_new (NULL, NULL);
+  st->queue_view_window = GTK_SCROLLED_WINDOW (scrolled);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
+				  GTK_POLICY_AUTOMATIC,
+				  GTK_POLICY_AUTOMATIC);
+    
+  gtk_container_add (GTK_CONTAINER (scrolled), st->queue_view);
+  gtk_container_add (GTK_CONTAINER (vbox), scrolled);
+    
+  gtk_notebook_append_page (GTK_NOTEBOOK (notebook), vbox,
+			    gtk_label_new (_("Queue")));
 
   /* Lyrics tab */
 

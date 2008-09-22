@@ -58,10 +58,16 @@ enum
     PL_COL_COUNT
   };
 
+enum play_list_mode
+  {
+    PLAY_LIST_LIBRARY,
+    PLAY_LIST_QUEUE
+  };
+
 /** play_list_open:
 
     Create a new play list based on the music database DB.  */
-extern PlayList *play_list_new (MusicDB *db);
+extern PlayList *play_list_new (MusicDB *db, enum play_list_mode mode);
 
 /* Return the number of entries.  */
 extern gint play_list_count (PlayList *pl);
@@ -90,6 +96,10 @@ extern void play_list_get_info (PlayList *pl, int index, int *uid,
 				char **source,
 				char **artist, char **album,
 				int *track, char **title, int *duration);
+
+/* Return an index (if any) associated with UID.  If none, return
+   -1.  */
+extern int play_list_uid_to_index (PlayList *pl, int uid);
 
 #endif
 

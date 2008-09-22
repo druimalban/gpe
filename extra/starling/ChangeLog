@@ -1,3 +1,51 @@
+2008-09-21  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.h (music_db_play_queue_enqueue): New declaration.
+	(music_db_play_queue_dequeue): Likewise.
+	(music_db_play_queue_count): Likewise.
+	(music_db_play_queue_query): Likewise.
+	(music_db_play_queue_remove): Likewise.
+	(music_db_queue_for_each): Likewise.
+	* src/musicdb.c (music_db_create_table): Create table queue.
+	(struct info_callback_data): New structure.
+	(music_db_for_each.callback): Move from here...
+	(info_callback): ... to here.  Interpret the first argument as a
+	struct info_callback_data.  Use it.  Update callers.
+	(music_db_play_queue_enqueue): New function.
+	(music_db_play_queue_dequeue): Likewise.
+	(music_db_play_queue_count): Likewise.
+	(music_db_play_queue_query): Likewise.
+	(music_db_play_queue_remove): Likewise.
+	(music_db_queue_for_each): Likewise.
+	* src/playlist.h (enum play_list_mode): New enumeration.
+	(play_list_new): Take additional parameter mode.  Update callers.
+	(play_list_uid_to_index): New declaration.
+	* src/playlist.c (struct _PlayList): Add field mode.
+	(do_refresh): If PL->MODE is PLAY_LIST_QUEUE, set PL->COUNT to the
+	result of music_db_play_queue_count, and call
+	music_db_queue_for_each instead of music_db_for_each.
+	(play_list_uid_to_idx): Rename from this...
+	(play_list_uid_to_index): ... to this.  Make extern.  If UID does
+	not exist in the hash, return -1.  Update callers.
+	(changed_entry): If play_list_uid_to_index returns -1, just
+	return.
+	(play_list_new): Take additional parameter mode.  Save in PL->MODE.
+	(play_list_remove): If PL->MODE is PLAY_LIST_QUEUE, call
+	music_db_play_queue_remove instead of music_db_remove.
+	* src/starling.c (struct _Starling): Rename field treeview_window
+	to library_view_window, treeview to library_view, and mdb to db.
+	Update users.  Add fields queue_view_window, queue_view, and
+	queue.
+	(starling_play): Move loading functionality...
+	(starling_load): ... to this new function.
+	(starling_next): Move advancement functionality...
+	(starling_advance): ... to this new function.  Take from the play
+	queue if it is not empty.
+	(starling_prev): Implement in terms of starling_advance.
+	(deserialize): When restoring the select entry, load it.
+	(starling_run): Set ST->QUEUE to a a new play list in queue mode.
+	Create a notebook tab for the play queue.
+
 2008-09-20  Neal H. Walfield  <neal@gnu.org>
 
 	* src/playlist.c (changed_entry): Schedule a refresh.
