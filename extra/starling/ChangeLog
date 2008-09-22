@@ -1,5 +1,26 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.h (struct _MusicDBClass): Add fields
+	added_to_queue_signal_id and removed_from_queue_signal_id.
+	* src/musicdb.c (music_db_class_init): Register signals
+	"added-to-queue" and "removed-from-queue".
+	(music_db_play_queue_enqueue): On success, emit the
+	"added-to-queue" signal.
+	(music_db_play_queue_dequeue): On success, emit the
+	"removed-from-queue" signal.
+	(music_db_play_queue_remove): Likewise.
+	* src/playlist.c (struct _PlayList): Add fields
+	added_to_queue_signal_id, and removed_from_queue_signal_id.
+	(play_list_dispose): Disconnect the signal
+	PL->ADDED_TO_QUEUE_SIGNAL_ID and PL->REMOVED_FROM_QUEUE_SIGNAL_ID.
+	(added_to_queue): New function.
+	(removed_from_queue): Likewise.
+	(play_list_new): Only connect to DB's "new-entry" signal if in
+	library mode.  Connect to DB's "added-to-queue" and DB's
+	"removed-from-queue" signals.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_create_table): Remove extra comma.
 
 2008-09-21  Neal H. Walfield  <neal@gnu.org>

@@ -137,6 +137,22 @@ music_db_class_init (MusicDBClass *klass)
 		    0, NULL, NULL,
 		    g_cclosure_marshal_VOID__VOID,
 		    G_TYPE_NONE, 0);
+
+  music_db_class->added_to_queue_signal_id
+    = g_signal_new ("added-to-queue",
+		    G_TYPE_FROM_CLASS (klass),
+		    G_SIGNAL_RUN_FIRST,
+		    0, NULL, NULL,
+		    g_cclosure_marshal_VOID__UINT,
+		    G_TYPE_NONE, 1, G_TYPE_UINT);
+
+  music_db_class->removed_from_queue_signal_id
+    = g_signal_new ("removed-from-queue",
+		    G_TYPE_FROM_CLASS (klass),
+		    G_SIGNAL_RUN_FIRST,
+		    0, NULL, NULL,
+		    g_cclosure_marshal_VOID__UINT,
+		    G_TYPE_NONE, 1, G_TYPE_UINT);
 }
 
 static void
@@ -1294,14 +1310,26 @@ music_db_for_each (MusicDB *db,
 void
 music_db_play_queue_enqueue (MusicDB *db, int uid)
 {
+  int count = 0;
+  int callback (void *arg, int argc, char **argv, char **names)
+  {
+    count = atoi (argv[0]);
+    return 0;
+  }
+
   char *err = NULL;
-  sqlite_exec_printf (db->sqliteh, "insert into queue (uid) values (%d)",
-		      NULL, NULL, &err, uid);
+  sqlite_exec_printf (db->sqliteh,
+		      "insert into queue (uid) values (%d);"
+		      "select count (*) from queue",
+		      callback, NULL, &err, uid);
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
       sqlite_freemem (err);
     }
+
+  g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->added_to_queue_signal_id, 0,
+		 count - 1);
 }
 
 int
@@ -1335,6 +1363,9 @@ music_db_play_queue_dequeue (MusicDB *db)
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
       sqlite_freemem (err);
     }
+
+  g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->removed_from_queue_signal_id, 0,
+		 0);
 
   return uid;
 }
@@ -1403,6 +1434,9 @@ music_db_play_queue_remove (MusicDB *db, int offset)
 
       return;
     }
+
+  g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->removed_from_queue_signal_id, 0,
+		 offset);
 }
 
 int

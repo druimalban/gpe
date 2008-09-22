@@ -54,6 +54,13 @@ struct _MusicDBClass
   guint deleted_entry_signal_id;
   /* "cleared" signal: All entries in the DB were removed.  */
   guint cleared_signal_id;
+
+  /* "added-to-queue" signal: A new entry was added to the play queue.
+     Passed the position (guint) and UID (guint) of the new entry.  */
+  guint added_to_queue_signal_id;
+  /* "removed-from-queue" signal: An entry was removed from the play
+     queue.  Passed the position (guint).  */
+  guint removed_from_queue_signal_id;
 };
 
 extern GType music_db_get_type (void);

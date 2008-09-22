@@ -62,6 +62,8 @@ struct _PlayList {
   gint changed_entry_signal_id;
   gint deleted_entry_signal_id;
   gint cleared_signal_id;
+  gint added_to_queue_signal_id;
+  gint removed_from_queue_signal_id;
 
   gint reschedule_timeout;
   /* Number of reschedules requests since last reschedule.  */
@@ -108,6 +110,10 @@ play_list_dispose (GObject *obj)
     g_signal_handler_disconnect (pl->db, pl->deleted_entry_signal_id);
   if (pl->cleared_signal_id)
     g_signal_handler_disconnect (pl->db, pl->cleared_signal_id);
+  if (pl->added_to_queue_signal_id)
+    g_signal_handler_disconnect (pl->db, pl->added_to_queue_signal_id);
+  if (pl->removed_from_queue_signal_id)
+    g_signal_handler_disconnect (pl->db, pl->removed_from_queue_signal_id);
 
   if (pl->reschedule_timeout)
     g_source_remove (pl->reschedule_timeout);
@@ -327,6 +333,22 @@ cleared (MusicDB *db, gpointer data)
   play_list_idx_uid_refresh_schedule (pl, true);
 }
 
+static void
+added_to_queue (MusicDB *db, gint offset, gpointer data)
+{
+  PlayList *pl = PLAY_LIST (data);
+
+  play_list_idx_uid_refresh_schedule (pl, false);
+}
+
+static void
+removed_from_queue (MusicDB *db, gint offset, gpointer data)
+{
+  PlayList *pl = PLAY_LIST (data);
+
+  play_list_idx_uid_refresh_schedule (pl, false);
+}
+
 
 PlayList *
 play_list_new (MusicDB *db, enum play_list_mode mode)
@@ -339,18 +361,33 @@ play_list_new (MusicDB *db, enum play_list_mode mode)
   g_object_ref (db);
   pl->db = db;
 
-  pl->new_entry_signal_id
-    = g_signal_connect (G_OBJECT (db), "new-entry",
-			G_CALLBACK (new_entry), pl);
+  if (pl->mode == PLAY_LIST_LIBRARY)
+    pl->new_entry_signal_id
+      = g_signal_connect (G_OBJECT (db), "new-entry",
+			  G_CALLBACK (new_entry), pl);
+
   pl->changed_entry_signal_id
     = g_signal_connect (G_OBJECT (db), "changed-entry",
 			G_CALLBACK (changed_entry), pl);
+
   pl->deleted_entry_signal_id
     = g_signal_connect (G_OBJECT (db), "deleted-entry",
 			G_CALLBACK (deleted_entry), pl);
+
   pl->cleared_signal_id
     = g_signal_connect (G_OBJECT (db), "cleared",
 			G_CALLBACK (cleared), pl);
+
+  if (pl->mode == PLAY_LIST_QUEUE)
+    {
+      pl->added_to_queue_signal_id
+	= g_signal_connect (G_OBJECT (db), "added-to-queue",
+			    G_CALLBACK (added_to_queue), pl);
+
+      pl->removed_from_queue_signal_id
+	= g_signal_connect (G_OBJECT (db), "removed-from-queue",
+			    G_CALLBACK (removed_from_queue), pl);
+    }
 
   return pl;
 }
