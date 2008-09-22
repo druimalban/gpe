@@ -191,7 +191,7 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
     sqlite_exec (db->sqliteh,
 		 "begin transaction;"
 		 "drop table files;"
-		 "drop table dirs;",
+		 "drop table dirs;"
 		 "drop table queue;",
 		 NULL, NULL, &err);
   else

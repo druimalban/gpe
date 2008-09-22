@@ -1,3 +1,7 @@
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (music_db_create_table): Remove extra comma.
+
 2008-09-21  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (struct menu_info): New structure.
