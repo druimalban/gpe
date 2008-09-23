@@ -68,6 +68,7 @@ struct _Starling {
 
   GtkScrolledWindow *library_view_window;
   GtkWidget *library_view;
+  GtkWidget *search_entry;
   GtkScrolledWindow *queue_view_window;
   GtkWidget *queue_view;
   GtkWidget *random;
@@ -657,21 +658,65 @@ jump_to_current (Starling *st)
   gtk_notebook_set_current_page (GTK_NOTEBOOK (st->notebook), 0);
 }
 
-static void
-search_text_changed (GtkEditable *search, gpointer data)
+static int regen_source;
+
+static int
+search_text_regen (gpointer data)
 {
   Starling *st = data;
 
-  const char *text = gtk_entry_get_text (GTK_ENTRY (search));
+  regen_source = 0;
 
-  char *constraint = sqlite_mprintf ("artist like '%%%q%%'"
-				     "or album like '%%%q%%'"
-				     "or title like '%%%q%%'",
-				     text, text, text);
+  const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+  if (! text || ! *text)
+    return FALSE;
 
-  play_list_constrain (st->pl, constraint);
+  char *s = sqlite_mprintf ("%q", text);
 
-  sqlite_freemem (constraint);
+  struct obstack constraint;
+  obstack_init (&constraint);
+
+  bool have_one = false;
+
+  char *tok;
+  for (tok = strtok (s, " "); tok; tok = strtok (NULL, " "))
+    if (*tok)
+      {
+	if (have_one)
+	  obstack_printf (&constraint, "and ");
+	else
+	  have_one = true;
+	  
+	obstack_printf (&constraint,
+			"(artist like '%%%s%%'"
+			"or album like '%%%s%%'"
+			"or title like '%%%s%%'"
+			"or source like '%%%s%%') ",
+			tok, tok, tok, tok);
+      }
+  sqlite_freemem (s);
+
+  obstack_1grow (&constraint, 0);
+
+  play_list_constrain (st->pl, obstack_finish (&constraint));
+
+  obstack_free (&constraint, NULL);
+
+  return FALSE;
+}
+
+static void
+search_text_changed (GtkEditable *search, gpointer data)
+{
+  /* When the user changes the source text, we don't update
+     immediately but try to group updates.  The assumption is that
+     users will type a few characters.  Thus, we wait until there is
+     no activity for 100ms before triggering the update.  */
+  Starling *st = data;
+
+  if (regen_source)
+    g_source_remove (regen_source);
+  regen_source = g_timeout_add (100, search_text_regen, st);
 }
 
 static gboolean
@@ -1426,10 +1471,10 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
-  GtkWidget *search = gtk_entry_new ();
-  g_signal_connect (G_OBJECT (search), "changed",
+  st->search_entry = gtk_entry_new ();
+  g_signal_connect (G_OBJECT (st->search_entry), "changed",
 		    G_CALLBACK (search_text_changed), st);
-  gtk_box_pack_start (hbox, search, TRUE, TRUE, 0);
+  gtk_box_pack_start (hbox, st->search_entry, TRUE, TRUE, 0);
 
 
   st->library_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->pl));

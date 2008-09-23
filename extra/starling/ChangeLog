@@ -1,5 +1,17 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct _Starling): Add field search_entry.
+	(regen_source): New variable.
+	(search_text_changed): Move body from here...
+	(search_text_regen): ... to this new function.  Don't treat the
+	search text as a single string, instead, search for the occurance
+	of each word.
+	(search_text_changed): If REGEN_SOURCE is not 0, remove the
+	timeout.  Set a timeout to call search_text_regen.
+	(starling_run): Save the search entry in ST->SEARCH_ENTRY.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h (music_db_play_queue_clear): New declaration.
 	* src/musicdb.c (music_db_play_queue_clear): New function.
 	* src/starling.c (clear_queue_cb): New function.
