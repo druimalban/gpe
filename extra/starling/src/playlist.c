@@ -44,9 +44,6 @@ struct _PlayList {
 
   enum play_list_mode mode;
 
-  /* Position in the playlist.  */
-  int position;
-
   /* The visible entries.  */
   char *constraint;
 
@@ -417,6 +414,12 @@ play_list_constrain (PlayList *pl, const char *constraint)
   play_list_idx_uid_refresh_schedule (pl, true);
 }
 
+const char *
+play_list_constraint_get (PlayList *pl)
+{
+  return pl->constraint;
+}
+
 gint
 play_list_count (PlayList *pl)
 {
@@ -426,32 +429,12 @@ play_list_count (PlayList *pl)
   return pl->count;
 }
 
-gint
-play_list_get_current (PlayList *pl)
-{
-  return pl->position;
-}
-
 void
-play_list_goto (PlayList *pl, gint n)
+play_list_force_changed (PlayList *pl, gint n)
 {
-  if (n == pl->position)
-    return;
-
-  GtkTreePath *path = gtk_tree_path_new_from_indices (pl->position, -1);
+  GtkTreePath *path = gtk_tree_path_new_from_indices (n, -1);
   GtkTreeIter iter;
-  ITER_INIT (pl, &iter, pl->position);
-
-  gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
-
-  g_free (path);
-
-
-  pl->position = n;
-
-
-  path = gtk_tree_path_new_from_indices (pl->position, -1);
-  ITER_INIT (pl, &iter, pl->position);
+  ITER_INIT (pl, &iter, n);
 
   gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
 
@@ -467,21 +450,27 @@ play_list_remove (PlayList *pl, gint idx)
     music_db_play_queue_remove (pl->db, idx);
 }
 
-void
+bool
 play_list_get_info (PlayList *pl, int idx, int *uidp,
 		    char **source,
 		    char **artist, char **album,
 		    int *track, char **title, int *duration)
 {
-  if (idx == -1)
-    idx = play_list_get_current (pl);
+  g_assert (idx >= 0);
 
   int uid = play_list_idx_to_uid (pl, idx);
+  if (uid == -1)
+    return false;
+
   if (uidp)
     *uidp = uid;
 
-  music_db_get_info (pl->db, uid, source, artist, album,
-		     track, title, duration);
+  if (! source && ! artist && ! album && ! track && ! title && ! duration)
+    /* Nothing else to get.  */
+    return true;
+
+  return music_db_get_info (pl->db, uid, source, artist, album,
+			    track, title, duration);
 }
 
 /* Tree model interface.  */

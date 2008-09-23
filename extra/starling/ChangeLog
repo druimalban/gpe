@@ -1,5 +1,50 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c: Include <obstack.h> and <stdio.h>.
+	(_GNU_SOURCE): Define.
+	(obstack_chunk_alloc): Likewise.
+	(obstack_chunk_free): Likewise.
+	(struct _Starling): Add field loaded_song.
+	(starling_load): Add parameter UID.  Use UID rather than the
+	currently selected entity.  Set ST->LOADED_SONG to UID.  On
+	success, update the display.
+	(starling_play): Don't call starling_load.
+	(do_goto): Remove function.
+	(starling_advance): Take the current song from ST->LOADED_SONG.
+	Don't call do_goto.  Instead call starling_load and starling_play
+	directly.
+	(KEY_POSITION): Rename from this...
+	(KEY_LIBRARY_VIEW_POSITION): ... to this.  Update users.
+	(KEY_CURRENT_ENTRY): Rename from this...
+	(KEY_LOADED_SONG): ... to this.  Update users.
+	(deserialize): Don't use play_list_goto.  Instead call
+	starling_load.
+	(serialize): Save the UID of the current song, not its index.
+	(starling_scroll_to_playing): Use ST->LOADED_SONG.  Map it to an
+	index using play_list_uid_to_index.
+	(clear_cb): Call starling_load to clear the current song.
+	(activated_cb): Don't call do_goto.  Instead, get the uid of the
+	selected song and load and play it.
+	(title_data_func): Set the background if UID matches
+	ST->LOADED_SONG.
+	(starling_run): Pass ST as the user data to
+	gtk_cell_layout_set_cell_data_func.
+	* src/playlist.h (play_list_constraint_get): New declaration.
+	(play_list_get_current): Remove declaration.
+	(play_list_goto): Likewise.
+	(play_list_get_info): Change declaration to return a bool.
+	(play_list_force_changed): New declaration.
+	* src/playlist.c (struct _PlayList): Remove field position.
+	(play_list_constraint_get): New function.
+	(play_list_get_current): Remove function.
+	(play_list_goto): Likewise.
+	(play_list_force_changed): New function.
+	(play_list_get_info): Return a bool.  Don't special case IDX ==
+	-1.  If UID is -1, return false.  If source, artist, album, track,
+	title and duration are NULL, don't call music_db_get_info.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (key_press_event): On control-l, activate the
 	search box.
 

@@ -18,6 +18,8 @@
    along with this program.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define _GNU_SOURCE
+
 #define ERROR_DOMAIN() g_quark_from_static_string ("starling")
 
 #include "starling.h"
@@ -30,6 +32,10 @@
 #include "playlist.h"
 #include "player.h"
 
+#define obstack_chunk_alloc g_malloc
+#define obstack_chunk_free g_free
+#include <obstack.h>
+#include <stdio.h>
 #include <string.h>
 #include <glib.h>
 #include <glib/gtypes.h>
@@ -89,6 +95,9 @@ struct _Starling {
   MusicDB *db;
   PlayList *pl;
   PlayList *queue;
+
+  /* UID of the loaded song.  */
+  int loaded_song;
 };
 
 bool
@@ -107,63 +116,73 @@ starling_random_set (Starling *st, bool value)
 }
 
 static gboolean
-starling_load (Starling *st)
+starling_load (Starling *st, int uid)
 {
-  char *source = NULL;
-  int uid;
+  if (st->loaded_song)
+    {
+      int idx = play_list_uid_to_index (st->pl, st->loaded_song);
+      if (idx != -1)
+	play_list_force_changed (st->pl, idx);
+    }
 
-  play_list_get_info (st->pl, -1, &uid, &source, NULL,
-		      NULL, NULL, NULL, NULL);
+  char *source = NULL;
+
+  st->loaded_song = uid;
+  music_db_get_info (st->db, uid, &source, NULL,
+		     NULL, NULL, NULL, NULL);
   if (! source)
     {
-      g_warning ("%s: No SOURCE found for current entry!", __FUNCTION__);
+      g_warning ("%s: No SOURCE found for %d!", __FUNCTION__, uid);
       return FALSE;
     }
 
   player_set_source (st->player, source, (gpointer) uid);
 
   g_free (source);
+
+  if (st->loaded_song)
+    {
+      int idx = play_list_uid_to_index (st->pl, st->loaded_song);
+      if (idx != -1)
+	play_list_force_changed (st->pl, idx);
+    }
+
   return TRUE;
 }
 
 gboolean
 starling_play (Starling *st)
 {
-  bool ret = starling_load (st);
-  if (ret)
-    ret = player_play (st->player);
-
-  return ret;
-}
-
-static bool
-do_goto (Starling *st, int n)
-{
-  g_return_val_if_fail (0 <= n && n <= play_list_count (st->pl), FALSE);
-
-  play_list_goto (st->pl, n);
-
-  return starling_play (st);
+  return player_play (st->player);
 }
 
 static void
 starling_advance (Starling *st, int delta)
 {
-  if (play_list_count (st->pl) == 0)
-    return;
+  int tries = 0;
 
-  int idx;
+  int count = -1;
+
+  int uid;
   do
     {
-      idx = -1;
-
-      int uid = music_db_play_queue_dequeue (st->db);
-      if (uid)
-	idx = play_list_uid_to_index (st->pl, uid);
-
-      if (idx == -1)
+      uid = music_db_play_queue_dequeue (st->db);
+      if (uid == 0)
+	/* Nothing on the queue.  */
 	{
+	  if (count == -1)
+	    count = play_list_count (st->pl);
+
+	  if (count == tries)
+	    /* Tried everything in the library once.  Something is
+	       wrong...  */
+	    return;
+	  tries ++;
+
+	  int idx;
+
 	  if (starling_random (st))
+	    /* Random mode.  */
 	    {
 	      static int rand_init;
 	      if (! rand_init)
@@ -172,26 +191,32 @@ starling_advance (Starling *st, int delta)
 		  rand_init = 1;
 		}
 
-	      idx = rand () % play_list_count (st->pl);
+	      idx = rand () % count;
 	    }
 	  else
+	    /* Not random mode.  */
 	    {
-	      idx = play_list_get_current (st->pl) + delta;
+	      idx = play_list_uid_to_index (st->pl, st->loaded_song);
+	      if (idx == -1)
+		idx = 0;
 
 	      if (delta > 0)
 		{
-		  if (idx >= play_list_count (st->pl))
+		  if (idx >= count)
 		    idx = 0;
 		}
 	      else
 		{
 		  if (idx < 0)
-		    idx = play_list_count (st->pl) - 1;
+		    idx = count - 1;
 		}
 	    }
+
+	  play_list_get_info (st->pl, idx, &uid,
+			      NULL, NULL, NULL, NULL, NULL, NULL);
 	}
     }
-  while (! do_goto (st, idx));
+  while (! (starling_load (st, uid) && starling_play (st)));
 }
 
 void
@@ -221,8 +246,8 @@ starling_set_sink (Starling *st, char *sink)
 #define KEYLFMPASSWD "lastfm-password"
 #define KEY_WIDTH "width"
 #define KEY_HEIGHT "height"
-#define KEY_POSITION "position"
-#define KEY_CURRENT_ENTRY "current-entry"
+#define KEY_LOADED_SONG "loaded-song"
+#define KEY_LIBRARY_VIEW_POSITION "library-view-position"
 
 #define GROUP "main"
 
@@ -324,18 +349,18 @@ deserialize (Starling *st)
       st->fs_last_path = NULL;
     }
 
-  /* Current entry.  */
-  play_list_goto (st->pl,
-		  g_key_file_get_integer (keyfile,
-					  GROUP, KEY_CURRENT_ENTRY, NULL));
-  starling_load (st);
+
+  /* Current song.  */
+  starling_load (st, g_key_file_get_integer (keyfile,
+					     GROUP, KEY_LOADED_SONG, NULL));
 
 
   struct deserialize_bottom_half *bf = calloc (sizeof (*bf), 1);
   bf->st = st;
 
-  /* Position.  */
-  value = g_key_file_get_string (keyfile, GROUP, KEY_POSITION, NULL);
+  /* Library position.  */
+  value = g_key_file_get_string (keyfile,
+				 GROUP, KEY_LIBRARY_VIEW_POSITION, NULL);
   if (value)
     {
       bf->vadj_val = strtod (value, NULL);
@@ -383,20 +408,19 @@ serialize (Starling *st)
   g_key_file_set_string (keyfile, GROUP, KEYLFMPASSWD,
 			 gtk_entry_get_text (GTK_ENTRY (st->webpasswd_entry)));
 
-  /* Current entry.  */
-  g_key_file_set_integer (keyfile, GROUP, KEY_CURRENT_ENTRY,
-			  play_list_get_current (st->pl));
 
-  /* Position.  */
+  /* Current song.  */
+  g_key_file_set_integer (keyfile, GROUP, KEY_LOADED_SONG, st->loaded_song);
+
+  /* Library view position.  */
   GtkAdjustment *vadj
     = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
 		      (st->library_view_window));
   char *value = g_strdup_printf ("%f", gtk_adjustment_get_value (vadj));
-  g_key_file_set_string (keyfile, GROUP, KEY_POSITION, value);
+  g_key_file_set_string (keyfile, GROUP, KEY_LIBRARY_VIEW_POSITION, value);
   g_free (value);
 
-
-  /* Save it to disk.  */
+  /* Save the key file to disk.  */
   gsize length;
   char *data = g_key_file_to_data (keyfile, &length, NULL);
 
@@ -409,6 +433,13 @@ serialize (Starling *st)
 void
 starling_scroll_to_playing (Starling *st)
 {
+  if (! st->loaded_song)
+    return;
+
+  int idx = play_list_uid_to_index (st->pl, st->loaded_song);
+  if (idx == -1)
+    return;
+
   int count = play_list_count (st->pl);
   if (count == 0)
     return;
@@ -416,10 +447,10 @@ starling_scroll_to_playing (Starling *st)
   GtkAdjustment *vadj
     = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
 		      (st->library_view_window));
-  int pos = play_list_get_current (st->pl);
+
   gtk_adjustment_set_value
     (vadj,
-     ((gdouble) (pos) / count) * (vadj->upper - vadj->lower)
+     ((gdouble) (idx) / count) * (vadj->upper - vadj->lower)
      - vadj->page_size / 2 + vadj->lower);
 }
 
@@ -527,6 +558,7 @@ static void
 clear_cb (GtkWidget *w, Starling *st)
 {   
   music_db_clear (st->db);
+  starling_load (st, 0);
 }
 
 static void
@@ -623,9 +655,17 @@ activated_cb (GtkTreeView *view, GtkTreePath *path,
 {
   gint *pos;
 
+  g_assert (gtk_tree_path_get_depth (path) == 1);
+
   pos = gtk_tree_path_get_indices (path);
 
-  do_goto (st, *pos);
+  int uid;
+  if (! play_list_get_info (st->pl, pos[0], &uid,
+			    NULL, NULL, NULL, NULL, NULL, NULL))
+    return;
+
+  starling_load (st, uid);
+  starling_play (st);
 }
 
 static void
@@ -947,6 +987,8 @@ title_data_func (GtkCellLayout *cell_layout,
 		 GtkTreeIter *iter,
 		 gpointer data)
 {
+  Starling *st = data;
+
   char *artist;
   char *title;
   char *buffer = NULL;
@@ -994,10 +1036,10 @@ title_data_func (GtkCellLayout *cell_layout,
   g_free (buffer);
 
   int uid;
-  gtk_tree_model_get (model, iter, PL_COL_INDEX, &uid, -1);
+  gtk_tree_model_get (model, iter, PL_COL_UID, &uid, -1);
   g_object_set (cell_renderer,
 		"cell-background-set",
-		uid == play_list_get_current (PLAY_LIST (model)),
+		uid == st->loaded_song,
 		NULL);
 }
 
@@ -1567,7 +1609,7 @@ starling_run (void)
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
 				      renderer,
 				      title_data_func,
-				      NULL, NULL);
+				      st, NULL);
     
   scrolled = gtk_scrolled_window_new (NULL, NULL);
   st->library_view_window = GTK_SCROLLED_WINDOW (scrolled);
@@ -1608,7 +1650,7 @@ starling_run (void)
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
 				      renderer,
 				      title_data_func,
-				      NULL, NULL);
+				      st, NULL);
     
   scrolled = gtk_scrolled_window_new (NULL, NULL);
   st->queue_view_window = GTK_SCROLLED_WINDOW (scrolled);

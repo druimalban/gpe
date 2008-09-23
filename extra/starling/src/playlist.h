@@ -73,18 +73,11 @@ extern PlayList *play_list_new (MusicDB *db, enum play_list_mode mode);
    interpreted as for music_db_for_each.  */
 extern void play_list_constrain (PlayList *pl, const char *constraint);
 
+/* Return the current constraint.  */
+extern const char *play_list_constraint_get (PlayList *pl);
+
 /* Return the number of entries.  */
 extern gint play_list_count (PlayList *pl);
-
-/** play_list_get_current:
-
-    Return the current entry. */
-extern gint play_list_get_current (PlayList *pl);
-
-/** play_list_goto:
-
-    Set the current entry.  */
-extern void play_list_goto (PlayList *pl, gint idx);
 
 /* Permanently remove entry IDX.  */
 extern void play_list_remove (PlayList *pl, gint idx);
@@ -96,7 +89,7 @@ extern void play_list_remove (PlayList *pl, gint idx);
     returned.  Any of SOURCE, UID, ARIST, TITLE, ALBUM, DURATION may
     be NULL to indicate don't cares.  The caller must free the
     returned strings.  */
-extern void play_list_get_info (PlayList *pl, int index, int *uid,
+extern bool play_list_get_info (PlayList *pl, int index, int *uid,
 				char **source,
 				char **artist, char **album,
 				int *track, char **title, int *duration);
@@ -104,6 +97,9 @@ extern void play_list_get_info (PlayList *pl, int index, int *uid,
 /* Return an index (if any) associated with UID.  If none, return
    -1.  */
 extern int play_list_uid_to_index (PlayList *pl, int uid);
+
+/* Force a "row-changed" signal to be emitted for row N.  */
+extern void play_list_force_changed (PlayList *pl, gint n);
 
 #endif
 
