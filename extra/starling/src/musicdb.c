@@ -1438,6 +1438,33 @@ music_db_play_queue_remove (MusicDB *db, int offset)
 		 offset);
 }
 
+void
+music_db_play_queue_clear (MusicDB *db)
+{
+  int count = 0;
+  int callback (void *arg, int argc, char **argv, char **names)
+  {
+    count = atoi (argv[0]);
+    return 0;
+  }
+
+  char *err = NULL;
+  sqlite_exec (db->sqliteh,
+	       "select count (*) from queue;"
+	       "delete from queue",
+	       callback, NULL, &err);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      free (err);
+    }
+
+  for (; count > 0; count --)
+    g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->removed_from_queue_signal_id, 0,
+		   0);
+}
+
+
 int
 music_db_queue_for_each (MusicDB *db,
 			 int (*user_callback) (int uid,

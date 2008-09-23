@@ -1,5 +1,14 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.h (music_db_play_queue_clear): New declaration.
+	* src/musicdb.c (music_db_play_queue_clear): New function.
+	* src/starling.c (clear_queue_cb): New function.
+	(starling_run): In the clear all menu item, make the a the active
+	key.  Create a new menu item for clearing the queue, connect
+	clear_queue_cb to it.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/player.c (player_get_source): Call g_object_get, not
 	g_object_set.
 

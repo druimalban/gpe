@@ -193,6 +193,9 @@ extern int music_db_play_queue_query (MusicDB *db, int offset);
 /* Removes the element at OFFSET in the play queue.  */
 extern void music_db_play_queue_remove (MusicDB *db, int offset);
 
+/* Clear the play queue.  */
+extern void music_db_play_queue_clear (MusicDB *db);
+
 /* Iterate over each entry in the queue, in order.  */
 extern int music_db_queue_for_each (MusicDB *db,
 				    int (*cb) (int uid,

@@ -528,6 +528,12 @@ clear_cb (GtkWidget *w, Starling *st)
   music_db_clear (st->db);
 }
 
+static void
+clear_queue_cb (GtkWidget *w, Starling *st)
+{   
+  music_db_play_queue_clear (st->db);
+}
+
 #ifdef IS_HILDON
 #if HILDON_VER > 0
 static void
@@ -1260,9 +1266,16 @@ starling_run (void)
   gtk_menu_shell_append (menu, mitem);
 
   /* Options -> Clear all.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("_Clear all"));
+  mitem = gtk_menu_item_new_with_mnemonic (_("Clear _all"));
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (clear_cb), st);
+  gtk_widget_show (mitem);
+  gtk_menu_shell_append (menu, mitem);
+
+  /* Options -> Clear queue.  */
+  mitem = gtk_menu_item_new_with_mnemonic (_("Clear _queue"));
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (clear_queue_cb), st);
   gtk_widget_show (mitem);
   gtk_menu_shell_append (menu, mitem);
 
