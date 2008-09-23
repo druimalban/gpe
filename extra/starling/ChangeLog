@@ -1,3 +1,12 @@
+2008-09-23  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c (struct _Starling): Add field queue_tab.
+	(player_state_changed): New function.
+	(starling_run): Connect update_queue_count to ST->DB's "cleared",
+	"added-to-queue" and "removed-from-queue" signals.  Save the queue
+	tab's child in ST->QUEUE_TAB.  Call update_queue_count to set the
+	tab's label.
+
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (KEY_LIBRARY_SELECTION): Define.

@@ -71,6 +71,7 @@ struct _Starling {
   gboolean scale_pressed;
 
   GtkWidget *notebook;
+  GtkWidget *queue_tab;
 
   GtkScrolledWindow *library_view_window;
   GtkWidget *library_view;
@@ -905,6 +906,18 @@ scale_update_cb (Starling *st)
 }
 
 static void
+update_queue_count (Starling *st)
+{
+  char *text = g_strdup_printf (_("Queue (%d)"),
+				music_db_play_queue_count (st->db));
+
+  gtk_notebook_set_tab_label_text (GTK_NOTEBOOK (st->notebook),
+				   st->queue_tab, text);
+
+  g_free (text);
+}
+
+static void
 player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
 {
   if (GST_STATE_PLAYING == state)
@@ -1333,6 +1346,14 @@ starling_run (void)
       exit (1);
     }
 
+  g_signal_connect_swapped (G_OBJECT (st->db), "cleared",
+			    G_CALLBACK (update_queue_count), st);
+  g_signal_connect_swapped (G_OBJECT (st->db), "added-to-queue",
+			    G_CALLBACK (update_queue_count), st);
+  g_signal_connect_swapped (G_OBJECT (st->db), "removed-from-queue",
+			    G_CALLBACK (update_queue_count), st);
+
+
   st->pl = play_list_new (st->db, PLAY_LIST_LIBRARY);
   st->queue = play_list_new (st->db, PLAY_LIST_QUEUE);
 
@@ -1718,9 +1739,10 @@ starling_run (void)
     
   gtk_container_add (GTK_CONTAINER (scrolled), st->queue_view);
   gtk_container_add (GTK_CONTAINER (vbox), scrolled);
-    
-  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
-			    gtk_label_new (_("Queue")));
+
+  st->queue_tab = GTK_WIDGET (vbox);
+  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox, NULL);
+  update_queue_count (st);
 
   /* Lyrics tab */
 
