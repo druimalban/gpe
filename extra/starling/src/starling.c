@@ -1015,6 +1015,9 @@ queue_song_cb (GtkWidget *widget, gpointer d)
   music_db_play_queue_enqueue (st->db, info->uid);
 }
 
+static enum mdb_fields sort_order[]
+  = { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
+
 static void
 queue_album_cb (GtkWidget *widget, gpointer d)
 {
@@ -1031,10 +1034,14 @@ queue_album_cb (GtkWidget *widget, gpointer d)
     return 0;
   }
 
-  enum mdb_fields order[] = { MDB_ARTIST, MDB_ALBUM, 0 };
-  char *s = sqlite_mprintf ("artist = '%q' and album = '%q'",
-			    info->artist, info->album);
-  music_db_for_each (st->db, callback, order, s);
+  char *s;
+  if (info->artist)
+    s = sqlite_mprintf ("artist = '%q' and album = '%q'",
+			info->artist, info->album);
+  else
+    s = sqlite_mprintf ("album = '%q'",
+			info->artist, info->album);
+  music_db_for_each (st->db, callback, sort_order, s);
   sqlite_freemem (s);
 }
 
@@ -1052,10 +1059,26 @@ queue_artist_cb (GtkWidget *widget, gpointer d)
     return 0;
   }
 
-  enum mdb_fields order[] = { MDB_ARTIST, 0 };
   char *s = sqlite_mprintf ("artist = '%q'", info->artist);
-  music_db_for_each (st->db, callback, order, s);
+  music_db_for_each (st->db, callback, sort_order, s);
   sqlite_freemem (s);
+}
+
+static void
+queue_all_cb (GtkWidget *widget, gpointer d)
+{
+  struct menu_info *info = d;
+  Starling *st = info->st;
+
+  int callback (int uid, struct music_db_info *i)
+  {
+    music_db_play_queue_enqueue (st->db, uid);
+
+    return 0;
+  }
+
+  music_db_for_each (st->db, callback, sort_order,
+		     play_list_constraint_get (st->pl));
 }
 
 static gboolean
@@ -1078,9 +1101,10 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       gtk_tree_path_free (path);
 
       struct menu_info *info = g_malloc (sizeof (*info));
+      char *source;
       char *title;
       info->st = st;
-      play_list_get_info (st->pl, idx, &info->uid, NULL,
+      play_list_get_info (st->pl, idx, &info->uid, &source,
 			  &info->artist, &info->album,
 			  NULL, &title, NULL);
 
@@ -1089,8 +1113,19 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 
       /* Create a "queue this song button."  */
       GtkWidget *button = gtk_menu_item_new_with_label ("");
-      char *str = g_strdup_printf (_("Queue <i>%.20s%s</i>"),
-				   title, strlen (title) > 20 ? "..." : "");
+      char *str;
+      if (title)
+	str = g_strdup_printf (_("Queue <i>%.20s%s</i>"),
+			       title, strlen (title) > 20 ? "..." : "");
+      else
+	{
+	  char *s = source;
+	  if (strlen (s) > 40)
+	    s = s + strlen (s) - 37;
+
+	  str = g_strdup_printf (_("Queue <i>%s%s</i>"),
+				 s == source ? "" : "...", s);
+	}
       gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
       g_free (str);
       g_signal_connect (G_OBJECT (button), "activate",
@@ -1099,32 +1134,54 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       gtk_menu_attach (menu, button, 0, 1, i, i + 1);
       i ++;
 
-      /* Create a "queue this album button."  */
-      button = gtk_menu_item_new_with_label ("");
-      str = g_strdup_printf (_("Queue album <i>%.20s%s</i>"),
-			     info->album,
-			     strlen (info->album) > 20 ? "..." : "");
-      gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
-      g_free (str);
-      g_signal_connect (G_OBJECT (button), "activate",
-			G_CALLBACK (queue_album_cb), info);
-      gtk_widget_show (button);
-      gtk_menu_attach (menu, button, 0, 1, i, i + 1);
-      i ++;
+      if (info->album)
+	/* Create a "queue this album button."  */
+	{
+	  button = gtk_menu_item_new_with_label ("");
+	  str = g_strdup_printf (_("Queue album <i>%.20s%s</i>"),
+				 info->album,
+				 strlen (info->album) > 20 ? "..." : "");
+	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
+	  g_free (str);
+	  g_signal_connect (G_OBJECT (button), "activate",
+			    G_CALLBACK (queue_album_cb), info);
+	  gtk_widget_show (button);
+	  gtk_menu_attach (menu, button, 0, 1, i, i + 1);
+	  i ++;
+	}
 
-      /* Create a "queue this artist button."  */
-      button = gtk_menu_item_new_with_label ("");
-      str = g_strdup_printf (_("Queue songs by <i>%.20s%s</i>"),
-			     info->artist,
-			     strlen (info->artist) > 20 ? "..." : "");
-      gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
-      g_free (str);
-      g_signal_connect (G_OBJECT (button), "activate",
-			G_CALLBACK (queue_artist_cb), info);
-      gtk_widget_show (button);
-      gtk_menu_attach (menu, button, 0, 1, i, i + 1);
-      i ++;
+      if (info->album)
+	/* Create a "queue this artist button."  */
+	{
+	  button = gtk_menu_item_new_with_label ("");
+	  str = g_strdup_printf (_("Queue songs by <i>%.20s%s</i>"),
+				 info->artist,
+				 strlen (info->artist) > 20 ? "..." : "");
+	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
+	  g_free (str);
+	  g_signal_connect (G_OBJECT (button), "activate",
+			    G_CALLBACK (queue_artist_cb), info);
+	  gtk_widget_show (button);
+	  gtk_menu_attach (menu, button, 0, 1, i, i + 1);
+	  i ++;
+	}
 
+      const char *search_text
+	= gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+      if (search_text && *search_text)
+	{
+	  button = gtk_menu_item_new_with_label ("");
+	  str = g_strdup_printf (_("Queue songs matching <i>%s</i>"),
+				 search_text);
+	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
+	  g_signal_connect (G_OBJECT (button), "activate",
+			    G_CALLBACK (queue_all_cb), info);
+	  gtk_widget_show (button);
+	  gtk_menu_attach (menu, button, 0, 1, i, i + 1);
+	  i ++;
+	}
+
+      g_free (source);
       g_free (title);
 
       g_signal_connect (G_OBJECT (menu), "selection-done",

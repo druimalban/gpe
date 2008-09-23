@@ -1,5 +1,18 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (sort_order): New variable.
+	(queue_album_cb): Use SORT_ORDER.  If INFO->ARTIST is NULL, only
+	search for the album.
+	(queue_artist_cb): Use SORT_ORDER.
+	(queue_all_cb): New function.
+	(library_button_press_event): Get the entry's source.  If TITLE is
+	NULL, use SOURCE instead.  If INFO->ALBUM is NULL, don't create
+	the queue this album menu item.  If INFO->ARTIST is NULL, don't
+	create the queue this artist menu item.  Create a button for
+	queueing all tracks matching the current search terms.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct _Starling): Add field search_entry.
 	(regen_source): New variable.
 	(search_text_changed): Move body from here...
