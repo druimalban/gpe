@@ -1,5 +1,9 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (whitelist): Add ".flac" and ".FLAC".
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h (music_db_count): Take additional parameter
 	constraint.
 	* src/musicdb.c (struct _MusicDB): Remove field count.

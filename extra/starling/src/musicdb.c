@@ -778,7 +778,8 @@ has_audio_extension (const char *filename)
   const char *whitelist[] = { ".ogg", ".OGG",
 			      ".mp3", ".MP3",
 			      ".rm", ".RM",
-			      ".wav", ".WAV"
+			      ".wav", ".WAV",
+			      ".flac", ".FLAC"
   };
 
   int i;
@@ -1295,7 +1296,8 @@ music_db_for_each (MusicDB *db,
   sqlite_exec (db->sqliteh, statement, info_callback, &data, &err);
   if (err)
     {
-      fprintf (stderr, "%s:%d: %s", __FUNCTION__, __LINE__, err);
+      g_warning ("%s:%d: %s (statement: `%s')",
+		 __FUNCTION__, __LINE__, err, statement);
       free (err);
     }
 
