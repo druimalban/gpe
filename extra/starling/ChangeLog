@@ -1,5 +1,10 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/player.c (player_get_source): Call g_object_get, not
+	g_object_set.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (whitelist): Add ".flac" and ".FLAC".
 
 2008-09-22  Neal H. Walfield  <neal@gnu.org>

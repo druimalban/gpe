@@ -153,7 +153,6 @@ player_bus_cb (GstBus *bus, GstMessage *message, gpointer data)
 	break;
 
       case GST_MESSAGE_EOS:
-	printf ("Got EOS\n");
 	g_signal_emit (pl, PLAYER_GET_CLASS (pl)->eos_signal_id, 0,
 		       pl->cookie);
 	break;
@@ -234,7 +233,7 @@ player_get_source (Player *pl, void **cookie)
     *cookie = pl->cookie;
 
   char *source = NULL;
-  g_object_set (G_OBJECT (pl->playbin), "uri", &source, NULL);
+  g_object_get (G_OBJECT (pl->playbin), "uri", &source, NULL);
   return source;
 }
 
