@@ -1,5 +1,11 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (KEY_LIBRARY_SELECTION): Define.
+	(deserialize): Restore the selection.
+	(serialize): Save the selection.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (KEY_SEARCH_TEXT): Define.
 	(deserialize): Restore search string.
 	(serialize): Save search string.

@@ -248,6 +248,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_HEIGHT "height"
 #define KEY_LOADED_SONG "loaded-song"
 #define KEY_LIBRARY_VIEW_POSITION "library-view-position"
+#define KEY_LIBRARY_SELECTION "library-selection"
 #define KEY_SEARCH_TEXT "search-text"
 
 #define GROUP "main"
@@ -376,6 +377,21 @@ deserialize (Starling *st)
       g_free (value);
     }
 
+  /* Library selection.  */
+  GtkTreeSelection *selection
+    = gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
+  value = g_key_file_get_string (keyfile, GROUP, KEY_LIBRARY_SELECTION, NULL);
+
+  char *tok;
+  for (tok = strtok (value, ","); tok; tok = strtok (NULL, " "))
+    if (*tok)
+      {
+	GtkTreePath *path = gtk_tree_path_new_from_string (tok);
+	gtk_tree_selection_select_path (selection, path);
+	gtk_tree_path_free (path);
+      }
+  g_free (value);
+
 
   g_key_file_free (keyfile);
 
@@ -433,6 +449,34 @@ serialize (Starling *st)
   /* Search text.  */
   g_key_file_set_string (keyfile, GROUP, KEY_SEARCH_TEXT,
 			 gtk_entry_get_text (GTK_ENTRY (st->search_entry)));
+
+  /* Library selection.  */
+  GtkTreeSelection *selection
+    = gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
+
+  struct obstack sel;
+  obstack_init (&sel);
+
+  bool have_one = false;
+  void callback (GtkTreeModel *model,
+		 GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+  {
+      if (have_one)
+	obstack_1grow (&sel, ',');
+      have_one = true;
+
+      char *s = gtk_tree_path_to_string (path);
+      obstack_printf (&sel, "%s", s);
+      g_free (s);
+    }
+  gtk_tree_selection_selected_foreach (selection, callback, NULL);
+
+  obstack_1grow (&sel, 0);
+
+  g_key_file_set_string (keyfile, GROUP, KEY_LIBRARY_SELECTION,
+			 obstack_finish (&sel));
+  obstack_free (&sel, NULL);
+
 
   /* Save the key file to disk.  */
   gsize length;
