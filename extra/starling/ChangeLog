@@ -1,5 +1,10 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (key_press_event): On control-l, activate the
+	search box.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (sort_order): New variable.
 	(queue_album_cb): Use SORT_ORDER.  If INFO->ARTIST is NULL, only
 	search for the album.

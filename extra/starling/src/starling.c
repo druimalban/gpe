@@ -899,6 +899,19 @@ lastfm_submit_cb (GtkWidget *w, Starling *st)
 static int
 key_press_event (GtkWidget *widget, GdkEventKey *k, Starling *st)
 {
+  if ((k->state & GDK_MODIFIER_MASK) == GDK_CONTROL_MASK)
+    /* Control is pressed.  */
+    {
+      if (k->keyval == 'l' || k->keyval == 'L')
+	/* Control-L.  */
+	{
+	  gtk_editable_select_region (GTK_EDITABLE (st->search_entry), 0, -1);
+	  gtk_widget_grab_focus (GTK_WIDGET (st->search_entry));
+
+	  return TRUE;
+	}
+    }
+
   /* in hildon there is nothing like control, shift etc buttons */
   switch (k->keyval)
     {
