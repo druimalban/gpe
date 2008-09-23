@@ -1,5 +1,11 @@
 2008-09-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (KEY_SEARCH_TEXT): Define.
+	(deserialize): Restore search string.
+	(serialize): Save search string.
+
+2008-09-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c: Include <obstack.h> and <stdio.h>.
 	(_GNU_SOURCE): Define.
 	(obstack_chunk_alloc): Likewise.

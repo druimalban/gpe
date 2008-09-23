@@ -248,6 +248,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_HEIGHT "height"
 #define KEY_LOADED_SONG "loaded-song"
 #define KEY_LIBRARY_VIEW_POSITION "library-view-position"
+#define KEY_SEARCH_TEXT "search-text"
 
 #define GROUP "main"
 
@@ -367,6 +368,15 @@ deserialize (Starling *st)
       g_free (value);
     }
 
+  /* Search text.  */
+  value = g_key_file_get_string (keyfile, GROUP, KEY_SEARCH_TEXT, NULL);
+  if (value)
+    {
+      gtk_entry_set_text (GTK_ENTRY (st->search_entry), value);
+      g_free (value);
+    }
+
+
   g_key_file_free (keyfile);
 
   gtk_idle_add (deserialize_bottom_half, bf);  
@@ -419,6 +429,10 @@ serialize (Starling *st)
   char *value = g_strdup_printf ("%f", gtk_adjustment_get_value (vadj));
   g_key_file_set_string (keyfile, GROUP, KEY_LIBRARY_VIEW_POSITION, value);
   g_free (value);
+
+  /* Search text.  */
+  g_key_file_set_string (keyfile, GROUP, KEY_SEARCH_TEXT,
+			 gtk_entry_get_text (GTK_ENTRY (st->search_entry)));
 
   /* Save the key file to disk.  */
   gsize length;
