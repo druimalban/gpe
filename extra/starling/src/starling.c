@@ -892,8 +892,8 @@ scale_update_cb (Starling *st)
       {
 	char *artist;
 	char *title;
-	play_list_get_info (st->pl, -1,
-			    NULL, NULL, &artist, NULL, NULL, &title, NULL);
+	music_db_get_info (st->db, st->loaded_song,
+			   NULL, &artist, NULL, NULL, &title, NULL);
 
 	st->enqueued = TRUE;
 	lastfm_enqueue (artist, title, total_seconds, st);

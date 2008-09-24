@@ -1,5 +1,10 @@
 2008-09-24  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (scale_update_cb): Use music_db_get_info, not
+	play_list_get_info.
+
+2008-09-24  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.c: Include <sys/time.h>.
 	(struct _PlayList): Add field last_refresh.
 	(timeval_subtract): New function.  Take from Glibc's manual.
