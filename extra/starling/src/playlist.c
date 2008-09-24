@@ -21,6 +21,7 @@
 #define ERROR_DOMAIN() g_quark_from_static_string ("playlist")
 
 #include <string.h>
+#include <sys/time.h>
 #include <glib.h>
 #include <gtk/gtktreemodel.h>
 #include <gst/gst.h>
@@ -68,6 +69,7 @@ struct _PlayList {
   gint reschedule_timeout;
   /* Number of reschedules requests since last reschedule.  */
   gint reschedule_requests;
+  struct timeval last_refresh;
 };
 
 static void play_list_dispose (GObject *obj);
@@ -139,6 +141,32 @@ play_list_finalize (GObject *object)
     g_hash_table_destroy (pl->uid_idx_hash);
 }
 
+/* From glibc manual.  */
+static int
+timeval_subtract (result, x, y)
+     struct timeval *result, *x, *y;
+{
+  /* Perform the carry for the later subtraction by updating Y. */
+  if (x->tv_usec < y->tv_usec) {
+    int nsec = (y->tv_usec - x->tv_usec) / 1000000 + 1;
+    y->tv_usec -= 1000000 * nsec;
+    y->tv_sec += nsec;
+  }
+  if (x->tv_usec - y->tv_usec > 1000000) {
+    int nsec = (x->tv_usec - y->tv_usec) / 1000000;
+    y->tv_usec += 1000000 * nsec;
+    y->tv_sec -= nsec;
+  }
+
+  /* Compute the time remaining to wait.
+     `tv_usec' is certainly positive. */
+  result->tv_sec = x->tv_sec - y->tv_sec;
+  result->tv_usec = x->tv_usec - y->tv_usec;
+
+  /* Return 1 if result is negative. */
+  return x->tv_sec < y->tv_sec;
+}
+
 static gboolean
 do_refresh (gpointer data)
 {
@@ -151,6 +179,18 @@ do_refresh (gpointer data)
       pl->reschedule_requests >>= 1;
       return TRUE;
     }
+
+  {
+    struct timeval now;
+    gettimeofday (&now, NULL);
+
+    struct timeval diff;
+    timeval_subtract (&diff, &now, &pl->last_refresh);
+
+    if (diff.tv_sec == 0)
+      /* Less than a second since the last refresh.  Wait.  */
+      return TRUE;
+  }
 
   int old_count = pl->count;
 
@@ -240,6 +280,9 @@ do_refresh (gpointer data)
   /* Remove timeout source.  */
   pl->reschedule_timeout = 0;
   pl->reschedule_requests = 0;
+
+  gettimeofday (&pl->last_refresh, NULL);
+
   return FALSE;
 }
 

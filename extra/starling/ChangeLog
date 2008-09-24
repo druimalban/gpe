@@ -1,5 +1,13 @@
 2008-09-24  Neal H. Walfield  <neal@gnu.org>
 
+	* src/playlist.c: Include <sys/time.h>.
+	(struct _PlayList): Add field last_refresh.
+	(timeval_subtract): New function.  Take from Glibc's manual.
+	(do_refresh): Only perform a refresh is the last refresh was more
+	than a second ago.
+
+2008-09-24  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_for_each): Sort NULLs at the end.  Do a
 	case insensitive sort.
 
