@@ -1,5 +1,10 @@
 2008-09-24  Neal H. Walfield  <neal@gnu.org>
 
+	* src/playlist.c (play_list_idx_uid_refresh_schedule): If NOW is
+	true, then clear PL->LAST_REFRESH.
+
+2008-09-24  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (search_text_regen): If the search text is empty,
 	set the constraint to the empty string.
 

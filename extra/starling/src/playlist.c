@@ -300,6 +300,7 @@ play_list_idx_uid_refresh_schedule (PlayList *pl, bool now)
 	}
 
       pl->reschedule_requests = 0;
+      memset (&pl->last_refresh, 0, sizeof (pl->last_refresh));
       do_refresh (pl);
     }
   else if (! pl->reschedule_timeout)
