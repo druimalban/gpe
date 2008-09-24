@@ -1281,7 +1281,11 @@ music_db_for_each (MusicDB *db,
 	      continue;
 	    }
 
-	  obstack_grow (&sql, s, strlen (s));
+	  /* We'd like to use %s collate nocase but that does seem to
+	     work, at least for sqlite 2...  */
+	  obstack_printf (&sql,
+			  "%s isnull, lower(%s)",
+			  s, s);
 	}
     }
 

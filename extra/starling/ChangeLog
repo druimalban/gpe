@@ -1,3 +1,8 @@
+2008-09-24  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (music_db_for_each): Sort NULLs at the end.  Do a
+	case insensitive sort.
+
 2008-09-23  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (struct _Starling): Add field queue_tab.
