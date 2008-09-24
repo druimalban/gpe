@@ -1,5 +1,10 @@
 2008-09-24  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (search_text_regen): If the search text is empty,
+	set the constraint to the empty string.
+
+2008-09-24  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (scale_update_cb): Use music_db_get_info, not
 	play_list_get_info.
 

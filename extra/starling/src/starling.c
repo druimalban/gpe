@@ -768,7 +768,10 @@ search_text_regen (gpointer data)
 
   const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
   if (! text || ! *text)
-    return FALSE;
+    {
+      play_list_constrain (st->pl, NULL);
+      return FALSE;
+    }
 
   char *s = sqlite_mprintf ("%q", text);
 
