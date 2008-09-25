@@ -64,6 +64,13 @@ enum
     is NULL, uses the library.  */
 extern PlayList *play_list_new (MusicDB *db, const char *list);
 
+/* Set the play list to LIST.  */
+extern void play_list_set (PlayList *pl, const char *list);
+
+/* Return the current play list.  */
+extern const char *play_list_get (PlayList *pl);
+
+
 /* Narrow the visible tracks according to CONSTRAINT.  CONSTRAINT is
    interpreted as for music_db_for_each.  */
 extern void play_list_constrain (PlayList *pl, const char *constraint);

@@ -367,7 +367,7 @@ music_db_open (const char *file, GError **error)
 }
 
 gint
-music_db_count (MusicDB *db, const char *constraint)
+music_db_count (MusicDB *db, const char *list, const char *constraint)
 {
   if (constraint && ! *constraint)
     constraint = NULL;
@@ -382,11 +382,21 @@ music_db_count (MusicDB *db, const char *constraint)
   }
 
   char *err = NULL;
-  sqlite_exec_printf (db->sqliteh,
-		      "select count (*) from files %s%s",
-		      callback, NULL, &err,
-		      constraint ? "where " : "",
-		      constraint ? constraint : "");
+  if (list)
+    sqlite_exec_printf (db->sqliteh,
+			"select count(*) from playlists left join files"
+			"  on playlists.uid = files.rowid"
+			" where list = '%q' %s%s%s",
+			callback, NULL, &err, list,
+			constraint ? "and (" : "",
+			constraint ? constraint : "",
+			constraint ? ")" : "");
+  else
+    sqlite_exec_printf (db->sqliteh,
+			"select count (*) from files %s%s",
+			callback, NULL, &err,
+			constraint ? "where " : "",
+			constraint ? constraint : "");
   if (err)
     {
       g_critical ("%s", err);
@@ -1276,7 +1286,7 @@ info_callback (void *arg, int argc, char **argv, char **names)
 }
 
 int
-music_db_for_each (MusicDB *db,
+music_db_for_each (MusicDB *db, const char *list,
 		   int (*user_callback) (int uid, struct music_db_info *info),
 		   enum mdb_fields *order,
 		   const char *constraint)
@@ -1288,17 +1298,30 @@ music_db_for_each (MusicDB *db,
 
   obstack_init (&sql);
 
-  obstack_printf (&sql,
-		  "select ROWID, source, artist, album, track,"
-		  " title, duration from files ");
+  if (list)
+    {
+      char *l = sqlite_mprintf ("%q", list);
+      obstack_printf (&sql,
+		      "select files.ROWID, files.source, files.artist,"
+		      "  files.album, files.track, files.title, files.duration"
+		      " from playlists left join files"
+		      "  on playlists.uid = files.ROWID"
+		      " where playlists.list = '%s' ",
+		      l);
+      sqlite_freemem (l);
+    }
+  else
+    obstack_printf (&sql,
+		    "select ROWID, source, artist, album, track,"
+		    " title, duration from files ");
 
   if (constraint)
-    obstack_printf (&sql, "where %s ", constraint);
+    obstack_printf (&sql, "%s(%s) ", list ? "and " : "where", constraint);
+
+  obstack_printf (&sql, "order by ");
 
   if (order)
     {
-      obstack_printf (&sql, "order by ");
-
       bool need_comma = false;
       for (; *order; order ++)
 	{
@@ -1341,6 +1364,8 @@ music_db_for_each (MusicDB *db,
 			  s, s);
 	}
     }
+  else
+    obstack_printf (&sql, "files.ROWID");
 
   obstack_1grow (&sql, 0);
   char *statement = obstack_finish (&sql);
@@ -1432,31 +1457,6 @@ music_db_play_list_dequeue (MusicDB *db, const char *list)
 }
 
 int
-music_db_play_list_count (MusicDB *db, const char *list)
-{
-  int count = 0;
-  int callback (void *arg, int argc, char **argv, char **names)
-  {
-    count = atoi (argv[0]);
-    return 0;
-  }
-
-  char *err = NULL;
-  sqlite_exec_printf (db->sqliteh,
-		      "select count(*) from playlists where list = '%q'",
-		      callback, NULL, &err, list);
-  if (err)
-    {
-      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-      sqlite_freemem (err);
-
-      return 0;
-    }
-
-  return count;
-}
-
-int
 music_db_play_list_query (MusicDB *db, const char *list, int offset)
 {
   int uid = 0;
@@ -1488,7 +1488,7 @@ music_db_play_list_remove (MusicDB *db, const char *list, int offset)
   char *err = NULL;
   sqlite_exec_printf (db->sqliteh,
 		      "delete from playlists where ROWID in "
-		      " (select ROWID from queue where list = '%q'"
+		      " (select ROWID from playlists where list = '%q'"
 		      "   limit 1 offset %d);",
 		      NULL, NULL, &err, list, offset);
   if (err)
@@ -1530,32 +1530,6 @@ music_db_play_list_clear (MusicDB *db, const char *list)
 		   0, list, 0);
 }
 
-
-int
-music_db_play_list_for_each (MusicDB *db, const char *list,
-			     int (*user_callback) (int uid,
-						   struct music_db_info *info))
-{
-  struct info_callback_data data;
-  data.ret = 0;
-  data.user_callback = user_callback;
-
-  char *err = NULL;
-  sqlite_exec_printf (db->sqliteh,
-		      "select files.ROWID, files.source, files.artist,"
-		      "  files.album, files.track, files.title, files.duration"
-		      " from playlists left join files"
-		      "  on playlists.uid = files.rowid"
-		      " where playlists.list = '%q'",
-		      info_callback, &data, &err, list);
-  if (err)
-    {
-      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-      free (err);
-    }
-
-  return data.ret;
-}
 
 int
 music_db_play_lists_for_each (MusicDB *db,

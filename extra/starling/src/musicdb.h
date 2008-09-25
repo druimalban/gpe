@@ -77,7 +77,7 @@ extern MusicDB *music_db_open (const char *file, GError **error);
   Returns the number of entries in the music db that match constraint
   CONSTAINT.  See music_db_for_each for valid values of
   constraint.  */
-extern gint music_db_count (MusicDB *db,
+extern gint music_db_count (MusicDB *db, const char *list,
 			    const char *constraint) __attribute__ ((pure));
 
 
@@ -167,11 +167,11 @@ extern void music_db_set_info (MusicDB *db, int uid,
 extern void music_db_set_info_from_tags (MusicDB *db, int uid,
 					 GstTagList *tags);
 
-/* Call CB for each entry in database DB.  Order the results according
+/* Iterate over each entry in the list.  Order the results according
    to ORDER, which is a zero-terminated array of enum mdb_fields.  If
    CONSTRAINT is non-NULL, it is where SQL clause (without the where),
    e.g., `artist in ("Foo", "Bar")'.  */
-extern int music_db_for_each (MusicDB *db,
+extern int music_db_for_each (MusicDB *db, const char *list,
 			      int (*cb) (int uid, struct music_db_info *info),
 			      enum mdb_fields *order,
 			      const char *constraint);
@@ -182,9 +182,6 @@ extern void music_db_play_list_enqueue (MusicDB *db, const char *list, int uid);
 /* Dequeue an element from the play list, return its UID.  Returns
    0 if the list is empty or an error occurs.  */
 extern int music_db_play_list_dequeue (MusicDB *db, const char *list);
-
-/* Returns the number of elements in the play list.  */
-extern int music_db_play_list_count (MusicDB *db, const char *list);
 
 /* Returns the UID of the OFFSET element in the list (0 based).  If
    the returned value is zero, there is no such element at that
@@ -198,11 +195,6 @@ extern void music_db_play_list_remove (MusicDB *db, const char *list,
 
 /* Clear the play list.  */
 extern void music_db_play_list_clear (MusicDB *db, const char *list);
-
-/* Iterate over each entry in the list, in order.  */
-extern int music_db_play_list_for_each (MusicDB *db, const char *list,
-					int (*cb) (int uid,
-						   struct music_db_info *info));
 
 /* Iterate over each play list in the database.  */
 extern int music_db_play_lists_for_each (MusicDB *db,

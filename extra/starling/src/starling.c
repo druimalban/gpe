@@ -73,12 +73,18 @@ struct _Starling {
   GtkWidget *notebook;
   GtkWidget *library_tab;
   GtkWidget *queue_tab;
+  GtkWidget *playlist_tab;
 
   GtkScrolledWindow *library_view_window;
   GtkWidget *library_view;
+  GtkComboBox *playlist;
+  int playlist_count;
+  int playlist_changed_signal;
   GtkWidget *search_entry;
+
   GtkScrolledWindow *queue_view_window;
   GtkWidget *queue_view;
+
   GtkWidget *random;
   gchar *fs_last_path;
   GtkWidget *textview;
@@ -268,6 +274,8 @@ starling_advance (Starling *st, int delta)
 	      idx = play_list_uid_to_index (st->library, st->loaded_song);
 	      if (idx == -1)
 		idx = 0;
+	      else
+		idx += delta;
 
 	      if (delta > 0)
 		{
@@ -321,6 +329,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_LIBRARY_SELECTION "library-selection"
 #define KEY_SEARCH_TEXT "search-text"
 #define KEY_CURRENT_PAGE "current-page"
+#define KEY_CURRENT_PLAYLIST "current-playlist"
 
 #define GROUP "main"
 
@@ -351,6 +360,8 @@ deserialize_bottom_half (gpointer data)
   g_free (data);
   return FALSE;
 }
+
+static void play_list_combo_refresh (Starling *st, char *active);
 
 static void
 deserialize (Starling *st)
@@ -447,6 +458,12 @@ deserialize (Starling *st)
       g_free (value);
     }
 
+  /* The current play list.  */
+  value = g_key_file_get_string (keyfile,
+				 GROUP, KEY_CURRENT_PLAYLIST, NULL);
+  play_list_combo_refresh (st, value);
+  g_free (value);
+
   /* Search text.  */
   value = g_key_file_get_string (keyfile, GROUP, KEY_SEARCH_TEXT, NULL);
   if (value)
@@ -534,6 +551,11 @@ serialize (Starling *st)
   g_key_file_set_string (keyfile, GROUP, KEY_LIBRARY_VIEW_POSITION, value);
   g_free (value);
 
+  /* The current play list.  */
+  value = gtk_combo_box_get_active_text (st->playlist);
+  g_key_file_set_string (keyfile, GROUP, KEY_CURRENT_PLAYLIST, value);
+  g_free (value);
+
   /* Search text.  */
   g_key_file_set_string (keyfile, GROUP, KEY_SEARCH_TEXT,
 			 gtk_entry_get_text (GTK_ENTRY (st->search_entry)));
@@ -604,6 +626,64 @@ starling_scroll_to_playing (Starling *st)
      - vadj->page_size / 2 + vadj->lower);
 }
 
+static void
+play_list_combo_changed (GtkComboBox *combo, gpointer data)
+{
+  /* When the user changes the source text, we don't update
+     immediately but try to group updates.  The assumption is that
+     users will type a few characters.  Thus, we wait until there is
+     no activity for 100ms before triggering the update.  */
+  Starling *st = data;
+
+  char *text = gtk_combo_box_get_active_text (combo);
+
+  play_list_set (st->library,
+		 ! text || strcmp (text, "Library") == 0 ? NULL : text);
+
+  g_free (text);
+}
+
+static void
+play_list_combo_refresh (Starling *st, char *active)
+{
+  g_signal_handler_block (st->playlist, st->playlist_changed_signal);
+
+  bool free_active = false;
+  if (! active)
+    {
+      free_active = true;
+      active = gtk_combo_box_get_active_text (st->playlist);
+    }
+
+  for (; st->playlist_count > 0; st->playlist_count --)
+    gtk_combo_box_remove_text (st->playlist, 0);
+
+  gtk_combo_box_append_text (st->playlist, _("Library"));
+  st->playlist_count = 1;
+
+  int active_i = 0;
+  int playlist_iter (const char *list)
+  {
+    if (strcmp ("queue", list) != 0)
+      {
+	gtk_combo_box_append_text (st->playlist, list);
+	if (active && strcmp (list, active) == 0)
+	  active_i = st->playlist_count;
+
+	st->playlist_count ++;
+      }
+    return 0;
+  }
+  music_db_play_lists_for_each (st->db, playlist_iter);
+
+  if (free_active)
+    g_free (active);
+
+  g_signal_handler_unblock (st->playlist, st->playlist_changed_signal);
+
+  gtk_combo_box_set_active (st->playlist, active_i);
+}
+
 static void
 add_cb (GtkWidget *w, Starling *st, GtkFileChooserAction action)
 {
@@ -707,7 +787,17 @@ remove_cb (GtkWidget *w, Starling *st)
 static void
 clear_cb (GtkWidget *w, Starling *st)
 {   
-  music_db_clear (st->db);
+  char *text = gtk_combo_box_get_active_text (st->playlist);
+
+  if (strcmp (text, "Library") == 0)
+    music_db_clear (st->db);
+  else
+    music_db_play_list_clear (st->db, text);
+
+  g_free (text);
+
+  play_list_combo_refresh (st, NULL);
+
   starling_load (st, 0);
 }
 
@@ -1230,12 +1320,24 @@ title_data_func (GtkCellLayout *cell_layout,
 		NULL);
 }
 
+
+enum menu_op
+  {
+    add_song,
+    add_album,
+    add_artist,
+    add_all
+  };
+
 struct menu_info
 {
   Starling *st;
   int uid;
   char *artist;
   char *album;
+  char *list;
+  enum menu_op op;
+  struct menu_info *next;
 };
 
 static void
@@ -1244,79 +1346,116 @@ menu_destroy (GtkWidget *widget, gpointer d)
   struct menu_info *info = d;
   g_free (info->artist);
   g_free (info->album);
-  g_free (info);
+
+  struct menu_info *i;
+  struct menu_info *n = info->next;
+  while ((i = n))
+    {
+      n = i->next;
+
+      g_free (i->list);
+      g_free (i);
+    }
+
   gtk_widget_destroy (widget);
 }
 
 static void
-queue_song_cb (GtkWidget *widget, gpointer d)
+queue_cb (GtkWidget *widget, gpointer d)
 {
   struct menu_info *info = d;
   Starling *st = info->st;
 
-  music_db_play_list_enqueue (st->db, "queue", info->uid);
-}
+  bool new_list = false;
+  if (strcmp (info->list, "new play list") == 0)
+    {
+      GtkWidget *dialog = gtk_dialog_new_with_buttons
+	(_("New play list's name:"),
+	 GTK_WINDOW (st->window), GTK_DIALOG_DESTROY_WITH_PARENT,
+	 GTK_STOCK_OK, GTK_RESPONSE_OK,
+	 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+	 NULL);
 
-static enum mdb_fields sort_order[]
-  = { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
+      gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+				       GTK_RESPONSE_OK);
 
-static void
-queue_album_cb (GtkWidget *widget, gpointer d)
-{
-  struct menu_info *info = d;
-  Starling *st = info->st;
+      GtkWidget *entry = gtk_entry_new ();
+      gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), entry);
+      gtk_widget_show_all (dialog);
+
+      gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+      switch (result)
+	{
+	case GTK_RESPONSE_OK:
+	  g_free (info->list);
+	  info->list = g_strdup (gtk_entry_get_text (GTK_ENTRY (entry)));
+	  new_list = true;
+	  break;
+
+	case GTK_RESPONSE_CANCEL:
+	  break;
+	}
+
+      gtk_widget_destroy (dialog);
+    }
 
   int callback (int uid, struct music_db_info *i)
   {
-    music_db_play_list_enqueue (st->db, "queue", uid);
+    music_db_play_list_enqueue (st->db, info->list, uid);
 
     return 0;
   }
 
   char *s;
-  if (info->artist)
-    s = sqlite_mprintf ("artist like '%q' and album like '%q'",
-			info->artist, info->album);
-  else
-    s = sqlite_mprintf ("album like '%q'",
-			info->artist, info->album);
-  music_db_for_each (st->db, callback, sort_order, s);
-  sqlite_freemem (s);
-}
+  bool need_free = true;
+  const char *constraint = play_list_constraint_get (st->library);
 
-static void
-queue_artist_cb (GtkWidget *widget, gpointer d)
-{
-  struct menu_info *info = d;
-  Starling *st = info->st;
+  switch (info->op)
+    {
+    case add_song:
+      music_db_play_list_enqueue (st->db, info->list, info->uid);
+      s = NULL;
+      break;
 
-  int callback (int uid, struct music_db_info *i)
-  {
-    music_db_play_list_enqueue (st->db, "queue", uid);
+    case add_album:
+      if (info->artist)
+	s = sqlite_mprintf ("%s%s (artist like '%q' and album like '%q')",
+			    constraint,
+			    constraint ? " and" : "",
+			    info->artist, info->album);
+      else
+	s = sqlite_mprintf ("%s%s (album like '%q')",
+			    constraint ? " and" : "",
+			    constraint, info->artist, info->album);
+      break;
 
-    return 0;
-  }
+    case add_artist:
+      s = sqlite_mprintf ("%s%s (artist like '%q')",
+			  constraint ? " and" : "",
+			  constraint, info->artist);
+      break;
 
-  char *s = sqlite_mprintf ("artist like '%q'", info->artist);
-  music_db_for_each (st->db, callback, sort_order, s);
-  sqlite_freemem (s);
-}
+    case add_all:
+      s = (char *) constraint;
+      need_free = false;
+      break;
 
-static void
-queue_all_cb (GtkWidget *widget, gpointer d)
-{
-  struct menu_info *info = d;
-  Starling *st = info->st;
+    default:
+      g_assert (! "Unknown op value");
+      return;
+    }
 
-  int callback (int uid, struct music_db_info *i)
-  {
-    music_db_play_list_enqueue (st->db, "queue", uid);
+  if (s)
+    {
+      enum mdb_fields sort_order[]
+	= { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
+      music_db_for_each (st->db, play_list_get (st->library),
+			 callback, sort_order, s);
+      sqlite_freemem (s);
+    }
 
-    return 0;
-  }
-
-  music_db_for_each (st->db, callback, sort_order,
-		     play_list_constraint_get (st->library));
+  if (new_list)
+    play_list_combo_refresh (st, NULL);
 }
 
 static gboolean
@@ -1338,22 +1477,27 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 
       gtk_tree_path_free (path);
 
-      struct menu_info *info = g_malloc (sizeof (*info));
+      GtkMenu *menu = GTK_MENU (gtk_menu_new ());
+
+      int uid;
       char *source;
+      char *artist;
+      char *album;
       char *title;
-      info->st = st;
-      play_list_get_info (st->library, idx, &info->uid, &source,
-			  &info->artist, &info->album,
+      play_list_get_info (st->library, idx, &uid, &source,
+			  &artist, &album,
 			  NULL, &title, NULL);
 
-      GtkMenu *menu = GTK_MENU (gtk_menu_new ());
-      int i = 0;
+      
+      GtkMenu *submenus[4];
+      int ops[4];
+      int submenu_count = 0;
 
       /* Create a "queue this song button."  */
       GtkWidget *button = gtk_menu_item_new_with_label ("");
       char *str;
       if (title)
-	str = g_strdup_printf (_("Queue <i>%.20s%s</i>"),
+	str = g_strdup_printf (_("Add <i>%.20s%s</i> to"),
 			       title, strlen (title) > 20 ? "..." : "");
       else
 	{
@@ -1361,47 +1505,65 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 	  if (strlen (s) > 40)
 	    s = s + strlen (s) - 37;
 
-	  str = g_strdup_printf (_("Queue <i>%s%s</i>"),
+	  str = g_strdup_printf (_("Add <i>%s%s</i> to"),
 				 s == source ? "" : "...", s);
 	}
       gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
       g_free (str);
-      g_signal_connect (G_OBJECT (button), "activate",
-			G_CALLBACK (queue_song_cb), info);
       gtk_widget_show (button);
-      gtk_menu_attach (menu, button, 0, 1, i, i + 1);
-      i ++;
+      gtk_menu_attach (menu, button, 0, 1, submenu_count, submenu_count + 1);
 
-      if (info->album)
+      submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
+      gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
+      gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
+				 GTK_WIDGET (submenus[submenu_count]));
+
+      ops[submenu_count] = add_song;
+
+      submenu_count ++;
+
+      if (album)
 	/* Create a "queue this album button."  */
 	{
 	  button = gtk_menu_item_new_with_label ("");
-	  str = g_strdup_printf (_("Queue album <i>%.20s%s</i>"),
-				 info->album,
-				 strlen (info->album) > 20 ? "..." : "");
+	  str = g_strdup_printf (_("Add album <i>%.20s%s</i> to"),
+				 album, strlen (album) > 20 ? "..." : "");
 	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
 	  g_free (str);
-	  g_signal_connect (G_OBJECT (button), "activate",
-			    G_CALLBACK (queue_album_cb), info);
 	  gtk_widget_show (button);
-	  gtk_menu_attach (menu, button, 0, 1, i, i + 1);
-	  i ++;
+	  gtk_menu_attach (menu, button, 0, 1,
+			   submenu_count, submenu_count + 1);
+
+	  submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
+	  gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
+	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
+				     GTK_WIDGET (submenus[submenu_count]));
+
+	  ops[submenu_count] = add_album;
+
+	  submenu_count ++;
 	}
 
-      if (info->album)
+      if (album)
 	/* Create a "queue this artist button."  */
 	{
 	  button = gtk_menu_item_new_with_label ("");
-	  str = g_strdup_printf (_("Queue songs by <i>%.20s%s</i>"),
-				 info->artist,
-				 strlen (info->artist) > 20 ? "..." : "");
+	  str = g_strdup_printf (_("Add songs by <i>%.20s%s</i> to"),
+				 artist, strlen (artist) > 20 ? "..." : "");
 	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
 	  g_free (str);
-	  g_signal_connect (G_OBJECT (button), "activate",
-			    G_CALLBACK (queue_artist_cb), info);
 	  gtk_widget_show (button);
-	  gtk_menu_attach (menu, button, 0, 1, i, i + 1);
-	  i ++;
+	  gtk_menu_attach (menu, button, 0, 1,
+			   submenu_count, submenu_count + 1);
+
+	  submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
+	  gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
+	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
+				     GTK_WIDGET (submenus[submenu_count]));
+
+	  ops[submenu_count] = add_artist;
+
+	  submenu_count ++;
 	}
 
       const char *search_text
@@ -1409,21 +1571,79 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       if (search_text && *search_text)
 	{
 	  button = gtk_menu_item_new_with_label ("");
-	  str = g_strdup_printf (_("Queue songs matching <i>%s</i>"),
+	  str = g_strdup_printf (_("Add songs matching <i>%s</i> to"),
 				 search_text);
 	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
-	  g_signal_connect (G_OBJECT (button), "activate",
-			    G_CALLBACK (queue_all_cb), info);
 	  gtk_widget_show (button);
-	  gtk_menu_attach (menu, button, 0, 1, i, i + 1);
-	  i ++;
+	  gtk_menu_attach (menu, button, 0, 1,
+			   submenu_count, submenu_count + 1);
+
+	  submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
+	  gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
+	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
+				     GTK_WIDGET (submenus[submenu_count]));
+
+	  ops[submenu_count] = add_all;
+
+	  submenu_count ++;
 	}
+
+
+      /* Add queue at the beginning of the menu.  */
+      int submenu_pos = 0;
+
+      struct menu_info *main_info = g_malloc (sizeof (*main_info));
+      memset (main_info, 0, sizeof (*main_info));
+      main_info->st = st;
+      main_info->uid = uid;
+      main_info->artist = g_strdup (artist);
+      main_info->album = g_strdup (album);
+
+      g_signal_connect (G_OBJECT (menu), "selection-done",
+			G_CALLBACK (menu_destroy), main_info);
+
+
+      bool force = true;
+      int callback (const char *list)
+      {
+	if (strcmp (list, "queue") == 0)
+	  {
+	    if (force)
+	      force = false;
+	    else
+	      return 0;
+	  }
+
+	int i;
+	for (i = 0; i < submenu_count; i ++)
+	  {
+	    struct menu_info *info = g_malloc (sizeof (*info));
+	    *info = *main_info;
+
+	    info->next = main_info->next;
+	    main_info->next = info;
+
+	    info->op = ops[i];
+	    info->list = g_strdup (list);
+
+	    button = gtk_menu_item_new_with_label (list);
+	    g_signal_connect (G_OBJECT (button), "activate",
+			      G_CALLBACK (queue_cb), info);
+	    gtk_widget_show (button);
+	    gtk_menu_attach (submenus[i], button, 0, 1,
+			     submenu_pos, submenu_pos + 1);
+	    submenu_pos ++;
+	  }
+
+	return 0;
+      }
+
+      callback ("queue");
+      callback ("new play list");
+      music_db_play_lists_for_each (st->db, callback);
 
       g_free (source);
       g_free (title);
-
-      g_signal_connect (G_OBJECT (menu), "selection-done",
-			G_CALLBACK (menu_destroy), info);
 
       gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
 		      event->button, event->time);
@@ -1605,8 +1825,8 @@ starling_run (void)
   gtk_widget_show (mitem);
   gtk_menu_shell_append (menu, mitem);
 
-  /* Options -> Clear all.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("Clear _all"));
+  /* Options -> Remove all.  */
+  mitem = gtk_menu_item_new_with_mnemonic (_("_Remove all"));
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (clear_cb), st);
   gtk_widget_show (mitem);
@@ -1765,6 +1985,13 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
+  st->playlist = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  st->playlist_changed_signal
+    = g_signal_connect (G_OBJECT (st->playlist), "changed",
+			G_CALLBACK (play_list_combo_changed), st);
+  play_list_combo_refresh (st, NULL);
+  gtk_box_pack_start (hbox, GTK_WIDGET (st->playlist), FALSE, FALSE, 0);
+
   st->search_entry = gtk_entry_new ();
   g_signal_connect (G_OBJECT (st->search_entry), "changed",
 		    G_CALLBACK (search_text_changed), st);
@@ -1858,6 +2085,7 @@ starling_run (void)
 			    G_CALLBACK (update_queue_count), st);
   g_signal_connect_swapped (G_OBJECT (st->queue), "row-deleted",
 			    G_CALLBACK (update_queue_count), st);
+
 
   /* Lyrics tab */
 

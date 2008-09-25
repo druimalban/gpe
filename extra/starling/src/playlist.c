@@ -202,10 +202,7 @@ do_refresh (gpointer data)
     g_hash_table_destroy (pl->uid_idx_hash);
   pl->uid_idx_hash = g_hash_table_new (NULL, NULL);
 
-  if (! pl->list)
-    pl->count = music_db_count (pl->db, pl->constraint);
-  else
-    pl->count = music_db_play_list_count (pl->db, pl->list);
+  pl->count = music_db_count (pl->db, pl->list, pl->constraint);
 
   pl->size = pl->count + 128;
   pl->idx_uid_map = malloc (pl->size * sizeof (pl->idx_uid_map[0]));
@@ -220,14 +217,11 @@ do_refresh (gpointer data)
 
     return 0;
   }
-  if (! pl->list)
-    {
-      enum mdb_fields order[]
-	= { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
-      music_db_for_each (pl->db, cb, order, pl->constraint);
-    }
-  else
-    music_db_play_list_for_each (pl->db, pl->list, cb);
+  enum mdb_fields library_order[]
+    = { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
+  music_db_for_each (pl->db, pl->list, cb,
+		     pl->list ? NULL : library_order,
+		     pl->constraint);
 
   /* We need to emit some signals now so the thing using this model
      will stay in sync.  We brute force it as calculating the
@@ -340,7 +334,8 @@ new_entry (MusicDB *db, gint uid, gpointer data)
 {
   PlayList *pl = PLAY_LIST (data);
 
-  play_list_idx_uid_refresh_schedule (pl, false);
+  if (! pl->list)
+    play_list_idx_uid_refresh_schedule (pl, false);
 }
 
 static void
@@ -386,7 +381,7 @@ added_to_play_list (MusicDB *db, const char *list, gint offset, gpointer data)
 {
   PlayList *pl = PLAY_LIST (data);
 
-  if (strcmp (list, pl->list) == 0)
+  if (pl->list && strcmp (list, pl->list) == 0)
     play_list_idx_uid_refresh_schedule (pl, false);
 }
 
@@ -396,7 +391,7 @@ removed_from_play_list (MusicDB *db, const char *list, gint offset,
 {
   PlayList *pl = PLAY_LIST (data);
 
-  if (strcmp (list, pl->list) == 0)
+  if (pl->list && strcmp (list, pl->list) == 0)
     play_list_idx_uid_refresh_schedule (pl, false);
 }
 
@@ -414,10 +409,9 @@ play_list_new (MusicDB *db, const char *list)
   g_object_ref (db);
   pl->db = db;
 
-  if (! pl->list)
-    pl->new_entry_signal_id
-      = g_signal_connect (G_OBJECT (db), "new-entry",
-			  G_CALLBACK (new_entry), pl);
+  pl->new_entry_signal_id
+    = g_signal_connect (G_OBJECT (db), "new-entry",
+			G_CALLBACK (new_entry), pl);
 
   pl->changed_entry_signal_id
     = g_signal_connect (G_OBJECT (db), "changed-entry",
@@ -431,18 +425,41 @@ play_list_new (MusicDB *db, const char *list)
     = g_signal_connect (G_OBJECT (db), "cleared",
 			G_CALLBACK (cleared), pl);
 
-  if (pl->list)
-    {
-      pl->added_to_play_list_signal_id
-	= g_signal_connect (G_OBJECT (db), "added-to-play-list",
-			    G_CALLBACK (added_to_play_list), pl);
+  pl->added_to_play_list_signal_id
+    = g_signal_connect (G_OBJECT (db), "added-to-play-list",
+			G_CALLBACK (added_to_play_list), pl);
 
-      pl->removed_from_play_list_signal_id
-	= g_signal_connect (G_OBJECT (db), "removed-from-play-list",
-			    G_CALLBACK (removed_from_play_list), pl);
-    }
+  pl->removed_from_play_list_signal_id
+    = g_signal_connect (G_OBJECT (db), "removed-from-play-list",
+			G_CALLBACK (removed_from_play_list), pl);
 
   return pl;
+}
+
+void
+play_list_set (PlayList *pl, const char *list)
+{
+  if (list && ! *list)
+    list = NULL;
+
+  if (! pl->list && ! list)
+    return;
+  if (pl->list && list && strcmp (pl->list, list) == 0)
+    return;
+
+  g_free (pl->list);
+  if (list)
+    pl->list = g_strdup (list);
+  else
+    pl->list = NULL;
+
+  play_list_idx_uid_refresh_schedule (pl, true);
+}
+
+const char *
+play_list_get (PlayList *pl)
+{
+  return pl->list;
 }
 
 void

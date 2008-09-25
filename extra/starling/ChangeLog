@@ -1,5 +1,54 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.h (music_db_count): Take additional parameter list.
+	Update users.
+	(music_db_for_each): Likewise.
+	(music_db_play_list_count): Remove declaration.  Update callers to
+	use music_db_count.
+	(music_db_play_list_for_each): Remove declaration.  Update callers
+	to use music_db_for_each.
+	* src/musicdb.c (music_db_play_lists_for_each): Merge this
+	function...
+	(music_db_for_each): ... into this one.  Take additional parameter
+	list.
+	(music_db_play_list_count): Merge this function...
+	(music_db_count): ... into this one.  Take additional parameter
+	list.
+	* src/playlist.h (play_list_set): New declaration.
+	(play_list_get): Likewise.
+	* src/playlist.c (new_entry): Only call
+	play_list_idx_uid_refresh_schedule if PL->LIST is NULL.
+	(added_to_play_list): Only call play_list_idx_uid_refresh_schedule
+	if PL->LIST matches LIST.
+	(removed_from_play_list): Likewise.
+	(play_list_new): Always connect to DB's "new-entry",
+	"added-to-play-list" and "removed-from-play-list"'s signals.
+	(play_list_set): New function.
+	(play_list_get): Likewise.
+	* src/starling.c (struct _Starling): Add fields playlist_tab,
+	playlist, playlist_count and playlist_changed_signal.
+	(KEY_CURRENT_PLAYLIST): New define.
+	(deserialize): Restore the current play list.
+	(serialize): Save the current play list.
+	(play_list_combo_changed): New function.
+	(play_list_combo_refresh): Likewise.
+	(clear_cb): Clear according to the current play list.  Refresh the
+	play list.
+	(enum menu_op): New enum.
+	(struct menu_info): Add fields list, op and next.
+	(menu_destroy): Free all menu_infos.
+	(queue_song_cb): Merge this..
+	(queue_album_cb): ... and this...
+	(queue_artist_cb): ... and this...
+	(queue_all_cb): ... and this...
+	(queue_cb): ... into this.
+	(library_button_press_event): Make the queue song, album, artist
+	and all into submenus.  Attach a the play lists to each submenu.
+	(starling_run): Rename "Clear all" to "Remove all".  Create a
+	combo box for the play lists.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h (struct _MusicDBClass): Rename field
 	added_to_queue_signal_id to added_to_play_list_signal_id.  Update
 	users.  Rename field removed_from_queue_signal_id to
