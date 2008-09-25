@@ -71,6 +71,7 @@ struct _Starling {
   gboolean scale_pressed;
 
   GtkWidget *notebook;
+  GtkWidget *library_tab;
   GtkWidget *queue_tab;
 
   GtkScrolledWindow *library_view_window;
@@ -94,7 +95,7 @@ struct _Starling {
 
   Player *player;
   MusicDB *db;
-  PlayList *pl;
+  PlayList *library;
   PlayList *queue;
 
   /* UID of the loaded song.  */
@@ -186,9 +187,9 @@ starling_load (Starling *st, int uid)
 {
   if (st->loaded_song)
     {
-      int idx = play_list_uid_to_index (st->pl, st->loaded_song);
+      int idx = play_list_uid_to_index (st->library, st->loaded_song);
       if (idx != -1)
-	play_list_force_changed (st->pl, idx);
+	play_list_force_changed (st->library, idx);
     }
 
   char *source = NULL;
@@ -208,9 +209,9 @@ starling_load (Starling *st, int uid)
 
   if (st->loaded_song)
     {
-      int idx = play_list_uid_to_index (st->pl, st->loaded_song);
+      int idx = play_list_uid_to_index (st->library, st->loaded_song);
       if (idx != -1)
-	play_list_force_changed (st->pl, idx);
+	play_list_force_changed (st->library, idx);
 
       set_title (st);
     }
@@ -239,7 +240,7 @@ starling_advance (Starling *st, int delta)
 	/* Nothing on the queue.  */
 	{
 	  if (count == -1)
-	    count = play_list_count (st->pl);
+	    count = play_list_count (st->library);
 
 	  if (count == tries)
 	    /* Tried everything in the library once.  Something is
@@ -264,7 +265,7 @@ starling_advance (Starling *st, int delta)
 	  else
 	    /* Not random mode.  */
 	    {
-	      idx = play_list_uid_to_index (st->pl, st->loaded_song);
+	      idx = play_list_uid_to_index (st->library, st->loaded_song);
 	      if (idx == -1)
 		idx = 0;
 
@@ -280,7 +281,7 @@ starling_advance (Starling *st, int delta)
 		}
 	    }
 
-	  play_list_get_info (st->pl, idx, &uid,
+	  play_list_get_info (st->library, idx, &uid,
 			      NULL, NULL, NULL, NULL, NULL, NULL);
 	}
     }
@@ -574,11 +575,11 @@ starling_scroll_to_playing (Starling *st)
   if (! st->loaded_song)
     return;
 
-  int idx = play_list_uid_to_index (st->pl, st->loaded_song);
+  int idx = play_list_uid_to_index (st->library, st->loaded_song);
   if (idx == -1)
     return;
 
-  int count = play_list_count (st->pl);
+  int count = play_list_count (st->library);
   if (count == 0)
     return;
 
@@ -689,7 +690,7 @@ remove_cb (GtkWidget *w, Starling *st)
 {
   int pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->library_view));
   if (pos >= 0)
-    play_list_remove (st->pl, pos);
+    play_list_remove (st->library, pos);
 }
 
 static void
@@ -751,11 +752,11 @@ save_helper_cb (GtkWidget *dialog, gint response, gpointer data)
 
         path = gtk_entry_get_text (entry);
         if (g_str_has_suffix (path, ".m3u")) {
-            play_list_save_m3u (st->pl, path);
+            play_list_save_m3u (st->library, path);
         } else {
             GString *string = g_string_new (path);
             string = g_string_append (string, ".m3u");
-            play_list_save_m3u (st->pl, string->str);
+            play_list_save_m3u (st->library, string->str);
             g_string_free (string, TRUE);
         }
     }
@@ -798,7 +799,7 @@ activated_cb (GtkTreeView *view, GtkTreePath *path,
   pos = gtk_tree_path_get_indices (path);
 
   int uid;
-  if (! play_list_get_info (st->pl, pos[0], &uid,
+  if (! play_list_get_info (st->library, pos[0], &uid,
 			    NULL, NULL, NULL, NULL, NULL, NULL))
     return;
 
@@ -848,7 +849,7 @@ search_text_regen (gpointer data)
   const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
   if (! text || ! *text)
     {
-      play_list_constrain (st->pl, NULL);
+      play_list_constrain (st->library, NULL);
       return FALSE;
     }
 
@@ -879,7 +880,7 @@ search_text_regen (gpointer data)
 
   obstack_1grow (&constraint, 0);
 
-  play_list_constrain (st->pl, obstack_finish (&constraint));
+  play_list_constrain (st->library, obstack_finish (&constraint));
 
   obstack_free (&constraint, NULL);
 
@@ -990,13 +991,40 @@ position_update (Starling *st)
 static void
 update_queue_count (Starling *st)
 {
-  char *text = g_strdup_printf (_("Queue (%d)"),
-				music_db_play_queue_count (st->db));
+  int count = play_list_count (st->queue);
+  g_assert (count >= 0);
+  static int last_count = -1;
+
+  if (count == last_count)
+    return;
+
+  char *text = g_strdup_printf (_("Queue (%d)"), count);
 
   gtk_notebook_set_tab_label_text (GTK_NOTEBOOK (st->notebook),
 				   st->queue_tab, text);
 
   g_free (text);
+
+  last_count = count;
+}
+
+static void
+update_library_count (Starling *st)
+{
+  int count = play_list_count (st->library);
+  g_assert (count >= 0);
+  static int last_count = -1;
+
+  if (count == last_count)
+    return;
+
+  char *text = g_strdup_printf (_("Library (%d)"), count);
+  gtk_notebook_set_tab_label_text (GTK_NOTEBOOK (st->notebook),
+				   st->library_tab, text);
+
+  g_free (text);
+
+  last_count = count;
 }
 
 static void
@@ -1252,7 +1280,7 @@ queue_all_cb (GtkWidget *widget, gpointer d)
   }
 
   music_db_for_each (st->db, callback, sort_order,
-		     play_list_constraint_get (st->pl));
+		     play_list_constraint_get (st->library));
 }
 
 static gboolean
@@ -1278,7 +1306,7 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       char *source;
       char *title;
       info->st = st;
-      play_list_get_info (st->pl, idx, &info->uid, &source,
+      play_list_get_info (st->library, idx, &info->uid, &source,
 			  &info->artist, &info->album,
 			  NULL, &title, NULL);
 
@@ -1394,15 +1422,7 @@ starling_run (void)
       exit (1);
     }
 
-  g_signal_connect_swapped (G_OBJECT (st->db), "cleared",
-			    G_CALLBACK (update_queue_count), st);
-  g_signal_connect_swapped (G_OBJECT (st->db), "added-to-queue",
-			    G_CALLBACK (update_queue_count), st);
-  g_signal_connect_swapped (G_OBJECT (st->db), "removed-from-queue",
-			    G_CALLBACK (update_queue_count), st);
-
-
-  st->pl = play_list_new (st->db, PLAY_LIST_LIBRARY);
+  st->library = play_list_new (st->db, PLAY_LIST_LIBRARY);
   st->queue = play_list_new (st->db, PLAY_LIST_QUEUE);
 
   st->player = player_new ();
@@ -1715,7 +1735,8 @@ starling_run (void)
   gtk_box_pack_start (hbox, st->search_entry, TRUE, TRUE, 0);
 
 
-  st->library_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->pl));
+  st->library_view
+    = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->library));
   g_signal_connect (G_OBJECT (st->library_view), "row-activated",
 		    G_CALLBACK (activated_cb), st);
   g_signal_connect (G_OBJECT (st->library_view), "button-press-event",
@@ -1754,8 +1775,14 @@ starling_run (void)
 		    G_CALLBACK (save_cb), st);
 #endif
     
-  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
-			    gtk_label_new (_("Player")));
+  st->library_tab = GTK_WIDGET (vbox);
+  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox, NULL);
+  update_library_count (st);
+
+  g_signal_connect_swapped (G_OBJECT (st->library), "row-inserted",
+			    G_CALLBACK (update_library_count), st);
+  g_signal_connect_swapped (G_OBJECT (st->library), "row-deleted",
+			    G_CALLBACK (update_library_count), st);
 
 
   /* Play queue tab.  */
@@ -1790,6 +1817,11 @@ starling_run (void)
   st->queue_tab = GTK_WIDGET (vbox);
   gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox, NULL);
   update_queue_count (st);
+
+  g_signal_connect_swapped (G_OBJECT (st->queue), "row-inserted",
+			    G_CALLBACK (update_queue_count), st);
+  g_signal_connect_swapped (G_OBJECT (st->queue), "row-deleted",
+			    G_CALLBACK (update_queue_count), st);
 
   /* Lyrics tab */
 
