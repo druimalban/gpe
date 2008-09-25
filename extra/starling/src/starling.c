@@ -1142,19 +1142,43 @@ static void
 update_library_count (Starling *st)
 {
   int count = play_list_count (st->library);
-  g_assert (count >= 0);
-  static int last_count = -1;
 
-  if (count == last_count)
-    return;
+  static int old_count;
+  static int old_total;
 
-  char *text = g_strdup_printf (_("Library (%d)"), count);
+  const char *search_text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+  int total = 0;
+  if (*search_text)
+    {
+      total = play_list_total (st->library);
+
+      if (old_count == count && old_total == total)
+	return;
+    }
+  else
+    {
+      if (old_count == count)
+	return;
+    }
+
+  old_count = count;
+  old_total = total;
+
+
+  char *playlist = gtk_combo_box_get_active_text (st->playlist);
+
+  char *text;
+  if (*search_text)
+    text = g_strdup_printf (_("%s (%d/%d)"),
+			    playlist ?: _("Library"), count, total);
+  else
+    text = g_strdup_printf (_("%s (%d)"),
+			    playlist ?: _("Library"), count);
+
+  g_free (playlist);
   gtk_notebook_set_tab_label_text (GTK_NOTEBOOK (st->notebook),
 				   st->library_tab, text);
-
   g_free (text);
-
-  last_count = count;
 }
 
 static void

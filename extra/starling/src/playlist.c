@@ -48,8 +48,10 @@ struct _PlayList {
   /* The visible entries.  */
   char *constraint;
 
-  /* The number of entries in the playlist.  */
+  /* The number of entries in the playlist as constrained by CONSTRAINT.  */
   int count;
+  /* The number of entries in the playlist.  */
+  int total;
 
   /* Number of cells in the IDX_UID_MAP (COUNT <= SIZE).  */
   int size;
@@ -97,6 +99,7 @@ play_list_class_init (PlayListClass *klass)
 static void
 play_list_init (PlayList *pl)
 {
+  pl->total = -1;
 }
 
 static void
@@ -453,6 +456,7 @@ play_list_set (PlayList *pl, const char *list)
   else
     pl->list = NULL;
 
+  pl->total = -1;
   play_list_idx_uid_refresh_schedule (pl, true);
 }
 
@@ -495,6 +499,15 @@ play_list_count (PlayList *pl)
     play_list_idx_uid_refresh_schedule (pl, true);
 
   return pl->count;
+}
+
+gint
+play_list_total (PlayList *pl)
+{
+  if (pl->total == -1)
+    pl->total = music_db_count (pl->db, play_list_get (pl), NULL);
+
+  return pl->total;
 }
 
 void

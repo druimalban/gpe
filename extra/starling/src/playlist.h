@@ -81,6 +81,9 @@ extern const char *play_list_constraint_get (PlayList *pl);
 /* Return the number of entries.  */
 extern gint play_list_count (PlayList *pl);
 
+/* Return the number of entries ignoring the constraint.  */
+extern gint play_list_total (PlayList *pl);
+
 /* Permanently remove entry IDX.  */
 extern void play_list_remove (PlayList *pl, gint idx);
 

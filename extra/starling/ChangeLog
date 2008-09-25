@@ -1,5 +1,15 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/playlist.h (play_list_total): New declaration.
+	* src/playlist.c (struct _PlayList): Add field total.
+	(play_list_init): Set it to -1.
+	(play_list_set): Likewise.
+	(play_list_total): New function.
+	* src/starling.c (update_library_count): Include total if there
+	are search terms.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h (music_db_count): Take additional parameter list.
 	Update users.
 	(music_db_for_each): Likewise.
