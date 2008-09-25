@@ -1,5 +1,19 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct _Starling): Remove field scale_pressed.
+	Add field scale_sliding.
+	(set_position_text): New function.
+	(scale_sliding_update): Likewise.
+	(scale_button_released_cb): Remove the source ST->SCALE_SLIDING.
+	(scale_button_pressed_cb): Set a timeout to call
+	scale_sliding_update.
+	(position_update): If ST->SCALE_SLIDING is true, just return.
+	Don't update the position text here.  Call set_position_text
+	instead.
+	(starling_run): Don't unnecessarily initialize ST's fields to 0.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/lyrics.h (lyrics_select): Take additional parameter content.
 	Change return type to an int.  Update users.
 	* src/lyrics.c (lyricwiki_parse): Set LINE to NULL.

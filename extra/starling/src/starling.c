@@ -68,7 +68,7 @@ struct _Starling {
   GtkLabel *duration;
   GtkWidget *playpause;
   GtkWidget *scale;
-  gboolean scale_pressed;
+  int scale_sliding;
 
   GtkWidget *notebook;
   GtkWidget *library_tab;
@@ -901,91 +901,120 @@ search_text_changed (GtkEditable *search, gpointer data)
   regen_source = g_timeout_add (100, search_text_regen, st);
 }
 
+static void
+set_position_text (Starling *st, int seconds)
+{
+  char *p = g_strdup_printf ("%d:%02d",
+			     seconds / 60, seconds % 60);
+  gtk_label_set_text (GTK_LABEL (st->position), p);
+  g_free (p);
+}
+
+static gboolean
+scale_sliding_update (Starling *st)
+{
+  if (st->current_length < 0)
+    {
+      GstFormat fmt = GST_FORMAT_TIME;
+      player_query_duration (st->player, &fmt, &st->current_length, -1);
+    }
+
+  gfloat percent = gtk_range_get_value (GTK_RANGE (st->scale));
+
+  set_position_text (st,
+		     ((gint64) (((gfloat) st->current_length * percent)
+				/ 100))
+		     / 1e9);
+
+  return TRUE;
+}
+
 static gboolean
 scale_button_released_cb (GtkRange *range, GdkEventButton *event,
         Starling *st)
 {
-    gint percent;
-    GstFormat fmt = GST_FORMAT_TIME;
+  g_assert (st->scale_sliding);
+  g_source_remove (st->scale_sliding);
+  st->scale_sliding = 0;
 
-    if (st->current_length < 0) {
-        player_query_duration (st->player, &fmt, &st->current_length, -1);
-    }
+  gint percent;
+  GstFormat fmt = GST_FORMAT_TIME;
 
-    percent = gtk_range_get_value (range);
-    player_seek (st->player, GST_FORMAT_TIME, 
-		 (st->current_length / 100) * percent);
+  if (st->current_length < 0)
+    player_query_duration (st->player, &fmt, &st->current_length, -1);
+
+  percent = gtk_range_get_value (range);
+  player_seek (st->player, GST_FORMAT_TIME, 
+	       (st->current_length / 100) * percent);
     
-    st->scale_pressed = FALSE;
-    
-    return FALSE;
+  return FALSE;
 }
 
 static gboolean
 scale_button_pressed_cb (GtkRange *range, GdkEventButton *event,
-        Starling *st)
+			 Starling *st)
 {
-    st->scale_pressed = TRUE;
-    /* Avoid sending the track if the user seeks */
-    // Commented for testing
-    //st->enqueued = FALSE;
-    
-    return FALSE;
+  g_assert (! st->scale_sliding);
+  st->scale_sliding
+    = g_timeout_add (100, (GSourceFunc) scale_sliding_update, st);
+
+  return FALSE;
 }
 
 static gboolean
 position_update (Starling *st)
 {
-    GstFormat fmt = GST_FORMAT_TIME;
-    gint64 position;
-    gfloat percent;
-    gint total_seconds;
-    gint position_seconds;
-
-    if (st->current_length < 0)
-      {
-	if (! player_query_duration (st->player, &fmt, &st->current_length, -1))
-	  return TRUE;
-
-	total_seconds = st->current_length / 1e9;
-	char *d = g_strdup_printf ("%d:%02d",
-				   total_seconds / 60, total_seconds % 60);
-	gtk_label_set_text (GTK_LABEL (st->duration), d);
-	g_free (d);
-      }
-
-    player_query_position (st->player, &fmt, &position);
-
-    percent = (((gfloat) (position)) / st->current_length) * 100; 
-
-    total_seconds = st->current_length / 1e9;
-    position_seconds = (total_seconds / 100.0) * percent;
-
-    char *p = g_strdup_printf ("%d:%02d",
-			       position_seconds / 60, position_seconds % 60);
-    gtk_label_set_text (GTK_LABEL (st->position), p);
-    g_free (p);
-
-    if (!st->scale_pressed && percent <= 100) {
-        gtk_range_set_value (GTK_RANGE (st->scale), percent);
-    }
-
-    if (G_UNLIKELY (!st->enqueued && total_seconds > 30 && 
-        (position_seconds > 240 || position_seconds * 2 >= total_seconds)))
-      {
-	char *artist;
-	char *title;
-	music_db_get_info (st->db, st->loaded_song,
-			   NULL, &artist, NULL, NULL, &title, NULL);
-
-	st->enqueued = TRUE;
-	lastfm_enqueue (artist, title, total_seconds, st);
-
-	g_free (artist);
-	g_free (title);
-    }
-
+  if (st->scale_sliding)
+    /* User is sliding, don't change the position.  */
     return TRUE;
+
+  GstFormat fmt = GST_FORMAT_TIME;
+  gint64 position;
+  gfloat percent;
+  gint total_seconds;
+  gint position_seconds;
+
+  if (st->current_length < 0)
+    {
+      if (! player_query_duration (st->player, &fmt, &st->current_length, -1))
+	return TRUE;
+
+      total_seconds = st->current_length / 1e9;
+      char *d = g_strdup_printf ("%d:%02d",
+				 total_seconds / 60, total_seconds % 60);
+      gtk_label_set_text (GTK_LABEL (st->duration), d);
+      g_free (d);
+    }
+
+  player_query_position (st->player, &fmt, &position);
+
+  percent = (((gfloat) (position)) / st->current_length) * 100; 
+
+  total_seconds = st->current_length / 1e9;
+  position_seconds = (total_seconds / 100.0) * percent;
+
+  if (!st->scale_sliding)
+    {
+      set_position_text (st, position_seconds);
+      gtk_range_set_value (GTK_RANGE (st->scale), percent);
+    }
+
+  if (G_UNLIKELY (!st->enqueued && total_seconds > 30 && 
+		  (position_seconds > 240 || position_seconds * 2 >= total_seconds)))
+    {
+      char *artist;
+      char *title;
+      music_db_get_info (st->db, st->loaded_song,
+			 NULL, &artist, NULL, NULL, &title, NULL);
+
+      st->enqueued = TRUE;
+      lastfm_enqueue (artist, title, total_seconds, st);
+
+      g_free (artist);
+      g_free (title);
+    }
+
+  return TRUE;
 }
 
 static void
@@ -1873,16 +1902,7 @@ starling_run (void)
 			    gtk_label_new (_("last.fm")));
 
 
-  /* Init some variables */
-
-  st->scale_pressed = FALSE;
-
-  /* Just make sure */
-  st->fs_last_path = NULL;
-
   st->current_length = -1;
-  st->has_lyrics = FALSE;
-  st->enqueued = FALSE;
     
   lyrics_init ();
 
