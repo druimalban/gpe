@@ -1318,10 +1318,10 @@ music_db_for_each (MusicDB *db, const char *list,
   if (constraint)
     obstack_printf (&sql, "%s(%s) ", list ? "and " : "where", constraint);
 
-  obstack_printf (&sql, "order by ");
-
   if (order)
     {
+      obstack_printf (&sql, "order by ");
+
       bool need_comma = false;
       for (; *order; order ++)
 	{
@@ -1365,7 +1365,10 @@ music_db_for_each (MusicDB *db, const char *list,
 	}
     }
   else
-    obstack_printf (&sql, "files.ROWID");
+    {
+      if (list)
+	obstack_printf (&sql, "order by playlists.ROWID");
+    }
 
   obstack_1grow (&sql, 0);
   char *statement = obstack_finish (&sql);

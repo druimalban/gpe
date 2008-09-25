@@ -1,5 +1,10 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (music_db_for_each): If ORDER is NULL and this is
+	a play list, order by playlists.ROWID.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.h (play_list_total): New declaration.
 	* src/playlist.c (struct _PlayList): Add field total.
 	(play_list_init): Set it to -1.
