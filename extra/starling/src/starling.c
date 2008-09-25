@@ -1146,9 +1146,9 @@ update_library_count (Starling *st)
   static int old_count;
   static int old_total;
 
-  const char *search_text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+  const char *search_text = play_list_constraint_get (st->library);
   int total = 0;
-  if (*search_text)
+  if (search_text)
     {
       total = play_list_total (st->library);
 
@@ -1168,7 +1168,7 @@ update_library_count (Starling *st)
   char *playlist = gtk_combo_box_get_active_text (st->playlist);
 
   char *text;
-  if (*search_text)
+  if (search_text)
     text = g_strdup_printf (_("%s (%d/%d)"),
 			    playlist ?: _("Library"), count, total);
   else
