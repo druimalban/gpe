@@ -320,6 +320,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_LIBRARY_VIEW_POSITION "library-view-position"
 #define KEY_LIBRARY_SELECTION "library-selection"
 #define KEY_SEARCH_TEXT "search-text"
+#define KEY_CURRENT_PAGE "current-page"
 
 #define GROUP "main"
 
@@ -330,6 +331,7 @@ struct deserialize_bottom_half
 {
   Starling *st;
   double vadj_val;
+  int page;
 };
 
 static int
@@ -338,6 +340,8 @@ deserialize_bottom_half (gpointer data)
   struct deserialize_bottom_half *bh = data;
 
   Starling *st = bh->st;
+
+  gtk_notebook_set_current_page (GTK_NOTEBOOK (st->notebook), bh->page);
 
   GtkAdjustment *vadj
     = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
@@ -431,15 +435,15 @@ deserialize (Starling *st)
   starling_load (st, g_key_file_get_integer (keyfile,
 					     GROUP, KEY_LOADED_SONG, NULL));
 
-  struct deserialize_bottom_half *bf = calloc (sizeof (*bf), 1);
-  bf->st = st;
+  struct deserialize_bottom_half *bh = calloc (sizeof (*bh), 1);
+  bh->st = st;
 
   /* Library position.  */
   value = g_key_file_get_string (keyfile,
 				 GROUP, KEY_LIBRARY_VIEW_POSITION, NULL);
   if (value)
     {
-      bf->vadj_val = strtod (value, NULL);
+      bh->vadj_val = strtod (value, NULL);
       g_free (value);
     }
 
@@ -466,10 +470,13 @@ deserialize (Starling *st)
       }
   g_free (value);
 
+  /* The current page.  */
+  bh->page = g_key_file_get_integer (keyfile, GROUP, KEY_CURRENT_PAGE, NULL);
+
 
   g_key_file_free (keyfile);
 
-  gtk_idle_add (deserialize_bottom_half, bf);  
+  gtk_idle_add (deserialize_bottom_half, bh);  
 }
 
 static void
@@ -557,6 +564,10 @@ serialize (Starling *st)
   g_key_file_set_string (keyfile, GROUP, KEY_LIBRARY_SELECTION,
 			 obstack_finish (&sel));
   obstack_free (&sel, NULL);
+
+  /* The current page.  */
+  int page = gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook));
+  g_key_file_set_integer (keyfile, GROUP, KEY_CURRENT_PAGE, page);
 
 
   /* Save the key file to disk.  */

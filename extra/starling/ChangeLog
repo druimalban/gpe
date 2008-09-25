@@ -1,5 +1,13 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (KEY_CURRENT_PAGE): Define.
+	(struct deserialize_bottom_half): Add field page.
+	(deserialize_bottom_half): Set the current page.
+	(deserialize): Initialize BH->PAGE.
+	(serialize): Save the current page.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct _Starling): Remove field scale_pressed.
 	Add field scale_sliding.
 	(set_position_text): New function.
