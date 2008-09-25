@@ -1,5 +1,12 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (starling_load): Invalidate the old song's row
+	after updating ST->LOADED_SONG.
+
+	(starling_run): Rename "Remove all" to "Clear play list".
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (update_library_count): Get the current
 	constraint using play_list_constraint_get.
 

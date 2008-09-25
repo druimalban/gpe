@@ -191,12 +191,9 @@ starling_random_set (Starling *st, bool value)
 static gboolean
 starling_load (Starling *st, int uid)
 {
+  int old_idx = -1;
   if (st->loaded_song)
-    {
-      int idx = play_list_uid_to_index (st->library, st->loaded_song);
-      if (idx != -1)
-	play_list_force_changed (st->library, idx);
-    }
+    old_idx = play_list_uid_to_index (st->library, st->loaded_song);
 
   char *source = NULL;
 
@@ -213,6 +210,8 @@ starling_load (Starling *st, int uid)
 
   g_free (source);
 
+  if (old_idx != -1)
+    play_list_force_changed (st->library, old_idx);
   if (st->loaded_song)
     {
       int idx = play_list_uid_to_index (st->library, st->loaded_song);
@@ -1845,8 +1844,8 @@ starling_run (void)
   gtk_widget_show (mitem);
   gtk_menu_shell_append (menu, mitem);
 
-  /* Options -> Remove all.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("_Remove all"));
+  /* Options -> Clear play list.  */
+  mitem = gtk_menu_item_new_with_mnemonic (_("_Clear play list"));
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (clear_cb), st);
   gtk_widget_show (mitem);
