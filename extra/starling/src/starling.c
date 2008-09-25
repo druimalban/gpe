@@ -1443,20 +1443,16 @@ queue_cb (GtkWidget *widget, gpointer d)
 
     case add_album:
       if (info->artist)
-	s = sqlite_mprintf ("%s%s (artist like '%q' and album like '%q')",
-			    constraint,
-			    constraint ? " and" : "",
+	s = sqlite_mprintf ("(artist like '%q' and album like '%q')",
 			    info->artist, info->album);
       else
-	s = sqlite_mprintf ("%s%s (album like '%q')",
-			    constraint ? " and" : "",
-			    constraint, info->artist, info->album);
+	s = sqlite_mprintf ("(album like '%q')",
+			    info->album);
       break;
 
     case add_artist:
-      s = sqlite_mprintf ("%s%s (artist like '%q')",
-			  constraint ? " and" : "",
-			  constraint, info->artist);
+      s = sqlite_mprintf ("(artist like '%q')",
+			  info->artist);
       break;
 
     case add_all:
