@@ -221,6 +221,7 @@ player_set_source (Player *pl, const char *source, gpointer cookie)
 
   gst_element_set_state (pl->playbin, GST_STATE_NULL);
   g_object_set (G_OBJECT (pl->playbin), "uri", source, NULL);
+  gst_element_set_state (pl->playbin, GST_STATE_PAUSED);
 }
 
 char *

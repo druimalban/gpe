@@ -99,7 +99,72 @@ struct _Starling {
 
   /* UID of the loaded song.  */
   int loaded_song;
+
+  /* Source of the position updater.  */
+  int position_update;
+
+  /* Position to seek to next time it is possible (because we cannot
+     seek when the player is in GST_STATE_NULL).  */
+  int pending_seek;
 };
+
+static void
+set_title (Starling *st)
+{
+  char *artist_buffer;
+  char *title_buffer;
+  char *uri_buffer;
+
+  music_db_get_info (st->db, st->loaded_song, &uri_buffer,
+		     &artist_buffer, NULL, NULL, &title_buffer, NULL);
+  char *uri = uri_buffer;
+  if (! uri)
+    uri = "unknown";
+  char *artist = artist_buffer;
+  char *title = title_buffer;
+
+  //if (st->last_state != GST_STATE_PAUSED) {
+  if (!st->has_lyrics && artist && title) {
+    st->has_lyrics = TRUE;
+    lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview));
+  }
+
+  if (! title)
+    {
+      title = strrchr (uri, '/');
+      if (! title)
+	title = uri;
+      else
+	title ++;
+    }
+
+#define PREFIX "Starling: "
+  char *title_bar;
+  if (artist)
+    title_bar = g_strdup_printf (_("%s %s - %s"),
+				 _(PREFIX),
+				 artist, title);
+  else
+    title_bar = g_strdup_printf (_("%s %s"), _(PREFIX), title);
+
+  gtk_label_set_text (GTK_LABEL (st->title),
+		      title_bar
+		      + sizeof (PREFIX) - 1 /* NULL */ + 1 /* ' ' */);
+
+#ifdef IS_HILDON
+#if HILDON_VER > 0
+  gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
+#else
+  hildon_app_set_title (HILDON_APP (st->window), title_bar);
+#endif /* HILDON_VER */
+#else
+  gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
+#endif /* IS_HILDON */
+  g_free (title_bar);
+  g_free (artist_buffer);
+  g_free (title_buffer);
+  g_free (uri_buffer);
+}
 
 bool
 starling_random (Starling *st)
@@ -146,6 +211,8 @@ starling_load (Starling *st, int uid)
       int idx = play_list_uid_to_index (st->pl, st->loaded_song);
       if (idx != -1)
 	play_list_force_changed (st->pl, idx);
+
+      set_title (st);
     }
 
   return TRUE;
@@ -248,6 +315,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_WIDTH "width"
 #define KEY_HEIGHT "height"
 #define KEY_LOADED_SONG "loaded-song"
+#define KEY_LOADED_SONG_POSITION "loaded-song-position"
 #define KEY_LIBRARY_VIEW_POSITION "library-view-position"
 #define KEY_LIBRARY_SELECTION "library-selection"
 #define KEY_SEARCH_TEXT "search-text"
@@ -353,10 +421,14 @@ deserialize (Starling *st)
     }
 
 
-  /* Current song.  */
+  /* First get the current song's position.  */
+  st->pending_seek = g_key_file_get_integer (keyfile,
+					     GROUP,
+					     KEY_LOADED_SONG_POSITION, NULL);
+
+  /* And then load the current song.  */
   starling_load (st, g_key_file_get_integer (keyfile,
 					     GROUP, KEY_LOADED_SONG, NULL));
-
 
   struct deserialize_bottom_half *bf = calloc (sizeof (*bf), 1);
   bf->st = st;
@@ -438,6 +510,13 @@ serialize (Starling *st)
 
   /* Current song.  */
   g_key_file_set_integer (keyfile, GROUP, KEY_LOADED_SONG, st->loaded_song);
+
+  /* And the position in that song.  */
+  GstFormat fmt = GST_FORMAT_TIME;
+  gint64 pos = 0;
+  player_query_position (st->player, &fmt, &pos);
+  g_key_file_set_integer (keyfile, GROUP, KEY_LOADED_SONG_POSITION,
+			  (int) (pos / 1e9));
 
   /* Library view position.  */
   GtkAdjustment *vadj
@@ -854,7 +933,7 @@ scale_button_pressed_cb (GtkRange *range, GdkEventButton *event,
 }
 
 static gboolean
-scale_update_cb (Starling *st)
+position_update (Starling *st)
 {
     GstFormat fmt = GST_FORMAT_TIME;
     gint64 position;
@@ -930,63 +1009,13 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
 	gtk_toggle_tool_button_set_active
 	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause), TRUE);
 
-      char *artist_buffer;
-      char *title_buffer;
-      char *uri_buffer;
-
-      music_db_get_info (st->db, (gint) uid, &uri_buffer,
-			 &artist_buffer, NULL, NULL, &title_buffer, NULL);
-      char *uri = uri_buffer;
-      if (! uri)
-	uri = "unknown";
-      char *artist = artist_buffer;
-      char *title = title_buffer;
-
-      //if (st->last_state != GST_STATE_PAUSED) {
-      if (!st->has_lyrics && artist && title) {
-	st->has_lyrics = TRUE;
-	lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview));
-      }
-
-      if (! title)
-	{
-	  title = strrchr (uri, '/');
-	  if (! title)
-	    title = uri;
-	  else
-	    title ++;
-	}
-
-#define PREFIX "Starling: "
-      char *title_bar;
-      if (artist)
-	title_bar = g_strdup_printf (_("%s %s - %s"),
-				     _(PREFIX),
-				     artist, title);
-      else
-	title_bar = g_strdup_printf (_("%s %s"), _(PREFIX), title);
-
-      gtk_label_set_text (GTK_LABEL (st->title),
-			  title_bar
-			  + sizeof (PREFIX) - 1 /* NULL */ + 1 /* ' ' */);
-
-#ifdef IS_HILDON
-#if HILDON_VER > 0
-      gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
-#else
-      hildon_app_set_title (HILDON_APP (st->window), title_bar);
-#endif /* HILDON_VER */
-#else
-      gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
-#endif /* IS_HILDON */
-      g_free (title_bar);
-      g_free (artist_buffer);
-      g_free (title_buffer);
-      g_free (uri_buffer);
-
       st->current_length = -1;
       st->has_lyrics = FALSE;
       st->enqueued = FALSE;
+
+      if (! st->position_update)
+	st->position_update
+	  = g_timeout_add (1000, (GSourceFunc) position_update, st);
     }
   else if (state == GST_STATE_PAUSED || state == GST_STATE_NULL)
     {
@@ -994,6 +1023,22 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
 	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause)))
 	gtk_toggle_tool_button_set_active
 	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause), FALSE);
+
+      if (st->position_update)
+	{
+	  g_source_remove (st->position_update);
+	  st->position_update = 0;
+	}
+    }
+
+  position_update (st);
+
+  if (st->pending_seek >= 0
+      && (state == GST_STATE_PLAYING || state == GST_STATE_PAUSED))
+    {
+      player_seek (st->player,
+		   GST_FORMAT_TIME, (gint64) st->pending_seek * 1e9);
+      st->pending_seek = -1;
     }
 }
 
@@ -1616,7 +1661,6 @@ starling_run (void)
 		    G_CALLBACK (scale_button_released_cb), st);
   g_signal_connect (G_OBJECT (st->scale), "button-press-event",
 		    G_CALLBACK (scale_button_pressed_cb), st);
-  g_timeout_add (1000, (GSourceFunc) scale_update_cb, st);
   gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->scale),
 		      TRUE, TRUE, 0);
     

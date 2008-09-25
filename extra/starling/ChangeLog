@@ -1,3 +1,20 @@
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c (struct _Starling): Add fields position_update
+	and pending_seek.
+	(starling_load): Call set_title.
+	(KEY_LOADED_SONG_POSITION): Define.
+	(deserialize): Load the current song's position.
+	(serialize): Save the current song's position.
+	(scale_update_cb): Rename from this...
+	(position_update): ... to this.  Move title updater from here
+	(set_title): ... to this new function.  If no longer playing,
+	remove the position updater.  If now playing, start the position
+	updater.  If ST->PENDING_SEEK is non-negative, seek.
+	(starling_run): Don't setup a timer connected to scale_update_cb.
+	* src/player.c (player_set_source): After setting the URI, change
+	the player to GST_STATE_PAUSED.
+
 2008-09-24  Neal H. Walfield  <neal@gnu.org>
 
 	* src/playlist.c (play_list_idx_uid_refresh_schedule): If NOW is
