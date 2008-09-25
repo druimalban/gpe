@@ -1,5 +1,10 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/lastfm.c (lastfm_enqueue): Don't use g_return_if_fail, just
+	return.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (starling_load): Invalidate the old song's row
 	after updating ST->LOADED_SONG.
 

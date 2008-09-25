@@ -149,7 +149,8 @@ lastfm_enqueue (const gchar *artist, const gchar *title, gint length, Starling *
     sqlite_vm *vm;
     gint ret;
 
-    g_return_if_fail (artist && title && db);
+    if (! (artist && title && db))
+      return;
 
     sqlite_compile (db, STORE_STATEMENT, NULL, &vm, NULL);
     sqlite_bind (vm, 1, artist, -1, 0);
