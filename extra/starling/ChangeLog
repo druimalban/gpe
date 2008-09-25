@@ -1,5 +1,76 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.h (struct _MusicDBClass): Rename field
+	added_to_queue_signal_id to added_to_play_list_signal_id.  Update
+	users.  Rename field removed_from_queue_signal_id to
+	removed_from_play_list_signal_id.  Update users.
+	(music_db_play_queue_enqueue): Rename from this...
+	(music_db_play_list_enqueue): ... to this.  Take additional
+	parameter list.  Update users.
+	(music_db_play_queue_dequeue): Rename from this...
+	(music_db_play_list_dequeue): ... to this.  Take additional
+	parameter list.  Update users.
+	(music_db_play_queue_count): Rename from this...
+	(music_db_play_list_count): ... to this.  Take additional
+	parameter list.  Update users.
+	(music_db_play_queue_query): Rename from this...
+	(music_db_play_list_query): ... to this.  Take additional
+	parameter list.  Update users.
+	(music_db_play_queue_remove): Rename from this...
+	(music_db_play_list_remove): ... to this.  Take additional
+	parameter list.  Update users.
+	(music_db_play_queue_clear): Rename from this...
+	(music_db_play_list_clear): ... to this.  Take additional
+	parameter list.  Update users.
+	(music_db_play_queue_for_each): Rename from this...
+	(music_db_play_list_for_each): ... to this.  Take additional
+	parameter list.  Update users.
+	(music_db_play_lists_for_each): New declaration.
+	* src/musicdb.c: Include "marshal.h".
+	(music_db_class_init): Add parameter to signal
+	"added-to-play-list" and "removed-from-play-list". Update
+	closures.
+	(music_db_create_table): Remove table queue.  Add table playlists.
+	(music_db_play_queue_enqueue): Rename from this...
+	(music_db_play_list_enqueue): ... to this.  Take additional
+	parameter list.  Use it.
+	(music_db_play_queue_dequeue): Rename from this...
+	(music_db_play_list_dequeue): ... to this.  Take additional
+	parameter list.  Use it.
+	(music_db_play_queue_count): Rename from this...
+	(music_db_play_list_count): ... to this.  Take additional
+	parameter list.  Use it.
+	(music_db_play_queue_query): Rename from this...
+	(music_db_play_list_query): ... to this.  Take additional
+	parameter list.  Use it.
+	(music_db_play_queue_remove): Rename from this...
+	(music_db_play_list_remove): ... to this.  Take additional
+	parameter list.  Use it.
+	(music_db_play_queue_clear): Rename from this...
+	(music_db_play_list_clear): ... to this.  Take additional
+	parameter list.  Use it.
+	(music_db_play_queue_for_each): Rename from this...
+	(music_db_play_list_for_each): ... to this.  Take additional
+	parameter list.  Use it.
+	(music_db_play_lists_for_each): New function.
+	* src/playlist.h (enum play_list_mode): Remove enum.
+	(play_list_new): Replace parameter mode with parameter list.
+	Update users.
+	* src/playlist.c (struct _PlayList): Replace field mode with field
+	list.  Update users.
+	(struct _PlayList): Replace field added_to_queue_signal_id with
+	added_to_play_list_signal_id and removed_from_queue_signal_id with
+	removed_from_play_list_signal_id.  Update users.
+	(play_list_finalize): Free PL->LIST.
+	(removed_from_queue): Replace this function...
+	(removed_from_play_list): ... with this one.  Update users.
+	(added_to_queue): Replace this function...
+	(added_to_play_list): ... with this one.  Update users.
+	(play_list_new): Replace parameter mode with parameter list.  Use
+	it.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (KEY_CURRENT_PAGE): Define.
 	(struct deserialize_bottom_half): Add field page.
 	(deserialize_bottom_half): Set the current page.

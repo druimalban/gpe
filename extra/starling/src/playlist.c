@@ -43,7 +43,7 @@ struct _PlayList {
 
   MusicDB *db;
 
-  enum play_list_mode mode;
+  char *list;
 
   /* The visible entries.  */
   char *constraint;
@@ -63,8 +63,8 @@ struct _PlayList {
   gint changed_entry_signal_id;
   gint deleted_entry_signal_id;
   gint cleared_signal_id;
-  gint added_to_queue_signal_id;
-  gint removed_from_queue_signal_id;
+  gint added_to_play_list_signal_id;
+  gint removed_from_play_list_signal_id;
 
   gint reschedule_timeout;
   /* Number of reschedules requests since last reschedule.  */
@@ -112,10 +112,10 @@ play_list_dispose (GObject *obj)
     g_signal_handler_disconnect (pl->db, pl->deleted_entry_signal_id);
   if (pl->cleared_signal_id)
     g_signal_handler_disconnect (pl->db, pl->cleared_signal_id);
-  if (pl->added_to_queue_signal_id)
-    g_signal_handler_disconnect (pl->db, pl->added_to_queue_signal_id);
-  if (pl->removed_from_queue_signal_id)
-    g_signal_handler_disconnect (pl->db, pl->removed_from_queue_signal_id);
+  if (pl->added_to_play_list_signal_id)
+    g_signal_handler_disconnect (pl->db, pl->added_to_play_list_signal_id);
+  if (pl->removed_from_play_list_signal_id)
+    g_signal_handler_disconnect (pl->db, pl->removed_from_play_list_signal_id);
 
   if (pl->reschedule_timeout)
     g_source_remove (pl->reschedule_timeout);
@@ -139,6 +139,8 @@ play_list_finalize (GObject *object)
   free (pl->idx_uid_map);
   if (pl->uid_idx_hash)
     g_hash_table_destroy (pl->uid_idx_hash);
+
+  g_free (pl->list);
 }
 
 /* From glibc manual.  */
@@ -200,10 +202,10 @@ do_refresh (gpointer data)
     g_hash_table_destroy (pl->uid_idx_hash);
   pl->uid_idx_hash = g_hash_table_new (NULL, NULL);
 
-  if (pl->mode == PLAY_LIST_LIBRARY)
+  if (! pl->list)
     pl->count = music_db_count (pl->db, pl->constraint);
   else
-    pl->count = music_db_play_queue_count (pl->db);
+    pl->count = music_db_play_list_count (pl->db, pl->list);
 
   pl->size = pl->count + 128;
   pl->idx_uid_map = malloc (pl->size * sizeof (pl->idx_uid_map[0]));
@@ -218,14 +220,14 @@ do_refresh (gpointer data)
 
     return 0;
   }
-  if (pl->mode == PLAY_LIST_LIBRARY)
+  if (! pl->list)
     {
       enum mdb_fields order[]
 	= { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
       music_db_for_each (pl->db, cb, order, pl->constraint);
     }
   else
-    music_db_queue_for_each (pl->db, cb);
+    music_db_play_list_for_each (pl->db, pl->list, cb);
 
   /* We need to emit some signals now so the thing using this model
      will stay in sync.  We brute force it as calculating the
@@ -380,34 +382,39 @@ cleared (MusicDB *db, gpointer data)
 }
 
 static void
-added_to_queue (MusicDB *db, gint offset, gpointer data)
+added_to_play_list (MusicDB *db, const char *list, gint offset, gpointer data)
 {
   PlayList *pl = PLAY_LIST (data);
 
-  play_list_idx_uid_refresh_schedule (pl, false);
+  if (strcmp (list, pl->list) == 0)
+    play_list_idx_uid_refresh_schedule (pl, false);
 }
 
 static void
-removed_from_queue (MusicDB *db, gint offset, gpointer data)
+removed_from_play_list (MusicDB *db, const char *list, gint offset,
+			gpointer data)
 {
   PlayList *pl = PLAY_LIST (data);
 
-  play_list_idx_uid_refresh_schedule (pl, false);
+  if (strcmp (list, pl->list) == 0)
+    play_list_idx_uid_refresh_schedule (pl, false);
 }
 
 
 PlayList *
-play_list_new (MusicDB *db, enum play_list_mode mode)
+play_list_new (MusicDB *db, const char *list)
 {
   PlayList *pl = PLAY_LIST (g_object_new (PLAY_LIST_TYPE, NULL));
 
-  g_assert (mode == PLAY_LIST_LIBRARY || mode == PLAY_LIST_QUEUE);
-  pl->mode = mode;
+  if (list)
+    pl->list = g_strdup (list);
+  else
+    pl->list = NULL;
 
   g_object_ref (db);
   pl->db = db;
 
-  if (pl->mode == PLAY_LIST_LIBRARY)
+  if (! pl->list)
     pl->new_entry_signal_id
       = g_signal_connect (G_OBJECT (db), "new-entry",
 			  G_CALLBACK (new_entry), pl);
@@ -424,15 +431,15 @@ play_list_new (MusicDB *db, enum play_list_mode mode)
     = g_signal_connect (G_OBJECT (db), "cleared",
 			G_CALLBACK (cleared), pl);
 
-  if (pl->mode == PLAY_LIST_QUEUE)
+  if (pl->list)
     {
-      pl->added_to_queue_signal_id
-	= g_signal_connect (G_OBJECT (db), "added-to-queue",
-			    G_CALLBACK (added_to_queue), pl);
+      pl->added_to_play_list_signal_id
+	= g_signal_connect (G_OBJECT (db), "added-to-play-list",
+			    G_CALLBACK (added_to_play_list), pl);
 
-      pl->removed_from_queue_signal_id
-	= g_signal_connect (G_OBJECT (db), "removed-from-queue",
-			    G_CALLBACK (removed_from_queue), pl);
+      pl->removed_from_play_list_signal_id
+	= g_signal_connect (G_OBJECT (db), "removed-from-play-list",
+			    G_CALLBACK (removed_from_play_list), pl);
     }
 
   return pl;
@@ -488,10 +495,10 @@ play_list_force_changed (PlayList *pl, gint n)
 void
 play_list_remove (PlayList *pl, gint idx)
 {
-  if (pl->mode == PLAY_LIST_LIBRARY)
+  if (! pl->list)
     music_db_remove (pl->db, play_list_idx_to_uid (pl, idx));
   else
-    music_db_play_queue_remove (pl->db, idx);
+    music_db_play_list_remove (pl->db, pl->list, idx);
 }
 
 bool

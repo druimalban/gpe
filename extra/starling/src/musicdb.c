@@ -22,6 +22,7 @@
 #define ERROR_DOMAIN() g_quark_from_static_string ("musicdb")
 
 #include "musicdb.h"
+#include "marshal.h"
 
 #include <glib.h>
 #include <glib/gstdio.h>
@@ -136,21 +137,21 @@ music_db_class_init (MusicDBClass *klass)
 		    g_cclosure_marshal_VOID__VOID,
 		    G_TYPE_NONE, 0);
 
-  music_db_class->added_to_queue_signal_id
-    = g_signal_new ("added-to-queue",
+  music_db_class->added_to_play_list_signal_id
+    = g_signal_new ("added-to-play-list",
 		    G_TYPE_FROM_CLASS (klass),
 		    G_SIGNAL_RUN_FIRST,
 		    0, NULL, NULL,
-		    g_cclosure_marshal_VOID__UINT,
-		    G_TYPE_NONE, 1, G_TYPE_UINT);
+		    g_cclosure_user_marshal_VOID__POINTER_INT,
+		    G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
 
-  music_db_class->removed_from_queue_signal_id
-    = g_signal_new ("removed-from-queue",
+  music_db_class->removed_from_play_list_signal_id
+    = g_signal_new ("removed-from-play-list",
 		    G_TYPE_FROM_CLASS (klass),
 		    G_SIGNAL_RUN_FIRST,
 		    0, NULL, NULL,
-		    g_cclosure_marshal_VOID__UINT,
-		    G_TYPE_NONE, 1, G_TYPE_UINT);
+		    g_cclosure_user_marshal_VOID__POINTER_INT,
+		    G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
 }
 
 static void
@@ -205,7 +206,7 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 		 "begin transaction;"
 		 "drop table files;"
 		 "drop table dirs;"
-		 "drop table queue;",
+		 "drop table playlists;",
 		 NULL, NULL, &err);
   else
     sqlite_exec (db->sqliteh,
@@ -242,8 +243,8 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 	       "create table dirs (filename STRING); "
 	       "commit transaction;"
 
-	       /* Create a table for the play queue.  */
-	       "create table queue (uid INTEGER)",
+	       /* Create a table for the play lists.  */
+	       "create table playlists (list STRING, uid INTEGER);",
 	       NULL, NULL, NULL);
 }
 
@@ -1363,7 +1364,7 @@ music_db_for_each (MusicDB *db,
 }
 
 void
-music_db_play_queue_enqueue (MusicDB *db, int uid)
+music_db_play_list_enqueue (MusicDB *db, const char *list, int uid)
 {
   int count = 0;
   int callback (void *arg, int argc, char **argv, char **names)
@@ -1374,21 +1375,21 @@ music_db_play_queue_enqueue (MusicDB *db, int uid)
 
   char *err = NULL;
   sqlite_exec_printf (db->sqliteh,
-		      "insert into queue (uid) values (%d);"
-		      "select count (*) from queue",
-		      callback, NULL, &err, uid);
+		      "insert into playlists (list, uid) values ('%q', %d);"
+		      "select count (*) from playlists where list = '%q'",
+		      callback, NULL, &err, list, uid, list);
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
       sqlite_freemem (err);
     }
 
-  g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->added_to_queue_signal_id, 0,
-		 count - 1);
+  g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->added_to_play_list_signal_id, 0,
+		 list, count - 1);
 }
 
 int
-music_db_play_queue_dequeue (MusicDB *db)
+music_db_play_list_dequeue (MusicDB *db, const char *list)
 {
   int rowid = 0;
   int uid = 0;
@@ -1400,8 +1401,13 @@ music_db_play_queue_dequeue (MusicDB *db)
   }
 
   char *err = NULL;
-  sqlite_exec (db->sqliteh, "select ROWID, uid from queue limit 1;",
-	       callback, NULL, &err);
+  sqlite_exec_printf (db->sqliteh,
+		      "select ROWID, uid from playlists where list = '%q'"
+		      " limit 1;",
+		      callback, NULL, &err, list);
+
+  printf ("rowid: %d, uid: %d\n", rowid, uid);
+
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
@@ -1411,7 +1417,7 @@ music_db_play_queue_dequeue (MusicDB *db)
     }
 
   sqlite_exec_printf (db->sqliteh,
-		      "delete from queue where rowid = %d;",
+		      "delete from playlists where ROWID = %d;",
 		      NULL, NULL, &err, rowid);
   if (err)
     {
@@ -1419,14 +1425,14 @@ music_db_play_queue_dequeue (MusicDB *db)
       sqlite_freemem (err);
     }
 
-  g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->removed_from_queue_signal_id, 0,
-		 0);
+  g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->removed_from_play_list_signal_id,
+		 0, list, 0);
 
   return uid;
 }
 
 int
-music_db_play_queue_count (MusicDB *db)
+music_db_play_list_count (MusicDB *db, const char *list)
 {
   int count = 0;
   int callback (void *arg, int argc, char **argv, char **names)
@@ -1436,8 +1442,9 @@ music_db_play_queue_count (MusicDB *db)
   }
 
   char *err = NULL;
-  sqlite_exec (db->sqliteh, "select count(*) from queue",
-	       callback, NULL, &err);
+  sqlite_exec_printf (db->sqliteh,
+		      "select count(*) from playlists where list = '%q'",
+		      callback, NULL, &err, list);
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
@@ -1450,7 +1457,7 @@ music_db_play_queue_count (MusicDB *db)
 }
 
 int
-music_db_play_queue_query (MusicDB *db, int offset)
+music_db_play_list_query (MusicDB *db, const char *list, int offset)
 {
   int uid = 0;
   int callback (void *arg, int argc, char **argv, char **names)
@@ -1461,8 +1468,9 @@ music_db_play_queue_query (MusicDB *db, int offset)
 
   char *err = NULL;
   sqlite_exec_printf (db->sqliteh,
-		      "select uid from queue limit 1 offset %d;",
-		      callback, NULL, &err, offset);
+		      "select uid from playlists where list = '%q'"
+		      " limit 1 offset %d;",
+		      callback, NULL, &err, offset, list);
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
@@ -1475,13 +1483,14 @@ music_db_play_queue_query (MusicDB *db, int offset)
 }
 
 void
-music_db_play_queue_remove (MusicDB *db, int offset)
+music_db_play_list_remove (MusicDB *db, const char *list, int offset)
 {
   char *err = NULL;
   sqlite_exec_printf (db->sqliteh,
-		      "delete from queue where ROWID in "
-		      " (select ROWID from queue limit 1 offset %d);",
-		      NULL, NULL, &err, offset);
+		      "delete from playlists where ROWID in "
+		      " (select ROWID from queue where list = '%q'"
+		      "   limit 1 offset %d);",
+		      NULL, NULL, &err, list, offset);
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
@@ -1490,12 +1499,12 @@ music_db_play_queue_remove (MusicDB *db, int offset)
       return;
     }
 
-  g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->removed_from_queue_signal_id, 0,
-		 offset);
+  g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->removed_from_play_list_signal_id,
+		 0, list, offset);
 }
 
 void
-music_db_play_queue_clear (MusicDB *db)
+music_db_play_list_clear (MusicDB *db, const char *list)
 {
   int count = 0;
   int callback (void *arg, int argc, char **argv, char **names)
@@ -1505,10 +1514,10 @@ music_db_play_queue_clear (MusicDB *db)
   }
 
   char *err = NULL;
-  sqlite_exec (db->sqliteh,
-	       "select count (*) from queue;"
-	       "delete from queue",
-	       callback, NULL, &err);
+  sqlite_exec_printf (db->sqliteh,
+		      "select count (*) from playlists where list = '%q';"
+		      "delete from playlists where list = '%q'",
+		      callback, NULL, &err, list, list);
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
@@ -1516,26 +1525,29 @@ music_db_play_queue_clear (MusicDB *db)
     }
 
   for (; count > 0; count --)
-    g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->removed_from_queue_signal_id, 0,
-		   0);
+    g_signal_emit (db,
+		   MUSIC_DB_GET_CLASS (db)->removed_from_play_list_signal_id,
+		   0, list, 0);
 }
 
 
 int
-music_db_queue_for_each (MusicDB *db,
-			 int (*user_callback) (int uid,
-					       struct music_db_info *info))
+music_db_play_list_for_each (MusicDB *db, const char *list,
+			     int (*user_callback) (int uid,
+						   struct music_db_info *info))
 {
   struct info_callback_data data;
   data.ret = 0;
   data.user_callback = user_callback;
 
   char *err = NULL;
-  sqlite_exec (db->sqliteh,
-	       "select files.ROWID, files.source, files.artist, "
-	       "  files.album, files.track, files.title, files.duration "
-	       " from queue left join files on queue.uid = files.rowid;",
-	       info_callback, &data, &err);
+  sqlite_exec_printf (db->sqliteh,
+		      "select files.ROWID, files.source, files.artist,"
+		      "  files.album, files.track, files.title, files.duration"
+		      " from playlists left join files"
+		      "  on playlists.uid = files.rowid"
+		      " where playlists.list = '%q'",
+		      info_callback, &data, &err, list);
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
@@ -1543,4 +1555,28 @@ music_db_queue_for_each (MusicDB *db,
     }
 
   return data.ret;
+}
+
+int
+music_db_play_lists_for_each (MusicDB *db,
+			      int (*user_callback) (const char *list))
+{
+  int ret = 0;
+  int callback (void *arg, int argc, char **argv, char **names)
+  {
+    ret = user_callback (argv[0]);
+    return ret;
+  }
+
+  char *err = NULL;
+  sqlite_exec (db->sqliteh,
+	       "select distinct list from playlists order by lower(list);",
+	       callback, NULL, &err);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      free (err);
+    }
+
+  return ret;
 }

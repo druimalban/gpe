@@ -235,7 +235,7 @@ starling_advance (Starling *st, int delta)
   int uid;
   do
     {
-      uid = music_db_play_queue_dequeue (st->db);
+      uid = music_db_play_list_dequeue (st->db, "queue");
       if (uid == 0)
 	/* Nothing on the queue.  */
 	{
@@ -714,7 +714,7 @@ clear_cb (GtkWidget *w, Starling *st)
 static void
 clear_queue_cb (GtkWidget *w, Starling *st)
 {   
-  music_db_play_queue_clear (st->db);
+  music_db_play_list_clear (st->db, "queue");
 }
 
 #ifdef IS_HILDON
@@ -1254,7 +1254,7 @@ queue_song_cb (GtkWidget *widget, gpointer d)
   struct menu_info *info = d;
   Starling *st = info->st;
 
-  music_db_play_queue_enqueue (st->db, info->uid);
+  music_db_play_list_enqueue (st->db, "queue", info->uid);
 }
 
 static enum mdb_fields sort_order[]
@@ -1268,7 +1268,7 @@ queue_album_cb (GtkWidget *widget, gpointer d)
 
   int callback (int uid, struct music_db_info *i)
   {
-    music_db_play_queue_enqueue (st->db, uid);
+    music_db_play_list_enqueue (st->db, "queue", uid);
 
     return 0;
   }
@@ -1292,7 +1292,7 @@ queue_artist_cb (GtkWidget *widget, gpointer d)
 
   int callback (int uid, struct music_db_info *i)
   {
-    music_db_play_queue_enqueue (st->db, uid);
+    music_db_play_list_enqueue (st->db, "queue", uid);
 
     return 0;
   }
@@ -1310,7 +1310,7 @@ queue_all_cb (GtkWidget *widget, gpointer d)
 
   int callback (int uid, struct music_db_info *i)
   {
-    music_db_play_queue_enqueue (st->db, uid);
+    music_db_play_list_enqueue (st->db, "queue", uid);
 
     return 0;
   }
@@ -1458,8 +1458,8 @@ starling_run (void)
       exit (1);
     }
 
-  st->library = play_list_new (st->db, PLAY_LIST_LIBRARY);
-  st->queue = play_list_new (st->db, PLAY_LIST_QUEUE);
+  st->library = play_list_new (st->db, NULL);
+  st->queue = play_list_new (st->db, "queue");
 
   st->player = player_new ();
 

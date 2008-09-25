@@ -58,16 +58,11 @@ enum
     PL_COL_COUNT
   };
 
-enum play_list_mode
-  {
-    PLAY_LIST_LIBRARY,
-    PLAY_LIST_QUEUE
-  };
-
 /** play_list_open:
 
-    Create a new play list based on the music database DB.  */
-extern PlayList *play_list_new (MusicDB *db, enum play_list_mode mode);
+    Create a new play list object based on music database DB.  If LIST
+    is NULL, uses the library.  */
+extern PlayList *play_list_new (MusicDB *db, const char *list);
 
 /* Narrow the visible tracks according to CONSTRAINT.  CONSTRAINT is
    interpreted as for music_db_for_each.  */

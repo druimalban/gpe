@@ -55,12 +55,13 @@ struct _MusicDBClass
   /* "cleared" signal: All entries in the DB were removed.  */
   guint cleared_signal_id;
 
-  /* "added-to-queue" signal: A new entry was added to the play queue.
-     Passed the position (guint) and UID (guint) of the new entry.  */
-  guint added_to_queue_signal_id;
-  /* "removed-from-queue" signal: An entry was removed from the play
-     queue.  Passed the position (guint).  */
-  guint removed_from_queue_signal_id;
+  /* "added-to-play-list" signal: A new entry was added to a play
+     list.  Passed the list (char *), position (guint) and UID (guint)
+     of the new entry.  */
+  guint added_to_play_list_signal_id;
+  /* "removed-from-play-list" signal: An entry was removed from a play
+     list.  Passed the play list (char *) and position (guint).  */
+  guint removed_from_play_list_signal_id;
 };
 
 extern GType music_db_get_type (void);
@@ -175,29 +176,35 @@ extern int music_db_for_each (MusicDB *db,
 			      enum mdb_fields *order,
 			      const char *constraint);
 
-/* Enqueue UID to the end of the play queue.  */
-extern void music_db_play_queue_enqueue (MusicDB *db, int uid);
+/* Enqueue UID to the end of the play list.  */
+extern void music_db_play_list_enqueue (MusicDB *db, const char *list, int uid);
  
-/* Dequeue an element from the play queue, return its UID.  Returns
-   0 if the queue is empty or an error occurs.  */
-extern int music_db_play_queue_dequeue (MusicDB *db);
+/* Dequeue an element from the play list, return its UID.  Returns
+   0 if the list is empty or an error occurs.  */
+extern int music_db_play_list_dequeue (MusicDB *db, const char *list);
 
-/* Returns the number of elements in the play queue.  */
-extern int music_db_play_queue_count (MusicDB *db);
+/* Returns the number of elements in the play list.  */
+extern int music_db_play_list_count (MusicDB *db, const char *list);
 
-/* Returns the UID of the OFFSET element in the queue (0 based).  If
+/* Returns the UID of the OFFSET element in the list (0 based).  If
    the returned value is zero, there is no such element at that
    offset.  */
-extern int music_db_play_queue_query (MusicDB *db, int offset);
+extern int music_db_play_list_query (MusicDB *db, const char *list,
+				     int offset);
 
-/* Removes the element at OFFSET in the play queue.  */
-extern void music_db_play_queue_remove (MusicDB *db, int offset);
+/* Removes the element at OFFSET in the play list.  */
+extern void music_db_play_list_remove (MusicDB *db, const char *list,
+				       int offset);
 
-/* Clear the play queue.  */
-extern void music_db_play_queue_clear (MusicDB *db);
+/* Clear the play list.  */
+extern void music_db_play_list_clear (MusicDB *db, const char *list);
 
-/* Iterate over each entry in the queue, in order.  */
-extern int music_db_queue_for_each (MusicDB *db,
-				    int (*cb) (int uid,
-					       struct music_db_info *info));
+/* Iterate over each entry in the list, in order.  */
+extern int music_db_play_list_for_each (MusicDB *db, const char *list,
+					int (*cb) (int uid,
+						   struct music_db_info *info));
+
+/* Iterate over each play list in the database.  */
+extern int music_db_play_lists_for_each (MusicDB *db,
+					 int (*cb) (const char *list));
 #endif
