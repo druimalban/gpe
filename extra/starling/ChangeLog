@@ -1,5 +1,21 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/lyrics.h (lyrics_select): Take additional parameter content.
+	Change return type to an int.  Update users.
+	* src/lyrics.c (lyricwiki_parse): Set LINE to NULL.
+	(lyrics_select): Take additional parameter content.  Return
+	content in *CONTENT.  Change return type to an int.  If the
+	content does not exist in the DB, return 0.  Otherwise, 1.  If
+	SQLOUT[0] is NULL, don't g_strdup, just set *CONTENT to NULL.
+	(lyrics_write_textview): If CONTENT is NULL, use _("No lyrics
+	found.").
+	(got_lyrics): Don't special case LYRICS == NULL.
+	(lyrics_display_with_uri): Only retreive the lyrics if
+	lyrics_select returns 0.
+	(lyrics_store): On failure, clean up VM.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (queue_album_cb): Remove asserts.  Don't match
 	using '=' but 'like'.
 	(queue_artist_cb): Likewise.

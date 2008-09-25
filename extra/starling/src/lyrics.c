@@ -1,14 +1,22 @@
-/*
- * This file is part of Starling
- *
- * Copyright (C) 2006 Alberto García Hierro
- *      <skyhusker@handhelds.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version
- * 2 of the License, or (at your option) any later version.
- */
+/* lyrics.c - Lyrics support.
+   Copyright (C) 2008 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006 Alberto García Hierro <skyhusker@handhelds.org>
+
+   This file is part of GPE.
+
+   GPE is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   GPE is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
 
@@ -122,7 +130,7 @@ lyricwiki_parse (SoupMessage *msg)
 {
     const gchar *delim = "<div id=\"lyric\">";
     gchar **lines;
-    gchar *line;
+    gchar *line = NULL;
     gchar *retval;
     GString *str;
     gint ii;
@@ -224,17 +232,15 @@ lyrics_get_provider (void)
     return current_provider;
 }
 
-gchar *
-lyrics_select (const gchar *uri)
+int
+lyrics_select (const gchar *uri, char **content)
 {
     sqlite_vm *vm;
-    gchar *retval;
     gint ret;
     const gchar **sqlout;
 
-    if (!db) {
-        return NULL;
-    }
+    if (!db)
+      return 0;
 
     sqlite_compile (db, SELECT_STATEMENT, NULL, &vm, NULL);
 
@@ -244,13 +250,17 @@ lyrics_select (const gchar *uri)
     
     if (ret != SQLITE_ROW) {
         sqlite_finalize (vm, NULL);
-        return NULL;
+        return 0;
     }
 
-    retval = g_strdup (sqlout[0]);
+    if (sqlout[0])
+      *content = g_strdup (sqlout[0]);
+    else
+      *content = NULL;
+
     sqlite_finalize (vm, NULL);
 
-    return retval;
+    return 1;
 }
 
 static void
@@ -259,7 +269,7 @@ lyrics_write_textview (GtkTextView *view, const gchar *content)
     GtkTextBuffer *buffer;
         
     buffer = gtk_text_view_get_buffer (view);
-    gtk_text_buffer_set_text (buffer, content, -1);
+    gtk_text_buffer_set_text (buffer, content ?: _("No lyrics found."), -1);
 }
 
 void
@@ -287,11 +297,6 @@ got_lyrics (SoupMessage *msg, gpointer view)
     if (SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
         lyrics = providers[current_provider].parse (msg);
 
-    if (!lyrics) {
-        lyrics_write_textview (GTK_TEXT_VIEW (view), _("No lyrics found"));
-        return;
-    }
-    
     lyrics_write_textview (GTK_TEXT_VIEW (view), lyrics);
     
     uri = soup_uri_to_string (soup_message_get_uri (msg), FALSE);
@@ -307,14 +312,13 @@ lyrics_display_with_uri (const gchar *uri, GtkTextView *view)
     SoupSession *session;
     SoupMessage *msg;
     
-    content = lyrics_select (uri);
-    
-    if (content) {
+    if (lyrics_select (uri, &content))
+      {
         lyrics_write_textview (view, content);
         
         g_free (content);
         return;
-    }
+      }
 
     session = soup_session_async_new ();
     msg = soup_message_new (SOUP_METHOD_GET, uri);
@@ -337,23 +341,23 @@ lyrics_store (const gchar *uri, const gchar *text)
     sqlite_compile (db, STORE_STATEMENT, NULL, &vm, NULL);
 
     ret = sqlite_bind (vm, 1, uri, -1, FALSE);
-    if (ret) {
-        return;
-    }
+    if (ret)
+      goto out;
 
     ret = sqlite_bind (vm, 2, text, -1, FALSE);
-
-    if (ret) {
-        return;
-    }
+    if (ret)
+      goto out;
 
     ret = sqlite_step (vm, NULL, NULL, NULL);
     
-    if (ret != SQLITE_DONE) {
-        printf("Error storing lyrics: %d\n", ret);
-    }
-
-    sqlite_finalize (vm, NULL);
+ out:;
+    char *err = NULL;
+    sqlite_finalize (vm, &err);
+    if (err)
+      {
+        printf ("Error storing lyrics: %d: %s\n", ret, err);
+	sqlite_freemem (err);
+      }
 }
 
 gchar *

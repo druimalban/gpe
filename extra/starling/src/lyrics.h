@@ -41,7 +41,7 @@ void lyrics_display (const gchar *artist, const gchar *title, GtkTextView *view)
 
 void lyrics_display_with_uri (const gchar *uri, GtkTextView *view);
 
-gchar * lyrics_select (const gchar *uri);
+int lyrics_select (const gchar *uri, char **content);
 
 void lyrics_store (const gchar *uri, const gchar *text);
 
