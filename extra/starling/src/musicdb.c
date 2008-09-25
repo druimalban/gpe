@@ -77,6 +77,7 @@ struct _MusicDB
   sqlite *sqliteh;
 
   /* UIDs of files whose metadata we should try to read.  */
+  GStaticMutex meta_data_reader_mutex;
   GQueue *meta_data_reader_pending;
   /* The idle handler.  */
   guint meta_data_reader;
@@ -344,7 +345,7 @@ music_db_open (const char *file, GError **error)
     }
   else
     {
-      sqlite_busy_handler (db->sqliteh, busy_handler, NULL);
+      sqlite_busy_handler (sqliteh, busy_handler, NULL);
 
       struct fs_scanner *fs = calloc (sizeof (*fs), 1);
       fs->db = db;
@@ -409,15 +410,50 @@ fs_scanner_thread (gpointer data)
 
   GQueue *q = g_queue_new ();
 
-  int cb (void *arg, int argc, char **argv, char **names)
+  int check_dead_cb (void *arg, int argc, char **argv, char **names)
+  {
+    g_queue_push_tail (q, g_strdup (argv[0] + strlen ("file://")));
+    return 0;
+  }
+
+  char *err = NULL;
+  sqlite_exec_printf (sqliteh,
+		      "select (source) from files"
+		      " where source like 'file:///%';",
+		      check_dead_cb, NULL, &err);
+  if (err)
+    {
+      g_debug ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+    }
+
+
+  while (! g_queue_is_empty (q))
+    {
+      char *filename = g_queue_pop_head (q);
+      
+      struct stat st;
+      int ret = g_stat (filename, &st);
+      if (ret < 0 || ! S_ISREG (st.st_mode))
+	sqlite_exec_printf (sqliteh,
+			    "delete from files"
+			    " where source = 'file://%s';",
+			    NULL, NULL, &err, filename);
+
+      g_free (filename);
+    }
+
+
+
+  int dir_cb (void *arg, int argc, char **argv, char **names)
   {
     g_queue_push_tail (q, g_strdup (argv[0]));
     return 0;
   }
 
-  char *err = NULL;
+  err = NULL;
   sqlite_exec_printf (sqliteh, "select (filename) from dirs;",
-		      cb, NULL, &err);
+		      dir_cb, NULL, &err);
   if (err)
     {
       g_debug ("%s:%d: %s", __FUNCTION__, __LINE__, err);
@@ -478,9 +514,21 @@ meta_data_reader (gpointer data)
   if (major == 0 && minor < 12)
     target_state = GST_STATE_PLAYING;
 
-  while (! g_queue_is_empty (db->meta_data_reader_pending))
+  while (1)
     {
+      g_static_mutex_lock (&db->meta_data_reader_mutex);
+
+      if (! g_queue_is_empty (db->meta_data_reader_pending))
+	{
+	  g_static_mutex_unlock (&db->meta_data_reader_mutex);
+	  break;
+	}
+
       int *uidp = g_queue_pop_head (db->meta_data_reader_pending);
+
+      g_static_mutex_unlock (&db->meta_data_reader_mutex);
+
+
       g_assert (uidp);
       int uid = *uidp;
       g_free (uidp);
@@ -612,7 +660,7 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 	s[total ++] = sources[i];
 
       if (ret != SQLITE_ABORT && err)
-	fprintf (stderr, "%s:%d: %s", __FUNCTION__, __LINE__, err);
+	g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
 
       if (err)
 	sqlite_freemem (err);
@@ -650,8 +698,7 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
       /* Queue the file in the meta-data crawler (if appropriate).  */
       if (strncmp (FILE_PREFIX, s[i], sizeof (FILE_PREFIX) - 1) == 0)
 	{
-	  if (! db->meta_data_reader)
-	    db->meta_data_reader = g_idle_add (meta_data_reader, db);
+	  g_static_mutex_lock (&db->meta_data_reader_mutex);
 
 	  if (! db->meta_data_reader_pending)
 	    db->meta_data_reader_pending = g_queue_new ();
@@ -659,6 +706,11 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 	  int *uidp = g_malloc (sizeof (int));
 	  *uidp = uid;
 	  g_queue_push_tail (db->meta_data_reader_pending, uidp);
+
+	  if (! db->meta_data_reader)
+	    db->meta_data_reader = g_idle_add (meta_data_reader, db);
+
+	  g_static_mutex_unlock (&db->meta_data_reader_mutex);
 	}
     }
 

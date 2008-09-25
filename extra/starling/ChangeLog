@@ -1,5 +1,17 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (struct _MusicDB): Add field
+	meta_data_reader_mutex.
+	(meta_data_reader): Lock access to DB->META_DATA_READER_PENDING.
+	(music_db_add): Likewise.  Create idle handler after creating the
+	queue.
+
+	(fs_scanner_thread): Check for dead files.
+
+	(music_db_open): Set SQLITEH's busy handler.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct _Starling): Add fields position_update
 	and pending_seek.
 	(starling_load): Call set_title.
