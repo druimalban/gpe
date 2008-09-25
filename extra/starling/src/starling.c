@@ -1228,9 +1228,6 @@ queue_album_cb (GtkWidget *widget, gpointer d)
 
   int callback (int uid, struct music_db_info *i)
   {
-    g_assert (strcmp (i->artist, info->artist) == 0);
-    g_assert (strcmp (i->album, info->album) == 0);
-
     music_db_play_queue_enqueue (st->db, uid);
 
     return 0;
@@ -1238,10 +1235,10 @@ queue_album_cb (GtkWidget *widget, gpointer d)
 
   char *s;
   if (info->artist)
-    s = sqlite_mprintf ("artist = '%q' and album = '%q'",
+    s = sqlite_mprintf ("artist like '%q' and album like '%q'",
 			info->artist, info->album);
   else
-    s = sqlite_mprintf ("album = '%q'",
+    s = sqlite_mprintf ("album like '%q'",
 			info->artist, info->album);
   music_db_for_each (st->db, callback, sort_order, s);
   sqlite_freemem (s);
@@ -1255,13 +1252,12 @@ queue_artist_cb (GtkWidget *widget, gpointer d)
 
   int callback (int uid, struct music_db_info *i)
   {
-    g_assert (strcmp (i->artist, info->artist) == 0);
     music_db_play_queue_enqueue (st->db, uid);
 
     return 0;
   }
 
-  char *s = sqlite_mprintf ("artist = '%q'", info->artist);
+  char *s = sqlite_mprintf ("artist like '%q'", info->artist);
   music_db_for_each (st->db, callback, sort_order, s);
   sqlite_freemem (s);
 }

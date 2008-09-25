@@ -1,5 +1,11 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (queue_album_cb): Remove asserts.  Don't match
+	using '=' but 'like'.
+	(queue_artist_cb): Likewise.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct _Starling): Add field library_tab.
 	Rename field pl to library.  Update users.
 	(update_queue_count): Cache last count and only update text if
