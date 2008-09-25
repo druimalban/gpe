@@ -1,5 +1,10 @@
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (music_db_for_each): If CONSTRAINT is the empty
+	string, treat as if it were NULL.
+
+2008-09-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (queue_cb): Don't include an and when building
 	the constraint.
 

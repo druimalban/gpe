@@ -1315,7 +1315,7 @@ music_db_for_each (MusicDB *db, const char *list,
 		    "select ROWID, source, artist, album, track,"
 		    " title, duration from files ");
 
-  if (constraint)
+  if (constraint && *constraint)
     obstack_printf (&sql, "%s(%s) ", list ? "and " : "where", constraint);
 
   if (order)
