@@ -1,5 +1,10 @@
 2008-09-26  Neal H. Walfield  <neal@gnu.org>
 
+	* src/lyrics.c (lyrcar_parse): Add sanity checks.  Properly clean
+	up and return NULL if those sanity checks fail.
+
+2008-09-26  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct play_list_view_config): New structure.
 	(struct _Starling): Add field playlists_conf.
 	(KEY_LIBRARY_VIEW_POSITION): Remove define.

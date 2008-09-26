@@ -68,7 +68,7 @@ lyrcar_cook (const gchar *artist, const gchar *title)
 static gchar *
 lyrcar_parse (SoupMessage *msg)
 {
-    gchar *retval;
+    gchar *retval = NULL;
     gchar **lines;
     GString *str;
     gint ii;
@@ -76,13 +76,19 @@ lyrcar_parse (SoupMessage *msg)
 
     lines = g_strsplit (msg->response.body, "\n", 4096);
 
+    int len = g_strv_length (lines);
+    if (len < 130)
+      goto out;
+
     /* First line */
     pos = strstr (lines[129], "</script></td></tr></table>");
     
-    if (!pos) {
-        /* This is an error page, no lyrics */
-        return NULL;
-    }
+    if (!pos)
+      /* This is an error page, no lyrics */
+      goto out;
+
+    if (strlen (pos) < 27)
+      goto out;
 
     pos += 27; /* strlen("</script></td></tr></table>") */
     str = g_string_new ("");
@@ -101,11 +107,13 @@ lyrcar_parse (SoupMessage *msg)
         g_string_append (str, "\n"); 
     }
         
-    g_strfreev (lines);    
         
     retval = str->str;
+
     g_string_free (str, FALSE);
 
+ out:
+    g_strfreev (lines);    
     return retval;
 }
 
