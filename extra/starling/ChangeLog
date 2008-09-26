@@ -1,5 +1,9 @@
 2008-09-26  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (serialize): Free KEYFILE.
+
+2008-09-26  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (fs_scanner_thread): Use %q for the file name, not
 	%s.
 

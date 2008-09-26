@@ -631,6 +631,7 @@ serialize (Starling *st)
   /* Save the key file to disk.  */
   gsize length;
   char *data = g_key_file_to_data (keyfile, &length, NULL);
+  g_key_file_free (keyfile);
 
   g_file_set_contents (path, data, length, NULL);
 
