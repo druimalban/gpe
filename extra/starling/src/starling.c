@@ -477,7 +477,7 @@ deserialize (Starling *st)
   value = g_key_file_get_string (keyfile, GROUP, KEY_LIBRARY_SELECTION, NULL);
 
   char *tok;
-  for (tok = strtok (value, ","); tok; tok = strtok (NULL, " "))
+  for (tok = strtok (value, ","); tok; tok = strtok (NULL, ","))
     if (*tok)
       {
 	GtkTreePath *path = gtk_tree_path_new_from_string (tok);
@@ -1350,7 +1350,9 @@ enum menu_op
     add_song,
     add_album,
     add_artist,
-    add_all
+    add_all,
+    add_sel,
+    add_count,
   };
 
 struct menu_info
@@ -1360,6 +1362,7 @@ struct menu_info
   char *artist;
   char *album;
   char *list;
+  GList *selection;
   enum menu_op op;
   struct menu_info *next;
 };
@@ -1370,6 +1373,7 @@ menu_destroy (GtkWidget *widget, gpointer d)
   struct menu_info *info = d;
   g_free (info->artist);
   g_free (info->album);
+  g_list_free (info->selection);
 
   struct menu_info *i;
   struct menu_info *n = info->next;
@@ -1416,8 +1420,8 @@ queue_cb (GtkWidget *widget, gpointer d)
 	  new_list = true;
 	  break;
 
-	case GTK_RESPONSE_CANCEL:
-	  break;
+	default:
+	  return;
 	}
 
       gtk_widget_destroy (dialog);
@@ -1458,6 +1462,11 @@ queue_cb (GtkWidget *widget, gpointer d)
     case add_all:
       s = (char *) constraint;
       need_free = false;
+      break;
+
+    case add_sel:
+      g_list_foreach (info->selection, (GFunc) callback, NULL);
+      s = NULL;
       break;
 
     default:
@@ -1509,8 +1518,8 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 			  NULL, &title, NULL, NULL);
 
       
-      GtkMenu *submenus[4];
-      int ops[4];
+      GtkMenu *submenus[add_count];
+      int ops[add_count];
       int submenu_count = 0;
 
       /* Create a "queue this song button."  */
@@ -1609,6 +1618,62 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 	}
 
 
+      GtkTreeSelection *selection
+	= gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
+      int sel_count = 0;
+      GList *selection_list = NULL;
+      char *first_source = NULL;
+      char *first_title = NULL;
+
+      bool first = true;
+      void sel_callback (GtkTreeModel *model,
+			 GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+      {
+	gint *indices = gtk_tree_path_get_indices (path);
+
+	int uid;
+	play_list_get_info (st->library, indices[0], &uid,
+			    first ? &first_source : NULL, NULL, NULL, NULL,
+			    first ? &first_title : NULL, NULL, NULL);
+	selection_list
+	  = g_list_append (selection_list, (gpointer) uid);
+	sel_count ++;
+
+	first = false;
+      }
+      gtk_tree_selection_selected_foreach (selection, sel_callback, NULL);
+
+      if (sel_count)
+	{
+	  button = gtk_menu_item_new_with_label ("");
+	  if (sel_count > 1)
+	    str = g_strdup_printf (_("Add %d selected songs to"),
+				   sel_count);
+	  else
+	    str = g_strdup_printf (_("Add selected song <i>%.15s%s</i> to"),
+				   first_title ?: first_source,
+				   strlen (first_title ?: first_source) > 15
+				     ? "..." : "");
+
+	  g_free (first_title);
+	  g_free (first_source);
+
+	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
+	  gtk_widget_show (button);
+	  gtk_menu_attach (menu, button, 0, 1,
+			   submenu_count, submenu_count + 1);
+
+	  submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
+	  gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
+	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
+				     GTK_WIDGET (submenus[submenu_count]));
+
+	  ops[submenu_count] = add_sel;
+
+	  submenu_count ++;
+	}
+
+
       /* Add queue at the beginning of the menu.  */
       int submenu_pos = 0;
 
@@ -1618,6 +1683,7 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       main_info->uid = uid;
       main_info->artist = g_strdup (artist);
       main_info->album = g_strdup (album);
+      main_info->selection = selection_list;
 
       g_signal_connect (G_OBJECT (menu), "selection-done",
 			G_CALLBACK (menu_destroy), main_info);
@@ -2027,6 +2093,9 @@ starling_run (void)
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->library_view), FALSE);
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->library_view), TRUE);
   gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->library_view), TRUE);
+  GtkTreeSelection *sel = gtk_tree_view_get_selection
+    (GTK_TREE_VIEW (st->library_view));
+  gtk_tree_selection_set_mode (sel, GTK_SELECTION_MULTIPLE);
 
   gtk_widget_grab_focus (GTK_WIDGET (st->library_view));
 
@@ -2076,6 +2145,9 @@ starling_run (void)
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->queue_view), FALSE);
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->queue_view), TRUE);
   gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->queue_view), TRUE);
+  sel = gtk_tree_view_get_selection
+    (GTK_TREE_VIEW (st->queue_view));
+  gtk_tree_selection_set_mode (sel, GTK_SELECTION_MULTIPLE);
 
   col = gtk_tree_view_column_new ();
   gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);

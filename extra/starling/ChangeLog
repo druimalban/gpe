@@ -1,5 +1,19 @@
 2008-09-26  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (deserialize): When parsing the selection value,
+	use ',' as the delimiter.
+	(enum menu_op): Add add_sel and add_count.
+	(struct menu_info): Add field selection.
+	(menu_destroy): Free INFO->SELECTION.
+	(queue_cb): If the user cancels the new list dialog box, return.
+	Handle add_sel.
+	(library_button_press_event): Add a menu item for adding the
+	selected items to a play list.
+	(starling_run): Change ST->LIBRARY_VIEW's and ST->QUEUE_VIEW's
+	selection mode to GTK_SELECTION_MULTIPLE.
+
+2008-09-26  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h (music_db_get_info): Add parameter genre.  Update
 	users.
 	(enum mdb_fields): Add MDB_GENRE.
