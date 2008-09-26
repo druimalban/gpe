@@ -1802,6 +1802,7 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 	  g_free (first_source);
 
 	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
+	  g_free (str);
 	  gtk_widget_show (button);
 	  gtk_menu_attach (menu, button, 0, 1,
 			   submenu_count, submenu_count + 1);

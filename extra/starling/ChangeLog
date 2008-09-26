@@ -1,5 +1,9 @@
 2008-09-26  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (library_button_press_event): Free STR.
+
+2008-09-26  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (play_list_combo_changed): Also restore when
 	ACTIVE is NULL.
 
