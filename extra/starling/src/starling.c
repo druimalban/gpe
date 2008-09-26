@@ -778,9 +778,34 @@ set_random_cb (GtkWidget *w, Starling *st)
 static void
 remove_cb (GtkWidget *w, Starling *st)
 {
-  int pos = gtk_tree_view_get_position (GTK_TREE_VIEW (st->library_view));
-  if (pos >= 0)
-    play_list_remove (st->library, pos);
+  /* We need to remove them in reverse numerical order.  Consider: 1
+     and 3 are selected.  We remove the track at index 1 and then 3.
+     After removing the track at index 1, the entry referred to be
+     index 3 is different!  */
+
+  GtkTreeSelection *selection
+    = gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
+
+  GQueue *selected = g_queue_new ();
+
+  void callback (GtkTreeModel *model,
+		 GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+  {
+    gint *indices = gtk_tree_path_get_indices (path);
+    g_queue_push_head (selected, (gpointer) indices[0]);
+  }
+  gtk_tree_selection_selected_foreach (selection, callback, NULL);
+
+
+  while (! g_queue_is_empty (selected))
+    {
+      int idx = (int) g_queue_pop_head (selected);
+      play_list_remove (st->library, idx);
+    }
+
+  g_queue_free (selected);
+
+  gtk_tree_selection_unselect_all (selection);
 }
 
 static void

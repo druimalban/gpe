@@ -1,5 +1,9 @@
 2008-09-26  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (remove_cb): Remove all selected entries.
+
+2008-09-26  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (deserialize): When parsing the selection value,
 	use ',' as the delimiter.
 	(enum menu_op): Add add_sel and add_count.
