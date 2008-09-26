@@ -451,7 +451,7 @@ fs_scanner_thread (gpointer data)
 	{
 	  sqlite_exec_printf (sqliteh,
 			      "delete from files"
-			      " where source = 'file://%s';",
+			      " where source = 'file://%q';",
 			      NULL, NULL, &err, filename);
 	  if (err)
 	    {
