@@ -783,8 +783,22 @@ remove_cb (GtkWidget *w, Starling *st)
      After removing the track at index 1, the entry referred to be
      index 3 is different!  */
 
+  GtkWidget *view = NULL;
+  switch (gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook)))
+    {
+    case 0:
+      view = st->library_view;
+      break;
+    case 1:
+      view = st->queue_view;
+      break;
+    }
+
+  if (! view)
+    return;
+
   GtkTreeSelection *selection
-    = gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
+    = gtk_tree_view_get_selection (GTK_TREE_VIEW (view));
 
   GQueue *selected = g_queue_new ();
 
@@ -806,6 +820,8 @@ remove_cb (GtkWidget *w, Starling *st)
   g_queue_free (selected);
 
   gtk_tree_selection_unselect_all (selection);
+
+  play_list_combo_refresh (st, NULL);
 }
 
 static void
