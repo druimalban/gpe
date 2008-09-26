@@ -47,6 +47,7 @@ struct info_cache_entry
   char *title;
   int track;
   int duration;
+  char *genre;
 };
 
 void
@@ -58,6 +59,7 @@ info_cache_evict (void *object)
   free (e->artist);
   free (e->album);
   free (e->title);
+  free (e->genre);
   free (e);
 }
 
@@ -545,7 +547,7 @@ meta_data_reader (gpointer data)
       g_free (uidp);
 
       char *source = NULL;
-      music_db_get_info (db, uid, &source, NULL, NULL, NULL, NULL, NULL);
+      music_db_get_info (db, uid, &source, NULL, NULL, NULL, NULL, NULL, NULL);
       if (! source)
 	/* Hmm, entry disappeared.  It's possible: the user may have
 	   removed it before we got to processing it.  */
@@ -952,7 +954,8 @@ music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
 void
 music_db_remove (MusicDB *db, gint uid)
 {
-  g_assert (music_db_get_info (db, uid, NULL, NULL, NULL, NULL, NULL, NULL));
+  g_assert (music_db_get_info (db, uid,
+			       NULL, NULL, NULL, NULL, NULL, NULL, NULL));
 
   char *err = NULL;
   sqlite_exec_printf (db->sqliteh,
@@ -988,7 +991,7 @@ music_db_clear (MusicDB *db)
 bool
 music_db_get_info (MusicDB *db, int uid,
 		   char **source, char **artist, char **album,
-		   int *track, char **title, int *duration)
+		   int *track, char **title, int *duration, char **genre)
 {
   struct info_cache_entry *e = simple_cache_find (&info_cache, uid);
   if (! e)
@@ -1007,6 +1010,8 @@ music_db_get_info (MusicDB *db, int uid,
 	*title = NULL;
       if (duration)
 	*duration = 0;
+      if (genre)
+	*genre = NULL;
 
       bool found = false;
       int callback (void *arg, int argc, char **argv, char **names)
@@ -1031,13 +1036,16 @@ music_db_get_info (MusicDB *db, int uid,
 	i ++;
 	e->duration = argv[i] ? atoi (argv[i]) : 0;
 
+	i ++;
+	e->genre = argv[i] ? g_strdup (argv[i]) : NULL;
+
 	return 1;
       }
 
       char *err = NULL;
       sqlite_exec_printf (db->sqliteh,
 			  "select source, artist, album, "
-			  "  track, title, duration "
+			  "  track, title, duration, genre "
 			  " from files where ROWID = %d;",
 			  callback, NULL, &err, (int) uid);
       if (err)
@@ -1067,6 +1075,8 @@ music_db_get_info (MusicDB *db, int uid,
     *title = e->title ? strdup (e->title) : NULL;
   if (duration)
     *duration = e->duration;
+  if (genre)
+    *genre = e->genre ? strdup (e->genre) : NULL;
 
   return true;
 }
@@ -1132,6 +1142,8 @@ music_db_set_info (MusicDB *db, int uid, struct music_db_info *info)
     munge_str ("album", info->album);
   if ((info->fields & MDB_TITLE))
     munge_str ("title", info->title);
+  if ((info->fields & MDB_GENRE))
+    munge_str ("genre", info->genre);
 
   if ((info->fields & MDB_TRACK))
     munge_int ("track", info->track);
@@ -1189,13 +1201,11 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
 	  info.fields |= MDB_ALBUM;
 	  s = &info.album;
 	}
-#if 0
       else if (strcmp (tag, "genre") == 0)
 	{
 	  info.fields |= MDB_GENRE;
 	  s = &info.genre;
 	}
-#endif
       else if (strcmp (tag, "track-number") == 0)
 	{
 	  info.fields |= MDB_TRACK;
@@ -1230,7 +1240,7 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
       free (info.artist);
       free (info.title);
       free (info.album);
-      /* free (info.genre); */
+      free (info.genre);
     }
 }
 

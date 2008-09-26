@@ -132,7 +132,8 @@ extern void music_db_clear (MusicDB *db);
 extern bool music_db_get_info (MusicDB *db, int uid,
 			       char **source,
 			       char **artist, char **album,
-			       int *track, char **title, int *duration);
+			       int *track, char **title, int *duration,
+			       char **genre);
 
 
 enum mdb_fields
@@ -142,7 +143,8 @@ enum mdb_fields
     MDB_ALBUM = 1 << 2,
     MDB_TRACK = 1 << 3,
     MDB_TITLE = 1 << 4,
-    MDB_DURATION = 1 << 5
+    MDB_DURATION = 1 << 5,
+    MDB_GENRE = 1 << 6
   };
 
 struct music_db_info
@@ -155,6 +157,7 @@ struct music_db_info
   int track;
   char *title;
   int duration;
+  char *genre;
 };
 
 /* Set the meta-data associated with UID according to INFO.

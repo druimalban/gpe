@@ -123,7 +123,7 @@ set_title (Starling *st)
   char *uri_buffer;
 
   music_db_get_info (st->db, st->loaded_song, &uri_buffer,
-		     &artist_buffer, NULL, NULL, &title_buffer, NULL);
+		     &artist_buffer, NULL, NULL, &title_buffer, NULL, NULL);
   char *uri = uri_buffer;
   if (! uri)
     uri = "unknown";
@@ -199,7 +199,7 @@ starling_load (Starling *st, int uid)
 
   st->loaded_song = uid;
   music_db_get_info (st->db, uid, &source, NULL,
-		     NULL, NULL, NULL, NULL);
+		     NULL, NULL, NULL, NULL, NULL);
   if (! source)
     {
       g_warning ("%s: No SOURCE found for %d!", __FUNCTION__, uid);
@@ -289,7 +289,7 @@ starling_advance (Starling *st, int delta)
 	    }
 
 	  play_list_get_info (st->library, idx, &uid,
-			      NULL, NULL, NULL, NULL, NULL, NULL);
+			      NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 	}
     }
   while (! (starling_load (st, uid) && starling_play (st)));
@@ -900,7 +900,7 @@ activated_cb (GtkTreeView *view, GtkTreePath *path,
 
   int uid;
   if (! play_list_get_info (st->library, pos[0], &uid,
-			    NULL, NULL, NULL, NULL, NULL, NULL))
+			    NULL, NULL, NULL, NULL, NULL, NULL, NULL))
     return;
 
   starling_load (st, uid);
@@ -973,8 +973,9 @@ search_text_regen (gpointer data)
 			"(artist like '%%%s%%'"
 			"or album like '%%%s%%'"
 			"or title like '%%%s%%'"
+			"or genre like '%%%s%%'"
 			"or source like '%%%s%%') ",
-			tok, tok, tok, tok);
+			tok, tok, tok, tok, tok);
       }
   sqlite_freemem (s);
 
@@ -1105,7 +1106,7 @@ position_update (Starling *st)
       char *artist;
       char *title;
       music_db_get_info (st->db, st->loaded_song,
-			 NULL, &artist, NULL, NULL, &title, NULL);
+			 NULL, &artist, NULL, NULL, &title, NULL, NULL);
 
       st->enqueued = TRUE;
       lastfm_enqueue (artist, title, total_seconds, st);
@@ -1505,7 +1506,7 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       char *title;
       play_list_get_info (st->library, idx, &uid, &source,
 			  &artist, &album,
-			  NULL, &title, NULL);
+			  NULL, &title, NULL, NULL);
 
       
       GtkMenu *submenus[4];

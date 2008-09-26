@@ -535,7 +535,8 @@ bool
 play_list_get_info (PlayList *pl, int idx, int *uidp,
 		    char **source,
 		    char **artist, char **album,
-		    int *track, char **title, int *duration)
+		    int *track, char **title, int *duration,
+		    char **genre)
 {
   g_assert (idx >= 0);
 
@@ -546,12 +547,13 @@ play_list_get_info (PlayList *pl, int idx, int *uidp,
   if (uidp)
     *uidp = uid;
 
-  if (! source && ! artist && ! album && ! track && ! title && ! duration)
+  if (! source && ! artist && ! album && ! track && ! title && ! duration
+      && ! genre)
     /* Nothing else to get.  */
     return true;
 
   return music_db_get_info (pl->db, uid, source, artist, album,
-			    track, title, duration);
+			    track, title, duration, genre);
 }
 
 /* Tree model interface.  */
@@ -584,6 +586,7 @@ get_column_type (GtkTreeModel *tree_model, gint col)
     case PL_COL_ARTIST:
     case PL_COL_TITLE:
     case PL_COL_ALBUM:
+    case PL_COL_GENRE:
       return G_TYPE_STRING;
 
     default:
@@ -648,7 +651,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_SOURCE:
       {
 	char *s;
-	music_db_get_info (pl->db, uid, &s, NULL, NULL, NULL, NULL, NULL);
+	music_db_get_info (pl->db, uid, &s, NULL, NULL, NULL, NULL, NULL, NULL);
 	g_value_init (value, G_TYPE_STRING);
 	g_value_take_string (value, s);
 	return;
@@ -657,7 +660,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_ARTIST:
       {
 	char *s;
-	music_db_get_info (pl->db, uid, NULL, &s, NULL, NULL, NULL, NULL);
+	music_db_get_info (pl->db, uid, NULL, &s, NULL, NULL, NULL, NULL, NULL);
 	g_value_init (value, G_TYPE_STRING);
 	g_value_take_string (value, s);
 	return;
@@ -666,7 +669,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_ALBUM:
       {
 	char *s;
-	music_db_get_info (pl->db, uid, NULL, NULL, &s, NULL, NULL, NULL);
+	music_db_get_info (pl->db, uid, NULL, NULL, &s, NULL, NULL, NULL, NULL);
 	g_value_init (value, G_TYPE_STRING);
 	g_value_take_string (value, s);
 	return;
@@ -675,7 +678,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_TRACK:
       {
 	int t;
-	music_db_get_info (pl->db, uid, NULL, NULL, NULL, &t, NULL, NULL);
+	music_db_get_info (pl->db, uid, NULL, NULL, NULL, &t, NULL, NULL, NULL);
 	g_value_init (value, G_TYPE_INT);
 	g_value_set_int (value, t);
 	return;
@@ -684,7 +687,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_TITLE:
       {
 	char *s;
-	music_db_get_info (pl->db, uid, NULL, NULL, NULL, NULL, &s, NULL);
+	music_db_get_info (pl->db, uid, NULL, NULL, NULL, NULL, &s, NULL, NULL);
 	g_value_init (value, G_TYPE_STRING);
 	g_value_take_string (value, s);
 	return;
@@ -693,9 +696,18 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
     case PL_COL_DURATION:
       {
 	int d;
-	music_db_get_info (pl->db, uid, NULL, NULL, NULL, NULL, NULL, &d);
+	music_db_get_info (pl->db, uid, NULL, NULL, NULL, NULL, NULL, &d, NULL);
 	g_value_init (value, G_TYPE_INT);
 	g_value_set_int (value, d);
+	return;
+      }
+
+    case PL_COL_GENRE:
+      {
+	char *s;
+	music_db_get_info (pl->db, uid, NULL, NULL, NULL, NULL, NULL, NULL, &s);
+	g_value_init (value, G_TYPE_STRING);
+	g_value_take_string (value, s);
 	return;
       }
 

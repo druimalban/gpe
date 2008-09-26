@@ -1,3 +1,24 @@
+2008-09-26  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.h (music_db_get_info): Add parameter genre.  Update
+	users.
+	(enum mdb_fields): Add MDB_GENRE.
+	(struct music_db_info): Add field genre.
+	* src/musicdb.c (struct info_cache_entry): Add field genre.
+	(info_cache_evict): Free E->GENRE.
+	(music_db_get_info): Add parameter GENRE.  Get the genre when
+	doing the look up.  Save it in the cache entry.  Return it if
+	GENRE is not NULL.
+	(music_db_set_info_from_tags): If the tag "genre" is present, save
+	it.
+	* src/playlist.h (PL_COL_GENRE): Define.
+	(play_list_get_info): Take additional parameter genre.
+	* src/playlist.c (play_list_get_info): Take additional parameter
+	genre.  Pass it to music_db_get_info.
+	(get_column_type): Handle PL_COL_GENRE.
+	(get_value): Likewise.
+	* src/starling.c (search_text_regen): Also search on the genre.
+
 2008-09-25  Neal H. Walfield  <neal@gnu.org>
 
 	* src/lastfm.c (lastfm_enqueue): Don't use g_return_if_fail, just
