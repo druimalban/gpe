@@ -61,6 +61,12 @@
 # define APPLICATION_DBUS_SERVICE "starling"
 #endif /* IS_HILDON */
 
+struct play_list_view_config
+{
+  gdouble position;
+  GList *selected_rows;
+};
+
 struct _Starling {
   GtkWidget *window;
   GtkWidget *title;
@@ -113,6 +119,9 @@ struct _Starling {
   /* Position to seek to next time it is possible (because we cannot
      seek when the player is in GST_STATE_NULL).  */
   int pending_seek;
+
+  /* Hash mapping play lists to their position.  */
+  GHashTable *playlists_conf;
 };
 
 static void
@@ -324,8 +333,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_HEIGHT "height"
 #define KEY_LOADED_SONG "loaded-song"
 #define KEY_LOADED_SONG_POSITION "loaded-song-position"
-#define KEY_LIBRARY_VIEW_POSITION "library-view-position"
-#define KEY_LIBRARY_SELECTION "library-selection"
+#define KEY_PLAYLISTS_CONFIG "playlists-config"
 #define KEY_SEARCH_TEXT "search-text"
 #define KEY_CURRENT_PAGE "current-page"
 #define KEY_CURRENT_PLAYLIST "current-playlist"
@@ -338,9 +346,12 @@ starling_set_sink (Starling *st, char *sink)
 struct deserialize_bottom_half
 {
   Starling *st;
-  double vadj_val;
   int page;
+  char *playlist;
 };
+
+static void play_list_combo_refresh (Starling *st, char *active,
+				     bool save_old_config);
 
 static int
 deserialize_bottom_half (gpointer data)
@@ -351,16 +362,12 @@ deserialize_bottom_half (gpointer data)
 
   gtk_notebook_set_current_page (GTK_NOTEBOOK (st->notebook), bh->page);
 
-  GtkAdjustment *vadj
-    = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
-		      (st->library_view_window));
-  gtk_adjustment_set_value (vadj, bh->vadj_val);
+  play_list_combo_refresh (st, bh->playlist, false);
+  g_free (bh->playlist);
 
   g_free (data);
   return FALSE;
 }
-
-static void play_list_combo_refresh (Starling *st, char *active);
 
 static void
 deserialize (Starling *st)
@@ -448,20 +455,9 @@ deserialize (Starling *st)
   struct deserialize_bottom_half *bh = calloc (sizeof (*bh), 1);
   bh->st = st;
 
-  /* Library position.  */
-  value = g_key_file_get_string (keyfile,
-				 GROUP, KEY_LIBRARY_VIEW_POSITION, NULL);
-  if (value)
-    {
-      bh->vadj_val = strtod (value, NULL);
-      g_free (value);
-    }
-
   /* The current play list.  */
-  value = g_key_file_get_string (keyfile,
-				 GROUP, KEY_CURRENT_PLAYLIST, NULL);
-  play_list_combo_refresh (st, value);
-  g_free (value);
+  bh->playlist = g_key_file_get_string (keyfile,
+					GROUP, KEY_CURRENT_PLAYLIST, NULL);
 
   /* Search text.  */
   value = g_key_file_get_string (keyfile, GROUP, KEY_SEARCH_TEXT, NULL);
@@ -471,29 +467,55 @@ deserialize (Starling *st)
       g_free (value);
     }
 
-  /* Library selection.  */
-  GtkTreeSelection *selection
-    = gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
-  value = g_key_file_get_string (keyfile, GROUP, KEY_LIBRARY_SELECTION, NULL);
+  /* The play lists' config.  */
+  {
+    gsize length = 0;
+    char **values = g_key_file_get_string_list (keyfile,
+						GROUP, KEY_PLAYLISTS_CONFIG,
+						&length, NULL);
 
-  char *tok;
-  for (tok = strtok (value, ","); tok; tok = strtok (NULL, ","))
-    if (*tok)
+    int i = 0;
+    while (i < length)
       {
-	GtkTreePath *path = gtk_tree_path_new_from_string (tok);
-	gtk_tree_selection_select_path (selection, path);
-	gtk_tree_path_free (path);
+	char *playlist = values[i ++];
+	char *position = i < length ? values[i ++] : NULL;
+	char *selection = i < length ? values[i ++] : NULL;
+
+	if ((! position || !*position) && (! selection || !*selection))
+	  continue;
+
+	struct play_list_view_config *conf
+	  = g_hash_table_lookup (st->playlists_conf, playlist);
+	if (! conf)
+	  {
+	    conf = g_malloc (sizeof (*conf));
+	    memset (conf, 0, sizeof (*conf));
+	    g_hash_table_insert (st->playlists_conf,
+				 g_strdup (playlist), conf);
+	  }
+
+	conf->position = strtod (position, NULL);
+
+	char *tok;
+	for (tok = strtok (selection, ","); tok; tok = strtok (NULL, ","))
+	  if (*tok)
+	    conf->selected_rows
+	      = g_list_append (conf->selected_rows, 
+			       gtk_tree_path_new_from_string (tok));
       }
-  g_free (value);
+
+    g_strfreev (values);
+  }
 
   /* The current page.  */
   bh->page = g_key_file_get_integer (keyfile, GROUP, KEY_CURRENT_PAGE, NULL);
-
 
   g_key_file_free (keyfile);
 
   gtk_idle_add (deserialize_bottom_half, bh);  
 }
+
+static void play_list_combo_changed (Starling *st, gpointer do_save);
 
 static void
 serialize (Starling *st)
@@ -542,49 +564,64 @@ serialize (Starling *st)
   g_key_file_set_integer (keyfile, GROUP, KEY_LOADED_SONG_POSITION,
 			  (int) (pos / 1e9));
 
-  /* Library view position.  */
-  GtkAdjustment *vadj
-    = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
-		      (st->library_view_window));
-  char *value = g_strdup_printf ("%f", gtk_adjustment_get_value (vadj));
-  g_key_file_set_string (keyfile, GROUP, KEY_LIBRARY_VIEW_POSITION, value);
-  g_free (value);
+  /* Play list positions.  */
+  /* Save the current play list's config to the hash.  */
+  play_list_combo_changed (st, (gpointer) true);
+
+  int positions = 0;
+  if (st->playlists_conf)
+    positions = g_hash_table_size (st->playlists_conf);
+
+  if (positions)
+    {
+      char *values[3 * positions];
+      int i = 0;
+
+      struct obstack paths;
+      obstack_init (&paths);
+
+      void callback (gpointer key, gpointer value, gpointer data)
+      {
+	values[i ++] = key;
+
+	struct play_list_view_config *conf = value;
+	values[i ++] = g_strdup_printf ("%f", conf->position);
+
+	GList *l;
+	for (l = conf->selected_rows; l; l = l->next)
+	  {
+	    if (l != conf->selected_rows)
+	      obstack_1grow (&paths, ',');
+
+	    char *s = gtk_tree_path_to_string ((GtkTreePath *) l->data);
+	    obstack_printf (&paths, s);
+	    g_free (s);
+	  }
+	obstack_1grow (&paths, 0);
+
+	values[i ++] = obstack_finish (&paths);
+      }
+      g_hash_table_foreach (st->playlists_conf, callback, NULL);
+
+      g_key_file_set_string_list (keyfile, GROUP, KEY_PLAYLISTS_CONFIG,
+				  (void *) values, 3 * positions);
+
+      for (i = 1; i < 3 * positions; i += 3)
+	g_free (values[i]);
+
+      obstack_free (&paths, NULL);
+    }
+  else
+    g_key_file_remove_key (keyfile, GROUP, KEY_PLAYLISTS_CONFIG, NULL);
 
   /* The current play list.  */
-  value = gtk_combo_box_get_active_text (st->playlist);
+  char *value = gtk_combo_box_get_active_text (st->playlist);
   g_key_file_set_string (keyfile, GROUP, KEY_CURRENT_PLAYLIST, value);
   g_free (value);
 
   /* Search text.  */
   g_key_file_set_string (keyfile, GROUP, KEY_SEARCH_TEXT,
 			 gtk_entry_get_text (GTK_ENTRY (st->search_entry)));
-
-  /* Library selection.  */
-  GtkTreeSelection *selection
-    = gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
-
-  struct obstack sel;
-  obstack_init (&sel);
-
-  bool have_one = false;
-  void callback (GtkTreeModel *model,
-		 GtkTreePath *path, GtkTreeIter *iter, gpointer data)
-  {
-      if (have_one)
-	obstack_1grow (&sel, ',');
-      have_one = true;
-
-      char *s = gtk_tree_path_to_string (path);
-      obstack_printf (&sel, "%s", s);
-      g_free (s);
-    }
-  gtk_tree_selection_selected_foreach (selection, callback, NULL);
-
-  obstack_1grow (&sel, 0);
-
-  g_key_file_set_string (keyfile, GROUP, KEY_LIBRARY_SELECTION,
-			 obstack_finish (&sel));
-  obstack_free (&sel, NULL);
 
   /* The current page.  */
   int page = gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook));
@@ -626,24 +663,86 @@ starling_scroll_to_playing (Starling *st)
 }
 
 static void
-play_list_combo_changed (GtkComboBox *combo, gpointer data)
+play_list_combo_changed (Starling *st, gpointer do_save)
 {
-  /* When the user changes the source text, we don't update
-     immediately but try to group updates.  The assumption is that
-     users will type a few characters.  Thus, we wait until there is
-     no activity for 100ms before triggering the update.  */
-  Starling *st = data;
+  GtkAdjustment *vadj = NULL;
+  GtkTreeSelection *selection = NULL;
 
-  char *text = gtk_combo_box_get_active_text (combo);
+  void ensure (void)
+  {
+    if (! vadj)
+      vadj = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
+			     (st->library_view_window));
+    if (! selection)
+      selection
+	= gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
+  }
 
-  play_list_set (st->library,
-		 ! text || strcmp (text, "Library") == 0 ? NULL : text);
+  const char *play_list = play_list_get (st->library);
+  if (! play_list)
+    play_list = "Library";
 
-  g_free (text);
+  if (do_save)
+    /* Save the current position and selection.  */
+    {
+      struct play_list_view_config *conf
+	= g_hash_table_lookup (st->playlists_conf, play_list);
+      if (! conf)
+	{
+	  conf = g_malloc (sizeof (*conf));
+	  memset (conf, 0, sizeof (*conf));
+	  g_hash_table_insert (st->playlists_conf,
+			       g_strdup (play_list), conf);
+	}
+
+      ensure ();
+
+      conf->position = gtk_adjustment_get_value (vadj);
+
+      if (conf->selected_rows)
+	{
+	  g_list_foreach (conf->selected_rows,
+			  (GFunc) gtk_tree_path_free, NULL);
+	  g_list_free (conf->selected_rows);
+	}
+
+      GtkTreeModel *model = GTK_TREE_MODEL (st->library);
+      conf->selected_rows = gtk_tree_selection_get_selected_rows
+	(selection, &model);
+    }
+
+
+  char *active = gtk_combo_box_get_active_text (st->playlist);
+  if (! do_save
+      || (! active && strcmp (play_list, "Library") != 0)
+      || strcmp (play_list, active) != 0)
+    {
+      play_list_set (st->library,
+		     ! active || strcmp (active, "Library") == 0
+		     ? NULL : active);
+
+      /* Restore the position and the selected rows.  */
+      struct play_list_view_config *conf
+	= g_hash_table_lookup (st->playlists_conf, active);
+      if (conf)
+	{
+	  ensure ();
+
+	  gtk_adjustment_set_value (vadj, conf->position);
+
+	  gtk_tree_selection_unselect_all (selection);
+	  GList *l;
+	  for (l = conf->selected_rows; l; l = l->next)
+	    gtk_tree_selection_select_path (selection,
+					    (GtkTreePath *) l->data);
+	}
+    }
+
+  g_free (active);
 }
 
 static void
-play_list_combo_refresh (Starling *st, char *active)
+play_list_combo_refresh (Starling *st, char *active, bool save_old_config)
 {
   g_signal_handler_block (st->playlist, st->playlist_changed_signal);
 
@@ -678,9 +777,11 @@ play_list_combo_refresh (Starling *st, char *active)
   if (free_active)
     g_free (active);
 
-  g_signal_handler_unblock (st->playlist, st->playlist_changed_signal);
-
   gtk_combo_box_set_active (st->playlist, active_i);
+
+  play_list_combo_changed (st, (gpointer) save_old_config);
+
+  g_signal_handler_unblock (st->playlist, st->playlist_changed_signal);
 }
 
 static void
@@ -821,7 +922,7 @@ remove_cb (GtkWidget *w, Starling *st)
 
   gtk_tree_selection_unselect_all (selection);
 
-  play_list_combo_refresh (st, NULL);
+  play_list_combo_refresh (st, NULL, true);
 }
 
 static void
@@ -836,7 +937,7 @@ clear_cb (GtkWidget *w, Starling *st)
 
   g_free (text);
 
-  play_list_combo_refresh (st, NULL);
+  play_list_combo_refresh (st, NULL, false);
 
   starling_load (st, 0);
 }
@@ -1525,7 +1626,7 @@ queue_cb (GtkWidget *widget, gpointer d)
     }
 
   if (new_list)
-    play_list_combo_refresh (st, NULL);
+    play_list_combo_refresh (st, NULL, true);
 }
 
 static gboolean
@@ -1785,7 +1886,9 @@ Starling *
 starling_run (void)
 {
   Starling *st = calloc (sizeof (*st), 1);
-
+  st->current_length = -1;
+  st->playlists_conf = g_hash_table_new (g_str_hash, g_str_equal);
+    
   const char *home = g_get_home_dir ();
   char *dir = g_strdup_printf ("%s/.starling", home);
   /* We don't check the error here because either it already exists
@@ -2114,9 +2217,8 @@ starling_run (void)
 
   st->playlist = GTK_COMBO_BOX (gtk_combo_box_new_text ());
   st->playlist_changed_signal
-    = g_signal_connect (G_OBJECT (st->playlist), "changed",
-			G_CALLBACK (play_list_combo_changed), st);
-  play_list_combo_refresh (st, NULL);
+    = g_signal_connect_swapped (G_OBJECT (st->playlist), "changed",
+				G_CALLBACK (play_list_combo_changed), st);
   gtk_box_pack_start (hbox, GTK_WIDGET (st->playlist), FALSE, FALSE, 0);
 
   st->search_entry = gtk_entry_new ();
@@ -2274,8 +2376,6 @@ starling_run (void)
 			    gtk_label_new (_("last.fm")));
 
 
-  st->current_length = -1;
-    
   lyrics_init ();
 
   lastfm_init (st);

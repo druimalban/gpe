@@ -1,5 +1,33 @@
 2008-09-26  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct play_list_view_config): New structure.
+	(struct _Starling): Add field playlists_conf.
+	(KEY_LIBRARY_VIEW_POSITION): Remove define.
+	(KEY_LIBRARY_SELECTION): Likewise.
+	(KEY_PLAYLISTS_CONFIG): New define.
+	(struct deserialize_bottom_half): Remove field vadj_val.  Add
+	field playlist.
+	(deserialize_bottom_half): Don't set the main window's vertical
+	adjustment.  Instead, call play_list_combo_refresh with
+	BH->PLAYLIST.
+	(deserialize): Don't restore just current play list's position and
+	selection, restore all play list's positions and selections.
+	(serialize): Don't save just current play list's position and
+	selection, save all play list's positions and selections.
+	(play_list_combo_changed): Remove arguments combo and data.
+	Replace with st and do_save.  Update callers.  Save the old
+	playlist's config if DO_SAVE is true.  Restore the new play list's
+	config.
+	(play_list_combo_refresh): Take additional parameter
+	save_old_config.  Update users.  Call gtk_combo_box_set_active
+	before unblocking the changed signal.  Call
+	play_list_combo_changed with save_old_config.
+	(starling_run): Initialize ST->PLAYLISTS_CONF.  Connect
+	play_list_combo_changed to ST->PLAYLIST's "change" signal using
+	g_signal_connect_swapped, not g_signal_connect.
+
+2008-09-26  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (remove_cb): Apply to current view.  Call
 	play_list_combo_refresh.
 
