@@ -1,5 +1,10 @@
 2008-09-26  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (fs_scanner_thread): If an error occurs, print the
+	error message and free the memory.
+
+2008-09-26  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (library_button_press_event): Free STR.
 
 2008-09-26  Neal H. Walfield  <neal@gnu.org>

@@ -448,10 +448,17 @@ fs_scanner_thread (gpointer data)
       struct stat st;
       int ret = g_stat (filename, &st);
       if (ret < 0 || ! S_ISREG (st.st_mode))
-	sqlite_exec_printf (sqliteh,
-			    "delete from files"
-			    " where source = 'file://%s';",
-			    NULL, NULL, &err, filename);
+	{
+	  sqlite_exec_printf (sqliteh,
+			      "delete from files"
+			      " where source = 'file://%s';",
+			      NULL, NULL, &err, filename);
+	  if (err)
+	    {
+	      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+	      sqlite_freemem (err);
+	    }
+	}
 
       g_free (filename);
     }
@@ -1443,8 +1450,6 @@ music_db_play_list_dequeue (MusicDB *db, const char *list)
 		      "select ROWID, uid from playlists where list = '%q'"
 		      " limit 1;",
 		      callback, NULL, &err, list);
-
-  printf ("rowid: %d, uid: %d\n", rowid, uid);
 
   if (err)
     {
