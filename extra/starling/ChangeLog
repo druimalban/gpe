@@ -1,5 +1,19 @@
 2008-09-26  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (play_list_combo_changed): Also restore when
+	ACTIVE is NULL.
+
+	* src/lyrics.c (got_lyrics): Free URI.
+	* src/player.c (player_bus_cb): Free TAGS.
+	* src/playlist.c (do_refresh): Correctly PATH.
+	(changed_entry): Likewise.
+	(play_list_force_changed): Likewise.
+	* src/starling.c (title_data_func): Free ARTIST.
+	(library_button_press_event): Don't g_strdup ARTIST and ALBUM.
+	(starling_run): Free DIR.
+
+2008-09-26  Neal H. Walfield  <neal@gnu.org>
+
 	* src/lyrics.c (lyrcar_parse): Add sanity checks.  Properly clean
 	up and return NULL if those sanity checks fail.
 

@@ -297,7 +297,6 @@ lyrics_display (const gchar *artist, const gchar *title, GtkTextView *view)
 static void
 got_lyrics (SoupMessage *msg, gpointer view)
 {
-    const gchar *uri;
     gchar *lyrics = NULL;
 
     //write (0, msg->response.body, msg->response.length);
@@ -307,8 +306,9 @@ got_lyrics (SoupMessage *msg, gpointer view)
 
     lyrics_write_textview (GTK_TEXT_VIEW (view), lyrics);
     
-    uri = soup_uri_to_string (soup_message_get_uri (msg), FALSE);
+    char *uri = soup_uri_to_string (soup_message_get_uri (msg), FALSE);
     lyrics_store (uri, lyrics);
+    g_free (uri);
 
     g_free (lyrics);
 }

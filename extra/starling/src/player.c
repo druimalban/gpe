@@ -164,6 +164,8 @@ player_bus_cb (GstBus *bus, GstMessage *message, gpointer data)
 
 	  g_signal_emit (pl, PLAYER_GET_CLASS (pl)->tags_signal_id, 0,
 			 pl->cookie, tags);
+
+	  gst_tag_list_free (tags);
 	  break;
 	}
 

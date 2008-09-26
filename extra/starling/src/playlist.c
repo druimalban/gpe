@@ -242,7 +242,7 @@ do_refresh (gpointer data)
       for (i = old_count; i < pl->count; i ++)
 	gtk_tree_model_row_inserted (GTK_TREE_MODEL (pl), path, &iter);
 
-      g_free (path);
+      gtk_tree_path_free (path);
     }
   else if (old_count > pl->count)
     {
@@ -252,7 +252,7 @@ do_refresh (gpointer data)
       for (i = pl->count; i < old_count; i ++)
 	gtk_tree_model_row_deleted (GTK_TREE_MODEL (pl), path);
 
-      g_free (path);
+      gtk_tree_path_free (path);
     }
 
   int min_count;
@@ -271,7 +271,7 @@ do_refresh (gpointer data)
 
 	gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
 
-	g_free (path);
+	gtk_tree_path_free (path);
       }
 
   free (old_idx_uid_map);
@@ -360,7 +360,7 @@ changed_entry (MusicDB *db, gint uid, gpointer data)
 
   play_list_idx_uid_refresh_schedule (pl, false);
 
-  g_free (path);
+  gtk_tree_path_free (path);
 }
 
 static void
@@ -519,7 +519,7 @@ play_list_force_changed (PlayList *pl, gint n)
 
   gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
 
-  g_free (path);
+  gtk_tree_path_free (path);
 }
 
 void

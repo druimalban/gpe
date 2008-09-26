@@ -714,7 +714,7 @@ play_list_combo_changed (Starling *st, gpointer do_save)
 
   char *active = gtk_combo_box_get_active_text (st->playlist);
   if (! do_save
-      || (! active && strcmp (play_list, "Library") != 0)
+      || ! active
       || strcmp (play_list, active) != 0)
     {
       play_list_set (st->library,
@@ -1472,6 +1472,7 @@ title_data_func (GtkCellLayout *cell_layout,
     {
       char *t = g_strdup_printf ("%s - %s", artist, title);
       g_free (buffer);
+      g_free (artist);
       title = buffer = t;
     }
 
@@ -1823,8 +1824,8 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       memset (main_info, 0, sizeof (*main_info));
       main_info->st = st;
       main_info->uid = uid;
-      main_info->artist = g_strdup (artist);
-      main_info->album = g_strdup (album);
+      main_info->artist = artist;
+      main_info->album = album;
       main_info->selection = selection_list;
 
       g_signal_connect (G_OBJECT (menu), "selection-done",
@@ -1895,6 +1896,7 @@ starling_run (void)
      (which isn't really an error), or we could created it and this
      error will be caught below.  */
   g_mkdir (dir, 0755);
+  g_free (dir);
   char *file = g_strdup_printf ("%s/.starling/playlist", home);
 
   GError *err = NULL;
