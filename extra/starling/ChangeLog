@@ -1,5 +1,10 @@
 2008-09-27  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (clear_cb): Only call starling_load if we cleared
+	the library.
+
+2008-09-27  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (starling_scroll_to_playing): Rename from this...
 	(starling_scroll_to): ... to this.  Take additional parameter idx.
 	Update users.  Implement scrolling using

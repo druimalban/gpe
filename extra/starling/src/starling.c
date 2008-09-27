@@ -939,7 +939,8 @@ clear_cb (GtkWidget *w, Starling *st)
 
   play_list_combo_refresh (st, NULL, false);
 
-  starling_load (st, 0);
+  if (strcmp (text, "Library") == 0)
+    starling_load (st, 0);
 }
 
 static void
