@@ -22,15 +22,6 @@
   <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
 </tr>
 <tr>
-  <td><b>Coordinator(s)</b></td>
-  <td>
-    The coordinator for this sub-project is Alberto Garc&iacute;a Hierro
-    (<a HREF="mailto:skyhusker@handhelds.org">skyhusker@handhelds.org</a>)
-    If you want to contribute to this project, please contact the coordinator
-    or the GPE mailinglist.
-  </td>
-</tr>
-<tr>
   <td><b>Status</b></td>
   <td>
     <p><i>Starling</i> is still under development but expected to be 
@@ -46,24 +37,11 @@
      </ul>
 	</p>
 	<p>
-	  <i><!--#echo var="appname"--></i> is distributed under the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL</a>.
+	  <i><!--#echo var="appname"--></i> is distributed under the
+	  terms of
+	  the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL
+	  version 3</a>, or, at your option, any later version.
 	</p>
-  </td>
-</tr>
-<tr>
-  <td><b>Technical</b></td>
-  <td colspan="2">
-    <p>
-	  <i>Starling</i> makes use of the GStreamer media framework. 
-    </p>
-  </td>
-</tr>
-<tr>
-  <td><b>Project History</b></td>
-  <td colspan="2">
-     <ul>
-	   <li>2006 Project started by Alberto Garc&iacute;a Hierro for Summer of Code 2006</li>
-	 </ul>
   </td>
 </tr>
 </table>
