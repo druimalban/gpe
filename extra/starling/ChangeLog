@@ -1,5 +1,15 @@
 2008-09-27  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (starling_scroll_to_playing): Rename from this...
+	(starling_scroll_to): ... to this.  Take additional parameter idx.
+	Update users.  Implement scrolling using
+	gtk_tree_view_scroll_to_cell.
+	(search_text_regen): Scroll the window so that the first selected
+	track remains visible.  If there are no selected tracks, scroll so
+	that the track in the first third is visible.
+
+2008-09-27  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.c (struct _PlayList): Remove field size.
 	(do_refresh): Only allocate PL->COUNT elements for the
 	PL->IDX_UID_MAP array.

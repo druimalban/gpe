@@ -640,27 +640,26 @@ serialize (Starling *st)
 }
 
 void
-starling_scroll_to_playing (Starling *st)
+starling_scroll_to (Starling *st, int idx)
 {
-  if (! st->loaded_song)
-    return;
-
-  int idx = play_list_uid_to_index (st->library, st->loaded_song);
   if (idx == -1)
-    return;
+    {
+      if (! st->loaded_song)
+	return;
+
+      idx = play_list_uid_to_index (st->library, st->loaded_song);
+      if (idx == -1)
+	return;
+    }
 
   int count = play_list_count (st->library);
   if (count == 0)
     return;
 
-  GtkAdjustment *vadj
-    = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
-		      (st->library_view_window));
-
-  gtk_adjustment_set_value
-    (vadj,
-     ((gdouble) (idx) / count) * (vadj->upper - vadj->lower)
-     - vadj->page_size / 2 + vadj->lower);
+  GtkTreePath *path = gtk_tree_path_new_from_indices (idx, -1);
+  gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (st->library_view),
+				path, NULL, true, 0.5, 0.0);
+  gtk_tree_path_free (path);
 }
 
 static void
@@ -1054,14 +1053,14 @@ static void
 next_cb (GtkWidget *w, Starling *st)
 {
   starling_next (st);
-  starling_scroll_to_playing (st);  
+  starling_scroll_to (st, -1);  
 }
 
 static void
 prev_cb (GtkWidget *w, Starling *st)
 {
   starling_prev (st);
-  starling_scroll_to_playing (st);  
+  starling_scroll_to (st, -1);  
 }
 
 static void
@@ -1076,7 +1075,7 @@ playpause_cb (GtkWidget *w, Starling *st)
 static void
 jump_to_current (Starling *st)
 {
-  starling_scroll_to_playing (st);
+  starling_scroll_to (st, -1);
   gtk_notebook_set_current_page (GTK_NOTEBOOK (st->notebook), 0);
 }
 
@@ -1089,11 +1088,58 @@ search_text_regen (gpointer data)
 
   regen_source = 0;
 
+  /* Figure out the first song that is visible and selected and scroll
+     to it after we change the search terms.  */
+  int current = 0;
+  GtkTreePath *top_path;
+  if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (st->library_view),
+				     1, 1, &top_path, NULL, NULL, NULL))
+    {
+      gint *indices = gtk_tree_path_get_indices (top_path);
+      int top_idx = indices[0];
+      gtk_tree_path_free (top_path);
+
+      GtkTreePath *bottom_path;
+      int bottom_idx;
+      if (gtk_tree_view_get_path_at_pos
+	    (GTK_TREE_VIEW (st->library_view),
+	     1, GTK_WIDGET (st->library_view)->allocation.height - 1,
+	     &bottom_path, NULL, NULL, NULL))
+	{
+	  gint *indices = gtk_tree_path_get_indices (bottom_path);
+	  bottom_idx = indices[0];
+	  gtk_tree_path_free (bottom_path);
+	}
+      else
+	bottom_idx = play_list_count (st->library);
+
+      GtkTreeSelection *selection
+	= gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
+
+      int i;
+      for (i = top_idx; i <= bottom_idx; i ++)
+	{
+	  GtkTreePath *path = gtk_tree_path_new_from_indices (i, -1);
+	  if (gtk_tree_selection_path_is_selected (selection, path))
+	    {
+	      gtk_tree_path_free (path);
+	      break;
+	    }
+	  gtk_tree_path_free (path);
+	}
+      if (i == bottom_idx + 1)
+	/* Nothing selected.  Take entry at the top third.  */
+	i = top_idx + ((bottom_idx - top_idx) / 3);
+
+      play_list_get_info (st->library, i, &current,
+			  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    }
+
   const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
   if (! text || ! *text)
     {
       play_list_constrain (st->library, NULL);
-      return FALSE;
+      goto out;
     }
 
   char *s = sqlite_mprintf ("%q", text);
@@ -1127,6 +1173,16 @@ search_text_regen (gpointer data)
   play_list_constrain (st->library, obstack_finish (&constraint));
 
   obstack_free (&constraint, NULL);
+
+ out:
+  if (current)
+    {
+      int idx = play_list_uid_to_index (st->library, current);
+      if (idx == -1)
+	idx = 0;
+
+      starling_scroll_to (st, idx);
+    }
 
   return FALSE;
 }
