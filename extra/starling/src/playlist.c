@@ -53,8 +53,6 @@ struct _PlayList {
   /* The number of entries in the playlist.  */
   int total;
 
-  /* Number of cells in the IDX_UID_MAP (COUNT <= SIZE).  */
-  int size;
   /* Map from indexes to UID.  */
   int *idx_uid_map;
   /* Hash mapping UIDs to indexes.  If in queue mode, the maps to one
@@ -207,8 +205,7 @@ do_refresh (gpointer data)
 
   pl->count = music_db_count (pl->db, pl->list, pl->constraint);
 
-  pl->size = pl->count + 128;
-  pl->idx_uid_map = malloc (pl->size * sizeof (pl->idx_uid_map[0]));
+  pl->idx_uid_map = malloc (pl->count * sizeof (pl->idx_uid_map[0]));
 
   int idx = 0;
 
