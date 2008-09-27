@@ -5,6 +5,22 @@
 
 2008-09-27  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (music_db_create_table): Create playlists table
+	correctly.
+
+	* src/playlist.c (do_refresh): Set PL->TOTAL to -1.
+	(play_list_set): Don't do it here.
+
+	* src/starling.c (deserialize): Pass BH->SEARCH_TERMS to
+	search_text_gen.
+
+	(update_library_count): If SEARCH_TEXT is the empty string, don't
+	display the count.
+
+	(starling_run): Assign a default label to the library tab.
+
+2008-09-27  Neal H. Walfield  <neal@gnu.org>
+
 	* src/Makefile.am (starling_SOURCES): Add config.h
 
 2008-09-27  Neal H. Walfield  <neal@gnu.org>

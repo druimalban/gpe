@@ -243,10 +243,11 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 
 	       /* Create the table for the directories.  */
 	       "create table dirs (filename STRING); "
-	       "commit transaction;"
 
 	       /* Create a table for the play lists.  */
-	       "create table playlists (list STRING, uid INTEGER);",
+	       "create table playlists (list STRING, uid INTEGER);"
+
+	       "commit transaction;",
 	       NULL, NULL, NULL);
 }
 

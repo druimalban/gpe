@@ -273,6 +273,8 @@ do_refresh (gpointer data)
 
   free (old_idx_uid_map);
 
+  pl->total = -1;
+
   /* Remove timeout source.  */
   pl->reschedule_timeout = 0;
   pl->reschedule_requests = 0;
@@ -453,7 +455,6 @@ play_list_set (PlayList *pl, const char *list)
   else
     pl->list = NULL;
 
-  pl->total = -1;
   play_list_idx_uid_refresh_schedule (pl, true);
 }
 

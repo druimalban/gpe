@@ -470,7 +470,7 @@ deserialize (Starling *st)
      which is not what we want.  */
   bh->search_terms
     = g_key_file_get_string (keyfile, GROUP, KEY_SEARCH_TEXT, NULL);
-  search_text_gen (st, value);
+  search_text_gen (st, bh->search_terms);
 
   /* The play lists' config.  */
   {
@@ -1389,27 +1389,27 @@ update_library_count (Starling *st)
 
   const char *search_text = play_list_constraint_get (st->library);
   int total = 0;
-  if (search_text)
+  if (search_text && *search_text)
     {
       total = play_list_total (st->library);
 
       if (old_count == count && old_total == total)
 	return;
+
+      old_total = total;
     }
   else
     {
       if (old_count == count)
 	return;
     }
-
   old_count = count;
-  old_total = total;
 
 
   char *playlist = gtk_combo_box_get_active_text (st->playlist);
 
   char *text;
-  if (search_text)
+  if (search_text && *search_text)
     text = g_strdup_printf (_("%s (%d/%d)"),
 			    playlist ?: _("Library"), count, total);
   else
@@ -2373,7 +2373,8 @@ starling_run (void)
 #endif
     
   st->library_tab = GTK_WIDGET (vbox);
-  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox, NULL);
+  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
+			    gtk_label_new (_("Library")));
   update_library_count (st);
 
   g_signal_connect_swapped (G_OBJECT (st->library), "row-inserted",
