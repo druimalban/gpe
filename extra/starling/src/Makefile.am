@@ -14,7 +14,8 @@ starling_SOURCES = main.c \
 		errorbox.h errorbox.c \
 		cache.h cache.c \
 		marshal.c marshal.h \
-		md5.h md5.c
+		md5.h md5.c \
+		config.h
 
 INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS)
 

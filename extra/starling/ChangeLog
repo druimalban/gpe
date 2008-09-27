@@ -1,5 +1,9 @@
 2008-09-27  Neal H. Walfield  <neal@gnu.org>
 
+	* src/Makefile.am (starling_SOURCES): Add config.h
+
+2008-09-27  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct play_list_view_config): Change position's
 	type to an integer.  Update users.
 	(struct deserialize_bottom_half): Add field search_terms.
