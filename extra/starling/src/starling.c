@@ -63,7 +63,7 @@
 
 struct play_list_view_config
 {
-  gdouble position;
+  int position;
   GList *selected_rows;
 };
 
@@ -348,6 +348,7 @@ struct deserialize_bottom_half
   Starling *st;
   int page;
   char *playlist;
+  char *search_terms;
 };
 
 static void play_list_combo_refresh (Starling *st, char *active,
@@ -365,9 +366,14 @@ deserialize_bottom_half (gpointer data)
   play_list_combo_refresh (st, bh->playlist, false);
   g_free (bh->playlist);
 
+  gtk_entry_set_text (GTK_ENTRY (st->search_entry), bh->search_terms);
+  g_free (bh->search_terms);
+
   g_free (data);
   return FALSE;
 }
+
+static void search_text_gen (Starling *st, const char *text);
 
 static void
 deserialize (Starling *st)
@@ -459,13 +465,12 @@ deserialize (Starling *st)
   bh->playlist = g_key_file_get_string (keyfile,
 					GROUP, KEY_CURRENT_PLAYLIST, NULL);
 
-  /* Search text.  */
-  value = g_key_file_get_string (keyfile, GROUP, KEY_SEARCH_TEXT, NULL);
-  if (value)
-    {
-      gtk_entry_set_text (GTK_ENTRY (st->search_entry), value);
-      g_free (value);
-    }
+  /* Search text.  We set the constraint and only later set the text
+     entry as the attached signal handler will save the selection,
+     which is not what we want.  */
+  bh->search_terms
+    = g_key_file_get_string (keyfile, GROUP, KEY_SEARCH_TEXT, NULL);
+  search_text_gen (st, value);
 
   /* The play lists' config.  */
   {
@@ -500,8 +505,7 @@ deserialize (Starling *st)
 	for (tok = strtok (selection, ","); tok; tok = strtok (NULL, ","))
 	  if (*tok)
 	    conf->selected_rows
-	      = g_list_append (conf->selected_rows, 
-			       gtk_tree_path_new_from_string (tok));
+	      = g_list_append (conf->selected_rows, (gpointer) atoi (tok));
       }
 
     g_strfreev (values);
@@ -515,7 +519,7 @@ deserialize (Starling *st)
   gtk_idle_add (deserialize_bottom_half, bh);  
 }
 
-static void play_list_combo_changed (Starling *st, gpointer do_save);
+static void play_list_state_save (Starling *st);
 
 static void
 serialize (Starling *st)
@@ -566,7 +570,7 @@ serialize (Starling *st)
 
   /* Play list positions.  */
   /* Save the current play list's config to the hash.  */
-  play_list_combo_changed (st, (gpointer) true);
+  play_list_state_save (st);
 
   int positions = 0;
   if (st->playlists_conf)
@@ -585,7 +589,7 @@ serialize (Starling *st)
 	values[i ++] = key;
 
 	struct play_list_view_config *conf = value;
-	values[i ++] = g_strdup_printf ("%f", conf->position);
+	values[i ++] = g_strdup_printf ("%d", conf->position);
 
 	GList *l;
 	for (l = conf->selected_rows; l; l = l->next)
@@ -593,9 +597,7 @@ serialize (Starling *st)
 	    if (l != conf->selected_rows)
 	      obstack_1grow (&paths, ',');
 
-	    char *s = gtk_tree_path_to_string ((GtkTreePath *) l->data);
-	    obstack_printf (&paths, s);
-	    g_free (s);
+	    obstack_printf (&paths, "%d", (int) l->data);
 	  }
 	obstack_1grow (&paths, 0);
 
@@ -663,54 +665,155 @@ starling_scroll_to (Starling *st, int idx)
 }
 
 static void
+play_list_state_save (Starling *st)
+{
+  const char *play_list = play_list_get (st->library);
+  if (! play_list)
+    play_list = "Library";
+
+  printf ("Saving %s\n", play_list);
+
+  struct play_list_view_config *conf
+    = g_hash_table_lookup (st->playlists_conf, play_list);
+  if (! conf)
+    {
+      conf = g_malloc (sizeof (*conf));
+      memset (conf, 0, sizeof (*conf));
+      g_hash_table_insert (st->playlists_conf,
+			   g_strdup (play_list), conf);
+    }
+
+  GtkTreeSelection *selection
+    = gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
+
+
+  /* Figure out the first song that is visible and selected.  */
+  conf->position = -1;
+  GtkTreePath *top_path;
+  if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (st->library_view),
+				     1, 1, &top_path, NULL, NULL, NULL))
+    {
+      gint *indices = gtk_tree_path_get_indices (top_path);
+      int top_idx = indices[0];
+      gtk_tree_path_free (top_path);
+
+      GtkTreePath *bottom_path;
+      int bottom_idx;
+      if (gtk_tree_view_get_path_at_pos
+	  (GTK_TREE_VIEW (st->library_view),
+	   1, GTK_WIDGET (st->library_view)->allocation.height - 1,
+	   &bottom_path, NULL, NULL, NULL))
+	{
+	  gint *indices = gtk_tree_path_get_indices (bottom_path);
+	  bottom_idx = indices[0];
+	  gtk_tree_path_free (bottom_path);
+	}
+      else
+	bottom_idx = play_list_count (st->library);
+
+      int i;
+      for (i = top_idx; i <= bottom_idx; i ++)
+	{
+	  GtkTreePath *path = gtk_tree_path_new_from_indices (i, -1);
+	  if (gtk_tree_selection_path_is_selected (selection, path))
+	    {
+	      gtk_tree_path_free (path);
+	      break;
+	    }
+	  gtk_tree_path_free (path);
+	}
+      if (i == bottom_idx + 1)
+	/* Nothing selected.  Take entry at the top third.  */
+	i = top_idx + ((bottom_idx - top_idx) / 3);
+
+      play_list_get_info (st->library, i, &conf->position,
+			  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+    }
+
+  /* Now get the current selection.  */
+  if (conf->selected_rows)
+    g_list_free (conf->selected_rows);
+  conf->selected_rows = NULL;
+
+  void callback (GtkTreeModel *model,
+		 GtkTreePath *path, GtkTreeIter *iter,
+		 gpointer data)
+  {
+    gint *indices = gtk_tree_path_get_indices (path);
+    int uid;
+    if (! play_list_get_info (st->library, indices[0], &uid,
+			      NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+      return;
+
+    conf->selected_rows = g_list_append (conf->selected_rows,
+					 (gpointer) uid);
+  }
+  gtk_tree_selection_selected_foreach (selection, callback, NULL);
+}
+
+static void
+play_list_state_restore (Starling *st)
+{
+  const char *play_list = play_list_get (st->library);
+  if (! play_list)
+    play_list = "Library";
+
+  printf ("Restoring %s\n", play_list);
+
+  /* Restore the position and the selected rows.  */
+  struct play_list_view_config *conf
+    = g_hash_table_lookup (st->playlists_conf, play_list);
+  if (conf)
+    {
+      if (conf->position)
+	{
+	  int idx;
+
+	  if (conf->position == -1)
+	    idx = -1;
+	  else
+	    idx = play_list_uid_to_index (st->library, conf->position);
+
+	  starling_scroll_to (st, idx);
+	}
+
+      /* Restore the current selection.  */
+      GtkTreeSelection *selection
+	= gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
+
+      gtk_tree_selection_unselect_all (selection);
+      GList *l;
+      GList *n = conf->selected_rows;
+      while ((l = n))
+	{
+	  /* Grab the next pointer in case we remove L.  */
+	  n = l->next;
+
+	  int idx = play_list_uid_to_index (st->library, (int) l->data);
+	  if (idx == -1)
+	    {
+	      conf->selected_rows
+		= g_list_delete_link (conf->selected_rows, l);
+	      continue;
+	    }
+
+	  GtkTreePath *path = gtk_tree_path_new_from_indices (idx, -1);
+	  gtk_tree_selection_select_path (selection, path);
+	  gtk_tree_path_free (path);
+	}
+    }
+}
+
+static void
 play_list_combo_changed (Starling *st, gpointer do_save)
 {
-  GtkAdjustment *vadj = NULL;
-  GtkTreeSelection *selection = NULL;
-
-  void ensure (void)
-  {
-    if (! vadj)
-      vadj = GTK_ADJUSTMENT (gtk_scrolled_window_get_vadjustment
-			     (st->library_view_window));
-    if (! selection)
-      selection
-	= gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
-  }
-
   const char *play_list = play_list_get (st->library);
   if (! play_list)
     play_list = "Library";
 
   if (do_save)
     /* Save the current position and selection.  */
-    {
-      struct play_list_view_config *conf
-	= g_hash_table_lookup (st->playlists_conf, play_list);
-      if (! conf)
-	{
-	  conf = g_malloc (sizeof (*conf));
-	  memset (conf, 0, sizeof (*conf));
-	  g_hash_table_insert (st->playlists_conf,
-			       g_strdup (play_list), conf);
-	}
-
-      ensure ();
-
-      conf->position = gtk_adjustment_get_value (vadj);
-
-      if (conf->selected_rows)
-	{
-	  g_list_foreach (conf->selected_rows,
-			  (GFunc) gtk_tree_path_free, NULL);
-	  g_list_free (conf->selected_rows);
-	}
-
-      GtkTreeModel *model = GTK_TREE_MODEL (st->library);
-      conf->selected_rows = gtk_tree_selection_get_selected_rows
-	(selection, &model);
-    }
-
+    play_list_state_save (st);
 
   char *active = gtk_combo_box_get_active_text (st->playlist);
   if (! do_save
@@ -721,23 +824,8 @@ play_list_combo_changed (Starling *st, gpointer do_save)
 		     ! active || strcmp (active, "Library") == 0
 		     ? NULL : active);
 
-      /* Restore the position and the selected rows.  */
-      struct play_list_view_config *conf
-	= g_hash_table_lookup (st->playlists_conf, active);
-      if (conf)
-	{
-	  ensure ();
-
-	  gtk_adjustment_set_value (vadj, conf->position);
-
-	  gtk_tree_selection_unselect_all (selection);
-	  GList *l;
-	  for (l = conf->selected_rows; l; l = l->next)
-	    gtk_tree_selection_select_path (selection,
-					    (GtkTreePath *) l->data);
-	}
+      play_list_state_restore (st);
     }
-
   g_free (active);
 }
 
@@ -1082,65 +1170,13 @@ jump_to_current (Starling *st)
 
 static int regen_source;
 
-static int
-search_text_regen (gpointer data)
+static void
+search_text_gen (Starling *st, const char *text)
 {
-  Starling *st = data;
-
-  regen_source = 0;
-
-  /* Figure out the first song that is visible and selected and scroll
-     to it after we change the search terms.  */
-  int current = 0;
-  GtkTreePath *top_path;
-  if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (st->library_view),
-				     1, 1, &top_path, NULL, NULL, NULL))
-    {
-      gint *indices = gtk_tree_path_get_indices (top_path);
-      int top_idx = indices[0];
-      gtk_tree_path_free (top_path);
-
-      GtkTreePath *bottom_path;
-      int bottom_idx;
-      if (gtk_tree_view_get_path_at_pos
-	    (GTK_TREE_VIEW (st->library_view),
-	     1, GTK_WIDGET (st->library_view)->allocation.height - 1,
-	     &bottom_path, NULL, NULL, NULL))
-	{
-	  gint *indices = gtk_tree_path_get_indices (bottom_path);
-	  bottom_idx = indices[0];
-	  gtk_tree_path_free (bottom_path);
-	}
-      else
-	bottom_idx = play_list_count (st->library);
-
-      GtkTreeSelection *selection
-	= gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
-
-      int i;
-      for (i = top_idx; i <= bottom_idx; i ++)
-	{
-	  GtkTreePath *path = gtk_tree_path_new_from_indices (i, -1);
-	  if (gtk_tree_selection_path_is_selected (selection, path))
-	    {
-	      gtk_tree_path_free (path);
-	      break;
-	    }
-	  gtk_tree_path_free (path);
-	}
-      if (i == bottom_idx + 1)
-	/* Nothing selected.  Take entry at the top third.  */
-	i = top_idx + ((bottom_idx - top_idx) / 3);
-
-      play_list_get_info (st->library, i, &current,
-			  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-    }
-
-  const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
   if (! text || ! *text)
     {
       play_list_constrain (st->library, NULL);
-      goto out;
+      return;
     }
 
   char *s = sqlite_mprintf ("%q", text);
@@ -1174,16 +1210,21 @@ search_text_regen (gpointer data)
   play_list_constrain (st->library, obstack_finish (&constraint));
 
   obstack_free (&constraint, NULL);
+}
 
- out:
-  if (current)
-    {
-      int idx = play_list_uid_to_index (st->library, current);
-      if (idx == -1)
-	idx = 0;
+static int
+search_text_regen (gpointer data)
+{
+  Starling *st = data;
 
-      starling_scroll_to (st, idx);
-    }
+  regen_source = 0;
+
+  play_list_state_save (st);
+
+  const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+  search_text_gen (st, text);
+
+  play_list_state_restore (st);
 
   return FALSE;
 }

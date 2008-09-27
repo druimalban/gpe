@@ -1,5 +1,26 @@
 2008-09-27  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct play_list_view_config): Change position's
+	type to an integer.  Update users.
+	(struct deserialize_bottom_half): Add field search_terms.
+	(deserialize_bottom_half): Set ST->SEARCH_ENTRY here based on
+	BH->SEARCH_TERMS.
+	(deserialize): Don't set ST->SEARCH_ENTRY here.  Call
+	search_text_gen on the search terms and save it in
+	BH->SEARCH_TERMS.  Make the selection a list of UIDs, not of a
+	list of paths.
+	(serialize): Treat the selection list as a list of UIDs, not a
+	list of paths.
+	(play_list_state_save): New function.
+	(play_list_state_restore): Likewise.
+	(play_list_combo_changed): Use them.
+	(search_text_regen): Move state saving and restoration to the two
+	new functions.  Move constraint generation to...
+	(search_text_gen): ... this new function.
+	(search_text_regen): Use them.
+
+2008-09-27  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (clear_cb): Only call starling_load if we cleared
 	the library.
 
