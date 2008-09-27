@@ -1,5 +1,5 @@
-AC_INIT(starling, 0.3,[skyhusker@handhelds.org])
-AC_CONFIG_SRCDIR([src/main.c])
+AC_INIT(starling, 0.9,[gpe-list@linuxtogo.org])
+AC_CONFIG_SRCDIR([src/starling.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AC_PROG_INSTALL
 AC_PROG_CC
