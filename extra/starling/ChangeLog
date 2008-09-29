@@ -1,3 +1,12 @@
+2008-09-29  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (music_db_create_table): Add columns date_added,
+	date_last_played and date_tags_update.
+	(music_db_add): When inserting, also initialize the track's
+	date_added value.
+	* src/starling.c (search_text_gen): Treat "added:" as a request to
+	search on the time since a track was added to the database.
+
 2008-09-27  Neal H. Walfield  <neal@gnu.org>
 
 	* configure.ac: Change maintainer's email address to

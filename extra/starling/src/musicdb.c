@@ -238,6 +238,11 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 	       "  genre STRING COLLATE NOCASE, "
 	       "  duration INTEGER, "
 	       "  rating INTEGER,"
+
+	       "  date_added INTEGER,"
+	       "  date_last_played INTEGER,"
+	       "  date_tags_updated INTEGER,"
+
 	       /* To determine if the information is up to date.  */
 	       "  mtime INTEGER);"
 
@@ -706,7 +711,8 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
   for (i = 0; i < total; i ++)
     {
       sqlite_exec_printf (sqliteh,
-			  "insert into files (source) values ('%q');",
+			  "insert into files (source, date_added) "
+			  "  values ('%q', strftime('%%s', 'now'));",
 			  NULL, NULL, &err, s[i]);
       if (err)
 	break;

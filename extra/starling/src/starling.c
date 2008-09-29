@@ -1194,14 +1194,82 @@ search_text_gen (Starling *st, const char *text)
 	  obstack_printf (&constraint, "and ");
 	else
 	  have_one = true;
-	  
-	obstack_printf (&constraint,
-			"(artist like '%%%s%%'"
-			"or album like '%%%s%%'"
-			"or title like '%%%s%%'"
-			"or genre like '%%%s%%'"
-			"or source like '%%%s%%') ",
-			tok, tok, tok, tok, tok);
+
+	if (strncasecmp ("added:", tok, strlen ("added:")) == 0)
+	  /* The time since the track was added is less than some time
+	     ago.  */
+	  {
+	    char *spec = tok + strlen ("added:");
+	    char dir = '<';
+	    if (*spec == '<')
+	      {
+		dir = '<';
+		spec ++;
+	      }
+	    else if (*spec == '>')
+	      {
+		dir = '>';
+		spec ++;
+	      }
+
+	    int time = 0;
+	    while (*spec)
+	      {
+		char *end;
+		int i = strtol (spec, &end, 10);
+		switch (*end)
+		  {
+		  case 's':
+		  case 'S':
+		    break;
+		  case 'm':
+		    i *= 60;
+		    break;
+		  case 'h':
+		  case 'H':
+		    i *= 60 * 60;
+		    break;
+		  case 0:
+		  case 'd':
+		  case 'D':
+		    i *= 24 * 60 * 60;
+		    break;
+		  case 'w':
+		  case 'W':
+		    i *= 7 * 24 * 60 * 60;
+		    break;
+		  case 'M':
+		    i *= 30 * 24 * 60 * 60;
+		    break;
+		  case 'y':
+		  case 'Y':
+		    i *= 365 * 24 * 60 * 60;
+		    break;
+		  default:
+		    goto done;
+		  }
+
+		time += i;
+
+		if (!*end)
+		  break;
+		spec = end + 1;
+	      }
+
+	  done:
+	    obstack_printf (&constraint,
+			    "(strftime('%%s', 'now')"
+			    " - coalesce (date_added, 0) %c %d)",
+			    dir, time);
+	  }
+	else
+	  obstack_printf (&constraint,
+			  "(artist like '%%%s%%'"
+			  " or album like '%%%s%%'"
+			  " or title like '%%%s%%'"
+			  " or genre like '%%%s%%'"
+			  " or source like '%%%s%%') ",
+			  tok, tok, tok, tok, tok);
       }
   sqlite_freemem (s);
 
