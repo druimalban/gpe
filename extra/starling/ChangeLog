@@ -1,5 +1,10 @@
 2008-09-29  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (search_text_gen): Enable searching on a
+	particular field.
+
+2008-09-29  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h (enum mdb_fields): Add MDB_DATE_ADDED,
 	MDB_DATE_LAST_PLAYED, MDB_DATE_TAGS_UPDATED,
 	MDB_UPDATE_DATE_LAST_PLAYED and MDB_UPDATE_DATE_TAGS_UPDATED.

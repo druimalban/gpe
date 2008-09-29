@@ -1284,6 +1284,22 @@ search_text_gen (Starling *st, const char *text)
 			    " - coalesce (date_last_played, 0) %c %d)",
 			    dir, parse_time (spec));
 	  }
+	else if (strncasecmp ("artist:", tok, strlen ("artist:")) == 0
+		 || strncasecmp ("album:", tok, strlen ("album:")) == 0
+		 || strncasecmp ("title:", tok, strlen ("title:")) == 0
+		 || strncasecmp ("genre:", tok, strlen ("genre:")) == 0
+		 || strncasecmp ("source:", tok, strlen ("source:")) == 0)
+	  {
+	    char *prefix = tok;
+	    char *term = strchr (tok, ':');
+	    g_assert (term && *term == ':');
+	    *term = 0;
+	    term ++;
+
+	    obstack_printf (&constraint,
+			    "(%s like '%%%s%%')",
+			    prefix, term);
+	  }
 	else
 	  obstack_printf (&constraint,
 			  "(artist like '%%%s%%'"
