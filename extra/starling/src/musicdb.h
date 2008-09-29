@@ -144,7 +144,13 @@ enum mdb_fields
     MDB_TRACK = 1 << 3,
     MDB_TITLE = 1 << 4,
     MDB_DURATION = 1 << 5,
-    MDB_GENRE = 1 << 6
+    MDB_GENRE = 1 << 6,
+    MDB_DATE_ADDED = 1 << 7,
+    MDB_DATE_LAST_PLAYED = 1 << 7,
+    MDB_DATE_TAGS_UPDATED = 1 << 8,
+
+    MDB_UPDATE_DATE_LAST_PLAYED = 1 << 30,
+    MDB_UPDATE_DATE_TAGS_UPDATED = 1 << 31,
   };
 
 struct music_db_info
@@ -158,6 +164,10 @@ struct music_db_info
   char *title;
   int duration;
   char *genre;
+
+  int date_added;
+  int date_last_played;
+  int date_tags_updated;
 };
 
 /* Set the meta-data associated with UID according to INFO.

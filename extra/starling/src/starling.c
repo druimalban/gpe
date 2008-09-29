@@ -671,8 +671,6 @@ play_list_state_save (Starling *st)
   if (! play_list)
     play_list = "Library";
 
-  printf ("Saving %s\n", play_list);
-
   struct play_list_view_config *conf
     = g_hash_table_lookup (st->playlists_conf, play_list);
   if (! conf)
@@ -757,8 +755,6 @@ play_list_state_restore (Starling *st)
   const char *play_list = play_list_get (st->library);
   if (! play_list)
     play_list = "Library";
-
-  printf ("Restoring %s\n", play_list);
 
   /* Restore the position and the selected rows.  */
   struct play_list_view_config *conf
@@ -1195,9 +1191,58 @@ search_text_gen (Starling *st, const char *text)
 	else
 	  have_one = true;
 
+	int parse_time (const char *spec)
+	{
+	  int time = 0;
+	  while (*spec)
+	    {
+	      char *end;
+	      int i = strtol (spec, &end, 10);
+	      switch (*end)
+		{
+		case 's':
+		case 'S':
+		  break;
+		case 'm':
+		  i *= 60;
+		  break;
+		case 'h':
+		case 'H':
+		  i *= 60 * 60;
+		  break;
+		case 0:
+		case 'd':
+		case 'D':
+		  i *= 24 * 60 * 60;
+		  break;
+		case 'w':
+		case 'W':
+		  i *= 7 * 24 * 60 * 60;
+		  break;
+		case 'M':
+		  i *= 30 * 24 * 60 * 60;
+		  break;
+		case 'y':
+		case 'Y':
+		  i *= 365 * 24 * 60 * 60;
+		  break;
+		default:
+		  return time;
+		}
+
+	      time += i;
+
+	      if (!*end)
+		return time;
+	      spec = end + 1;
+	    }
+
+	  return time;
+	}
+
 	if (strncasecmp ("added:", tok, strlen ("added:")) == 0)
-	  /* The time since the track was added is less than some time
-	     ago.  */
+	  /* The time since the track was added is less/greater than
+	     some time ago.  */
 	  {
 	    char *spec = tok + strlen ("added:");
 	    char dir = '<';
@@ -1212,55 +1257,32 @@ search_text_gen (Starling *st, const char *text)
 		spec ++;
 	      }
 
-	    int time = 0;
-	    while (*spec)
-	      {
-		char *end;
-		int i = strtol (spec, &end, 10);
-		switch (*end)
-		  {
-		  case 's':
-		  case 'S':
-		    break;
-		  case 'm':
-		    i *= 60;
-		    break;
-		  case 'h':
-		  case 'H':
-		    i *= 60 * 60;
-		    break;
-		  case 0:
-		  case 'd':
-		  case 'D':
-		    i *= 24 * 60 * 60;
-		    break;
-		  case 'w':
-		  case 'W':
-		    i *= 7 * 24 * 60 * 60;
-		    break;
-		  case 'M':
-		    i *= 30 * 24 * 60 * 60;
-		    break;
-		  case 'y':
-		  case 'Y':
-		    i *= 365 * 24 * 60 * 60;
-		    break;
-		  default:
-		    goto done;
-		  }
-
-		time += i;
-
-		if (!*end)
-		  break;
-		spec = end + 1;
-	      }
-
-	  done:
 	    obstack_printf (&constraint,
 			    "(strftime('%%s', 'now')"
 			    " - coalesce (date_added, 0) %c %d)",
-			    dir, time);
+			    dir, parse_time (spec));
+	  }
+	else if (strncasecmp ("played:", tok, strlen ("played:")) == 0)
+	  /* The time since the track was last played is less/greater
+	     than some time ago.  */
+	  {
+	    char *spec = tok + strlen ("played:");
+	    char dir = '<';
+	    if (*spec == '<')
+	      {
+		dir = '<';
+		spec ++;
+	      }
+	    else if (*spec == '>')
+	      {
+		dir = '>';
+		spec ++;
+	      }
+
+	    obstack_printf (&constraint,
+			    "(strftime('%%s', 'now')"
+			    " - coalesce (date_last_played, 0) %c %d)",
+			    dir, parse_time (spec));
 	  }
 	else
 	  obstack_printf (&constraint,
@@ -1507,6 +1529,12 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
       if (! st->position_update)
 	st->position_update
 	  = g_timeout_add (1000, (GSourceFunc) position_update, st);
+
+      struct music_db_info info;
+      memset (&info, 0, sizeof (info));
+      info.fields = MDB_UPDATE_DATE_LAST_PLAYED;
+
+      music_db_set_info (st->db, st->loaded_song, &info);
     }
   else if (state == GST_STATE_PAUSED || state == GST_STATE_NULL)
     {

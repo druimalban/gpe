@@ -1145,6 +1145,17 @@ music_db_set_info (MusicDB *db, int uid, struct music_db_info *info)
     obstack_printf (&sql, "%s = %d", key, val);
   }
 
+  void munge_lit (char *key, const char *val)
+  {
+    g_assert (key);
+
+    if (need_comma)
+      obstack_1grow (&sql, ',');
+    need_comma = true;
+
+    obstack_printf (&sql, "%s = %s", key, val);
+  }
+
   obstack_init (&sql);
   obstack_printf (&sql, "update files set ");
 
@@ -1163,6 +1174,11 @@ music_db_set_info (MusicDB *db, int uid, struct music_db_info *info)
     munge_int ("track", info->track);
   if ((info->fields & MDB_DURATION))
     munge_int ("duration", info->duration);
+
+  if ((info->fields & MDB_UPDATE_DATE_LAST_PLAYED))
+    munge_lit ("date_last_played", "strftime('%s', 'now')");
+  if ((info->fields & MDB_UPDATE_DATE_TAGS_UPDATED))
+    munge_lit ("date_tags_updated", "strftime('%s', 'now')");
 
   obstack_printf (&sql, " where ROWID = %d;", uid);
 
@@ -1249,6 +1265,8 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
 
   if (info.fields)
     {
+      info.fields |= MDB_UPDATE_DATE_TAGS_UPDATED;
+
       music_db_set_info (db, uid, &info);
 
       free (info.artist);
