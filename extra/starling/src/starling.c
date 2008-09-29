@@ -86,6 +86,7 @@ struct _Starling {
   GtkComboBox *playlist;
   int playlist_count;
   int playlist_changed_signal;
+  GtkToggleButton *search_enabled;
   GtkWidget *search_entry;
 
   GtkScrolledWindow *queue_view_window;
@@ -334,6 +335,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_LOADED_SONG "loaded-song"
 #define KEY_LOADED_SONG_POSITION "loaded-song-position"
 #define KEY_PLAYLISTS_CONFIG "playlists-config"
+#define KEY_SEARCH_ENABLED "search-enabled"
 #define KEY_SEARCH_TEXT "search-text"
 #define KEY_CURRENT_PAGE "current-page"
 #define KEY_CURRENT_PLAYLIST "current-playlist"
@@ -348,6 +350,7 @@ struct deserialize_bottom_half
   Starling *st;
   int page;
   char *playlist;
+  bool search_enabled;
   char *search_terms;
 };
 
@@ -366,6 +369,7 @@ deserialize_bottom_half (gpointer data)
   play_list_combo_refresh (st, bh->playlist, false);
   g_free (bh->playlist);
 
+  gtk_toggle_button_set_active (st->search_enabled, bh->search_enabled);
   gtk_entry_set_text (GTK_ENTRY (st->search_entry), bh->search_terms);
   g_free (bh->search_terms);
 
@@ -468,9 +472,14 @@ deserialize (Starling *st)
   /* Search text.  We set the constraint and only later set the text
      entry as the attached signal handler will save the selection,
      which is not what we want.  */
+  bh->search_enabled = true;
+  if (g_key_file_has_key (keyfile, GROUP, KEY_SEARCH_ENABLED, NULL))
+    bh->search_enabled
+      = g_key_file_get_boolean (keyfile, GROUP, KEY_SEARCH_ENABLED, NULL);
   bh->search_terms
     = g_key_file_get_string (keyfile, GROUP, KEY_SEARCH_TEXT, NULL);
-  search_text_gen (st, bh->search_terms);
+  if (bh->search_enabled)
+    search_text_gen (st, bh->search_terms);
 
   /* The play lists' config.  */
   {
@@ -622,6 +631,8 @@ serialize (Starling *st)
   g_free (value);
 
   /* Search text.  */
+  g_key_file_set_boolean (keyfile, GROUP, KEY_SEARCH_ENABLED,
+			  gtk_toggle_button_get_active (st->search_enabled));
   g_key_file_set_string (keyfile, GROUP, KEY_SEARCH_TEXT,
 			 gtk_entry_get_text (GTK_ENTRY (st->search_entry)));
 
@@ -1327,8 +1338,13 @@ search_text_regen (gpointer data)
 
   play_list_state_save (st);
 
-  const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
-  search_text_gen (st, text);
+  if (gtk_toggle_button_get_active (st->search_enabled))
+    {
+      const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+      search_text_gen (st, text);
+    }
+  else
+    search_text_gen (st, NULL);
 
   play_list_state_restore (st);
 
@@ -1336,14 +1352,12 @@ search_text_regen (gpointer data)
 }
 
 static void
-search_text_changed (GtkEditable *search, gpointer data)
+search_text_changed (Starling *st)
 {
   /* When the user changes the source text, we don't update
      immediately but try to group updates.  The assumption is that
      users will type a few characters.  Thus, we wait until there is
      no activity for 100ms before triggering the update.  */
-  Starling *st = data;
-
   if (regen_source)
     g_source_remove (regen_source);
   regen_source = g_timeout_add (100, search_text_regen, st);
@@ -1949,28 +1963,30 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 	  submenu_count ++;
 	}
 
-      const char *search_text
-	= gtk_entry_get_text (GTK_ENTRY (st->search_entry));
-      if (search_text && *search_text)
+      if (gtk_toggle_button_get_active (st->search_enabled))
 	{
-	  button = gtk_menu_item_new_with_label ("");
-	  str = g_strdup_printf (_("Add songs matching <i>%s</i> to"),
-				 search_text);
-	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
-	  gtk_widget_show (button);
-	  gtk_menu_attach (menu, button, 0, 1,
-			   submenu_count, submenu_count + 1);
+	  const char *search_text
+	    = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+	  if (search_text && *search_text)
+	    {
+	      button = gtk_menu_item_new_with_label ("");
+	      str = g_strdup_printf (_("Add songs matching <i>%s</i> to"),
+				     search_text);
+	      gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
+	      gtk_widget_show (button);
+	      gtk_menu_attach (menu, button, 0, 1,
+			       submenu_count, submenu_count + 1);
 
-	  submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
-	  gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
-	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
-				     GTK_WIDGET (submenus[submenu_count]));
+	      submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
+	      gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
+	      gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
+					 GTK_WIDGET (submenus[submenu_count]));
 
-	  ops[submenu_count] = add_all;
+	      ops[submenu_count] = add_all;
 
-	  submenu_count ++;
+	      submenu_count ++;
+	    }
 	}
-
 
       GtkTreeSelection *selection
 	= gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
@@ -2435,9 +2451,13 @@ starling_run (void)
 				G_CALLBACK (play_list_combo_changed), st);
   gtk_box_pack_start (hbox, GTK_WIDGET (st->playlist), FALSE, FALSE, 0);
 
+  st->search_enabled = GTK_TOGGLE_BUTTON (gtk_check_button_new ());
+  g_signal_connect_swapped (G_OBJECT (st->search_enabled), "toggled",
+			    G_CALLBACK (search_text_changed), st);
+  gtk_box_pack_start (hbox, GTK_WIDGET (st->search_enabled), FALSE, FALSE, 0);
   st->search_entry = gtk_entry_new ();
-  g_signal_connect (G_OBJECT (st->search_entry), "changed",
-		    G_CALLBACK (search_text_changed), st);
+  g_signal_connect_swapped (G_OBJECT (st->search_entry), "changed",
+			    G_CALLBACK (search_text_changed), st);
   gtk_box_pack_start (hbox, st->search_entry, TRUE, TRUE, 0);
 
 
