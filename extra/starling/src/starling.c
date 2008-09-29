@@ -671,7 +671,7 @@ starling_scroll_to (Starling *st, int idx)
 
   GtkTreePath *path = gtk_tree_path_new_from_indices (idx, -1);
   gtk_tree_view_scroll_to_cell (GTK_TREE_VIEW (st->library_view),
-				path, NULL, true, 0.5, 0.0);
+				path, NULL, true, 0.33, 0.0);
   gtk_tree_path_free (path);
 }
 

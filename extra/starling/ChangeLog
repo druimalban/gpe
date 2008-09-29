@@ -1,5 +1,10 @@
 2008-09-29  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (starling_scroll_to): Scroll the track to 0.33
+	the vertical height, not 0.5.
+
+2008-09-29  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (search_text_regen): If the search text is empty
 	or disabled and the constraint is NULL, then do nothing.
 
