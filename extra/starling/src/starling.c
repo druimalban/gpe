@@ -1336,13 +1336,18 @@ search_text_regen (gpointer data)
 
   regen_source = 0;
 
+  const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+
+  if ((! gtk_toggle_button_get_active (st->search_enabled)
+       || ! text || !*text)
+      && ! play_list_constraint_get (st->library))
+    /* No change.  */
+    return FALSE;
+
   play_list_state_save (st);
 
   if (gtk_toggle_button_get_active (st->search_enabled))
-    {
-      const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
-      search_text_gen (st, text);
-    }
+    search_text_gen (st, text);
   else
     search_text_gen (st, NULL);
 
@@ -1361,6 +1366,12 @@ search_text_changed (Starling *st)
   if (regen_source)
     g_source_remove (regen_source);
   regen_source = g_timeout_add (100, search_text_regen, st);
+}
+
+static void
+search_text_clear (Starling *st)
+{
+  gtk_entry_set_text (GTK_ENTRY (st->search_entry), "");
 }
 
 static void
@@ -2459,6 +2470,14 @@ starling_run (void)
   g_signal_connect_swapped (G_OBJECT (st->search_entry), "changed",
 			    G_CALLBACK (search_text_changed), st);
   gtk_box_pack_start (hbox, st->search_entry, TRUE, TRUE, 0);
+
+  GtkWidget *clear = gtk_button_new ();
+  gtk_button_set_image (GTK_BUTTON (clear),
+			gtk_image_new_from_stock (GTK_STOCK_CLEAR,
+						  GTK_ICON_SIZE_BUTTON));
+  g_signal_connect_swapped (G_OBJECT (clear), "clicked",
+			    G_CALLBACK (search_text_clear), st);
+  gtk_box_pack_start (hbox, clear, FALSE, FALSE, 0);
 
 
   st->library_view
