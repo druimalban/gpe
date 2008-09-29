@@ -28,6 +28,22 @@
 #   include <gpe/init.h>
 #endif
 
+#ifdef IS_HILDON
+/* Hildon includes */
+# if HILDON_VER > 0
+#  include <hildon/hildon-program.h>
+#  include <hildon/hildon-window.h>
+#  include <hildon/hildon-file-chooser-dialog.h>
+# else
+#  include <hildon-widgets/hildon-app.h>
+#  include <hildon-widgets/hildon-appview.h>
+#  include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
+# endif /* HILDON_VER */
+
+# include <libosso.h>
+# define APPLICATION_DBUS_SERVICE "starling"
+#endif /* IS_HILDON */
+
 int
 main (int argc, char *argv[])
 {

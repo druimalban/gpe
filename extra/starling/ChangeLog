@@ -1,3 +1,8 @@
+2008-09-30  Graham Cobb  <g+770@cobb.uk.net>
+
+	* src/main.c: Add Hildon includes back in so osso_initialize can 
+	be called.
+
 2008-09-29  Neal H. Walfield  <neal@gnu.org>
 
 	* src/musicdb.h (enum mdb_fields): Add MDB_INC_PLAY_COUNT.
