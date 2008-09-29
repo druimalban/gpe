@@ -237,7 +237,9 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 	       "  title STRING COLLATE NOCASE, "
 	       "  genre STRING COLLATE NOCASE, "
 	       "  duration INTEGER, "
+
 	       "  rating INTEGER,"
+	       "  play_count INTEGER,"
 
 	       "  date_added INTEGER,"
 	       "  date_last_played INTEGER,"
@@ -1177,6 +1179,8 @@ music_db_set_info (MusicDB *db, int uid, struct music_db_info *info)
 
   if ((info->fields & MDB_UPDATE_DATE_LAST_PLAYED))
     munge_lit ("date_last_played", "strftime('%s', 'now')");
+  if ((info->fields & MDB_INC_PLAY_COUNT))
+    munge_lit ("play_count", "coalesce (play_count, 0) + 1");
   if ((info->fields & MDB_UPDATE_DATE_TAGS_UPDATED))
     munge_lit ("date_tags_updated", "strftime('%s', 'now')");
 

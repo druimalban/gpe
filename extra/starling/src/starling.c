@@ -1295,6 +1295,25 @@ search_text_gen (Starling *st, const char *text)
 			    " - coalesce (date_last_played, 0) %c %d)",
 			    dir, parse_time (spec));
 	  }
+	else if (strncasecmp ("play-count:", tok, strlen ("play-count:")) == 0)
+	  {
+	    char *spec = tok + strlen ("play-count:");
+	    char dir = '<';
+	    if (*spec == '<')
+	      {
+		dir = '<';
+		spec ++;
+	      }
+	    else if (*spec == '>')
+	      {
+		dir = '>';
+		spec ++;
+	      }
+
+	    obstack_printf (&constraint,
+			    "(coalesce (play_count, 0) %c %d)",
+			    dir, atoi (spec));
+	  }
 	else if (strncasecmp ("artist:", tok, strlen ("artist:")) == 0
 		 || strncasecmp ("album:", tok, strlen ("album:")) == 0
 		 || strncasecmp ("title:", tok, strlen ("title:")) == 0
@@ -1573,7 +1592,7 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
 
       struct music_db_info info;
       memset (&info, 0, sizeof (info));
-      info.fields = MDB_UPDATE_DATE_LAST_PLAYED;
+      info.fields = MDB_UPDATE_DATE_LAST_PLAYED | MDB_INC_PLAY_COUNT;
 
       music_db_set_info (st->db, st->loaded_song, &info);
     }

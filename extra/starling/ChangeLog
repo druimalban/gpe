@@ -1,5 +1,16 @@
 2008-09-29  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.h (enum mdb_fields): Add MDB_INC_PLAY_COUNT.
+	(struct music_db_info): Add field play_count.
+	* src/musicdb.c (music_db_create_table): Add field play_count.
+	(music_db_set_info): If MDB_INC_PLAY_COUNT is set, increment the
+	play_count field.
+	* src/starling.c (search_text_gen): Treat a word with the
+	"play-count:" prefix as a request to search on the play count.
+	(player_state_changed): Add MDB_INC_PLAY_COUNT to INFO.FIELDS.
+
+2008-09-29  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (starling_scroll_to): Scroll the track to 0.33
 	the vertical height, not 0.5.
 

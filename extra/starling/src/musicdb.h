@@ -146,9 +146,11 @@ enum mdb_fields
     MDB_DURATION = 1 << 5,
     MDB_GENRE = 1 << 6,
     MDB_DATE_ADDED = 1 << 7,
-    MDB_DATE_LAST_PLAYED = 1 << 7,
-    MDB_DATE_TAGS_UPDATED = 1 << 8,
+    MDB_PLAY_COUNT = 1 << 8,
+    MDB_DATE_LAST_PLAYED = 1 << 9,
+    MDB_DATE_TAGS_UPDATED = 1 << 10,
 
+    MDB_INC_PLAY_COUNT = 1 << 29,
     MDB_UPDATE_DATE_LAST_PLAYED = 1 << 30,
     MDB_UPDATE_DATE_TAGS_UPDATED = 1 << 31,
   };
@@ -165,6 +167,7 @@ struct music_db_info
   int duration;
   char *genre;
 
+  int play_count;
   int date_added;
   int date_last_played;
   int date_tags_updated;
