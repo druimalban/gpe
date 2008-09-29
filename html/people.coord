@@ -6,12 +6,14 @@
  055.57  -003.13 "moray"    align=above          # Edinburgh, .uk
  053.37  -006.50 "paul"     align=above          # Leixlip, .ie
  053.03   008.55 "reenoo"                        # Ganderkesee, .de
+ 052.44   013.20 "pH5"                           # Berlin, .de
  052.22   006.92 "koen"                          # Enschede, .nl
  052.12   000.07 "pb"       align=right          # Cambridge, .uk
+ 051.75  -001.25 "grcobb"                        # Oxford, .uk
  051.38  -002.37 "owen"                          # Bath, .uk
  051.30   000.05 "dc"                            # London, .uk
  051.30   000.05 "mallum"   align=below          # East London, .uk
- 052.44   013.20 "pH5"                           # Berlin, .de
+ 051.14   006.47 "neal"                          # Düsseldorf, .de
  050.52   008.02 "nils/florian/ole" align=right  # Netphen, .de
  049.24   008.42 "fng_sma"                       # Heidelberg, .de
  048.47   009.12 "colin"                         # Stuttgart, .de
@@ -38,5 +40,5 @@
 # or maybe http://flatplanet.sourceforge.net/maps/images/earthmap_hires.jpg
 #
 # Run: 
-#   xplanet -window -config xplanet.config  -pango -font="Bitstream Vera Sans" -fontsize 7 -geometry 800x400 -projection ancient -output images/people.png -num_times 1
+#   xplanet -window -config xplanet.config  -pango -font="Bitstream Vera Sans" -fontsize 7 -geometry 800x400 -projection rectangular -output images/people.png -num_times 1
 #   xplanet -radius 170 -window -projection orthographic -lat 049.00 -lon 015.00 -config xplanet.config  -pango -font "Bitstream Vera Sans" -fontsize 7 -geometry 600x400 -output images/people_eu.png -num_times 1
