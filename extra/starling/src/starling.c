@@ -349,6 +349,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_SEARCHES "searches"
 #define KEY_CURRENT_PAGE "current-page"
 #define KEY_CURRENT_PLAYLIST "current-playlist"
+#define KEY_TRACK_CAPTION "track-caption"
 
 #define GROUP "main"
 
@@ -548,6 +549,15 @@ deserialize (Starling *st)
 
   /* The current page.  */
   bh->page = g_key_file_get_integer (keyfile, GROUP, KEY_CURRENT_PAGE, NULL);
+
+  value = g_key_file_get_string (keyfile, GROUP, KEY_TRACK_CAPTION, NULL);
+  if (value)
+    {
+      if (st->caption)
+	caption_free (st->caption);
+      st->caption = caption_create (value);
+      g_free (value);
+    }
 
   g_key_file_free (keyfile);
 
@@ -1636,6 +1646,9 @@ title_data_func (GtkCellLayout *cell_layout,
 {
   Starling *st = data;
 
+  if (G_UNLIKELY (! st->caption))
+    st->caption = caption_create ("%.50a - %.50t");
+
   int uid;
   gtk_tree_model_get (model, iter, PL_COL_UID, &uid, -1);
 
@@ -2459,8 +2472,6 @@ starling_run (void)
   renderer = gtk_cell_renderer_text_new ();
   g_object_set (renderer, "cell-background", "gray", NULL);
   gtk_tree_view_column_pack_start (col, renderer, FALSE);
-
-  st->caption = caption_create ("%.50a - %.50t");
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
 				      renderer,
 				      title_data_func,

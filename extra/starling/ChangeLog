@@ -1,5 +1,13 @@
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (KEY_TRACK_CAPTION): Define.
+	(deserialize): Set ST->CAPTION based on KEY_TRACK_CAPTION.
+	(title_data_func): If ST->CAPTION is NULL, create a simple
+	caption.
+	(starling_run): Don't initialize ST->CAPTION here.
+
+2008-09-30  Neal H. Walfield  <neal@gnu.org>
+
 	* src/caption.c: New file.
 	* src/caption.c: Likewise.
 	* src/Makefile.am (starling_SOURCES): Add caption.h and caption.c.
