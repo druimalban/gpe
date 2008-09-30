@@ -1,5 +1,38 @@
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.h (enum mdb_fields): Add MDB_RATING.
+	(music_db_get_info): Add parameter info.  Remove parameters
+	source, artist, album, track, title, duration and genre.  Update
+	users.
+	* src/musicdb.c (struct info_cache_entry): Add fields play_count,
+	date_added, date_last_played, date_tags_updated, and rating.
+	(music_db_get_info): Add parameter info.  Remove parameters
+	source, artist, album, track, title, duration and genre.  Get
+	information for play_count, date_added, date_last_played,
+	date_tags_updated, and rating as per INFO->FIELDS.  Save
+	play_count, date_added, date_last_played, date_tags_updated, and
+	rating in the cache entry.
+	(music_db_set_info): Save play_count, date_added,
+	date_last_played, date_tags_updated, and rating in the DB as per
+	INFO->FIELDS.
+	* src/playlist.h (PL_COL_PLAY_COUNT): Define.
+	(PL_COL_DATE_ADDED): Likewise.
+	(PL_COL_DATE_LAST_PLAYED): Likewise.
+	(PL_COL_DATE_TAGS_UPDATED): Likewise.
+	(PL_COL_RATING): Likewise.
+	(play_list_get_info): Remove declaration.
+	(play_list_index_to_uid): New declaration.  Update users of
+	play_list_get_info to use this and music_db_get_info, as required.
+	* src/playlist.c (play_list_idx_to_uid): Rename from this...
+	(play_list_index_to_uid): ... to this.  Remove static qualifier.
+	Update users.
+	(play_list_get_info): Remove function.
+	(get_value): Support PL_COL_PLAY_COUNT, PL_COL_DATE_ADDED,
+	PL_COL_DATE_LAST_PLAYED, PL_COL_DATE_TAGS_UPDATED and
+	PL_COL_RATING.
+
+2008-09-30  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac: Add AC_PROG_YACC.
 
 2008-09-30  Neal H. Walfield  <neal@gnu.org>

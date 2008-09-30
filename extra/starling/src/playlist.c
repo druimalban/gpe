@@ -308,8 +308,8 @@ play_list_idx_uid_refresh_schedule (PlayList *pl, bool now)
 }
 
 /* Return the UID of the record at index IDX.  */
-static int
-play_list_idx_to_uid (PlayList *pl, int idx)
+int
+play_list_index_to_uid (PlayList *pl, int idx)
 {
   int count = play_list_count (pl);
 
@@ -524,34 +524,9 @@ void
 play_list_remove (PlayList *pl, gint idx)
 {
   if (! pl->list)
-    music_db_remove (pl->db, play_list_idx_to_uid (pl, idx));
+    music_db_remove (pl->db, play_list_index_to_uid (pl, idx));
   else
     music_db_play_list_remove (pl->db, pl->list, idx);
-}
-
-bool
-play_list_get_info (PlayList *pl, int idx, int *uidp,
-		    char **source,
-		    char **artist, char **album,
-		    int *track, char **title, int *duration,
-		    char **genre)
-{
-  g_assert (idx >= 0);
-
-  int uid = play_list_idx_to_uid (pl, idx);
-  if (uid == -1)
-    return false;
-
-  if (uidp)
-    *uidp = uid;
-
-  if (! source && ! artist && ! album && ! track && ! title && ! duration
-      && ! genre)
-    /* Nothing else to get.  */
-    return true;
-
-  return music_db_get_info (pl->db, uid, source, artist, album,
-			    track, title, duration, genre);
 }
 
 /* Tree model interface.  */
@@ -630,7 +605,9 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
 
   g_return_if_fail (i != -1);
 
-  int uid = play_list_idx_to_uid (pl, i);
+  int uid = play_list_index_to_uid (pl, i);
+
+  struct music_db_info info;
 
   switch (column)
     {
@@ -648,64 +625,109 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
 
     case PL_COL_SOURCE:
       {
-	char *s;
-	music_db_get_info (pl->db, uid, &s, NULL, NULL, NULL, NULL, NULL, NULL);
+	info.fields = MDB_SOURCE;
+	music_db_get_info (pl->db, uid, &info);
 	g_value_init (value, G_TYPE_STRING);
-	g_value_take_string (value, s);
+	g_value_take_string (value, info.source);
 	return;
       }
 
     case PL_COL_ARTIST:
       {
-	char *s;
-	music_db_get_info (pl->db, uid, NULL, &s, NULL, NULL, NULL, NULL, NULL);
+	info.fields = MDB_ARTIST;
+	music_db_get_info (pl->db, uid, &info);
 	g_value_init (value, G_TYPE_STRING);
-	g_value_take_string (value, s);
+	g_value_take_string (value, info.artist);
 	return;
       }
 
     case PL_COL_ALBUM:
       {
-	char *s;
-	music_db_get_info (pl->db, uid, NULL, NULL, &s, NULL, NULL, NULL, NULL);
+	info.fields = MDB_ALBUM;
+	music_db_get_info (pl->db, uid, &info);
 	g_value_init (value, G_TYPE_STRING);
-	g_value_take_string (value, s);
+	g_value_take_string (value, info.album);
 	return;
       }
 
     case PL_COL_TRACK:
       {
-	int t;
-	music_db_get_info (pl->db, uid, NULL, NULL, NULL, &t, NULL, NULL, NULL);
-	g_value_init (value, G_TYPE_INT);
-	g_value_set_int (value, t);
+	info.fields = MDB_TRACK;
+	music_db_get_info (pl->db, uid, &info);
+	g_value_init (value, G_TYPE_STRING);
+	g_value_set_int (value, info.track);
 	return;
       }
 
     case PL_COL_TITLE:
       {
-	char *s;
-	music_db_get_info (pl->db, uid, NULL, NULL, NULL, NULL, &s, NULL, NULL);
+	info.fields = MDB_TITLE;
+	music_db_get_info (pl->db, uid, &info);
 	g_value_init (value, G_TYPE_STRING);
-	g_value_take_string (value, s);
+	g_value_take_string (value, info.title);
 	return;
       }
 
     case PL_COL_DURATION:
       {
-	int d;
-	music_db_get_info (pl->db, uid, NULL, NULL, NULL, NULL, NULL, &d, NULL);
-	g_value_init (value, G_TYPE_INT);
-	g_value_set_int (value, d);
+	info.fields = MDB_DURATION;
+	music_db_get_info (pl->db, uid, &info);
+	g_value_init (value, G_TYPE_STRING);
+	g_value_set_int (value, info.duration);
 	return;
       }
 
     case PL_COL_GENRE:
       {
-	char *s;
-	music_db_get_info (pl->db, uid, NULL, NULL, NULL, NULL, NULL, NULL, &s);
+	info.fields = MDB_GENRE;
+	music_db_get_info (pl->db, uid, &info);
 	g_value_init (value, G_TYPE_STRING);
-	g_value_take_string (value, s);
+	g_value_take_string (value, info.genre);
+	return;
+      }
+
+    case PL_COL_PLAY_COUNT:
+      {
+	info.fields = MDB_PLAY_COUNT;
+	music_db_get_info (pl->db, uid, &info);
+	g_value_init (value, G_TYPE_STRING);
+	g_value_set_int (value, info.play_count);
+	return;
+      }
+
+    case PL_COL_DATE_ADDED:
+      {
+	info.fields = MDB_DATE_ADDED;
+	music_db_get_info (pl->db, uid, &info);
+	g_value_init (value, G_TYPE_STRING);
+	g_value_set_int (value, info.date_added);
+	return;
+      }
+
+    case PL_COL_DATE_LAST_PLAYED:
+      {
+	info.fields = MDB_DATE_LAST_PLAYED;
+	music_db_get_info (pl->db, uid, &info);
+	g_value_init (value, G_TYPE_STRING);
+	g_value_set_int (value, info.date_last_played);
+	return;
+      }
+
+    case PL_COL_DATE_TAGS_UPDATED:
+      {
+	info.fields = MDB_DATE_TAGS_UPDATED;
+	music_db_get_info (pl->db, uid, &info);
+	g_value_init (value, G_TYPE_STRING);
+	g_value_set_int (value, info.date_tags_updated);
+	return;
+      }
+
+    case PL_COL_RATING:
+      {
+	info.fields = MDB_RATING;
+	music_db_get_info (pl->db, uid, &info);
+	g_value_init (value, G_TYPE_STRING);
+	g_value_set_int (value, info.rating);
 	return;
       }
 

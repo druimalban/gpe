@@ -130,17 +130,15 @@ struct _Starling {
 static void
 set_title (Starling *st)
 {
-  char *artist_buffer;
-  char *title_buffer;
-  char *uri_buffer;
+  struct music_db_info info;
+  info.fields = MDB_SOURCE | MDB_ARTIST | MDB_TITLE;
+  music_db_get_info (st->db, st->loaded_song, &info);
 
-  music_db_get_info (st->db, st->loaded_song, &uri_buffer,
-		     &artist_buffer, NULL, NULL, &title_buffer, NULL, NULL);
-  char *uri = uri_buffer;
+  char *uri = info.source;
   if (! uri)
     uri = "unknown";
-  char *artist = artist_buffer;
-  char *title = title_buffer;
+  char *artist = info.artist;
+  char *title = info.title;
 
   //if (st->last_state != GST_STATE_PAUSED) {
   if (!st->has_lyrics && artist && title) {
@@ -180,9 +178,9 @@ set_title (Starling *st)
   gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
 #endif /* IS_HILDON */
   g_free (title_bar);
-  g_free (artist_buffer);
-  g_free (title_buffer);
-  g_free (uri_buffer);
+  g_free (info.artist);
+  g_free (info.title);
+  g_free (info.source);
 }
 
 bool
@@ -207,20 +205,19 @@ starling_load (Starling *st, int uid)
   if (st->loaded_song)
     old_idx = play_list_uid_to_index (st->library, st->loaded_song);
 
-  char *source = NULL;
-
   st->loaded_song = uid;
-  music_db_get_info (st->db, uid, &source, NULL,
-		     NULL, NULL, NULL, NULL, NULL);
-  if (! source)
+
+  struct music_db_info info;
+  info.fields = MDB_SOURCE;
+  if (! music_db_get_info (st->db, uid, &info))
     {
-      g_warning ("%s: No SOURCE found for %d!", __FUNCTION__, uid);
+      g_warning ("%s: No entry found for %d!", __FUNCTION__, uid);
       return FALSE;
     }
 
-  player_set_source (st->player, source, (gpointer) uid);
+  player_set_source (st->player, info.source, (gpointer) uid);
 
-  g_free (source);
+  g_free (info.source);
 
   if (old_idx != -1)
     play_list_force_changed (st->library, old_idx);
@@ -300,8 +297,7 @@ starling_advance (Starling *st, int delta)
 		}
 	    }
 
-	  play_list_get_info (st->library, idx, &uid,
-			      NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+	  uid = play_list_index_to_uid (st->library, idx);
 	}
     }
   while (! (starling_load (st, uid) && starling_play (st)));
@@ -495,11 +491,8 @@ deserialize (Starling *st)
 
     int i;
     for (i = 0; i < length; i ++)
-      {
-	printf ("%s\n", values[i]);
-	gtk_list_store_insert_with_values (st->searches, NULL, -1,
-					   0, values[i], -1);
-      }
+      gtk_list_store_insert_with_values (st->searches, NULL, -1,
+					 0, values[i], -1);
     g_strfreev (values);
   }
 
@@ -676,8 +669,6 @@ serialize (Starling *st)
 
     obstack_printf (&history, "%s", val);
 
-    printf ("Saving %s\n", val);
-
     g_free (val);
     return FALSE;
   }
@@ -789,8 +780,7 @@ play_list_state_save (Starling *st)
 	/* Nothing selected.  Take entry at the top third.  */
 	i = top_idx + ((bottom_idx - top_idx) / 3);
 
-      play_list_get_info (st->library, i, &conf->position,
-			  NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+      conf->position = play_list_index_to_uid (st->library, i);
     }
 
   /* Now get the current selection.  */
@@ -803,11 +793,7 @@ play_list_state_save (Starling *st)
 		 gpointer data)
   {
     gint *indices = gtk_tree_path_get_indices (path);
-    int uid;
-    if (! play_list_get_info (st->library, indices[0], &uid,
-			      NULL, NULL, NULL, NULL, NULL, NULL, NULL))
-      return;
-
+    int uid = play_list_index_to_uid (st->library, indices[0]);
     conf->selected_rows = g_list_append (conf->selected_rows,
 					 (gpointer) uid);
   }
@@ -1190,9 +1176,7 @@ activated_cb (GtkTreeView *view, GtkTreePath *path,
 
   pos = gtk_tree_path_get_indices (path);
 
-  int uid;
-  if (! play_list_get_info (st->library, pos[0], &uid,
-			    NULL, NULL, NULL, NULL, NULL, NULL, NULL))
+  int uid = play_list_index_to_uid (st->library, pos[0]);
     return;
 
   starling_load (st, uid);
@@ -1437,16 +1421,15 @@ position_update (Starling *st)
   if (G_UNLIKELY (!st->enqueued && total_seconds > 30 && 
 		  (position_seconds > 240 || position_seconds * 2 >= total_seconds)))
     {
-      char *artist;
-      char *title;
-      music_db_get_info (st->db, st->loaded_song,
-			 NULL, &artist, NULL, NULL, &title, NULL, NULL);
+      struct music_db_info info;
+      info.fields = MDB_ARTIST | MDB_TITLE;
+      music_db_get_info (st->db, st->loaded_song, &info);
 
       st->enqueued = TRUE;
-      lastfm_enqueue (artist, title, total_seconds, st);
+      lastfm_enqueue (info.artist, info.title, total_seconds, st);
 
-      g_free (artist);
-      g_free (title);
+      g_free (info.artist);
+      g_free (info.title);
     }
 
   return TRUE;
@@ -1850,34 +1833,31 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 
       GtkMenu *menu = GTK_MENU (gtk_menu_new ());
 
-      int uid;
-      char *source;
-      char *artist;
-      char *album;
-      char *title;
-      play_list_get_info (st->library, idx, &uid, &source,
-			  &artist, &album,
-			  NULL, &title, NULL, NULL);
+      int uid = play_list_index_to_uid (st->library, idx);
 
-      
+      struct music_db_info info;
+      info.fields = MDB_SOURCE | MDB_ARTIST | MDB_ALBUM | MDB_TITLE;
+      music_db_get_info (st->db, uid, &info);
+
       GtkMenu *submenus[add_count];
       int ops[add_count];
       int submenu_count = 0;
 
-      /* Create a "queue this song button."  */
+      /* Create a "queue this track" button.  */
       GtkWidget *button = gtk_menu_item_new_with_label ("");
       char *str;
-      if (title)
-	str = g_strdup_printf (_("Add <i>%.20s%s</i> to"),
-			       title, strlen (title) > 20 ? "..." : "");
+      if (info.title)
+	str = g_strdup_printf (_("Add track <i>%.20s%s</i> to"),
+			       info.title,
+			       strlen (info.title) > 20 ? "..." : "");
       else
 	{
-	  char *s = source;
+	  char *s = info.source;
 	  if (strlen (s) > 40)
 	    s = s + strlen (s) - 37;
 
-	  str = g_strdup_printf (_("Add <i>%s%s</i> to"),
-				 s == source ? "" : "...", s);
+	  str = g_strdup_printf (_("Add track <i>%s%s</i> to"),
+				 s == info.source ? "" : "...", s);
 	}
       gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
       g_free (str);
@@ -1893,12 +1873,13 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 
       submenu_count ++;
 
-      if (album)
+      if (info.album)
 	/* Create a "queue this album button."  */
 	{
 	  button = gtk_menu_item_new_with_label ("");
 	  str = g_strdup_printf (_("Add album <i>%.20s%s</i> to"),
-				 album, strlen (album) > 20 ? "..." : "");
+				 info.album,
+				 strlen (info.album) > 20 ? "..." : "");
 	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
 	  g_free (str);
 	  gtk_widget_show (button);
@@ -1915,12 +1896,13 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 	  submenu_count ++;
 	}
 
-      if (album)
+      if (info.album)
 	/* Create a "queue this artist button."  */
 	{
 	  button = gtk_menu_item_new_with_label ("");
-	  str = g_strdup_printf (_("Add songs by <i>%.20s%s</i> to"),
-				 artist, strlen (artist) > 20 ? "..." : "");
+	  str = g_strdup_printf (_("Add tracks by <i>%.20s%s</i> to"),
+				 info.artist,
+				 strlen (info.artist) > 20 ? "..." : "");
 	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
 	  g_free (str);
 	  gtk_widget_show (button);
@@ -1944,7 +1926,7 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 	  if (search_text && *search_text)
 	    {
 	      button = gtk_menu_item_new_with_label ("");
-	      str = g_strdup_printf (_("Add songs matching <i>%s</i> to"),
+	      str = g_strdup_printf (_("Add tracks matching <i>%s</i> to"),
 				     search_text);
 	      gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
 	      gtk_widget_show (button);
@@ -1975,15 +1957,19 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       {
 	gint *indices = gtk_tree_path_get_indices (path);
 
-	int uid;
-	play_list_get_info (st->library, indices[0], &uid,
-			    first ? &first_source : NULL, NULL, NULL, NULL,
-			    first ? &first_title : NULL, NULL, NULL);
+	int uid = play_list_index_to_uid (st->library, indices[0]);
+	if (first)
+	  {
+	    struct music_db_info info;
+	    info.fields = MDB_SOURCE | MDB_TITLE;
+	    music_db_get_info (st->db, uid, &info);
+
+	    first = false;
+	  }
+
 	selection_list
 	  = g_list_append (selection_list, (gpointer) uid);
 	sel_count ++;
-
-	first = false;
       }
       gtk_tree_selection_selected_foreach (selection, sel_callback, NULL);
 
@@ -1991,10 +1977,10 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 	{
 	  button = gtk_menu_item_new_with_label ("");
 	  if (sel_count > 1)
-	    str = g_strdup_printf (_("Add %d selected songs to"),
+	    str = g_strdup_printf (_("Add %d selected tracks to"),
 				   sel_count);
 	  else
-	    str = g_strdup_printf (_("Add selected song <i>%.15s%s</i> to"),
+	    str = g_strdup_printf (_("Add selected track <i>%.15s%s</i> to"),
 				   first_title ?: first_source,
 				   strlen (first_title ?: first_source) > 15
 				     ? "..." : "");
@@ -2026,8 +2012,8 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       memset (main_info, 0, sizeof (*main_info));
       main_info->st = st;
       main_info->uid = uid;
-      main_info->artist = artist;
-      main_info->album = album;
+      main_info->artist = info.artist;
+      main_info->album = info.album;
       main_info->selection = selection_list;
 
       g_signal_connect (G_OBJECT (menu), "selection-done",
@@ -2073,8 +2059,8 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       callback ("new play list");
       music_db_play_lists_for_each (st->db, callback);
 
-      g_free (source);
-      g_free (title);
+      g_free (info.source);
+      g_free (info.title);
 
       gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
 		      event->button, event->time);

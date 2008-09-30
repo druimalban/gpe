@@ -123,19 +123,6 @@ extern void music_db_remove (MusicDB *db, gint uid);
   Empty the play list.  Use carefully.  */
 extern void music_db_clear (MusicDB *db);
 
-/** music_db_get_info:
-
-  Returns the information regarding the entry with uid UID in the
-  music db DB.  Any of SOURCE, UID, ARIST, TITLE, ALBUM, DURATION may
-  be NULL to indicate don't cares.  The caller must free the returned
-  strings.  */
-extern bool music_db_get_info (MusicDB *db, int uid,
-			       char **source,
-			       char **artist, char **album,
-			       int *track, char **title, int *duration,
-			       char **genre);
-
-
 enum mdb_fields
   {
     MDB_SOURCE = 1 << 0,
@@ -149,7 +136,9 @@ enum mdb_fields
     MDB_PLAY_COUNT = 1 << 8,
     MDB_DATE_LAST_PLAYED = 1 << 9,
     MDB_DATE_TAGS_UPDATED = 1 << 10,
+    MDB_RATING = 1 << 11,
 
+    /* These take precedent of the simple set variants.  */
     MDB_INC_PLAY_COUNT = 1 << 29,
     MDB_UPDATE_DATE_LAST_PLAYED = 1 << 30,
     MDB_UPDATE_DATE_TAGS_UPDATED = 1 << 31,
@@ -171,7 +160,19 @@ struct music_db_info
   int date_added;
   int date_last_played;
   int date_tags_updated;
+
+  int rating;
 };
+
+/** music_db_get_info:
+
+  Returns the information regarding the entry with uid UID in the
+  music db DB.  Any of SOURCE, UID, ARIST, TITLE, ALBUM, DURATION may
+  be NULL to indicate don't cares.  The caller must free the returned
+  strings.  */
+extern bool music_db_get_info (MusicDB *db, int uid,
+			       struct music_db_info *info);
+
 
 /* Set the meta-data associated with UID according to INFO.
    INFO->FIELDS determines which fields to set.  */

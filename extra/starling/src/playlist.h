@@ -56,6 +56,12 @@ enum
     PL_COL_TITLE,
     PL_COL_DURATION,
     PL_COL_GENRE,
+    PL_COL_PLAY_COUNT,
+    PL_COL_DATE_ADDED,
+    PL_COL_DATE_LAST_PLAYED,
+    PL_COL_DATE_TAGS_UPDATED,
+    PL_COL_RATING,
+
     PL_COL_COUNT
   };
 
@@ -90,16 +96,9 @@ extern void play_list_remove (PlayList *pl, gint idx);
 
 /** play_list_get_info:
 
-    Returns the information regarding entry INDEX in playlist PL.  If
-    INDEX is -1, information regarding the currently selected entry is
-    returned.  Any of SOURCE, UID, ARIST, TITLE, ALBUM, DURATION and
-    GENRE may be NULL to indicate don't cares.  The caller must free
-    the returned strings.  */
-extern bool play_list_get_info (PlayList *pl, int index, int *uid,
-				char **source,
-				char **artist, char **album,
-				int *track, char **title, int *duration,
-				char **genre);
+    Returns the uid associated with INDEX.  If invalid, returns 0.
+    (A valid UID is guaranteed to be non-0.)  */
+extern int play_list_index_to_uid (PlayList *pl, int index);
 
 /* Return an index (if any) associated with UID.  If none, return
    -1.  */

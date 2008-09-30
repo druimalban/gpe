@@ -48,6 +48,13 @@ struct info_cache_entry
   int track;
   int duration;
   char *genre;
+
+  int play_count;
+  int date_added;
+  int date_last_played;
+  int date_tags_updated;
+
+  int rating;
 };
 
 void
@@ -561,12 +568,15 @@ meta_data_reader (gpointer data)
       int uid = *uidp;
       g_free (uidp);
 
-      char *source = NULL;
-      music_db_get_info (db, uid, &source, NULL, NULL, NULL, NULL, NULL, NULL);
-      if (! source)
+      struct music_db_info info;
+      info.fields = MDB_SOURCE;
+      
+      if (! music_db_get_info (db, uid, &info))
 	/* Hmm, entry disappeared.  It's possible: the user may have
 	   removed it before we got to processing it.  */
 	continue;
+
+      char *source = info.source;
 
       if (! pipeline)
 	{
@@ -970,9 +980,6 @@ music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
 void
 music_db_remove (MusicDB *db, gint uid)
 {
-  g_assert (music_db_get_info (db, uid,
-			       NULL, NULL, NULL, NULL, NULL, NULL, NULL));
-
   char *err = NULL;
   sqlite_exec_printf (db->sqliteh,
 		      "delete from files where ROWID = %d;",
@@ -1005,29 +1012,12 @@ music_db_clear (MusicDB *db)
 }
 
 bool
-music_db_get_info (MusicDB *db, int uid,
-		   char **source, char **artist, char **album,
-		   int *track, char **title, int *duration, char **genre)
+music_db_get_info (MusicDB *db, int uid, struct music_db_info *info)
 {
   struct info_cache_entry *e = simple_cache_find (&info_cache, uid);
   if (! e)
     {
       e = g_malloc (sizeof (struct info_cache_entry));
-
-      if (source)
-	*source = NULL;
-      if (artist)
-	*artist = NULL;
-      if (album)
-	*album = NULL;
-      if (track)
-	*track = 0;
-      if (title)
-	*title = NULL;
-      if (duration)
-	*duration = 0;
-      if (genre)
-	*genre = NULL;
 
       bool found = false;
       int callback (void *arg, int argc, char **argv, char **names)
@@ -1055,18 +1045,36 @@ music_db_get_info (MusicDB *db, int uid,
 	i ++;
 	e->genre = argv[i] ? g_strdup (argv[i]) : NULL;
 
+	i ++;
+	e->play_count = argv[i] ? atoi (argv[i]) : 0;
+
+	i ++;
+	e->date_added = argv[i] ? atoi (argv[i]) : 0;
+
+	i ++;
+	e->date_last_played = argv[i] ? atoi (argv[i]) : 0;
+
+	i ++;
+	e->date_tags_updated = argv[i] ? atoi (argv[i]) : 0;
+
+	i ++;
+	e->rating = argv[i] ? atoi (argv[i]) : 0;
+
 	return 1;
       }
 
       char *err = NULL;
       sqlite_exec_printf (db->sqliteh,
 			  "select source, artist, album, "
-			  "  track, title, duration, genre "
+			  "  track, title, duration, genre, "
+			  "  play_count, date_added, "
+			  "  date_last_played, date_tags_updated, "
+			  "  rating"
 			  " from files where ROWID = %d;",
 			  callback, NULL, &err, (int) uid);
       if (err)
 	{
-	  g_warning ("%s: %s", __FUNCTION__, err);
+	  g_warning ("%s:%d %s", __FUNCTION__, __LINE__, err);
 	  sqlite_freemem (err);
 	}
 
@@ -1079,20 +1087,30 @@ music_db_get_info (MusicDB *db, int uid,
       simple_cache_add (&info_cache, uid, e);
     }
 
-  if (source)
-    *source = e->source ? strdup (e->source) : NULL;
-  if (artist)
-    *artist = e->artist ? strdup (e->artist) : NULL;
-  if (album)
-    *album = e->album ? strdup (e->album) : NULL;
-  if (track)
-    *track = e->track;
-  if (title)
-    *title = e->title ? strdup (e->title) : NULL;
-  if (duration)
-    *duration = e->duration;
-  if (genre)
-    *genre = e->genre ? strdup (e->genre) : NULL;
+  if ((info->fields & MDB_SOURCE))
+    info->source = e->source ? strdup (e->source) : NULL;
+  if ((info->fields & MDB_ARTIST))
+    info->artist = e->artist ? strdup (e->artist) : NULL;
+  if ((info->fields & MDB_ALBUM))
+    info->album = e->album ? strdup (e->album) : NULL;
+  if ((info->fields & MDB_TRACK))
+    info->track = e->track;
+  if ((info->fields & MDB_TITLE))
+    info->title = e->title ? strdup (e->title) : NULL;
+  if ((info->fields & MDB_DURATION))
+    info->duration = e->duration;
+  if ((info->fields & MDB_GENRE))
+    info->genre = e->genre ? strdup (e->genre) : NULL;
+  if ((info->fields & MDB_PLAY_COUNT))
+    info->play_count = e->play_count;
+  if ((info->fields & MDB_DATE_ADDED))
+    info->date_added = e->date_added;
+  if ((info->fields & MDB_DATE_LAST_PLAYED))
+    info->date_last_played = e->date_last_played;
+  if ((info->fields & MDB_DATE_TAGS_UPDATED))
+    info->date_tags_updated = e->date_tags_updated;
+  if ((info->fields & MDB_RATING))
+    info->rating = e->rating;
 
   return true;
 }
@@ -1177,12 +1195,26 @@ music_db_set_info (MusicDB *db, int uid, struct music_db_info *info)
   if ((info->fields & MDB_DURATION))
     munge_int ("duration", info->duration);
 
-  if ((info->fields & MDB_UPDATE_DATE_LAST_PLAYED))
-    munge_lit ("date_last_played", "strftime('%s', 'now')");
+  if ((info->fields & MDB_DATE_ADDED))
+    munge_int ("date_added", info->date_added);
+
   if ((info->fields & MDB_INC_PLAY_COUNT))
     munge_lit ("play_count", "coalesce (play_count, 0) + 1");
+  else if ((info->fields & MDB_PLAY_COUNT))
+    munge_int ("play_count", info->play_count);
+
+  if ((info->fields & MDB_UPDATE_DATE_LAST_PLAYED))
+    munge_lit ("date_last_played", "strftime('%s', 'now')");
+  else if ((info->fields & MDB_DATE_LAST_PLAYED))
+    munge_int ("date_last_played", info->date_last_played);
+
   if ((info->fields & MDB_UPDATE_DATE_TAGS_UPDATED))
     munge_lit ("date_tags_updated", "strftime('%s', 'now')");
+  else if ((info->fields & MDB_DATE_TAGS_UPDATED))
+    munge_int ("date_tags_updated", info->date_tags_updated);
+
+  if ((info->fields & MDB_RATING))
+    munge_int ("rating", info->rating);
 
   obstack_printf (&sql, " where ROWID = %d;", uid);
 
