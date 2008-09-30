@@ -553,7 +553,7 @@ meta_data_reader (gpointer data)
     {
       g_static_mutex_lock (&db->meta_data_reader_mutex);
 
-      if (! g_queue_is_empty (db->meta_data_reader_pending))
+      if (g_queue_is_empty (db->meta_data_reader_pending))
 	{
 	  g_static_mutex_unlock (&db->meta_data_reader_mutex);
 	  break;

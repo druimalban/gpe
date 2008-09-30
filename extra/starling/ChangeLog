@@ -1,5 +1,10 @@
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (meta_data_reader): Break out of the loop if the
+	queue is empty, not if it is not empty.
+
+2008-09-30  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (KEY_TRACK_CAPTION): Define.
 	(deserialize): Set ST->CAPTION based on KEY_TRACK_CAPTION.
 	(title_data_func): If ST->CAPTION is NULL, create a simple
