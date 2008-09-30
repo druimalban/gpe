@@ -15,11 +15,13 @@ starling_SOURCES = main.c \
 		cache.h cache.c \
 		marshal.c marshal.h \
 		md5.h md5.c \
-		config.h
+		config.h \
+		search.y
 
 INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS)
 
-BUILT_SOURCES = marshal.h marshal.c
+BUILT_SOURCES = marshal.h marshal.c search.h search.c
+AM_YFLAGS = -d
 
 nodist_noinst_HEADERS = marshal.h
 

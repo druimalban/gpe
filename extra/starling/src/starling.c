@@ -31,6 +31,7 @@
 #include "utils.h"
 #include "playlist.h"
 #include "player.h"
+#include "search.h"
 
 #define obstack_chunk_alloc g_malloc
 #define obstack_chunk_free g_free
@@ -1186,166 +1187,13 @@ search_text_gen (Starling *st, const char *text)
       return;
     }
 
-  char *s = sqlite_mprintf ("%q", text);
-
-  struct obstack constraint;
-  obstack_init (&constraint);
-
-  bool have_one = false;
-
-  char *tok;
-  for (tok = strtok (s, " "); tok; tok = strtok (NULL, " "))
-    if (*tok)
-      {
-	if (have_one)
-	  obstack_printf (&constraint, "and ");
-	else
-	  have_one = true;
-
-	int parse_time (const char *spec)
-	{
-	  int time = 0;
-	  while (*spec)
-	    {
-	      char *end;
-	      int i = strtol (spec, &end, 10);
-	      switch (*end)
-		{
-		case 's':
-		case 'S':
-		  break;
-		case 'm':
-		  i *= 60;
-		  break;
-		case 'h':
-		case 'H':
-		  i *= 60 * 60;
-		  break;
-		case 0:
-		case 'd':
-		case 'D':
-		  i *= 24 * 60 * 60;
-		  break;
-		case 'w':
-		case 'W':
-		  i *= 7 * 24 * 60 * 60;
-		  break;
-		case 'M':
-		  i *= 30 * 24 * 60 * 60;
-		  break;
-		case 'y':
-		case 'Y':
-		  i *= 365 * 24 * 60 * 60;
-		  break;
-		default:
-		  return time;
-		}
-
-	      time += i;
-
-	      if (!*end)
-		return time;
-	      spec = end + 1;
-	    }
-
-	  return time;
-	}
-
-	if (strncasecmp ("added:", tok, strlen ("added:")) == 0)
-	  /* The time since the track was added is less/greater than
-	     some time ago.  */
-	  {
-	    char *spec = tok + strlen ("added:");
-	    char dir = '<';
-	    if (*spec == '<')
-	      {
-		dir = '<';
-		spec ++;
-	      }
-	    else if (*spec == '>')
-	      {
-		dir = '>';
-		spec ++;
-	      }
-
-	    obstack_printf (&constraint,
-			    "(strftime('%%s', 'now')"
-			    " - coalesce (date_added, 0) %c %d)",
-			    dir, parse_time (spec));
-	  }
-	else if (strncasecmp ("played:", tok, strlen ("played:")) == 0)
-	  /* The time since the track was last played is less/greater
-	     than some time ago.  */
-	  {
-	    char *spec = tok + strlen ("played:");
-	    char dir = '<';
-	    if (*spec == '<')
-	      {
-		dir = '<';
-		spec ++;
-	      }
-	    else if (*spec == '>')
-	      {
-		dir = '>';
-		spec ++;
-	      }
-
-	    obstack_printf (&constraint,
-			    "(strftime('%%s', 'now')"
-			    " - coalesce (date_last_played, 0) %c %d)",
-			    dir, parse_time (spec));
-	  }
-	else if (strncasecmp ("play-count:", tok, strlen ("play-count:")) == 0)
-	  {
-	    char *spec = tok + strlen ("play-count:");
-	    char dir = '<';
-	    if (*spec == '<')
-	      {
-		dir = '<';
-		spec ++;
-	      }
-	    else if (*spec == '>')
-	      {
-		dir = '>';
-		spec ++;
-	      }
-
-	    obstack_printf (&constraint,
-			    "(coalesce (play_count, 0) %c %d)",
-			    dir, atoi (spec));
-	  }
-	else if (strncasecmp ("artist:", tok, strlen ("artist:")) == 0
-		 || strncasecmp ("album:", tok, strlen ("album:")) == 0
-		 || strncasecmp ("title:", tok, strlen ("title:")) == 0
-		 || strncasecmp ("genre:", tok, strlen ("genre:")) == 0
-		 || strncasecmp ("source:", tok, strlen ("source:")) == 0)
-	  {
-	    char *prefix = tok;
-	    char *term = strchr (tok, ':');
-	    g_assert (term && *term == ':');
-	    *term = 0;
-	    term ++;
-
-	    obstack_printf (&constraint,
-			    "(%s like '%%%s%%')",
-			    prefix, term);
-	  }
-	else
-	  obstack_printf (&constraint,
-			  "(artist like '%%%s%%'"
-			  " or album like '%%%s%%'"
-			  " or title like '%%%s%%'"
-			  " or genre like '%%%s%%'"
-			  " or source like '%%%s%%') ",
-			  tok, tok, tok, tok, tok);
-      }
-  sqlite_freemem (s);
-
-  obstack_1grow (&constraint, 0);
-
-  play_list_constrain (st->library, obstack_finish (&constraint));
-
-  obstack_free (&constraint, NULL);
+  char *result;
+  void *state = NULL;
+  if (yyparse (text, &result, &state) == 0)
+    {
+      play_list_constrain (st->library, result);
+      g_free (result);
+    }
 }
 
 static int
