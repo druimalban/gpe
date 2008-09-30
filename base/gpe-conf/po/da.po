@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gpe-conf-0.2.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-05 16:51+0200\n"
-"PO-Revision-Date: 2008-08-29 00:00+0000\n"
+"PO-Revision-Date: 2008-09-24 00:00+0000\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr "Status: Oplader"
 
 #: ../modules/battery.c:207 ../modules/battery.c:267
 msgid "Status: charge main"
-msgstr ""
+msgstr "Status: Oplader hovedbatteri"
 
 #: ../modules/battery.c:210
 msgid "Status: dead"
@@ -80,7 +80,7 @@ msgstr "lærer"
 
 #: ../modules/battery.c:228 ../modules/battery.c:283
 msgid "Voltage"
-msgstr "Volt"
+msgstr "Spænding"
 
 #: ../modules/battery.c:232 ../modules/battery.c:287 ../modules/battery.c:388
 msgid "AC connected"
@@ -100,7 +100,7 @@ msgstr "ikke installeret"
 
 #: ../modules/battery.c:298
 msgid "Voltage: unknown"
-msgstr ""
+msgstr "Spænding: Ukendt"
 
 #: ../modules/battery.c:299
 msgid "Lifetime: unknown"
@@ -114,9 +114,10 @@ msgstr "Intet batteri"
 msgid "Internal battery"
 msgstr "Internt batteri"
 
+# i tvivl om den her.
 #: ../modules/battery.c:455
 msgid "Jacket battery"
-msgstr ""
+msgstr "Batterikappe"
 
 #: ../modules/cfgfile.c:919
 msgid "No write access to network configuration."
@@ -130,7 +131,7 @@ msgstr "brug: gpe-info [side]\n"
 #: ../main-info.c:68
 #, c-format
 msgid "    Where page may be \"global\" (default)\n"
-msgstr ""
+msgstr "    Hvor side må være »global« (standard)\n"
 
 #: ../main-info.c:78 ../desktop/gpe-conf-sysinfo.desktop.in.h:2
 msgid "System Information"
@@ -252,23 +253,23 @@ msgstr "Lydopsætning"
 
 #: ../main.c:117
 msgid "Task nameserver"
-msgstr ""
+msgstr "Opgave navneserver"
 
 #: ../main.c:117
 msgid "Task for changing nameserver"
-msgstr ""
+msgstr "Opgave for ændring af navneserver"
 
 #: ../main.c:119
 msgid "Task sound"
-msgstr ""
+msgstr "Opgave lyd"
 
 #: ../main.c:119
 msgid "Command line task saving/restoring sound settings."
-msgstr ""
+msgstr "Kommandolinjeopgave gemme/gendanne lydopsætning."
 
 #: ../main.c:121
 msgid "Task background image"
-msgstr ""
+msgstr "Opgave baggrundsbillede"
 
 #: ../main.c:121
 msgid "Only select background image."
@@ -276,11 +277,11 @@ msgstr "Vælg kun baggrundsbillede."
 
 #: ../main.c:123
 msgid "Task backlight setting"
-msgstr ""
+msgstr "Opgave opsætning af baggrundslys"
 
 #: ../main.c:123
 msgid "Change backlight power and brightness."
-msgstr ""
+msgstr "Ændre kraft og lysfølsomhed for baggrundslys."
 
 #: ../main.c:144
 msgid "Settings saved"
@@ -289,17 +290,17 @@ msgstr "Opsætning gemt"
 #: ../main.c:339
 #, c-format
 msgid "'task_backlight' supports zero, one and two arguments.\n"
-msgstr ""
+msgstr "»opgave_baggrundslys« understøtter nul, et eller to argumenter.\n"
 
 #: ../main.c:358
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
-msgstr ""
+msgstr "»opgave_navneserver« behøver en ny (og kun en) navneserver som argument.\n"
 
 #: ../main.c:376
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
-msgstr ""
+msgstr "»opgave_lyd« behøver (g)em/(e)gendan som argument.\n"
 
 #: ../main.c:444
 msgid "Warning: PCMCIA init failed."
@@ -334,6 +335,10 @@ msgid ""
 "Usage: gpe-conf [AppletName]\n"
 "where AppletName is in:\n"
 msgstr ""
+"\n"
+"\n"
+"Brug: gpe-conf [AppletName]\n"
+"hvor AppletName er i:\n"
 
 #: ../tools/interface.c:315 ../tools/interface.c:515 ../tools/interface.c:531
 #: ../tools/interface.c:651
@@ -411,22 +416,22 @@ msgstr "Ingen brugbare familieadresser fundet.\n"
 #: ../tools/interface.c:1036
 #, c-format
 msgid "Warning: no inet socket available: %s\n"
-msgstr ""
+msgstr "Advarsel: Ingen inet-sokkel tilgængelig: %s\n"
 
 #: ../tools/interface.c:1188
 #, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
-msgstr ""
+msgstr "Advarsel: Kan ikke åbne %s (%s). Begrænset uddata.\n"
 
 #. Give better error message for this case.
 #: ../tools/interface.c:1431
 msgid "Device not found"
-msgstr ""
+msgstr "Enhed ikke fundet"
 
 #: ../tools/interface.c:1435
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
-msgstr ""
+msgstr "%s: Fejl under indlæsning af grænsefladeinformation: %s\n"
 
 #: ../tools/interface.c:1609
 #, c-format
@@ -435,27 +440,27 @@ msgstr "Du kan ikke starte PPP med dette program.\n"
 
 #: ../tools/interface.c:1703
 msgid "Local Loopback"
-msgstr ""
+msgstr "Lokal loopback"
 
 #: ../tools/interface.c:1706
 msgid "Serial Line IP"
-msgstr ""
+msgstr "Seriel linje-IP"
 
 #: ../tools/interface.c:1707
 msgid "VJ Serial Line IP"
-msgstr ""
+msgstr "VJ seriel linje-IP"
 
 #: ../tools/interface.c:1708
 msgid "6-bit Serial Line IP"
-msgstr ""
+msgstr "6-bit seriel linje-IP"
 
 #: ../tools/interface.c:1709
 msgid "VJ 6-bit Serial Line IP"
-msgstr ""
+msgstr "VJ 6-bit seriel linje-IP"
 
 #: ../tools/interface.c:1710
 msgid "Adaptive Serial Line IP"
-msgstr ""
+msgstr "Adaptive seriel linje-IP"
 
 #: ../tools/interface.c:1713
 msgid "Ethernet"
@@ -463,15 +468,15 @@ msgstr "Ethernet"
 
 #: ../tools/interface.c:1719
 msgid "Fiber Distributed Data Interface"
-msgstr ""
+msgstr "Fiber distribueret datagrænseflade"
 
 #: ../tools/interface.c:1722
 msgid "HIPPI"
-msgstr ""
+msgstr "HIPPI"
 
 #: ../tools/interface.c:1734
 msgid "generic X.25"
-msgstr ""
+msgstr "generic X.25"
 
 #: ../tools/interface.c:1737
 msgid "IPIP Tunnel"
@@ -519,7 +524,7 @@ msgstr "16/4 Mbps Token Ring (ny)"
 
 #: ../tools/interface.c:1874
 msgid "Interface:"
-msgstr ""
+msgstr "Grænseflade:"
 
 #: ../tools/interface.c:1875
 #, c-format
@@ -549,12 +554,12 @@ msgstr "P-t-P: %s\n"
 #: ../tools/interface.c:1910
 #, c-format
 msgid "Netmask: %s\n"
-msgstr ""
+msgstr "Netmaske: %s\n"
 
 #: ../tools/interface.c:1914
 #, c-format
 msgid "Broadcast: %s\n"
-msgstr ""
+msgstr "Rundsending: %s\n"
 
 #: ../tools/interface.c:1926
 #, c-format
@@ -569,27 +574,28 @@ msgstr "IPv6-adresse: %s/%d\n"
 #: ../tools/interface.c:1959
 #, c-format
 msgid "Scope: "
-msgstr ""
+msgstr "Omfang: "
 
 #: ../tools/interface.c:1964
 #, c-format
 msgid "Global"
-msgstr ""
+msgstr "Global"
 
 #: ../tools/interface.c:1967
 #, c-format
 msgid "Link"
-msgstr ""
+msgstr "Henvisning"
 
 #: ../tools/interface.c:1970
 #, c-format
 msgid "Site"
-msgstr ""
+msgstr "Sted"
 
+# engelsk stavefejl her -> Compact
 #: ../tools/interface.c:1973
 #, c-format
 msgid "Compat"
-msgstr ""
+msgstr "Kompakt"
 
 #: ../tools/interface.c:1976
 #, c-format
@@ -1086,7 +1092,7 @@ msgstr "Netværksfilsystem"
 
 #: ../modules/storage.c:330
 msgid "Mounted at "
-msgstr ""
+msgstr "Monteret ved "
 
 #: ../modules/storage.c:338
 msgid "Free space"
@@ -1094,7 +1100,7 @@ msgstr "Ledig plads"
 
 #: ../modules/serial.c:428 ../modules/serial.c:434
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
-msgstr ""
+msgstr "Simpel grænseflade for seriel portkonfiguration. Komponenter der er fravalgt installeres ikke."
 
 #: ../modules/serial.c:431
 msgid "Port A"
@@ -1102,11 +1108,11 @@ msgstr "Port A"
 
 #: ../modules/serial.c:438
 msgid "Serial port default usage"
-msgstr ""
+msgstr "Standardbrug for seriel port"
 
 #: ../modules/serial.c:443
 msgid "Select desired software to use serial port here."
-msgstr ""
+msgstr "Vælg ønsket software til seriel port her."
 
 #: ../modules/serial.c:446
 msgid "Console"
@@ -1114,7 +1120,7 @@ msgstr "Konsol"
 
 #: ../modules/serial.c:449
 msgid "This option runs console on serial port. (default)"
-msgstr ""
+msgstr "Denne indstilling kører konsol på seriel port. (standard)"
 
 #: ../modules/serial.c:457
 msgid "GPS Daemon"
@@ -1126,15 +1132,15 @@ msgstr "GPS-dæmon (behøver »gpsd«)"
 
 #: ../modules/serial.c:467
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
-msgstr ""
+msgstr "Denne indstilling gør det muligt at afvikle GPSD, som sender data fra en GPS-modtager til programmer."
 
 #: ../modules/serial.c:474
 msgid "Nothing (free)"
-msgstr ""
+msgstr "Intet (ledig)"
 
 #: ../modules/serial.c:477
 msgid "Don't start any software that uses the serial port."
-msgstr ""
+msgstr "Start ikke software som anvender den serielle port."
 
 #: ../modules/serial.c:514 ../modules/serial.c:521
 msgid "This page configures the GPS receiver software."
@@ -1158,7 +1164,7 @@ msgstr "NMEA"
 
 #: ../modules/serial.c:541
 msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
-msgstr ""
+msgstr "GPS-modtageren sender NMEA-data (standard, ingen behov for ændring for de fleste modtagere)."
 
 #: ../modules/serial.c:547
 msgid "Earthmate"
@@ -1174,63 +1180,63 @@ msgstr ""
 
 #: ../modules/cardinfo.c:103
 msgid "/_Card"
-msgstr ""
+msgstr "/_Kort"
 
 #: ../modules/cardinfo.c:104
 msgid "/Card/_Insert"
-msgstr ""
+msgstr "/Kort/_Indsæt"
 
 #: ../modules/cardinfo.c:105
 msgid "/Card/_Eject"
-msgstr ""
+msgstr "/Kort/_Skub ud"
 
 #: ../modules/cardinfo.c:106
 msgid "/Card/_Suspend"
-msgstr ""
+msgstr "/Kort/_Dvale"
 
 #: ../modules/cardinfo.c:107
 msgid "/Card/_Resume"
-msgstr ""
+msgstr "/Kort/_Genoptag"
 
 #: ../modules/cardinfo.c:108
 msgid "/Card/_Reset"
-msgstr ""
+msgstr "/Kort/_nulstil"
 
 #: ../modules/cardinfo.c:109
 msgid "/Card/s1"
-msgstr ""
+msgstr "/Kort/s1"
 
 #: ../modules/cardinfo.c:110
 msgid "/Card/_Assign Driver"
-msgstr ""
+msgstr "/Kort/_Tildel drivprogram"
 
 #: ../modules/cardinfo.c:111
 msgid "/Card/s2"
-msgstr ""
+msgstr "/Kort/s2"
 
 #: ../modules/cardinfo.c:112
 msgid "/Card/_Close"
-msgstr ""
+msgstr "/Kort/_Luk"
 
 #: ../modules/cardinfo.c:113
 msgid "/_Help"
-msgstr ""
+msgstr "/_Hjælp"
 
 #: ../modules/cardinfo.c:114
 msgid "/_Help/Index"
-msgstr ""
+msgstr "/_Hjælp/Indeks"
 
 #: ../modules/cardinfo.c:115
 msgid "/_Help/About"
-msgstr ""
+msgstr "/_Hjælp/Om"
 
 #: ../modules/cardinfo.c:175 ../modules/cardinfo.c:848
 msgid "card not recognized"
-msgstr ""
+msgstr "kort ikke genkendt"
 
 #: ../modules/cardinfo.c:277 ../modules/cardinfo.c:348
 msgid "Could not write to temporal config file."
-msgstr ""
+msgstr "Kunne ikke skrive til temporær konfigurationsfil."
 
 #: ../modules/cardinfo.c:554
 msgid "Could not open pidfile:"
@@ -1242,48 +1248,48 @@ msgstr "Kunne ikke læse pidfile"
 
 #: ../modules/cardinfo.c:564
 msgid "Could not signal cardmgr:"
-msgstr ""
+msgstr "Kunne ikke signalere cardmgr:"
 
 #: ../modules/cardinfo.c:638
 msgid "gpe-conf must be setuid root to use cardinfo feature."
-msgstr ""
+msgstr "gpe-conf skal være setuid-root for at anvende kortinfo-egenskaben."
 
 #: ../modules/cardinfo.c:656
 msgid "No PCMCIA driver in '/proc/devices'"
-msgstr ""
+msgstr "Ingen PCMCIA-driver i '/proc/devices'"
 
 #: ../modules/cardinfo.c:659
 msgid "Could not open '/proc/devices'"
-msgstr ""
+msgstr "Kunne ikke åbne '/proc/devices'"
 
 #: ../modules/cardinfo.c:671
 msgid "No sockets found\n"
-msgstr ""
+msgstr "Ingen sokler fundet\n"
 
 #: ../modules/cardinfo.c:835
 msgid "flock(stabfile) failed"
-msgstr ""
+msgstr "flock(stabfile) mislykkedes"
 
 #: ../modules/cardinfo.c:854
 #, c-format
 msgid "no driver loaded"
-msgstr ""
+msgstr "ingen driver indlæst"
 
 #: ../modules/cardinfo.c:963
 msgid "ready"
-msgstr ""
+msgstr "klar"
 
 #: ../modules/cardinfo.c:981
 msgid "not ready"
-msgstr ""
+msgstr "ikke klar"
 
 #: ../modules/cardinfo.c:996
 msgid "suspended"
-msgstr ""
+msgstr "i dvale"
 
 #: ../modules/cardinfo.c:1188
 msgid "Assign Driver"
-msgstr ""
+msgstr "Tildel driver"
 
 #: ../modules/cardinfo.c:1197
 msgid ""
@@ -1291,6 +1297,9 @@ msgid ""
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
+"Dette vindue gør at du kan vælge/\n"
+"ændre drivertildelingen for et\n"
+"PCMCIA- eller CF-kort."
 
 #: ../modules/cardinfo.c:1207
 msgid "Your current card identifies itself as:"
@@ -1306,20 +1315,20 @@ msgstr "Klasse"
 
 #: ../modules/cardinfo.c:1327 ../modules/cardinfo.c:1340
 msgid "PC/CF card socket information."
-msgstr ""
+msgstr "PC/CF-kort sokkelinformation."
 
 #: ../modules/cardinfo.c:1335
 msgid "Socket"
-msgstr ""
+msgstr "Sokkel"
 
 #: ../modules/cardinfo.c:1366
 msgid "Information for socket"
-msgstr ""
+msgstr "Information for sokkel"
 
 #. fields
 #: ../modules/cardinfo.c:1375
 msgid "State:"
-msgstr ""
+msgstr "Tilstand:"
 
 #: ../modules/cardinfo.c:1376
 msgid "Device:"
@@ -1327,7 +1336,7 @@ msgstr "Enhed:"
 
 #: ../modules/cardinfo.c:1377
 msgid "Driver:"
-msgstr ""
+msgstr "Driver:"
 
 #: ../modules/cardinfo.c:1378
 msgid "Type:"
@@ -1335,27 +1344,27 @@ msgstr "Type:"
 
 #: ../modules/cardinfo.c:1379
 msgid "I/O:"
-msgstr ""
+msgstr "I/O:"
 
 #: ../modules/cardinfo.c:1380
 msgid "IRQ:"
-msgstr ""
+msgstr "IRQ:"
 
 #: ../modules/cardinfo.c:1387
 msgid "Flags:"
-msgstr ""
+msgstr "Flag:"
 
 #: ../modules/cardinfo.c:1404
 msgid "PCMCIA initialisation failed"
-msgstr ""
+msgstr "PCMCIA initialisering mislykkedes"
 
 #: ../modules/gpe-admin.c:92
 msgid "Allow users to configure everything"
-msgstr ""
+msgstr "Til brugere at konfigurere alt"
 
 #: ../modules/users/ucallbacks.c:107
 msgid "You need at least one user account!"
-msgstr ""
+msgstr "Du skal bruge mindst en brugerkonto!"
 
 #: ../modules/users/ucallbacks.c:131
 msgid "You can't remove this user!"
@@ -1453,7 +1462,7 @@ msgstr "Brugerinfo:"
 
 #: ../modules/users/uinterface.c:381
 msgid "Shell:"
-msgstr ""
+msgstr "Skal:"
 
 #: ../modules/users/uinterface.c:400
 msgid "Home:"
@@ -1461,11 +1470,11 @@ msgstr "Hjem:"
 
 #: ../modules/users/uinterface.c:419
 msgid "Change"
-msgstr ""
+msgstr "Ændr"
 
 #: ../modules/users/uinterface.c:420
 msgid "Set"
-msgstr ""
+msgstr "Indstil"
 
 #: ../modules/users/uinterface.c:484
 msgid "Change Password"
@@ -1518,7 +1527,7 @@ msgstr "ingen"
 
 #: ../modules/keys/keyboard.c:77
 msgid "Foldable"
-msgstr ""
+msgstr "Ombøjelig"
 
 #: ../modules/keys/keyboard.c:78
 msgid "SnapNType"
@@ -1562,11 +1571,11 @@ msgstr "Pocketvik"
 
 #: ../modules/keys/keyboard.c:88
 msgid "Micro Foldaway"
-msgstr ""
+msgstr "Micro Foldaway"
 
 #: ../modules/keys/keyboard.c:89
 msgid "Micro Datapad"
-msgstr ""
+msgstr "Micro Datapad"
 
 #: ../modules/keys/keyboard.c:255
 msgid "External keyboard configuration."
@@ -1586,7 +1595,7 @@ msgstr "Eksternt tastaturtype"
 
 #: ../modules/keys/kbd.c:142
 msgid "Keyboard Geometry / Layout"
-msgstr ""
+msgstr "Tastaturgeometri / layout"
 
 #: ../modules/keys/kbd.c:182
 msgid "User defined"
@@ -1594,35 +1603,35 @@ msgstr "Bruger defineret"
 
 #: ../modules/keys/keyctl.c:195
 msgid "Button layout file is missing a global section."
-msgstr ""
+msgstr "Filen for knaplayout mangler et globalt afsnit."
 
 #: ../modules/keys/keyctl.c:411
 msgid "No button configuration available for this device."
-msgstr ""
+msgstr "Ingen knapkonfiguration tilgængelig for denne enhed."
 
 #: ../modules/keys/keyctl.c:583
 msgid "Critical: Can't open keylaunchrc for writing!"
-msgstr ""
+msgstr "Kritisk: Kan ikke åbne keylaunchrc!"
 
 #: ../modules/keys/keyctl.c:606
 msgid "Could not restart key handler!"
-msgstr ""
+msgstr "Kunne ikke genstarte nøglehåndtering!"
 
 #: ../modules/keys/keyctl.c:629
 msgid "The file you selected is not executable."
-msgstr ""
+msgstr "Den fil du valgte kan ikke eksekveres."
 
 #: ../modules/keys/keys.c:79
 msgid "Buttons"
-msgstr ""
+msgstr "Knapper"
 
 #: ../modules/keys/keys.c:83
 msgid "Virtual Keyb."
-msgstr ""
+msgstr "Virtuelt tastatur"
 
 #: ../modules/keys/keys.c:87
 msgid "External Keyb."
-msgstr ""
+msgstr "Eksternt tastatur"
 
 #: ../modules/screen/screen.c:73
 msgid "Portrait"
@@ -1650,27 +1659,27 @@ msgstr "Portræt (højre)"
 
 #: ../modules/screen/screen.c:84
 msgid "Inverted"
-msgstr ""
+msgstr "Omvendt"
 
 #: ../modules/screen/screen.c:111
 msgid "Light"
-msgstr ""
+msgstr "Lys"
 
 #: ../modules/screen/screen.c:117
 msgid "Brightness"
-msgstr ""
+msgstr "Lysfølsomhed"
 
 #: ../modules/screen/screen.c:129
 msgid "Display"
-msgstr ""
+msgstr "Display"
 
 #: ../modules/screen/screen.c:133
 msgid "Rotation"
-msgstr ""
+msgstr "Rotation"
 
 #: ../modules/screen/screen.c:153
 msgid "Touchscreen"
-msgstr ""
+msgstr "Trykskærm"
 
 #: ../modules/screen/screen.c:157
 msgid "Calibrate"
@@ -1678,7 +1687,7 @@ msgstr "Kalibrer"
 
 #: ../modules/screen/screen.c:159
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: ../modules/screen/screen.c:275 ../modules/sleep/scallbacks.c:39
 msgid "min"
@@ -1690,19 +1699,19 @@ msgstr "sek"
 
 #: ../modules/network.c:103
 msgid "Current Config"
-msgstr ""
+msgstr "Nuværende konfiguration"
 
 #: ../modules/network.c:252
 msgid "New Interface"
-msgstr ""
+msgstr "Ny grænseflade"
 
 #: ../modules/network.c:261
 msgid "This interface definition already exists!"
-msgstr ""
+msgstr "Denne grænsefladedefiniton eksisterer allerede!"
 
 #: ../modules/network.c:343
 msgid "Do you want to delete this interface?"
-msgstr ""
+msgstr "Ønsker du at slette denne grænseflade?"
 
 #: ../modules/network.c:592
 msgid "WiFi config"
@@ -1720,35 +1729,35 @@ msgstr "ESSID"
 
 #: ../modules/network.c:665
 msgid "Mode"
-msgstr ""
+msgstr "Tilstand"
 
 #: ../modules/network.c:675
 msgid "managed"
-msgstr ""
+msgstr "håndteret"
 
 #: ../modules/network.c:687
 msgid "ad-hoc"
-msgstr ""
+msgstr "ad-hoc"
 
 #: ../modules/network.c:704
 msgid "Channel"
-msgstr ""
+msgstr "Kanal"
 
 #: ../modules/network.c:725
 msgid "WEP"
-msgstr ""
+msgstr "WEP"
 
 #: ../modules/network.c:735
 msgid "off"
-msgstr ""
+msgstr "lukket"
 
 #: ../modules/network.c:747
 msgid "open"
-msgstr ""
+msgstr "åben"
 
 #: ../modules/network.c:759
 msgid "restricted"
-msgstr ""
+msgstr "begrænset"
 
 #: ../modules/network.c:775
 msgid "Key 1"
@@ -1769,7 +1778,7 @@ msgstr "Tast 4"
 #: ../modules/network.c:1015 ../modules/network.c:1142
 #: ../modules/network.c:1259
 msgid "Interface"
-msgstr ""
+msgstr "Grænseflade"
 
 #. page items
 #: ../modules/network.c:1065
@@ -1782,27 +1791,27 @@ msgstr "Indtast din ip-adresse her, for eksempel 192.168.1.2"
 
 #: ../modules/network.c:1068
 msgid "Netmask"
-msgstr ""
+msgstr "Netmaske"
 
 #: ../modules/network.c:1070
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
-msgstr ""
+msgstr "Indtast din netmaske her, for eksempel 255.255.255.0 i de fleste tilfælde"
 
 #: ../modules/network.c:1072
 msgid "Broadcast"
-msgstr ""
+msgstr "Rundsending"
 
 #: ../modules/network.c:1074
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
-msgstr ""
+msgstr "Indtast din rundsendingsadresse her, normalt den samme som din ip med 255 som sidste nummer."
 
 #: ../modules/network.c:1076
 msgid "Gateway"
-msgstr ""
+msgstr "Adgangspunkt"
 
 #: ../modules/network.c:1078
 msgid "Enter the IP Address of your default gateway here."
-msgstr ""
+msgstr "Indtast ip-adressen på dit normale adgangspunkt her."
 
 #: ../modules/network.c:1087 ../modules/network.c:1201
 msgid "WiFi device"
@@ -1828,7 +1837,7 @@ msgstr "Udbyder"
 
 #: ../modules/network.c:1311
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
-msgstr ""
+msgstr "Her skal du indtaste navnet på udbyderkonfigurationen til brug for denne grænseflade."
 
 #: ../modules/network.c:1334
 msgid "Global Settings"
@@ -1848,7 +1857,7 @@ msgstr "Ingen proxy for"
 
 #: ../modules/network.c:1384
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
-msgstr ""
+msgstr "Her bør du indtaste dit lokale domæne hvis du ikke ønsker at anvende en proxy."
 
 #: ../modules/network.c:1391
 msgid "DNS server"
@@ -1856,7 +1865,7 @@ msgstr "DNS-server"
 
 #: ../modules/network.c:1393
 msgid "Enter the IP of the DNS(name-) server to use here."
-msgstr ""
+msgstr "Indtast ip'en på DNS (navneserveren) her."
 
 #: ../modules/network.c:1421
 msgid "Enter the Hostname to use for this machine"
@@ -1867,38 +1876,41 @@ msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
 msgstr ""
+"Her kan du ændre standardkonfigurationstypen på din enhed.\n"
+"Brug »static« for manuelt grænsefladekonfiguration, »dhcp« for DHCP og »ppp« for at gøre enheden til en punkt-til-punkt-enhed."
 
 #: ../modules/network.c:1618
 msgid "Enable this option if your device is a WiFi device"
-msgstr ""
+msgstr "Slå denne indstilling til hvis enheden er en WiFi-enhed"
 
 #: ../modules/network.c:1620
 msgid "Click to set the wireless options for this device"
-msgstr ""
+msgstr "Klik for at indstille de trådlåse indstillinger for denne enhed"
 
 #: ../modules/network.c:1622
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
-msgstr ""
+msgstr "Indstil den tilstand dit WiFi-kort skal bruge. (håndteret eller ad-hoc)."
 
+# engelsk stavefejl enrcyption -> encryption
 #: ../modules/network.c:1625
 msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
-msgstr ""
+msgstr "Indstil krypteringstilstanden: Slukket for ingen WEP-kryptering, åben for åbent system og begrænset for kun begrænsede WEP-forbindelser."
 
 #: ../modules/network.c:1630
 msgid "Enter the essid of your WiFi network here."
-msgstr ""
+msgstr "Indtast essid'en på dit WiFi-netværk her."
 
 #: ../modules/network.c:1633
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
-msgstr ""
+msgstr "Indtast din WEP-nøgle her i iwconfig-format, for eksempel: »s:12345«"
 
 #: ../modules/network.c:1636
 msgid "Select the WEP key to use."
-msgstr ""
+msgstr "Vælg WEP-nøglen."
 
 #: ../modules/network.c:1639
 msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
-msgstr ""
+msgstr "Indtast kanalnummer eller frekvens hvis krævet. Hvis intet krav så lad feltet være tomt."
 
 #: ../modules/network.c:1655
 msgid "Remove current Interface"
@@ -1922,23 +1934,23 @@ msgstr "Kunne ikke læse netværkskonfiguration."
 
 #: ../modules/network.c:1701
 msgid "global"
-msgstr ""
+msgstr "global"
 
 #: ../modules/sleep/sinterface.c:64
 msgid "Auto sleep"
-msgstr ""
+msgstr "Automatisk dvale"
 
 #: ../modules/sleep/sinterface.c:74 ../modules/sleep/sinterface.c:105
 msgid "enabled"
-msgstr ""
+msgstr "slået til"
 
 #: ../modules/sleep/sinterface.c:92
 msgid "sleep timeout"
-msgstr ""
+msgstr "dvale tidsgrænse"
 
 #: ../modules/sleep/sinterface.c:95
 msgid "Auto dim"
-msgstr ""
+msgstr "Auto dim"
 
 #: ../modules/sleep/sinterface.c:122
 msgid "backlight dim timeout"
@@ -1950,7 +1962,7 @@ msgstr ""
 
 #: ../modules/sleep/sinterface.c:144
 msgid "Advanced Controls"
-msgstr ""
+msgstr "Avancerede kontroller"
 
 #: ../modules/sleep/sinterface.c:154
 msgid "CPU"
