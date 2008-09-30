@@ -89,6 +89,7 @@ struct _Starling {
   int playlist_changed_signal;
   GtkToggleButton *search_enabled;
   GtkWidget *search_entry;
+  GtkListStore *searches;
 
   GtkScrolledWindow *queue_view_window;
   GtkWidget *queue_view;
@@ -338,6 +339,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_PLAYLISTS_CONFIG "playlists-config"
 #define KEY_SEARCH_ENABLED "search-enabled"
 #define KEY_SEARCH_TEXT "search-text"
+#define KEY_SEARCHES "searches"
 #define KEY_CURRENT_PAGE "current-page"
 #define KEY_CURRENT_PLAYLIST "current-playlist"
 
@@ -481,6 +483,25 @@ deserialize (Starling *st)
     = g_key_file_get_string (keyfile, GROUP, KEY_SEARCH_TEXT, NULL);
   if (bh->search_enabled)
     search_text_gen (st, bh->search_terms);
+
+  /* Search history.  */
+  {
+    gtk_list_store_clear (st->searches);
+
+    gsize length = 0;
+    char **values = g_key_file_get_string_list (keyfile,
+						GROUP, KEY_SEARCHES,
+						&length, NULL);
+
+    int i;
+    for (i = 0; i < length; i ++)
+      {
+	printf ("%s\n", values[i]);
+	gtk_list_store_insert_with_values (st->searches, NULL, -1,
+					   0, values[i], -1);
+      }
+    g_strfreev (values);
+  }
 
   /* The play lists' config.  */
   {
@@ -636,6 +657,38 @@ serialize (Starling *st)
 			  gtk_toggle_button_get_active (st->search_enabled));
   g_key_file_set_string (keyfile, GROUP, KEY_SEARCH_TEXT,
 			 gtk_entry_get_text (GTK_ENTRY (st->search_entry)));
+
+  /* Search history.  */
+  struct obstack history;
+  obstack_init (&history);
+  bool have_one = false;
+  gboolean callback (GtkTreeModel *model, GtkTreePath *path,
+		     GtkTreeIter *iter, gpointer data)
+  {
+    char *val = NULL;
+    gtk_tree_model_get (model, iter, 0, &val, -1);
+    if (! val)
+      return TRUE;
+
+    if (have_one)
+      obstack_1grow (&history, ';');
+    have_one = true;
+
+    obstack_printf (&history, "%s", val);
+
+    printf ("Saving %s\n", val);
+
+    g_free (val);
+    return FALSE;
+  }
+  gtk_tree_model_foreach (GTK_TREE_MODEL (st->searches), callback, NULL);
+
+  obstack_1grow (&history, 0);
+  
+  g_key_file_set_string (keyfile, GROUP, KEY_SEARCHES,
+			 obstack_finish (&history));
+  obstack_free (&history, NULL);
+
 
   /* The current page.  */
   int page = gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook));
@@ -1176,11 +1229,46 @@ jump_to_current (Starling *st)
   gtk_notebook_set_current_page (GTK_NOTEBOOK (st->notebook), 0);
 }
 
-static int regen_source;
+static int search_text_save_source;
+
+static int
+search_text_save (Starling *st)
+{
+  search_text_save_source = 0;
+
+  const char *search = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+
+  gboolean found = FALSE;
+  gboolean callback (GtkTreeModel *model, GtkTreePath *path,
+		     GtkTreeIter *iter, gpointer data)
+  {
+    char *val = NULL;
+    gtk_tree_model_get (model, iter, 0, &val, -1);
+    if (val && strcasecmp (search, val) == 0)
+      /* Already in the history.  */
+      found = TRUE;
+    g_free (val);
+
+    return found;
+  }
+  gtk_tree_model_foreach (GTK_TREE_MODEL (st->searches), callback, NULL);
+
+  if (! found)
+    gtk_list_store_insert_with_values (st->searches, NULL, -1,
+				       0, search, -1);
+
+  return FALSE;
+}
 
 static void
 search_text_gen (Starling *st, const char *text)
 {
+  if (search_text_save_source)
+    {
+      g_source_remove (search_text_save_source);
+      search_text_save_source = 0;
+    }
+
   if (! text || ! *text)
     {
       play_list_constrain (st->library, NULL);
@@ -1193,8 +1281,15 @@ search_text_gen (Starling *st, const char *text)
     {
       play_list_constrain (st->library, result);
       g_free (result);
+
+      /* Save the search in the history in 60 seconds, if it hasn't
+	 changed.  */
+      search_text_save_source
+	= g_timeout_add (60 * 1000, (GSourceFunc) search_text_save, st);
     }
 }
+
+static int regen_source;
 
 static int
 search_text_regen (gpointer data)
@@ -1229,10 +1324,10 @@ search_text_changed (Starling *st)
   /* When the user changes the source text, we don't update
      immediately but try to group updates.  The assumption is that
      users will type a few characters.  Thus, we wait until there is
-     no activity for 100ms before triggering the update.  */
+     no activity for 200ms before triggering the update.  */
   if (regen_source)
     g_source_remove (regen_source);
-  regen_source = g_timeout_add (100, search_text_regen, st);
+  regen_source = g_timeout_add (200, search_text_regen, st);
 }
 
 static void
@@ -2333,7 +2428,15 @@ starling_run (void)
   g_signal_connect_swapped (G_OBJECT (st->search_enabled), "toggled",
 			    G_CALLBACK (search_text_changed), st);
   gtk_box_pack_start (hbox, GTK_WIDGET (st->search_enabled), FALSE, FALSE, 0);
+
+  st->searches = gtk_list_store_new (1, GTK_TYPE_STRING);
+
+  GtkEntryCompletion *completion = gtk_entry_completion_new ();
+  gtk_entry_completion_set_model (completion, GTK_TREE_MODEL (st->searches));
+  gtk_entry_completion_set_text_column (completion, 0);
+
   st->search_entry = gtk_entry_new ();
+  gtk_entry_set_completion (GTK_ENTRY (st->search_entry), completion);
   g_signal_connect_swapped (G_OBJECT (st->search_entry), "changed",
 			    G_CALLBACK (search_text_changed), st);
   gtk_box_pack_start (hbox, st->search_entry, TRUE, TRUE, 0);
@@ -2345,7 +2448,6 @@ starling_run (void)
   g_signal_connect_swapped (G_OBJECT (clear), "clicked",
 			    G_CALLBACK (search_text_clear), st);
   gtk_box_pack_start (hbox, clear, FALSE, FALSE, 0);
-
 
   st->library_view
     = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->library));

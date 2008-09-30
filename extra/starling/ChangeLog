@@ -1,5 +1,21 @@
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct _Starling): Add field searches.
+	(KEY_SEARCHES): Define.
+	(deserialize): Populate ST->SEARCHES based on the value of
+	KEY_SEARCHES.
+	(serialize): Save ST->SEARCHES to KEY_SEARCHES.
+	(search_text_save_source): New variable.
+	(search_text_save): New function.
+	(search_text_gen): If SEARCH_TEXT_SAVE_SOURCE is non-zero, remove
+	the variable.  If we create a non-empty constraint, set up a
+	callback in 60 seconds to add it to the history.
+	(starling_run): Initialize ST->SEARCHES.  Create an entry
+	completion.  Associate it with ST->SEARCHES.  Attach it to
+	ST->SEARCH_ENTRY.
+
+2008-09-30  Neal H. Walfield  <neal@gnu.org>
+
 	* src/search.y: New file.
 	* src/Makefile.am (starling_SOURCES): Add search.y.
 	(BUILT_SOURCES): Add search.h and search.c.
