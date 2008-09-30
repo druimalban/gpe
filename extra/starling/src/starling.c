@@ -1985,6 +1985,9 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 	    info.fields = MDB_SOURCE | MDB_TITLE;
 	    music_db_get_info (st->db, uid, &info);
 
+	    first_title = info.title;
+	    first_source = info.source;
+
 	    first = false;
 	  }
 

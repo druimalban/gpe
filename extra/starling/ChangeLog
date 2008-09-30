@@ -1,5 +1,10 @@
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (library_button_press_event): Correctly set
+	FIRST_TITLE and FIRST_SOURCE.
+
+2008-09-30  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct _Starling): Add fields rating and
 	rating_change_signal_id.
 	(set_title): Get the song's rating and set ST->RATING accordingly.
