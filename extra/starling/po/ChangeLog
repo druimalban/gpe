@@ -1,3 +1,7 @@
+2008-09-30  Neal H. Walfield  <neal@gnu.org>
+
+	* POTFILES.in: Add src/search.c.
+
 2008-09-27  Neal H. Walfield  <neal@gnu.org>
 
 	* POTFILES.in: Update list of files.

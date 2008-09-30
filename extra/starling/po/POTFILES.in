@@ -21,3 +21,4 @@ src/starling.c
 src/starling.h
 src/utils.c
 src/utils.h
+src/search.c
