@@ -1,5 +1,12 @@
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (queue_cb): Set ENTRY to activate the default
+	button on enter.
+
+	(starling_run): Replace the search entry with a combo box entry.
+
+2008-09-30  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct _Starling): Add field searches.
 	(KEY_SEARCHES): Define.
 	(deserialize): Populate ST->SEARCHES based on the value of

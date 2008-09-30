@@ -1749,6 +1749,7 @@ queue_cb (GtkWidget *widget, gpointer d)
 				       GTK_RESPONSE_OK);
 
       GtkWidget *entry = gtk_entry_new ();
+      gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
       gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox), entry);
       gtk_widget_show_all (dialog);
 
@@ -2431,15 +2432,18 @@ starling_run (void)
 
   st->searches = gtk_list_store_new (1, GTK_TYPE_STRING);
 
+  GtkWidget *search_entry_combo
+    = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (st->searches), 0);
+  gtk_box_pack_start (hbox, search_entry_combo, TRUE, TRUE, 0);
+
+  st->search_entry = gtk_bin_get_child (GTK_BIN (search_entry_combo));
+  g_signal_connect_swapped (G_OBJECT (st->search_entry),
+			    "changed",
+			    G_CALLBACK (search_text_changed), st);
   GtkEntryCompletion *completion = gtk_entry_completion_new ();
   gtk_entry_completion_set_model (completion, GTK_TREE_MODEL (st->searches));
   gtk_entry_completion_set_text_column (completion, 0);
-
-  st->search_entry = gtk_entry_new ();
   gtk_entry_set_completion (GTK_ENTRY (st->search_entry), completion);
-  g_signal_connect_swapped (G_OBJECT (st->search_entry), "changed",
-			    G_CALLBACK (search_text_changed), st);
-  gtk_box_pack_start (hbox, st->search_entry, TRUE, TRUE, 0);
 
   GtkWidget *clear = gtk_button_new ();
   gtk_button_set_image (GTK_BUTTON (clear),
