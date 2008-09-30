@@ -4,6 +4,7 @@ AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AC_PROG_INSTALL
 AC_PROG_CC
 AC_LANG(C)
+AC_PROG_YACC
 
 dnl i18n stuff
 ALL_LINGUAS=""

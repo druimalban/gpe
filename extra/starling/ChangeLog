@@ -1,5 +1,9 @@
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Add AC_PROG_YACC.
+
+2008-09-30  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (queue_cb): Set ENTRY to activate the default
 	button on enter.
 
