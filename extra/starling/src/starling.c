@@ -70,12 +70,16 @@ struct play_list_view_config
 
 struct _Starling {
   GtkWidget *window;
-  GtkWidget *title;
+
   GtkLabel *position;
   GtkLabel *duration;
   GtkWidget *playpause;
   GtkWidget *scale;
   int scale_sliding;
+
+  GtkWidget *title;
+  GtkComboBox *rating;
+  int rating_change_signal_id;
 
   GtkWidget *notebook;
   GtkWidget *library_tab;
@@ -131,7 +135,7 @@ static void
 set_title (Starling *st)
 {
   struct music_db_info info;
-  info.fields = MDB_SOURCE | MDB_ARTIST | MDB_TITLE;
+  info.fields = MDB_SOURCE | MDB_ARTIST | MDB_TITLE | MDB_RATING;
   music_db_get_info (st->db, st->loaded_song, &info);
 
   char *uri = info.source;
@@ -145,6 +149,10 @@ set_title (Starling *st)
     st->has_lyrics = TRUE;
     lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview));
   }
+
+  g_signal_handler_block (st->rating, st->rating_change_signal_id);
+  gtk_combo_box_set_active (st->rating, info.rating);
+  g_signal_handler_unblock (st->rating, st->rating_change_signal_id);
 
   if (! title)
     {
@@ -177,6 +185,7 @@ set_title (Starling *st)
 #else
   gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
 #endif /* IS_HILDON */
+
   g_free (title_bar);
   g_free (info.artist);
   g_free (info.title);
@@ -1177,7 +1186,6 @@ activated_cb (GtkTreeView *view, GtkTreePath *path,
   pos = gtk_tree_path_get_indices (path);
 
   int uid = play_list_index_to_uid (st->library, pos[0]);
-    return;
 
   starling_load (st, uid);
   starling_play (st);
@@ -1204,6 +1212,19 @@ playpause_cb (GtkWidget *w, Starling *st)
     player_unpause (st->player);
   else
     player_pause (st->player);
+}
+
+static void
+rate (Starling *st)
+{
+  if (! st->loaded_song)
+    return;
+
+  struct music_db_info info;
+  info.fields = MDB_RATING;
+  info.rating = gtk_combo_box_get_active (st->rating);
+
+  music_db_set_info (st->db, st->loaded_song, &info);
 }
 
 static void
@@ -2377,6 +2398,21 @@ starling_run (void)
   gtk_misc_set_alignment (GTK_MISC (st->title), 0, 0.5);
   gtk_label_set_ellipsize (GTK_LABEL (st->title), PANGO_ELLIPSIZE_END);
   gtk_box_pack_start (hbox, st->title, TRUE, TRUE, 0);
+
+  st->rating = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  gtk_combo_box_append_text (st->rating, "-");
+  gtk_combo_box_set_active (st->rating, 0);
+  int i;
+  for (i = 1; i <= 5; i ++)
+    {
+      char buffer[2];
+      sprintf (buffer, "%d", i);
+      gtk_combo_box_append_text (st->rating, buffer);
+    }
+  st->rating_change_signal_id
+    = g_signal_connect_swapped (G_OBJECT (st->rating), "changed",
+				G_CALLBACK (rate), st);
+  gtk_box_pack_start (hbox, GTK_WIDGET (st->rating), FALSE, FALSE, 0);
 
   /* Jump to the currently playing song.  */
   GtkWidget *jump_to = gtk_button_new ();

@@ -1,5 +1,17 @@
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct _Starling): Add fields rating and
+	rating_change_signal_id.
+	(set_title): Get the song's rating and set ST->RATING accordingly.
+	(rating): New function.
+	(starling_run): Create a combo box for the ratings.  Attach the
+	"changed" signal to rating.  Save the signal id in
+	ST->RATING_CHANGE_SIGNAL_ID.
+	* src/search.y (expand_term): Treat a word with the "rating:"
+	prefix as a request to search on the rating.
+
+2008-09-30  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h (enum mdb_fields): Add MDB_RATING.
 	(music_db_get_info): Add parameter info.  Remove parameters
 	source, artist, album, track, title, duration and genre.  Update
