@@ -32,6 +32,7 @@
 #include "playlist.h"
 #include "player.h"
 #include "search.h"
+#include "caption.h"
 
 #define obstack_chunk_alloc g_malloc
 #define obstack_chunk_free g_free
@@ -88,6 +89,7 @@ struct _Starling {
 
   GtkScrolledWindow *library_view_window;
   GtkWidget *library_view;
+  struct caption *caption;
   GtkComboBox *playlist;
   int playlist_count;
   int playlist_changed_signal;
@@ -1634,55 +1636,13 @@ title_data_func (GtkCellLayout *cell_layout,
 {
   Starling *st = data;
 
-  char *artist;
-  char *title;
-  char *buffer = NULL;
-  gtk_tree_model_get (model, iter, PL_COL_TITLE, &buffer,
-		      PL_COL_ARTIST, &artist, -1);
-  if (buffer)
-    title = buffer;
-  else
-    /* Try to show the last three path components as the directory
-       structure is often artist/album/file.  */
-    {
-      gtk_tree_model_get (model, iter, PL_COL_SOURCE, &buffer, -1);
-      if (buffer)
-	{
-	  char *slashes[3];
-	  int i = 0;
-	  char *t = strchr (buffer, '/');
-	  do
-	    {
-	      while (t[1] == '/')
-		t ++;
-	      slashes[(i ++) % 3] = t;
-	    }
-	  while ((t = strchr (t + 1, '/')));
-
-	  if (i >= 3)
-	    title = slashes[(i - 3) % 3] + 1;
-	  else if (i)
-	    title = slashes[0] + 1;
-	  else
-	    title = buffer;
-	}
-      else
-	title = "unknown";
-    }
-
-  if (artist)
-    {
-      char *t = g_strdup_printf ("%s - %s", artist, title);
-      g_free (buffer);
-      g_free (artist);
-      title = buffer = t;
-    }
-
-  g_object_set (cell_renderer, "text", title, NULL);
-  g_free (buffer);
-
   int uid;
   gtk_tree_model_get (model, iter, PL_COL_UID, &uid, -1);
+
+  char *text = caption_render (st->caption, st->db, uid);
+  g_object_set (cell_renderer, "text", text, NULL);
+  g_free (text);
+
   g_object_set (cell_renderer,
 		"cell-background-set",
 		uid == st->loaded_song,
@@ -2499,6 +2459,8 @@ starling_run (void)
   renderer = gtk_cell_renderer_text_new ();
   g_object_set (renderer, "cell-background", "gray", NULL);
   gtk_tree_view_column_pack_start (col, renderer, FALSE);
+
+  st->caption = caption_create ("%.50a - %.50t");
   gtk_cell_layout_set_cell_data_func (GTK_CELL_LAYOUT (col),
 				      renderer,
 				      title_data_func,

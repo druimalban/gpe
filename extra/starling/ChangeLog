@@ -1,5 +1,15 @@
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
+	* src/caption.c: New file.
+	* src/caption.c: Likewise.
+	* src/Makefile.am (starling_SOURCES): Add caption.h and caption.c.
+	* src/starling.c: Include "caption.h".
+	(struct _Starling): Add field caption.
+	(title_data_func): Use caption_render to generate the caption.
+	(starling_run): Create ST->CAPTION.
+
+2008-09-30  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (library_button_press_event): Correctly set
 	FIRST_TITLE and FIRST_SOURCE.
 

@@ -16,7 +16,8 @@ starling_SOURCES = main.c \
 		marshal.c marshal.h \
 		md5.h md5.c \
 		config.h \
-		search.y
+		search.y \
+		caption.h caption.c
 
 INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS)
 
