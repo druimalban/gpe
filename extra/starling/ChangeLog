@@ -1,5 +1,13 @@
 2008-10-01  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (deserialize): Extract searchs' time stamps.
+	(serialize): Save searchs' time stamps.
+	(search_text_save): Update the search's time stamp.
+	(starling_run): Add a column to ST->SEARCHES for a search's time
+	stamp.
+
+2008-10-01  Neal H. Walfield  <neal@gnu.org>
+
 	* src/lastfm.c: Don't include "md5.h".  Include "utils.h".
 	(lastfm_md5): Don't use md5_buffer.  Instead use
 	g_compute_checksum_for_data.

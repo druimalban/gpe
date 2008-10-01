@@ -501,10 +501,24 @@ deserialize (Starling *st)
 						GROUP, KEY_SEARCHES,
 						&length, NULL);
 
+    /* The format is: `search(time stamp)'.  */
     int i;
     for (i = 0; i < length; i ++)
-      gtk_list_store_insert_with_values (st->searches, NULL, -1,
-					 0, values[i], -1);
+      {
+	char *ts = NULL;
+	unsigned int ts_val = 0;
+	if (values[i][strlen (values[i]) - 1] == ')'
+	    && (ts = strrchr (values[i], '(')))
+	  {
+	    *ts = 0;
+	    ts ++;
+	    ts_val = (unsigned int) atoll (ts);
+	  }
+
+	gtk_list_store_insert_with_values (st->searches, NULL, -1,
+					   0, values[i],
+					   1, ts_val, -1);
+      }
     g_strfreev (values);
   }
 
@@ -680,7 +694,8 @@ serialize (Starling *st)
 		     GtkTreeIter *iter, gpointer data)
   {
     char *val = NULL;
-    gtk_tree_model_get (model, iter, 0, &val, -1);
+    int ts = 0;
+    gtk_tree_model_get (model, iter, 0, &val, 1, &ts, -1);
     if (! val)
       return TRUE;
 
@@ -688,7 +703,7 @@ serialize (Starling *st)
       obstack_1grow (&history, ';');
     have_one = true;
 
-    obstack_printf (&history, "%s", val);
+    obstack_printf (&history, "%s(%u)", val, ts);
 
     g_free (val);
     return FALSE;
@@ -1262,8 +1277,16 @@ search_text_save (Starling *st)
     char *val = NULL;
     gtk_tree_model_get (model, iter, 0, &val, -1);
     if (val && strcasecmp (search, val) == 0)
-      /* Already in the history.  */
-      found = TRUE;
+      /* Already in the history.  Update time stamp.  */
+      {
+	GValue ts;
+	g_value_init (&ts, G_TYPE_UINT);
+	g_value_set_uint (&ts, (unsigned int) time (NULL));
+
+	gtk_list_store_set_value (st->searches, iter, 1, &ts);
+
+	found = TRUE;
+      }
     g_free (val);
 
     return found;
@@ -1272,7 +1295,8 @@ search_text_save (Starling *st)
 
   if (! found)
     gtk_list_store_insert_with_values (st->searches, NULL, -1,
-				       0, search, -1);
+				       0, search,
+				       1, (unsigned int) time (NULL), -1);
 
   return FALSE;
 }
@@ -2436,7 +2460,7 @@ starling_run (void)
 			    G_CALLBACK (search_text_changed), st);
   gtk_box_pack_start (hbox, GTK_WIDGET (st->search_enabled), FALSE, FALSE, 0);
 
-  st->searches = gtk_list_store_new (1, GTK_TYPE_STRING);
+  st->searches = gtk_list_store_new (2, GTK_TYPE_STRING, GTK_TYPE_UINT);
 
   GtkWidget *search_entry_combo
     = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (st->searches), 0);
