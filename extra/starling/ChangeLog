@@ -1,5 +1,9 @@
 2008-10-01  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Bump version to 0.9.1.
+
+2008-10-01  Neal H. Walfield  <neal@gnu.org>
+
 	* HACKING: Move build instructions...
 	* README: ... to this new file.
 
