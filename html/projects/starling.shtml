@@ -13,7 +13,6 @@ is based on a flexible sound architecture which can be exteded by
 modules to support multiple file formats. It is able to manage
 multiple playlists as well as remote access to lyrics information.
 
-<img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot">
 <img src="../images/starling.png" border="0" alt="Foobar" align="right">
 
 <h2>Status</h2>
