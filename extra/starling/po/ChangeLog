@@ -1,3 +1,8 @@
+2008-10-01  Neal H. Walfield  <neal@gnu.org>
+
+	* POTFILES.in: Remove src/md5.h and md5.c.  Add src/caption.c and
+	src/caption.h.
+
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
 	* POTFILES.in: Add src/search.c.

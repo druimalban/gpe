@@ -9,8 +9,6 @@ src/lastfm.h
 src/lyrics.c
 src/lyrics.h
 src/main.c
-src/md5.c
-src/md5.h
 src/musicdb.c
 src/musicdb.h
 src/player.c
@@ -22,3 +20,5 @@ src/starling.h
 src/utils.c
 src/utils.h
 src/search.c
+src/caption.c
+src/caption.h
