@@ -6,102 +6,99 @@
 <!--#set var="authoremail" value="florian@linuxtogo.org"-->
 <!--#include virtual="/includes/head.php"-->
 
-<table cellpadding="12" cellspacing="12" border="12" width="100%" bgcolor="#EEEEEE">
-<tr>
-  <td colspan="3"><h2>Subprojects: <!--#echo var="appname"--></h2>
-  <i><!--#echo var="pagename"--></i></td>
-</tr>
-<tr>
-  <td><b>Function</b></td>
-  <td>
-    <i>Starling</i> is a simple and easy to use audio player for GPE.
-	It is based on a flexible sound architecture which can be exteded by modules
-	to support multiple file formats. It is able to manage multiple playlists 
-	as well as remote access to lyrics information.
-  </td>
-  <td rowspan="3"><img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot"></td>
-</tr>
-<tr>
-  <td><b>Searching</b></td>
-  <td>
-    <p><i>Starling</i> supports searching for songs based on keywords.
-    By default, keywords are looked for in a track's title, album,
-    artist, genre and source fields.  If a keyword is a substring of
-    any of those fields, the track is considered to match.  If
-    multiple keywords are given, then a track must match all keywords.
-    It is possible to search for a specific field by prefixing the
-    keyword with the field of interest followed by a colon.  For
-    instance, to find tracks by the BBC, one could
-    use <code>artist:bbc</code>.</p>
+<H1>Starling</H1>
 
-    <p>Keywords can be joined together using <i>or<i>.  For instance,
-    searching for <code>ambient or electronic</code> will find tracks
-    that have the string <i>ambient</i> or the
-    string <i>electronic</i> in their respective title, album, artist,
-    genre or source field.  Likewise, <i>and</i>, <i>not</i> and
-    parenthesis can be used.</p>
+<i>Starling</i> is a simple and easy to use audio player for GPE.  It
+is based on a flexible sound architecture which can be exteded by
+modules to support multiple file formats. It is able to manage
+multiple playlists as well as remote access to lyrics information.
 
-    <p>It is also possible to match against some properties of a
-    track.  Starling currently supports four properties:</p>
+<img src="../images/<!--#echo var="appname"-->.png" border="0" alt="Screenshot">
+<img src="../images/starling.png" border="0" alt="Foobar" align="right">
 
-      <ul>
-	<li><code>added</code> - the amount of time since the track was
-	added to the data base,
-	<li><code>played</code> - the amount of time since the track was
-	last played,
-	<li><code>play-count</code> - the number of times a song has
+<h2>Status</h2>
+
+<p><i>Starling</i> is still under development but expected to be
+stable and included in distributions soon.</p>
+
+<p>The source code can be found in <A href="../download.phtml">SVN</A>,
+module <b>extra/<!--#echo var="appname"--></b>.</p>
+
+<p>Distributions known to ship <i><!--#echo var="appname"--></i> include:
+
+<ul>
+  <li><a href="http://www.maemo.org/">Maemo</a>
+</ul>
+</p>
+<p>
+
+<h2>License</h2>
+
+<p><i>Starling</i> is distributed under the terms of
+the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL
+version 3</a>, or, at your option, any later version.</p>
+
+<h2>Functionality</h2>
+
+<h3>Searching</h3>
+
+<p><i>Starling</i> supports keyword based searching.  By default, the
+keywords are searched for (case insensitively) in a track's title,
+album, artist, genre and source fields.  If a keyword is a substring
+of any of those fields, the track is considered to match and is shown.
+It is possible to search for a specific field by prefixing the keyword
+with the field of interest followed by a colon.  For instance, to find
+tracks by the BBC, one could use <code>artist:bbc</code>.</p>
+
+<h4>Complex Queries</h4>
+
+<p>Multiple keywords may be given.  By default, only those tracks that
+match all keywords are shown.  (That is, the intersection is taken.)
+By separating keywords by <i>or</i>, it is possible change this
+behavior.  For instance, searching for <code>genre:ambient or
+genre:electronic</code> will find tracks that have the
+string <i>ambient</i> or the string <i>electronic</i> in their genre
+field.  Likewise, <i>not</i> and parenthesis can also be used.  For
+consistency, they keyword <i>and</i> is also recognized.</p>
+
+<h4>Properties</h4>
+
+<p><i>Starling</i> also supports matching against some properties of a
+track.  <i>Starling</i> currently supports four properties:</p>
+
+  <ul>
+	<li><code>added</code> - the amount of time in seconds since
+	the track was added to the data base,
+	<li><code>played</code> - the amount of time in seconds since
+	the track was last played,
+	<li><code>play-count</code> - the number of times a track has
 	been played, and,
-	<li><code>rating</code> - the songs rating.
-      </ul>
+	<li><code>rating</code> - a track's rating.
+  </ul>
 
-    <p>To search for a property, suffix the property with a colon,
-    followed by a comparison operator,
-    either <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
-    <code>&gt;=</code>, <code>=</code>, or <code>!=</code>.  Time is
-    measured in seconds, however, <code>m</code>, <code>h</code>,
-    <code>d</code>, <code>W</code>, <code>M</code>,
-    and <code>Y</code>, can be used to multiple by the number of
-    seconds in a minute, hour, day, week, month (30 days) or year,
-    respectively.</p>
+<p>To search for a property, suffix the property with a colon,
+followed by a comparison operator,
+either <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>,
+<code>&gt;=</code>, <code>=</code>, or <code>!=</code>, followed by a
+number.  <b>Note: spaces are not allowed.</b>  Time is measured in
+seconds, however, <code>m</code>, <code>h</code>,
+<code>d</code>, <code>W</code>, <code>M</code>,
+and <code>Y</code>, can be used to multiply by the number of
+seconds in a minute, hour, day, week, month (30 days) or year,
+respectively.</p>
 
-    <p>For instance, to search for songs added in the last week that
-    have not yet been played, one could use:</p>
+<p>To search for songs added in the last week that have not yet been
+played, one could use:</p>
 
-    <blockquote>
-      <code>added:<1W and play-count:=0</code>
-    </blockquote>
+<blockquote>
+  <code>added:<1W and play-count:=0</code>
+</blockquote>
 
-    <p>For 4 and 5 star songs that have not been played in the last 3
-    days:</p>
+<p>For 4 and 5 star songs that have not been played in the last 3
+days:</p>
 
-    <blockquote>
-      <code>rating:>4 and last-played:>3D</code>
-    </blockquote>
-  </td>
-</tr>
-<tr>
-  <td><b>Status</b></td>
-  <td>
-    <p><i>Starling</i> is still under development but expected to be 
-	stable and included in distributions soon.</p>
-    <p>
-      The source code can be found in <A href="../download.phtml">SVN</A>,
-      module <b>extra/<!--#echo var="appname"--></b>.  
-	</p>
-	<p>
-	  Distributions known to ship <i><!--#echo var="appname"--></i> are:
-	  <ul>
-	  	  <li><a href="http://www.maemo.org/">Maemo</a>
-	  </ul>
-	</p>
-	<p>
-	  <i><!--#echo var="appname"--></i> is distributed under the
-	  terms of
-	  the <a href="http://www.gnu.org/licenses/gpl.html#SEC1">GPL
-	  version 3</a>, or, at your option, any later version.
-	</p>
-  </td>
-</tr>
-</table>
+<blockquote>
+  <code>rating:>4 and last-played:>3D</code>
+</blockquote>
 
 <!--#include virtual="/includes/foot.shtml"-->
