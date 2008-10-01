@@ -1088,19 +1088,19 @@ music_db_get_info (MusicDB *db, int uid, struct music_db_info *info)
     }
 
   if ((info->fields & MDB_SOURCE))
-    info->source = e->source ? strdup (e->source) : NULL;
+    info->source = e->source ? g_strdup (e->source) : NULL;
   if ((info->fields & MDB_ARTIST))
-    info->artist = e->artist ? strdup (e->artist) : NULL;
+    info->artist = e->artist ? g_strdup (e->artist) : NULL;
   if ((info->fields & MDB_ALBUM))
-    info->album = e->album ? strdup (e->album) : NULL;
+    info->album = e->album ? g_strdup (e->album) : NULL;
   if ((info->fields & MDB_TRACK))
     info->track = e->track;
   if ((info->fields & MDB_TITLE))
-    info->title = e->title ? strdup (e->title) : NULL;
+    info->title = e->title ? g_strdup (e->title) : NULL;
   if ((info->fields & MDB_DURATION))
     info->duration = e->duration;
   if ((info->fields & MDB_GENRE))
-    info->genre = e->genre ? strdup (e->genre) : NULL;
+    info->genre = e->genre ? g_strdup (e->genre) : NULL;
   if ((info->fields & MDB_PLAY_COUNT))
     info->play_count = e->play_count;
   if ((info->fields & MDB_DATE_ADDED))
@@ -1408,6 +1408,7 @@ music_db_for_each (MusicDB *db, const char *list,
 	  else
 	    need_comma = true;
 
+	  int is_string = true;
 	  char *s;
 	  switch (*order)
 	    {
@@ -1422,12 +1423,14 @@ music_db_for_each (MusicDB *db, const char *list,
 	      break;
 	    case MDB_TRACK:
 	      s = "track";
+	      is_string = false;
 	      break;
 	    case MDB_TITLE:
 	      s = "title";
 	      break;
 	    case MDB_DURATION:
 	      s = "duration";
+	      is_string = false;
 	      break;
 
 	    default:
@@ -1437,9 +1440,14 @@ music_db_for_each (MusicDB *db, const char *list,
 
 	  /* We'd like to use %s collate nocase but that does seem to
 	     work, at least for sqlite 2...  */
-	  obstack_printf (&sql,
-			  "%s isnull, lower(%s)",
-			  s, s);
+	  if (is_string)
+	    obstack_printf (&sql,
+			    "%s isnull, lower(%s)",
+			    s, s);
+	  else
+	    obstack_printf (&sql,
+			    "%s isnull, %s",
+			    s, s);
 	}
     }
   else
