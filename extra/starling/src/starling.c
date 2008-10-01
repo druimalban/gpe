@@ -1279,12 +1279,9 @@ search_text_save (Starling *st)
     if (val && strcasecmp (search, val) == 0)
       /* Already in the history.  Update time stamp.  */
       {
-	GValue ts;
-	g_value_init (&ts, G_TYPE_UINT);
-	g_value_set_uint (&ts, (unsigned int) time (NULL));
-
-	gtk_list_store_set_value (st->searches, iter, 1, &ts);
-
+	gtk_list_store_set (st->searches, iter,
+			    1, (unsigned int) time (NULL),
+			    -1);
 	found = TRUE;
       }
     g_free (val);
