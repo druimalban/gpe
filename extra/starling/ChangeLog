@@ -1,5 +1,12 @@
 2008-10-01  Neal H. Walfield  <neal@gnu.org>
 
+	* src/utils.h (gtk_tree_view_get_position): Remove declaration.
+	(gtk_tree_model_get_iter_from_int): Likewise.
+	* src/utils.c (gtk_tree_view_get_position): Remove function.
+	(gtk_tree_model_get_iter_from_int): Likewise.
+
+2008-10-01  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (player_state_changed): Don't mark the track as
 	played here...
 	(position_update): ... do it here if at least 90% of the track has

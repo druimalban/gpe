@@ -21,39 +21,6 @@
 #define CHECK_TBL_STATEMENT "SELECT name FROM sqlite_master WHERE " \
                         " type='table' AND name=?;"
 
-gint
-gtk_tree_view_get_position (GtkTreeView *view)
-{
-    GtkTreePath *path = NULL;
-    gchar *pathstr;
-    gint pos;
-
-    gtk_tree_view_get_cursor (view, &path, NULL);
-
-    if (!path)
-        return -1;
-
-    pathstr = gtk_tree_path_to_string (path);         
-    pos = g_strtod (pathstr, NULL);
-    gtk_tree_path_free (path);
-    g_free (pathstr);
-    return pos;
-}
-
-gboolean
-gtk_tree_model_get_iter_from_int (GtkTreeModel *model,
-        GtkTreeIter *iter, gint pos)
-{
-    GtkTreePath *path;
-    gboolean ret;
-
-    path = gtk_tree_path_new_from_indices (pos, -1);
-    ret = gtk_tree_model_get_iter (model, iter, path);
-    
-    gtk_tree_path_free (path);
-    return ret;
-}
-
 gchar *
 escape_spaces (const gchar *orig, const gchar *replace)
 {

@@ -13,14 +13,7 @@
 
 #include <glib/gtypes.h>
 
-#include <gtk/gtktreeview.h>
-
 #include <sqlite.h>
-
-gint gtk_tree_view_get_position (GtkTreeView *view);
-
-gboolean gtk_tree_model_get_iter_from_int (GtkTreeModel *model,
-        GtkTreeIter *iter, gint pos);
 
 gchar *escape_spaces (const gchar *orig, const gchar *replace);
 
