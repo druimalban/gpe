@@ -97,7 +97,12 @@ played, one could use: \n\
 \n\
   For 4 and 5 star songs that have not been played in the last 3 days:\n\
 \n\
-      rating:>4 and played:>3D";
+      rating:>=4 and played:>3D\n\
+\n\
+To copy all songs with a rating greater than or equal to 4 to /mnt, \n\
+use:\n\
+\n\
+    starling-catalog -0 rating:>=4 | xargs --r -I FILE -0 cp FILE /mnt";
 
 static char args_doc[] = "[QUERY]";
 

@@ -1,5 +1,9 @@
 2008-10-01  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling-catalog.c: Improve documentation.
+
+2008-10-01  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac (DEP_MODULES): Break this into...
 	(BASE_MODULES): ... this ...
 	(GUI_MODULES): ... and this.  Update users.
