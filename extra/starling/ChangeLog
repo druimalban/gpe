@@ -1,3 +1,11 @@
+2008-10-01  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c (player_state_changed): Don't mark the track as
+	played here...
+	(position_update): ... do it here if at least 90% of the track has
+	been reached.  Submit to lastfm if this holds and the track is at
+	least 30 seconds long.
+
 2008-09-30  Neal H. Walfield  <neal@gnu.org>
 
 	* src/musicdb.c (meta_data_reader): Break out of the loop if the

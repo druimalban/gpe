@@ -1451,18 +1451,32 @@ position_update (Starling *st)
       gtk_range_set_value (GTK_RANGE (st->scale), percent);
     }
 
-  if (G_UNLIKELY (!st->enqueued && total_seconds > 30 && 
-		  (position_seconds > 240 || position_seconds * 2 >= total_seconds)))
+  if (G_UNLIKELY (!st->enqueued
+		  && (position_seconds > (9 * total_seconds) / 100)))
+    /* 90% of the track has been played.  */
     {
+      if (total_seconds > 30)
+	/* And the track is at least 30 seconds long.  Submit it to
+	   lastfm.  */
+	{
+	  struct music_db_info info;
+	  info.fields = MDB_ARTIST | MDB_TITLE;
+	  music_db_get_info (st->db, st->loaded_song, &info);
+
+	  lastfm_enqueue (info.artist, info.title, total_seconds, st);
+
+	  g_free (info.artist);
+	  g_free (info.title);
+	}
+
+      /* Note that it has been played.  */
       struct music_db_info info;
-      info.fields = MDB_ARTIST | MDB_TITLE;
-      music_db_get_info (st->db, st->loaded_song, &info);
+      memset (&info, 0, sizeof (info));
+      info.fields = MDB_UPDATE_DATE_LAST_PLAYED | MDB_INC_PLAY_COUNT;
+
+      music_db_set_info (st->db, st->loaded_song, &info);
 
       st->enqueued = TRUE;
-      lastfm_enqueue (info.artist, info.title, total_seconds, st);
-
-      g_free (info.artist);
-      g_free (info.title);
     }
 
   return TRUE;
@@ -1548,12 +1562,6 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
       if (! st->position_update)
 	st->position_update
 	  = g_timeout_add (1000, (GSourceFunc) position_update, st);
-
-      struct music_db_info info;
-      memset (&info, 0, sizeof (info));
-      info.fields = MDB_UPDATE_DATE_LAST_PLAYED | MDB_INC_PLAY_COUNT;
-
-      music_db_set_info (st->db, st->loaded_song, &info);
     }
   else if (state == GST_STATE_PAUSED || state == GST_STATE_NULL)
     {
