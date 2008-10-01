@@ -19,9 +19,9 @@
 #include <libsoup/soup.h>
 
 #include "config.h"
-#include "md5.h"
 #include "errorbox.h"
 #include "starling.h"
+#include "utils.h"
 #include <time.h>
 
 #define TABLE_NAME "lastfm"
@@ -334,16 +334,9 @@ static gchar * lastfm_md5(const gchar *string)
      The md5() function takes a string and returns the 32-byte ASCII hexadecimal 
      representation of the MD5 hash, using lower case characters for the hex values.
   */
-    guchar md5[16];
-    gchar md5str[33];
-    int i;
- 
-    md5_buffer (string, strlen(string), md5);
-    for (i = 0; i < sizeof(md5); i++)
-        sprintf(md5str + 2 * i, "%02x", md5[i]);
-    md5str[33] = '\0';
-    
-    return g_strdup(md5str);
+
+  return g_compute_checksum_for_data (G_CHECKSUM_MD5,
+				      (guint8 *) string, strlen (string));
 }
 
 void
