@@ -13,7 +13,8 @@ is based on a flexible sound architecture which can be exteded by
 modules to support multiple file formats. It is able to manage
 multiple playlists as well as remote access to lyrics information.
 
-<img src="../images/starling.png" border="0" alt="Foobar" align="right">
+<img src="../images/starling.png" border="2" alt="Screenshot"
+     align="right" hspace="15" vspace="15">
 
 <h2>Status</h2>
 
@@ -97,7 +98,7 @@ played, one could use:</p>
 days:</p>
 
 <blockquote>
-  <code>rating:>4 and last-played:>3D</code>
+  <code>rating:>4 and played:>3D</code>
 </blockquote>
 
 <!--#include virtual="/includes/foot.shtml"-->
