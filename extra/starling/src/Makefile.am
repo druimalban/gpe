@@ -1,8 +1,9 @@
-bin_PROGRAMS = starling
+bin_PROGRAMS = starling starling-catalog
 
 AM_CFLAGS = -Wall -O0
 
-starling_LDADD = $(DEPS_LIBS) $(HILDON_LIBS) 
+starling_CFLAGS = $(GUI_CFLAGS)
+starling_LDADD = $(GUI_LIBS)
 starling_SOURCES = main.c \
 		starling.h starling.c \
 		musicdb.h musicdb.c \
@@ -18,7 +19,15 @@ starling_SOURCES = main.c \
 		search.y \
 		caption.h caption.c
 
-INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS)
+starling_catalog_CFLAGS = $(BASE_CFLAGS)
+starling_catalog_LDADD = $(BASE_LIBS)
+starling_catalog_SOURCES = starling-catalog.c \
+		marshal.h marshal.c \
+		cache.h cache.c \
+		musicdb.h musicdb.c \
+		config.h \
+		search.y \
+		caption.h caption.c
 
 BUILT_SOURCES = marshal.h marshal.c search.h search.c
 AM_YFLAGS = -d

@@ -14,14 +14,16 @@ AC_SUBST(starling_localedir)
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL([0.23])
 
-DEP_MODULES="gtk+-2.0 gstreamer-0.10 gstreamer-plugins-base-0.10 \
- sqlite >= 2.8 libsoup-2.2"
+BASE_MODULES="glib-2.0 sqlite >= 2.8 \
+	gstreamer-0.10 gstreamer-plugins-base-0.10"
+
+GUI_MODULES="${BASE_MODULES} gtk+-2.0 libsoup-2.2"
 
 dnl Optional stuff
 AC_ARG_ENABLE(gpe, [ --enable-gpe   Enable GPE support], [gpe=$enableval], [gpe=no])
 dnl Check for GPE
 if test "x"$gpe = "xyes"; then
-  DEP_MODULES="$DEP_MODULES libgpewidget >= 0.102"
+  GUI_MODULES="$GUI_MODULES libgpewidget >= 0.102"
   AC_DEFINE([ENABLE_GPE], [1], [Define to 1 to enable GPE widgets])
 fi
 
@@ -33,21 +35,25 @@ AC_CHECK_LIB([osso], [osso_initialize],
 	 PKG_CHECK_MODULES(HILDON, hildon-1,
 		[
                 AC_DEFINE(HILDON_VER, 2, [Version of hildon libraries])
-		DEP_MODULES="$DEP_MODULES hildon-fm-2"
+		GUI_MODULES="$GUI_MODULES hildon-fm-2"
 		],
                 [
                         AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
                         PKG_CHECK_MODULES(HILDON, hildon-lgpl hildon-libs)
-			DEP_MODULES="$DEP_MODULES hildon-fm"
+			GUI_MODULES="$GUI_MODULES hildon-fm"
                 ])
-	 DEP_MODULES="$DEP_MODULES libosso"],
+	 GUI_MODULES="$GUI_MODULES libosso"],
 	[ENABLE_HILDON=false])
 AC_SUBST(ENABLE_HILDON)
 AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
 
-PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
-AC_SUBST(DEPS_CFLAGS)
-AC_SUBST(DEPS_LIBS)
+PKG_CHECK_MODULES(BASE, $BASE_MODULES)
+AC_SUBST(BASE_CFLAGS)
+AC_SUBST(BASE_LIBS)
+
+PKG_CHECK_MODULES(GUI, $GUI_MODULES)
+AC_SUBST(GUI_CFLAGS)
+AC_SUBST(GUI_LIBS)
 
 dnl glib-genmarshal
 GLIB_GENMARSHAL=`$PKG_CONFIG --variable=glib_genmarshal glib-2.0`

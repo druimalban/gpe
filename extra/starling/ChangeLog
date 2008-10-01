@@ -1,5 +1,16 @@
 2008-10-01  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac (DEP_MODULES): Break this into...
+	(BASE_MODULES): ... this ...
+	(GUI_MODULES): ... and this.  Update users.
+	* src/Makefile.am (bin_PROGRAMS): Add starling-catalog.
+	(starling_catalog_CFLAGS): New variable.
+	(starling_catalog_LDADD): Likewise.
+	(starling_catalog_SOURCES): Likewise.
+	* src/starling-catalog.c: New file.
+
+2008-10-01  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_for_each): If the field is not a string,
 	don't lower-case the value.
 	
