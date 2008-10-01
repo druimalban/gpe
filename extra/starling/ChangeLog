@@ -1,5 +1,10 @@
 2008-10-01  Neal H. Walfield  <neal@gnu.org>
 
+	* HACKING: Move build instructions...
+	* README: ... to this new file.
+
+2008-10-01  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (search_text_save): Use gtk_list_store_set to
 	update the time stamp.
 	
