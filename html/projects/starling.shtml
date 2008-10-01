@@ -40,6 +40,12 @@ version 3</a>, or, at your option, any later version.</p>
 
 <h2>Functionality</h2>
 
+<h3>Controls</h3>
+
+On the Nokia 770, N800 and N810, the full screen button functions as a
+play/pause button, and the rocker (zoom in/zoom out) provides previous
+and next functionality.
+
 <h3>Searching</h3>
 
 <p><i>Starling</i> supports keyword based searching.  By default, the
