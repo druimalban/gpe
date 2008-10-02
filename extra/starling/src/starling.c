@@ -113,6 +113,7 @@ struct _Starling {
 #ifdef IS_HILDON
   GtkCheckMenuItem *fullscreen;
 #endif
+  GtkCheckMenuItem *download_lyrics;
 
   Player *player;
   MusicDB *db;
@@ -146,11 +147,12 @@ set_title (Starling *st)
   char *artist = info.artist;
   char *title = info.title;
 
-  //if (st->last_state != GST_STATE_PAUSED) {
-  if (!st->has_lyrics && artist && title) {
-    st->has_lyrics = TRUE;
-    lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview));
-  }
+  if (!st->has_lyrics && artist && title)
+    {
+      st->has_lyrics = TRUE;
+      lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview),
+		      gtk_check_menu_item_get_active (st->download_lyrics));
+    }
 
   g_signal_handler_block (st->rating, st->rating_change_signal_id);
   gtk_combo_box_set_active (st->rating, info.rating);
@@ -353,6 +355,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_CURRENT_PAGE "current-page"
 #define KEY_CURRENT_PLAYLIST "current-playlist"
 #define KEY_TRACK_CAPTION "track-caption"
+#define KEY_LYRICS_DOWNLOAD "lyrics-download"
 
 #define GROUP "main"
 
@@ -576,6 +579,12 @@ deserialize (Starling *st)
       g_free (value);
     }
 
+  /* Lyrics download.  */
+  gtk_check_menu_item_set_active
+    (st->download_lyrics,
+     g_key_file_get_boolean (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, NULL));
+
+
   g_key_file_free (keyfile);
 
   gtk_idle_add (deserialize_bottom_half, bh);  
@@ -723,6 +732,11 @@ serialize (Starling *st)
   /* The current page.  */
   int page = gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook));
   g_key_file_set_integer (keyfile, GROUP, KEY_CURRENT_PAGE, page);
+
+  /* Lyrics download.  */
+  g_key_file_set_boolean (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, 
+			  gtk_check_menu_item_get_active
+			  (st->download_lyrics));
 
 
   /* Save the key file to disk.  */
@@ -2295,11 +2309,11 @@ starling_run (void)
   gtk_widget_show (mitem);
   gtk_menu_shell_append (menu, mitem);
 
-#ifdef IS_HILDON
   mitem = gtk_separator_menu_item_new ();
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 
+#ifdef IS_HILDON
   /* Options -> Full Screen.  */
   mitem = gtk_check_menu_item_new_with_mnemonic (_("_Full Screen"));
   st->fullscreen = GTK_CHECK_MENU_ITEM(mitem);
@@ -2313,6 +2327,12 @@ starling_run (void)
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 #endif
+
+  /* Options -> Download Lyrics.  */
+  mitem = gtk_check_menu_item_new_with_mnemonic (_("Download _Lyrics"));
+  st->download_lyrics = GTK_CHECK_MENU_ITEM(mitem);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
 
 #ifdef IS_HILDON
   /* Finally attach close item. */

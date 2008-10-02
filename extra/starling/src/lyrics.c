@@ -281,7 +281,8 @@ lyrics_write_textview (GtkTextView *view, const gchar *content)
 }
 
 void
-lyrics_display (const gchar *artist, const gchar *title, GtkTextView *view)
+lyrics_display (const gchar *artist, const gchar *title, GtkTextView *view,
+		bool try_to_download)
 {
     gchar *uri;
 
@@ -289,7 +290,7 @@ lyrics_display (const gchar *artist, const gchar *title, GtkTextView *view)
 
     g_return_if_fail (uri != NULL);
 
-    lyrics_display_with_uri (uri, view);
+    lyrics_display_with_uri (uri, view, try_to_download);
 
     g_free (uri);
 }
@@ -314,7 +315,8 @@ got_lyrics (SoupMessage *msg, gpointer view)
 }
 
 void
-lyrics_display_with_uri (const gchar *uri, GtkTextView *view)
+lyrics_display_with_uri (const gchar *uri, GtkTextView *view,
+			 bool try_to_download)
 {
     gchar *content;
     SoupSession *session;
@@ -326,6 +328,12 @@ lyrics_display_with_uri (const gchar *uri, GtkTextView *view)
         
         g_free (content);
         return;
+      }
+
+    if (! try_to_download)
+      {
+        lyrics_write_textview (view, NULL);
+	return;
       }
 
     session = soup_session_async_new ();

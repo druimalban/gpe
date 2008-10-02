@@ -1,5 +1,27 @@
 2008-10-02  Neal H. Walfield  <neal@gnu.org>
 
+	* src/lyrics.h: Include <stdbool.h>.
+	(lyrics_display): Take additional parameter try_to_download.
+	Update users.
+	(lyrics_display_with_uri): Likewise.
+	* src/lyrics.c (lyrics_display): Take additional parameter
+	try_to_download.  Pass it to lyrics_display_with_uri.
+	(lyrics_display_with_uri): Take additional parameter
+	try_to_download.  If the lyrics are not in the database, only try
+	to download them if TRY_TO_DOWNLOAD is true.
+	* src/starling.c (struct _Starling): Add field download_lyrics.
+	(set_title): Pass the active state of ST->DOWNLOAD_LYRICS to
+	lyrics_display.
+	(KEY_LYRICS_DOWNLOAD): Define.
+	(deserialize): Set ST->DOWNLOAD_LYRICS's active state according to
+	KEY_LYRICS_DOWNLOAD.
+	(serialize): Save ST->DOWNLOAD_LYRICS's active state according to
+	KEY_LYRICS_DOWNLOAD.
+	(starling_run): Create ST->DOWNLOAD_LYRICS and add it to the
+	option menu.
+
+2008-10-02  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_set_info_from_tags): If a duration tag
 	is present, add it.
 	* src/search.y (expand_term): Support searching on the duration.
