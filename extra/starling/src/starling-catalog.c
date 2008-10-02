@@ -48,6 +48,8 @@ FORMAT\n\
      %g - genre\n\
      %r - rating\n\
      %d - duration\n\
+     %s - duration mod 60\n\
+     %m - duration div 60\n\
      %c - play count\n\
 \n\
   The following format options are support:\n\
@@ -74,14 +76,15 @@ parenthesis can also be used. For consistency, they keyword and is \
 also recognized.\n\
 \n\
 Starling also supports matching against some properties of a \
-track.  Starling currently supports four properties: \n\
+track.  Starling currently supports five properties: \n\
 \n\
     added - the amount of time in seconds since the track was added to \
       the data base, \n\
     played - the amount of time in seconds since the track was last \
       played, \n\
     play-count - the number of times a track has been played, and, \n\
-    rating - a track's rating. \n\
+    rating - a track's rating.\n\
+    duration - a track's duration (in seconds)\n\
 \n\
 To search for a property, suffix the property with a colon, followed \
 by a comparison operator, either <, >, <=, >=, =, or !=, followed by \
@@ -102,7 +105,7 @@ played, one could use: \n\
 To copy all songs with a rating greater than or equal to 4 to /mnt, \n\
 use:\n\
 \n\
-    starling-catalog -0 rating:>=4 | xargs --r -I FILE -0 cp FILE /mnt";
+    starling-catalog -0 'rating:>=4' | sed 's#^file://##' | xargs --r -I FILE -0 cp FILE /mnt";
 
 static char args_doc[] = "[QUERY]";
 

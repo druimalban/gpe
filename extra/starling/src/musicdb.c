@@ -1342,6 +1342,7 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
     {
       gchar **s = NULL;
       int *i = NULL;
+      int factor = 1;
 
       if (strcmp (tag, "artist") == 0)
 	{
@@ -1368,6 +1369,12 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
 	  info.fields |= MDB_TRACK;
 	  i = &info.track;
 	}
+      else if (strcmp (tag, "duration") == 0)
+	{
+	  info.fields |= MDB_DURATION;
+	  i = &info.duration;
+	  factor = 1e9;
+	}
 
       if (! s && ! i)
 	return;
@@ -1383,7 +1390,7 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
 	*s = str;
       else
 	{
-	  *i = atoi (str);
+	  *i = atoll (str) / factor;
 	  g_free (str);
 	}
     }

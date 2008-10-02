@@ -19,6 +19,9 @@
 
 #define _GNU_SOURCE
 
+#define obstack_chunk_alloc g_malloc
+#define obstack_chunk_free g_free
+
 #include <obstack.h>
 #include <string.h>
 #include <stdlib.h>
@@ -50,8 +53,12 @@ struct caption
   struct chunk *chunks;
 };
 
-#define obstack_chunk_alloc g_malloc
-#define obstack_chunk_free g_free
+struct my_info
+{
+  struct music_db_info db;
+  int seconds;
+  int minutes;
+};
 
 struct caption *
 caption_create (const char *fmt)
@@ -148,6 +155,18 @@ caption_create (const char *fmt)
 	      f->offset = offsetof (struct music_db_info, duration);
 	      fmt_char = 'd';
 	      break;
+	    case 's':
+	      /* Duration % 60.  */
+	      caption->fields |= MDB_DURATION;
+	      f->offset = offsetof (struct my_info, seconds);
+	      fmt_char = 'd';
+	      break;
+	    case 'm':
+	      /* Minutes.  */
+	      caption->fields |= MDB_DURATION;
+	      f->offset = offsetof (struct my_info, minutes);
+	      fmt_char = 'd';
+	      break;
 	    case 'c':
 	      /* Play count.  */
 	      caption->fields |= MDB_PLAY_COUNT;
@@ -168,22 +187,19 @@ caption_create (const char *fmt)
 	      c = end;
 	      continue;
 	    }
-	  /* The +1 will be added by the for loop.  */
-	  c = end;
 
 	  obstack_1grow (&caption->pool, '%');
-	  if (w)
-	    obstack_printf (&caption->pool, "%d", w);
-	  if (p)
+	  obstack_grow (&caption->pool, c, end - c);
+
+	  if (p && fmt_char == 's')
 	    {
-	      if (fmt_char == 's')
-		{
-		  f = obstack_base (&caption->pool);
-		  f->width = p;
-		}
-	      obstack_printf (&caption->pool, ".%d", p);
+	      f = obstack_base (&caption->pool);
+	      f->width = p;
 	    }
 	  obstack_1grow (&caption->pool, fmt_char);
+
+	  /* The +1 will be added by the for loop.  */
+	  c = end;
 	}
       else
 	obstack_1grow (&caption->pool, *c);
@@ -206,43 +222,49 @@ caption_free (struct caption *caption)
 char *
 caption_render (struct caption *caption, MusicDB *db, int uid)
 {
-  struct music_db_info info;
+  struct my_info info;
   memset (&info, 0, sizeof (info));
-  info.fields = caption->fields;
-  music_db_get_info (db, uid, &info);
+  info.db.fields = caption->fields;
+  music_db_get_info (db, uid, &info.db);
 
   char *unknown = "unknown";
-  if ((info.fields & MDB_ARTIST) && ! info.artist)
-    info.artist = unknown;
-  if ((info.fields & MDB_ALBUM) && ! info.album)
-    info.album = unknown;
-  if ((info.fields & MDB_GENRE) && ! info.genre)
-    info.genre = unknown;
+  if ((info.db.fields & MDB_ARTIST) && ! info.db.artist)
+    info.db.artist = unknown;
+  if ((info.db.fields & MDB_ALBUM) && ! info.db.album)
+    info.db.album = unknown;
+  if ((info.db.fields & MDB_GENRE) && ! info.db.genre)
+    info.db.genre = unknown;
 
   /* Treat title specially.  If it is NULL, then use the source.  */
   int free_title = true;
-  if ((info.fields & MDB_TITLE) && ! info.title)
+  if ((info.db.fields & MDB_TITLE) && ! info.db.title)
     {
-      if (info.source)
+      if (info.db.source)
 	{
 	  int i;
-	  int len = strlen (info.source);
+	  int len = strlen (info.db.source);
 	  int slashes = 0;
 	  for (i = len - 1; i >= 0; i --)
-	    if (info.source[i] == '/')
+	    if (info.db.source[i] == '/')
 	      {
 		slashes ++;
 		if (slashes == 3)
 		  break;
 	      }
 
-	  if (info.source[i] == '/')
+	  if (info.db.source[i] == '/')
 	    i ++;
-	  info.title = &info.source[i];
+	  info.db.title = &info.db.source[i];
 	}
       else
-	info.title = unknown;
+	info.db.title = unknown;
       free_title = false;
+    }
+
+  if ((info.db.fields & MDB_DURATION))
+    {
+      info.seconds = info.db.duration % 60;
+      info.minutes = info.db.duration / 60;
     }
 
   struct chunk *c;
@@ -267,16 +289,16 @@ caption_render (struct caption *caption, MusicDB *db, int uid)
 	obstack_printf (&caption->pool, "%s", c->fmt);
     }
 
-  g_free (info.source);
-  if (info.artist != unknown)
-    g_free (info.artist);
-  if (info.album != unknown)
-    g_free (info.album);
-  if (info.genre != unknown)
-    g_free (info.genre);
+  g_free (info.db.source);
+  if (info.db.artist != unknown)
+    g_free (info.db.artist);
+  if (info.db.album != unknown)
+    g_free (info.db.album);
+  if (info.db.genre != unknown)
+    g_free (info.db.genre);
 
   if (free_title)
-    g_free (info.title);
+    g_free (info.db.title);
 
   obstack_1grow (&caption->pool, 0);
   char *result = obstack_finish (&caption->pool);

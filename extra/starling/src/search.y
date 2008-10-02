@@ -137,6 +137,15 @@ expand_term (const char *tok)
       return g_strdup_printf  ("coalesce (rating, 0) %s %d",
 			       comparison, atoi (spec));
     }
+  else if (strncasecmp ("duration:", tok, strlen ("duration:")) == 0)
+    {
+      const char *spec = tok + strlen ("duration:");
+      const char *comparison = parse_comparison (spec, ">");
+      spec += strlen (comparison);
+
+      return g_strdup_printf  ("coalesce (duration, 0) %s %d",
+			       comparison, atoi (spec));
+    }
   else if (strncasecmp ("artist:", tok, strlen ("artist:")) == 0
 	   || strncasecmp ("album:", tok, strlen ("album:")) == 0
 	   || strncasecmp ("title:", tok, strlen ("title:")) == 0
