@@ -32,6 +32,12 @@ typedef struct _Starling Starling;
   Create a new starling.  */
 extern Starling *starling_run (void);
 
+/* Deiconify and come to the front.  */
+extern void starling_come_to_front (Starling *st);
+
+/* Quit.  */
+extern void starling_quit (Starling *st);
+
 /* Return whether random mode is enabled.  */
 extern bool starling_random (Starling *st);
 

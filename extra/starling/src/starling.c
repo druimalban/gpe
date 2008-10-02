@@ -1039,25 +1039,20 @@ add_directory_cb (GtkWidget *w, Starling *st)
   add_cb (w, st, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 }
 
-static void
-do_quit (Starling *st)
+
+void
+starling_come_to_front (Starling *st)
+{
+  gtk_window_present (GTK_WINDOW (st->window));
+}
+
+void
+starling_quit (Starling *st)
 {
   serialize (st);
   gtk_main_quit();
 }
-
-static void
-x_quit (GtkWidget *w, GdkEvent *e, Starling *st)
-{
-  do_quit (st);
-}
-
-static void
-menu_quit (GtkWidget *w, Starling *st)
-{
-  do_quit (st);
-}
-
+
 static void
 set_random_cb (GtkWidget *w, Starling *st)
 {
@@ -2187,8 +2182,8 @@ starling_run (void)
   st->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (st->window), "Starling");
 #endif /* IS_HILDON */
-  g_signal_connect (G_OBJECT (st->window), "delete-event", 
-		    G_CALLBACK (x_quit), st);
+  g_signal_connect_swapped (G_OBJECT (st->window), "delete-event", 
+			    G_CALLBACK (starling_quit), st);
 
   GtkBox *main_box = GTK_BOX (gtk_vbox_new (FALSE, 5));
 #ifdef IS_HILDON
@@ -2260,8 +2255,8 @@ starling_run (void)
 #else
   mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
 #endif
-  g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (menu_quit), st);
+  g_signal_connect_swapped (G_OBJECT (mitem), "activate",
+			    G_CALLBACK (starling_quit), st);
   gtk_widget_show (mitem);
 #ifndef IS_HILDON
   /* Don't append this to the file menu in hildon but the main menu

@@ -1,5 +1,22 @@
 2008-10-02  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.h (starling_come_to_front): New declaration.
+	(starling_quit): Likewise.
+	* src/starling.c (starling_come_to_front): New function.
+	(starling_quit): Likewise.
+	(do_quit): Remove function, replace uses with starling_quit.
+	(x_quit): Likewise.
+	(menu_quit): Likewise.
+	* configure.ac (GUI_MODULES): Add libhandoff.
+	* src/main.c: Include "config.h", <handoff.h> and <string.h>.
+	(handoff_callback): New function.
+	(handoff_serialize): Likewise.
+	(osso_top_callback) [IS_HILDON]: Likewise.
+	(main): Create a handoff instance.
+	[IS_HILDON]: Register a top callback.
+
+2008-10-02  Neal H. Walfield  <neal@gnu.org>
+
 	* src/lyrics.h: Include <stdbool.h>.
 	(lyrics_display): Take additional parameter try_to_download.
 	Update users.

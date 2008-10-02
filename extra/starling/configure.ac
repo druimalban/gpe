@@ -17,7 +17,7 @@ AC_PROG_INTLTOOL([0.23])
 BASE_MODULES="glib-2.0 sqlite >= 2.8 \
 	gstreamer-0.10 gstreamer-plugins-base-0.10"
 
-GUI_MODULES="${BASE_MODULES} gtk+-2.0 libsoup-2.2"
+GUI_MODULES="${BASE_MODULES} gtk+-2.0 libsoup-2.2 libhandoff"
 
 dnl Optional stuff
 AC_ARG_ENABLE(gpe, [ --enable-gpe   Enable GPE support], [gpe=$enableval], [gpe=no])
