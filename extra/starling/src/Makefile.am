@@ -17,7 +17,8 @@ starling_SOURCES = main.c \
 		marshal.c marshal.h \
 		config.h \
 		search.y \
-		caption.h caption.c
+		caption.h caption.c \
+		md5.h md5.c
 
 starling_catalog_CFLAGS = $(BASE_CFLAGS)
 starling_catalog_LDADD = $(BASE_LIBS)

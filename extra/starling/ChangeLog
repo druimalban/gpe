@@ -1,5 +1,13 @@
 2008-10-02  Neal H. Walfield  <neal@gnu.org>
 
+	* src/md5.h: Restore file and update copy from glibc.
+	* src/md5.c: Likewise.
+	* src/Makefile.am: Add md5.h and md5.c.
+	* src/lastfm.c (lastfm_md5): Don't use
+	g_compute_chechsum_for_data.  Restore previous version.
+
+2008-10-02  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (set_title): If ST->LOADED_SONG is not valid, set
 	the title bar to "Starling".
 	(play_list_combo_refresh): Don't call play_list_combo_changed
