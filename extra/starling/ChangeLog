@@ -1,3 +1,8 @@
+2008-10-02  Graham Cobb  <g+770@cobb.uk.net>
+
+	* src/Makefile.am (starling_CFLAGS): re-instate HILDON_CFLAGS and HILDON_LIBS
+	* configure.ac: export HILDON_CFLAGS and HILDON_LIBS
+
 2008-10-02  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.h (starling_come_to_front): New declaration.
