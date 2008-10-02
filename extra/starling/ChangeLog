@@ -1,5 +1,9 @@
 2008-10-02  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (music_db_add): Don't scan recovered files.
+
+2008-10-02  Neal H. Walfield  <neal@gnu.org>
+
 	* src/md5.h: Restore file and update copy from glibc.
 	* src/md5.c: Likewise.
 	* src/Makefile.am: Add md5.h and md5.c.

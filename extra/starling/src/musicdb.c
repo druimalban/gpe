@@ -483,7 +483,6 @@ fs_scanner_thread (gpointer data)
       int ret = g_stat (track->filename, &st);
       if (ret < 0 || ! S_ISREG (st.st_mode))
 	{
-	  printf ("Marking %s as removed\n", track->filename);
 	  sqlite_exec_printf (sqliteh,
 			      "update files"
 			      " set removed = strftime('%%s', 'now')"
@@ -708,6 +707,7 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
   /* Ignore any entries that do already exist in the DB.  */
   char *s[count];
   int uids[count];
+  bool crawl[count];
   int total = 0;
 
 
@@ -805,6 +805,7 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 	{
 	  uids[total] = uid;
 	  s[total] = sources[i];
+	  crawl[total] = status == noentry;
 
 	  total ++;
 	}
@@ -836,7 +837,8 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 		     uids[i]);
 
       /* Queue the file in the meta-data crawler (if appropriate).  */
-      if (strncmp (FILE_PREFIX, s[i], sizeof (FILE_PREFIX) - 1) == 0)
+      if (crawl[i]
+	  && strncmp (FILE_PREFIX, s[i], sizeof (FILE_PREFIX) - 1) == 0)
 	{
 	  g_static_mutex_lock (&db->meta_data_reader_mutex);
 
