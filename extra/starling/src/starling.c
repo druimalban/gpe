@@ -1498,7 +1498,7 @@ position_update (Starling *st)
     }
 
   if (G_UNLIKELY (!st->enqueued
-		  && (position_seconds > (9 * total_seconds) / 100)))
+		  && (position_seconds > (9 * total_seconds) / 10)))
     /* 90% of the track has been played.  */
     {
       if (total_seconds > 30)
@@ -1518,7 +1518,11 @@ position_update (Starling *st)
       /* Note that it has been played.  */
       struct music_db_info info;
       memset (&info, 0, sizeof (info));
-      info.fields = MDB_UPDATE_DATE_LAST_PLAYED | MDB_INC_PLAY_COUNT;
+      info.fields = MDB_UPDATE_DATE_LAST_PLAYED | MDB_INC_PLAY_COUNT
+	| MDB_DURATION;
+      /* Also set the duration now, it doesn't cost anything and many
+	 track lack it.  */
+      info.duration = total_seconds;
 
       music_db_set_info (st->db, st->loaded_song, &info);
 

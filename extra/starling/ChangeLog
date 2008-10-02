@@ -1,5 +1,10 @@
 2008-10-02  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (position_update): Remove extra 0.
+	Update the track's duration.
+
+2008-10-02  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_add): Don't scan recovered files.
 
 2008-10-02  Neal H. Walfield  <neal@gnu.org>
