@@ -1,3 +1,28 @@
+2008-10-02  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.h (enum mdb_fields): Add MDB_PRESENT.
+	(struct music_db_info): Add field present.
+	* src/musicdb.c (struct info_cache_entry): Add field present.
+	(music_db_create_table): Add column removed to table FILES.
+	(music_db_count): When counting the number of the tracks in the
+	library, exclude tracks that are not present.
+	(fs_scanner_thread): If a file is not found, don't remove it,
+	instead, change its removed field to the current time.
+	(music_db_add): If the track is just marked as removed, restore
+	it.
+	(music_db_get_info): Return whether the file is present.
+	(music_db_for_each): When iterating over the main library, add the
+	constraint that the track be present.
+	* src/starling.c (starling_load): Check if the track is present.
+	If not, return FALSE.
+	(title_data_func): If the track is not present, render it in a
+	lighter font.
+
+	* src/musicdb.c (music_db_remove): Also remove reference to the
+	track from other play lists.
+
+	* src/starling.c (queue_cb): Only free S if NEED_FREE is true.
+
 2008-10-01  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling-catalog.c: Improve documentation.

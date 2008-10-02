@@ -219,12 +219,15 @@ starling_load (Starling *st, int uid)
   st->loaded_song = uid;
 
   struct music_db_info info;
-  info.fields = MDB_SOURCE;
+  info.fields = MDB_SOURCE | MDB_PRESENT;
   if (! music_db_get_info (st->db, uid, &info))
     {
       g_warning ("%s: No entry found for %d!", __FUNCTION__, uid);
       return FALSE;
     }
+
+  if (! info.present)
+    return FALSE;
 
   player_set_source (st->player, info.source, (gpointer) uid);
 
@@ -1681,14 +1684,20 @@ title_data_func (GtkCellLayout *cell_layout,
   int uid;
   gtk_tree_model_get (model, iter, PL_COL_UID, &uid, -1);
 
+  struct music_db_info info;
+  info.fields = MDB_PRESENT;
+  music_db_get_info (st->db, uid, &info);
+
   char *text = caption_render (st->caption, st->db, uid);
-  g_object_set (cell_renderer, "text", text, NULL);
-  g_free (text);
 
   g_object_set (cell_renderer,
-		"cell-background-set",
-		uid == st->loaded_song,
+		"text", text,
+		"weight",
+		info.present ? PANGO_WEIGHT_NORMAL : PANGO_WEIGHT_NORMAL / 4,
+		"cell-background-set", uid == st->loaded_song,
 		NULL);
+
+  g_free (text);
 }
 
 
@@ -1828,7 +1837,8 @@ queue_cb (GtkWidget *widget, gpointer d)
 	= { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
       music_db_for_each (st->db, play_list_get (st->library),
 			 callback, sort_order, s);
-      sqlite_freemem (s);
+      if (need_free)
+	sqlite_freemem (s);
     }
 
   if (new_list)

@@ -137,6 +137,7 @@ enum mdb_fields
     MDB_DATE_LAST_PLAYED = 1 << 9,
     MDB_DATE_TAGS_UPDATED = 1 << 10,
     MDB_RATING = 1 << 11,
+    MDB_PRESENT = 1 << 12,
 
     /* These take precedent of the simple set variants.  */
     MDB_INC_PLAY_COUNT = 1 << 29,
@@ -162,14 +163,15 @@ struct music_db_info
   int date_tags_updated;
 
   int rating;
+
+  bool present;
 };
 
 /** music_db_get_info:
 
   Returns the information regarding the entry with uid UID in the
-  music db DB.  Any of SOURCE, UID, ARIST, TITLE, ALBUM, DURATION may
-  be NULL to indicate don't cares.  The caller must free the returned
-  strings.  */
+  music db DB.  INFO->FIELDS indicates the interested fields.  The
+  caller must free any returned strings.  */
 extern bool music_db_get_info (MusicDB *db, int uid,
 			       struct music_db_info *info);
 

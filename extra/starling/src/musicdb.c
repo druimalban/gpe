@@ -41,6 +41,8 @@
 
 struct info_cache_entry
 {
+  bool present;
+
   char *source;
   char *artist;
   char *album;
@@ -252,6 +254,10 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 	       "  date_last_played INTEGER,"
 	       "  date_tags_updated INTEGER,"
 
+	       /* The date the file was found to no longer be
+		  present.  */
+	       "  removed INTEGER,"
+
 	       /* To determine if the information is up to date.  */
 	       "  mtime INTEGER);"
 
@@ -410,10 +416,12 @@ music_db_count (MusicDB *db, const char *list, const char *constraint)
 			constraint ? ")" : "");
   else
     sqlite_exec_printf (db->sqliteh,
-			"select count (*) from files %s%s",
+			"select count (*) from files"
+			" where removed isnull %s%s%s",
 			callback, NULL, &err,
-			constraint ? "where " : "",
-			constraint ? constraint : "");
+			constraint ? "and (" : "",
+			constraint ? constraint : "",
+			constraint ? ")" : "");
   if (err)
     {
       g_critical ("%s", err);
@@ -438,16 +446,27 @@ fs_scanner_thread (gpointer data)
 
   GQueue *q = g_queue_new ();
 
+  struct track
+  {
+    char *filename;
+    int uid;
+  };
+
   int check_dead_cb (void *arg, int argc, char **argv, char **names)
   {
-    g_queue_push_tail (q, g_strdup (argv[0] + strlen ("file://")));
+    struct track *track = g_malloc (sizeof (struct track));
+    track->uid = atoi (argv[0]);
+    track->filename = g_strdup (argv[1] + strlen ("file://"));
+
+    g_queue_push_tail (q, track);
+
     return 0;
   }
 
   char *err = NULL;
   sqlite_exec_printf (sqliteh,
-		      "select (source) from files"
-		      " where source like 'file:///%';",
+		      "select ROWID, source from files"
+		      " where removed isnull and source like 'file:///%';",
 		      check_dead_cb, NULL, &err);
   if (err)
     {
@@ -458,24 +477,35 @@ fs_scanner_thread (gpointer data)
 
   while (! g_queue_is_empty (q))
     {
-      char *filename = g_queue_pop_head (q);
+      struct track *track = g_queue_pop_head (q);
       
       struct stat st;
-      int ret = g_stat (filename, &st);
+      int ret = g_stat (track->filename, &st);
       if (ret < 0 || ! S_ISREG (st.st_mode))
 	{
+	  printf ("Marking %s as removed\n", track->filename);
 	  sqlite_exec_printf (sqliteh,
-			      "delete from files"
-			      " where source = 'file://%q';",
-			      NULL, NULL, &err, filename);
+			      "update files"
+			      " set removed = strftime('%%s', 'now')"
+			      " where ROWID = %d;",
+			      NULL, NULL, &err, track->uid);
 	  if (err)
 	    {
 	      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
 	      sqlite_freemem (err);
 	    }
+	  else
+	    {
+	      simple_cache_shootdown (&info_cache, track->uid);
+	      g_signal_emit (db,
+			     MUSIC_DB_GET_CLASS (db)->deleted_entry_signal_id,
+			     0, track->uid);
+	    }
+
 	}
 
-      g_free (filename);
+      g_free (track->filename);
+      g_free (track);
     }
 
 
@@ -677,37 +707,8 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 {
   /* Ignore any entries that do already exist in the DB.  */
   char *s[count];
+  int uids[count];
   int total = 0;
-
-  int i;
-  for (i = 0; i < count; i ++)
-    {
-      int source_exists (void *arg, int argc, char **argv, char **names)
-      {
-	return 1;
-      }
-
-      char *err = NULL;
-      int ret = sqlite_exec_printf (sqliteh,
-				    "select * from files"
-				    "  where source = '%q';",
-				    source_exists, NULL, &err,
-				    sources[i]);
-      if (ret == 0)
-	/* Entry does not exist.  */
-	s[total ++] = sources[i];
-
-      if (ret != SQLITE_ABORT && err)
-	g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-
-      if (err)
-	sqlite_freemem (err);
-    }
-
-  if (total == 0)
-    /* Nothing to do.  */
-    return;
-
 
 
   char *err = NULL;
@@ -720,19 +721,119 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
       return;
     }
 
-  for (i = 0; i < total; i ++)
+  int i;
+  for (i = 0; i < count; i ++)
     {
+      /* First, get the status of the entry.  */
+      enum { present, removed, noentry };
+      int status = noentry;
+      int uid = 0;
+
+      int source_status (void *arg, int argc, char **argv, char **names)
+      {
+	if (argv[0])
+	  status = removed;
+	else
+	  status = present;
+
+	if (argv[1])
+	  uid = atoi (argv[1]);
+
+	return 0;
+      }
+
+      char *err = NULL;
       sqlite_exec_printf (sqliteh,
-			  "insert into files (source, date_added) "
-			  "  values ('%q', strftime('%%s', 'now'));",
-			  NULL, NULL, &err, s[i]);
+			  "select removed, ROWID from files"
+			  "  where source = '%q';",
+			  source_status, NULL, &err,
+			  sources[i]);
+      if (err)
+	{
+	  g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+	  sqlite_freemem (err);
+	  break;
+	}
+
+      switch (status)
+	{
+	case present:
+	  /* It's already there.  Nothing to do.  */
+	  g_assert (uid);
+	  break;
+
+	case removed:
+	  /* It's there, we just need to restore it.  */
+	  g_assert (uid);
+
+	  sqlite_exec_printf (sqliteh,
+			      "update files set removed = null"
+			      "  where ROWID = %d",
+			      NULL, NULL, &err, uid);
+	  if (err)
+	    {
+	      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+	      sqlite_freemem (err);
+	    }
+
+	  break;
+
+	case noentry:
+	  g_assert (! uid);
+
+	  sqlite_exec_printf (sqliteh,
+			      "insert into files (source, date_added) "
+			      "  values ('%q', strftime('%%s', 'now'));",
+			      NULL, NULL, &err, sources[i]);
+	  if (err)
+	    {
+	      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+	      sqlite_freemem (err);
+	    }
+	  else
+	    uid = sqlite_last_insert_rowid (sqliteh);
+	  break;
+
+	default:
+	  g_assert (! "Invalid status value!");
+	}
+
       if (err)
 	break;
 
-      int uid = sqlite_last_insert_rowid (sqliteh);
+      if (status == removed || status == noentry)
+	{
+	  uids[total] = uid;
+	  s[total] = sources[i];
 
+	  total ++;
+	}
+    }
+
+  if (err)
+    {
+      sqlite_exec (sqliteh,
+		   "rollback transaction;", NULL, NULL, NULL);
+      return;
+    }
+
+  sqlite_exec (sqliteh,
+	       "commit transaction;", NULL, NULL, &err);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+      return;
+    }
+
+  if (total == 0)
+    /* Nothing to do.  */
+    return;
+
+  for (i = 0; i < total; i ++)
+    {
       g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->new_entry_signal_id, 0,
-		     uid);
+		     uids[i]);
 
       /* Queue the file in the meta-data crawler (if appropriate).  */
       if (strncmp (FILE_PREFIX, s[i], sizeof (FILE_PREFIX) - 1) == 0)
@@ -743,7 +844,7 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 	    db->meta_data_reader_pending = g_queue_new ();
 
 	  int *uidp = g_malloc (sizeof (int));
-	  *uidp = uid;
+	  *uidp = uids[i];
 	  g_queue_push_tail (db->meta_data_reader_pending, uidp);
 
 	  if (! db->meta_data_reader)
@@ -753,23 +854,6 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 	}
     }
 
-  if (! err)
-    sqlite_exec (sqliteh,
-		 "commit transaction;", NULL, NULL, &err);
-
-  if (err)
-    {
-      g_set_error (error, ERROR_DOMAIN (), 0, "%s", err);
-      sqlite_freemem (err);
-
-      sqlite_exec (sqliteh,
-		   "rollback transaction;", NULL, NULL, NULL);
-
-      return;
-    }
-
-  if (total == 0)
-    return;
 }
 
 int
@@ -982,8 +1066,9 @@ music_db_remove (MusicDB *db, gint uid)
 {
   char *err = NULL;
   sqlite_exec_printf (db->sqliteh,
-		      "delete from files where ROWID = %d;",
-		      NULL, NULL, &err, (int) uid);
+		      "delete from files where ROWID = %d;"
+		      "delete from playlists where uid = %d;",
+		      NULL, NULL, &err, uid, uid);
   if (err)
     {
       g_warning ("%s: %s", __func__, err);
@@ -1060,6 +1145,10 @@ music_db_get_info (MusicDB *db, int uid, struct music_db_info *info)
 	i ++;
 	e->rating = argv[i] ? atoi (argv[i]) : 0;
 
+	/* NULL => present, not-NULL => date of removal.  */
+	i ++;
+	e->present = argv[i] ? false : true;
+
 	return 1;
       }
 
@@ -1069,7 +1158,7 @@ music_db_get_info (MusicDB *db, int uid, struct music_db_info *info)
 			  "  track, title, duration, genre, "
 			  "  play_count, date_added, "
 			  "  date_last_played, date_tags_updated, "
-			  "  rating"
+			  "  rating, removed"
 			  " from files where ROWID = %d;",
 			  callback, NULL, &err, (int) uid);
       if (err)
@@ -1111,6 +1200,8 @@ music_db_get_info (MusicDB *db, int uid, struct music_db_info *info)
     info->date_tags_updated = e->date_tags_updated;
   if ((info->fields & MDB_RATING))
     info->rating = e->rating;
+  if ((info->fields & MDB_PRESENT))
+    info->present = e->present;
 
   return true;
 }
@@ -1391,10 +1482,10 @@ music_db_for_each (MusicDB *db, const char *list,
   else
     obstack_printf (&sql,
 		    "select ROWID, source, artist, album, track,"
-		    " title, duration from files ");
+		    " title, duration from files where removed isnull ");
 
   if (constraint && *constraint)
-    obstack_printf (&sql, "%s(%s) ", list ? "and " : "where", constraint);
+    obstack_printf (&sql, "and (%s) ", constraint);
 
   if (order)
     {
