@@ -1,3 +1,12 @@
+2008-10-02  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c (set_title): If ST->LOADED_SONG is not valid, set
+	the title bar to "Starling".
+	(play_list_combo_refresh): Don't call play_list_combo_changed
+	explicitly.  Instead call gtk_combo_box_set_active after we
+	unblock the changed signal.
+	(clear_cb): If clearing the library, call player_pause.
+
 2008-10-02  Graham Cobb  <g+770@cobb.uk.net>
 
 	* src/Makefile.am (starling_CFLAGS): re-instate HILDON_CFLAGS and HILDON_LIBS

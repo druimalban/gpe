@@ -137,9 +137,17 @@ struct _Starling {
 static void
 set_title (Starling *st)
 {
+  char *title_bar;
+  bool free_title_bar = true;
+
   struct music_db_info info;
   info.fields = MDB_SOURCE | MDB_ARTIST | MDB_TITLE | MDB_RATING;
-  music_db_get_info (st->db, st->loaded_song, &info);
+  if (! music_db_get_info (st->db, st->loaded_song, &info))
+    {
+      title_bar = "Starling";
+      free_title_bar = false;
+      goto do_set;
+    }
 
   char *uri = info.source;
   if (! uri)
@@ -168,7 +176,6 @@ set_title (Starling *st)
     }
 
 #define PREFIX "Starling: "
-  char *title_bar;
   if (artist)
     title_bar = g_strdup_printf (_("%s %s - %s"),
 				 _(PREFIX),
@@ -180,6 +187,11 @@ set_title (Starling *st)
 		      title_bar
 		      + sizeof (PREFIX) - 1 /* NULL */ + 1 /* ' ' */);
 
+  g_free (info.artist);
+  g_free (info.title);
+  g_free (info.source);
+
+ do_set:
 #ifdef IS_HILDON
 #if HILDON_VER > 0
   gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
@@ -190,10 +202,8 @@ set_title (Starling *st)
   gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
 #endif /* IS_HILDON */
 
-  g_free (title_bar);
-  g_free (info.artist);
-  g_free (info.title);
-  g_free (info.source);
+  if (free_title_bar)
+    g_free (title_bar);
 }
 
 bool
@@ -934,6 +944,8 @@ play_list_combo_refresh (Starling *st, char *active, bool save_old_config)
 {
   g_signal_handler_block (st->playlist, st->playlist_changed_signal);
 
+  printf ("%s\n", __FUNCTION__);
+
   bool free_active = false;
   if (! active)
     {
@@ -965,11 +977,9 @@ play_list_combo_refresh (Starling *st, char *active, bool save_old_config)
   if (free_active)
     g_free (active);
 
-  gtk_combo_box_set_active (st->playlist, active_i);
-
-  play_list_combo_changed (st, (gpointer) save_old_config);
-
   g_signal_handler_unblock (st->playlist, st->playlist_changed_signal);
+
+  gtk_combo_box_set_active (st->playlist, active_i);
 }
 
 static void
@@ -1114,7 +1124,10 @@ clear_cb (GtkWidget *w, Starling *st)
   char *text = gtk_combo_box_get_active_text (st->playlist);
 
   if (strcmp (text, "Library") == 0)
-    music_db_clear (st->db);
+    {
+      player_pause (st->player);
+      music_db_clear (st->db);
+    }
   else
     music_db_play_list_clear (st->db, text);
 
