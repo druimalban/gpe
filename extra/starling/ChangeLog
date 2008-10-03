@@ -1,5 +1,10 @@
 2008-10-03  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (change_caption_format): Only add the defaults
+	that are not in the history.
+
+2008-10-03  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (CAPTION_FMT_DEFAULT): Define.
 	(KEY_TRACK_CAPTION): Rename from this...
 	(KEY_CAPTION_FORMAT): ... to this.  Update users.

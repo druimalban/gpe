@@ -1244,8 +1244,18 @@ change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
   int i;
   for (i = 0; history && history[i]; i ++)
     gtk_combo_box_append_text (GTK_COMBO_BOX (combo), history[i]); 
-  for (i = 0; i< sizeof (defaults) / sizeof (defaults[0]); i ++)
-    gtk_combo_box_append_text (GTK_COMBO_BOX (combo), defaults[i]); 
+  /* Add the defaults, but only those that are not already in the
+     history.  */
+  for (i = 0; i < sizeof (defaults) / sizeof (defaults[0]); i ++)
+    {
+      int j;
+      for (j = 0; history && history[j]; j ++)
+	if (strcmp (history[j], defaults[i]) == 0)
+	  break;
+
+      if (! history || ! history[j])
+	gtk_combo_box_append_text (GTK_COMBO_BOX (combo), defaults[i]); 
+    }
 
   gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
 
