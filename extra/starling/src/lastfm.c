@@ -22,7 +22,7 @@
 #include "md5.h"
 #include "errorbox.h"
 #include "starling.h"
-#include "util.h"
+#include "utils.h"
 #include <time.h>
 
 #define TABLE_NAME "lastfm"

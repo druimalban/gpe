@@ -1,3 +1,7 @@
+2008-10-03  Neal H. Walfield  <neal@gnu.org>
+
+	* src/lastfm.c: Fix spelling, it's utils.h, not util.h.
+
 2008-10-02  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (position_update): Remove extra 0.
