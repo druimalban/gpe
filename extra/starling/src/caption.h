@@ -21,7 +21,8 @@
 
 struct caption;
 
-/* %a - artist
+/* %u - URI
+   %a - artist
    %A - album
    %t - title
    %T - track
@@ -29,7 +30,8 @@ struct caption;
    %r - rating
    %d - duration
    %c - play count
-   %[width][.][precision]c - width and precision.
+   %[width][.][precision]c - width and precision, negative right aligns
+   %X?(true clause)(fault clase) - conditional
 
   Must be freed with caption_free.  */
 struct caption *caption_create (const char *fmt);

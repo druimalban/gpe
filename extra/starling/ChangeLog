@@ -1,5 +1,20 @@
 2008-10-03  Neal H. Walfield  <neal@gnu.org>
 
+	* src/caption.c (struct chunk): Add fields cond_true, cond_false
+	and bytes.
+	(caption_create): Break the VM construction out of this function...
+	(build): ... and put it in this new function.  Add support for
+	conditionals, URL and left ellipsizing.
+	(caption_render): Break the rendering out of this function...
+	(render): ... and put it in this new function.  Add support for
+	conditionals, URL and left ellipsizing.
+	* src/caption.h (caption_create): Update documentation.
+	* src/starling-catalog.c: Update documentation.
+	* src/starling.c (change_caption_format): Update the default
+	captions.  Update the documentation.
+
+2008-10-03  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (change_caption_format): Only add the defaults
 	that are not in the history.
 

@@ -41,6 +41,7 @@ FORMAT\n\
 \n\
   The support format characters are:\n\
 \n\
+     %u - URI\n\
      %a - artist\n\
      %A - album\n\
      %t - title or, if NULL, source\n\
@@ -54,7 +55,8 @@ FORMAT\n\
 \n\
   The following format options are support:\n\
 \n\
-    %[width][.][precision]c - width and precision.\n\
+   %[width][.][precision]c - width and precision, negative right aligns\n\
+   %X?(true clause)(fault clase) - conditional\n\
 \n\
 QUERY\n\
 \n\

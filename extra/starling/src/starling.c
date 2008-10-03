@@ -47,8 +47,6 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
-#define CAPTION_FMT_DEFAULT "%.50a - %.50t"
-
 #ifdef IS_HILDON
 /* Hildon includes */
 # if HILDON_VER > 0
@@ -1186,13 +1184,12 @@ change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
 {
   Starling *st = user_data;
 
+#define CAPTION_FMT_DEFAULT "%u?!(artist - title (album track #) m:ss)%a?(%.50a - )%t?(%.50t)(%.-90u)%A?( (%A%T?( %T)))(%T?( %T))%d?( %m:%02s)"
+
   const char *defaults[] = {
     CAPTION_FMT_DEFAULT,
-    "%a - %t",
-    "%.40a - %.40t - %.40A",
-    "%a - %t - (%A %T)",
-    "%a - %t - (%A %T) %m:%02s",
-    "%a - %t (%c plays)" };
+    "%u?!(artist - title or source)%a?(%.50a%t?( - )(%u?( - )))%t?(%.50t)(%.-90u)",
+  };
 
   GKeyFile *keyfile = config_file_load ();
   char *caption = NULL;
@@ -1218,6 +1215,7 @@ change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
 				   GTK_RESPONSE_OK);
   GtkWidget *label = gtk_label_new
     ("New caption format:\n"
+     " %u - URI\n"
      " %a - artist\n"
      " %A - album\n"
      " %t - title\n"
@@ -1228,7 +1226,8 @@ change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
      " %s - seconds\n"
      " %m - minutes\n"
      " %c - play count\n"
-     " %[width][.][precision]c - width and precision.");
+     " %[width][.][precision]c - width and precision, negative right aligns\n"
+     " %X?(true clause)(fault clase) - conditional");
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), label);
 
   GtkWidget *combo = gtk_combo_box_entry_new_text ();
