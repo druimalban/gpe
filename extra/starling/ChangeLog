@@ -1,5 +1,20 @@
 2008-10-03  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (CAPTION_FMT_DEFAULT): Define.
+	(KEY_TRACK_CAPTION): Rename from this...
+	(KEY_CAPTION_FORMAT): ... to this.  Update users.
+	(KEY_CAPTION_FORMAT_HISTORY): Define.
+	(config_file_load): New function.
+	(config_file_save): Likewise.
+	(deserialize): Use them.
+	(serialize): Likewise.
+	(change_caption_format): New function.
+	(title_data_func): Use CAPTION_FMT_DEFAULT.
+	(starling_run): Create a menu item for changing the caption
+	format.  Connect the "activate" signal to change_caption_format.
+
+2008-10-03  Neal H. Walfield  <neal@gnu.org>
+
 	* src/lastfm.c: Fix spelling, it's utils.h, not util.h.
 
 2008-10-02  Neal H. Walfield  <neal@gnu.org>

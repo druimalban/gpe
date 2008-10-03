@@ -47,6 +47,8 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
+#define CAPTION_FMT_DEFAULT "%.50a - %.50t"
+
 #ifdef IS_HILDON
 /* Hildon includes */
 # if HILDON_VER > 0
@@ -364,8 +366,9 @@ starling_set_sink (Starling *st, char *sink)
 #define KEY_SEARCHES "searches"
 #define KEY_CURRENT_PAGE "current-page"
 #define KEY_CURRENT_PLAYLIST "current-playlist"
-#define KEY_TRACK_CAPTION "track-caption"
 #define KEY_LYRICS_DOWNLOAD "lyrics-download"
+#define KEY_CAPTION_FORMAT "caption-format"
+#define KEY_CAPTION_FORMAT_HISTORY "caption-format-history"
 
 #define GROUP "main"
 
@@ -406,22 +409,52 @@ deserialize_bottom_half (gpointer data)
 
 static void search_text_gen (Starling *st, const char *text);
 
-static void
-deserialize (Starling *st)
+static GKeyFile *
+config_file_load (void)
 {
-  /* Open the settings file.  */
+  gchar *dir = g_strdup_printf ("%s/%s", g_get_home_dir(), CONFIGDIR);
+  g_mkdir (dir, 0755);
+  g_free (dir);
+
   char *path = g_strdup_printf ("%s/%s/%s",
 				g_get_home_dir(), CONFIGDIR, CONFIG_FILE);
 
   GKeyFile *keyfile = g_key_file_new ();
-  bool ret = g_key_file_load_from_file (keyfile, path, 0, NULL);
+  g_key_file_load_from_file (keyfile, path, 0, NULL);
+
   g_free (path);
 
-  if (! ret)
-    {
-      g_key_file_free (keyfile);
-      return;
-    }
+  return keyfile;
+}
+
+static void
+config_file_save (GKeyFile *keyfile)
+{
+  gchar *dir = g_strdup_printf ("%s/%s", g_get_home_dir(), CONFIGDIR);
+  g_mkdir (dir, 0755);
+  g_free (dir);
+
+  char *path = g_strdup_printf ("%s/%s/%s",
+				g_get_home_dir(), CONFIGDIR, CONFIG_FILE);
+
+  /* Save the key file to disk.  */
+  gsize length;
+  char *data = g_key_file_to_data (keyfile, &length, NULL);
+  g_key_file_free (keyfile);
+
+  g_file_set_contents (path, data, length, NULL);
+
+  g_free (path);
+  g_free (data);
+}
+
+static void
+deserialize (Starling *st)
+{
+  /* Open the settings file.  */
+  GKeyFile *keyfile = config_file_load ();
+  if (! keyfile)
+    return;
 
   /* Audio sink.  */
   char *value = g_key_file_get_string (keyfile, GROUP, KEYSINK, NULL);
@@ -580,7 +613,13 @@ deserialize (Starling *st)
   /* The current page.  */
   bh->page = g_key_file_get_integer (keyfile, GROUP, KEY_CURRENT_PAGE, NULL);
 
-  value = g_key_file_get_string (keyfile, GROUP, KEY_TRACK_CAPTION, NULL);
+  /* Lyrics download.  */
+  gtk_check_menu_item_set_active
+    (st->download_lyrics,
+     g_key_file_get_boolean (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, NULL));
+
+  /* Caption format.  */
+  value = g_key_file_get_string (keyfile, GROUP, KEY_CAPTION_FORMAT, NULL);
   if (value)
     {
       if (st->caption)
@@ -588,12 +627,6 @@ deserialize (Starling *st)
       st->caption = caption_create (value);
       g_free (value);
     }
-
-  /* Lyrics download.  */
-  gtk_check_menu_item_set_active
-    (st->download_lyrics,
-     g_key_file_get_boolean (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, NULL));
-
 
   g_key_file_free (keyfile);
 
@@ -606,16 +639,7 @@ static void
 serialize (Starling *st)
 {
   /* Load the current settings and the overwrite them.  */
-  gchar *dir = g_strdup_printf ("%s/%s", g_get_home_dir(), CONFIGDIR);
-  g_mkdir (dir, 0755);
-  g_free (dir);
-
-  char *path = g_strdup_printf ("%s/%s/%s",
-				g_get_home_dir(), CONFIGDIR, CONFIG_FILE);
-
-  GKeyFile *keyfile = g_key_file_new ();
-  g_key_file_load_from_file (keyfile, path, 0, NULL);
-
+  GKeyFile *keyfile = config_file_load ();
 
   /* Current directory.  */
   if (st->fs_last_path)
@@ -749,15 +773,7 @@ serialize (Starling *st)
 			  (st->download_lyrics));
 
 
-  /* Save the key file to disk.  */
-  gsize length;
-  char *data = g_key_file_to_data (keyfile, &length, NULL);
-  g_key_file_free (keyfile);
-
-  g_file_set_contents (path, data, length, NULL);
-
-  g_free (path);
-  g_free (data);
+  config_file_save (keyfile);
 }
 
 void
@@ -1164,6 +1180,139 @@ toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
 }
 #endif /* HILDON_VER */
 #endif /*IS_HILDON*/
+
+static void
+change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
+{
+  Starling *st = user_data;
+
+  const char *defaults[] = {
+    CAPTION_FMT_DEFAULT,
+    "%a - %t",
+    "%.40a - %.40t - %.40A",
+    "%a - %t - (%A %T)",
+    "%a - %t - (%A %T) %m:%02s",
+    "%a - %t (%c plays)" };
+
+  GKeyFile *keyfile = config_file_load ();
+  char *caption = NULL;
+  char **history = NULL;
+  int history_len;
+  if (keyfile)
+    {
+      caption = g_key_file_get_string (keyfile, GROUP,
+				       KEY_CAPTION_FORMAT, NULL);
+      history = g_key_file_get_string_list (keyfile, GROUP,
+					    KEY_CAPTION_FORMAT_HISTORY,
+					    &history_len, NULL);
+    }
+
+  GtkWidget *dialog = gtk_dialog_new_with_buttons
+    (_("New caption format"),
+     GTK_WINDOW (st->window), GTK_DIALOG_DESTROY_WITH_PARENT,
+     GTK_STOCK_OK, GTK_RESPONSE_OK,
+     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+     NULL);
+
+  gtk_dialog_set_default_response (GTK_DIALOG (dialog),
+				   GTK_RESPONSE_OK);
+  GtkWidget *label = gtk_label_new
+    ("New caption format:\n"
+     " %a - artist\n"
+     " %A - album\n"
+     " %t - title\n"
+     " %T - track\n"
+     " %g - genre\n"
+     " %r - rating\n"
+     " %d - duration\n"
+     " %s - seconds\n"
+     " %m - minutes\n"
+     " %c - play count\n"
+     " %[width][.][precision]c - width and precision.");
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), label);
+
+  GtkWidget *combo = gtk_combo_box_entry_new_text ();
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), combo);
+
+  /* Load it with the history and the defaults.  */
+  if (caption)
+    {
+      gtk_combo_box_append_text (GTK_COMBO_BOX (combo), caption); 
+      g_free (caption);
+    }
+
+  int i;
+  for (i = 0; history && history[i]; i ++)
+    gtk_combo_box_append_text (GTK_COMBO_BOX (combo), history[i]); 
+  for (i = 0; i< sizeof (defaults) / sizeof (defaults[0]); i ++)
+    gtk_combo_box_append_text (GTK_COMBO_BOX (combo), defaults[i]); 
+
+  gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
+
+
+  GtkWidget *entry = gtk_bin_get_child (GTK_BIN (combo));
+
+  gtk_entry_set_activates_default (GTK_ENTRY (entry), TRUE);
+  gtk_widget_show_all (dialog);
+
+  gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+  switch (result)
+    {
+    case GTK_RESPONSE_OK:
+      if (st->caption)
+	caption_free (st->caption);
+
+      char *fmt = gtk_combo_box_get_active_text (GTK_COMBO_BOX (combo));
+      st->caption = caption_create (fmt);
+      g_key_file_set_string (keyfile, GROUP, KEY_CAPTION_FORMAT, fmt);
+
+      /* See if FMT is already in the history.  */
+      int i;
+      for (i = 0; history && history[i]; i ++)
+	if (strcmp (history[i], fmt) == 0)
+	  /* Already in the history.  */
+	  break;
+
+      if (! history || ! history[i])
+	/* Not in the history.  */
+	{
+	  struct obstack s;
+	  obstack_init (&s);
+	  
+	  obstack_printf (&s, "%s", fmt);
+
+	  if (history)
+	    for (i = 0; history[i]; i ++)
+	      {
+		obstack_1grow (&s, ';');
+		obstack_printf (&s, "%s", history[i]);
+	      }
+	  obstack_1grow (&s, 0);
+
+	  g_key_file_set_string (keyfile, GROUP, KEY_CAPTION_FORMAT_HISTORY,
+				 obstack_finish (&s));
+
+	  obstack_free (&s, NULL);
+	}
+
+      g_free (fmt);
+
+      gtk_widget_queue_draw (st->library_view);
+      gtk_widget_queue_draw (st->queue_view);
+
+      break;
+
+    default:
+      break;
+    }
+
+  g_strfreev (history);
+
+  gtk_widget_destroy (dialog);
+
+  if (keyfile)
+    config_file_save (keyfile);
+}
 
 #if 0
 static void
@@ -1705,7 +1854,7 @@ title_data_func (GtkCellLayout *cell_layout,
   Starling *st = data;
 
   if (G_UNLIKELY (! st->caption))
-    st->caption = caption_create ("%.50a - %.50t");
+    st->caption = caption_create (CAPTION_FMT_DEFAULT);
 
   int uid;
   gtk_tree_model_get (model, iter, PL_COL_UID, &uid, -1);
@@ -2245,7 +2394,7 @@ starling_run (void)
 #endif
     
   /* File -> Open.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("Import _File"));
+  mitem = gtk_menu_item_new_with_mnemonic (_("Add _File"));
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (add_file_cb), st);
   gtk_widget_show (mitem);
@@ -2256,7 +2405,7 @@ starling_run (void)
 #endif
 
   /* File -> Open directory.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("Import _Directory"));
+  mitem = gtk_menu_item_new_with_mnemonic (_("Add _Directory"));
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (add_directory_cb), st);
   gtk_widget_show (mitem);
@@ -2339,6 +2488,13 @@ starling_run (void)
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 #endif
+
+  /* Options -> Caption Format.  */
+  mitem = gtk_menu_item_new_with_mnemonic (_("_Caption Format"));
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (change_caption_format), st);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
 
   /* Options -> Download Lyrics.  */
   mitem = gtk_check_menu_item_new_with_mnemonic (_("Download _Lyrics"));
