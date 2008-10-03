@@ -935,15 +935,13 @@ play_list_combo_changed (Starling *st, gpointer do_save)
   if (! play_list)
     play_list = "Library";
 
-  if (do_save)
-    /* Save the current position and selection.  */
-    play_list_state_save (st);
-
   char *active = gtk_combo_box_get_active_text (st->playlist);
-  if (! do_save
-      || ! active
-      || strcmp (play_list, active) != 0)
+  if (! active || strcmp (play_list, active) != 0)
     {
+      /* Save the current position and selection.  */
+      if (do_save)
+	play_list_state_save (st);
+
       play_list_set (st->library,
 		     ! active || strcmp (active, "Library") == 0
 		     ? NULL : active);
@@ -957,8 +955,6 @@ static void
 play_list_combo_refresh (Starling *st, char *active, bool save_old_config)
 {
   g_signal_handler_block (st->playlist, st->playlist_changed_signal);
-
-  printf ("%s\n", __FUNCTION__);
 
   bool free_active = false;
   if (! active)
@@ -990,6 +986,9 @@ play_list_combo_refresh (Starling *st, char *active, bool save_old_config)
 
   if (free_active)
     g_free (active);
+
+  if (! save_old_config)
+    play_list_combo_changed (st, (gpointer) FALSE);
 
   g_signal_handler_unblock (st->playlist, st->playlist_changed_signal);
 

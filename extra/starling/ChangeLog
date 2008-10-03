@@ -1,5 +1,11 @@
 2008-10-03  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (play_list_combo_refresh): Call
+	play_list_combo_changed before unblocking the signal handler if
+	SAVE_OLD_CONFIG is false.
+
+2008-10-03  Neal H. Walfield  <neal@gnu.org>
+
 	* src/caption.c (struct chunk): Add fields cond_true, cond_false
 	and bytes.
 	(caption_create): Break the VM construction out of this function...
