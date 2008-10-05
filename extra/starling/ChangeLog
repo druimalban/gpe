@@ -1,5 +1,18 @@
 2008-10-05  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (fs_scanner_thread): Detect files by the presense
+	of a leading /, not a "file://" prefix.
+	(music_db_add): Likewise.
+	(music_db_add_file_internal): Don't add a "file://" prefix.
+	* src/player.c: Include <obstack.h>.
+	(obstack_chunk_alloc): Define.
+	(obstack_chunk_free): Likewise.
+	(player_set_source): If the leading character is a '/', assume it
+	is a file name and create a URI out of it.
+	* configure.ac: Check for the availability of g_uri_escape_string.
+
+2008-10-05  Neal H. Walfield  <neal@gnu.org>
+
 	* src/caption.c (build): Fix negative conditional.
 
 	* src/starling.c (deserialize): Add some default searches.

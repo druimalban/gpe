@@ -25,6 +25,10 @@
 #include <gst/gst.h>
 #include <gst/audio/gstaudiosink.h>
 
+#define obstack_chunk_alloc g_malloc
+#define obstack_chunk_free g_free
+#include <obstack.h>
+
 #include "player.h"
 #include "marshal.h"
 
@@ -222,7 +226,54 @@ player_set_source (Player *pl, const char *source, gpointer cookie)
   playbin_ensure (pl);
 
   gst_element_set_state (pl->playbin, GST_STATE_NULL);
-  g_object_set (G_OBJECT (pl->playbin), "uri", source, NULL);
+
+  if (*source == '/')
+    /* It's a filename.  Create a URI.  */
+    {
+      printf ("Source is: %s\n", source);
+      
+      struct obstack uri;
+      obstack_init (&uri);
+
+      obstack_printf (&uri, "file://");
+
+      /* We prefer g_uri_escape_string is it is available, as it is
+	 more robust than just escaping %.  */
+#ifdef HAVE_G_URI_ESCAPE_STRING
+      char *s;
+      s = g_uri_escape_string (source,
+			       G_URI_RESERVED_CHARS_ALLOWED_IN_PATH,
+			       1);
+      int len = strlen (s);
+      obstack_grow (&uri, s, len);
+      g_free (s);
+#else
+      const char *s = source;
+
+      while (*s)
+	{
+	  int len = strcspn (s, "%");
+	  obstack_grow (&uri, s, len);
+	  s += len;
+
+	  while (*s == '%')
+	    {
+	      obstack_grow (&uri, "%25", 3);
+	      s ++;
+	    }
+	}
+#endif
+
+      obstack_1grow (&uri, 0);
+      char *location = obstack_finish (&uri);
+      printf ("URI is: %s\n", location);
+      g_object_set (G_OBJECT (pl->playbin), "uri",
+		    location, NULL);
+      obstack_free (&uri, NULL);
+    }
+  else
+    g_object_set (G_OBJECT (pl->playbin), "uri", source, NULL);
+
   gst_element_set_state (pl->playbin, GST_STATE_PAUSED);
 }
 

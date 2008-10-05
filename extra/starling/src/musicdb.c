@@ -456,7 +456,7 @@ fs_scanner_thread (gpointer data)
   {
     struct track *track = g_malloc (sizeof (struct track));
     track->uid = atoi (argv[0]);
-    track->filename = g_strdup (argv[1] + strlen ("file://"));
+    track->filename = g_strdup (argv[1]);
 
     g_queue_push_tail (q, track);
 
@@ -466,7 +466,7 @@ fs_scanner_thread (gpointer data)
   char *err = NULL;
   sqlite_exec_printf (sqliteh,
 		      "select ROWID, source from files"
-		      " where removed isnull and source like 'file:///%';",
+		      " where removed isnull and source like '/%';",
 		      check_dead_cb, NULL, &err);
   if (err)
     {
@@ -624,10 +624,7 @@ meta_data_reader (gpointer data)
 	  bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
 	}
 
-#define FILE_PREFIX "file://"
-      g_assert (strlen (source) > sizeof (FILE_PREFIX) - 1);
-      g_object_set (G_OBJECT (src),
-		    "location", source + sizeof (FILE_PREFIX) - 1, NULL);
+      g_object_set (G_OBJECT (src), "location", source, NULL);
       g_free (source);
 
       GstStateChangeReturn res = gst_element_set_state (pipeline,
@@ -702,10 +699,10 @@ meta_data_reader (gpointer data)
 
 static void
 music_db_add (MusicDB *db, sqlite *sqliteh,
-	      char *sources[], int count, GError **error)
+	      const char *sources[], int count, GError **error)
 {
   /* Ignore any entries that do already exist in the DB.  */
-  char *s[count];
+  const char *s[count];
   int uids[count];
   bool crawl[count];
   int total = 0;
@@ -837,8 +834,7 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 		     uids[i]);
 
       /* Queue the file in the meta-data crawler (if appropriate).  */
-      if (crawl[i]
-	  && strncmp (FILE_PREFIX, s[i], sizeof (FILE_PREFIX) - 1) == 0)
+      if (crawl[i] && s[i][0] == '/')
 	{
 	  g_static_mutex_lock (&db->meta_data_reader_mutex);
 
@@ -924,23 +920,14 @@ music_db_add_m3u (MusicDB *db, const gchar *path, GError **error)
 void
 music_db_add_uri (MusicDB *db, const char *uri, GError **error)
 {
-  char *sources[1] = { (char *) uri };
-  music_db_add (db, db->sqliteh, sources, 1, error);
+  music_db_add (db, db->sqliteh, &uri, 1, error);
 }
 
 static void
 music_db_add_file_internal (MusicDB *db, sqlite *sqliteh,
 			    const gchar *file, GError **error)
 {
-#define P "file://"
-  char source[sizeof (P) + strlen (file)];
-  strcpy (source, P);
-  strcpy (source + sizeof (P) - 1, file);
-
-  /* XXX: We need to escape this!  Filenames with '%' will silently
-     fail.  */
-  char *sources[1] = { source };
-  music_db_add (db, sqliteh, sources, 1, error);
+  music_db_add (db, sqliteh, &file, 1, error);
 }
 
 void
