@@ -555,6 +555,9 @@ deserialize (Starling *st)
 						GROUP, KEY_SEARCHES,
 						&length, NULL);
 
+    int count = 0;
+    GtkTreeIter iter;
+
     /* The format is: `search(time stamp)'.  */
     int i;
     for (i = 0; i < length; i ++)
@@ -574,7 +577,7 @@ deserialize (Starling *st)
 	  if (defaults[j] && strcmp (values[i], defaults[j]) == 0)
 	    defaults[j] = NULL;
 
-	gtk_list_store_insert_with_values (st->searches, NULL, -1,
+	gtk_list_store_insert_with_values (st->searches, &iter, count ++,
 					   0, values[i],
 					   1, ts_val, -1);
       }
@@ -582,7 +585,7 @@ deserialize (Starling *st)
 
     for (i = 0; i < sizeof (defaults) / sizeof (defaults[0]); i ++)
       if (defaults[i])
-	gtk_list_store_insert_with_values (st->searches, NULL, -1,
+	gtk_list_store_insert_with_values (st->searches, &iter, count,
 					   0, defaults[i],
 					   1, 0, -1);
   }
@@ -1493,7 +1496,8 @@ search_text_save (Starling *st)
   }
   gtk_tree_model_foreach (GTK_TREE_MODEL (st->searches), callback, NULL);
 
-  gtk_list_store_insert_with_values (st->searches, NULL, 0,
+  GtkTreeIter iter;
+  gtk_list_store_insert_with_values (st->searches, &iter, 0,
 				     0, search,
 				     1, (unsigned int) time (NULL), -1);
 

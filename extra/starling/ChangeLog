@@ -1,5 +1,11 @@
 2008-10-05  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (deserialize): Don't pass NULL as the iter
+	parameter to gtk_list_store_insert_with_values.
+	(search_text_save): Likewise.
+
+2008-10-05  Neal H. Walfield  <neal@gnu.org>
+
 	* src/player.c (player_set_source): Remove debugging output.
 
 2008-10-05  Neal H. Walfield  <neal@gnu.org>
