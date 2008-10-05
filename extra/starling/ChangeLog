@@ -1,3 +1,15 @@
+2008-10-05  Neal H. Walfield  <neal@gnu.org>
+
+	* src/caption.c (build): Fix negative conditional.
+
+	* src/starling.c (deserialize): Add some default searches.
+
+	(change_caption_format): Don't add the current format twice.
+
+	(set_position_text): Use a local variable for the buffer.
+
+	(position_update): Return if PLAYER_QUERY_POSITION returns false.
+
 2008-10-03  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (play_list_combo_refresh): Call

@@ -253,10 +253,10 @@ build (struct caption *caption, const char *fmt)
 	    chunk->bytes = sizeof (void *);
 
 	  if ((end[1] == '?' && end[2] == '(')
-	      || (end[1] == '!' && end[2] == '?' && end[3] == '('))
+	      || (end[1] == '?' && end[2] == '!' && end[3] == '('))
 	    /* It's a condition: "%s?(...)(...)".  */
 	    {
-	      bool neg = end[1] == '!';
+	      bool neg = end[2] == '!';
 
 	      end = strchr (end, '(') + 1;
 

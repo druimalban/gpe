@@ -541,6 +541,13 @@ deserialize (Starling *st)
 
   /* Search history.  */
   {
+    char *defaults[] = { "played:<24h",
+			 "rating:>=4",
+			 "rating:>=4 and played:>3D",
+			 "added:<1W and play-count:=0",
+			 "(rating:=0 or rating:>=2)"
+    };
+
     gtk_list_store_clear (st->searches);
 
     gsize length = 0;
@@ -562,11 +569,22 @@ deserialize (Starling *st)
 	    ts_val = (unsigned int) atoll (ts);
 	  }
 
+	int j;
+	for (j = 0; j < sizeof (defaults) / sizeof (defaults[0]); j ++)
+	  if (defaults[j] && strcmp (values[i], defaults[j]) == 0)
+	    defaults[j] = NULL;
+
 	gtk_list_store_insert_with_values (st->searches, NULL, -1,
 					   0, values[i],
 					   1, ts_val, -1);
       }
     g_strfreev (values);
+
+    for (i = 0; i < sizeof (defaults) / sizeof (defaults[0]); i ++)
+      if (defaults[i])
+	gtk_list_store_insert_with_values (st->searches, NULL, -1,
+					   0, defaults[i],
+					   1, 0, -1);
   }
 
   /* The play lists' config.  */
@@ -1234,26 +1252,31 @@ change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
 
   /* Load it with the history and the defaults.  */
   if (caption)
-    {
-      gtk_combo_box_append_text (GTK_COMBO_BOX (combo), caption); 
-      g_free (caption);
-    }
+    gtk_combo_box_append_text (GTK_COMBO_BOX (combo), caption); 
 
   int i;
   for (i = 0; history && history[i]; i ++)
-    gtk_combo_box_append_text (GTK_COMBO_BOX (combo), history[i]); 
+    if (! caption || strcmp (caption, history[i]) != 0)
+      gtk_combo_box_append_text (GTK_COMBO_BOX (combo), history[i]); 
+
   /* Add the defaults, but only those that are not already in the
      history.  */
   for (i = 0; i < sizeof (defaults) / sizeof (defaults[0]); i ++)
     {
+      bool in_history = false;
       int j;
       for (j = 0; history && history[j]; j ++)
 	if (strcmp (history[j], defaults[i]) == 0)
-	  break;
+	  {
+	    in_history = true;
+	    break;
+	  }
 
-      if (! history || ! history[j])
+      if (! in_history && (! caption || strcmp (caption, defaults[i]) != 0))
 	gtk_combo_box_append_text (GTK_COMBO_BOX (combo), defaults[i]); 
     }
+
+  g_free (caption);
 
   gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
 
@@ -1559,10 +1582,11 @@ search_text_clear (Starling *st)
 static void
 set_position_text (Starling *st, int seconds)
 {
-  char *p = g_strdup_printf ("%d:%02d",
-			     seconds / 60, seconds % 60);
-  gtk_label_set_text (GTK_LABEL (st->position), p);
-  g_free (p);
+  char buffer[16];
+  snprintf (buffer, sizeof (buffer), "%d:%02d", seconds / 60, seconds % 60);
+  buffer[sizeof (buffer) - 1] = 0;
+
+  gtk_label_set_text (GTK_LABEL (st->position), buffer);
 }
 
 static gboolean
@@ -1641,7 +1665,8 @@ position_update (Starling *st)
       g_free (d);
     }
 
-  player_query_position (st->player, &fmt, &position);
+  if (! player_query_position (st->player, &fmt, &position))
+    return TRUE;
 
   percent = (((gfloat) (position)) / st->current_length) * 100; 
 
