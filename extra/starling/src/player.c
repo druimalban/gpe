@@ -230,8 +230,6 @@ player_set_source (Player *pl, const char *source, gpointer cookie)
   if (*source == '/')
     /* It's a filename.  Create a URI.  */
     {
-      printf ("Source is: %s\n", source);
-      
       struct obstack uri;
       obstack_init (&uri);
 
@@ -266,7 +264,6 @@ player_set_source (Player *pl, const char *source, gpointer cookie)
 
       obstack_1grow (&uri, 0);
       char *location = obstack_finish (&uri);
-      printf ("URI is: %s\n", location);
       g_object_set (G_OBJECT (pl->playbin), "uri",
 		    location, NULL);
       obstack_free (&uri, NULL);

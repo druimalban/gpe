@@ -1,5 +1,9 @@
 2008-10-05  Neal H. Walfield  <neal@gnu.org>
 
+	* src/player.c (player_set_source): Remove debugging output.
+
+2008-10-05  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (search_text_save): Move search to the search of
 	the list.
 
