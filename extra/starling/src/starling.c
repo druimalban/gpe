@@ -1475,7 +1475,6 @@ search_text_save (Starling *st)
 
   const char *search = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
 
-  gboolean found = FALSE;
   gboolean callback (GtkTreeModel *model, GtkTreePath *path,
 		     GtkTreeIter *iter, gpointer data)
   {
@@ -1484,21 +1483,19 @@ search_text_save (Starling *st)
     if (val && strcasecmp (search, val) == 0)
       /* Already in the history.  Update time stamp.  */
       {
-	gtk_list_store_set (st->searches, iter,
-			    1, (unsigned int) time (NULL),
-			    -1);
-	found = TRUE;
+	gtk_list_store_remove (st->searches, iter);
+	g_free (val);
+	return TRUE;
       }
     g_free (val);
 
-    return found;
+    return FALSE;
   }
   gtk_tree_model_foreach (GTK_TREE_MODEL (st->searches), callback, NULL);
 
-  if (! found)
-    gtk_list_store_insert_with_values (st->searches, NULL, -1,
-				       0, search,
-				       1, (unsigned int) time (NULL), -1);
+  gtk_list_store_insert_with_values (st->searches, NULL, 0,
+				     0, search,
+				     1, (unsigned int) time (NULL), -1);
 
   return FALSE;
 }

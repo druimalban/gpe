@@ -1,5 +1,10 @@
 2008-10-05  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (search_text_save): Move search to the search of
+	the list.
+
+2008-10-05  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (fs_scanner_thread): Detect files by the presense
 	of a leading /, not a "file://" prefix.
 	(music_db_add): Likewise.
