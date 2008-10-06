@@ -139,11 +139,54 @@ player_bus_cb (GstBus *bus, GstMessage *message, gpointer data)
 	  break;
 	}
 
-      case GST_MESSAGE_STATE_CHANGED:
+      case GST_MESSAGE_STATE_CHANGED:;
+	GstState state, pending;
+	gst_message_parse_state_changed (message, NULL, &state, &pending);
+
+#if 0
+	char *s = "unknown";
+	switch (pending)
+	  {
+	  case GST_STATE_VOID_PENDING:
+	    s = "void_pending";
+	    break;
+	  case GST_STATE_NULL:
+	    s = "null";
+	    break;
+	  case GST_STATE_READY:
+	    s = "ready";
+	    break;
+	  case GST_STATE_PAUSED:
+	    s = "paused";
+	    break;
+	  case GST_STATE_PLAYING:
+	    s = "playing";
+	    break;
+	  }
+	char *p = s;
+	switch (state)
+	  {
+	  case GST_STATE_VOID_PENDING:
+	    s = "void_pending";
+	    break;
+	  case GST_STATE_NULL:
+	    s = "null";
+	    break;
+	  case GST_STATE_READY:
+	    s = "ready";
+	    break;
+	  case GST_STATE_PAUSED:
+	    s = "paused";
+	    break;
+	  case GST_STATE_PLAYING:
+	    s = "playing";
+	    break;
+	  }
+#endif
+
 	if (GST_MESSAGE_SRC (message) == GST_OBJECT (pl->playbin))
 	  {
-	    GstState state, pending;
-	    gst_message_parse_state_changed (message, NULL, &state, &pending);
+	    // g_debug ("playbin's state changed: %s, %s pending", s, p);
 
 	    if (pending == GST_STATE_VOID_PENDING)
 	      {
@@ -311,8 +354,13 @@ player_play (Player *pl)
 void
 player_pause (Player *pl)
 {
-  if (pl->last_state == GST_STATE_PLAYING && pl->playbin)
-    gst_element_set_state (pl->playbin, GST_STATE_PAUSED);
+  if (! pl->playbin)
+    return;
+
+  GstStateChangeReturn res
+    = gst_element_set_state (pl->playbin, GST_STATE_PAUSED);
+  if (res == GST_STATE_CHANGE_FAILURE)
+    g_debug ("%s failed to change state to paused", __FUNCTION__);
 }
 
 void
@@ -326,8 +374,10 @@ player_unpause (Player *pl)
       return;
     }
 
-  if (pl->last_state != GST_STATE_PLAYING)
-    gst_element_set_state (pl->playbin, GST_STATE_PLAYING);
+  GstStateChangeReturn res
+    = gst_element_set_state (pl->playbin, GST_STATE_PLAYING);
+  if (res == GST_STATE_CHANGE_FAILURE)
+    g_debug ("%s failed to change state to paused for playing", __FUNCTION__);
 }
 
 void
@@ -336,15 +386,24 @@ player_play_pause_toggle (Player *pl)
   if (! pl->playbin)
     return;
 
+  GstState state;
   if (player_playing (pl))
-    gst_element_set_state (pl->playbin, GST_STATE_PAUSED);
+    state = GST_STATE_PLAYING;
   else
-    gst_element_set_state (pl->playbin, GST_STATE_PLAYING);
+    state = GST_STATE_PAUSED;
+
+  GstStateChangeReturn res = gst_element_set_state (pl->playbin, state);
+  if (res == GST_STATE_CHANGE_FAILURE)
+    g_debug ("%s failed to change state to %s", __FUNCTION__,
+	     state == GST_STATE_PLAYING ? "playing" : "paused");
 }
 
 gboolean
 player_playing (Player *pl)
 {
+  if (! pl->playbin)
+    return FALSE;
+
   GstState state = GST_STATE_PAUSED;
   if (pl->playbin)
     gst_element_get_state (pl->playbin, &state, NULL, GST_CLOCK_TIME_NONE);

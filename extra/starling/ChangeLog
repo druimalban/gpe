@@ -1,3 +1,12 @@
+2008-10-06  Neal H. Walfield  <neal@gnu.org>
+
+	* src/player.c (player_pause): If PL->PLAYBIN is NULL, return.
+	Print out some debugging information if setting the state fails.
+	(player_unpause): Print out some debugging information if setting
+	the state fails.
+	(player_play_pause_toggle): Likewise.
+	(player_playing): If PL->PLAYBIN is NULL, return FALSE.
+
 2008-10-05  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (deserialize): Don't pass NULL as the iter
