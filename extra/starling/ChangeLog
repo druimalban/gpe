@@ -1,5 +1,9 @@
 2008-10-06  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Bump version to 0.9.2.
+
+2008-10-06  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct _Starling): Add field
 	playpause_toggled_signal_id.
 	(player_state_changed): Block ST->PLAYPAUSE's toggled signal while
