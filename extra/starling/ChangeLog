@@ -1,5 +1,32 @@
 2008-10-06  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct _Starling): Add field
+	playpause_toggled_signal_id.
+	(player_state_changed): Block ST->PLAYPAUSE's toggled signal while
+	toggling it.
+	(starling_run): Save ST->PLAYPAUSE's "toggled" signal id in
+	ST->PLAYPAUSE_TOGGLED_SIGNAL_ID.
+
+	(starling_load): Set ST->PENDING_SEEK to -1 and ST->CURRENT_LENGTH
+	to -1.
+	(try_seek): New function.
+	(scale_button_released_cb): Save the seek position in
+	ST->PENDING_SEEK.  Call try_seek.
+	(position_update): Be more robust.  If there is no current
+	position but ST->PENDING_SEEK is not -1, use that.  Call TRY_SEEK
+	if required.
+	(player_state_changed): Call POSITION_UPDATE when enter
+	GST_STATE_PAUSED or GST_STATE_NULL.  Call try_seek as required.
+	(starling_run): Initialize ST->PENDING_SEEK to -1.
+
+	(struct deserialize_bottom_half): Add field loaded_song.
+	(deserialize_bottom_half): Load BH->LOADED_SONG if it is not 0.
+	Be careful to preserve ST->PENDING_SEEK.
+	(deserialize): Don't load the song here.  Save it in
+	BH->LOADED_SONG.
+
+2008-10-06  Neal H. Walfield  <neal@gnu.org>
+
 	* src/player.c (player_pause): If PL->PLAYBIN is NULL, return.
 	Print out some debugging information if setting the state fails.
 	(player_unpause): Print out some debugging information if setting

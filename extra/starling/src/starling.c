@@ -75,6 +75,7 @@ struct _Starling {
   GtkLabel *position;
   GtkLabel *duration;
   GtkWidget *playpause;
+  int playpause_toggled_signal_id;
   GtkWidget *scale;
   int scale_sliding;
 
@@ -229,6 +230,8 @@ starling_load (Starling *st, int uid)
     old_idx = play_list_uid_to_index (st->library, st->loaded_song);
 
   st->loaded_song = uid;
+  st->pending_seek = -1;
+  st->current_length = -1;
 
   struct music_db_info info;
   info.fields = MDB_SOURCE | MDB_PRESENT;
@@ -380,6 +383,8 @@ struct deserialize_bottom_half
   char *playlist;
   bool search_enabled;
   char *search_terms;
+
+  int loaded_song;
 };
 
 static void play_list_combo_refresh (Starling *st, char *active,
@@ -400,6 +405,13 @@ deserialize_bottom_half (gpointer data)
   gtk_toggle_button_set_active (st->search_enabled, bh->search_enabled);
   gtk_entry_set_text (GTK_ENTRY (st->search_entry), bh->search_terms);
   g_free (bh->search_terms);
+
+  if (bh->loaded_song > 0)
+    {
+      int pending_seek = st->pending_seek;
+      starling_load (st, bh->loaded_song);
+      st->pending_seek = pending_seek;
+    }
 
   g_free (data);
   return FALSE;
@@ -516,12 +528,12 @@ deserialize (Starling *st)
 					     GROUP,
 					     KEY_LOADED_SONG_POSITION, NULL);
 
-  /* And then load the current song.  */
-  starling_load (st, g_key_file_get_integer (keyfile,
-					     GROUP, KEY_LOADED_SONG, NULL));
-
   struct deserialize_bottom_half *bh = calloc (sizeof (*bh), 1);
   bh->st = st;
+
+  /* And then load the current song.  */
+  bh->loaded_song = g_key_file_get_integer (keyfile,
+					    GROUP, KEY_LOADED_SONG, NULL);
 
   /* The current play list.  */
   bh->playlist = g_key_file_get_string (keyfile,
@@ -1609,6 +1621,43 @@ scale_sliding_update (Starling *st)
   return TRUE;
 }
 
+static void
+try_seek (Starling *st)
+{
+  if (st->pending_seek >= 0)
+    {
+      if (st->current_length < 0)
+	{
+	  GstFormat fmt = GST_FORMAT_TIME;
+	  if (! player_query_duration (st->player,
+				       &fmt, &st->current_length, -1))
+	    {
+	      st->current_length = -1;
+	      g_debug ("%s: query duration failed", __FUNCTION__);
+	    }
+	}
+
+      if (st->current_length >= 0)
+	/* Only if the song has actually loaded.  */
+	{
+	  if (st->pending_seek * 1e9 > st->current_length)
+	    /* Don't seek beyond the end of the track.  */
+	    {
+	      g_debug ("%s: seek %d > length %d",
+		       __FUNCTION__,
+		       st->pending_seek, st->current_length / 1e9);
+	      st->pending_seek = (st->current_length / 1e9) - 1;
+	    }
+
+	  if (player_seek (st->player,
+			   GST_FORMAT_TIME, (gint64) st->pending_seek * 1e9))
+	    st->pending_seek = -1;
+	  else
+	    g_debug ("%s: seeking failed.  Will try again.", __FUNCTION__);
+	}
+    }
+}
+
 static gboolean
 scale_button_released_cb (GtkRange *range, GdkEventButton *event,
         Starling *st)
@@ -1617,16 +1666,13 @@ scale_button_released_cb (GtkRange *range, GdkEventButton *event,
   g_source_remove (st->scale_sliding);
   st->scale_sliding = 0;
 
-  gint percent;
-  GstFormat fmt = GST_FORMAT_TIME;
-
   if (st->current_length < 0)
-    player_query_duration (st->player, &fmt, &st->current_length, -1);
+    return FALSE;
 
-  percent = gtk_range_get_value (range);
-  player_seek (st->player, GST_FORMAT_TIME, 
-	       (st->current_length / 100) * percent);
-    
+  gint percent = gtk_range_get_value (range);
+  st->pending_seek = (st->current_length / 100) * percent / 1e9;
+  try_seek (st);
+
   return FALSE;
 }
 
@@ -1651,13 +1697,40 @@ position_update (Starling *st)
   GstFormat fmt = GST_FORMAT_TIME;
   gint64 position;
   gfloat percent;
-  gint total_seconds;
-  gint position_seconds;
+  gint total_seconds = 0;
+  gint position_seconds = 0;
 
+  /* Set position text.  */
+  if (! player_query_position (st->player, &fmt, &position))
+    {
+      g_debug ("%s: Failed to get position", __FUNCTION__);
+
+      if (st->pending_seek >= 0)
+	set_position_text (st, st->pending_seek);
+    }
+  else
+    {
+      percent = (((gfloat) (position)) / st->current_length) * 100; 
+
+      total_seconds = st->current_length / 1e9;
+      position_seconds = (total_seconds / 100.0) * percent;
+
+      if (!st->scale_sliding)
+	{
+	  set_position_text (st, position_seconds);
+	  gtk_range_set_value (GTK_RANGE (st->scale), percent);
+	}
+    }
+
+  /* Set duration text.  */
   if (st->current_length < 0)
     {
-      if (! player_query_duration (st->player, &fmt, &st->current_length, -1))
-	return TRUE;
+      if (! player_query_duration (st->player,
+				   &fmt, &st->current_length, -1))
+	{
+	  g_debug ("%s: Failed to get duration", __FUNCTION__);
+	  return TRUE;
+	}
 
       total_seconds = st->current_length / 1e9;
       char *d = g_strdup_printf ("%d:%02d",
@@ -1666,20 +1739,7 @@ position_update (Starling *st)
       g_free (d);
     }
 
-  if (! player_query_position (st->player, &fmt, &position))
-    return TRUE;
-
-  percent = (((gfloat) (position)) / st->current_length) * 100; 
-
-  total_seconds = st->current_length / 1e9;
-  position_seconds = (total_seconds / 100.0) * percent;
-
-  if (!st->scale_sliding)
-    {
-      set_position_text (st, position_seconds);
-      gtk_range_set_value (GTK_RANGE (st->scale), percent);
-    }
-
+  /* Update some statistics.  */
   if (G_UNLIKELY (!st->enqueued
 		  && (position_seconds > (9 * total_seconds) / 10)))
     /* 90% of the track has been played.  */
@@ -1711,6 +1771,10 @@ position_update (Starling *st)
 
       st->enqueued = TRUE;
     }
+
+  /* Seek if required.  */
+  if (st->pending_seek >= 0)
+    try_seek (st);
 
   return TRUE;
 }
@@ -1781,13 +1845,18 @@ update_library_count (Starling *st)
 static void
 player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
 {
+  if (gtk_toggle_tool_button_get_active
+       (GTK_TOGGLE_TOOL_BUTTON (st->playpause))
+      != (GST_STATE_PLAYING == state))
+    {
+      g_signal_handler_block (st->playpause, st->playpause_toggled_signal_id);
+      gtk_toggle_tool_button_set_active
+	(GTK_TOGGLE_TOOL_BUTTON (st->playpause), state == GST_STATE_PLAYING);
+      g_signal_handler_unblock (st->playpause, st->playpause_toggled_signal_id);
+    }
+
   if (GST_STATE_PLAYING == state)
     {
-      if (! gtk_toggle_tool_button_get_active
-	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause)))
-	gtk_toggle_tool_button_set_active
-	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause), TRUE);
-
       st->current_length = -1;
       st->has_lyrics = FALSE;
       st->enqueued = FALSE;
@@ -1798,27 +1867,23 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
     }
   else if (state == GST_STATE_PAUSED || state == GST_STATE_NULL)
     {
-      if (gtk_toggle_tool_button_get_active
-	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause)))
-	gtk_toggle_tool_button_set_active
-	  (GTK_TOGGLE_TOOL_BUTTON (st->playpause), FALSE);
-
       if (st->position_update)
 	{
 	  g_source_remove (st->position_update);
 	  st->position_update = 0;
 	}
+      position_update (st);
     }
 
   position_update (st);
 
   if (st->pending_seek >= 0
-      && (state == GST_STATE_PLAYING || state == GST_STATE_PAUSED))
-    {
-      player_seek (st->player,
-		   GST_FORMAT_TIME, (gint64) st->pending_seek * 1e9);
-      st->pending_seek = -1;
-    }
+      && (state == GST_STATE_PLAYING
+#ifdef IS_HILDON
+	  || state == GST_STATE_PAUSED
+#endif
+	  ))
+    try_seek (st);
 }
 
 static void
@@ -1862,7 +1927,9 @@ key_press_event (GtkWidget *widget, GdkEventKey *k, Starling *st)
 #endif
       /* Make full screen a play/pause button.  */
       gtk_toggle_tool_button_set_active
-	(st->playpause, ! gtk_toggle_tool_button_get_active (st->playpause));
+	(GTK_TOGGLE_TOOL_BUTTON (st->playpause),
+	 ! gtk_toggle_tool_button_get_active
+	    (GTK_TOGGLE_TOOL_BUTTON (st->playpause)));
       return TRUE;
 #endif
 
@@ -2321,6 +2388,7 @@ starling_run (void)
 {
   Starling *st = calloc (sizeof (*st), 1);
   st->current_length = -1;
+  st->pending_seek = -1;
   st->playlists_conf = g_hash_table_new (g_str_hash, g_str_equal);
     
   const char *home = g_get_home_dir ();
@@ -2578,8 +2646,9 @@ starling_run (void)
   /* Play/pause.  */
   item = gtk_toggle_tool_button_new_from_stock (GTK_STOCK_MEDIA_PLAY);
   st->playpause = GTK_WIDGET (item);
-  g_signal_connect (G_OBJECT (st->playpause), "toggled",
-		    G_CALLBACK (playpause_cb), st);
+  st->playpause_toggled_signal_id
+    = g_signal_connect (G_OBJECT (st->playpause), "toggled",
+			G_CALLBACK (playpause_cb), st);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
   /* Next.  */
