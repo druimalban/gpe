@@ -444,6 +444,8 @@ render (struct caption *caption, struct my_info *info, struct chunk *c)
 	     ellipsize.  */
 	  {
 	    char *s = * (char **) locp;
+	    if (! s)
+	      s = "";
 
 	    int p = c->width > 0 ? c->width : - c->width;
 	    int len = strlen (s);
