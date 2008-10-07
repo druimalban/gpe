@@ -1,5 +1,12 @@
 2008-10-07  Neal H. Walfield  <neal@gnu.org>
 
+	* debian/control: Add libgstreamer-plugins-base0.10-dev and
+	libhandoff-dev to Build-Depends.
+	* README: Add libhandoff-dev build dependency.
+	Reported by Thomas Schwinge <tschwinge@gnu.org>.
+
+2008-10-07  Neal H. Walfield  <neal@gnu.org>
+
 	* moko-type.h: New file.
 	* moko-finger-scroll.h: Likewise.
 	* moko-finger-scroll.c: Likewise.

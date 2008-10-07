@@ -7,6 +7,7 @@ correspond to Ubuntu):
     * libgstreamer-plugins-base0.10-dev
     * libsqlite-dev
     * libglib2.0-dev
+    * libhandoff-dev
     * intltool
     * bison
 
