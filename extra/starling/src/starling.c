@@ -44,6 +44,7 @@
 #include <glib/gkeyfile.h>
 #include <glib/gstdio.h>
 #include <gdk/gdkkeysyms.h>
+#include <gdk/gdk.h>
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
@@ -2382,6 +2383,25 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
   return FALSE;
 }
 
+#ifdef IS_HILDON
+static void
+library_tap_and_hold_cb (GtkWidget *widget, gpointer user_data)
+{
+  Starling *st = user_data;
+
+  int x, y;
+  gdk_display_get_pointer (gdk_drawable_get_display (widget->window),
+			   NULL, &x, &y, NULL);
+
+  GdkEventButton event;
+  event.x = x;
+  event.y = y;
+  event.button = 3;
+  event.time = GDK_CURRENT_TIME;
+
+  library_button_press_event (st->library_view, &event, st);
+}
+#endif
 
 Starling *
 starling_run (void)
@@ -2787,6 +2807,11 @@ starling_run (void)
 		    G_CALLBACK (activated_cb), st);
   g_signal_connect (G_OBJECT (st->library_view), "button-press-event",
 		    G_CALLBACK (library_button_press_event), st);
+#ifdef IS_HILDON
+  g_signal_connect (G_OBJECT (st->library_view),
+		    "tap-and-hold", G_CALLBACK (library_tap_and_hold_cb), st);
+  gtk_widget_tap_and_hold_setup (st->library_view, NULL, NULL, 0);
+#endif
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->library_view), FALSE);
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->library_view), TRUE);
   gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->library_view), TRUE);

@@ -1,3 +1,11 @@
+2008-10-07  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c: Include <gdk/gdk.h>.
+	(library_tap_and_hold_cb) [IS_HILDON]: New function.
+	(starling_run) [IS_HILDON]: Call gtk_widget_tap_and_hold_setup on
+	ST->LIBRARY_VIEW.  Connect its "tap-and-hold" signal to
+	library_tap_and_hold_cb.
+
 2008-10-06  Neal H. Walfield  <neal@gnu.org>
 
 	* configure.ac: Bump version to 0.9.2.
