@@ -1,6 +1,6 @@
 bin_PROGRAMS = starling starling-catalog
 
-AM_CFLAGS = -Wall -O0
+AM_CFLAGS = -Wall
 
 starling_CFLAGS = $(GUI_CFLAGS) $(HILDON_CFLAGS)
 starling_LDADD = $(GUI_LIBS) $(HILDON_LIBS)
@@ -19,6 +19,11 @@ starling_SOURCES = main.c \
 		search.y \
 		caption.h caption.c \
 		md5.h md5.c
+
+if HILDON
+starling_SOURCES += moko-type.h \
+		moko-finger-scroll.h moko-finger-scroll.c
+endif
 
 starling_catalog_CFLAGS = $(BASE_CFLAGS)
 starling_catalog_LDADD = $(BASE_LIBS)

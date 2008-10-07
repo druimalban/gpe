@@ -1,5 +1,18 @@
 2008-10-07  Neal H. Walfield  <neal@gnu.org>
 
+	* moko-type.h: New file.
+	* moko-finger-scroll.h: Likewise.
+	* moko-finger-scroll.c: Likewise.
+	* src/Makefile.am (starling_SOURCES) [HILDON]: Add moko-type.h, 
+	moko-finger-scroll.h and moko-finger-scroll.c.
+	* src/starling.c [IS_HILDON]: Include <moko-finger-scroll.h>.
+	(GtkScrolledWindow) [IS_HILDON]: Define.
+	(gtk_scrolled_window_new) [IS_HILDON]: Likewise.
+	(GTK_SCROLLED_WINDOW MOKO_FINGER_SCROLL) [IS_HILDON]: Likewise.
+	(gtk_scrolled_window_set_policy) [IS_HILDON]: Likewise.
+
+2008-10-07  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c: Include <gdk/gdk.h>.
 	(library_tap_and_hold_cb) [IS_HILDON]: New function.
 	(starling_run) [IS_HILDON]: Call gtk_widget_tap_and_hold_setup on
