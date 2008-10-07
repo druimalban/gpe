@@ -1135,13 +1135,16 @@ remove_cb (GtkWidget *w, Starling *st)
      index 3 is different!  */
 
   GtkWidget *view = NULL;
+  PlayList *pl;
   switch (gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook)))
     {
     case 0:
       view = st->library_view;
+      pl = st->library;
       break;
     case 1:
       view = st->queue_view;
+      pl = st->queue;
       break;
     }
 
@@ -1165,7 +1168,7 @@ remove_cb (GtkWidget *w, Starling *st)
   while (! g_queue_is_empty (selected))
     {
       int idx = (int) g_queue_pop_head (selected);
-      play_list_remove (st->library, idx);
+      play_list_remove (pl, idx);
     }
 
   g_queue_free (selected);
@@ -1177,29 +1180,34 @@ remove_cb (GtkWidget *w, Starling *st)
 
 static void
 clear_cb (GtkWidget *w, Starling *st)
-{   
-  char *text = gtk_combo_box_get_active_text (st->playlist);
-
-  if (strcmp (text, "Library") == 0)
+{
+  switch (gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook)))
     {
-      player_pause (st->player);
-      music_db_clear (st->db);
+    case 0:
+      {
+	char *text = gtk_combo_box_get_active_text (st->playlist);
+
+	if (strcmp (text, "Library") == 0)
+	  {
+	    player_pause (st->player);
+	    music_db_clear (st->db);
+	  }
+	else
+	  music_db_play_list_clear (st->db, text);
+
+	g_free (text);
+
+	play_list_combo_refresh (st, NULL, false);
+
+	if (strcmp (text, "Library") == 0)
+	  starling_load (st, 0);
+
+	break;
+      }
+    case 1:
+      music_db_play_list_clear (st->db, "queue");
+      break;
     }
-  else
-    music_db_play_list_clear (st->db, text);
-
-  g_free (text);
-
-  play_list_combo_refresh (st, NULL, false);
-
-  if (strcmp (text, "Library") == 0)
-    starling_load (st, 0);
-}
-
-static void
-clear_queue_cb (GtkWidget *w, Starling *st)
-{   
-  music_db_play_list_clear (st->db, "queue");
 }
 
 #ifdef IS_HILDON
@@ -2588,17 +2596,10 @@ starling_run (void)
   gtk_widget_show (mitem);
   gtk_menu_shell_append (menu, mitem);
 
-  /* Options -> Clear play list.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("_Clear play list"));
+  /* Options -> Clear list.  */
+  mitem = gtk_menu_item_new_with_mnemonic (_("_Clear list"));
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (clear_cb), st);
-  gtk_widget_show (mitem);
-  gtk_menu_shell_append (menu, mitem);
-
-  /* Options -> Clear queue.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("Clear _queue"));
-  g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (clear_queue_cb), st);
   gtk_widget_show (mitem);
   gtk_menu_shell_append (menu, mitem);
 

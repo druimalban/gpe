@@ -1,5 +1,14 @@
 2008-10-07  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (remove_cb): Remove tracks from the right play
+	list.
+	(clear_cb): Clear the library, if that is the selected tab, or the
+	queue, if that is the selected tab.
+	(clear_queue_cb): Remove function.
+	(starling_run): Rename menu item "Clear play list" to "Clear list".
+
+2008-10-07  Neal H. Walfield  <neal@gnu.org>
+
 	* src/caption.c (render): Account for that fact that S may be
 	NULL.
 	Reported by Thomas Schwinge <tschwinge@gnu.org>.
