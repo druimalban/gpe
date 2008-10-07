@@ -13,8 +13,9 @@ is based on a flexible sound architecture which can be exteded by
 modules to support multiple file formats. It is able to manage
 multiple playlists as well as remote access to lyrics information.
 
-<img src="../images/starling.png" border="2" alt="Screenshot"
-     align="right" hspace="15" vspace="15">
+<a href="../images/starling.png"><img src="../images/starling-small.png"
+     border="2" alt="Screenshot" align="right" hspace="15"
+     vspace="15"></a>
 
 <h2>Status</h2>
 
