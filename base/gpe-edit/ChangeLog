@@ -1,5 +1,9 @@
+2008-10-14  Florian Boor <florian.boor@kernelconcepts.de>
 
-2000-01-31  Florian Boor <florian.boor@kernelconcepts.de>
+    * Add Danish translation and determine available translations
+      automatically.
+
+2008-01-31  Florian Boor <florian.boor@kernelconcepts.de>
 
     * Update translations and translation code.
 

@@ -1,128 +1,131 @@
-# Polish translation for gpe-edit.
-# Copyright (C) 2007, 2008 Free Software Foundation, Inc.
+# Danish translation of GPE-edit.
+# Copyright (C) 2008 GPE.
 # This file is distributed under the same license as the gpe-edit package.
-# Jakub Bogusz <qboosh@pld-linux.org>, 2007-2008.
+# Joe Hansen <joedalton2@yahoo.dk>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-edit 0.41\n"
+"Project-Id-Version: gpe-edit-0.41\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-17 23:21+0100\n"
-"PO-Revision-Date: 2008-10-10 18:08+0200\n"
-"Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
-"Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2008-08-29 00:00+0000\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../gpe-edit.desktop.in.in.h:1
 msgid "GPE Text Editor"
-msgstr "Edytor tekstu GPE"
+msgstr "GPE-tekstbehandler"
 
 #: ../gpe-edit.desktop.in.in.h:2
 msgid "Text Editor"
-msgstr "Edytor tekstu"
+msgstr "Tekstbehandler"
 
 #: ../main.c:78
 msgid "Help not (or incorrectly) installed. Or no helpviewer application registered."
-msgstr "Pomoc nie została właściwie zainstalowana, albo nie zarejestrowano przeglądarki pomocy."
+msgstr "Hjælp er ikke (eller forkert) installeret. Eller intet hjælpeprogram registreret."
 
 #: ../main.c:99
 msgid "Untitled"
-msgstr "Nienazwany"
+msgstr "Titelløs"
 
 #: ../main.c:140
 msgid "Current file is modified, save?"
-msgstr "Bieżący plik został zmieniony, zapisać?"
+msgstr "Nuværende fil er ændret, gem?"
 
 #: ../main.c:140 ../main.c:367
 msgid "Question"
-msgstr "Pytanie"
+msgstr "Spørgsmål"
 
 #: ../main.c:271
 msgid "Open File ..."
-msgstr "Otworz plik..."
+msgstr "Åben fil..."
 
 #: ../main.c:322
 msgid "Save as..."
-msgstr "Zapisz jako..."
+msgstr "Gem som..."
 
 #: ../main.c:367
 msgid "Save current file before exiting?"
-msgstr "Zapisać bieżący plik przed wyjściem?"
+msgstr "Gem nuværende fil før der afsluttes?"
 
 #: ../main.c:368
 msgid "Don't save"
-msgstr "Nie zapisuj"
+msgstr "Gem ikke"
 
 #: ../main.c:433
 msgid "Text not found"
-msgstr "Nie znaleziono tekstu"
+msgstr "Tekst ikke fundet"
 
 #: ../main.c:473
 msgid "Unable to replace text"
-msgstr "Nie udało się zamienić tekstu"
+msgstr "Kan ikke erstatte tekst"
 
 #: ../main.c:486
 msgid "Search for: "
-msgstr "Szukaj: "
+msgstr "Søg efter: "
 
 #: ../main.c:489 ../main.c:546
 msgid "Find"
-msgstr "Szukaj"
+msgstr "Søg"
 
 #: ../main.c:538
 msgid "Search for:"
-msgstr "Szukaj:"
+msgstr "Søg efter:"
 
 #: ../main.c:540
 msgid "Replace with:"
-msgstr "Zastąp:"
+msgstr "Erstat med:"
 
 #: ../main.c:545
 msgid "Replace"
-msgstr "Zastąp"
+msgstr "Erstat"
 
+# ? hvilken tast(e) er tap&hold. Menes der at man skal holde fingeren nede et stykke tid på 
+# musepladen
 #: ../main.c:671
 msgid "File editing field, additional functions are available by tap&hold or right click."
-msgstr "Pole edycji pliku, dodatkowe funkcje są dostępne pod tap&hold lub prawym przyciskiem."
+msgstr "Fileredigeringsfelt, yderligere funktioner er tilgængelige via tap&hold eller højreklik."
 
 #: ../main.c:678
 msgid "New document"
-msgstr "Nowy dokument"
+msgstr "Nyt dokument"
 
 #: ../main.c:683
 msgid "Open file"
-msgstr "Otwórz plik"
+msgstr "Åbn fil"
 
 #: ../main.c:688
 msgid "Save current file"
-msgstr "Zapisz bieżący plik"
+msgstr "Gem nuværende fil"
 
 #: ../main.c:693
 msgid "Save current file as"
-msgstr "Zapisz bieżący plik jako"
+msgstr "Gem nuværende fil som"
 
 #: ../main.c:704
 msgid "Search text for a string"
-msgstr "Szukaj łańcucha znaków w tekście"
+msgstr "Søg tekst for en streng"
 
 #: ../main.c:710
 msgid "Replace a string"
-msgstr "Zastąp łańcuch znaków"
+msgstr "Erstat en streng"
 
+# Uafklaret tap&hold
 #: ../main.c:725
 msgid "Copy selected, paste is possible by tap&hold"
-msgstr "Skopiuj zaznaczenie, wkleić można przez tap&hold"
+msgstr "Kopiering valgt, indsæt er muligt ved brug af tap&hold"
 
 #: ../main.c:735
 msgid "Paste from clipboard"
-msgstr "Wklej ze schowka"
+msgstr "Indsæt fra klippebord"
 
 #: ../main.c:743
 msgid "Get help"
-msgstr "Pomoc"
+msgstr "Få hjælp"
 
 #: ../main.c:751
 msgid "Exit gpe-edit"
-msgstr "Zakończ gpe-edit"
+msgstr "Afslut gpe-edit"
