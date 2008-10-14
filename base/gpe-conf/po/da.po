@@ -3,12 +3,14 @@
 # This file is distributed under the same license as the gpe-conf package.
 # Joe Hansen <joedalton2@yahoo.dk>, 2008.
 #
+# sleep -> dvale
+# suspend -> dvale
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf-0.2.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-05 16:51+0200\n"
-"PO-Revision-Date: 2008-09-24 00:00+0000\n"
+"PO-Revision-Date: 2008-09-27 00:00+0000\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
@@ -625,7 +627,7 @@ msgstr "Kan ikke få adgang til semaphore(r) for syslogds cirkulære buffer."
 
 #: ../modules/logread.c:156
 msgid "<empty syslog>"
-msgstr ""
+msgstr "<tom syslog>"
 
 #: ../modules/logread.c:227 ../modules/logread.c:243
 msgid "System Log"
@@ -641,39 +643,39 @@ msgstr "Kunne ikke åbne X-seesionlog.\n"
 
 #: ../modules/usb.c:80
 msgid "Choose backing file"
-msgstr ""
+msgstr "Vælg sikkerhedskopifil"
 
 #: ../modules/usb.c:240
 msgid "USB Peripheral Mode"
-msgstr ""
+msgstr "USB perifer tilstand"
 
 #: ../modules/usb.c:247
 msgid "Ethernet Networking"
-msgstr ""
+msgstr "Ethernet netværk"
 
 #: ../modules/usb.c:252 ../modules/sysinfo.c:645
 msgid "Storage"
-msgstr ""
+msgstr "Lager"
 
 #: ../modules/usb.c:258 ../modules/serial.c:573
 msgid "Serial Port"
-msgstr ""
+msgstr "Seriel port"
 
 #: ../modules/usb.c:267
 msgid "Storage Behaviour"
-msgstr ""
+msgstr "Lager opførelsel"
 
 #: ../modules/usb.c:274
 msgid "CF/SD Card Reader"
-msgstr ""
+msgstr "CF/SD kortlæser"
 
 #: ../modules/usb.c:280
 msgid "File-backed"
-msgstr ""
+msgstr "Fil-sikkerhedskopieret"
 
 #: ../modules/usb.c:290
 msgid "Select"
-msgstr ""
+msgstr "Vælg"
 
 #: ../modules/usb.c:298
 msgid "Allow write access"
@@ -681,11 +683,11 @@ msgstr "Tillad skriveadgang"
 
 #: ../modules/usb.c:307
 msgid "Serial Settings"
-msgstr ""
+msgstr "Serielindstillinger"
 
 #: ../modules/usb.c:314
 msgid "Use CDC ACM"
-msgstr ""
+msgstr "Anvend CDC ACM"
 
 #: ../modules/theme.c:234
 msgid "Choose backgound image"
@@ -701,7 +703,7 @@ msgstr "Ændrede med succes baggrundsbillede."
 
 #: ../modules/theme.c:270
 msgid "Use \"Look and Feel\" setup tool to change details."
-msgstr ""
+msgstr "Anvend »Se og føl«-opsætningsværktøj for at ændre detaljer."
 
 #: ../modules/theme.c:781 ../modules/theme.c:859
 msgid "You don't have read access to selected background image!"
@@ -742,7 +744,7 @@ msgstr "Temastandard"
 
 #: ../modules/theme.c:1096
 msgid "Solid colour"
-msgstr ""
+msgstr "Fast farve"
 
 #: ../modules/theme.c:1110
 msgid "Horizontal"
@@ -759,7 +761,7 @@ msgstr "Farve"
 
 #: ../modules/theme.c:1129
 msgid "Colour gradient"
-msgstr ""
+msgstr "Farvehældning"
 
 #: ../modules/theme.c:1148
 msgid "Image"
@@ -767,15 +769,15 @@ msgstr "Billede"
 
 #: ../modules/theme.c:1174
 msgid "Center"
-msgstr ""
+msgstr "Centrer"
 
 #: ../modules/theme.c:1178
 msgid "Tile"
-msgstr ""
+msgstr "Flise"
 
 #: ../modules/theme.c:1181
 msgid "Stretch"
-msgstr ""
+msgstr "Stræk"
 
 #: ../modules/theme.c:1188
 msgid "Toolbars"
@@ -855,7 +857,7 @@ msgstr "Debian"
 #. TRANSLATORS: "Ångström" is the name of a linux distribution.
 #: ../modules/sysinfo.c:226
 msgid "Ångström"
-msgstr ""
+msgstr "Ångström"
 
 #. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
 #: ../modules/sysinfo.c:235
@@ -882,7 +884,7 @@ msgstr "Trådløs"
 
 #: ../modules/sysinfo.c:437
 msgid "Default Gateway"
-msgstr ""
+msgstr "Standard adgangspunkt"
 
 #: ../modules/sysinfo.c:480
 msgid "System information"
@@ -894,7 +896,7 @@ msgstr "Version"
 
 #: ../modules/sysinfo.c:522
 msgid "Distribution"
-msgstr ""
+msgstr "Distribution"
 
 #: ../modules/sysinfo.c:547
 msgid "System"
@@ -914,18 +916,18 @@ msgstr "Producent:"
 
 #: ../modules/sysinfo.c:600
 msgid "RAM:"
-msgstr ""
+msgstr "RAM:"
 
 #. TRANSLATORS: MB == Mega Bytes
 #: ../modules/sysinfo.c:606 ../modules/sysinfo.c:622 ../modules/storage.c:176
 #: ../modules/storage.c:183 ../modules/storage.c:329 ../modules/storage.c:340
 #: ../modules/storage.c:445 ../modules/storage.c:458
 msgid "MB"
-msgstr ""
+msgstr "MB"
 
 #: ../modules/sysinfo.c:616
 msgid "Storage:"
-msgstr ""
+msgstr "Lager:"
 
 #: ../modules/sysinfo.c:628
 msgid "Hardware"
@@ -941,7 +943,7 @@ msgstr "Netværk"
 
 #: ../modules/sysinfo.c:659
 msgid "Log Display"
-msgstr ""
+msgstr "Log skærm"
 
 #: ../modules/timeanddate.c:222
 msgid "Time adjusted from network."
@@ -961,19 +963,19 @@ msgstr "Dato"
 
 #: ../modules/timeanddate.c:486
 msgid "Enter current date here or use button to select."
-msgstr ""
+msgstr "Indtast aktuel dato her eller brug knap for at vælge."
 
 #: ../modules/timeanddate.c:521
 msgid "Select the timeserver to use to set the clock."
-msgstr ""
+msgstr "Vælg tidsserver der skal bruges til at indstille uret."
 
 #: ../modules/timeanddate.c:523
 msgid "Get time from network"
-msgstr ""
+msgstr "Hent tidsinformationer fra netværk"
 
 #: ../modules/timeanddate.c:531
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
-msgstr ""
+msgstr "Hvis forbundet til internettet, så kan du trykke på denne knap for at indstille uret på denne enhed ved brug af tidsserveren nævnt ovenfor."
 
 #. root_mode
 #: ../modules/timeanddate.c:534 ../modules/timeanddate.c:544
@@ -1006,7 +1008,7 @@ msgstr "Dele af disse opsætninger kan alene ændret af brugeren »root«."
 
 #: ../modules/login-setup.c:183 ../modules/gpe-admin.c:85
 msgid "General"
-msgstr ""
+msgstr "Generel"
 
 #: ../modules/login-setup.c:200
 msgid "Show owner information at login."
@@ -1014,23 +1016,27 @@ msgstr "Vis ejerinformation ved logind."
 
 #: ../modules/login-setup.c:204
 msgid "Lock display on suspend."
-msgstr ""
+msgstr "Lås skærm ved dvale."
 
 #: ../modules/login-setup.c:208
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
 msgstr ""
+"Lås skærm ved dvale. \n"
+"  (kræver adganskode)"
 
 #: ../modules/login-setup.c:213
 msgid ""
 "Automatic login. \n"
 "  (without password)"
 msgstr ""
+"Automatisk logind. \n"
+"  (uden adgangskode)"
 
 #: ../modules/ownerinfo.c:210
 msgid "Information about the Owner"
-msgstr ""
+msgstr "Information vedrørende ejeren"
 
 #: ../modules/ownerinfo.c:218
 msgid "Only the user 'root' is allowed to change this information"
@@ -1059,7 +1065,7 @@ msgstr "Adresse:"
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:308
 msgid "Photofile:"
-msgstr ""
+msgstr "Fotofil:"
 
 #: ../modules/storage.c:166 ../modules/storage.c:423
 msgid "System Memory"
@@ -1168,7 +1174,7 @@ msgstr "GPS-modtageren sender NMEA-data (standard, ingen behov for ændring for 
 
 #: ../modules/serial.c:547
 msgid "Earthmate"
-msgstr ""
+msgstr "Earthmate"
 
 #: ../modules/serial.c:553
 msgid "GPS receiver is an Earthmate GPS."
@@ -1176,7 +1182,7 @@ msgstr "GPS-modtager er en Earthmate GPS."
 
 #: ../modules/serial.c:557
 msgid "Baud Rate"
-msgstr ""
+msgstr "Baudrate"
 
 #: ../modules/cardinfo.c:103
 msgid "/_Card"
@@ -1627,11 +1633,11 @@ msgstr "Knapper"
 
 #: ../modules/keys/keys.c:83
 msgid "Virtual Keyb."
-msgstr "Virtuelt tastatur"
+msgstr "Virtuelt tast."
 
 #: ../modules/keys/keys.c:87
 msgid "External Keyb."
-msgstr "Eksternt tastatur"
+msgstr "Eksternt tast."
 
 #: ../modules/screen/screen.c:73
 msgid "Portrait"
@@ -1954,11 +1960,11 @@ msgstr "Auto dim"
 
 #: ../modules/sleep/sinterface.c:122
 msgid "backlight dim timeout"
-msgstr ""
+msgstr "baglys dim tidsudløb"
 
 #: ../modules/sleep/sinterface.c:124
 msgid "Auto dim level"
-msgstr ""
+msgstr "Auto dim-niveau"
 
 #: ../modules/sleep/sinterface.c:144
 msgid "Advanced Controls"
@@ -1970,23 +1976,23 @@ msgstr "CPU"
 
 #: ../modules/sleep/sinterface.c:160
 msgid "Sleep on cpu less than load"
-msgstr ""
+msgstr "Dvale på cpu mindre end belastning"
 
 #: ../modules/sleep/sinterface.c:164
 msgid "load below"
-msgstr ""
+msgstr "belastning under"
 
 #: ../modules/sleep/sinterface.c:180
 msgid "APM"
-msgstr ""
+msgstr "APM"
 
 #: ../modules/sleep/sinterface.c:186
 msgid "Sleep on AC"
-msgstr ""
+msgstr "Dvale ved AC"
 
 #: ../modules/sleep/sinterface.c:188
 msgid "probe IRQs"
-msgstr ""
+msgstr "søge IRQ'er"
 
 #: ../modules/sleep/sinterface.c:194
 msgid "Check IRQ activity"
@@ -2026,15 +2032,15 @@ msgstr "Indtast ejerinformation"
 
 #: ../desktop/gpe-conf-serial.desktop.in.h:1
 msgid "Serial Port Settings"
-msgstr ""
+msgstr "Indstillinger for seriel port"
 
 #: ../desktop/gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"
-msgstr ""
+msgstr "Dvale konfiguration"
 
 #: ../desktop/gpe-conf-sleep.desktop.in.h:2
 msgid "Sleep Configuration"
-msgstr ""
+msgstr "Dvale konfiguration"
 
 #: ../desktop/gpe-conf-sound.desktop.in.h:1
 msgid "Sound Settings"
@@ -2050,7 +2056,7 @@ msgstr "Systeminfo"
 
 #: ../desktop/gpe-conf-theme.desktop.in.h:1
 msgid "Global Appearance Setup"
-msgstr ""
+msgstr "Global udseende opsætning"
 
 #: ../desktop/gpe-conf-time.desktop.in.h:1
 msgid "Date/Time Setup"
