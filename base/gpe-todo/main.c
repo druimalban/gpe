@@ -58,6 +58,8 @@ gboolean large_screen;
 gboolean mode_landscape;
 
 extern GtkWidget *top_level (GtkWidget *window);
+extern void conf_read (void);
+extern void conf_write (void);
 
 #ifdef IS_HILDON
 
@@ -70,6 +72,14 @@ osso_top_callback (const gchar* arguments, gpointer ptr)
 }
 
 #endif
+
+void
+gpe_todo_exit (void)
+{
+  conf_write ();
+
+  gtk_main_quit ();
+}
 
 static void
 open_window (void)
@@ -106,7 +116,7 @@ open_window (void)
   gtk_container_add (GTK_CONTAINER (window), top);
 
   g_signal_connect (G_OBJECT (window), "delete-event",
-		    G_CALLBACK (gtk_main_quit), NULL);
+		    G_CALLBACK (gpe_todo_exit), NULL);
 
   gtk_widget_show_all (window);
 }
@@ -131,6 +141,8 @@ main (int argc, char *argv[])
 
   if (gpe_pim_categories_init () == FALSE)
     exit (1);
+
+  conf_read();
 
   open_window ();
   

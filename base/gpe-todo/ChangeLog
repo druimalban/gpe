@@ -1,3 +1,11 @@
+2008-10-20  Persson Fink, Lars  <lars.p.fink@gmail.com>
+
+	* main.c, todo.h: Added support for saved preferences.
+
+	* list-ui.c: current_menu_item is now set when moving between list
+	items using arrow keys. Fixes #205. Added support for "activate"
+	event and saved preferences.
+
 2008-09-06  Graham Cobb  <g+770@cobb.uk.net>
 
 	* list-ui.c (categories_menu): Adapt to new gpe_pim_categories_list.

@@ -43,6 +43,9 @@
 
 #define _(_x) gettext(_x)
 
+#define CONF_FILE_ "/.gpe-todo"
+#define CONF_FILE() g_strdup_printf ("%s" CONF_FILE_, g_get_home_dir ())
+
 static GtkWidget *g_option;
 static gint selected_category = -1;
 static gboolean show_completed_tasks = TRUE;
@@ -113,11 +116,32 @@ build_categories_color_array (struct todo_item *item)
 }
 
 static void
-item_do_edit (void)
+show_no_item_selected_dialog(GtkWidget *w)
 {
-  gtk_widget_show_all (edit_item (current_menu_item, -1, GTK_WINDOW(window)));
+  GtkWidget *dialog;
 
-  current_menu_item = NULL;
+  dialog = gtk_message_dialog_new (GTK_WINDOW(gtk_widget_get_toplevel(w)),
+                                   GTK_DIALOG_MODAL 
+                                   | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                   GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+                                   _("You must select an item to edit."));
+  gtk_dialog_run (GTK_DIALOG (dialog));
+  gtk_widget_destroy (dialog);
+}
+
+static void
+item_do_edit (GtkWidget *w)
+{
+  if(current_menu_item)
+    {
+      gtk_widget_show_all (edit_item (current_menu_item, -1, GTK_WINDOW(window)));
+
+      current_menu_item = NULL;
+    }
+  else
+    {
+      show_no_item_selected_dialog(w);
+    }
 }
 
 static void
@@ -619,7 +643,7 @@ create_app_menu(HildonWindow *window)
   g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
   g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(delete_completed_items), NULL);
   g_signal_connect(G_OBJECT(item_move), "activate", G_CALLBACK(refresh_items), NULL);
-  g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gtk_main_quit), NULL);
+  g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gpe_todo_exit), NULL);
 
   gtk_widget_show_all (GTK_WIDGET(menu_main));
   fullscreen_control = item_fullscreen;
@@ -642,6 +666,34 @@ window_key_press_event (GtkWidget *window, GdkEventKey *k, GtkWidget *data)
       }
     return FALSE;
 }
+
+void
+selection_changed_event(GtkTreeSelection *treeselection,
+			 gpointer user_data)
+{
+  GtkTreeIter iter;
+  GtkTreeModel *model;
+    
+  if(gtk_tree_selection_get_selected(treeselection, &model, &iter))
+    {
+      struct todo_item *i;
+      gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, COL_DATA, &i, -1);
+      current_menu_item = i;
+    }
+  else
+    {
+      current_menu_item = NULL;
+    }    
+} 
+
+void                
+row_activated_event(GtkTreeView *tree_view,
+		    GtkTreePath *path,
+                    GtkTreeViewColumn *column,
+                    gpointer user_data)
+{
+  open_editing_window(path);
+} 
 
 static GtkItemFactoryEntry menu_items[] =
 {
@@ -762,7 +814,7 @@ top_level (GtkWidget *window)
   gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), TRUE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   item = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (gtk_main_quit), NULL);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (gpe_todo_exit), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 #endif
     
@@ -865,4 +917,58 @@ top_level (GtkWidget *window)
   refresh_items ();
 
   return vbox;
+}
+
+void
+conf_read (void)
+{
+  /* Read the configuration file.  */
+  GKeyFile *conf = g_key_file_new ();
+  char *filename = CONF_FILE ();
+  if (g_key_file_load_from_file (conf, filename, 0, NULL))
+    {
+      gboolean b;
+      GError *error = NULL;
+      b = g_key_file_get_boolean (conf, "gpe-todo",
+				 "show_completed_tasks", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error = NULL;
+	}
+      else
+	show_completed_tasks = b;
+
+    }
+  g_free (filename);
+  g_key_file_free (conf);
+}
+
+/* Write the configuration file.  */
+void
+conf_write (void)
+{
+  GKeyFile *conf = g_key_file_new ();
+  char *filename = CONF_FILE ();
+  g_key_file_load_from_file (conf, filename, G_KEY_FILE_KEEP_COMMENTS, NULL);
+  g_free (filename);
+
+  g_key_file_set_boolean (conf, "gpe-todo", "show_completed_tasks", 
+			  show_completed_tasks);
+
+  gsize length;
+  char *data = g_key_file_to_data (conf, &length, NULL);
+  g_key_file_free (conf);
+  if (data)
+    {
+      char *filename = CONF_FILE ();
+      FILE *f = fopen (filename, "w");
+      g_free (filename);
+      if (f)
+	{
+	  fwrite (data, length, 1, f);
+	  fclose (f);
+	}
+      g_free (data);
+    }
 }

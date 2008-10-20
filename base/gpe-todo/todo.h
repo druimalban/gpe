@@ -23,6 +23,7 @@ extern GtkWidget *edit_item (struct todo_item *item,
 
 extern void categories_menu (void);
 extern void refresh_items (void);
+extern void gpe_todo_exit (void);
 
 /* screen geometry information */
 extern gboolean mode_landscape;
