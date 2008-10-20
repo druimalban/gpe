@@ -87,8 +87,8 @@ struct _Starling {
   GtkLabel *duration;
   GtkWidget *playpause;
   int playpause_toggled_signal_id;
-  GtkWidget *scale;
-  int scale_sliding;
+  GtkWidget *position_slider;
+  int user_seeking;
 
   GtkWidget *title;
   GtkComboBox *rating;
@@ -1622,7 +1622,7 @@ set_position_text (Starling *st, int seconds)
 }
 
 static gboolean
-scale_sliding_update (Starling *st)
+user_seeking_update (Starling *st)
 {
   if (st->current_length < 0)
     {
@@ -1630,7 +1630,7 @@ scale_sliding_update (Starling *st)
       player_query_duration (st->player, &fmt, &st->current_length, -1);
     }
 
-  gfloat percent = gtk_range_get_value (GTK_RANGE (st->scale));
+  gfloat percent = gtk_range_get_value (GTK_RANGE (st->position_slider));
 
   set_position_text (st,
 		     ((gint64) (((gfloat) st->current_length * percent)
@@ -1678,12 +1678,12 @@ try_seek (Starling *st)
 }
 
 static gboolean
-scale_button_released_cb (GtkRange *range, GdkEventButton *event,
-        Starling *st)
+position_slider_button_released_cb (GtkRange *range, GdkEventButton *event,
+			  Starling *st)
 {
-  g_assert (st->scale_sliding);
-  g_source_remove (st->scale_sliding);
-  st->scale_sliding = 0;
+  g_assert (st->user_seeking);
+  g_source_remove (st->user_seeking);
+  st->user_seeking = 0;
 
   if (st->current_length < 0)
     return FALSE;
@@ -1696,12 +1696,12 @@ scale_button_released_cb (GtkRange *range, GdkEventButton *event,
 }
 
 static gboolean
-scale_button_pressed_cb (GtkRange *range, GdkEventButton *event,
+position_slider_button_pressed_cb (GtkRange *range, GdkEventButton *event,
 			 Starling *st)
 {
-  g_assert (! st->scale_sliding);
-  st->scale_sliding
-    = g_timeout_add (100, (GSourceFunc) scale_sliding_update, st);
+  if (! st->user_seeking)
+    st->user_seeking
+      = g_timeout_add (100, (GSourceFunc) user_seeking_update, st);
 
   return FALSE;
 }
@@ -1709,7 +1709,7 @@ scale_button_pressed_cb (GtkRange *range, GdkEventButton *event,
 static gboolean
 position_update (Starling *st)
 {
-  if (st->scale_sliding)
+  if (st->user_seeking)
     /* User is sliding, don't change the position.  */
     return TRUE;
 
@@ -1734,11 +1734,8 @@ position_update (Starling *st)
       total_seconds = st->current_length / 1e9;
       position_seconds = (total_seconds / 100.0) * percent;
 
-      if (!st->scale_sliding)
-	{
-	  set_position_text (st, position_seconds);
-	  gtk_range_set_value (GTK_RANGE (st->scale), percent);
-	}
+      set_position_text (st, position_seconds);
+      gtk_range_set_value (GTK_RANGE (st->position_slider), percent);
     }
 
   /* Set duration text.  */
@@ -2688,7 +2685,7 @@ starling_run (void)
 		    G_CALLBACK (next_cb), st);
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
-  /* Scale.  */
+  /* Position slider.  */
   item = gtk_tool_item_new ();
   gtk_tool_item_set_expand (item, TRUE);
 
@@ -2709,13 +2706,13 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->position),
 		      FALSE, FALSE, 0);
 
-  st->scale = gtk_hscale_new_with_range (0, 100, 1);
-  gtk_scale_set_draw_value (GTK_SCALE (st->scale), FALSE);
-  g_signal_connect (G_OBJECT (st->scale), "button-release-event", 
-		    G_CALLBACK (scale_button_released_cb), st);
-  g_signal_connect (G_OBJECT (st->scale), "button-press-event",
-		    G_CALLBACK (scale_button_pressed_cb), st);
-  gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->scale),
+  st->position_slider = gtk_hscale_new_with_range (0, 100, 1);
+  gtk_scale_set_draw_value (GTK_SCALE (st->position_slider), FALSE);
+  g_signal_connect (G_OBJECT (st->position_slider), "button-release-event", 
+		    G_CALLBACK (position_slider_button_released_cb), st);
+  g_signal_connect (G_OBJECT (st->position_slider), "button-press-event",
+		    G_CALLBACK (position_slider_button_pressed_cb), st);
+  gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->position_slider),
 		      TRUE, TRUE, 0);
     
   st->duration = GTK_LABEL (gtk_label_new ("0:00"));

@@ -1,3 +1,19 @@
+2008-10-20  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c (struct _Starling): Rename field scale to
+	position_slider and scale_sliding to user_seeking.  Update users.
+	(scale_sliding_update): Rename from this...
+	(user_seeking_update): ... to this.  Update users.
+	(scale_button_released_cb): Rename from this...
+	(position_slider_button_released_cb): ... to this.  Update users.
+	(scale_button_pressed_cb): Rename from this...
+	(position_slider_button_pressed_cb): ... to this.  Update users.
+
+	(position_slider_button_pressed_cb): Don't assert
+	that ST->POSITION_SLIDING is 0.  Instead, only set up the timeout if
+	ST->POSITION_SLIDING is 0.
+	Reported by Thomas Schwinge <tschwinge@gnu.org>.
+
 2008-10-07  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (remove_cb): Remove tracks from the right play
