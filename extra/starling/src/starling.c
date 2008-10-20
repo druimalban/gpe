@@ -1281,19 +1281,29 @@ change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
 
   gtk_dialog_set_default_response (GTK_DIALOG (dialog),
 				   GTK_RESPONSE_OK);
-  GtkWidget *label = gtk_label_new
-    ("New caption format:\n"
-     " %u - URI\n"
-     " %a - artist\n"
-     " %A - album\n"
-     " %t - title\n"
-     " %T - track\n"
-     " %g - genre\n"
-     " %r - rating\n"
-     " %d - duration\n"
-     " %s - seconds\n"
-     " %m - minutes\n"
-     " %c - play count\n"
+  GtkWidget *label = gtk_label_new ("New caption format:");
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), label);
+
+  GtkWidget *hbox = gtk_hbox_new (FALSE, 5);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
+
+  label = gtk_label_new (" %u - URI\n"
+			 " %a - artist\n"
+			 " %A - album\n"
+			 " %t - title\n"
+			 " %T - track\n"
+			 " %g - genre");
+  gtk_container_add (GTK_CONTAINER (hbox), label);
+
+  label = gtk_label_new (" %r - rating\n"
+			 " %d - duration\n"
+			 " %s - seconds\n"
+			 " %m - minutes\n"
+			 " %c - play count\n"
+			 "");
+  gtk_container_add (GTK_CONTAINER (hbox), label);
+
+  label = gtk_label_new (
      " %[width][.][precision]c - width and precision, negative right aligns\n"
      " %X?(true clause)(fault clase) - conditional");
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), label);
