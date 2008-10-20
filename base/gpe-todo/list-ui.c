@@ -905,7 +905,13 @@ top_level (GtkWidget *window)
                     G_CALLBACK (button_release_event), NULL);
   g_signal_connect (G_OBJECT (window), "key-press-event", 
                     G_CALLBACK (window_key_press_event), NULL);
-  
+  g_signal_connect (G_OBJECT (list_view), "row_activated",
+		    G_CALLBACK (row_activated_event), NULL);
+  GtkTreeSelection *selection =  gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
+  if(selection)
+    g_signal_connect (G_OBJECT(selection), "changed",
+		      G_CALLBACK(selection_changed_event), NULL);
+
   gtk_container_add (GTK_CONTAINER (scrolled), list_view);
 
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
