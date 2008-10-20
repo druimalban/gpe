@@ -1462,13 +1462,18 @@ static void
 activated_cb (GtkTreeView *view, GtkTreePath *path,
 	      GtkTreeViewColumn *col, Starling *st)
 {
-  gint *pos;
-
   g_assert (gtk_tree_path_get_depth (path) == 1);
 
-  pos = gtk_tree_path_get_indices (path);
+  gint *pos = gtk_tree_path_get_indices (path);
 
-  int uid = play_list_index_to_uid (st->library, pos[0]);
+  PlayList *pl = view == GTK_TREE_VIEW (st->library_view)
+    ? st->library : st->queue;
+
+  int uid = play_list_index_to_uid (pl, pos[0]);
+
+  if (pl == st->queue)
+    /* When playing a song in the queue, remove it.  */
+    music_db_play_list_remove (st->db, "queue", pos[0]);
 
   starling_load (st, uid);
   starling_play (st);
@@ -2890,6 +2895,8 @@ starling_run (void)
   vbox = gtk_vbox_new (FALSE, 5);
 
   st->queue_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->queue));
+  g_signal_connect (G_OBJECT (st->queue_view), "row-activated",
+		    G_CALLBACK (activated_cb), st);
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (st->queue_view), FALSE);
   gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (st->queue_view), TRUE);
   gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->queue_view), TRUE);

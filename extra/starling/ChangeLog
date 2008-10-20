@@ -1,5 +1,12 @@
 2008-10-20  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (activated_cb): Handle the case where VIEW
+	corresponds to the queue.
+	(starling_run): Connect ST->QUEUE_VIEW's "row-activated" signal to
+	activated_cb.
+
+2008-10-20  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_play_list_query): Fix order of
 	parameters.
 	* src/starling.c (starling_advance): If random mode is enabled and
