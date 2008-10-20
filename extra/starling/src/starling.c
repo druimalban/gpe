@@ -289,7 +289,33 @@ starling_advance (Starling *st, int delta)
   int uid;
   do
     {
-      uid = music_db_play_list_dequeue (st->db, "queue");
+      /* Try to get something from the queue.  */
+      if (starling_random (st))
+	{
+	  static int rand_init;
+	  if (! rand_init)
+	    {
+	      srand (time (NULL));
+	      rand_init = 1;
+	    }
+
+	  int count = music_db_count (st->db, "queue", NULL);
+	  if (count > 0)
+	    {
+	      int i = rand () % count;
+	      uid = music_db_play_list_query (st->db, "queue", i);
+	      music_db_play_list_remove (st->db, "queue", i);
+
+	      if (uid == 0)
+		/* It seems the track was removed or something.  */
+		continue;
+	    }
+	  else
+	    uid = 0;
+	}
+      else
+	uid = music_db_play_list_dequeue (st->db, "queue");
+
       if (uid == 0)
 	/* Nothing on the queue.  */
 	{
@@ -306,16 +332,7 @@ starling_advance (Starling *st, int delta)
 
 	  if (starling_random (st))
 	    /* Random mode.  */
-	    {
-	      static int rand_init;
-	      if (! rand_init)
-		{
-		  srand (time (NULL));
-		  rand_init = 1;
-		}
-
-	      idx = rand () % count;
-	    }
+	    idx = rand () % count;
 	  else
 	    /* Not random mode.  */
 	    {

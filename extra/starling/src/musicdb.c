@@ -1644,7 +1644,7 @@ music_db_play_list_query (MusicDB *db, const char *list, int offset)
   sqlite_exec_printf (db->sqliteh,
 		      "select uid from playlists where list = '%q'"
 		      " limit 1 offset %d;",
-		      callback, NULL, &err, offset, list);
+		      callback, NULL, &err, list, offset);
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
