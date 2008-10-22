@@ -256,15 +256,15 @@ event_menu_new (Event *ev, gboolean show_summary)
       g_free (description);
       g_free(strstart);
       g_free(strend);
-      buffer[64] = 0;
-      if (l > sizeof (buffer))
-	l = sizeof (buffer);
+      buffer[sizeof (buffer) - 1] = 0;
+      if (l >= sizeof (buffer))
+	l = sizeof (buffer) - 1;
       l --;
       while (buffer[l] == '\n')
 	buffer[l --] = 0;
     
       char *tbuffer = g_locale_to_utf8 (buffer, -1, NULL, NULL, NULL);
-      if (tbuffer || buffer)
+      if (tbuffer || *buffer)
 	{
 	  GtkWidget *event_menu_info
 	    = gtk_menu_item_new_with_label (tbuffer ?: buffer);
@@ -273,8 +273,7 @@ event_menu_new (Event *ev, gboolean show_summary)
 	  i ++;
 	}
 
-      if (tbuffer)
-	g_free (tbuffer);
+      g_free (tbuffer);
     }
 
   /* Create an edit button.  */
