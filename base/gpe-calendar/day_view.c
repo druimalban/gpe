@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2006, 2007, 2008 Neal H. Walfield <neal@walfield.org>
  * Copyright (C) 2004 Luca De Cicco <ldecicco@gmx.net> 
  *
  * This program is free software; you can redistribute it and/or
@@ -646,17 +646,18 @@ calc_events_positions (DayView *day_view, GSList *events)
     {
       if (event_get_start (a) <= event_get_start (b)
 	  && (event_get_start (b)
-	      < event_get_start (a) + event_get_duration (a)))
+	      < event_get_start (a) + event_get_duration (a) - 1))
 	/* Start of B occurs during A.  */
 	return TRUE;
       if (event_get_start (b) <= event_get_start (a)
 	  && (event_get_start (a)
-	      < event_get_start (b) + event_get_duration (b)))
+	      < event_get_start (b) + event_get_duration (b) - 1))
 	/* Start of A occurs during B.  */
 	return TRUE;
-      if (event_get_start (b) < event_get_start (a) + event_get_duration (a)
-	  && (event_get_start (a) + event_get_duration (a)
-	      <= event_get_start (b) + event_get_duration (b)))
+      if (event_get_start (b)
+	  < event_get_start (a) + event_get_duration (a) - 1
+	  && (event_get_start (a) + event_get_duration (a) - 1
+	      <= event_get_start (b) + event_get_duration (b) - 1))
 	/* End of A occurs during B.  */
 	return TRUE;
       /* We don't need to check if the end of B occurs during A as

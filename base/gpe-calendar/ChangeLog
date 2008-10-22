@@ -1,5 +1,9 @@
 2008-10-22  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (calc_events_positions): Fix off-by-one error.
+
+2008-10-22  Neal H. Walfield  <neal@gnu.org>
+
 	* event-menu.c (event_menu_new): Fix off-by-one error.
 
 2008-10-22  Neal H. Walfield  <neal@gnu.org>
