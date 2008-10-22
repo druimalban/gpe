@@ -1,5 +1,14 @@
 2008-10-22  Neal H. Walfield  <neal@gnu.org>
 
+	* inotify-syscalls.h: Remove file.
+	* Makefile.am (libgpe_calendar_applet_la_SOURCES): Remove
+	inotify-syscalls.h.
+	* hildon-applet.c: Don't include <linux/inotify.h> or
+	"inotify-syscalls.h".  Include <sys/inotify.h>.
+	Patch by Adrian Bunk <bunk@stusta.de>.
+
+2008-10-22  Neal H. Walfield  <neal@gnu.org>
+
 	* day_view.c (calc_events_positions): Fix off-by-one error.
 
 2008-10-22  Neal H. Walfield  <neal@gnu.org>

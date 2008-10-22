@@ -23,12 +23,10 @@
 #include <gdk/gdkkeysyms.h>
 #include <fcntl.h>
 
-#include <linux/inotify.h>
+#include <sys/inotify.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
-#include "inotify-syscalls.h"
 
 #include "globals.h"
 #include "event-list.h"
