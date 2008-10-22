@@ -1,5 +1,9 @@
 2008-10-22  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Depend on the libxsettings package.
+
+2008-10-22  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac: Don't depend on the esound package.
 
 2008-09-05  Phil Blundell  <pb@reciva.com>
