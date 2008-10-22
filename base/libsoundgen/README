@@ -1,0 +1,4 @@
+To build, you require the following packages (at least on Debian or
+Ubuntu):
+
+  libglib2.0-dev libesd0-dev gtk-doc-tools

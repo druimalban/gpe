@@ -1,3 +1,10 @@
+2008-10-22  Neal H. Walfield  <neal@gnu.org>
+
+	* configure.ac: Check for the esound and gtk-doc packages.
+	* libsoundgen.pc.in (Requires): Add esound.
+	(Libs): Remove -lesd.
+	* README: New file.
+
 2007-08-01  Florian Boor <florian@linuxtogo.org>
 
 	* Release 0.6
