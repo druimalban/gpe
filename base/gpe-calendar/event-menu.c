@@ -35,6 +35,15 @@ edit_event_cb (GtkWidget *widget, gpointer d)
 }
 
 static void
+duplicate_event_cb (GtkWidget *widget, gpointer d)
+{
+  Event *ev = event_duplicate (event_get_event_db (EVENT (d)),
+			       EVENT (d), NULL);
+  GtkWidget *w = edit_event (ev);
+  gtk_widget_show (w);
+}
+
+static void
 edit_calendar_cb (GtkWidget *widget, gpointer d)
 {
   GtkWidget *w = calendar_edit_dialog_new (EVENT_CALENDAR (d));
@@ -282,7 +291,15 @@ event_menu_new (Event *ev, gboolean show_summary)
   gtk_menu_attach (menu, edit, 0, 1, i, i + 1);
   i ++;
 
-  /* And a save button.  */
+  /* And a duplicate button.  */
+  item = gtk_menu_item_new_with_label (_("Duplicate"));
+  g_signal_connect (G_OBJECT (item), "activate",
+		    G_CALLBACK (duplicate_event_cb), ev);
+  gtk_widget_show (item);
+  gtk_menu_attach (menu, item, 0, 1, i, i + 1);
+  i ++;
+
+  /* And a delete button.  */
 #ifdef IS_HILDON
   item = gtk_menu_item_new_with_label (_("Delete"));
 #else

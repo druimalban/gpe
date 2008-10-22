@@ -1,5 +1,10 @@
 2008-10-22  Neal H. Walfield  <neal@gnu.org>
 
+	* event-menu.c (edit_calendar_cb): New function.
+	(event_menu_new): Create a duplicate menu item.
+
+2008-10-22  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac: Depend on the libxsettings package.
 
 2008-10-22  Neal H. Walfield  <neal@gnu.org>
