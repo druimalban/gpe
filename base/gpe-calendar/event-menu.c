@@ -1,5 +1,5 @@
 /* event-menu.c - Event menu implementation.
-   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007, 2008 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
