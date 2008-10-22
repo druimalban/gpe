@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2002, 2006 Philip Blundell <philb@gnu.org>
  *               2006, Florian Boor <florian@kernelconcepts.de>
- * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2006, 2008 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
