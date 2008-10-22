@@ -1,3 +1,8 @@
+2008-10-22  Neal H. Walfield  <neal@gnu.org>
+
+	* gpe/event-db.h (event_duplicate): New declaration.
+	* event.c (event_duplicate): New function.
+
 2008-07-15  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event.c (event_flush): Do not crash when event is not modified,

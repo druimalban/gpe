@@ -426,6 +426,10 @@ extern gint event_alarm_compare_func (gconstpointer a, gconstpointer b);
 extern Event *event_new (EventDB *edb, EventCalendar *ec,
 			 const char *eventid, GError **error);
 
+/* Create a new event in database EDB that is a duplicate of the event
+   SRC.  */
+extern Event *event_duplicate (EventDB *edb, Event *src, GError **error);
+
 /* Flush event EV to the DB now.  */
 extern gboolean event_flush (Event *ev, GError **error);
 

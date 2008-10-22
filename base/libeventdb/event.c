@@ -442,6 +442,63 @@ event_details (EventSource *ev, gboolean fill_from_disk, GError **error)
   ev->details = TRUE;
 }
 
+Event *
+event_duplicate (EventDB *edb, Event *src, GError **error)
+{
+  EventCalendar *ec = event_get_calendar (EVENT (src), error);
+  if (! ec)
+    return NULL;
+
+  Event *ev = event_new (edb, ec, NULL, error);
+  if (! ev)
+    goto out;
+
+  /* Now duplicate the data.  */
+  ev->start = src->start;
+
+  EventSource *srcsrc = RESOLVE_CLONE (src);
+  EventSource *evsrc = RESOLVE_CLONE (ev);
+  g_assert (! evsrc->details);
+
+  event_details (srcsrc, TRUE, error);
+
+  /* We can memcpy everything but the event id and uid, which we need
+     to preserve, and the byday field and the details, which we need
+     to clone.  */
+  char *eventid = evsrc->eventid;
+  unsigned long uid = evsrc->uid;
+  int offset = offsetof (struct _EventSource, edb);
+  memcpy ((void *) evsrc + offset, (void *) srcsrc + offset,
+	  sizeof (*evsrc) - offset);
+  evsrc->eventid = eventid;
+  evsrc->uid = uid;
+
+  evsrc->details = TRUE;
+  if (srcsrc->summary)
+    evsrc->summary = g_strdup (srcsrc->summary);
+  if (srcsrc->description)
+    evsrc->description = g_strdup (srcsrc->description);
+  if (srcsrc->location)
+    evsrc->location = g_strdup (srcsrc->location);
+
+  GSList *l;
+  for (l = srcsrc->byday; l; l = l->next)
+    evsrc->byday = g_slist_append (evsrc->byday, g_strdup (l->data));
+
+  for (l = srcsrc->categories; l; l = l->next)
+    evsrc->categories = g_slist_append (evsrc->categories, l->data);
+
+  if (evsrc->alarm)
+    event_add_upcoming_alarms (evsrc, error);
+
+  evsrc->modified = FALSE;
+  STAMP (evsrc, error);
+
+ out:
+  g_object_unref (ec);
+  return ev;
+}
+
 void
 event_list_unref (GSList *l)
 {
