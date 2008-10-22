@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-14 21:25+0100\n"
+"POT-Creation-Date: 2008-10-22 13:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,117 +22,125 @@ msgid "GPE To-do List"
 msgstr ""
 
 #: ../gpe-todo.desktop.in.in.h:2 ../hildon/gpe-todo.desktop.in.in.h:2
-#: ../gpe-todo.desktop.in.h:2 ../hildon/gpe-todo.desktop.in.h:2 ../main.c:101
+#: ../gpe-todo.desktop.in.h:2 ../hildon/gpe-todo.desktop.in.h:2 ../main.c:111
 msgid "To-do list"
 msgstr ""
 
-#: ../list-ui.c:158
+#: ../list-ui.c:143
+msgid "You must select an item to edit."
+msgstr ""
+
+#: ../list-ui.c:160
+msgid "You must select an item to delete."
+msgstr ""
+
+#: ../list-ui.c:189
 msgid "All items"
 msgstr ""
 
-#: ../list-ui.c:185
+#: ../list-ui.c:217
 msgid "Show completed"
 msgstr ""
 
-#: ../list-ui.c:223 ../todo-ui.c:328
+#: ../list-ui.c:255 ../todo-ui.c:328
 msgid "OK"
 msgstr ""
 
-#: ../list-ui.c:224 ../todo-ui.c:329
+#: ../list-ui.c:256 ../todo-ui.c:329
 msgid "Cancel"
 msgstr ""
 
-#: ../list-ui.c:581
+#: ../list-ui.c:613
 msgid "Item"
 msgstr ""
 
-#: ../list-ui.c:582 ../list-ui.c:718
+#: ../list-ui.c:614 ../list-ui.c:781
 msgid "Categories"
 msgstr ""
 
-#: ../list-ui.c:583
+#: ../list-ui.c:615
 msgid "View"
 msgstr ""
 
-#: ../list-ui.c:584
+#: ../list-ui.c:616
 msgid "Tools"
 msgstr ""
 
-#: ../list-ui.c:585
+#: ../list-ui.c:617
 msgid "Close"
 msgstr ""
 
-#: ../list-ui.c:586
+#: ../list-ui.c:618
 msgid "Open..."
 msgstr ""
 
-#: ../list-ui.c:587
+#: ../list-ui.c:619
 msgid "Add new"
 msgstr ""
 
-#: ../list-ui.c:588
-msgid "Edit categories"
-msgstr ""
-
-#: ../list-ui.c:589
-msgid "Show toolbar"
-msgstr ""
-
-#: ../list-ui.c:590
-msgid "Fullscreen"
-msgstr ""
-
-#: ../list-ui.c:591
-msgid "Delete completed items"
-msgstr ""
-
-#: ../list-ui.c:592
-msgid "Move completed items to the end"
-msgstr ""
-
-#: ../list-ui.c:688
-msgid "New"
-msgstr ""
-
-#: ../list-ui.c:698 ../todo-ui.c:331
+#: ../list-ui.c:620 ../list-ui.c:761 ../todo-ui.c:331
 msgid "Delete"
 msgstr ""
 
-#: ../list-ui.c:710
+#: ../list-ui.c:621
+msgid "Edit categories"
+msgstr ""
+
+#: ../list-ui.c:622
+msgid "Show toolbar"
+msgstr ""
+
+#: ../list-ui.c:623
+msgid "Fullscreen"
+msgstr ""
+
+#: ../list-ui.c:624
+msgid "Delete completed items"
+msgstr ""
+
+#: ../list-ui.c:625
+msgid "Move completed items to the end"
+msgstr ""
+
+#: ../list-ui.c:751
+msgid "New"
+msgstr ""
+
+#: ../list-ui.c:773
 msgid "Refresh"
 msgstr ""
 
-#: ../list-ui.c:744
+#: ../list-ui.c:807
 msgid "Show:"
 msgstr ""
 
-#: ../list-ui.c:804
+#: ../list-ui.c:867
 msgid "Status"
 msgstr ""
 
-#: ../list-ui.c:810
+#: ../list-ui.c:873
 msgid "Summary"
 msgstr ""
 
-#: ../list-ui.c:822
+#: ../list-ui.c:885
 msgid "Due Date"
 msgstr ""
 
 #. xgettext: TRANSLATORS: "C" in the next line is an abbreviation for "Colour",
 #. please select an appropriate 1- or 2- character label for your own language.
-#: ../list-ui.c:832
+#: ../list-ui.c:895
 msgid "C"
 msgstr ""
 
-#: ../list-ui.c:839
+#: ../list-ui.c:902
 msgid "Category"
 msgstr ""
 
-#: ../main.c:88
+#: ../main.c:98
 msgid "ToDo"
 msgstr ""
 
-#: ../main.c:90
+#: ../main.c:100
 msgid "List"
 msgstr ""
 

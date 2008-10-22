@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2005 - 2006 Florian Boor <florian@kernelconcepts.de>
+ * Copyright (C) 2005 - 2008 Florian Boor <florian@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -116,7 +116,7 @@ build_categories_color_array (struct todo_item *item)
 }
 
 static void
-show_no_item_selected_dialog(GtkWidget *w)
+show_info_dialog(GtkWidget *w, const gchar *message)
 {
   GtkWidget *dialog;
 
@@ -124,7 +124,7 @@ show_no_item_selected_dialog(GtkWidget *w)
                                    GTK_DIALOG_MODAL 
                                    | GTK_DIALOG_DESTROY_WITH_PARENT,
                                    GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
-                                   _("You must select an item to edit."));
+                                   message);
   gtk_dialog_run (GTK_DIALOG (dialog));
   gtk_widget_destroy (dialog);
 }
@@ -140,18 +140,25 @@ item_do_edit (GtkWidget *w)
     }
   else
     {
-      show_no_item_selected_dialog(w);
+      show_info_dialog(w, _("You must select an item to edit."));
     }
 }
 
 static void
-item_do_delete (void)
+item_do_delete (GtkWidget *w)
 {
-  todo_db_delete_item (current_menu_item);
+  if(current_menu_item)
+    {
+      todo_db_delete_item (current_menu_item);
+      
+      current_menu_item = NULL;
 
-  refresh_items ();
-
-  current_menu_item = NULL;
+      refresh_items ();
+    }
+  else
+    {
+      show_info_dialog(w, _("You must select an item to delete."));
+    }      
 }
 
 static void
@@ -610,18 +617,20 @@ create_app_menu(HildonWindow *window)
   GtkWidget *item_close = gtk_menu_item_new_with_label(_("Close"));
   GtkWidget *item_open = gtk_menu_item_new_with_label(_("Open..."));
   GtkWidget *item_add = gtk_menu_item_new_with_label(_("Add new"));
+  GtkWidget *item_delete = gtk_menu_item_new_with_label(_("Delete"));
   GtkWidget *item_catedit = gtk_menu_item_new_with_label(_("Edit categories"));
   GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
   GtkWidget *item_fullscreen = gtk_check_menu_item_new_with_label(_("Fullscreen"));
-  GtkWidget *item_delete = gtk_menu_item_new_with_label(_("Delete completed items"));
+  GtkWidget *item_delete_completed = gtk_menu_item_new_with_label(_("Delete completed items"));
   GtkWidget *item_move = gtk_menu_item_new_with_label(_("Move completed items to the end"));
 
   gtk_menu_append (GTK_MENU(menu_items), item_open);
   gtk_menu_append (GTK_MENU(menu_items), item_add);
+  gtk_menu_append (GTK_MENU(menu_items), item_delete);
   gtk_menu_append (GTK_MENU(menu_categories), item_catedit);
   gtk_menu_append (GTK_MENU(menu_view), item_fullscreen);
   gtk_menu_append (GTK_MENU(menu_view), item_toolbar);
-  gtk_menu_append (GTK_MENU(menu_tools), item_delete);
+  gtk_menu_append (GTK_MENU(menu_tools), item_delete_completed);
   gtk_menu_append (GTK_MENU(menu_tools), item_move);
   gtk_menu_append (menu_main, item_items);
   gtk_menu_append (menu_main, item_categories);
@@ -638,10 +647,11 @@ create_app_menu(HildonWindow *window)
 
   g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_todo_item), NULL);
   g_signal_connect(G_OBJECT(item_open), "activate", G_CALLBACK(item_do_edit), NULL);
+  g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(item_do_delete), NULL);
   g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), NULL);
   g_signal_connect(G_OBJECT(item_fullscreen), "activate", G_CALLBACK(toggle_fullscreen), NULL);
   g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
-  g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(delete_completed_items), NULL);
+  g_signal_connect(G_OBJECT(item_delete_completed), "activate", G_CALLBACK(delete_completed_items), NULL);
   g_signal_connect(G_OBJECT(item_move), "activate", G_CALLBACK(refresh_items), NULL);
   g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gpe_todo_exit), NULL);
 

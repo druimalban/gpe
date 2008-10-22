@@ -1,3 +1,16 @@
+2008-10-22  Persson Fink, Lars  <lars.p.fink@gmail.com>
+
+	* po/gpe-todo.pot: Regenerated.
+
+	* po/sv.po: Updated accordingly.
+
+	* list-ui.c (item_do_delete): Added warning dialog if no item is
+	selected.
+	(show_info_dialog): Added message parameter and renamed from
+	show_no_item_selected_dialog.
+	(item_do_edit): Now uses show_info_dialog.
+	(create_app_menu): Add delete menu item. Fixes #249.
+
 2008-10-20  Persson Fink, Lars  <lars.p.fink@gmail.com>
 
 	* main.c, todo.h: Added support for saved preferences.

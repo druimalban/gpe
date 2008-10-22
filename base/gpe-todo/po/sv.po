@@ -8,130 +8,149 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gpe-todo 0.58\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-13 19:30+0100\n"
-"PO-Revision-Date: 2008-08-13 23:13+0100\n"
-"Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
+"POT-Creation-Date: 2008-10-22 13:05+0200\n"
+"PO-Revision-Date: 2008-10-22 13:07+0100\n"
+"Last-Translator: Lars Persson Fink <lars.p.fink@gmail.com>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../gpe-todo.desktop.in.in.h:1 ../hildon/gpe-todo.desktop.in.in.h:1
-#: ../gpe-todo.desktop.in.h:1 ../hildon/gpe-todo.desktop.in.h:1
+#: ../gpe-todo.desktop.in.in.h:1
+#: ../hildon/gpe-todo.desktop.in.in.h:1
+#: ../gpe-todo.desktop.in.h:1
+#: ../hildon/gpe-todo.desktop.in.h:1
 msgid "GPE To-do List"
 msgstr "GPE Att-göra-lista"
 
-#: ../gpe-todo.desktop.in.in.h:2 ../hildon/gpe-todo.desktop.in.in.h:2
-#: ../gpe-todo.desktop.in.h:2 ../hildon/gpe-todo.desktop.in.h:2 ../main.c:101
+#: ../gpe-todo.desktop.in.in.h:2
+#: ../hildon/gpe-todo.desktop.in.in.h:2
+#: ../gpe-todo.desktop.in.h:2
+#: ../hildon/gpe-todo.desktop.in.h:2
+#: ../main.c:111
 msgid "To-do list"
 msgstr "Att-göra-lista"
 
-#: ../list-ui.c:158
+#: ../list-ui.c:143
+msgid "You must select an item to edit."
+msgstr "Du måste välja ett objekt att redigera."
+
+#: ../list-ui.c:160
+msgid "You must select an item to delete."
+msgstr "Du måste välja ett objekt att ta bort."
+
+#: ../list-ui.c:189
 msgid "All items"
 msgstr "Alla objekt"
 
-#: ../list-ui.c:185
+#: ../list-ui.c:217
 msgid "Show completed"
 msgstr "Visa färdigställda"
 
-#: ../list-ui.c:223 ../todo-ui.c:328
+#: ../list-ui.c:255
+#: ../todo-ui.c:328
 msgid "OK"
 msgstr "OK"
 
-#: ../list-ui.c:224 ../todo-ui.c:329
+#: ../list-ui.c:256
+#: ../todo-ui.c:329
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ../list-ui.c:581
+#: ../list-ui.c:613
 msgid "Item"
 msgstr "Objekt"
 
-#: ../list-ui.c:582 ../list-ui.c:718
+#: ../list-ui.c:614
+#: ../list-ui.c:781
 msgid "Categories"
 msgstr "Kategorier"
 
-#: ../list-ui.c:583
+#: ../list-ui.c:615
 msgid "View"
 msgstr "Visa"
 
-#: ../list-ui.c:584
+#: ../list-ui.c:616
 msgid "Tools"
 msgstr "Verktyg"
 
-#: ../list-ui.c:585
+#: ../list-ui.c:617
 msgid "Close"
 msgstr "Stäng"
 
-#: ../list-ui.c:586
+#: ../list-ui.c:618
 msgid "Open..."
 msgstr "Öppna..."
 
-#: ../list-ui.c:587
+#: ../list-ui.c:619
 msgid "Add new"
 msgstr "Lägg till ny"
 
-#: ../list-ui.c:588
-msgid "Edit categories"
-msgstr "Redigera kategorier"
-
-#: ../list-ui.c:589
-msgid "Show toolbar"
-msgstr "Visa verktygsrad"
-
-#: ../list-ui.c:590
-msgid "Fullscreen"
-msgstr "Helskärm"
-
-#: ../list-ui.c:591
-msgid "Delete completed items"
-msgstr "Ta bort färdigställda objekt"
-
-#: ../list-ui.c:592
-msgid "Move completed items to the end"
-msgstr "Flytta färdigställda objekt till slutet"
-
-#: ../list-ui.c:688
-msgid "New"
-msgstr "Nytt"
-
-#: ../list-ui.c:698 ../todo-ui.c:331
+#: ../list-ui.c:620
+#: ../list-ui.c:761
+#: ../todo-ui.c:331
 msgid "Delete"
 msgstr "Ta bort"
 
-#: ../list-ui.c:710
+#: ../list-ui.c:621
+msgid "Edit categories"
+msgstr "Redigera kategorier"
+
+#: ../list-ui.c:622
+msgid "Show toolbar"
+msgstr "Visa verktygsrad"
+
+#: ../list-ui.c:623
+msgid "Fullscreen"
+msgstr "Helskärm"
+
+#: ../list-ui.c:624
+msgid "Delete completed items"
+msgstr "Ta bort färdigställda objekt"
+
+#: ../list-ui.c:625
+msgid "Move completed items to the end"
+msgstr "Flytta färdigställda objekt till slutet"
+
+#: ../list-ui.c:751
+msgid "New"
+msgstr "Nytt"
+
+#: ../list-ui.c:773
 msgid "Refresh"
 msgstr "Uppdatera"
 
-#: ../list-ui.c:744
+#: ../list-ui.c:807
 msgid "Show:"
 msgstr "Visa:"
 
-#: ../list-ui.c:804
+#: ../list-ui.c:867
 msgid "Status"
 msgstr "Status"
 
-#: ../list-ui.c:810
+#: ../list-ui.c:873
 msgid "Summary"
 msgstr "Sammanfattning"
 
-#: ../list-ui.c:822
+#: ../list-ui.c:885
 msgid "Due Date"
 msgstr "Slutdatum"
 
-#. TRANSLATORS: "C" stands for Color.
-#: ../list-ui.c:830
+#. xgettext: TRANSLATORS: "C" in the next line is an abbreviation for "Colour",
+#. please select an appropriate 1- or 2- character label for your own language.
+#: ../list-ui.c:895
 msgid "C"
 msgstr "F"
 
-#: ../list-ui.c:837
+#: ../list-ui.c:902
 msgid "Category"
 msgstr "Kategori"
 
-#: ../main.c:88
+#: ../main.c:98
 msgid "ToDo"
 msgstr "Att-göra"
 
-#: ../main.c:90
+#: ../main.c:100
 msgid "List"
 msgstr "Lista"
 
@@ -179,7 +198,8 @@ msgstr "Sammanfattning:"
 msgid "Details:"
 msgstr "Detaljer:"
 
-#: ../todo-ui.c:303 ../todo-ui.c:306
+#: ../todo-ui.c:303
+#: ../todo-ui.c:306
 msgid "Categories:"
 msgstr "Kategorier:"
 
@@ -205,45 +225,32 @@ msgstr "Nytt objekt"
 
 #~ msgid "Define categories by tapping Categories button."
 #~ msgstr "Definiera kategorier genom att tryck på knappen Kategorier."
-
 #~ msgid "Permanently delete all completed items?"
 #~ msgstr "Ta bort alla färdigställda objekt permanent?"
-
 #~ msgid "Confirm"
 #~ msgstr "Bekräfta"
-
 #~ msgid "Configure"
 #~ msgstr "Konfigurera"
-
 #~ msgid "Configure categories"
 #~ msgstr "Konfigurera kategorier"
-
 #~ msgid "Purge"
 #~ msgstr "Töm"
-
 #~ msgid "Re-sort"
 #~ msgstr "Sortera om"
-
 #~ msgid "Exit"
 #~ msgstr "Avsluta"
-
 #~ msgid "Exit the program"
 #~ msgstr "Avsluta programmet"
-
 #~ msgid "Category name must not be blank"
 #~ msgstr "Kategorinamnet får inte vara tomt"
-
 #~ msgid "A category by that name already exists"
 #~ msgstr "En kategori med samma namn finns redan"
-
 #~ msgid "To-do list: Categories"
 #~ msgstr "Att-göra-lista: Kategorier"
-
 #~ msgid "New category"
 #~ msgstr "Ny kategori"
-
 #~ msgid "Create a new category"
 #~ msgstr "Skapa en ny kategori"
-
 #~ msgid "Delete the selected category"
 #~ msgstr "Ta bort den markerade kategorin"
+
