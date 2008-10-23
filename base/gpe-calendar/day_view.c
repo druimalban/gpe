@@ -1,13 +1,23 @@
 /*
- * Copyright (C) 2001, 2002, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006, 2007, 2008 Neal H. Walfield <neal@walfield.org>
- * Copyright (C) 2004 Luca De Cicco <ldecicco@gmx.net> 
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version
- * 2 of the License, or (at your option) any later version.
- */
+   Copyright (C) 2001, 2002, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
+   Copyright (C) 2006, 2007, 2008 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2004 Luca De Cicco <ldecicco@gmx.net> 
+  
+   This file is part of GPE.
+
+   GPE is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   GPE is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
 #include <time.h>
@@ -898,11 +908,11 @@ calc_events_positions (DayView *day_view, GSList *events)
 }
 
 static void
-time_layout (PangoLayout *pl, int hour)
+time_layout (PangoLayout *pl, time_t time)
 {
   struct tm tm;
   memset (&tm, 0, sizeof (tm));
-  tm.tm_hour = hour;
+  localtime_r (&time, &tm);
 
   char *am = nl_langinfo (AM_STR);
   char timebuf[10];
@@ -963,11 +973,10 @@ update_extents (DayView *day_view)
   PangoLayout *pl
     = gtk_widget_create_pango_layout (GTK_WIDGET (day_view), NULL);
   day_view->time_width = 0;
-  int hour = (day_view->visible_start - day_view->period_start) / 60 / 60;
   int i;
   for (i = 0; i < day_view->visible_duration / 60 / 60; i ++)
     {
-      time_layout (pl, hour + i);
+      time_layout (pl, day_view->visible_start + i * 60 * 60);
 
       PangoRectangle pr;
       pango_layout_get_pixel_extents (pl, NULL, &pr);
@@ -1073,7 +1082,7 @@ hour_bar_calc (DayView *day_view)
       && now <= day_view->visible_start + day_view->visible_duration)
     {
       day_view->hour_bar_pos
-	= day_view->height * (now - day_view->visible_start)
+	= day_view->height * (difflocaltime (now, day_view->visible_start))
 	/ day_view->visible_duration;
 
       if (! day_view->hour_bar_repaint)
@@ -1163,11 +1172,10 @@ appointment_area_expose_event (GtkWidget *widget, GdkEventExpose *event,
   pango_layout_set_alignment (pl, PANGO_ALIGN_CENTER);
   pango_layout_set_wrap (pl, PANGO_WRAP_WORD_CHAR);
 
-  int hour = (day_view->visible_start - day_view->period_start) / 60 / 60;
   int i;
   for (i = 0; i < day_view->visible_duration / 60 / 60; i ++)
     {
-      time_layout (pl, hour + i);
+      time_layout (pl, day_view->visible_start + i * 60 * 60);
 
       PangoRectangle pr;
       pango_layout_get_pixel_extents (pl, NULL, &pr);
@@ -1481,7 +1489,8 @@ reload_events_hard (DayView *day_view)
 
   day_view->visible_start = (earliest / 60 / 60) * 60 * 60;
   day_view->visible_duration
-    = (latest - day_view->visible_start + 60 * 60 - 1) / 60 / 60 * 60 * 60;
+    = (difflocaltime (latest, day_view->visible_start) + 60 * 60 - 1)
+    / 60 / 60 * 60 * 60;
 
   update_extents (day_view);
 

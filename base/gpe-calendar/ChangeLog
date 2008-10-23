@@ -1,5 +1,16 @@
 2008-10-23  Neal H. Walfield  <neal@gnu.org>
 
+	* util.h (difflocaltime): New declaration.
+	* util.c (difflocaltime): New function.
+	* day_view.c (time_layout): Replace paramter hour with parameter
+	time.  Update users.  Use the local time to calculate the hour.
+	(hour_bar_calc): Use difflocaltime when calculating the position
+	of the hour bar.
+	(reload_events_hard): Use difflocaltime when calculating
+	DAY_VIEW->VISIBLE_DURATION.
+
+2008-10-23  Neal H. Walfield  <neal@gnu.org>
+
 	* event-ui.h: Include <stdbool.h>.
 	(edit_event): Add parameter remove_event_on_cancel.  Update users.
 	* event-ui.c (struct edit_state): Add field

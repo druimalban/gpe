@@ -1,14 +1,24 @@
 /*
- * Copyright (C) 2001, 2002, 2003, 2006 Philip Blundell <philb@gnu.org>
- * Hildon adaption 2005 by Matthias Steinbauer <matthias@steinbauer.org>
- * Toolbar new API conversion 2005 by Florian Boor <florian@kernelconcepts.de>
- * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version
- * 2 of the License, or (at your option) any later version.
- */
+   Copyright (C) 2001, 2002, 2003, 2006 Philip Blundell <philb@gnu.org>
+   Hildon adaption 2005 by Matthias Steinbauer <matthias@steinbauer.org>
+   Toolbar new API conversion 2005 by Florian Boor <florian@kernelconcepts.de>
+   Copyright (C) 2006, 2008 Neal H. Walfield <neal@walfield.org>
+  
+   This file is part of GPE.
+
+   GPE is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   GPE is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #include <time.h>
 #include <gtk/gtk.h>
@@ -49,5 +59,9 @@ extern void g_date_set_time_t (GDate *date, time_t t);
        } \
      ret; \
     })
+
+/* Given two unix times, determine the number of seconds between them
+   in the current timezone.  */
+extern unsigned int difflocaltime (time_t end, time_t start);
 
 #endif
