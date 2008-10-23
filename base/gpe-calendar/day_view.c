@@ -1421,6 +1421,16 @@ reload_events_hard (DayView *day_view)
 
   time_t end = start + 30 * 60 * 60 - 1;
 
+  /* Find the end of the day.  Some days have 23 hours, others 25.
+     Adding 30 hours is sure to get us exactly one day in the
+     future.  */
+  localtime_r (&end, &vt);
+  vt.tm_hour = 0;
+  vt.tm_min = 0;
+  vt.tm_sec = 0;
+  vt.tm_isdst = -1;
+  time_t day_end = mktime (&vt);
+
   time_t earliest = day_view->period_start + ROWS_HARD_FIRST * 60 * 60;
   time_t latest = day_view->period_start
     + (ROWS_HARD_FIRST + ROWS_HARD) * 60 * 60;
@@ -1432,14 +1442,13 @@ reload_events_hard (DayView *day_view)
       Event *ev = EVENT (iter->data);
 
       if (event_get_start (ev) <= start
-	  && (start + 24 * 60 * 60
-	      <= event_get_start (ev) + event_get_duration (ev)))
+	  && (day_end <= event_get_start (ev) + event_get_duration (ev)))
 	/* All day event or a multi-day event.  */
 	day_view->reminders = g_slist_prepend (day_view->reminders, ev);
       else if (is_reminder (ev))
 	/* Normal reminder.  */
 	{
-	  if (event_get_start (ev) < start + 24 * 60 * 60)
+	  if (event_get_start (ev) == start)
 	    day_view->reminders = g_slist_prepend (day_view->reminders, ev);
 	  else
 	    /* We're not interested in reminders which start

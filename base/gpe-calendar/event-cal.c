@@ -1,12 +1,12 @@
 /* event-cal.c - Event calendar widget implementation.
-   Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2006, 2007, 2008 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
    GPE is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
 
    GPE is distributed in the hope that it will be useful, but WITHOUT
    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
@@ -14,8 +14,8 @@
    License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111, USA. */
+   along with this program.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
 #include <gtk/gtk.h>
@@ -220,12 +220,17 @@ update_cal (GtkCalendar *cal)
       else
 	start = MAX (tm.tm_yday - start_tm.tm_yday + 1, 0);
 
-      t = event_get_start (ev) + event_get_duration (ev) - 1;
-      localtime_r (&t, &tm);
-      if (end_tm.tm_year < tm.tm_year)
-	end = days;
+      if (event_get_untimed (ev))
+	end = start;
       else
-	end = MIN (tm.tm_yday - start_tm.tm_yday + 1, days);
+	{
+	  t = event_get_start (ev) + event_get_duration (ev) - 1;
+	  localtime_r (&t, &tm);
+	  if (end_tm.tm_year < tm.tm_year)
+	    end = days;
+	  else
+	    end = MIN (tm.tm_yday - start_tm.tm_yday + 1, days);
+	}
 
       for (i = start; i <= end; i ++)
 #if defined(IS_HILDON) && HILDON_VER > 0

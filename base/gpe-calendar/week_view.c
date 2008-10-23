@@ -1,12 +1,22 @@
 /*
- * Copyright (C) 2001, 2002, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version
- * 2 of the License, or (at your option) any later version.
- */
+   Copyright (C) 2001, 2002, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
+   Copyright (C) 2006, 2007, 2008 Neal H. Walfield <neal@walfield.org>
+  
+   This file is part of GPE.
+
+   GPE is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   GPE is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #include <time.h>
 
@@ -710,12 +720,24 @@ reload_events_hard (GtkWeekView *week_view)
       time_t s = event_get_start (ev);
       GDate start;
       g_date_set_time_t (&start, s);
+
+      if (g_date_get_julian (&start) < g_date_get_julian (&period_start)
+	  && event_get_untimed (ev))
+	/* The event starts before the month starts and it is untimed.
+	   This can happen when DST occurs.  Skip it.  */
+	continue;
+
       g_date_clamp (&start, &period_start, &period_end);
 
-      time_t e = s + event_get_duration (ev) - 1;
       GDate end;
-      g_date_set_time_t (&end, e);
-      g_date_clamp (&end, &period_start, &period_end);
+      if (event_get_untimed (ev))
+	end = start;
+      else
+	{
+	  time_t e = s + event_get_duration (ev) - 1;
+	  g_date_set_time_t (&end, e);
+	  g_date_clamp (&end, &period_start, &period_end);
+	}
 
       for (i = g_date_get_julian (&start); i <= g_date_get_julian (&end); i ++)
 	{

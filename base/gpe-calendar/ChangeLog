@@ -1,5 +1,15 @@
 2008-10-23  Neal H. Walfield  <neal@gnu.org>
 
+	* day_view.c (reload_events_hard): Correctly calculate the end of
+	a day.  Only add an untimed event if the start matches the start
+	of the day.
+	* event-cal.c (update_cal): If the event is untimed, set END to
+	START.
+	* month_view.c (reload_events_hard): Likewise.
+	* week_view.c (reload_events_hard): Likewise.
+
+2008-10-23  Neal H. Walfield  <neal@gnu.org>
+
 	* util.h (difflocaltime): New declaration.
 	* util.c (difflocaltime): New function.
 	* day_view.c (time_layout): Replace paramter hour with parameter
