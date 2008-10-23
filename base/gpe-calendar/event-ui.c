@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2006, 2007, 2008 Neal H. Walfield <neal@walfield.org>
  * Copyright (C) 2005, 2006 Florian Boor <fb@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -101,6 +101,10 @@ struct edit_state
 
   /* The event we are editing.  If NULL then creating a new event.  */
   Event *ev;
+  /* If true and S->EV is not NULL, then S->EV is removed if the
+     dialog is cancelled.  (Implemented by clearing
+     REMOVE_EVENT_ON_CANCEL on ok.)  */
+  bool remove_event_on_cancel;
 
   gboolean recur_day_floating;
   gboolean end_date_floating, end_time_floating;
@@ -114,7 +118,11 @@ destroy_user_data (gpointer user_data, GObject *object)
 {
   struct edit_state *s = user_data;
   if (s->ev)
-    g_object_unref (s->ev);
+    {
+      if (s->remove_event_on_cancel)
+	event_remove (s->ev, NULL);
+      g_object_unref (s->ev);
+    }
 
   g_slist_free (s->categories);
 
@@ -521,6 +529,7 @@ click_ok (GtkWidget *widget, struct edit_state *s)
     }
 
   event_flush (ev, NULL);
+  s->remove_event_on_cancel = false;
   gtk_widget_destroy (GTK_WIDGET (s->window));
 }
 
@@ -1807,13 +1816,14 @@ new_event (time_t t)
 }
 
 GtkWidget *
-edit_event (Event *ev)
+edit_event (Event *ev, bool remove_event_on_cancel)
 {
   struct edit_state *s = build_edit_event_window (ev);
   if (! s)
     return NULL;
 
   gtk_window_set_title (s->window, _("Calendar: Edit event"));
+  s->remove_event_on_cancel = remove_event_on_cancel;
 
   return GTK_WIDGET (s->window);
 }

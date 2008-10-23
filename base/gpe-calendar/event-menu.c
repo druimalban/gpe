@@ -30,7 +30,7 @@
 static void
 edit_event_cb (GtkWidget *widget, gpointer d)
 {
-  GtkWidget *w = edit_event (EVENT (d));
+  GtkWidget *w = edit_event (EVENT (d), FALSE);
   gtk_widget_show (w);
 }
 
@@ -39,7 +39,7 @@ duplicate_event_cb (GtkWidget *widget, gpointer d)
 {
   Event *ev = event_duplicate (event_get_event_db (EVENT (d)),
 			       EVENT (d), NULL);
-  GtkWidget *w = edit_event (ev);
+  GtkWidget *w = edit_event (ev, TRUE);
   gtk_widget_show (w);
 }
 

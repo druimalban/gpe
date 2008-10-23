@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006 Neal H. Walfield <neal@walfield.org>
+ * Copyright (C) 2006, 2008 Neal H. Walfield <neal@walfield.org>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,12 +12,13 @@
 #define EVENT_UI_H
 
 #include <time.h>
+#include <stdbool.h>
 #include <glib.h>
 #include <gtk/gtk.h>
 
 #include <gpe/event-db.h>
 
 extern GtkWidget *new_event (time_t t);
-extern GtkWidget *edit_event (Event *ev);
+extern GtkWidget *edit_event (Event *ev, bool remove_event_on_cancel);
 
 #endif
