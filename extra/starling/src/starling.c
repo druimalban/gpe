@@ -269,6 +269,10 @@ starling_load (Starling *st, int uid)
 	play_list_force_changed (st->library, idx);
 
       set_title (st);
+
+      st->current_length = -1;
+      st->has_lyrics = FALSE;
+      st->enqueued = FALSE;
     }
 
   return TRUE;
@@ -1923,10 +1927,6 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
 
   if (GST_STATE_PLAYING == state)
     {
-      st->current_length = -1;
-      st->has_lyrics = FALSE;
-      st->enqueued = FALSE;
-
       if (! st->position_update)
 	st->position_update
 	  = g_timeout_add (1000, (GSourceFunc) position_update, st);
@@ -1938,7 +1938,6 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
 	  g_source_remove (st->position_update);
 	  st->position_update = 0;
 	}
-      position_update (st);
     }
 
   position_update (st);
