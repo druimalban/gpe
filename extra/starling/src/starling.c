@@ -1891,6 +1891,23 @@ update_library_count (Starling *st)
 }
 
 static void
+lyrics_download (Starling *st)
+{
+  struct music_db_info info;
+  info.fields = MDB_ARTIST | MDB_TITLE;
+  if (! music_db_get_info (st->db, st->loaded_song, &info))
+    return;
+
+  st->has_lyrics = TRUE;
+  lyrics_display (info.artist ?: "", info.title ?: "",
+		  GTK_TEXT_VIEW (st->textview),
+		  TRUE);
+
+  g_free (info.artist);
+  g_free (info.title);
+}
+
+static void
 player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
 {
   if (gtk_toggle_tool_button_get_active
@@ -2947,6 +2964,12 @@ starling_run (void)
   /* Lyrics tab */
 
   vbox = gtk_vbox_new (FALSE, 5);
+
+  GtkWidget *download = gtk_button_new_with_label (_("Download"));
+  g_signal_connect_swapped (G_OBJECT (download), "clicked",
+			    G_CALLBACK (lyrics_download), st);
+  gtk_box_pack_start (GTK_BOX (vbox), download, FALSE, FALSE, 0);
+
   st->textview = gtk_text_view_new ();
   GTK_TEXT_VIEW (st->textview)->editable = FALSE;
 

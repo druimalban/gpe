@@ -1,3 +1,9 @@
+2008-10-26  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c (lyrics_download): New function.
+	(starling_run): Create "download" button on lyrics tab.  Connect
+	"clicked" signal to it.
+
 2008-10-20  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (change_caption_format): Reformat dialog text.
