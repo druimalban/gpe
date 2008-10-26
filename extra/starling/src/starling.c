@@ -1284,7 +1284,7 @@ change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
   GtkWidget *label = gtk_label_new ("New caption format:");
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), label);
 
-  GtkWidget *hbox = gtk_hbox_new (FALSE, 5);
+  GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
 
   label = gtk_label_new (" %u - URI\n"
@@ -2537,7 +2537,7 @@ starling_run (void)
   g_signal_connect_swapped (G_OBJECT (st->window), "delete-event", 
 			    G_CALLBACK (starling_quit), st);
 
-  GtkBox *main_box = GTK_BOX (gtk_vbox_new (FALSE, 5));
+  GtkBox *main_box = GTK_BOX (gtk_vbox_new (FALSE, 0));
 #ifdef IS_HILDON
 #if HILDON_VER > 0
   gtk_container_add (GTK_CONTAINER (st->window), GTK_WIDGET (main_box));
@@ -2738,7 +2738,7 @@ starling_run (void)
   item = gtk_tool_item_new ();
   gtk_tool_item_set_expand (item, TRUE);
 
-  GtkBox *hbox = GTK_BOX (gtk_hbox_new (FALSE, 5));
+  GtkBox *hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
   gtk_container_add (GTK_CONTAINER (item), GTK_WIDGET (hbox));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
@@ -2773,7 +2773,7 @@ starling_run (void)
   /* The currently playing song.  */
   /* Stuff the title label in an hbox to prevent it from being
      centered.  */
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 5));
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
   gtk_box_pack_start (main_box, GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
@@ -2815,12 +2815,12 @@ starling_run (void)
   /* Library view tab.  Place a search field at the top and the
      library view at the bottom.  */
 
-  vbox = gtk_vbox_new (FALSE, 5);
+  vbox = gtk_vbox_new (FALSE, 0);
 
   /* The currently playing song.  */
   /* Stuff the title label in an hbox to prevent it from being
      centered.  */
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 5));
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
@@ -2919,7 +2919,7 @@ starling_run (void)
 
   /* Play queue tab.  */
 
-  vbox = gtk_vbox_new (FALSE, 5);
+  vbox = gtk_vbox_new (FALSE, 0);
 
   st->queue_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->queue));
   g_signal_connect (G_OBJECT (st->queue_view), "row-activated",
@@ -2963,7 +2963,7 @@ starling_run (void)
 
   /* Lyrics tab */
 
-  vbox = gtk_vbox_new (FALSE, 5);
+  vbox = gtk_vbox_new (FALSE, 0);
 
   GtkWidget *download = gtk_button_new_with_label (_("Download"));
   g_signal_connect_swapped (G_OBJECT (download), "clicked",
@@ -3006,7 +3006,7 @@ starling_run (void)
 
     gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
   */
-  vbox = gtk_vbox_new (FALSE, 5);
+  vbox = gtk_vbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox1, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
 
