@@ -171,7 +171,8 @@ set_title (Starling *st)
     {
       st->has_lyrics = TRUE;
       lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview),
-		      gtk_check_menu_item_get_active (st->download_lyrics));
+		      gtk_check_menu_item_get_active (st->download_lyrics),
+		      FALSE);
     }
 
   g_signal_handler_block (st->rating, st->rating_change_signal_id);
@@ -1901,7 +1902,7 @@ lyrics_download (Starling *st)
   st->has_lyrics = TRUE;
   lyrics_display (info.artist ?: "", info.title ?: "",
 		  GTK_TEXT_VIEW (st->textview),
-		  TRUE);
+		  TRUE, TRUE);
 
   g_free (info.artist);
   g_free (info.title);

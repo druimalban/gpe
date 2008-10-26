@@ -43,7 +43,7 @@ static provider_t current_provider = PROVIDER_LYRCAR;
                         "time DATE);"
 #define SELECT_STATEMENT "SELECT content FROM lyrics WHERE " \
                         "uri = ?;"
-#define STORE_STATEMENT "INSERT INTO lyrics (uri, content, time) " \
+#define STORE_STATEMENT "INSERT OR REPLACE INTO lyrics (uri, content, time) " \
                         "VALUES (?, ?, DATETIME('NOW'));"
 
 /* Lyrics providers */
@@ -277,12 +277,15 @@ lyrics_write_textview (GtkTextView *view, const gchar *content)
     GtkTextBuffer *buffer;
         
     buffer = gtk_text_view_get_buffer (view);
-    gtk_text_buffer_set_text (buffer, content ?: _("No lyrics found."), -1);
+    gtk_text_buffer_set_text (buffer,
+			      content && *content
+			      ? content : _("No lyrics found."),
+			      -1);
 }
 
 void
 lyrics_display (const gchar *artist, const gchar *title, GtkTextView *view,
-		bool try_to_download)
+		bool try_to_download, bool force_download)
 {
     gchar *uri;
 
@@ -290,7 +293,8 @@ lyrics_display (const gchar *artist, const gchar *title, GtkTextView *view,
 
     g_return_if_fail (uri != NULL);
 
-    lyrics_display_with_uri (uri, view, try_to_download);
+    lyrics_display_with_uri (uri, artist, title, view,
+			     try_to_download, force_download);
 
     g_free (uri);
 }
@@ -315,26 +319,37 @@ got_lyrics (SoupMessage *msg, gpointer view)
 }
 
 void
-lyrics_display_with_uri (const gchar *uri, GtkTextView *view,
-			 bool try_to_download)
+lyrics_display_with_uri (const gchar *uri,
+			 const char *artist, const char *title,
+			 GtkTextView *view, bool try_to_download,
+			 bool force_download)
 {
     gchar *content;
     SoupSession *session;
     SoupMessage *msg;
     
-    if (lyrics_select (uri, &content))
+    if (! force_download && lyrics_select (uri, &content))
       {
         lyrics_write_textview (view, content);
         
         g_free (content);
+
         return;
       }
 
     if (! try_to_download)
       {
-        lyrics_write_textview (view, NULL);
+	char *message = g_strdup_printf (_("%s by %s not in database."),
+					 title, artist);
+        lyrics_write_textview (view, message);
+	g_free (message);
 	return;
       }
+
+    char *message = g_strdup_printf (_("Downloading lyrics for %s by %s..."),
+				     title, artist);
+    lyrics_write_textview (view, message);
+    g_free (message);
 
     session = soup_session_async_new ();
     msg = soup_message_new (SOUP_METHOD_GET, uri);

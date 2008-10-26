@@ -1,5 +1,21 @@
 2008-10-26  Neal H. Walfield  <neal@gnu.org>
 
+	* src/lyrics.h (lyrics_display): Take additional parameter
+	force_download.  Update users.
+	(lyrics_display_with_uri): Take additional parameters artist,
+	title and force_download.  Update users.
+	* src/lyrics.c (STORE_STATEMENT): Use INSERT OR REPLACE, not just
+	INSERT.
+	(lyrics_write_textview): Also display "No lyrics found" if CONTENT
+	is the empty string.
+	(lyrics_display): Take additional parameter force_download.  Pass
+	it to lyrics_display_with_uri.
+	(lyrics_display_with_uri): Take additional parameters artist,
+	title and force_download.  Only select from the database if
+	FORCE_DOWNLOAD is false.  Print nicer status messages.
+
+2008-10-26  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (change_caption_format): Change box's child
 	spacing to 0.
 	(starling_run): Likewise.

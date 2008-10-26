@@ -47,10 +47,14 @@ void lyrics_set_provider (provider_t prov);
 provider_t lyrics_get_provider (void);
 
 void lyrics_display (const gchar *artist, const gchar *title,
-		     GtkTextView *view, bool try_to_download);
+		     GtkTextView *view,
+		     bool try_to_download, bool force_download);
 
-void lyrics_display_with_uri (const gchar *uri, GtkTextView *view,
-			      bool try_to_download);
+void lyrics_display_with_uri (const gchar *uri,
+			      const char *artist, const char *title,
+			      GtkTextView *view,
+			      bool try_to_download,
+			      bool force_download);
 
 int lyrics_select (const gchar *uri, char **content);
 
