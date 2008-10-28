@@ -1,207 +1,275 @@
-# Vietnamese Translation for gpe-sketchbook-0.2.7.
-# Copyright (C) 2005 Free Software Foundation, Inc.
-# Clytie Siddall <clytie@riverland.net.au>, 2005.
+# Vietnamese Translation for GPE Sketchbook.
+# Copyright © 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-sketchbook package.
+# Clytie Siddall <clytie@riverland.net.au>, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-sketchbook 0.2.7\n"
+"Project-Id-Version: gpe-sketchbook 0.2.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2003-10-12 20:45+0300\n"
-"PO-Revision-Date: 2005-02-03 16:56+1030\n"
+"POT-Creation-Date: 2005-11-04 22:39+0100\n"
+"PO-Revision-Date: 2008-09-08 18:28+0930\n"
 "Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
-"Language-Team: Vietnamese <gnomevi-list@lists.sourceforge.net> \n"
+"Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: LocFactoryEditor 1.7b3\n"
 
-#: src/gpe-sketchbook.c:115
+#: src/gpe-sketchbook.c:181
 msgid "Sketchbook: preferences"
-msgstr "Sổ vẽ: tham chiếu"
+msgstr "Sổ vẽ: tùy thích"
 
-#: src/gpe-sketchbook.c:119 gpe-sketchbook.desktop.in.h:2
+#: src/gpe-sketchbook.c:185
 msgid "Sketchbook"
 msgstr "Sổ vẽ"
 
-#: src/preferences.c:93
-msgid ""
-"Cannot create XSettings client.\n"
-"Use default preferences."
-msgstr ""
-"Không tạo được ứng dụng khách XSettings.\n"
-"Sử dụng tham chiếu mặc định."
+#: src/gpe-sketchbook.c:187 src/gpe-sketchbook.c:210 src/sketchpad.c:207
+msgid "Sketch"
+msgstr "Vẽ bức"
 
-#: src/preferences.c:188
-msgid ""
-"gpe-confd is not running.\n"
-"Cannot save the preferences."
-msgstr ""
-"Hiện trình gpe-confd không chạy.\n"
-"Không lưu được tham chiếu."
-
-#: src/preferences.c:277
+#: src/preferences.c:332
 msgid "Start with"
-msgstr "Bắt đầu có"
+msgstr "Bắt đầu với"
 
-#: src/preferences.c:280
+#: src/preferences.c:335
 msgid "Sketchpad"
-msgstr "Tập giấy vẽ"
+msgstr "Tập vẽ"
 
-#: src/preferences.c:282
+#: src/preferences.c:337
 msgid "Selector - list"
-msgstr "Chọn - danh sách"
+msgstr "Chọn — danh sách"
 
-#: src/preferences.c:284
+#: src/preferences.c:339
 msgid "Selector - icons table"
-msgstr "Chọn - bảng biểu tượng"
+msgstr "Chọn — bảng biểu tượng"
 
-#: src/preferences.c:300
+#: src/preferences.c:355
 msgid "Use joypad scrolling"
-msgstr "Sử dụng cách cuộn joypad"
+msgstr "Cuộn bằng joypad"
 
-#: src/preferences.c:307
+#: src/preferences.c:362
 msgid "Grow on scroll"
-msgstr "Mở rộng khi cuộn"
+msgstr "Phóng to khi cuộn"
 
-#: src/preferences.c:316
+#: src/preferences.c:371
 msgid "OK"
-msgstr "Được"
+msgstr "OK"
 
-#: src/preferences.c:317 src/selector-cb.c:67 src/sketchpad-cb.c:244
+#: src/preferences.c:372 src/selector-cb.c:66 src/sketchpad-cb.c:282
 msgid "Cancel"
 msgstr "Thôi"
 
-#: src/selector.c:88
-#, c-format
-msgid "Cannot read the sketchbook directory: %s. Exit."
-msgstr "Không đọc được thư mục sổ vẽ: %s. Thoát."
-
 #. TRANSLATORS: %s are: [folder name] [error message]
-#: src/selector.c:95
+#: src/selector.c:143
 #, c-format
 msgid "Cannot create %s: %s. Exit."
 msgstr "Không tạo được %s: %s. Thoát."
 
-#. TRANSLATORS: default sketch label based on [date] and [time]
-#. example: "2003 10 12  at  18:48:51"
-#: src/selector.c:179
-#, c-format
-msgid "%s  at  %s"
-msgstr "ngày %s  lúc  %s"
-
-#: src/selector-cb.c:66 src/sketchpad-cb.c:243
+#: src/selector-cb.c:65 src/sketchpad-cb.c:281
 msgid "Delete current sketch?"
-msgstr "Xóa bỏ bức vẽ này có không?"
+msgstr "Xoá bức vẽ này không?"
 
-#: src/selector-cb.c:66 src/sketchpad-cb.c:47 src/sketchpad-cb.c:77
-#: src/sketchpad-cb.c:243
+#: src/selector-cb.c:65 src/sketchpad-cb.c:47 src/sketchpad-cb.c:83
+#: src/sketchpad-cb.c:281
 msgid "Question"
 msgstr "Câu hỏi"
 
-#: src/selector-cb.c:67 src/sketchpad-cb.c:244 src/sketchpad-gui.c:468
+#: src/selector-cb.c:66 src/sketchpad-cb.c:282
 msgid "Delete"
-msgstr "Xóa bỏ"
+msgstr "Xóa"
 
-#: src/selector-gui.c:102
-msgid "New sketch"
-msgstr "Vẽ bức mới"
+#: src/selector-gui.c:103 src/sketchpad-gui.c:580
+msgid "Import"
+msgstr "Nhập"
 
-#: src/selector-gui.c:107
-msgid "Edit sketch"
-msgstr "Hiệu chỉnh bức vẽ"
+#: src/selector-gui.c:180
+msgid "View"
+msgstr "Xem"
 
-#: src/selector-gui.c:115
-msgid "Delete selected sketch"
-msgstr "Xóa bỏ bức vẽ được chọn"
+#. TRANSLATORS: "U" stands for "Updated"
+#. *  It is the title for the column that displays last update timestamp.
+#. *  The data in this column is no more than 5 characters.
+#. *  Please, try to make this title 5 characters max.
+#.
+#: src/selector-gui.c:280
+msgid "U"
+msgstr "C"
 
-#: src/selector-gui.c:123
-msgid "Import from image"
-msgstr "Nạp từ ảnh"
+#: src/selector-gui.c:288
+msgid "Title"
+msgstr "Tựa đề"
 
-#: src/selector-gui.c:132
-msgid "Toggle view"
-msgstr "Xem bập bênh"
-
-#: src/selector-gui.c:146
-msgid "Preferences"
-msgstr "Tham chiếu"
-
-#: src/sketchpad.c:184
-msgid "Sketch"
-msgstr "Vẽ bức"
-
-#: src/sketchpad.c:189
+#: src/sketchpad.c:212
 msgid "new"
 msgstr "mới"
 
-#: src/sketchpad.c:220
+#: src/sketchpad.c:261
 #, c-format
 msgid "Import of `%s' failed."
-msgstr "Không nạp `%s' được."
+msgstr "Lỗi nhập « %s »."
 
-#: src/sketchpad.c:237
+#: src/sketchpad.c:278
 msgid "Image to import"
-msgstr "Ảnh để nạp"
+msgstr "Ảnh cần nhập"
 
 #: src/sketchpad-cb.c:47
 msgid ""
 "Sketch modified,\n"
 "save before exiting?"
 msgstr ""
-"Bức vẽ được sửa đổi,\n"
+"Bức vẽ bị sửa đổi,\n"
 "nên lưu trước khi thoát không?"
 
-#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:84
 msgid "Discard"
 msgstr "Bỏ"
 
-#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:78 src/sketchpad-gui.c:467
+#: src/sketchpad-cb.c:48 src/sketchpad-cb.c:84
 msgid "Save"
 msgstr "Lưu"
 
-#: src/sketchpad-cb.c:77
+#: src/sketchpad-cb.c:83
 msgid "Save current sketch?"
 msgstr "Lưu bức vẽ này không?"
 
-#: src/sketchpad-gui.c:266
-msgid "Select eraser"
-msgstr "Chọn điều xóa"
+#: src/sketchpad-cb.c:179
+msgid "New sketch"
+msgstr "Vẽ bức mới"
 
-#: src/sketchpad-gui.c:268
-msgid "Select pencil"
-msgstr "Chọn cái viết chì"
+#: src/sketchpad-gui.c:211 src/sketchpad-gui.c:554
+msgid "Show list"
+msgstr "Hiện danh sách"
 
-#: src/sketchpad-gui.c:270
-msgid "Brush size"
-msgstr "Cỡ chổi"
+#: src/sketchpad-gui.c:213
+msgid "Show sketches list"
+msgstr "Hiện danh sách bức vẽ"
 
-#: src/sketchpad-gui.c:271
-msgid "Brush color"
-msgstr "Màu chổi"
-
-#: src/sketchpad-gui.c:430
+#: src/sketchpad-gui.c:216 src/sketchpad-gui.c:545
 msgid "Sketch menu"
 msgstr "Trình đơn vẽ"
 
-#: src/sketchpad-gui.c:439
-msgid "Show list"
-msgstr "Chỉ danh sách"
+#: src/sketchpad-gui.c:220
+msgid "Sketch file menu"
+msgstr "Trình đơn tập tin vẽ"
 
-#: src/sketchpad-gui.c:444
+#: src/sketchpad-gui.c:232
+msgid "Pencil"
+msgstr "Bút chì"
+
+#: src/sketchpad-gui.c:235 src/sketchpad-gui.c:369
+msgid "Select pencil"
+msgstr "Chọn bút chì"
+
+#: src/sketchpad-gui.c:242
+msgid "Eraser"
+msgstr "Cái cạo"
+
+#: src/sketchpad-gui.c:245 src/sketchpad-gui.c:367
+msgid "Select eraser"
+msgstr "Chọn cái cạo"
+
+#: src/sketchpad-gui.c:253
+msgid "Size"
+msgstr "Kích cỡ"
+
+#: src/sketchpad-gui.c:256
+msgid "Select a pencil size"
+msgstr "Chọn kích cỡ bút chì"
+
+#: src/sketchpad-gui.c:266
+msgid "Colour"
+msgstr "Màu"
+
+#: src/sketchpad-gui.c:269
+msgid "Select a colour"
+msgstr "Chọn màu"
+
+#: src/sketchpad-gui.c:275
+msgid "Display previous sketch"
+msgstr "Hiện bức vẽ trước"
+
+#: src/sketchpad-gui.c:280
+msgid "Display next sketch"
+msgstr "Hiện bức vẽ sau"
+
+#: src/sketchpad-gui.c:371
+msgid "Brush size"
+msgstr "Cỡ chổi"
+
+#: src/sketchpad-gui.c:372
+msgid "Brush color"
+msgstr "Màu chổi"
+
+#: src/sketchpad-gui.c:462
+msgid "small"
+msgstr "nhỏ"
+
+#: src/sketchpad-gui.c:463
+msgid "medium"
+msgstr "vừa"
+
+#: src/sketchpad-gui.c:464
+msgid "large"
+msgstr "lớn"
+
+#: src/sketchpad-gui.c:465
+msgid "very large"
+msgstr "rất lớn"
+
+#: src/sketchpad-gui.c:559
 msgid "Previous sketch"
 msgstr "Bức vẽ trước"
 
-#: src/sketchpad-gui.c:449
+#: src/sketchpad-gui.c:564
 msgid "Next sketch"
-msgstr "Bức vẽ tới"
+msgstr "Bức vẽ sau"
 
-#: src/sketchpad-gui.c:465
-msgid "New"
-msgstr "Mới"
+#: src/sketchpad-gui.c:613
+msgid "Small"
+msgstr "Nhỏ"
 
-#: src/sketchpad-gui.c:466
-msgid "Import"
-msgstr "Nạp"
+#: src/sketchpad-gui.c:617
+msgid "Medium"
+msgstr "Vừa"
+
+#: src/sketchpad-gui.c:621
+msgid "Large"
+msgstr "Lớn"
+
+#: src/sketchpad-gui.c:625
+msgid "Extra large"
+msgstr "Rất lớn"
+
+#: src/sketchpad-gui.c:691
+msgid "Black"
+msgstr "Đen"
+
+#: src/sketchpad-gui.c:692
+msgid "Blue"
+msgstr "Xanh"
+
+#: src/sketchpad-gui.c:693
+msgid "Green"
+msgstr "Lục"
+
+#: src/sketchpad-gui.c:694
+msgid "Red"
+msgstr "Đỏ"
+
+#: src/sketchpad-gui.c:695
+msgid "Orange"
+msgstr "Cam"
+
+#: src/sketchpad-gui.c:696
+msgid "Yellow"
+msgstr "Vàng"
 
 #: gpe-sketchbook.desktop.in.h:1
 msgid "GPE Sketchbook"
 msgstr "Sổ vẽ GPE"
+
+#: gpe-sketchbook.desktop.in.h:2
+msgid "Sketch Book"
+msgstr "Sổ vẽ"
