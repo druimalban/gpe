@@ -1,0 +1,15 @@
+gpe-sketchbook.desktop.in.in
+gpe-sketchbook.desktop.in
+src/sketchpad-gui.c
+src/preferences.c
+src/selector-cb.c
+src/sketchpad-cb.c
+src/selector.c
+src/gpe-sketchbook.c
+src/sketchpad.c
+src/selector-gui.c
+src/dock.c
+src/sketchpad-cb.c
+src/sketchpad-gui.c
+src/db.c
+src/files.c

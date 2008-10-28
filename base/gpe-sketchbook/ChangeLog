@@ -1,3 +1,7 @@
+2008-10-28  Florian Boor  <florian.boor@kernelconcepts.de>
+
+    * Apply patch for autotools support by D. Marlin.
+
 2008-09-07  Florian Boor  <florian.boor@kernelconcepts.de>
 
     * po/*.po, config.makefile: Add and update several translations.
