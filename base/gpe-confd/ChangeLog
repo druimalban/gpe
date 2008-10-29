@@ -1,0 +1,4 @@
+2008-10-29  Neal H. Walfield  <neal@gnu.org>
+
+	* autogen.sh: Mark executable.
+
