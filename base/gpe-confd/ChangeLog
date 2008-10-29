@@ -1,4 +1,8 @@
 2008-10-29  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Depend on libxsettings-client.
+
+2008-10-29  Neal H. Walfield  <neal@gnu.org>
+
 	* autogen.sh: Mark executable.
 
