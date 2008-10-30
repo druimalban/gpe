@@ -1,13 +1,23 @@
 /*
- * Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
- * Copyright (C) 2006, 2007, 2008 Neal H. Walfield <neal@walfield.org>
- * Copyright (C) 2005, 2006 Florian Boor <fb@kernelconcepts.de>
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version
- * 2 of the License, or (at your option) any later version.
- */
+   Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Philip Blundell <philb@gnu.org>
+   Copyright (C) 2006, 2007, 2008 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2005, 2006 Florian Boor <fb@kernelconcepts.de>
+  
+   This file is part of GPE.
+
+   GPE is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   GPE is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see
+   <http://www.gnu.org/licenses/>.  */
 
 #include <string.h>
 #include <stdlib.h>
@@ -107,7 +117,7 @@ struct edit_state
   bool remove_event_on_cancel;
 
   gboolean recur_day_floating;
-  gboolean end_date_floating, end_time_floating;
+  gboolean end_time_floating;
 };
 
 /* minute, hour, day, week */
@@ -650,110 +660,80 @@ sink_weekly (GtkWidget *widget, struct edit_state *s)
 }
 
 static void
-sink_end_date (GtkWidget *widget, struct edit_state *s)
-{
-  s->end_date_floating = FALSE;
-  s->end_time_floating = FALSE;
-}
-
-static void
-sink_end_time (GtkWidget *widget, struct edit_state *s)
+sink_end_time (struct edit_state *s, GtkWidget *widget)
 {
   s->end_time_floating = FALSE;
 }
 
-#ifdef IS_HILDON
 static void
-note_time_change (GtkWidget *widget, struct edit_state *s)
+note_time_change (struct edit_state *s, GtkWidget *widget)
 {
-  guint hour, minute, sec;
-    
-  hildon_time_editor_get_time (HILDON_TIME_EDITOR (widget), 
-                               &hour, &minute, &sec); 
-    
   if (s->end_time_floating)
     {
       struct tm tm;
       memset (&tm, 0, sizeof (struct tm));
+    
+      guint hour, minute;
+#ifdef IS_HILDON
       hildon_date_editor_get_date (HILDON_DATE_EDITOR (s->startdate),
                                    (guint *) &tm.tm_year, 
                                    (guint *) &tm.tm_mon, (guint *) &tm.tm_mday);
       tm.tm_year -= 1900;
       tm.tm_mon -= 1;
-      tm.tm_hour = hour;
-      tm.tm_min = minute;
-      tm.tm_isdst = -1;
-      time_t t = mktime (&tm) + 60 * 60;
-      localtime_r (&t, &tm);
 
-      hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->enddate),
-			       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
-
-      hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->endtime), 
-                                   tm.tm_hour, tm.tm_min, 0);
-    }
-}
-
-static void
-note_date_change (HildonDateEditor *c, GdkEventFocus *event, struct edit_state *s)
-{
-  if (s->recur_day_floating && s->checkbuttonwday[0])
-    {
-      GDate date;
-      guint day, month, year;
-        
-      hildon_date_editor_get_date (c, &year, &month, &day);
-      g_date_set_dmy (&date, day, month, year);
-      int wday = g_date_weekday (&date);
-
-      int i;
-      for (i = 0; i < 7; i++)
-          gtk_toggle_button_set_active
-	         (GTK_TOGGLE_BUTTON (s->checkbuttonwday[i]), i == wday - 1);
-
-      /* Changing the buttons--even programmatically--will cause the
-	 toggle's changed signal to be emitted thereby causing the
-	 recur_day_floating to be set to false.  Reset it.  */
-      s->recur_day_floating = TRUE;
-    }
-}
+      guint sec;
+      hildon_time_editor_get_time (HILDON_TIME_EDITOR (widget), 
+				   &hour, &minute, &sec); 
 
 #else
-
-static void
-note_time_change (GtkWidget *widget, struct edit_state *s)
-{
-  guint hour, minute;
-
-  gpe_time_sel_get_time (GPE_TIME_SEL (widget), &hour, &minute);
-    
-  if (s->end_time_floating)
-    {
-      struct tm tm;
-      memset (&tm, 0, sizeof (struct tm));
       tm.tm_year = GTK_DATE_COMBO (s->startdate)->year - 1900;
       tm.tm_mon = GTK_DATE_COMBO (s->startdate)->month;
       tm.tm_mday = GTK_DATE_COMBO (s->startdate)->day;
+
+      gpe_time_sel_get_time (GPE_TIME_SEL (widget), &hour, &minute);
+#endif
+
       tm.tm_hour = hour;
       tm.tm_min = minute;
       tm.tm_isdst = -1;
       time_t t = mktime (&tm) + 60 * 60;
       localtime_r (&t, &tm);
 
+#ifdef IS_HILDON
+      hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->enddate),
+				   tm.tm_year + 1900, tm.tm_mon + 1,
+				   tm.tm_mday);
+      hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->endtime), 
+                                   tm.tm_hour, tm.tm_min, 0);
+#else
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
 			       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
-
       gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
+#endif
+
+      /* Changing the buttons--even programmatically--will cause the
+	 toggle's changed signal to be emitted.  Reset them.  */
+      s->end_time_floating = TRUE;
     }
 }
 
 static void
-note_date_change (GtkDateCombo *c, struct edit_state *s)
+note_date_change (struct edit_state *s, GtkWidget *c)
 {
   if (s->recur_day_floating && s->checkbuttonwday[0])
     {
       GDate date;
-      g_date_set_dmy (&date, c->day, c->month + 1, c->year);
+
+      guint day, month, year;
+#ifdef IS_HILDON
+      hildon_date_editor_get_date (HILDON_DATE_EDITOR (c), &year, &month, &day);
+#else
+      day = GTK_DATE_COMBO (c)->day;
+      month = GTK_DATE_COMBO (c)->month + 1;
+      year = GTK_DATE_COMBO (c)->year;
+#endif
+
+      g_date_set_dmy (&date, day, month, year);
       int wday = g_date_weekday (&date);
 
       int i;
@@ -767,7 +747,6 @@ note_date_change (GtkDateCombo *c, struct edit_state *s)
       s->recur_day_floating = TRUE;
     }
 }
-#endif
 
 static void
 new_calendar_clicked (GtkButton *button, gpointer user_data)
@@ -1130,11 +1109,7 @@ build_recurrence_page (struct edit_state *s)
       gtk_widget_show (GTK_WIDGET (hbox));
     }
   else
-#ifdef IS_HILDON      
-    note_date_change (HILDON_DATE_EDITOR (s->startdate), NULL, s);
-#else
-    note_date_change (GTK_DATE_COMBO (s->startdate), s);
-#endif
+    note_date_change (s, s->startdate);
   /* By day (monthly).  */
   s->bydaymonthly = GTK_BOX (gtk_vbox_new (FALSE, 0));
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (s->bydaymonthly),
@@ -1285,17 +1260,18 @@ build_recurrence_page (struct edit_state *s)
           struct tm tm;
           localtime_r (&end, &tm);
           hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->datecomboendon), 
-                                       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
+                                       tm.tm_year + 1900, tm.tm_mon + 1,
+				       tm.tm_mday);
         }
       hildon_number_editor_set_value (HILDON_NUMBER_EDITOR (s->endafter),
-				 event_get_recurrence_count (s->ev));
+				      event_get_recurrence_count (s->ev));
 #else
       if (end)
         {
           struct tm tm;
           localtime_r (&end, &tm);
           gtk_date_combo_set_date (GTK_DATE_COMBO (s->datecomboendon),
-                       tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
+				   tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
         }
       gtk_spin_button_set_value (GTK_SPIN_BUTTON (s->endafter),
 				 event_get_recurrence_count (s->ev));
@@ -1440,10 +1416,12 @@ build_edit_event_window (Event *ev)
 
 #ifdef IS_HILDON
   s->starttime = hildon_time_editor_new ();
+  g_signal_connect_swapped (G_OBJECT (s->starttime), "focus-out-event",
+			    G_CALLBACK (note_time_change), s);
 #else
   s->starttime = gpe_time_sel_new ();
-  g_signal_connect (G_OBJECT (s->starttime), "changed",
-		    G_CALLBACK (note_time_change), s);
+  g_signal_connect_swapped (G_OBJECT (s->starttime), "changed",
+			    G_CALLBACK (note_time_change), s);
 #endif
   gtk_box_pack_start (hbox, s->starttime, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (s->starttime));
@@ -1454,14 +1432,14 @@ build_edit_event_window (Event *ev)
 
 #ifdef IS_HILDON
   s->startdate = hildon_date_editor_new ();
-  g_signal_connect (G_OBJECT (s->startdate), "focus-out-event",
-		    G_CALLBACK (note_date_change), s);
+  g_signal_connect_swapped (G_OBJECT (s->startdate), "focus-out-event",
+			    G_CALLBACK (note_date_change), s);
 #else
   s->startdate = gtk_date_combo_new ();
   gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->startdate),
 				     ! week_starts_sunday);
-  g_signal_connect (G_OBJECT (s->startdate), "changed",
-		    G_CALLBACK (note_date_change), s);
+  g_signal_connect_swapped (G_OBJECT (s->startdate), "changed",
+			    G_CALLBACK (note_date_change), s);
 #endif
   gtk_box_pack_start (hbox, s->startdate, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (s->startdate));
@@ -1498,8 +1476,12 @@ build_edit_event_window (Event *ev)
 
 #ifdef IS_HILDON
   s->endtime = hildon_time_editor_new ();
+  g_signal_connect_swapped (G_OBJECT (s->endtime), "focus-out-event",
+			    G_CALLBACK (sink_end_time), s);
 #else
   s->endtime = gpe_time_sel_new ();
+  g_signal_connect_swapped (G_OBJECT (s->endtime), "changed",
+			    G_CALLBACK (sink_end_time), s);
 #endif
   gtk_box_pack_start (hbox, s->endtime, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (s->endtime));
@@ -1510,10 +1492,14 @@ build_edit_event_window (Event *ev)
 
 #ifdef IS_HILDON
   s->enddate = hildon_date_editor_new ();
+  g_signal_connect_swapped (G_OBJECT (s->enddate), "focus-out-event",
+			    G_CALLBACK (sink_end_time), s);
 #else
   s->enddate = gtk_date_combo_new ();
   gtk_date_combo_week_starts_monday (GTK_DATE_COMBO (s->enddate),
 				     ! week_starts_sunday);
+  g_signal_connect_swapped (G_OBJECT (s->enddate), "changed",
+			    G_CALLBACK (sink_end_time), s);
 #endif
   gtk_box_pack_start (hbox, s->enddate, FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (s->enddate));
@@ -1534,15 +1520,15 @@ build_edit_event_window (Event *ev)
 			       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 #else
       gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
-      g_signal_connect (G_OBJECT (s->endtime), "changed",
-		    G_CALLBACK (sink_end_time), s);
       gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
  			tm.tm_year + 1900, tm.tm_mon, tm.tm_mday);
-      g_signal_connect (G_OBJECT (s->enddate), "changed",
-	        G_CALLBACK (sink_end_date), s);
 #endif
+
       gtk_notebook_set_page (GTK_NOTEBOOK (s->tabs), 0);
     }
+
+  s->recur_day_floating = TRUE;
+  s->end_time_floating = TRUE;
 
   /* The calendar combo box.  */
   hbox = GTK_BOX (gtk_hbox_new (FALSE, gpe_get_boxspacing()));
@@ -1781,7 +1767,7 @@ new_event (time_t t)
   hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->starttime), 
                                tm.tm_hour, tm.tm_min, 0);
   hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->startdate),
-			   tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
+			       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 #else
   gpe_time_sel_set_time (GPE_TIME_SEL (s->starttime), tm.tm_hour, tm.tm_min);
   gtk_date_combo_set_date (GTK_DATE_COMBO (s->startdate),
@@ -1794,7 +1780,7 @@ new_event (time_t t)
   hildon_time_editor_set_time (HILDON_TIME_EDITOR (s->endtime), 
                                tm.tm_hour, tm.tm_min, 0);
   hildon_date_editor_set_date (HILDON_DATE_EDITOR (s->enddate),
-			   tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
+			       tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 #else
   gpe_time_sel_set_time (GPE_TIME_SEL (s->endtime), tm.tm_hour, tm.tm_min);
   gtk_date_combo_set_date (GTK_DATE_COMBO (s->enddate),
@@ -1802,7 +1788,6 @@ new_event (time_t t)
 #endif
 
   s->recur_day_floating = TRUE;
-  s->end_date_floating = TRUE;
   s->end_time_floating = TRUE;
 
   GtkWidget *entry = g_object_get_data (G_OBJECT (s->window), "default-entry");

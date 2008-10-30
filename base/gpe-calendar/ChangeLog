@@ -1,3 +1,22 @@
+2008-10-30  Neal H. Walfield  <neal@gnu.org>
+
+	* event-ui.c (struct edit_state): Remove field end_date_floating.
+	(sink_end_date): Remove function.
+	(sink_end_time): Swap order of parameters.  Update uses.
+	(note_time_change): Merge generic and hildon implementations.
+	Make the edit state the first parameter.  Update callers.  Reset
+	S->END_TIME_FLOATING.
+	(note_date_change): Merge generic and hildon implementations.
+	Make the edit state the first parameter.  Update callers.
+	(build_edit_event_window) [IS_HILDON]: Connect S->STATETIME's
+	"focus-out-event" signal to note_time_change.  Connect
+	S->ENDTIME's and S->ENDDATE's "focus-out-event" signals to
+	sink_end_time.
+	(build_edit_event_window) [! IS_HILDON]: Always connect
+	S->ENDTIME's and S->ENDDATE's "changed" signals to sink_end_time.
+	(build_edit_event_window): After setting date and time, set
+	S->RECUR_DAY_FLOATING and S->END_TIME_FLOATING to true.
+
 2008-10-26  Neal H. Walfield  <neal@gnu.org>
 
 	* configure.ac: Remove libxsettings dependency.
