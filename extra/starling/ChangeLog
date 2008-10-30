@@ -1,3 +1,10 @@
+2008-10-30  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c (starling_load): If 90% of the song was played,
+	increment its play count, set its last played field and update its
+	duration.
+	(position_update): Don't do it here.
+
 2008-10-26  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (starling_load): Reset ST->CURRENT_LENGTH,

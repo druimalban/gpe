@@ -239,7 +239,31 @@ starling_load (Starling *st, int uid)
 {
   int old_idx = -1;
   if (st->loaded_song)
-    old_idx = play_list_uid_to_index (st->library, st->loaded_song);
+    {
+      old_idx = play_list_uid_to_index (st->library, st->loaded_song);
+
+      if (st->current_length > 0)
+	{
+	  GstFormat fmt = GST_FORMAT_TIME;
+	  gint64 position;
+	  if (player_query_position (st->player, &fmt, &position)
+	      && position > (9 * st->current_length) / 10)
+	    /* At least 90% of the song was played.  Increment its
+	       play count.  */
+	    {
+	      /* Note that it has been played.  */
+	      struct music_db_info info;
+	      memset (&info, 0, sizeof (info));
+	      info.fields = MDB_UPDATE_DATE_LAST_PLAYED | MDB_INC_PLAY_COUNT
+		| MDB_DURATION;
+	      /* Also set the duration now, it doesn't cost anything
+		 and many track lack it.  */
+	      info.duration = st->current_length / 1e9;
+
+	      music_db_set_info (st->db, st->loaded_song, &info);
+	    }
+	}
+    }
 
   st->loaded_song = uid;
   st->pending_seek = -1;
@@ -1810,17 +1834,6 @@ position_update (Starling *st)
 	  g_free (info.artist);
 	  g_free (info.title);
 	}
-
-      /* Note that it has been played.  */
-      struct music_db_info info;
-      memset (&info, 0, sizeof (info));
-      info.fields = MDB_UPDATE_DATE_LAST_PLAYED | MDB_INC_PLAY_COUNT
-	| MDB_DURATION;
-      /* Also set the duration now, it doesn't cost anything and many
-	 track lack it.  */
-      info.duration = total_seconds;
-
-      music_db_set_info (st->db, st->loaded_song, &info);
 
       st->enqueued = TRUE;
     }
