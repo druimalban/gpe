@@ -20,11 +20,6 @@ starling_SOURCES = main.c \
 		caption.h caption.c \
 		md5.h md5.c
 
-if HILDON
-starling_SOURCES += moko-type.h \
-		moko-finger-scroll.h moko-finger-scroll.c
-endif
-
 starling_catalog_CFLAGS = $(BASE_CFLAGS)
 starling_catalog_LDADD = $(BASE_LIBS)
 starling_catalog_SOURCES = starling-catalog.c \

@@ -1,3 +1,42 @@
+2008-11-03  Neal H. Walfield  <neal@gnu.org>
+
+	* moko-type.h: Remove file.
+	* moko-finger-scroll.h: Likewise.
+	* moko-finger-scroll.c: Likewise.
+	* src/Makefile.am (starling_SOURCES): Don't add moko-type.h, 
+	moko-finger-scroll.h, or moko-finger-scroll.c.
+	* src/starling.c: [IS_HILDON]: Don't include
+	<moko-finger-scroll.h>.
+	(GtkScrolledWindow) [IS_HILDON]: Don't redefine.
+	(gtk_scrolled_window_new) [IS_HILDON]: Likewise.
+	(GTK_SCROLLED_WINDOW) [IS_HILDON]: Likewise.
+	(gtk_scrolled_window_set_policy) [IS_HILDON]: Likewise.
+
+2008-11-01  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (struct _MusicDB): Rename meta_data_reader_mutex
+	to work_lock and change to a GMutex *.  Add fields worker, exit,
+	work_cond, and dirs_pending.  Rename meta_data_reader_pending to
+	meta_data_pending.  Update users.  Rename fs_scanner to
+	worker_idle.  Update users.  Remove field meta_data_reader.
+	(music_db_init): Initialize the thread package.  Initialize
+	db->work_lock, db->work_cond, db->meta_data_pending and
+	db->dirs_pending.
+	(music_db_finalize): Join with the worker thread.  Destroy
+	db->work_lock, db->work_cond, db->meta_data_pending and
+	db->dirs_pending.
+	(struct fs_scanner): Rename from this...
+	(struct worker): ... to this.  Update users.
+	(fs_scanner_thread): Rename from this...
+	(worker_thread): ... to this.  Update users.  Enter a loop waiting
+	on DB->WORK_COND.  On signal, process DB->DIRS_PENDING and
+	DB->META_DATA_PENDING.
+	(fs_scanner): Rename from this...
+	(worker_start): ... to this.  Update users.  Save the thread in
+	DB->WORKER.  Make it joinable.
+	(music_db_add): If we have added an entry to the queue, signal
+	DB->WORK_COND.
+
 2008-10-30  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (starling_load): If 90% of the song was played,

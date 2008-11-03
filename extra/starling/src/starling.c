@@ -64,16 +64,6 @@
 # define APPLICATION_DBUS_SERVICE "starling"
 #endif /* IS_HILDON */
 
-#ifdef IS_HILDON
-#include <moko-finger-scroll.h>
-#define GtkScrolledWindow MokoFingerScroll
-#undef gtk_scrolled_window_new
-#define gtk_scrolled_window_new(h, v) moko_finger_scroll_new()
-#undef GTK_SCROLLED_WINDOW
-#define GTK_SCROLLED_WINDOW MOKO_FINGER_SCROLL
-#define gtk_scrolled_window_set_policy(w, h, v) do { } while (0)
-#endif
-
 struct play_list_view_config
 {
   int position;
