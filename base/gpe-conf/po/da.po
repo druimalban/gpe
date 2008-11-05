@@ -3,14 +3,17 @@
 # This file is distributed under the same license as the gpe-conf package.
 # Joe Hansen <joedalton2@yahoo.dk>, 2008.
 #
-# sleep -> dvale
-# suspend -> dvale
+# Konventioner
+# sleep -> sove
+# suspend -> hvile
+# hibernate -> dvale (nb benyttes ikke)
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-conf-0.2.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-05 16:51+0200\n"
-"PO-Revision-Date: 2008-09-27 00:00+0000\n"
+"PO-Revision-Date: 2008-11-04 00:00+0000\n"
 "Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
@@ -27,8 +30,8 @@ msgid ""
 "accessible for user root.\n"
 "Please enter password."
 msgstr ""
-"Nogle indstillinger er kun\n"
-"tilgængelige for systemadministratoren.\n"
+"Nogle indstillinger er kun tilgængelige\n"
+"for systemadministratoren (root).\n"
 "Indtast venligst adgangskode."
 
 #: ../applets.c:474 ../modules/screen/calibrate.c:32
@@ -61,11 +64,11 @@ msgstr "Status: Oplader hovedbatteri"
 
 #: ../modules/battery.c:210
 msgid "Status: dead"
-msgstr "Status: Død"
+msgstr "Status: Dødt"
 
 #: ../modules/battery.c:213 ../modules/battery.c:273 ../modules/battery.c:354
 msgid "Status: full"
-msgstr "Status: Fuldt opladet"
+msgstr "Status: Fuldt ladt"
 
 #: ../modules/battery.c:216 ../modules/battery.c:276
 msgid "Status: no battery"
@@ -178,7 +181,7 @@ msgstr "Thema"
 #: ../main.c:97 ../modules/theme.c:987
 #: ../desktop/gpe-conf-theme.desktop.in.h:2
 msgid "Look and Feel"
-msgstr "Se og føl"
+msgstr "Udseende og fremtoning"
 
 #: ../main.c:99
 msgid "Power"
@@ -243,7 +246,7 @@ msgstr "PCMCIA/CF-kort"
 
 #: ../main.c:113
 msgid "PCMCIA/CF Card Info and Config"
-msgstr "PCMCIA/CF-kort info og konfig"
+msgstr "PCMCIA/CF-kortinfo og konfig"
 
 #: ../main.c:115
 msgid "Sound"
@@ -277,6 +280,8 @@ msgstr "Opgave baggrundsbillede"
 msgid "Only select background image."
 msgstr "Vælg kun baggrundsbillede."
 
+# måske bagbelysning.
+# google har flere hit på baggrundslys.
 #: ../main.c:123
 msgid "Task backlight setting"
 msgstr "Opgave opsætning af baggrundslys"
@@ -294,15 +299,17 @@ msgstr "Opsætning gemt"
 msgid "'task_backlight' supports zero, one and two arguments.\n"
 msgstr "»opgave_baggrundslys« understøtter nul, et eller to argumenter.\n"
 
+# Forudsat at ' ' er kommandoer som derfor ikke er oversat.
 #: ../main.c:358
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
-msgstr "»opgave_navneserver« behøver en ny (og kun en) navneserver som argument.\n"
+msgstr "»task_nameserver« kræver en ny (og kun en) navneserver som argument.\n"
 
+# Forudsat at ' ' er kommandoer som derfor ikke er oversat.
 #: ../main.c:376
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
-msgstr "»opgave_lyd« behøver (g)em/(e)gendan som argument.\n"
+msgstr "'task_sound' behøver (g)em/(e)gendan som argument.\n"
 
 #: ../main.c:444
 msgid "Warning: PCMCIA init failed."
@@ -339,13 +346,13 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Brug: gpe-conf [AppletName]\n"
-"hvor AppletName er i:\n"
+"Brug: gpe-conf [panelprogramnavn]\n"
+"hvor panelprogramnavn er i:\n"
 
 #: ../tools/interface.c:315 ../tools/interface.c:515 ../tools/interface.c:531
 #: ../tools/interface.c:651
 msgid "[NONE SET]"
-msgstr "[INGEN SAT]"
+msgstr "[INGEN INDSTILLET]"
 
 #: ../tools/interface.c:706 ../tools/interface.c:1704
 msgid "UNSPEC"
@@ -462,7 +469,7 @@ msgstr "VJ 6-bit seriel linje-IP"
 
 #: ../tools/interface.c:1710
 msgid "Adaptive Serial Line IP"
-msgstr "Adaptive seriel linje-IP"
+msgstr "Selvjusterende seriel linje-IP"
 
 #: ../tools/interface.c:1713
 msgid "Ethernet"
@@ -486,7 +493,7 @@ msgstr "IPIP-tunnel"
 
 #: ../tools/interface.c:1740
 msgid "Point-to-Point Protocol"
-msgstr "Point-to-Point protokol"
+msgstr "Punkt-til-punkt-protokol"
 
 #: ../tools/interface.c:1743
 msgid "(Cisco)-HDLC"
@@ -615,7 +622,7 @@ msgstr "Ukendt enhed"
 
 #: ../modules/logread.c:116
 msgid "Can't find circular buffer, is syslog running?\n"
-msgstr "Kan ikke finde cirkulærbuffer, kører syslog?\n"
+msgstr "Kan ikke finde cirkulær buffer, kører syslog?\n"
 
 #: ../modules/logread.c:123
 msgid "Can't get access to syslogd's circular buffer."
@@ -651,7 +658,7 @@ msgstr "USB perifer tilstand"
 
 #: ../modules/usb.c:247
 msgid "Ethernet Networking"
-msgstr "Ethernet netværk"
+msgstr "Ethernet-netværk"
 
 #: ../modules/usb.c:252 ../modules/sysinfo.c:645
 msgid "Storage"
@@ -663,11 +670,11 @@ msgstr "Seriel port"
 
 #: ../modules/usb.c:267
 msgid "Storage Behaviour"
-msgstr "Lager opførelsel"
+msgstr "Lageropførelse"
 
 #: ../modules/usb.c:274
 msgid "CF/SD Card Reader"
-msgstr "CF/SD kortlæser"
+msgstr "CF/SD-kortlæser"
 
 #: ../modules/usb.c:280
 msgid "File-backed"
@@ -699,11 +706,11 @@ msgstr "Du har ikke tilladelse til at læse denne fil, vælg en anden."
 
 #: ../modules/theme.c:269
 msgid "Succesfully changed background image."
-msgstr "Ændrede med succes baggrundsbillede."
+msgstr "Ændring af baggrundsbillede gennemført."
 
 #: ../modules/theme.c:270
 msgid "Use \"Look and Feel\" setup tool to change details."
-msgstr "Anvend »Se og føl«-opsætningsværktøj for at ændre detaljer."
+msgstr "Anvend »Udseende og fremtoning«-opsætningsværktøj for at ændre detaljer."
 
 #: ../modules/theme.c:781 ../modules/theme.c:859
 msgid "You don't have read access to selected background image!"
@@ -931,7 +938,7 @@ msgstr "Lager:"
 
 #: ../modules/sysinfo.c:628
 msgid "Hardware"
-msgstr "Programmel"
+msgstr "Maskinel"
 
 #: ../modules/sysinfo.c:638
 msgid "Battery"
@@ -1004,7 +1011,7 @@ msgstr "For at tidszoneopsætninger skal træde i kraft må du logge ud og ind i
 
 #: ../modules/login-setup.c:160
 msgid "Some of these settings can only be changed by the user 'root'."
-msgstr "Dele af disse opsætninger kan alene ændret af brugeren »root«."
+msgstr "Dele af disse opsætninger kan alene ændres af brugeren »root«."
 
 #: ../modules/login-setup.c:183 ../modules/gpe-admin.c:85
 msgid "General"
@@ -1016,14 +1023,14 @@ msgstr "Vis ejerinformation ved logind."
 
 #: ../modules/login-setup.c:204
 msgid "Lock display on suspend."
-msgstr "Lås skærm ved dvale."
+msgstr "Lås skærm ved hvile."
 
 #: ../modules/login-setup.c:208
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
 msgstr ""
-"Lås skærm ved dvale. \n"
+"Lås skærm ved hvile. \n"
 "  (kræver adganskode)"
 
 #: ../modules/login-setup.c:213
@@ -1082,15 +1089,16 @@ msgstr "I alt:"
 
 #: ../modules/storage.c:292
 msgid "Internal Flash"
-msgstr "Internt flash"
+msgstr "Intern flash"
 
 #: ../modules/storage.c:298
 msgid "MMC"
 msgstr "MMC"
 
+# Ikke oversat da navn
 #: ../modules/storage.c:304
 msgid "Compact Flash"
-msgstr "Compact flash"
+msgstr "Compact Flash"
 
 #: ../modules/storage.c:310
 msgid "Network Filesystem"
@@ -1116,17 +1124,21 @@ msgstr "Port A"
 msgid "Serial port default usage"
 msgstr "Standardbrug for seriel port"
 
+# Engelsk tekst noget kryptisk her.
+# jeg har lidt svært ved at forstå den engelske her, skal der stå sådan
+# noget som ".. software som kan brug seri.."
 #: ../modules/serial.c:443
 msgid "Select desired software to use serial port here."
-msgstr "Vælg ønsket software til seriel port her."
+msgstr "Vælg her ønsket software som kan bruge seriel port."
 
 #: ../modules/serial.c:446
 msgid "Console"
 msgstr "Konsol"
 
+# "on", skal det være "gennem"/"via" i denne her sammenhæng ?
 #: ../modules/serial.c:449
 msgid "This option runs console on serial port. (default)"
-msgstr "Denne indstilling kører konsol på seriel port. (standard)"
+msgstr "Denne indstilling kører konsol via seriel port. (standard)"
 
 #: ../modules/serial.c:457
 msgid "GPS Daemon"
@@ -1198,7 +1210,7 @@ msgstr "/Kort/_Skub ud"
 
 #: ../modules/cardinfo.c:106
 msgid "/Card/_Suspend"
-msgstr "/Kort/_Dvale"
+msgstr "/Kort/_Hvile"
 
 #: ../modules/cardinfo.c:107
 msgid "/Card/_Resume"
@@ -1206,7 +1218,7 @@ msgstr "/Kort/_Genoptag"
 
 #: ../modules/cardinfo.c:108
 msgid "/Card/_Reset"
-msgstr "/Kort/_nulstil"
+msgstr "/Kort/_Nulstil"
 
 #: ../modules/cardinfo.c:109
 msgid "/Card/s1"
@@ -1240,9 +1252,10 @@ msgstr "/_Hjælp/Om"
 msgid "card not recognized"
 msgstr "kort ikke genkendt"
 
+# temporal -> temporær, midlertidig
 #: ../modules/cardinfo.c:277 ../modules/cardinfo.c:348
 msgid "Could not write to temporal config file."
-msgstr "Kunne ikke skrive til temporær konfigurationsfil."
+msgstr "Kunne ikke skrive til midlertidig konfigurationsfil."
 
 #: ../modules/cardinfo.c:554
 msgid "Could not open pidfile:"
@@ -1291,7 +1304,7 @@ msgstr "ikke klar"
 
 #: ../modules/cardinfo.c:996
 msgid "suspended"
-msgstr "i dvale"
+msgstr "i hvile"
 
 #: ../modules/cardinfo.c:1188
 msgid "Assign Driver"
@@ -1362,7 +1375,7 @@ msgstr "Flag:"
 
 #: ../modules/cardinfo.c:1404
 msgid "PCMCIA initialisation failed"
-msgstr "PCMCIA initialisering mislykkedes"
+msgstr "PCMCIA-initialisering mislykkedes"
 
 #: ../modules/gpe-admin.c:92
 msgid "Allow users to configure everything"
@@ -1585,7 +1598,7 @@ msgstr "Micro Datapad"
 
 #: ../modules/keys/keyboard.c:255
 msgid "External keyboard configuration."
-msgstr "Ekstern tastaturkonfiguration."
+msgstr "Konfiguration af eksternt tastatur."
 
 #: ../modules/keys/keyboard.c:258
 msgid "External Keyboard Port"
@@ -1601,11 +1614,11 @@ msgstr "Eksternt tastaturtype"
 
 #: ../modules/keys/kbd.c:142
 msgid "Keyboard Geometry / Layout"
-msgstr "Tastaturgeometri / layout"
+msgstr "Tastaturgeometri / Layout"
 
 #: ../modules/keys/kbd.c:182
 msgid "User defined"
-msgstr "Bruger defineret"
+msgstr "Brugerdefineret"
 
 #: ../modules/keys/keyctl.c:195
 msgid "Button layout file is missing a global section."
@@ -1817,7 +1830,7 @@ msgstr "Adgangspunkt"
 
 #: ../modules/network.c:1078
 msgid "Enter the IP Address of your default gateway here."
-msgstr "Indtast ip-adressen på dit normale adgangspunkt her."
+msgstr "Indtast ip-adressen på dit standardadgangspunkt her."
 
 #: ../modules/network.c:1087 ../modules/network.c:1201
 msgid "WiFi device"
@@ -1863,7 +1876,7 @@ msgstr "Ingen proxy for"
 
 #: ../modules/network.c:1384
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
-msgstr "Her bør du indtaste dit lokale domæne hvis du ikke ønsker at anvende en proxy."
+msgstr "Her bør du indtaste dit lokale domæne, hvis du ikke ønsker at anvende en proxy."
 
 #: ../modules/network.c:1391
 msgid "DNS server"
@@ -1871,7 +1884,7 @@ msgstr "DNS-server"
 
 #: ../modules/network.c:1393
 msgid "Enter the IP of the DNS(name-) server to use here."
-msgstr "Indtast ip'en på DNS (navneserveren) her."
+msgstr "Indtast ip'en på DNS-serveren (navneserveren) her."
 
 #: ../modules/network.c:1421
 msgid "Enter the Hostname to use for this machine"
@@ -1944,7 +1957,7 @@ msgstr "global"
 
 #: ../modules/sleep/sinterface.c:64
 msgid "Auto sleep"
-msgstr "Automatisk dvale"
+msgstr "Automatisk sovetilstand"
 
 #: ../modules/sleep/sinterface.c:74 ../modules/sleep/sinterface.c:105
 msgid "enabled"
@@ -1952,7 +1965,7 @@ msgstr "slået til"
 
 #: ../modules/sleep/sinterface.c:92
 msgid "sleep timeout"
-msgstr "dvale tidsgrænse"
+msgstr "sove tidsgrænse"
 
 #: ../modules/sleep/sinterface.c:95
 msgid "Auto dim"
@@ -1960,11 +1973,11 @@ msgstr "Auto dim"
 
 #: ../modules/sleep/sinterface.c:122
 msgid "backlight dim timeout"
-msgstr "baglys dim tidsudløb"
+msgstr "baglys dæmpning tidsudløb"
 
 #: ../modules/sleep/sinterface.c:124
 msgid "Auto dim level"
-msgstr "Auto dim-niveau"
+msgstr "Auto dæmpningsniveau"
 
 #: ../modules/sleep/sinterface.c:144
 msgid "Advanced Controls"
@@ -1976,7 +1989,7 @@ msgstr "CPU"
 
 #: ../modules/sleep/sinterface.c:160
 msgid "Sleep on cpu less than load"
-msgstr "Dvale på cpu mindre end belastning"
+msgstr "Sovetilstand på cpu mindre end belastning"
 
 #: ../modules/sleep/sinterface.c:164
 msgid "load below"
@@ -1988,7 +2001,7 @@ msgstr "APM"
 
 #: ../modules/sleep/sinterface.c:186
 msgid "Sleep on AC"
-msgstr "Dvale ved AC"
+msgstr "Sovetilstand ved AC"
 
 #: ../modules/sleep/sinterface.c:188
 msgid "probe IRQs"
@@ -2036,11 +2049,11 @@ msgstr "Indstillinger for seriel port"
 
 #: ../desktop/gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"
-msgstr "Dvale konfiguration"
+msgstr "Konfig af sovetilstand"
 
 #: ../desktop/gpe-conf-sleep.desktop.in.h:2
 msgid "Sleep Configuration"
-msgstr "Dvale konfiguration"
+msgstr "Konfiguration af sovetilstand"
 
 #: ../desktop/gpe-conf-sound.desktop.in.h:1
 msgid "Sound Settings"
@@ -2056,11 +2069,11 @@ msgstr "Systeminfo"
 
 #: ../desktop/gpe-conf-theme.desktop.in.h:1
 msgid "Global Appearance Setup"
-msgstr "Global udseende opsætning"
+msgstr "Opsætning for global udseende"
 
 #: ../desktop/gpe-conf-time.desktop.in.h:1
 msgid "Date/Time Setup"
-msgstr "Dato/tid-opsætning"
+msgstr "Dato/Tid-opsætning"
 
 #: ../desktop/gpe-conf-time.desktop.in.h:2
 msgid "Setup Date and Time"
