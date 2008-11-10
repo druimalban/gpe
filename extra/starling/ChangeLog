@@ -1,3 +1,44 @@
+2008-11-10  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (struct _MusicDB): Rename meta_data_reader_mutex
+	to work_lock and change to a GMutex *.  Add fields worker, exit,
+	work_cond, and dirs_pending.  Rename meta_data_reader_pending to
+	meta_data_pending.  Update users.  Rename fs_scanner to
+	worker_idle.  Update users.  Remove field meta_data_reader.
+	(music_db_init): Initialize the thread package.  Initialize
+	db->work_lock, db->work_cond, db->meta_data_pending and
+	db->dirs_pending.
+	(music_db_finalize): Join with the worker thread.  Destroy
+	db->work_lock, db->work_cond, db->meta_data_pending and
+	db->dirs_pending.
+	(music_db_add): If we have added an entry to the queue, signal
+	DB->WORK_COND.
+	(music_db_add_recursive_internal): Don't call
+	g_main_context_iteration.
+	(music_db_add_recursive): Don't call
+	music_db_add_recursive_internal.  Instead, add PATH to
+	DB->DIRS_PENDING and signal DB->WORD_COND.
+	(music_db_get_info_internal): New function.
+	(music_db_get_info): Implement in terms of it.
+	(music_db_set_info_internal): New function.
+	(music_db_set_info): Implement in terms of it.
+	(music_db_set_info_from_tags_internal): New function.
+	(music_db_set_info_from_tags): Implement in terms of it.
+	(struct fs_scanner): Rename from this...
+	(struct worker): ... to this.  Update users.
+	(fs_scanner_thread): Rename from this...
+	(worker_thread): ... to this.  Update users.  Enter a loop waiting
+	on DB->WORK_COND.  On signal, process DB->DIRS_PENDING and
+	DB->META_DATA_PENDING.
+	(fs_scanner): Rename from this...
+	(worker_start): ... to this.  Update users.  Save the thread in
+	DB->WORKER.  Make it joinable.
+	(new_decoded_pad): New function.
+	(meta_data_reader): Be more robust.  In particular, don't
+	gst_bus_poll but gst_bus_timed_pop_filtered.  Don't reuse the
+	pipeline but build a new pipeline for each track.  Ignore all
+	messages that do not originate from PIPELINE.
+
 2008-11-03  Neal H. Walfield  <neal@gnu.org>
 
 	* moko-type.h: Remove file.
@@ -11,31 +52,6 @@
 	(gtk_scrolled_window_new) [IS_HILDON]: Likewise.
 	(GTK_SCROLLED_WINDOW) [IS_HILDON]: Likewise.
 	(gtk_scrolled_window_set_policy) [IS_HILDON]: Likewise.
-
-2008-11-01  Neal H. Walfield  <neal@gnu.org>
-
-	* src/musicdb.c (struct _MusicDB): Rename meta_data_reader_mutex
-	to work_lock and change to a GMutex *.  Add fields worker, exit,
-	work_cond, and dirs_pending.  Rename meta_data_reader_pending to
-	meta_data_pending.  Update users.  Rename fs_scanner to
-	worker_idle.  Update users.  Remove field meta_data_reader.
-	(music_db_init): Initialize the thread package.  Initialize
-	db->work_lock, db->work_cond, db->meta_data_pending and
-	db->dirs_pending.
-	(music_db_finalize): Join with the worker thread.  Destroy
-	db->work_lock, db->work_cond, db->meta_data_pending and
-	db->dirs_pending.
-	(struct fs_scanner): Rename from this...
-	(struct worker): ... to this.  Update users.
-	(fs_scanner_thread): Rename from this...
-	(worker_thread): ... to this.  Update users.  Enter a loop waiting
-	on DB->WORK_COND.  On signal, process DB->DIRS_PENDING and
-	DB->META_DATA_PENDING.
-	(fs_scanner): Rename from this...
-	(worker_start): ... to this.  Update users.  Save the thread in
-	DB->WORKER.  Make it joinable.
-	(music_db_add): If we have added an entry to the queue, signal
-	DB->WORK_COND.
 
 2008-10-30  Neal H. Walfield  <neal@gnu.org>
 

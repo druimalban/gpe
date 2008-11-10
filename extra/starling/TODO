@@ -4,10 +4,6 @@ Enable dragging selected items to move them to a play list or a queue.
 
 (Re-)enable saving play lists.
 
-Try harder to not freeze the interface on long imports (it is very
-unresponsive--especially at the start).  This could be done by way of
-a separate thread.  Currently we use an idle callback.
-
 If we do a big import and then quit before all the meta data is read,
 it will only be read once we play the song.  It would be nice to
 search the data base for entries which are not yet initialized as well

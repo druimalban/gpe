@@ -88,14 +88,21 @@ struct _MusicDB
 
   sqlite *sqliteh;
 
-  /* UIDs of files whose metadata we should try to read.  */
-  GStaticMutex meta_data_reader_mutex;
-  GQueue *meta_data_reader_pending;
-  /* The idle handler.  */
-  guint meta_data_reader;
+  /* A worker thread, which scans for files and for reading
+     meta-data.  */
+  GThread *worker;
+  /* We don't start the thread immediately but wait until the first
+     idle period.  */
+  int worker_idle;
+  bool exit;
+  GMutex *work_lock;
+  GCond *work_cond;
 
-  /* The idle handler.  */
-  guint fs_scanner;
+  /* UIDs of files (int *) whose metadata the worker should try to
+     read.  */
+  GQueue *meta_data_pending;
+  /* List of directories (char *) that the worker should scan.  */
+  GQueue *dirs_pending;
 };
 
 static void music_db_dispose (GObject *obj);
@@ -168,6 +175,13 @@ music_db_class_init (MusicDBClass *klass)
 static void
 music_db_init (MusicDB *db)
 {
+  if (! g_thread_supported ())
+    g_thread_init (NULL);
+
+  db->work_lock = g_mutex_new ();
+  db->work_cond = g_cond_new ();
+  db->meta_data_pending = g_queue_new ();
+  db->dirs_pending = g_queue_new ();
 }
 
 static void
@@ -184,24 +198,38 @@ music_db_finalize (GObject *object)
 
   G_OBJECT_CLASS (music_db_parent_class)->finalize (object);
 
-  if (db->meta_data_reader)
-    g_source_remove (db->meta_data_reader);
-
-  if (db->fs_scanner)
-    g_source_remove (db->fs_scanner);
-
-  if (db->meta_data_reader_pending)
+  if (db->worker)
     {
-      char *d;
-      do
-	{
-	  d = g_queue_pop_head (db->meta_data_reader_pending);
-	  g_free (d);
-	}
-      while (d);
+      db->exit = true;
+      g_mutex_lock (db->work_lock);
+      g_cond_signal (db->work_cond);
 
-      g_queue_free (db->meta_data_reader_pending);
+      g_thread_join (db->worker);
     }
+
+  g_cond_free (db->work_cond);
+  g_mutex_free (db->work_lock);
+
+  if (db->worker_idle)
+    g_source_remove (db->worker_idle);
+
+  char *d;
+  do
+    {
+      d = g_queue_pop_head (db->meta_data_pending);
+      g_free (d);
+    }
+  while (d);
+  g_queue_free (db->meta_data_pending);
+
+  do
+    {
+      d = g_queue_pop_head (db->dirs_pending);
+      g_free (d);
+    }
+  while (d);
+  g_queue_free (db->dirs_pending);
+
 
   if (db->sqliteh)
     sqlite_close (db->sqliteh);
@@ -271,14 +299,14 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 	       NULL, NULL, NULL);
 }
 
-struct fs_scanner
+struct worker
 {
   MusicDB *db;
   sqlite *sqliteh;
 };
 
 /* Forward.  */
-static gboolean fs_scanner (gpointer data);
+static gboolean worker_start (gpointer data);
 
 static int
 busy_handler (void *cookie, const char *table, int retries)
@@ -371,11 +399,11 @@ music_db_open (const char *file, GError **error)
     {
       sqlite_busy_handler (sqliteh, busy_handler, NULL);
 
-      struct fs_scanner *fs = calloc (sizeof (*fs), 1);
-      fs->db = db;
-      fs->sqliteh = sqliteh;
+      struct worker *worker = calloc (sizeof (*worker), 1);
+      worker->db = db;
+      worker->sqliteh = sqliteh;
 
-      db->fs_scanner = g_idle_add (fs_scanner, fs);
+      db->worker_idle = g_idle_add (worker_start, worker);
     }
 
   return db;
@@ -431,272 +459,7 @@ music_db_count (MusicDB *db, const char *list, const char *constraint)
 
   return count;
 }
-
-/* Forward.  */
-static int music_db_add_recursive_internal (MusicDB *db, sqlite *sqliteh,
-					    const gchar *path,
-					    GError **error);
 
-static gpointer
-fs_scanner_thread (gpointer data)
-{
-  struct fs_scanner *fs = data;
-  MusicDB *db = MUSIC_DB (fs->db);
-  sqlite *sqliteh = fs->sqliteh;
-
-  GQueue *q = g_queue_new ();
-
-  struct track
-  {
-    char *filename;
-    int uid;
-  };
-
-  int check_dead_cb (void *arg, int argc, char **argv, char **names)
-  {
-    struct track *track = g_malloc (sizeof (struct track));
-    track->uid = atoi (argv[0]);
-    track->filename = g_strdup (argv[1]);
-
-    g_queue_push_tail (q, track);
-
-    return 0;
-  }
-
-  char *err = NULL;
-  sqlite_exec_printf (sqliteh,
-		      "select ROWID, source from files"
-		      " where removed isnull and source like '/%';",
-		      check_dead_cb, NULL, &err);
-  if (err)
-    {
-      g_debug ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-      sqlite_freemem (err);
-    }
-
-
-  while (! g_queue_is_empty (q))
-    {
-      struct track *track = g_queue_pop_head (q);
-      
-      struct stat st;
-      int ret = g_stat (track->filename, &st);
-      if (ret < 0 || ! S_ISREG (st.st_mode))
-	{
-	  sqlite_exec_printf (sqliteh,
-			      "update files"
-			      " set removed = strftime('%%s', 'now')"
-			      " where ROWID = %d;",
-			      NULL, NULL, &err, track->uid);
-	  if (err)
-	    {
-	      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-	      sqlite_freemem (err);
-	    }
-	  else
-	    {
-	      simple_cache_shootdown (&info_cache, track->uid);
-	      g_signal_emit (db,
-			     MUSIC_DB_GET_CLASS (db)->deleted_entry_signal_id,
-			     0, track->uid);
-	    }
-
-	}
-
-      g_free (track->filename);
-      g_free (track);
-    }
-
-
-
-  int dir_cb (void *arg, int argc, char **argv, char **names)
-  {
-    g_queue_push_tail (q, g_strdup (argv[0]));
-    return 0;
-  }
-
-  err = NULL;
-  sqlite_exec_printf (sqliteh, "select (filename) from dirs;",
-		      dir_cb, NULL, &err);
-  if (err)
-    {
-      g_debug ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-      sqlite_freemem (err);
-    }
-
-  while (! g_queue_is_empty (q))
-    {
-      char *filename = g_queue_pop_head (q);
-      music_db_add_recursive_internal (db, sqliteh, filename, NULL);
-      g_free (filename);
-    }
-
-  g_queue_free (q);
-
-  sqlite_close (sqliteh);
-  g_free (fs);
-
-  return NULL;
-}
-
-/* Idle function which is called when meta data should be read.  */
-static gboolean
-fs_scanner (gpointer data)
-{
-  struct fs_scanner *fs = data;
-  MusicDB *db = MUSIC_DB (fs->db);
-  db->fs_scanner = 0;
-
-  g_thread_create (fs_scanner_thread, fs, FALSE, NULL);
-
-  return false;
-}
-
-
-/* Idle function which is called when meta data should be read.  */
-static gboolean
-meta_data_reader (gpointer data)
-{
-  MusicDB *db = MUSIC_DB (data);
-
-  GstElement *pipeline = NULL;
-  GstElement *src;
-  GstBus *bus;
-
-  /* 200702 - NHW
-
-     A streamer's tags are typically delivered before we reach the
-     PAUSED state.  Thus, we just need to wait until the paused state
-     is reached.  Unfortunately, there is a bug in the oggdemuxer such
-     that if the stream is immediately changed to the NULL state, we
-     get a crash.  It is scheduled to be fix in 0.10.12.  We can work
-     around it be going to the PLAY.  The tradeoff is that it is a bit
-     more expensive.  */
-  guint major, minor, micro, nano;
-  gst_version (&major, &minor, &micro, &nano);
-  GstState target_state = GST_STATE_PAUSED;
-  if (major == 0 && minor < 12)
-    target_state = GST_STATE_PLAYING;
-
-  while (1)
-    {
-      g_static_mutex_lock (&db->meta_data_reader_mutex);
-
-      if (g_queue_is_empty (db->meta_data_reader_pending))
-	{
-	  g_static_mutex_unlock (&db->meta_data_reader_mutex);
-	  break;
-	}
-
-      int *uidp = g_queue_pop_head (db->meta_data_reader_pending);
-
-      g_static_mutex_unlock (&db->meta_data_reader_mutex);
-
-
-      g_assert (uidp);
-      int uid = *uidp;
-      g_free (uidp);
-
-      struct music_db_info info;
-      info.fields = MDB_SOURCE;
-      
-      if (! music_db_get_info (db, uid, &info))
-	/* Hmm, entry disappeared.  It's possible: the user may have
-	   removed it before we got to processing it.  */
-	continue;
-
-      char *source = info.source;
-
-      if (! pipeline)
-	{
-	  /* We read the data from a file, send it to decodebin which
-	     selects the appropriate decoder and then send the result
-	     to /dev/null.  */
-	  pipeline = gst_pipeline_new ("meta_data_pipeline");
-	  src = gst_element_factory_make ("filesrc", "filesrc");
-	  GstElement *decodebin = gst_element_factory_make ("decodebin",
-							    "decodebin");
-	  GstElement *sink = gst_element_factory_make ("fakesink", "sink");
-
-	  gst_bin_add_many (GST_BIN (pipeline), src, decodebin, sink, NULL);
-	  gst_element_link_many (src, decodebin, sink, NULL);
-
-	  bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
-	}
-
-      g_object_set (G_OBJECT (src), "location", source, NULL);
-      g_free (source);
-
-      GstStateChangeReturn res = gst_element_set_state (pipeline,
-							target_state);
-      if (res == GST_STATE_CHANGE_FAILURE)
-	{
-	  g_warning ("%s: Failed to play %d", __FUNCTION__, (int) uid);
-	  continue;
-	}
-
-      int c = 0;
-      for (;;)
-	{
-	  c ++;
-	  GstMessage *msg = gst_bus_poll (bus,
-					  GST_MESSAGE_EOS | GST_MESSAGE_ERROR
-					  | GST_MESSAGE_TAG
-					  | GST_MESSAGE_STATE_CHANGED,
-					  /* Wait about two seconds.  */
-					  2 * 1000 * 1000 * 1000);
-	  if (! msg)
-	    break;
-
-	  switch (GST_MESSAGE_TYPE (msg))
-	    {
-	    case GST_MESSAGE_TAG:
-	      {
-		GstTagList *tags;
-		gst_message_parse_tag (msg, &tags);
-
-		music_db_set_info_from_tags (db, uid, tags);
-		continue;
-	      }
-
-	    case GST_MESSAGE_STATE_CHANGED:
-	      /* Once we've reached the paused state, for most
-		 formats, most of the time, all tags will have been
-		 reported.  (The exception is essentially streams--but
-		 we are only looking at files anyways so this should
-		 be relatively rare.)  */
-	      {
-		GstState state, pending;
-		gst_message_parse_state_changed (msg, NULL, &state, &pending);
-		if (! (pending == GST_STATE_VOID_PENDING
-		       && state == target_state))
-		  continue;
-	      }
-	      break;
-
-	    default:
-	      break;
-	    }
-
-	  break;
-	}
-
-      res = gst_element_set_state (pipeline, GST_STATE_NULL);
-      if (res == GST_STATE_CHANGE_FAILURE)
-	g_warning ("Failed to put pipeline in NULL state.");
-    }
-
-  db->meta_data_reader = 0;
-
-  if (pipeline)
-    {
-      gst_object_unref (pipeline);
-      gst_object_unref (bus);
-    }
-
-  return FALSE;
-}
-
 static void
 music_db_add (MusicDB *db, sqlite *sqliteh,
 	      const char *sources[], int count, GError **error)
@@ -828,6 +591,7 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
     /* Nothing to do.  */
     return;
 
+  bool have_one = false;
   for (i = 0; i < total; i ++)
     {
       g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->new_entry_signal_id, 0,
@@ -836,22 +600,19 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
       /* Queue the file in the meta-data crawler (if appropriate).  */
       if (crawl[i] && s[i][0] == '/')
 	{
-	  g_static_mutex_lock (&db->meta_data_reader_mutex);
-
-	  if (! db->meta_data_reader_pending)
-	    db->meta_data_reader_pending = g_queue_new ();
+	  have_one = true;
 
 	  int *uidp = g_malloc (sizeof (int));
 	  *uidp = uids[i];
-	  g_queue_push_tail (db->meta_data_reader_pending, uidp);
 
-	  if (! db->meta_data_reader)
-	    db->meta_data_reader = g_idle_add (meta_data_reader, db);
-
-	  g_static_mutex_unlock (&db->meta_data_reader_mutex);
+	  g_mutex_lock (db->work_lock);
+	  g_queue_push_tail (db->meta_data_pending, uidp);
+	  g_mutex_unlock (db->work_lock);
 	}
     }
 
+  if (have_one)
+    g_cond_signal (db->work_cond);
 }
 
 int
@@ -976,10 +737,6 @@ music_db_add_recursive_internal (MusicDB *db, sqlite *sqliteh,
 	      g_propagate_error (error, tmp_error);
 	      break;
 	    }
-
-	  /* We really want this to be a background job.  Invoke the
-	     main loop.  */
-	  g_main_context_iteration (NULL, FALSE);
 	}
         
       g_dir_close (dir);
@@ -1047,7 +804,11 @@ music_db_add_recursive (MusicDB *db, const gchar *path, GError **error)
       sqlite_freemem (err);
     }
 
-  return music_db_add_recursive_internal (db, db->sqliteh, path, error);
+  g_mutex_lock (db->work_lock);
+  g_queue_push_tail (db->dirs_pending, g_strdup (path));
+  g_mutex_unlock (db->work_lock);
+  g_cond_signal (db->work_cond);
+  return TRUE;
 }
 
 void
@@ -1085,8 +846,9 @@ music_db_clear (MusicDB *db)
   g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->cleared_signal_id, 0);
 }
 
-bool
-music_db_get_info (MusicDB *db, int uid, struct music_db_info *info)
+static bool
+music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
+			    int uid, struct music_db_info *info)
 {
   struct info_cache_entry *e = simple_cache_find (&info_cache, uid);
   if (! e)
@@ -1142,7 +904,7 @@ music_db_get_info (MusicDB *db, int uid, struct music_db_info *info)
       }
 
       char *err = NULL;
-      sqlite_exec_printf (db->sqliteh,
+      sqlite_exec_printf (sqliteh,
 			  "select source, artist, album, "
 			  "  track, title, duration, genre, "
 			  "  play_count, date_added, "
@@ -1195,8 +957,15 @@ music_db_get_info (MusicDB *db, int uid, struct music_db_info *info)
   return true;
 }
 
-void
-music_db_set_info (MusicDB *db, int uid, struct music_db_info *info)
+bool
+music_db_get_info (MusicDB *db, int uid, struct music_db_info *info)
+{
+  return music_db_get_info_internal (db, db->sqliteh, uid, info);
+}
+
+static void
+music_db_set_info_internal (MusicDB *db, sqlite *sqliteh,
+			    int uid, struct music_db_info *info)
 {
   if (! info->fields)
     return;
@@ -1302,7 +1071,7 @@ music_db_set_info (MusicDB *db, int uid, struct music_db_info *info)
   char *statement = obstack_finish (&sql);
 
   char *err = NULL;
-  sqlite_exec (db->sqliteh, statement, NULL, NULL, &err);
+  sqlite_exec (sqliteh, statement, NULL, NULL, &err);
   if (err)
     {
       g_warning ("%s: %s", __FUNCTION__, err);
@@ -1321,7 +1090,14 @@ music_db_set_info (MusicDB *db, int uid, struct music_db_info *info)
 }
 
 void
-music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
+music_db_set_info (MusicDB *db, int uid, struct music_db_info *info)
+{
+  music_db_set_info_internal (db, db->sqliteh, uid, info);
+}
+
+static void
+music_db_set_info_from_tags_internal (MusicDB *db, sqlite *sqliteh,
+				      int uid, GstTagList *tags)
 {
   struct music_db_info info;
   memset (&info, 0, sizeof (info));
@@ -1365,9 +1141,6 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
 	  factor = 1e9;
 	}
 
-      if (! s && ! i)
-	return;
-
       char *str;
       if (gst_tag_get_type (tag) == G_TYPE_STRING)
 	gst_tag_list_get_string_index (list, tag, 0, &str);
@@ -1379,7 +1152,8 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
 	*s = str;
       else
 	{
-	  *i = atoll (str) / factor;
+	  if (i)
+	    *i = atoll (str) / factor;
 	  g_free (str);
 	}
     }
@@ -1390,13 +1164,19 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
     {
       info.fields |= MDB_UPDATE_DATE_TAGS_UPDATED;
 
-      music_db_set_info (db, uid, &info);
+      music_db_set_info_internal (db, sqliteh, uid, &info);
 
       free (info.artist);
       free (info.title);
       free (info.album);
       free (info.genre);
     }
+}
+
+void
+music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
+{
+  music_db_set_info_from_tags_internal (db, db->sqliteh, uid, tags);
 }
 
 struct info_callback_data
@@ -1727,4 +1507,330 @@ music_db_play_lists_for_each (MusicDB *db,
     }
 
   return ret;
+}
+
+static
+new_decoded_pad (GstElement *decodebin, GstPad *pad,
+		 gboolean last, gpointer data)
+{
+  GstCaps *caps;
+  GstStructure *str;
+  GstPad *audiopad;
+
+  /* only link once */
+  audiopad = gst_element_get_pad (GST_ELEMENT (data), "sink");
+  if (GST_PAD_IS_LINKED (audiopad))
+    {
+      g_object_unref (audiopad);
+      return;
+    }
+
+  /* check media type */
+  caps = gst_pad_get_caps (pad);
+  str = gst_caps_get_structure (caps, 0);
+  if (!g_strrstr (gst_structure_get_name (str), "audio"))
+    {
+      gst_caps_unref (caps);
+      gst_object_unref (audiopad);
+      return;
+    }
+  gst_caps_unref (caps);
+
+  /* link'n'play */
+  gst_pad_link (pad, audiopad);
+}
+
+static void
+meta_data_reader (MusicDB *db, sqlite *sqliteh)
+{
+  /* 200702 - NHW
+
+     A streamer's tags are typically delivered before we reach the
+     PAUSED state.  Thus, we just need to wait until the paused state
+     is reached.  Unfortunately, there is a bug in the oggdemuxer such
+     that if the stream is immediately changed to the NULL state, we
+     get a crash.  It is scheduled to be fix in 0.10.12.  We can work
+     around it be going to the PLAY.  The tradeoff is that it is a bit
+     more expensive.  */
+  guint major, minor, micro, nano;
+  gst_version (&major, &minor, &micro, &nano);
+  GstState target_state = GST_STATE_PAUSED;
+  if (major == 0 && minor < 12)
+    target_state = GST_STATE_PLAYING;
+
+  while (1)
+    {
+      g_mutex_lock (db->work_lock);
+
+      if (g_queue_is_empty (db->meta_data_pending))
+	{
+	  g_mutex_unlock (db->work_lock);
+	  break;
+	}
+
+      int *uidp = g_queue_pop_head (db->meta_data_pending);
+
+      g_mutex_unlock (db->work_lock);
+
+      g_assert (uidp);
+      int uid = *uidp;
+      g_free (uidp);
+
+      struct music_db_info info;
+      info.fields = MDB_SOURCE;
+     
+      if (! music_db_get_info_internal (db, sqliteh, uid, &info))
+	/* Hmm, entry disappeared.  It's possible: the user may have
+	   removed it before we got to processing it.  */
+	continue;
+
+      char *source = info.source;
+
+      /* We read the data from a file, send it to decodebin which
+	 selects the appropriate decoder and then send the result
+	 to /dev/null.  */
+      GstElement *src = gst_element_factory_make ("filesrc", "filesrc");
+      GstElement *decodebin = gst_element_factory_make ("decodebin",
+							"decodebin");
+      GstElement *sink = gst_element_factory_make ("fakesink", "sink");
+
+      g_signal_connect (decodebin, "new-decoded-pad",
+			G_CALLBACK (new_decoded_pad), sink);
+
+      GstElement *pipeline = gst_pipeline_new ("meta_data_pipeline");
+      gst_bin_add_many (GST_BIN (pipeline), src, decodebin, sink, NULL);
+      gst_element_link_many (src, decodebin, NULL);
+
+      GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
+
+
+      g_object_set (G_OBJECT (src), "location", source, NULL);
+
+      GstStateChangeReturn res = gst_element_set_state (pipeline,
+							target_state);
+      if (res == GST_STATE_CHANGE_FAILURE)
+	{
+	  g_warning ("%s: Failed to play %d", __FUNCTION__, (int) uid);
+	  continue;
+	}
+
+      GstMessage *msg = NULL;
+      for (;;)
+	{
+	  if (msg)
+	    gst_message_unref (msg);
+
+	  msg = gst_bus_timed_pop_filtered
+	    (bus,
+	     /* Wait about two seconds.  */
+	     2 * GST_SECOND,
+	     GST_MESSAGE_EOS | GST_MESSAGE_ERROR
+	     | GST_MESSAGE_TAG | GST_MESSAGE_STATE_CHANGED);
+
+	  if (! msg)
+	    break;
+
+	  switch (GST_MESSAGE_TYPE (msg))
+	    {
+	    case GST_MESSAGE_TAG:
+	      {
+		GstTagList *tags;
+		gst_message_parse_tag (msg, &tags);
+
+		music_db_set_info_from_tags_internal (db, sqliteh, uid, tags);
+		continue;
+	      }
+
+	    case GST_MESSAGE_STATE_CHANGED:
+	      /* Once we've reached the paused state, for most
+		 formats, most of the time, all tags will have been
+		 reported.  (The exception is essentially streams--but
+		 we are only looking at files anyways so this should
+		 be relatively rare.)  */
+	      if (GST_MESSAGE_SRC (msg) == (void *) pipeline)
+		{
+		  GstState state, pending;
+		  gst_message_parse_state_changed (msg, NULL,
+						   &state, &pending);
+		  if (pending == GST_STATE_VOID_PENDING
+		      && state == target_state)
+		    break;
+		}
+	      continue;
+
+	    case GST_MESSAGE_ERROR:
+	      {
+		GError *err = NULL;
+		gchar *debug;
+		gst_message_parse_error (msg, &err, &debug);
+
+		g_debug ("%s: %s (%s)\n", __func__, err->message, debug);
+
+		g_error_free (err);
+		g_free (debug);
+
+		break;
+	      }
+
+	    case GST_MESSAGE_EOS:
+	      break;
+
+	    default:
+	      g_debug ("%s: unknown message %s, %d, ignoring\n",
+		       __FUNCTION__, source, GST_MESSAGE_TYPE (msg));
+	      break;
+	    }
+
+	  if (msg)
+	    gst_message_unref (msg);
+
+	  break;
+	}
+
+      g_free (source);
+
+      gst_element_set_state (pipeline, GST_STATE_NULL);
+      gst_object_unref (pipeline);
+      gst_object_unref (bus);
+    }
+}
+
+static gpointer
+worker_thread (gpointer data)
+{
+  struct worker *w = data;
+  MusicDB *db = MUSIC_DB (w->db);
+  sqlite *sqliteh = w->sqliteh;
+
+  GQueue *q = g_queue_new ();
+
+  struct track
+  {
+    char *filename;
+    int uid;
+  };
+
+  int check_dead_cb (void *arg, int argc, char **argv, char **names)
+  {
+    struct track *track = g_malloc (sizeof (struct track));
+    track->uid = atoi (argv[0]);
+    track->filename = g_strdup (argv[1]);
+
+    g_queue_push_tail (q, track);
+
+    return 0;
+  }
+
+  char *err = NULL;
+  sqlite_exec_printf (sqliteh,
+		      "select ROWID, source from files"
+		      " where removed isnull and source like '/%';",
+		      check_dead_cb, NULL, &err);
+  if (err)
+    {
+      g_debug ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+    }
+
+
+  while (! g_queue_is_empty (q))
+    {
+      struct track *track = g_queue_pop_head (q);
+      
+      struct stat st;
+      int ret = g_stat (track->filename, &st);
+      if (ret < 0 || ! S_ISREG (st.st_mode))
+	{
+	  sqlite_exec_printf (sqliteh,
+			      "update files"
+			      " set removed = strftime('%%s', 'now')"
+			      " where ROWID = %d;",
+			      NULL, NULL, &err, track->uid);
+	  if (err)
+	    {
+	      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+	      sqlite_freemem (err);
+	    }
+	  else
+	    {
+	      simple_cache_shootdown (&info_cache, track->uid);
+	      g_signal_emit (db,
+			     MUSIC_DB_GET_CLASS (db)->deleted_entry_signal_id,
+			     0, track->uid);
+	    }
+
+	}
+
+      g_free (track->filename);
+      g_free (track);
+    }
+
+
+
+  int dir_cb (void *arg, int argc, char **argv, char **names)
+  {
+    g_queue_push_tail (q, g_strdup (argv[0]));
+    return 0;
+  }
+
+  err = NULL;
+  sqlite_exec_printf (sqliteh, "select (filename) from dirs;",
+		      dir_cb, NULL, &err);
+  if (err)
+    {
+      g_debug ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+    }
+
+  while (! g_queue_is_empty (q))
+    {
+      char *filename = g_queue_pop_head (q);
+      music_db_add_recursive_internal (db, sqliteh, filename, NULL);
+      g_free (filename);
+    }
+
+  g_queue_free (q);
+
+  g_mutex_lock (db->work_lock);
+
+  while (! db->exit)
+    {
+      while (! g_queue_is_empty (db->dirs_pending))
+	{
+	  char *filename = g_queue_pop_head (db->dirs_pending);
+	  g_mutex_unlock (db->work_lock);
+
+	  music_db_add_recursive_internal (db, sqliteh, filename, NULL);
+	  g_free (filename);
+
+	  g_mutex_lock (db->work_lock);
+	}
+
+      g_mutex_unlock (db->work_lock);
+
+      meta_data_reader (db, sqliteh);
+
+      g_mutex_lock (db->work_lock);
+      g_cond_wait (db->work_cond, db->work_lock);
+    }
+
+  g_mutex_unlock (db->work_lock);
+
+  sqlite_close (sqliteh);
+  g_free (w);
+
+  return NULL;
+}
+
+/* Idle function which is called when meta data should be read.  */
+static gboolean
+worker_start (gpointer data)
+{
+  struct worker *w = data;
+  MusicDB *db = MUSIC_DB (w->db);
+  db->worker_idle = 0;
+
+  db->worker = g_thread_create (worker_thread, w, TRUE, NULL);
+
+  return false;
 }
