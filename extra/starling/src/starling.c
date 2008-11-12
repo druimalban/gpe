@@ -1715,7 +1715,7 @@ try_seek (Starling *st)
 	    {
 	      g_debug ("%s: seek %d > length %d",
 		       __FUNCTION__,
-		       st->pending_seek, st->current_length / 1e9);
+		       st->pending_seek, (int) (st->current_length / 1e9));
 	      st->pending_seek = (st->current_length / 1e9) - 1;
 	    }
 
@@ -2492,7 +2492,7 @@ starling_run (void)
   g_free (file);
   if (err)
     {
-      g_warning (err->message);
+      g_warning ("%s", err->message);
       starling_error_box (err->message);
       g_error_free (err);
       exit (1);
@@ -2877,6 +2877,7 @@ starling_run (void)
   gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->library_view), TRUE);
   GtkTreeSelection *sel = gtk_tree_view_get_selection
     (GTK_TREE_VIEW (st->library_view));
+  gtk_tree_view_set_enable_search (GTK_TREE_VIEW (st->library_view), FALSE);
   gtk_tree_selection_set_mode (sel, GTK_SELECTION_MULTIPLE);
 
   gtk_widget_grab_focus (GTK_WIDGET (st->library_view));
@@ -2932,6 +2933,7 @@ starling_run (void)
   gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (st->queue_view), TRUE);
   sel = gtk_tree_view_get_selection
     (GTK_TREE_VIEW (st->queue_view));
+  gtk_tree_view_set_enable_search (GTK_TREE_VIEW (st->queue_view), FALSE);
   gtk_tree_selection_set_mode (sel, GTK_SELECTION_MULTIPLE);
 
   col = gtk_tree_view_column_new ();

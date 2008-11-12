@@ -1,5 +1,15 @@
 2008-11-12  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (starling_run): Disable searching in the
+	ST->LIBRARY_VIEW and ST->QUEUE_VIEW.
+
+	(try_seek): When printing the current length, cast it to an int.
+
+	(starling_run): When printing ERR->MESSAGE, don't use it as the
+	format, instead, use "%s".
+
+2008-11-12  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_set_info_from_tags_internal): Always
 	update the DATE_TAGS_UPDATED field.
 	(meta_data_reader): Likewise.
