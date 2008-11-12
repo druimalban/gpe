@@ -4,11 +4,6 @@ Enable dragging selected items to move them to a play list or a queue.
 
 (Re-)enable saving play lists.
 
-If we do a big import and then quit before all the meta data is read,
-it will only be read once we play the song.  It would be nice to
-search the data base for entries which are not yet initialized as well
-as those which are out of date.
-
 Enable rating multiple songs at once.
 
 Provide a mechanism to view all the information about a track.

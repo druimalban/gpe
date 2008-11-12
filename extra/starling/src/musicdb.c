@@ -1160,17 +1160,14 @@ music_db_set_info_from_tags_internal (MusicDB *db, sqlite *sqliteh,
 
   gst_tag_list_foreach (tags, for_each_tag, NULL);
 
-  if (info.fields)
-    {
-      info.fields |= MDB_UPDATE_DATE_TAGS_UPDATED;
+  info.fields |= MDB_UPDATE_DATE_TAGS_UPDATED;
 
-      music_db_set_info_internal (db, sqliteh, uid, &info);
+  music_db_set_info_internal (db, sqliteh, uid, &info);
 
-      free (info.artist);
-      free (info.title);
-      free (info.album);
-      free (info.genre);
-    }
+  free (info.artist);
+  free (info.title);
+  free (info.album);
+  free (info.genre);
 }
 
 void
@@ -1577,7 +1574,7 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
       g_free (uidp);
 
       struct music_db_info info;
-      info.fields = MDB_SOURCE;
+      info.fields = MDB_SOURCE | MDB_DATE_TAGS_UPDATED;
      
       if (! music_db_get_info_internal (db, sqliteh, uid, &info))
 	/* Hmm, entry disappeared.  It's possible: the user may have
@@ -1611,6 +1608,13 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
       if (res == GST_STATE_CHANGE_FAILURE)
 	{
 	  g_warning ("%s: Failed to play %d", __FUNCTION__, (int) uid);
+
+	  if (! info.date_tags_updated)
+	    {
+	      info.fields = MDB_UPDATE_DATE_TAGS_UPDATED;
+	      music_db_set_info_internal (db, sqliteh, uid, &info);
+	    }
+
 	  continue;
 	}
 
@@ -1638,6 +1642,11 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 		gst_message_parse_tag (msg, &tags);
 
 		music_db_set_info_from_tags_internal (db, sqliteh, uid, tags);
+
+		/* This will automatically update the
+		   date_tags_updated column.  Don't do it again
+		   below.  */
+		info.date_tags_updated = 1;
 		continue;
 	      }
 
@@ -1681,8 +1690,13 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 	      break;
 	    }
 
-	  if (msg)
-	    gst_message_unref (msg);
+	  gst_message_unref (msg);
+
+	  if (! info.date_tags_updated)
+	    {
+	      info.fields = MDB_UPDATE_DATE_TAGS_UPDATED;
+	      music_db_set_info_internal (db, sqliteh, uid, &info);
+	    }
 
 	  break;
 	}
@@ -1704,6 +1718,7 @@ worker_thread (gpointer data)
 
   GQueue *q = g_queue_new ();
 
+  /* Find dead files.  */
   struct track
   {
     char *filename;
@@ -1766,7 +1781,7 @@ worker_thread (gpointer data)
     }
 
 
-
+  /* Find new files in directories that we watch.  */
   int dir_cb (void *arg, int argc, char **argv, char **names)
   {
     g_queue_push_tail (q, g_strdup (argv[0]));
@@ -1793,6 +1808,30 @@ worker_thread (gpointer data)
 
   g_mutex_lock (db->work_lock);
 
+
+  /* Find entries for which tags have not been read.  */
+  int no_tags_cb (void *arg, int argc, char **argv, char **names)
+  {
+    int *uidp = malloc (sizeof (int));
+    *uidp = atoi (argv[0]);
+    g_queue_push_tail (db->meta_data_pending, uidp);
+    printf ("Scanning %s\n", argv[0]);
+    return 0;
+  }
+  err = NULL;
+  sqlite_exec_printf (sqliteh,
+		      "select (ROWID) from files "
+		      "  where date_tags_updated isnull"
+		      "    and substr (source, 1, 1) = '/';",
+		      no_tags_cb, NULL, &err);
+  if (err)
+    {
+      g_debug ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+    }
+
+
+  /* Wait for work.  */
   while (! db->exit)
     {
       while (! g_queue_is_empty (db->dirs_pending))

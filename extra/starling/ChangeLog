@@ -1,3 +1,19 @@
+2008-11-12  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (music_db_set_info_from_tags_internal): Always
+	update the DATE_TAGS_UPDATED field.
+	(meta_data_reader): Likewise.
+	(worker_thread): Scan all local files for tags for which
+	DATE_TAGS_UPDATED is NULL.
+
+2008-11-11  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (music_db_set_info_from_tags_internal): Always at
+	least update the date tags updated field.
+	(meta_data_reader): Likewise.
+	(worker_thread): Scan files for tags for which date_tags_updated
+	is NULL.
+
 2008-11-10  Neal H. Walfield  <neal@gnu.org>
 
 	* src/musicdb.c (struct _MusicDB): Rename meta_data_reader_mutex
