@@ -64,6 +64,8 @@ CPPFLAGS="$CPPFLAGS $GUI_CFLAGS"
 old_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS $GUI_LIBS"
 AC_CHECK_FUNCS([g_uri_escape_string])
+AC_REPLACE_FUNCS([gst_bus_timed_pop_filtered])
+AC_REPLACE_FUNCS([gst_bus_timed_pop])
 CFLAGS="$old_CFLAGS"
 CPPFLAGS="$old_CPPFLAGS"
 LDFLAGS="$old_LDFLAGS"

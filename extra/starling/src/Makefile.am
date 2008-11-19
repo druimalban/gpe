@@ -1,9 +1,11 @@
 bin_PROGRAMS = starling starling-catalog
 
-AM_CFLAGS = -Wall
+# Annoyingly, the files in LIBOBJS are not compiled per target but one
+# and with the system cflags.
+AM_CFLAGS = -Wall $(BASE_CFLAGS)
 
 starling_CFLAGS = $(GUI_CFLAGS) $(HILDON_CFLAGS)
-starling_LDADD = $(GUI_LIBS) $(HILDON_LIBS)
+starling_LDADD = $(GUI_LIBS) $(HILDON_LIBS) $(LIBOBJS)
 starling_SOURCES = main.c \
 		starling.h starling.c \
 		musicdb.h musicdb.c \
@@ -21,7 +23,7 @@ starling_SOURCES = main.c \
 		md5.h md5.c
 
 starling_catalog_CFLAGS = $(BASE_CFLAGS)
-starling_catalog_LDADD = $(BASE_LIBS)
+starling_catalog_LDADD = $(BASE_LIBS) $(LIBOBJS)
 starling_catalog_SOURCES = starling-catalog.c \
 		marshal.h marshal.c \
 		cache.h cache.c \
