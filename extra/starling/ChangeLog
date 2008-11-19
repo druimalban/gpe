@@ -1,3 +1,14 @@
+2008-11-19  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.h (enum mdb_fields): Add MDB_MTIME.
+	(struct music_db_info): Add field mtime.
+	* src/musicdb.c (struct info_cache_entry): Add field mtime.
+	(music_db_get_info_internal): Return the mtime if requested.
+	(meta_data_reader): If we successfully
+	(worker_thread): When scanning the files, also check if their
+	mtime has changed.  If so, add them to the DB->META_DATA_PENDING
+	queue.
+
 2008-11-12  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (starling_run): Disable searching in the

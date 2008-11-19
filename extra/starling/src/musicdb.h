@@ -138,6 +138,7 @@ enum mdb_fields
     MDB_DATE_TAGS_UPDATED = 1 << 10,
     MDB_RATING = 1 << 11,
     MDB_PRESENT = 1 << 12,
+    MDB_MTIME = 1 << 13,
 
     /* These take precedent of the simple set variants.  */
     MDB_INC_PLAY_COUNT = 1 << 29,
@@ -165,6 +166,9 @@ struct music_db_info
   int rating;
 
   bool present;
+
+  /* Source's last modification time.  */
+  time_t mtime;
 };
 
 /** music_db_get_info:

@@ -57,6 +57,8 @@ struct info_cache_entry
   int date_tags_updated;
 
   int rating;
+
+  time_t mtime;
 };
 
 void
@@ -900,6 +902,9 @@ music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
 	i ++;
 	e->present = argv[i] ? false : true;
 
+	i ++;
+	e->mtime = argv[i] ? atoi (argv[i]) : 0;
+
 	return 1;
       }
 
@@ -909,7 +914,7 @@ music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
 			  "  track, title, duration, genre, "
 			  "  play_count, date_added, "
 			  "  date_last_played, date_tags_updated, "
-			  "  rating, removed"
+			  "  rating, removed, mtime"
 			  " from files where ROWID = %d;",
 			  callback, NULL, &err, (int) uid);
       if (err)
@@ -953,6 +958,8 @@ music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
     info->rating = e->rating;
   if ((info->fields & MDB_PRESENT))
     info->present = e->present;
+  if ((info->fields & MDB_MTIME))
+    info->mtime = e->mtime;
 
   return true;
 }
@@ -1064,6 +1071,9 @@ music_db_set_info_internal (MusicDB *db, sqlite *sqliteh,
 
   if ((info->fields & MDB_RATING))
     munge_int ("rating", info->rating);
+
+  if ((info->fields & MDB_MTIME))
+    munge_int ("mtime", info->mtime);
 
   obstack_printf (&sql, " where ROWID = %d;", uid);
 
@@ -1643,10 +1653,6 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 
 		music_db_set_info_from_tags_internal (db, sqliteh, uid, tags);
 
-		/* This will automatically update the
-		   date_tags_updated column.  Don't do it again
-		   below.  */
-		info.date_tags_updated = 1;
 		continue;
 	      }
 
@@ -1692,11 +1698,17 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 
 	  gst_message_unref (msg);
 
-	  if (! info.date_tags_updated)
+	  info.fields = MDB_UPDATE_DATE_TAGS_UPDATED;
+
+	  struct stat st;
+	  int ret = g_stat (source, &st);
+	  if (ret == 0)
 	    {
-	      info.fields = MDB_UPDATE_DATE_TAGS_UPDATED;
-	      music_db_set_info_internal (db, sqliteh, uid, &info);
+	      info.fields |= MDB_MTIME;
+	      info.mtime = st.st_mtime;
 	    }
+
+	  music_db_set_info_internal (db, sqliteh, uid, &info);
 
 	  break;
 	}
@@ -1723,6 +1735,7 @@ worker_thread (gpointer data)
   {
     char *filename;
     int uid;
+    time_t mtime;
   };
 
   int check_dead_cb (void *arg, int argc, char **argv, char **names)
@@ -1730,6 +1743,7 @@ worker_thread (gpointer data)
     struct track *track = g_malloc (sizeof (struct track));
     track->uid = atoi (argv[0]);
     track->filename = g_strdup (argv[1]);
+    track->mtime = argv[2] ? atoi (argv[2]) : 0;
 
     g_queue_push_tail (q, track);
 
@@ -1738,7 +1752,7 @@ worker_thread (gpointer data)
 
   char *err = NULL;
   sqlite_exec_printf (sqliteh,
-		      "select ROWID, source from files"
+		      "select ROWID, source, mtime from files"
 		      " where removed isnull and source like '/%';",
 		      check_dead_cb, NULL, &err);
   if (err)
@@ -1754,7 +1768,8 @@ worker_thread (gpointer data)
       
       struct stat st;
       int ret = g_stat (track->filename, &st);
-      if (ret < 0 || ! S_ISREG (st.st_mode))
+      if (ret < 0)
+	/* File cannot be stated.  Mark it as missing.  */
 	{
 	  sqlite_exec_printf (sqliteh,
 			      "update files"
@@ -1774,6 +1789,16 @@ worker_thread (gpointer data)
 			     0, track->uid);
 	    }
 
+	}
+      else if (st.st_mtime != track->mtime)
+	/* mtime changed.  Rescan tags.  */
+	{
+	  int *uidp = malloc (sizeof (int));
+	  *uidp = track->uid;
+
+	  g_mutex_lock (db->work_lock);
+	  g_queue_push_tail (db->meta_data_pending, uidp);
+	  g_mutex_unlock (db->work_lock);
 	}
 
       g_free (track->filename);
@@ -1815,7 +1840,6 @@ worker_thread (gpointer data)
     int *uidp = malloc (sizeof (int));
     *uidp = atoi (argv[0]);
     g_queue_push_tail (db->meta_data_pending, uidp);
-    printf ("Scanning %s\n", argv[0]);
     return 0;
   }
   err = NULL;
