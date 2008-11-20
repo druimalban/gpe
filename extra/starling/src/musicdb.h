@@ -29,6 +29,8 @@
 
 #include <stdbool.h>
 
+#include <config.h>
+
 typedef struct _MusicDB MusicDB;
 typedef struct _MusicDBClass MusicDBClass;
 
@@ -62,6 +64,11 @@ struct _MusicDBClass
   /* "removed-from-play-list" signal: An entry was removed from a play
      list.  Passed the play list (char *) and position (guint).  */
   guint removed_from_play_list_signal_id;
+
+  /* "status" signal: Indicates the amount of work to be done.  Passed
+     a status message (char *).  When no work remains, passed
+     NULL.  */
+  guint status_signal_id;
 };
 
 extern GType music_db_get_type (void);

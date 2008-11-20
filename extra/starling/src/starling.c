@@ -89,6 +89,8 @@ struct _Starling {
   GtkWidget *queue_tab;
   GtkWidget *playlist_tab;
 
+  GtkLabel *status;
+
   GtkScrolledWindow *library_view_window;
   GtkWidget *library_view;
   struct caption *caption;
@@ -2470,6 +2472,18 @@ library_tap_and_hold_cb (GtkWidget *widget, gpointer user_data)
 }
 #endif
 
+static void
+status_update (MusicDB *db, char *status, Starling *st)
+{
+  if (status)
+    {
+      gtk_label_set_text (st->status, status);
+      gtk_widget_show (GTK_WIDGET (st->status));
+    }
+  else
+    gtk_widget_hide (GTK_WIDGET (st->status));
+}
+
 Starling *
 starling_run (void)
 {
@@ -3026,6 +3040,12 @@ starling_run (void)
 			    gtk_label_new (_("last.fm")));
 
 
+  st->status = GTK_LABEL (gtk_label_new (NULL));
+  gtk_box_pack_start (GTK_BOX (main_box), GTK_WIDGET (st->status),
+		      FALSE, FALSE, 0);
+  g_signal_connect (G_OBJECT (st->db), "status",
+		    G_CALLBACK (status_update), st);
+
   lyrics_init ();
 
   lastfm_init (st);
@@ -3033,6 +3053,7 @@ starling_run (void)
   deserialize (st);
 
   gtk_widget_show_all (st->window);
+  gtk_widget_hide (GTK_WIDGET (st->status));
 
   return st;
 }

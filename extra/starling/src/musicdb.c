@@ -105,6 +105,9 @@ struct _MusicDB
   GQueue *meta_data_pending;
   /* List of directories (char *) that the worker should scan.  */
   GQueue *dirs_pending;
+
+  /* If non-zero, the source id of the status handler.  */
+  guint status_source;
 };
 
 static void music_db_dispose (GObject *obj);
@@ -172,6 +175,14 @@ music_db_class_init (MusicDBClass *klass)
 		    0, NULL, NULL,
 		    g_cclosure_user_marshal_VOID__POINTER_INT,
 		    G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_INT);
+
+  music_db_class->status_signal_id
+    = g_signal_new ("status",
+		    G_TYPE_FROM_CLASS (klass),
+		    G_SIGNAL_RUN_FIRST,
+		    0, NULL, NULL,
+		    g_cclosure_marshal_VOID__STRING,
+		    G_TYPE_NONE, 1, G_TYPE_STRING);
 }
 
 static void
@@ -1516,7 +1527,47 @@ music_db_play_lists_for_each (MusicDB *db,
   return ret;
 }
 
-static
+static int
+status_update (MusicDB *db)
+{
+  int dirs_pending = g_queue_get_length (db->dirs_pending);
+  int files_pending = g_queue_get_length (db->meta_data_pending);
+  char *message = NULL;
+  if (dirs_pending && files_pending)
+    message = g_strdup_printf (_("Scanning %d %s and %d %s."),
+			       dirs_pending,
+			       dirs_pending > 1 ? "directories" : "directory",
+			       files_pending,
+			       files_pending > 1 ? "files" : "file");
+  else if (dirs_pending)
+    message = g_strdup_printf (_("Scanning %d %s."),
+			       dirs_pending,
+			       dirs_pending > 1 ? "directories" : "directory");
+  else if (files_pending)
+    message = g_strdup_printf (_("Scanning %d %s."),
+			       files_pending,
+			       files_pending > 1 ? "files" : "file");
+
+  g_signal_emit (db,
+		 MUSIC_DB_GET_CLASS (db)->status_signal_id,
+		 0, message);
+  g_free (message);
+
+  return message ? TRUE : FALSE;
+}
+
+static void
+status_kick (MusicDB *db)
+{
+  if (db->status_source)
+    return;
+
+  status_update (db);
+  db->status_source = g_timeout_add (5 * 1000,
+				     (GSourceFunc) status_update, db);
+}
+
+static void
 new_decoded_pad (GstElement *decodebin, GstPad *pad,
 		 gboolean last, gpointer data)
 {
@@ -1574,6 +1625,8 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 	  g_mutex_unlock (db->work_lock);
 	  break;
 	}
+
+      status_kick (db);
 
       int *uidp = g_queue_pop_head (db->meta_data_pending);
 
@@ -1860,6 +1913,8 @@ worker_thread (gpointer data)
     {
       while (! g_queue_is_empty (db->dirs_pending))
 	{
+	  status_kick (db);
+
 	  char *filename = g_queue_pop_head (db->dirs_pending);
 	  g_mutex_unlock (db->work_lock);
 
