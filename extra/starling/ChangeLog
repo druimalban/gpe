@@ -1,5 +1,10 @@
 2008-11-20  Neal H. Walfield  <neal@gnu.org>
 
+	* src/player.c (playbin_ensure) [HILDON_VER == 0]: Only use
+	playbinmaemo in this case.
+
+2008-11-20  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h (enum mdb_fields): Define MDB_DATE,
 	MDB_VOLUME_NUMBER, MDB_VOLUME_COUNT, and MDB_PERFORMER.
 	(struct music_db_info): Add fields date, volume_number,

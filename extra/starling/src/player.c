@@ -235,12 +235,19 @@ playbin_ensure (Player *pl)
 {
   if (! pl->playbin)
     {
-#ifdef IS_HILDON
-      /* Evil, evil, evil, evil.  playbin is broken on the 770.  */
-      pl->playbin = gst_element_factory_make ("playbinmaemo", "player");
+      char *element;
+#if defined(IS_HILDON)
+# if HILDON_VER == 0
+      /* Evil, evil, evil, evil.  playbin is broken on Bora.  */
+      element = "playbinmaemo";
+# else
+      element = "playbin";
+# endif
 #else
-      pl->playbin = gst_element_factory_make ("playbin", "player");
+      element = "playbin";
 #endif
+      pl->playbin = gst_element_factory_make (element, "player");
+
       GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pl->playbin));
       gst_bus_add_watch (bus, player_bus_cb, pl);
       gst_object_unref (bus);
