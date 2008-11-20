@@ -163,6 +163,12 @@ build (struct caption *caption, const char *fmt)
 	      chunk->offset = offsetof (struct music_db_info, artist);
 	      fmt_char = 's';
 	      break;
+	    case 'p':
+	      /* Performer.  */
+	      caption->fields |= MDB_PERFORMER;
+	      chunk->offset = offsetof (struct music_db_info, performer);
+	      fmt_char = 's';
+	      break;
 	    case 'A':
 	      /* Album.  */
 	      caption->fields |= MDB_ALBUM;
@@ -175,10 +181,28 @@ build (struct caption *caption, const char *fmt)
 	      chunk->offset = offsetof (struct music_db_info, title);
 	      fmt_char = 's';
 	      break;
+	    case 'D':
+	      /* Date.  */
+	      caption->fields |= MDB_DATE;
+	      chunk->offset = offsetof (struct music_db_info, date);
+	      fmt_char = 's';
+	      break;
 	    case 'T':
 	      /* Track.  */
 	      caption->fields |= MDB_TRACK;
 	      chunk->offset = offsetof (struct music_db_info, track);
+	      fmt_char = 'd';
+	      break;
+	    case 'v':
+	      /* Volume number.  */
+	      caption->fields |= MDB_VOLUME_NUMBER;
+	      chunk->offset = offsetof (struct music_db_info, volume_number);
+	      fmt_char = 'd';
+	      break;
+	    case 'V':
+	      /* Volume count.  */
+	      caption->fields |= MDB_VOLUME_COUNT;
+	      chunk->offset = offsetof (struct music_db_info, volume_count);
 	      fmt_char = 'd';
 	      break;
 	    case 'g':

@@ -1308,25 +1308,29 @@ change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
   GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), hbox);
 
-  label = gtk_label_new (" %u - URI\n"
-			 " %a - artist\n"
-			 " %A - album\n"
-			 " %t - title\n"
-			 " %T - track\n"
-			 " %g - genre");
+  label = gtk_label_new (_(" %a - artist\n"
+			   " %p - performer\n"
+			   " %A - album\n"
+			   " %t - title\n"
+			   " %T - track\n"
+			   " %v - volume\n"
+			   " %V - volume count\n"
+			   " %D - date"));
   gtk_container_add (GTK_CONTAINER (hbox), label);
 
-  label = gtk_label_new (" %r - rating\n"
-			 " %d - duration\n"
-			 " %s - seconds\n"
-			 " %m - minutes\n"
-			 " %c - play count\n"
-			 "");
+  label = gtk_label_new (_(" %u - URI\n"
+			   " %g - genre\n"
+			   " %r - rating\n"
+			   " %d - duration\n"
+			   " %s - seconds\n"
+			   " %m - minutes\n"
+			   " %c - play count\n"
+			   ""));
   gtk_container_add (GTK_CONTAINER (hbox), label);
 
   label = gtk_label_new (
-     " %[width][.][precision]c - width and precision, negative right aligns\n"
-     " %X?(true clause)(fault clase) - conditional");
+    _(" %[width][.][precision]c - width and precision, negative right aligns\n"
+      " %X?(true clause)(fault clase) - conditional"));
   gtk_container_add (GTK_CONTAINER (GTK_DIALOG (dialog)->vbox), label);
 
   GtkWidget *combo = gtk_combo_box_entry_new_text ();

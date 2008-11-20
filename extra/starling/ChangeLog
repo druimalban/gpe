@@ -1,5 +1,29 @@
 2008-11-20  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.h (enum mdb_fields): Define MDB_DATE,
+	MDB_VOLUME_NUMBER, MDB_VOLUME_COUNT, and MDB_PERFORMER.
+	(struct music_db_info): Add fields date, volume_number,
+	volume_count and performer.
+	* src/musicdb.c (struct info_cache_entry): Add fields date,
+	volume_number, volume_count and performer.
+	(info_cache_evict): Free E->DATE and E->PERFORMER.
+	(music_db_create_table): Add columns date, volume_number,
+	volume_count and performer to the files tables.
+	(music_db_get_info_internal): Read the date, volume_number,
+	volume_count and performer columns.  Save them in E.  Return them
+	if requested.
+	(music_db_set_info_internal): Save the performer, volume_number,
+	volume_count and date fields.
+	(music_db_set_info_from_tags_internal): Likewise.
+	(music_db_set_info_from_tags_internal): Free INFO.DATE and
+	INFO.PERFORMER.
+	* src/caption.c (build): Support printing the performer, date,
+	volume number and volume count.
+	* src/starling.c (change_caption_format): Note support for
+	displaying the date, performer, volume number and volume_count.
+
+2008-11-20  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h: Include <config.h>.
 	(struct _MusicDBClass): Add field status_signal_id.
 	* src/musicdb.c (struct _MusicDB): Add field status_source.

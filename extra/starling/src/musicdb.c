@@ -50,6 +50,10 @@ struct info_cache_entry
   int track;
   int duration;
   char *genre;
+  char *date;
+  int volume_number;
+  int volume_count;
+  char *performer;
 
   int play_count;
   int date_added;
@@ -71,6 +75,8 @@ info_cache_evict (void *object)
   free (e->album);
   free (e->title);
   free (e->genre);
+  free (e->date);
+  free (e->performer);
   free (e);
 }
 
@@ -287,6 +293,10 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 	       "  title STRING COLLATE NOCASE, "
 	       "  genre STRING COLLATE NOCASE, "
 	       "  duration INTEGER, "
+	       "  date STRING, "
+	       "  volume_number INTEGER, "
+	       "  volume_count INTEGER, "
+	       "  performer STRING, "
 
 	       "  rating INTEGER,"
 	       "  play_count INTEGER,"
@@ -916,6 +926,18 @@ music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
 	i ++;
 	e->mtime = argv[i] ? atoi (argv[i]) : 0;
 
+	i ++;
+	e->date = argv[i] ? g_strdup (argv[i]) : NULL;
+
+	i ++;
+	e->volume_number = argv[i] ? atoi (argv[i]) : 0;
+
+	i ++;
+	e->volume_count = argv[i] ? atoi (argv[i]) : 0;
+
+	i ++;
+	e->performer = argv[i] ? g_strdup (argv[i]) : NULL;
+
 	return 1;
       }
 
@@ -925,7 +947,8 @@ music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
 			  "  track, title, duration, genre, "
 			  "  play_count, date_added, "
 			  "  date_last_played, date_tags_updated, "
-			  "  rating, removed, mtime"
+			  "  rating, removed, mtime, date,"
+			  "  volume_number, volume_count, performer"
 			  " from files where ROWID = %d;",
 			  callback, NULL, &err, (int) uid);
       if (err)
@@ -971,6 +994,14 @@ music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
     info->present = e->present;
   if ((info->fields & MDB_MTIME))
     info->mtime = e->mtime;
+  if ((info->fields & MDB_DATE))
+    info->date = e->date ? g_strdup (e->date) : NULL;
+  if ((info->fields & MDB_VOLUME_NUMBER))
+    info->volume_number = e->volume_number;
+  if ((info->fields & MDB_VOLUME_COUNT))
+    info->volume_count = e->volume_count;
+  if ((info->fields & MDB_PERFORMER))
+    info->performer = e->performer ? g_strdup (e->performer) : NULL;
 
   return true;
 }
@@ -1050,6 +1081,8 @@ music_db_set_info_internal (MusicDB *db, sqlite *sqliteh,
     munge_str ("source", info->source);
   if ((info->fields & MDB_ARTIST))
     munge_str ("artist", info->artist);
+  if ((info->fields & MDB_PERFORMER))
+    munge_str ("performer", info->performer);
   if ((info->fields & MDB_ALBUM))
     munge_str ("album", info->album);
   if ((info->fields & MDB_TITLE))
@@ -1059,8 +1092,15 @@ music_db_set_info_internal (MusicDB *db, sqlite *sqliteh,
 
   if ((info->fields & MDB_TRACK))
     munge_int ("track", info->track);
+  if ((info->fields & MDB_VOLUME_NUMBER))
+    munge_int ("volume_number", info->volume_number);
+  if ((info->fields & MDB_VOLUME_COUNT))
+    munge_int ("volume_count", info->volume_count);
   if ((info->fields & MDB_DURATION))
     munge_int ("duration", info->duration);
+
+  if ((info->fields & MDB_DATE))
+    munge_str ("date", info->date);
 
   if ((info->fields & MDB_DATE_ADDED))
     munge_int ("date_added", info->date_added);
@@ -1161,6 +1201,26 @@ music_db_set_info_from_tags_internal (MusicDB *db, sqlite *sqliteh,
 	  i = &info.duration;
 	  factor = 1e9;
 	}
+      else if (strcmp (tag, GST_TAG_DATE) == 0)
+	{
+	  info.fields |= MDB_DATE;
+	  s = &info.date;
+	}
+      else if (strcmp (tag, GST_TAG_ALBUM_VOLUME_NUMBER) == 0)
+	{
+	  info.fields |= MDB_VOLUME_NUMBER;
+	  i = &info.volume_number;
+	}
+      else if (strcmp (tag, GST_TAG_ALBUM_VOLUME_COUNT) == 0)
+	{
+	  info.fields |= MDB_VOLUME_COUNT;
+	  i = &info.volume_count;
+	}
+      else if (strcmp (tag, GST_TAG_PERFORMER) == 0)
+	{
+	  info.fields |= MDB_PERFORMER;
+	  s = &info.performer;
+	}
 
       char *str;
       if (gst_tag_get_type (tag) == G_TYPE_STRING)
@@ -1189,6 +1249,8 @@ music_db_set_info_from_tags_internal (MusicDB *db, sqlite *sqliteh,
   free (info.title);
   free (info.album);
   free (info.genre);
+  free (info.date);
+  free (info.performer);
 }
 
 void

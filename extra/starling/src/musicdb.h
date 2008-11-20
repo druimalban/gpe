@@ -146,6 +146,10 @@ enum mdb_fields
     MDB_RATING = 1 << 11,
     MDB_PRESENT = 1 << 12,
     MDB_MTIME = 1 << 13,
+    MDB_DATE = 1 << 14,
+    MDB_VOLUME_NUMBER = 1 << 15,
+    MDB_VOLUME_COUNT = 1 << 16,
+    MDB_PERFORMER = 1 << 17,
 
     /* These take precedent of the simple set variants.  */
     MDB_INC_PLAY_COUNT = 1 << 29,
@@ -164,6 +168,10 @@ struct music_db_info
   char *title;
   int duration;
   char *genre;
+  char *date;
+  int volume_number;
+  int volume_count;
+  char *performer;
 
   int play_count;
   int date_added;
