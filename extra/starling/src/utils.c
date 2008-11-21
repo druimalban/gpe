@@ -18,31 +18,12 @@
 #include "starling.h"
 #include "utils.h"
 
+#define obstack_chunk_alloc g_malloc
+#define obstack_chunk_free g_free
+#include <obstack.h>
+
 #define CHECK_TBL_STATEMENT "SELECT name FROM sqlite_master WHERE " \
                         " type='table' AND name=?;"
-
-gchar *
-escape_spaces (const gchar *orig, const gchar *replace)
-{
-    GString *str;
-    gchar *retval;
-    gint ii;
-
-    str = g_string_new ("");
-
-    for(ii = 0; ii < strlen (orig); ii++) {
-        if (orig[ii] == ' ')
-            g_string_append (str, replace);
-        else
-            g_string_append_c (str, orig[ii]);
-    }
-
-    retval = str->str;
-    
-    g_string_free (str, FALSE);
-
-    return retval;
-}
 
 gboolean
 has_db_table (sqlite *db, const gchar *name)
@@ -75,4 +56,38 @@ sqlite_bind_int (sqlite_vm *vm, gint index, gint value)
     snprintf (s, sizeof (s), "%d", value);
 
     return sqlite_bind (vm, index, s, -1, TRUE);
+}
+
+char *
+uri_escape_string (const char *string)
+{
+  /* We prefer g_uri_escape_string if it is available, as it is more
+     robust than just escaping %.  */
+#ifdef HAVE_G_URI_ESCAPE_STRING
+  return g_uri_escape_string (string,
+			      G_URI_RESERVED_CHARS_ALLOWED_IN_PATH,
+			      1);
+#else
+  struct obstack escaped;
+  obstack_init (&escaped);
+
+  const char *s = source;
+  while (*s)
+    {
+      int len = strcspn (s, "%");
+      obstack_grow (&escaped, s, len);
+      s += len;
+
+      while (*s == '%')
+	{
+	  obstack_grow (&escaped, "%25", 3);
+	  s ++;
+	}
+    }
+
+  obstack_1grow (&escaped, 0);
+  char *result = g_strdup (obstack_finish (&escaped));
+  obstack_free (&escaped, NULL);
+  return result;
+#endif
 }

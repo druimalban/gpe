@@ -1,3 +1,69 @@
+2008-11-21  Neal H. Walfield  <neal@gnu.org>
+
+	* src/lyrics.c: Include <libsoup/soup.h>, <stdbool.h> and
+	<obstack.h>.
+	(session): New global variable.
+	(artist): Likewise.
+	(title): Likewise.
+	(view): Likewise.
+	(extant): Likewise.
+	(current_provider): Remove.
+	(abort_extant): New function.
+	(lyrcar_cook): Escape the parameters using uri_escape_string.
+	(lyricwiki_cook): Escape the parameters using uri_escape_string.
+	Upper case the initial letters in each word.
+	(lyricwiki_parse): Rewrite.
+	(lyrics_init): Likewise.  Create a table keyed on the artist and
+	title, not the url.  Use the database "lyrics".
+	(lyrics_set_provider): Remove function.
+	(lyrics_select): Rewrite.  Remove parameter uri and content.
+	Select based on the artist and title, not the url.  Return the
+	content directly.  Update users.
+	(lyrics_store): Rewrite.  Store the lyrics with the artist and
+	title, not the url.
+	(got_lyrics): Rewrite to handle parallel requests.  After one
+	successful request, abort the remaining.
+	(lyrics_display_with_uri): Remove function.
+	(lyrics_display): Abort any extant messages.  Send one request per
+	provider.
+	(lyrics_cook_uri): Remove function.
+	* src/lyrics.h: Don't include <libsoup/soup.h> or <stdbool.h>.
+	(struct _Provider): Don't define.
+	(Provider): Likewise.
+	(provider_t): Likewise.
+	(lyrics_set_provider): Remove declaration.
+	(lyrics_get_provider): Likewise.
+	(lyrics_display_with_uri): Likewise.
+	(lyrics_select): Likewise.
+	(lyrics_store): Likewise.
+	(lyrics_cook_uri): Likewise.
+
+	* src/utils.h (uri_escape_string): New declaration.
+	(escape_spaces): Remove declaration.
+	* src/utils.c (obstack_chunk_alloc): Include <obstack.h>.
+	(obstack_chunk_alloc): Define.
+	(obstack_chunk_free): Likewise.
+	(escape_spaces): Remove function.
+	(uri_escape_string): New function.
+
+2008-11-20  Neal H. Walfield  <neal@gnu.org>
+
+	* configure.ac: Depend on sqlite3.
+	* src/musicdb.c (USE_SQLITE3): Define.
+	[USE_SQLITE3]: Don't include <sqlite.h>.  Include <sqlite3.h>.	
+	(sqlite) [USE_SQLITE3]: Define.
+	(sqlite_open) [USE_SQLITE3]: New function.
+	(sqlite_close) [USE_SQLITE3]: Define.
+	(sqlite_exec) [USE_SQLITE3]: Likewise.
+	(sqlite_freemem) [USE_SQLITE3]: Likewise.
+	(sqlite_busy_handler) [USE_SQLITE3]: Likewise.
+	(sqlite_mprintf) [USE_SQLITE3]: Likewise.
+	(sqlite_last_insert_rowid) [USE_SQLITE3]: Likewise.
+	(sqlite3_exec_printf) [USE_SQLITE3]: New function.
+	(sqlite_exec_printf) [USE_SQLITE3]: Define.
+	(busy_handler) [USE_SQLITE3]: Remove argument table.
+	* src/starling.c (starling_run): Use db, not playlist.
+
 2008-11-20  Neal H. Walfield  <neal@gnu.org>
 
 	* src/player.c (playbin_ensure) [HILDON_VER == 0]: Only use

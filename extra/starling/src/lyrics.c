@@ -18,6 +18,9 @@
    along with this program.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#include <libsoup/soup.h>
+#include <stdbool.h>
+
 #include <string.h>
 
 #include <sqlite.h>
@@ -33,18 +36,32 @@
 #include "lyrics.h"
 #include "utils.h"
 
-static sqlite *db = NULL;
-static provider_t current_provider = PROVIDER_LYRCAR;
+#define obstack_chunk_alloc g_malloc
+#define obstack_chunk_free g_free
+#include <obstack.h>
 
-#define TABLE_NAME "lyrics"
+static sqlite *db;
+static SoupSession *session;
+static char *artist;
+static char *title;
+static GtkTextView *view;
+static int extant;
 
-#define TABLE_CREATION "CREATE TABLE " TABLE_NAME " " \
-                         "(uri TEXT PRIMARY KEY, content TEXT, " \
-                        "time DATE);"
-#define SELECT_STATEMENT "SELECT content FROM lyrics WHERE " \
-                        "uri = ?;"
-#define STORE_STATEMENT "INSERT OR REPLACE INTO lyrics (uri, content, time) " \
-                        "VALUES (?, ?, DATETIME('NOW'));"
+/* Abort any outstanding requests.  */
+static void
+abort_extant (void)
+{
+  if (session)
+    {
+      extant = 0;
+      soup_session_abort (session);
+      g_free (artist);
+      g_free (title);
+      artist = NULL;
+      title = NULL;
+      view = NULL;
+    }
+}
 
 /* Lyrics providers */
 
@@ -52,17 +69,16 @@ static provider_t current_provider = PROVIDER_LYRCAR;
 static gchar *
 lyrcar_cook (const gchar *artist, const gchar *title)
 {
-    gchar *uri;
-    gchar *escaped;
+  char *a = uri_escape_string (artist);
+  char *t = uri_escape_string (title);
     
-    uri = g_strdup_printf ("http://lyrc.com.ar/en/tema1en.php?"
-        "artist=%s&songname=%s", artist, title);
+  char *uri = g_strdup_printf ("http://lyrc.com.ar/en/tema1en.php?"
+			       "artist=%s&songname=%s", a, t);
 
-    escaped = escape_spaces (uri, "%20");
+  g_free (a);
+  g_free (t);
 
-    g_free (uri);
-
-    return escaped;
+  return uri;
 }
 
 static gchar *
@@ -121,79 +137,86 @@ lyrcar_parse (SoupMessage *msg)
 gchar *
 lyricwiki_cook (const gchar *artist, const gchar *title)
 {
-    gchar *uri;
-    gchar *escaped;
-    
-    uri = g_strdup_printf ("http://lyricwiki.org/%s:%s", artist, title);
+  /* We must have all words with initial upper case letters.  */
+  char *a = g_strdup (artist);
+  int i;
+  for (i = 0; a[i]; i ++)
+    if (i == 0 || a[i - 1] == ' ')
+      a[i] = g_ascii_toupper (a[i]);
 
-    escaped = escape_spaces (uri, "_");
+  char *a2 = uri_escape_string (a);
+  g_free (a);
 
-    g_free (uri);
+  char *t = g_strdup (title);
+  for (i = 0; t[i]; i ++)
+    if (i == 0 || t[i - 1] == ' ')
+      t[i] = g_ascii_toupper (t[i]);
 
-    return escaped;
+  char *t2 = uri_escape_string (t);
+  g_free (t);
+
+  char *uri = g_strdup_printf ("http://lyricwiki.org/%s:%s", a2, t2);
+
+  g_free (a2);
+  g_free (t2);
+
+  return uri;
 }
 
 static gchar *
 lyricwiki_parse (SoupMessage *msg)
 {
-    const gchar *delim = "<div id=\"lyric\">";
-    gchar **lines;
-    gchar *line = NULL;
-    gchar *retval;
-    GString *str;
-    gint ii;
+  const gchar *div = "<div class='lyricbox' >";
 
-    lines = g_strsplit (msg->response.body, "\n", 4096);
+  char *start = strstr (msg->response.body, div);
+  if (! start)
+    return NULL;
 
-    for (ii = 0; lines[ii]; ii++) {
-        if (g_str_has_prefix (lines[ii], delim)) {
-            line = g_strdup (lines[ii]);
-            break;
-        }
+  start += strlen (div);
+
+  char *end = strstr (start, "</div>");
+  if (! end || end == start)
+    return NULL;
+
+  struct obstack text;
+  obstack_init (&text);
+
+  while (start < end)
+    {
+      char *delim = "<br />";
+      char *br = strstr (start, delim);
+      if (br > end || ! br)
+	br = end;
+
+      obstack_grow (&text, start, br - start);
+      obstack_1grow (&text, '\n');
+
+      start = br + strlen (delim);
     }
 
-    g_strfreev (lines);
+  obstack_1grow (&text, 0);
 
-    if (!line)
-        return NULL;
+  char *result = g_strdup (obstack_finish (&text));
+  obstack_free (&text, NULL);
 
-    lines = g_strsplit (line + strlen (delim), "<br />", 4096);
-
-    g_free (line);
-
-    str = g_string_new ("");
-
-    for (ii = 0; lines[ii]; ii++) {
-        g_string_append (str, lines[ii]);
-        g_string_append (str, "\n");
-    }
-
-    g_strfreev (lines);
-
-    /* Remove ending </div> */
-    g_string_erase (str, str->len - 7, -1);
-
-    retval = str->str;
-
-    g_string_free (str, FALSE);
-
-    return retval;
+  return result;
 }
 
-Provider providers[] = { 
-        {.cook = lyrcar_cook, .parse = lyrcar_parse},
-        {.cook = lyricwiki_cook, .parse = lyricwiki_parse}
-        };
+struct
+{
+    gchar * (*cook) (const gchar *, const gchar *);
+    gchar * (*parse) (SoupMessage *);
+} providers[] = { 
+  {.cook = lyrcar_cook, .parse = lyrcar_parse},
+  {.cook = lyricwiki_cook, .parse = lyricwiki_parse}
+};
 
 gboolean
 lyrics_init (void)
 {
     gchar *dbpath;
-    sqlite_vm *vm;
-    gint ret;
-
-    dbpath = g_strdup_printf ("%s/%s/%s", g_get_home_dir(), CONFIGDIR,
-            "starling.db");
+    dbpath = g_strdup_printf ("%s/%s/%s",
+			      g_get_home_dir(), CONFIGDIR, "lyrics");
 
     db = sqlite_open (dbpath, 0, NULL);
 
@@ -205,16 +228,18 @@ lyrics_init (void)
         return FALSE;
     }
 
-    if (!has_db_table (db, TABLE_NAME)) {
-        ret = sqlite_compile (db, TABLE_CREATION, NULL, &vm, NULL);
-
-        ret = sqlite_step (vm, NULL, NULL, NULL);
-
-        sqlite_finalize (vm, NULL); 
-                    
-        if (SQLITE_DONE != ret) {
-            return FALSE;
-        }
+    /* If there is an error, it is likely that the table already
+       exists.  We can ignore that.  */
+    char *err = NULL;
+    sqlite_exec (db,
+		 "CREATE TABLE lyrics "
+		 "  (artist TEXT, title TEXT, content TEXT, "
+		 "   time DATE);",
+		 NULL, NULL, &err);
+    if (err)
+      {
+	g_warning ("%s:%d: creating table: %s", __func__, __LINE__, err);
+	sqlite_freemem (err);
     }
 
     return TRUE;
@@ -223,52 +248,36 @@ lyrics_init (void)
 void
 lyrics_finalize (void)
 {
-    g_return_if_fail (db != NULL);
-
+  if (db)
     sqlite_close (db);
 }
 
-void
-lyrics_set_provider (provider_t prov)
+static char *
+lyrics_select (const char *artist, const char *title)
 {
-    current_provider = prov;
-}
+  if (!db)
+    return 0;
 
-provider_t
-lyrics_get_provider (void)
-{
-    return current_provider;
-}
+  char *lyrics = NULL;
+  int callback (void *arg, int argc, char **argv, char **names)
+  {
+    lyrics = g_strdup (argv[0]);
+    return 0;
+  }
 
-int
-lyrics_select (const gchar *uri, char **content)
-{
-    sqlite_vm *vm;
-    gint ret;
-    const gchar **sqlout;
-
-    if (!db)
-      return 0;
-
-    sqlite_compile (db, SELECT_STATEMENT, NULL, &vm, NULL);
-
-    sqlite_bind (vm, 1, uri, -1, FALSE);
-
-    ret = sqlite_step (vm, NULL, &sqlout, NULL);
-    
-    if (ret != SQLITE_ROW) {
-        sqlite_finalize (vm, NULL);
-        return 0;
+  char *err = NULL;
+  sqlite_exec_printf (db,
+		      "select content from lyrics "
+		      " where artist = lower ('%q') "
+		      "  and title = lower ('%q');",
+		      callback, NULL, &err, artist, title);
+  if (err)
+    {
+      g_warning ("%s:%d: selecting: %s", __func__, __LINE__, err);
+      sqlite_freemem (err);
     }
 
-    if (sqlout[0])
-      *content = g_strdup (sqlout[0]);
-    else
-      *content = NULL;
-
-    sqlite_finalize (vm, NULL);
-
-    return 1;
+  return lyrics;
 }
 
 static void
@@ -283,121 +292,111 @@ lyrics_write_textview (GtkTextView *view, const gchar *content)
 			      -1);
 }
 
-void
-lyrics_display (const gchar *artist, const gchar *title, GtkTextView *view,
-		bool try_to_download, bool force_download)
+static void
+lyrics_store (const gchar *lyrics)
 {
-    gchar *uri;
+  if (! db)
+    return;
 
-    uri = lyrics_cook_uri (artist, title);
-
-    g_return_if_fail (uri != NULL);
-
-    lyrics_display_with_uri (uri, artist, title, view,
-			     try_to_download, force_download);
-
-    g_free (uri);
+  char *err = NULL;
+  sqlite_exec_printf (db,
+		      "INSERT OR REPLACE INTO lyrics "
+		      "  (artist, title, content, time) "
+		      " VALUES (lower ('%q'), lower ('%q'),"
+		      "         '%q', DATETIME('NOW'));",
+		      NULL, NULL, &err,
+		      artist, title, lyrics ?: "");
+  if (err)
+    {
+      g_warning ("%s:%d: storing: %s", __func__, __LINE__, err);
+      sqlite_freemem (err);
+    }
 }
 
 static void
-got_lyrics (SoupMessage *msg, gpointer view)
+got_lyrics (SoupMessage *msg, gpointer provider)
 {
-    gchar *lyrics = NULL;
+  if (msg->status_code == SOUP_STATUS_CANCELLED)
+    return;
 
-    //write (0, msg->response.body, msg->response.length);
+  gchar *lyrics = NULL;
+  if (SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
+    lyrics = providers[(int) provider].parse (msg);
 
-    if (SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
-        lyrics = providers[current_provider].parse (msg);
+  g_debug ("%d (%d extant): Returned %.20s%s (status: %d)\n",
+	   (int) provider, extant,
+	   lyrics ?: "nothing!", lyrics ? "..." : "",
+	   msg->status_code);
 
-    lyrics_write_textview (GTK_TEXT_VIEW (view), lyrics);
+  if (lyrics || extant == 1)
+    {
+      lyrics_write_textview (GTK_TEXT_VIEW (view), lyrics);
     
-    char *uri = soup_uri_to_string (soup_message_get_uri (msg), FALSE);
-    lyrics_store (uri, lyrics);
-    g_free (uri);
+      lyrics_store (lyrics);
 
-    g_free (lyrics);
+      abort_extant ();
+    }
+  else
+    extant --;
+
+  g_free (lyrics);
 }
 
 void
-lyrics_display_with_uri (const gchar *uri,
-			 const char *artist, const char *title,
-			 GtkTextView *view, bool try_to_download,
-			 bool force_download)
+lyrics_display (const gchar *a, const gchar *t, GtkTextView *v,
+		bool try_to_download, bool force_download)
 {
-    gchar *content;
-    SoupSession *session;
-    SoupMessage *msg;
-    
-    if (! force_download && lyrics_select (uri, &content))
-      {
-        lyrics_write_textview (view, content);
+  abort_extant ();
+
+  if (! a || ! t)
+    /* We need both an artist and a title.  */
+    return;
+
+  gchar *content;
+  if (! force_download && (content = lyrics_select (a, t)))
+    {
+      lyrics_write_textview (v, content);
         
-        g_free (content);
+      g_free (content);
 
-        return;
-      }
-
-    if (! try_to_download)
-      {
-	char *message = g_strdup_printf (_("%s by %s not in database."),
-					 title, artist);
-        lyrics_write_textview (view, message);
-	g_free (message);
-	return;
-      }
-
-    char *message = g_strdup_printf (_("Downloading lyrics for %s by %s..."),
-				     title, artist);
-    lyrics_write_textview (view, message);
-    g_free (message);
-
-    session = soup_session_async_new ();
-    msg = soup_message_new (SOUP_METHOD_GET, uri);
-
-    g_debug ("Fetching %s\n", uri);
-
-    soup_session_queue_message (session, msg, got_lyrics, view);
-}
-    
-void
-lyrics_store (const gchar *uri, const gchar *text)
-{
-    sqlite_vm *vm;
-    gint ret;
-
-    if (!db) {
-        return;
+      return;
     }
 
-    sqlite_compile (db, STORE_STATEMENT, NULL, &vm, NULL);
+  if (! try_to_download)
+    {
+      char *message = g_strdup_printf (_("%s by %s not in database."),
+				       t, a);
+      lyrics_write_textview (v, message);
+      g_free (message);
+      return;
+    }
 
-    ret = sqlite_bind (vm, 1, uri, -1, FALSE);
-    if (ret)
-      goto out;
+  char *message = g_strdup_printf (_("Downloading lyrics for %s by %s..."),
+				   t, a);
+  lyrics_write_textview (v, message);
+  g_free (message);
 
-    ret = sqlite_bind (vm, 2, text, -1, FALSE);
-    if (ret)
-      goto out;
+  artist = g_strdup (a);
+  title = g_strdup (t);
+  view = v;
 
-    ret = sqlite_step (vm, NULL, NULL, NULL);
-    
- out:;
-    char *err = NULL;
-    sqlite_finalize (vm, &err);
-    if (err)
-      {
-        printf ("Error storing lyrics: %d: %s\n", ret, err);
-	sqlite_freemem (err);
-      }
+  if (! session)
+    session = soup_session_async_new ();
+
+  int i;
+  for (i = 0; i < sizeof (providers) / sizeof (providers[0]); i ++)
+    {
+      char *uri = providers[i].cook (artist, title);
+      if (uri)
+	{
+	  g_debug ("%d: Fetching %s\n", i, uri);
+
+	  SoupMessage *msg = soup_message_new (SOUP_METHOD_GET, uri);
+	  g_free (uri);
+
+	  soup_session_queue_message (session, msg, got_lyrics, (gpointer) i);
+
+	  extant ++;
+	}
+    }
 }
-
-gchar *
-lyrics_cook_uri (const gchar *artist, const gchar *title)
-{
-    if (current_provider >= PROVIDER_INVALID || !artist || !title)
-        return NULL;
-
-    return providers[current_provider].cook (artist, title);
-}
-
-
