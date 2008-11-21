@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-_Name=Calendar
+_Name=GPE Calendar
 _Comment=GPE Calendar Application
 Exec=/bin/sh -c '. /usr/bin/connectivity_preload.sh; @prefix@/bin/gpe-calendar'
 Terminal=false

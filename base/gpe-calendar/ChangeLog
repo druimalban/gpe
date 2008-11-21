@@ -1,5 +1,7 @@
 2008-11-21  Graham Cobb  <g+770@cobb.uk.net>
 
+	* hildon/gpe-calendar.desktop.in.in (_Name): Change name to GPE Calendar.
+
 	* rename pixmap/gpe-calendar.png to pixmap/gpe-calendar-48x48.png.
 	Add pixmap/gpe-calendar-26x26.png.
 	Makefile.am: Add rule to copy gpe-calendar-48x48.png to gpe-calendar.png.
