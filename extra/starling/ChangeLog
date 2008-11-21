@@ -1,5 +1,10 @@
 2008-11-21  Neal H. Walfield  <neal@gnu.org>
 
+	* src/player.c: Include "utils.h".
+	(player_set_source): Use uri_escape_string.
+
+2008-11-21  Neal H. Walfield  <neal@gnu.org>
+
 	* src/lyrics.c: Include <libsoup/soup.h>, <stdbool.h> and
 	<obstack.h>.
 	(session): New global variable.

@@ -32,6 +32,8 @@
 #include "player.h"
 #include "marshal.h"
 
+#include "utils.h"
+
 struct _Player {
   GObject parent;
 
@@ -285,34 +287,10 @@ player_set_source (Player *pl, const char *source, gpointer cookie)
 
       obstack_printf (&uri, "file://");
 
-      /* We prefer g_uri_escape_string is it is available, as it is
-	 more robust than just escaping %.  */
-#ifdef HAVE_G_URI_ESCAPE_STRING
-      char *s;
-      s = g_uri_escape_string (source,
-			       G_URI_RESERVED_CHARS_ALLOWED_IN_PATH,
-			       1);
-      int len = strlen (s);
-      obstack_grow (&uri, s, len);
+      char *s = uri_escape_string (source);
+      obstack_grow (&uri, s, strlen (s) + 1);
       g_free (s);
-#else
-      const char *s = source;
 
-      while (*s)
-	{
-	  int len = strcspn (s, "%");
-	  obstack_grow (&uri, s, len);
-	  s += len;
-
-	  while (*s == '%')
-	    {
-	      obstack_grow (&uri, "%25", 3);
-	      s ++;
-	    }
-	}
-#endif
-
-      obstack_1grow (&uri, 0);
       char *location = obstack_finish (&uri);
       g_object_set (G_OBJECT (pl->playbin), "uri",
 		    location, NULL);
