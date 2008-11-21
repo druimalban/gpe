@@ -1,3 +1,9 @@
+2008-11-21  Graham Cobb  <g+770@cobb.uk.net>
+
+	* rename pixmap/gpe-calendar.png to pixmap/gpe-calendar-48x48.png.
+	Add pixmap/gpe-calendar-26x26.png.
+	Makefile.am: Add rule to copy gpe-calendar-48x48.png to gpe-calendar.png.
+
 2008-10-30  Neal H. Walfield  <neal@gnu.org>
 
 	* event-ui.c (struct edit_state): Remove field end_date_floating.

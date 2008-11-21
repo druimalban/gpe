@@ -87,6 +87,9 @@ pixmapsdir = $(datadir)/pixmaps
 
 pixmaps_DATA = pixmaps/gpe-calendar.png
 
+pixmaps/gpe-calendar.png: pixmaps/gpe-calendar-48x48.png
+	cp $< $@
+
 EXTRA_DIST = $(service_DATA) \
              $(pixmaps_DATA) \
              gpe-calendar.desktop.in.in \
