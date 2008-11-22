@@ -17,8 +17,6 @@
 
 gboolean has_db_table (sqlite *db, const gchar *name);
 
-gint sqlite_bind_int (sqlite_vm *vm, gint index, gint value);
-
 /* Escape the string STRING for inclusion in a URI.  */
 extern char *uri_escape_string (const char *string);
 

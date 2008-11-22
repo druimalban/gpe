@@ -22,40 +22,29 @@
 #define obstack_chunk_free g_free
 #include <obstack.h>
 
-#define CHECK_TBL_STATEMENT "SELECT name FROM sqlite_master WHERE " \
-                        " type='table' AND name=?;"
-
 gboolean
 has_db_table (sqlite *db, const gchar *name)
 {
-    sqlite_vm *vm;
-    gint ret;
+  int have_table = FALSE;
 
-    g_return_val_if_fail (db != NULL, FALSE);
+  int callback (void *arg, int argc, char **argv, char **names)
+  {
+    have_table = TRUE;
+    return 0;
+  }
 
-    sqlite_compile (db, CHECK_TBL_STATEMENT, NULL, &vm, NULL);
-
-    sqlite_bind (vm, 1, name, -1, 0);
-
-    ret = sqlite_step (vm, NULL, NULL, NULL);
-
-    sqlite_finalize (vm, NULL);
-
-    if (SQLITE_ROW == ret) {
-        return TRUE;
+  char *err = NULL;
+  sqlite_exec_printf (db,
+		      "SELECT name FROM sqlite_master WHERE " \
+		      " type='table' AND name='%q';",
+		      callback, NULL, &err, name);
+  if (err)
+    {
+      g_warning ("%s:%d: selecting: %s", __func__, __LINE__, err);
+      sqlite_freemem (err);
     }
 
-    return FALSE;
-}
-
-gint
-sqlite_bind_int (sqlite_vm *vm, gint index, gint value)
-{
-    gchar s[128];
-
-    snprintf (s, sizeof (s), "%d", value);
-
-    return sqlite_bind (vm, index, s, -1, TRUE);
+  return have_table;
 }
 
 char *
