@@ -1,3 +1,8 @@
+2008-11-22  Neal H. Walfield  <neal@gnu.org>
+
+	* src/utils.c (uri_escape_string): Fix typo.
+	Reported by Graham Cobb  <g+770@cobb.uk.net>.
+
 2008-11-21  Neal H. Walfield  <neal@gnu.org>
 
 	* src/player.c: Include "utils.h".

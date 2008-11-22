@@ -71,7 +71,7 @@ uri_escape_string (const char *string)
   struct obstack escaped;
   obstack_init (&escaped);
 
-  const char *s = source;
+  const char *s = string;
   while (*s)
     {
       int len = strcspn (s, "%");
