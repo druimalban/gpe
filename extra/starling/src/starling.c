@@ -1996,7 +1996,7 @@ lastfm_submit_cb (GtkWidget *w, Starling *st)
     starling_error_box (_("You need to enter a username and password."));
   else
     {
-      lastfm_user_data_set (username, password,
+      lastfm_user_data_set (username, passwd,
 			    gtk_spin_button_get_value (st->lastfm_autosubmit));
       lastfm_submit ();
     }

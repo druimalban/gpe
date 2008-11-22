@@ -1,5 +1,9 @@
 2008-11-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (lastfm_submit_cb): Fix typo.
+
+2008-11-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/lastfm.h: Include <gtk/gtklabel.h>.  Don't include
 	"starling.h".
 	(lastfm_init): Change prototype to take the user name, password,
