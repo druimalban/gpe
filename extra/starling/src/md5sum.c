@@ -1,4 +1,4 @@
-/* lastfm.h - lastfm interface.
+/* md5sum.c - md5sum routine.
    Copyright (C) 2008 Neal H. Walfield <neal@walfield.org>
    Copyright (C) 2006 Alberto García Hierro <skyhusker@handhelds.org>
 
@@ -18,26 +18,26 @@
    along with this program.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef LASTFM_H
-#define LASTFM_H
+#include "md5.h"
+#include <glib.h>
+#include <string.h>
 
-#include <glib/gtypes.h>
-#include <gtk/gtklabel.h>
-
-/* If auto_submit is not zero, then when at least AUTO_SUBMIT tracks
-   are in the queue, they will automatically be submitted.  Otherwise,
-   submissions will only occur when triggered by a call to
-   lastfm_submit.  */
-extern gboolean lastfm_init (const char *user, const char *password,
-			     int auto_submit, GtkLabel *status);
-
-/* Enqueue a track for submission.  */
-void lastfm_enqueue (const gchar *artist, const gchar *title, gint length);
-
-/* Cause any pending tracks to be submitted now.  */
-void lastfm_submit (void);
-
-void lastfm_user_data_set (const char *user, const char *password,
-			   int auto_submit);
-
+char *
+md5sum (const char *str)
+{
+#ifdef HAVE_G_COMPUTE_CHECKSUM_FOR_DATA
+  return g_compute_checksum_for_data (G_CHECKSUM_MD5,
+				      (guint8 *) str, strlen (str));
+#else
+  guchar md5[16];
+  gchar md5str[33];
+  int i;
+ 
+  md5_buffer (str, strlen (str), md5);
+  for (i = 0; i < sizeof (md5); i++)
+    sprintf (md5str + 2 * i, "%02x", md5[i]);
+  md5str[33] = '\0';
+    
+  return g_strdup(md5str);
 #endif
+}

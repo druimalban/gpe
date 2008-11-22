@@ -1,6 +1,6 @@
 bin_PROGRAMS = starling starling-catalog
 
-# Annoyingly, the files in LIBOBJS are not compiled per target but one
+# Annoyingly, the files in LIBOBJS are not compiled per target but once
 # and with the system cflags.
 AM_CFLAGS = -Wall $(BASE_CFLAGS)
 
@@ -20,7 +20,7 @@ starling_SOURCES = main.c \
 		config.h \
 		search.y \
 		caption.h caption.c \
-		md5.h md5.c
+		md5sum.h md5sum.c
 
 starling_catalog_CFLAGS = $(BASE_CFLAGS)
 starling_catalog_LDADD = $(BASE_LIBS) $(LIBOBJS)
@@ -39,8 +39,7 @@ nodist_noinst_HEADERS = marshal.h
 
 CLEANFILES = $(BUILT_SOURCES)
 
-EXTRA_DIST = marshal.list
-
+EXTRA_DIST = marshal.list md5.h
 
 marshal.c: marshal.list
 	$(GLIB_GENMARSHAL) --body $^ > $@

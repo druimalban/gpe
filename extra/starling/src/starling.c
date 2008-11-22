@@ -104,13 +104,17 @@ struct _Starling {
   GtkScrolledWindow *queue_view_window;
   GtkWidget *queue_view;
 
-  GtkWidget *random;
-  gchar *fs_last_path;
-  GtkWidget *textview;
+  /* Lastfm tab.  */
   GtkWidget *webuser_entry;
   GtkWidget *webpasswd_entry;
   GtkWidget *web_submit;
   GtkWidget *web_count;
+  GtkSpinButton *lastfm_autosubmit;
+
+  GtkWidget *random;
+  gchar *fs_last_path;
+  GtkWidget *textview;
+
   gboolean has_lyrics;
   gint64 current_length;
   gboolean enqueued;
@@ -284,11 +288,11 @@ starling_load (Starling *st, int uid)
       if (idx != -1)
 	play_list_force_changed (st->library, idx);
 
-      set_title (st);
-
-      st->current_length = -1;
       st->has_lyrics = FALSE;
+      st->current_length = -1;
       st->enqueued = FALSE;
+
+      set_title (st);
     }
 
   return TRUE;
@@ -406,6 +410,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEYSINK "sink"
 #define KEYLFMUSER "lastfm-user"
 #define KEYLFMPASSWD "lastfm-password"
+#define KEYLFMAUTOSUBMIT "lastfm-auto-submit"
 #define KEY_WIDTH "width"
 #define KEY_HEIGHT "height"
 #define KEY_LOADED_SONG "loaded-song"
@@ -463,6 +468,12 @@ deserialize_bottom_half (gpointer data)
     }
 
   g_free (data);
+
+  lastfm_init (gtk_entry_get_text (GTK_ENTRY (st->webuser_entry)),
+	       gtk_entry_get_text (GTK_ENTRY (st->webpasswd_entry)),
+	       gtk_spin_button_get_value (st->lastfm_autosubmit),
+	       GTK_LABEL (st->web_count));
+
   return FALSE;
 }
 
@@ -541,6 +552,16 @@ deserialize (Starling *st)
       gtk_entry_set_text (GTK_ENTRY (st->webpasswd_entry), value);
       g_free (value);
     }
+
+  if (g_key_file_has_key (keyfile, GROUP, KEYLFMAUTOSUBMIT, NULL))
+    {
+      int i = g_key_file_get_integer (keyfile,
+				      GROUP,
+				      KEYLFMAUTOSUBMIT, NULL);
+      gtk_spin_button_set_value (st->lastfm_autosubmit,
+				 (double) i);
+    }
+
 
   /* Window size.  */
   int w = -1;
@@ -741,6 +762,8 @@ serialize (Starling *st)
 			 gtk_entry_get_text (GTK_ENTRY (st->webuser_entry)));
   g_key_file_set_string (keyfile, GROUP, KEYLFMPASSWD,
 			 gtk_entry_get_text (GTK_ENTRY (st->webpasswd_entry)));
+  g_key_file_set_integer (keyfile, GROUP, KEYLFMAUTOSUBMIT,
+			  gtk_spin_button_get_value (st->lastfm_autosubmit)); 
 
 
   /* Current song.  */
@@ -1825,7 +1848,7 @@ position_update (Starling *st)
 	  info.fields = MDB_ARTIST | MDB_TITLE;
 	  music_db_get_info (st->db, st->loaded_song, &info);
 
-	  lastfm_enqueue (info.artist, info.title, total_seconds, st);
+	  lastfm_enqueue (info.artist, info.title, total_seconds);
 
 	  g_free (info.artist);
 	  g_free (info.title);
@@ -1963,14 +1986,20 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
 static void
 lastfm_submit_cb (GtkWidget *w, Starling *st)
 {
-    const gchar *username;
-    const gchar *passwd;
+  const gchar *username;
+  const gchar *passwd;
 
-    username = gtk_entry_get_text (GTK_ENTRY (st->webuser_entry));
-    passwd = gtk_entry_get_text (GTK_ENTRY (st->webpasswd_entry));
+  username = gtk_entry_get_text (GTK_ENTRY (st->webuser_entry));
+  passwd = gtk_entry_get_text (GTK_ENTRY (st->webpasswd_entry));
 
-    if (username && passwd && strlen (username) && strlen (passwd))
-        lastfm_submit (username, passwd, st);
+  if (! username || ! *username || !passwd || !*passwd)
+    starling_error_box (_("You need to enter a username and password."));
+  else
+    {
+      lastfm_user_data_set (username, password,
+			    gtk_spin_button_get_value (st->lastfm_autosubmit));
+      lastfm_submit ();
+    }
 }
 
 static int
@@ -3021,7 +3050,7 @@ starling_run (void)
   label = gtk_label_new (_("Password:"));
   st->webpasswd_entry = gtk_entry_new ();
   gtk_entry_set_visibility (GTK_ENTRY (st->webpasswd_entry), FALSE);
-    
+
   gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (hbox2), st->webpasswd_entry, TRUE, TRUE, 0);
     
@@ -3031,6 +3060,20 @@ starling_run (void)
   */
   vbox = gtk_vbox_new (FALSE, 0);
   gtk_box_pack_start (GTK_BOX (vbox), hbox1, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
+
+  hbox2 = gtk_hbox_new (FALSE, 2);
+  label = gtk_label_new (_("Auto submit after"));
+  gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
+
+  st->lastfm_autosubmit
+    = GTK_SPIN_BUTTON (gtk_spin_button_new_with_range (0, 100, 1));
+  gtk_box_pack_start (GTK_BOX (hbox2), GTK_WIDGET (st->lastfm_autosubmit),
+		      FALSE, FALSE, 0);
+    
+  label = gtk_label_new (_("pending submissions."));
+  gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
+
   gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
 
   st->web_count = gtk_label_new ("");
@@ -3051,8 +3094,6 @@ starling_run (void)
 		    G_CALLBACK (status_update), st);
 
   lyrics_init ();
-
-  lastfm_init (st);
 
   deserialize (st);
 

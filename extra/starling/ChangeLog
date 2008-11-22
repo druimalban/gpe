@@ -1,5 +1,78 @@
 2008-11-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/lastfm.h: Include <gtk/gtklabel.h>.  Don't include
+	"starling.h".
+	(lastfm_init): Change prototype to take the user name, password,
+	whether to auto submit tracks and a label to update.  Don't take a
+	point to a Starling structure.  Update users.
+	(lastfm_enqueue): Don't take a point to a Starling structure.
+	Update users.
+	(lastfm_submit): Don't take any parameters.  Update users.
+	(lastfm_user_data_set): New declaration.
+	(lastfm_count): Remove declaration.
+	* src/lastfm.c: Don't include "md5.h" or "starling.h".  Include
+	"md5sum.h".
+	(LASTFM_MAX_ITEMS_PER_SUBMISSION): Make a string.
+	(CREATE_STATEMENT): Don't define.
+	(COUNT_STATEMENT): Likewise.
+	(SELECT_STATEMENT): Likewise.
+	(STORE_STATEMENT): Likewise.
+	(DELETE_STATEMENT): Likewise.
+	(HANDSHAKE_URI): Likewise.
+	(lastfm_data): Remove field label.
+	(lastfm_helper_data): Remove structure.
+	(db): Don't initialize.
+	(last_id_send): Likewise.
+	(session): New global variable.
+	(extant): Likewise.
+	(user): Likewise.
+	(password): Likewise.
+	(label): Likewise.
+	(auto_submit): Likewise.
+	(lastfm_show_count): Rename from this...
+	(update_status): ... to this.  Don't take a label or a count.
+	Update users.  Instead, use LABEL and call lastfm_count.  If we
+	are updating, note it.
+	(lastfm_delete_by_id): Rewrite.
+	(lastfm_create_table): Likewise.
+	(lastfm_count): Likewise.  Mark as a pure function.
+	(lastfm_submit): Move body of function from here...
+	(submit): ... to this new function.  If EXTANT is true, return.
+	Don't allocate the cookie here.  Don't allocate a new soup
+	session; queue MSG on SESSION.
+	(lastfm_submit): Call submit.
+	(maybe_submit): New function.
+	(lastfm_enqueue): Rewrite.  Call update_status and maybe_submit.
+	(got_submission_response): Check whether we got a respose.  Parse
+	the response more carefully.
+	(lastfm_submit_real_helper): Move from here...
+	(lastfm_submit_real): ... to here.  Rewrite.
+	(got_handshake_response): Be more careful.
+	(lastfm_user_data_set): New function.
+	(lastfm_init): Take a user name, password, whether to auto submit
+	tracks and a label to update.  Don't take a point to a Starling
+	structure.  Rewrite.
+	* src/starling.c (struct _Starling): Add field lastfm_autosubmit.
+	(KEYLFMAUTOSUBMIT): Define.
+	(starling_run): Don't call lastfm_init here...
+	(deserialize_bottom_half): .. call it here.
+	(deserialize): Restore ST->LASTFM_AUTOSUBMIT's state.
+	(serialize): Save ST->LASTFM_AUTOSUBMIT's state.
+	(lastfm_submit_cb): Show an error dialog box if the username or
+	password is empty.
+	(starling_run): Initialize ST->LASTFM_AUTOSUBMIT.
+
+	* configure.ac: Check for g_compute_checksum_for_data.  If that is
+	not found, check for md5_buffer.  If that is not found, add md5.c
+	to LIBOBJ.
+	* src/md5sum.h: New file.
+	* src/md5sum.c: Likewise.
+	* src/Makefile.am (starling_SOURCES): Remove md5.h and md5.c.  Add
+	md5sum.h md5sum.c.
+	(EXTRA_DIST): Add md5.h.
+
+2008-11-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/utils.c (uri_escape_string): Fix typo.
 	Reported by Graham Cobb  <g+770@cobb.uk.net>.
 
