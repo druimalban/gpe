@@ -1,5 +1,10 @@
 2008-11-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/lyrics.c (lyrics_init): Call has_db_table.  Only create the
+	table if it returns false.
+
+2008-11-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (lastfm_submit_cb): Fix typo.
 
 2008-11-22  Neal H. Walfield  <neal@gnu.org>

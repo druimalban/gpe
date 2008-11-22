@@ -214,35 +214,41 @@ struct
 gboolean
 lyrics_init (void)
 {
-    gchar *dbpath;
-    dbpath = g_strdup_printf ("%s/%s/%s",
-			      g_get_home_dir(), CONFIGDIR, "lyrics");
+  gchar *dbpath;
+  dbpath = g_strdup_printf ("%s/%s/%s",
+			    g_get_home_dir(), CONFIGDIR, "lyrics");
 
-    db = sqlite_open (dbpath, 0, NULL);
+  char *err = NULL;
+  db = sqlite_open (dbpath, 0, &err);
 
-    g_free (dbpath);
+  g_free (dbpath);
 
-    if (!db) {
-        g_fprintf (stderr, "Cannot open the database,"
-                    "lyrics won't be cached\n");
-        return FALSE;
+  if (err)
+    {
+      g_warning ("%s: %d: Cannot open the database: %s",
+		 __func__, __LINE__, err);
+      sqlite_freemem (err);
+      return FALSE;
     }
 
-    /* If there is an error, it is likely that the table already
-       exists.  We can ignore that.  */
-    char *err = NULL;
-    sqlite_exec (db,
-		 "CREATE TABLE lyrics "
-		 "  (artist TEXT, title TEXT, content TEXT, "
-		 "   time DATE);",
-		 NULL, NULL, &err);
-    if (err)
-      {
-	g_warning ("%s:%d: creating table: %s", __func__, __LINE__, err);
-	sqlite_freemem (err);
+  if (!has_db_table (db, "lyrics"))
+    {
+      /* If there is an error, it is likely that the table already
+	 exists.  We can ignore that.  */
+      char *err = NULL;
+      sqlite_exec (db,
+		   "CREATE TABLE lyrics "
+		   "  (artist TEXT, title TEXT, content TEXT, "
+		   "   time DATE);",
+		   NULL, NULL, &err);
+      if (err)
+	{
+	  g_warning ("%s:%d: creating table: %s", __func__, __LINE__, err);
+	  sqlite_freemem (err);
+	}
     }
 
-    return TRUE;
+  return TRUE;
 }
 
 void
