@@ -316,6 +316,25 @@ player_get_source (Player *pl, void **cookie)
   return source;
 }
 
+double
+player_get_volume (Player *pl)
+{
+  playbin_ensure (pl);
+
+  double volume;
+  g_object_get (G_OBJECT (pl->playbin), "volume", &volume, NULL);
+
+  return volume;
+}
+
+gboolean
+player_set_volume (Player *pl, double volume)
+{
+  playbin_ensure (pl);
+
+  g_object_set (G_OBJECT (pl->playbin), "volume", volume, NULL);
+}
+
 gboolean
 player_play (Player *pl)
 {

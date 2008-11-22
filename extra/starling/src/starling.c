@@ -80,6 +80,8 @@ struct _Starling {
   GtkWidget *position_slider;
   int user_seeking;
 
+  GtkWidget *volume_button;
+
   GtkWidget *title;
   GtkComboBox *rating;
   int rating_change_signal_id;
@@ -408,6 +410,7 @@ starling_set_sink (Starling *st, char *sink)
 #define KEYRANDOM "random"
 #define KEYLASTPATH "last-path"
 #define KEYSINK "sink"
+#define KEYVOLUME "volume"
 #define KEYLFMUSER "lastfm-user"
 #define KEYLFMPASSWD "lastfm-password"
 #define KEYLFMAUTOSUBMIT "lastfm-auto-submit"
@@ -537,6 +540,12 @@ deserialize (Starling *st)
   /* Random mode.  */
   starling_random_set (st, g_key_file_get_boolean (keyfile,
 						   GROUP, KEYRANDOM, NULL));
+
+  /* Volume mode.  */
+  double vol = 0.8;
+  if (g_key_file_has_key (keyfile, GROUP, KEYVOLUME, NULL))
+    vol = g_key_file_get_double (keyfile, GROUP, KEYVOLUME, NULL);
+  gtk_scale_button_set_value (GTK_SCALE_BUTTON (st->volume_button), vol);
 
   /* Lastfm user data.  */
   if (g_key_file_has_key (keyfile, GROUP, KEYLFMUSER, NULL))
@@ -750,6 +759,11 @@ serialize (Starling *st)
   /* Random mode.  */
   g_key_file_set_boolean (keyfile, GROUP, KEYRANDOM,
 			  starling_random (st));
+
+  /* Volume.  */
+  g_key_file_set_double
+    (keyfile, GROUP, KEYVOLUME,
+     gtk_scale_button_get_value (GTK_SCALE_BUTTON (st->volume_button)));
 
   /* Window size.  */
   int w, h;
@@ -1759,7 +1773,7 @@ try_seek (Starling *st)
 
 static gboolean
 position_slider_button_released_cb (GtkRange *range, GdkEventButton *event,
-			  Starling *st)
+				    Starling *st)
 {
   g_assert (st->user_seeking);
   g_source_remove (st->user_seeking);
@@ -1777,7 +1791,7 @@ position_slider_button_released_cb (GtkRange *range, GdkEventButton *event,
 
 static gboolean
 position_slider_button_pressed_cb (GtkRange *range, GdkEventButton *event,
-			 Starling *st)
+				   Starling *st)
 {
   if (! st->user_seeking)
     st->user_seeking
@@ -1862,6 +1876,28 @@ position_update (Starling *st)
     try_seek (st);
 
   return TRUE;
+}
+
+static gboolean
+volume_changed (GtkScaleButton *button, gdouble value, Starling *st)
+{
+  /* VALUE is betwen 0 and 1.  We need to translate this to one
+     between 0 and 10.  This is not simply a question of multiplying
+     by a factor: our volume control should be linear, however, the
+     underlying mechanism appears to be exponential.  */
+
+  /* Map 0 to 0.8 to 0 to 1 and 0.8 to 1.0 to 1 to 10.  */
+  double t;
+  if (value < 0.8)
+    /* Map 0 to 0.8 -> 0 to 1.  */ 
+    t = value / 0.8;
+  else
+    /* Map 0.8 to 1.0 -> 1 to 10.  */
+    t = 1.0 + ((10.0 - 1.0) / (1.0 - 0.8)) * (value - 0.8);
+
+  player_set_volume (st->player, t);
+
+  return FALSE;
 }
 
 static void
@@ -2820,6 +2856,12 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->duration),
 		      FALSE, FALSE, 0);
 
+  st->volume_button = gtk_volume_button_new ();
+  g_signal_connect (G_OBJECT (st->volume_button), "value-changed", 
+		    G_CALLBACK (volume_changed), st);
+  gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->volume_button),
+		      FALSE, FALSE, 0);
+    
   /* The currently playing song.  */
   /* Stuff the title label in an hbox to prevent it from being
      centered.  */

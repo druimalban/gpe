@@ -1,5 +1,20 @@
 2008-11-22  Neal H. Walfield  <neal@gnu.org>
 
+	* src/player.h (player_get_volume): New declaration.
+	(player_set_volume): Likewise.
+	* src/player.c (player_get_volume): New function.
+	(player_set_volume): Likewise.
+	* src/starling.c (struct _Starling): Add field volume_button.
+	(KEYVOLUME): Define.
+	(deserialize): Restore ST->VOLUME_BUTTON's state.
+	(serialize): Save ST->VOLUME_BUTTON's state.
+	(volume_changed): New function.
+	(starling_run): Create a volume button and save it in
+	ST->VOLUME_BUTTON.  Attach it's "value-changed" signal to
+	value_changed.
+
+2008-11-22  Neal H. Walfield  <neal@gnu.org>
+
 	* src/utils.h (sqlite_bind_int): Remove declaration.
 	* src/utils.c (CHECK_TBL_STATEMENT): Don't define.
 	(has_db_table): Rewrite.

@@ -76,6 +76,15 @@ extern void player_set_source (Player *pl, const char *source, gpointer cookie);
    returned in *COOKIE.  */
 extern char *player_get_source (Player *pl, void **cookie);
 
+/* player_get_volume:
+
+   Return current volume level (between 0 and 10).  */
+extern double player_get_volume (Player *pl);
+
+/* player_set_volume:
+
+   Set volume to a value between 0 and 10.  */
+extern gboolean player_set_volume (Player *pl, double volume);
 
 /** player_play:
 
