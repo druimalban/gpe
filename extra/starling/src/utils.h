@@ -20,4 +20,8 @@ gboolean has_db_table (sqlite *db, const gchar *name);
 /* Escape the string STRING for inclusion in a URI.  */
 extern char *uri_escape_string (const char *string);
 
+/* Return a string based on STRING with special html characters (&<>)
+   escaped.  */
+extern char *html_escape_string (const char *string);
+
 #endif

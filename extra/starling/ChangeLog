@@ -1,3 +1,9 @@
+2008-11-23  Neal H. Walfield  <neal@gnu.org>
+
+	* src/utils.h (html_escape_string): New declaration.
+	* src/utils.c (html_escape_string): New function.
+	* src/starling.c (library_button_press_event): Use it.
+
 2008-11-22  Neal H. Walfield  <neal@gnu.org>
 
 	* src/player.h (player_get_volume): New declaration.

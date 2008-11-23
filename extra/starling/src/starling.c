@@ -2287,6 +2287,31 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       info.fields = MDB_SOURCE | MDB_ARTIST | MDB_ALBUM | MDB_TITLE;
       music_db_get_info (st->db, uid, &info);
 
+      if (info.source)
+	{
+	  char *t = html_escape_string (info.source);
+	  g_free (info.source);
+	  info.source = t;
+	}
+      if (info.artist)
+	{
+	  char *t = html_escape_string (info.artist);
+	  g_free (info.artist);
+	  info.artist = t;
+	}
+      if (info.album)
+	{
+	  char *t = html_escape_string (info.album);
+	  g_free (info.album);
+	  info.album = t;
+	}
+      if (info.title)
+	{
+	  char *t = html_escape_string (info.title);
+	  g_free (info.title);
+	  info.title = t;
+	}
+
       GtkMenu *submenus[add_count];
       int ops[add_count];
       int submenu_count = 0;

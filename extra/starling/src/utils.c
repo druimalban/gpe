@@ -80,3 +80,43 @@ uri_escape_string (const char *string)
   return result;
 #endif
 }
+
+char *
+html_escape_string (const char *string)
+{
+  struct obstack escaped;
+  obstack_init (&escaped);
+
+  const char *s = string;
+  while (*s)
+    {
+      int len = strcspn (s, "<>&");
+      obstack_grow (&escaped, s, len);
+      s += len;
+
+      if (*s)
+	{
+	  char *t = NULL;
+	  switch (*s)
+	    {
+	    case '&':
+	      t = "&amp;";
+	      break;
+	    case '<':
+	      t = "&lt;";
+	      break;
+	    case '>':
+	      t = "&gt;";
+	      break;
+	    }
+
+	  obstack_grow (&escaped, t, strlen (t));
+	  s ++;
+	}
+    }
+
+  obstack_1grow (&escaped, 0);
+  char *result = g_strdup (obstack_finish (&escaped));
+  obstack_free (&escaped, NULL);
+  return result;
+}
