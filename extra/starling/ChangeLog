@@ -1,5 +1,18 @@
 2008-11-23  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Check for the gtk_volume_button_new function.
+	* src/starling.c (struct _Starling) [!HAVE_GTK_VOLUME_BUTTON_NEW]:
+	Remove field volume_button.
+	(deserialize) [!HAVE_GTK_VOLUME_BUTTON_NEW]: Don't restore the
+	volume's state.
+	(serialize) [!HAVE_GTK_VOLUME_BUTTON_NEW]: Don't save the volume's
+	state.
+	(volume_changed) [!HAVE_GTK_VOLUME_BUTTON_NEW]: Don't define.
+	(starling_run) [!HAVE_GTK_VOLUME_BUTTON_NEW]: Don't create the
+	volume button.
+
+2008-11-23  Neal H. Walfield  <neal@gnu.org>
+
 	* src/utils.h (html_escape_string): New declaration.
 	* src/utils.c (html_escape_string): New function.
 	* src/starling.c (library_button_press_event): Use it.

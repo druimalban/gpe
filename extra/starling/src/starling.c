@@ -80,7 +80,9 @@ struct _Starling {
   GtkWidget *position_slider;
   int user_seeking;
 
+#ifdef HAVE_GTK_VOLUME_BUTTON_NEW
   GtkWidget *volume_button;
+#endif
 
   GtkWidget *title;
   GtkComboBox *rating;
@@ -541,11 +543,13 @@ deserialize (Starling *st)
   starling_random_set (st, g_key_file_get_boolean (keyfile,
 						   GROUP, KEYRANDOM, NULL));
 
+#ifdef HAVE_GTK_VOLUME_BUTTON_NEW
   /* Volume mode.  */
   double vol = 0.8;
   if (g_key_file_has_key (keyfile, GROUP, KEYVOLUME, NULL))
     vol = g_key_file_get_double (keyfile, GROUP, KEYVOLUME, NULL);
   gtk_scale_button_set_value (GTK_SCALE_BUTTON (st->volume_button), vol);
+#endif
 
   /* Lastfm user data.  */
   if (g_key_file_has_key (keyfile, GROUP, KEYLFMUSER, NULL))
@@ -760,10 +764,12 @@ serialize (Starling *st)
   g_key_file_set_boolean (keyfile, GROUP, KEYRANDOM,
 			  starling_random (st));
 
+#ifdef HAVE_GTK_VOLUME_BUTTON_NEW
   /* Volume.  */
   g_key_file_set_double
     (keyfile, GROUP, KEYVOLUME,
      gtk_scale_button_get_value (GTK_SCALE_BUTTON (st->volume_button)));
+#endif
 
   /* Window size.  */
   int w, h;
@@ -1878,6 +1884,7 @@ position_update (Starling *st)
   return TRUE;
 }
 
+#ifdef HAVE_GTK_VOLUME_BUTTON_NEW
 static gboolean
 volume_changed (GtkScaleButton *button, gdouble value, Starling *st)
 {
@@ -1899,6 +1906,7 @@ volume_changed (GtkScaleButton *button, gdouble value, Starling *st)
 
   return FALSE;
 }
+#endif
 
 static void
 update_queue_count (Starling *st)
@@ -2881,11 +2889,13 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->duration),
 		      FALSE, FALSE, 0);
 
+#ifdef HAVE_GTK_VOLUME_BUTTON_NEW
   st->volume_button = gtk_volume_button_new ();
   g_signal_connect (G_OBJECT (st->volume_button), "value-changed", 
 		    G_CALLBACK (volume_changed), st);
   gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->volume_button),
 		      FALSE, FALSE, 0);
+#endif
     
   /* The currently playing song.  */
   /* Stuff the title label in an hbox to prevent it from being

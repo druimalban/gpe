@@ -63,6 +63,7 @@ old_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $GUI_CFLAGS"
 old_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS $GUI_LIBS"
+AC_CHECK_FUNCS([gtk_volume_button_new])
 AC_CHECK_FUNCS([g_uri_escape_string])
 AC_CHECK_FUNCS([g_compute_checksum_for_data], [],
                [AC_CHECK_FUNCS([md5_buffer], [], [AC_LIBOBJ([md5])])])
