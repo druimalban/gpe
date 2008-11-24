@@ -2296,29 +2296,13 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
       music_db_get_info (st->db, uid, &info);
 
       if (info.source)
-	{
-	  char *t = html_escape_string (info.source);
-	  g_free (info.source);
-	  info.source = t;
-	}
+	info.source = html_escape_string (info.source);
       if (info.artist)
-	{
-	  char *t = html_escape_string (info.artist);
-	  g_free (info.artist);
-	  info.artist = t;
-	}
+	info.artist = html_escape_string (info.artist);
       if (info.album)
-	{
-	  char *t = html_escape_string (info.album);
-	  g_free (info.album);
-	  info.album = t;
-	}
+	info.album = html_escape_string (info.album);
       if (info.title)
-	{
-	  char *t = html_escape_string (info.title);
-	  g_free (info.title);
-	  info.title = t;
-	}
+	info.title = html_escape_string (info.title);
 
       GtkMenu *submenus[add_count];
       int ops[add_count];

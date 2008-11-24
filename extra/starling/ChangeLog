@@ -1,3 +1,12 @@
+2008-11-24  Neal H. Walfield  <neal@gnu.org>
+
+	* src/utils.h (html_escape_string): Drop string's const
+	qualifier.  Note that the this function assumes ownership of
+	STRING.  Update callers.
+	* src/utils.c (html_escape_string): Drop string's const qualifier.
+	If there are no characters that must be rewritten, just return
+	STRING.  Otherwise, free string before returning.
+
 2008-11-23  Neal H. Walfield  <neal@gnu.org>
 
 	* configure.ac: Check for the gtk_volume_button_new function.

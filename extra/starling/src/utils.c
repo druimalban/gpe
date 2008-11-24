@@ -82,12 +82,19 @@ uri_escape_string (const char *string)
 }
 
 char *
-html_escape_string (const char *string)
+html_escape_string (char *string)
 {
+  const char *s = string;
+  int len = strcspn (s, "<>&");
+  if (s[len] == 0)
+    /* There is nothing to rewrite.  Just return STRING.  */
+    return string;
+
+  s += len;
+
   struct obstack escaped;
   obstack_init (&escaped);
 
-  const char *s = string;
   while (*s)
     {
       int len = strcspn (s, "<>&");
@@ -114,6 +121,8 @@ html_escape_string (const char *string)
 	  s ++;
 	}
     }
+
+  g_free (string);
 
   obstack_1grow (&escaped, 0);
   char *result = g_strdup (obstack_finish (&escaped));

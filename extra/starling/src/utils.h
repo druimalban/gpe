@@ -21,7 +21,7 @@ gboolean has_db_table (sqlite *db, const gchar *name);
 extern char *uri_escape_string (const char *string);
 
 /* Return a string based on STRING with special html characters (&<>)
-   escaped.  */
-extern char *html_escape_string (const char *string);
+   escaped.  This function assumes ownership of STRING!!!  */
+extern char *html_escape_string (char *string);
 
 #endif
