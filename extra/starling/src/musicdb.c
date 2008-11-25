@@ -1658,6 +1658,7 @@ new_decoded_pad (GstElement *decodebin, GstPad *pad,
 
   /* link'n'play */
   gst_pad_link (pad, audiopad);
+  gst_object_unref (audiopad);
 }
 
 static void

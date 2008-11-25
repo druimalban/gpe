@@ -1,5 +1,9 @@
 2008-11-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (new_decoded_pad): Unref AUDIOPAD.
+
+2008-11-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (meta_data_reader): Free TAGS.
 
 2008-11-24  Neal H. Walfield  <neal@gnu.org>
