@@ -1,5 +1,10 @@
 2008-11-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (status_kick): Trigger status_update every half
+	second.
+
+2008-11-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (worker_thread): Use sqlite_exec instead of
 	sqlite_exec_printf where possible.
 

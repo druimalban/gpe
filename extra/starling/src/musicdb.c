@@ -1648,7 +1648,8 @@ status_kick (MusicDB *db)
     return;
 
   status_update (db);
-  db->status_source = g_timeout_add (5 * 1000,
+  /* Update once every half a second.  */
+  db->status_source = g_timeout_add (500,
 				     (GSourceFunc) status_update, db);
 }
 
