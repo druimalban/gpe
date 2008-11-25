@@ -334,6 +334,12 @@ static gboolean worker_start (gpointer data);
 static int
 busy_handler (void *cookie, const char *table, int retries)
 {
+  if (cookie)
+    {
+      int *was_busy = cookie;
+      *was_busy = 1;
+    }
+
   /* If this is the main thread, then we'd like to recursively invoke
      the main loop, however, not everything is reentrant so...  */
 
@@ -341,7 +347,7 @@ busy_handler (void *cookie, const char *table, int retries)
     retries = 4;
 
   /* In milliseconds.  */
-  int timeout = 100 << (retries - 1);
+  int timeout = 50 << (retries - 1);
 
   /* Sleep and then try again.  */
   struct timespec ts;
@@ -353,6 +359,9 @@ busy_handler (void *cookie, const char *table, int retries)
   return 1;
 }
 
+/* The number of times the busy handler has been called in the main
+   context recently.  */
+static int main_thread_busy;
 
 MusicDB *
 music_db_open (const char *file, GError **error)
@@ -369,7 +378,7 @@ music_db_open (const char *file, GError **error)
       goto error;
     }
 
-  sqlite_busy_handler (db->sqliteh, busy_handler, NULL);
+  sqlite_busy_handler (db->sqliteh, busy_handler, &main_thread_busy);
 
   /* Get the DB's version.  */
   sqlite_exec (db->sqliteh,
@@ -743,6 +752,20 @@ static int
 music_db_add_recursive_internal (MusicDB *db, sqlite *sqliteh,
 				 const gchar *path, GError **error)
 {
+  if (db->sqliteh != sqliteh && main_thread_busy > 0)
+    {
+      /* The main thread was busy...  Back off a bit.  */
+      int timeout = 200;
+      struct timespec ts;
+      ts.tv_nsec = (timeout % 1000) * (1000000ULL);
+      ts.tv_sec = timeout / 1000;
+
+      nanosleep (&ts, &ts);
+
+      main_thread_busy --;
+    }
+
+
   int count = 0;
   GDir *dir = g_dir_open (path, 0, NULL);
   if (dir)
@@ -1681,6 +1704,20 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 
   while (1)
     {
+      if (main_thread_busy > 0)
+	{
+	  /* The main thread was busy...  Back off a bit.  */
+	  int timeout = 200;
+	  struct timespec ts;
+	  ts.tv_nsec = (timeout % 1000) * (1000000ULL);
+	  ts.tv_sec = timeout / 1000;
+
+	  nanosleep (&ts, &ts);
+
+	  main_thread_busy --;
+	}
+
+
       g_mutex_lock (db->work_lock);
 
       if (g_queue_is_empty (db->meta_data_pending))

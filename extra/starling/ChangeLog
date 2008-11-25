@@ -1,5 +1,17 @@
 2008-11-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (busy_handler): If COOKIE is not NULL, set *COOKIE
+	to 1.  Reduce pause time.
+	(main_thread_busy): New variable.
+	(music_db_open): Pass it to sqlite_busy_handler for the main
+	sqlite instance.
+	(music_db_add_recursive_internal): If SQLITEH is no the main
+	instance and MAIN_THREAD_BUSY is greater than 0, pause and then
+	decrement MAIN_THREAD_BUSY.
+	(meta_data_reader): Likewise.
+
+2008-11-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (new_decoded_pad): Unref AUDIOPAD.
 
 2008-11-25  Neal H. Walfield  <neal@gnu.org>
