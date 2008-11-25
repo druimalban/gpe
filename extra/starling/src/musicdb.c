@@ -1906,10 +1906,10 @@ worker_thread (gpointer data)
   }
 
   char *err = NULL;
-  sqlite_exec_printf (sqliteh,
-		      "select ROWID, source, mtime from files"
-		      " where removed isnull and source like '/%';",
-		      check_dead_cb, NULL, &err);
+  sqlite_exec (sqliteh,
+	       "select ROWID, source, mtime from files"
+	       " where removed isnull and source like '/%';",
+	       check_dead_cb, NULL, &err);
   if (err)
     {
       g_debug ("%s:%d: %s", __FUNCTION__, __LINE__, err);

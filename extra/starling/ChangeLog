@@ -1,5 +1,10 @@
 2008-11-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (worker_thread): Use sqlite_exec instead of
+	sqlite_exec_printf where possible.
+
+2008-11-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (busy_handler): If COOKIE is not NULL, set *COOKIE
 	to 1.  Reduce pause time.
 	(main_thread_busy): New variable.
