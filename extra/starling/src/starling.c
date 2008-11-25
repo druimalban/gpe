@@ -218,6 +218,13 @@ set_title (Starling *st)
   if (free_title_bar)
     g_free (title_bar);
 }
+
+static void
+meta_data_changed (Starling *st, gint uid, MusicDB *db)
+{
+  if (uid == st->loaded_song)
+    set_title (st);
+}
 
 bool
 starling_random (Starling *st)
@@ -2597,6 +2604,9 @@ starling_run (void)
       g_error_free (err);
       exit (1);
     }
+
+  g_signal_connect_swapped (G_OBJECT (st->db), "changed-entry",
+			    G_CALLBACK (meta_data_changed), st);
 
   st->library = play_list_new (st->db, NULL);
   st->queue = play_list_new (st->db, "queue");
