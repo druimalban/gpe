@@ -188,7 +188,8 @@ lastfm_submit (void)
 static void
 maybe_submit (void)
 {
-  if (! extant && auto_submit && lastfm_count () >= auto_submit)
+ if (*user && *password
+     && ! extant && auto_submit && lastfm_count () >= auto_submit)
     submit ();
 }
 

@@ -1,5 +1,10 @@
 2008-11-25  Neal H. Walfield  <neal@gnu.org>
 
+	* src/lastfm.c (maybe_submit): Only call submit if neither USER
+	nor PASSWORD is the empty string.
+
+2008-11-25  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (meta_data_changed): New function.
 	(starling_run): Connect ST->DB's "changed-entry" signal to it.
 
