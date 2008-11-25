@@ -1768,6 +1768,8 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 
 		music_db_set_info_from_tags_internal (db, sqliteh, uid, tags);
 
+		gst_tag_list_free (tags);
+
 		continue;
 	      }
 

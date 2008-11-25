@@ -1,3 +1,11 @@
+2008-11-25  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (meta_data_reader): Free TAGS.
+
+2008-11-24  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (new_decoded_pad): Drop reference to AUDIOPAD.
+
 2008-11-24  Neal H. Walfield  <neal@gnu.org>
 
 	* src/utils.h (html_escape_string): Drop string's const
