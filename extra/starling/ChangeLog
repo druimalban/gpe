@@ -1,3 +1,8 @@
+2008-11-27  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (worker_thread): When scanning files, don't add
+	tracks with a 0 mtime to the meta data scanner queue.
+
 2008-11-25  Neal H. Walfield  <neal@gnu.org>
 
 	* src/lastfm.c (maybe_submit): Only call submit if neither USER

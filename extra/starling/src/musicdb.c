@@ -1946,8 +1946,9 @@ worker_thread (gpointer data)
 	    }
 
 	}
-      else if (st.st_mtime != track->mtime)
-	/* mtime changed.  Rescan tags.  */
+      else if (track->mtime && st.st_mtime != track->mtime)
+	/* mtime changed.  Rescan tags.  (We ignore for which the
+	   mtime is NULL.  We'll add those below.)  */
 	{
 	  int *uidp = malloc (sizeof (int));
 	  *uidp = track->uid;
