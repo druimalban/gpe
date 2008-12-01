@@ -1,3 +1,17 @@
+2008-12-01  Graham Cobb  <g+770@cobb.uk.net>
+
+	* debian/postinst: add postinst script to rebuild hildon icon cache
+
+	* debian/rules: add configuration and clean sections
+
+	* Add pixmaps/gpe-calendar-64x64.png pixmaps/gpe-calendar-40x40.png
+	
+	* pixmaps/Makefile.am: create separate Makefile to generate various icons for hildon
+
+	* configure.ac: add pixmaps/Makefile to AC_OUTPUT
+
+	* Makefile.am (SUBDIRS): add pixmaps subdirectory, remove pixmaps from this file
+
 2008-12-01  Neal H. Walfield  <neal@gnu.org>
 
 	* event-cal.c (update_cal): If the event is untimed, set END to

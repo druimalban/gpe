@@ -6,8 +6,8 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-include /usr/share/cdbs/1/class/autotools.mk
-DEB_CONFIGURE_USER_FLAGS=--enable-hildon --prefix=/usr
+#include /usr/share/cdbs/1/class/autotools.mk
+#DEB_CONFIGURE_USER_FLAGS=--enable-hildon --prefix=/usr
 
 CFLAGS = -Wall -g
 
@@ -24,6 +24,9 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 	# Add here commands to configure the package.
+	intltoolize --copy --automake --force
+	autoreconf -f -i -s
+	CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info
 
 	touch configure-stamp
 
@@ -37,6 +40,16 @@ build-stamp: configure-stamp
 	$(MAKE)
 
 	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+
+	# Add here commands to clean up after the build process.
+	-$(MAKE) clean
+
+	dh_clean 
 
 install: build
 	dh_testdir

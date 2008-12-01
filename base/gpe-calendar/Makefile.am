@@ -1,5 +1,5 @@
 
-SUBDIRS = po
+SUBDIRS = po pixmaps
 
 if HILDON
 DEPS_CFLAGS += -DIS_HILDON
@@ -83,15 +83,7 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 service_DATA = $(service_in_files:.service.in=.service)
 hildonhome_DATA = $(hildonhome_in_files:.desktop.in=.desktop)
 
-pixmapsdir = $(datadir)/pixmaps
-
-pixmaps_DATA = pixmaps/gpe-calendar.png
-
-pixmaps/gpe-calendar.png: pixmaps/gpe-calendar-48x48.png
-	cp $< $@
-
 EXTRA_DIST = $(service_DATA) \
-             $(pixmaps_DATA) \
              gpe-calendar.desktop.in.in \
              hildon/com.nokia.gpe-calendar.service.in \
              hildon/gpe-calendar.desktop.in.in \

@@ -97,6 +97,7 @@ AC_OUTPUT([
 Makefile
 po/Makefile.in
 po/Makefile
+pixmaps/Makefile
 gpe-calendar.desktop.in
 hildon/com.nokia.gpe-calendar.service
 hildon/gpe-calendar.desktop.in
