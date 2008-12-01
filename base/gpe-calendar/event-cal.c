@@ -221,7 +221,14 @@ update_cal (GtkCalendar *cal)
 	start = MAX (tm.tm_yday - start_tm.tm_yday + 1, 0);
 
       if (event_get_untimed (ev))
-	end = start;
+	{
+	  end = start;
+
+	  int days = event_get_duration (ev) / (24 * 60 * 60);
+	  if (days > 0)
+	    days --;
+	  end += days;
+	}
       else
 	{
 	  t = event_get_start (ev) + event_get_duration (ev) - 1;

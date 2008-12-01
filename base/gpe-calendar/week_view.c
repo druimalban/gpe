@@ -731,7 +731,14 @@ reload_events_hard (GtkWeekView *week_view)
 
       GDate end;
       if (event_get_untimed (ev))
-	end = start;
+	{
+	  end = start;
+
+	  int days = event_get_duration (ev) / (24 * 60 * 60);
+	  if (days > 0)
+	    days --;
+	  g_date_add_days (&end, days);
+	}
       else
 	{
 	  time_t e = s + event_get_duration (ev) - 1;

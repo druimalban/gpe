@@ -1070,7 +1070,14 @@ reload_events_hard (GtkMonthView *month_view)
       time_t e = s + event_get_duration (ev) - 1;
       GDate end;
       if (event_get_untimed (ev))
-	end = start;
+	{
+	  end = start;
+
+	  int days = event_get_duration (ev) / (24 * 60 * 60);
+	  if (days > 0)
+	    days --;
+	  g_date_add_days (&end, days);
+	}
       else
 	{
 	  g_date_set_time_t (&end, e);

@@ -1,3 +1,10 @@
+2008-12-01  Neal H. Walfield  <neal@gnu.org>
+
+	* event-cal.c (update_cal): If the event is untimed, set END to
+	START plus the duration of the event in days minus one.
+	* month_view.c (reload_events_hard): Likewise.
+	* week_view.c (reload_events_hard): Likewise.
+
 2008-11-21  Graham Cobb  <g+770@cobb.uk.net>
 
 	* hildon/gpe-calendar.desktop.in.in (_Name): Change name to GPE Calendar.
