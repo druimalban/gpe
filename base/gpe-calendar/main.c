@@ -121,6 +121,7 @@ static struct gpe_icon my_icons[] = {
 static GtkBox *main_box;
 static GtkWidget *date_toolbar;
 static GtkWidget *today_button;
+static GtkLabel *day_of_week = NULL;
 static GtkToolItem *datesel_item;
 static GtkDateSel *datesel;
 static GtkContainer *main_panel;
@@ -621,10 +622,11 @@ set_title (void)
   snprintf (buffer, sizeof (buffer), _("Calendar - %s"), date);
 
 #ifdef IS_HILDON
+  /* On Hildon, just use the date as the title as the window manager will add "GPE Calendar" */
 #if HILDON_VER > 0
-  gtk_window_set_title (GTK_WINDOW (main_window), buffer);
+  gtk_window_set_title (GTK_WINDOW (main_window), date);
 #else
-  hildon_app_set_title (HILDON_APP (main_window), buffer);
+  hildon_app_set_title (HILDON_APP (main_window), date);
 #endif /* HILDON_VER  */
 #else
   gtk_window_set_title (GTK_WINDOW (main_window), buffer);
@@ -646,6 +648,16 @@ propagate_time (void)
   propagating = TRUE;
 
   localtime_r (&viewtime, &tm);
+
+  /* Update day of week on toolbar */
+  if (day_of_week) {
+    GDate viewing;
+    char dow[100];
+
+    g_date_set_time_t (&viewing, viewtime);
+    g_date_strftime(dow, sizeof(dow), _("%a"), &viewing);
+    gtk_label_set_text(day_of_week, dow);
+  }
 
   if (calendar)
     {
@@ -1210,12 +1222,14 @@ current_view_consider (void)
       gtk_date_sel_set_mode (datesel, GTKDATESEL_FULL);
       gtk_widget_show (GTK_WIDGET (datesel));
       gtk_widget_show (today_button);
+      if (day_of_week) gtk_widget_show (GTK_WIDGET (day_of_week));
       break;
     case view_week_view:
       current_view = gtk_week_view_new (viewtime);
       gtk_date_sel_set_mode (datesel, GTKDATESEL_WEEK);
       gtk_widget_show (GTK_WIDGET (datesel));
       gtk_widget_show (today_button);
+      if (day_of_week) gtk_widget_show (GTK_WIDGET (day_of_week));
       break;
     case view_month_view:
       calendar_hidden ++;
@@ -1223,6 +1237,7 @@ current_view_consider (void)
       gtk_date_sel_set_mode (datesel, GTKDATESEL_MONTH);
       gtk_widget_show (GTK_WIDGET (datesel));
       gtk_widget_show (today_button);
+      if (day_of_week) gtk_widget_hide (GTK_WIDGET (day_of_week));
       break;
     case view_event_list_view:
       event_list_hidden ++;
@@ -1240,6 +1255,7 @@ current_view_consider (void)
       event_list_set_period_box_visible (EVENT_LIST (current_view), TRUE);
       gtk_widget_hide (GTK_WIDGET (datesel));
       gtk_widget_hide (today_button);
+      if (day_of_week) gtk_widget_hide (GTK_WIDGET (day_of_week));
       break;
     }
 
@@ -2199,6 +2215,9 @@ main (int argc, char *argv[])
 
   /* Start gpe-calendar.  */
 
+  /* Application name is used for the window title on Hildon */
+  g_set_application_name(_("GPE Calendar"));
+
   if (gpe_application_init (&argc, &argv) == FALSE)
     exit (1);
 
@@ -2421,10 +2440,6 @@ main (int argc, char *argv[])
   /* Create HildonWindow and set it to HildonProgram */
   main_window = HILDON_WINDOW (hildon_window_new());
   hildon_program_add_window (program, main_window);
-//  main_window = hildon_app_new ();
-//  hildon_app_set_two_part_title (HILDON_APP (main_window), FALSE);
-//  main_appview = hildon_appview_new (_("Main"));
-//  hildon_app_set_appview (HILDON_APP (main_window), HILDON_APPVIEW (main_appview));
 #else
   main_window = hildon_app_new ();
   hildon_app_set_two_part_title (HILDON_APP (main_window), FALSE);
@@ -2615,14 +2630,28 @@ main (int argc, char *argv[])
   gtk_widget_show (GTK_WIDGET (item));
   today_button = GTK_WIDGET (item);
 
+  GDate date;
+  g_date_set_time_t (&date, viewtime);
 
+  /* Initialize the day-of-week label */
+  /* Note: if a platform does not want to include this label
+     just conditionalise out this code -- the rest of gpe-calendar
+     handles the day_of_week widget not being present */
+  item = gtk_tool_item_new ();
+  gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
+  gtk_widget_show (GTK_WIDGET (item));
+  char dow[100];
+  g_date_strftime(dow, sizeof(dow), _("%a"), &date);
+  day_of_week = GTK_LABEL(gtk_label_new(dow));
+  gtk_widget_show (GTK_WIDGET (day_of_week));
+  gtk_container_add (GTK_CONTAINER (item), GTK_WIDGET (day_of_week));
+  
+  /* Initialize the date selector widget */
   item = gtk_tool_item_new ();
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
   gtk_widget_show (GTK_WIDGET (item));
   datesel_item = GTK_TOOL_ITEM (item);
 
-  GDate date;
-  g_date_set_time_t (&date, viewtime);
   datesel = GTK_DATE_SEL (gtk_date_sel_new (GTKDATESEL_FULL, &date));
   g_signal_connect (G_OBJECT (datesel), "changed",
 		    G_CALLBACK (datesel_changed), NULL);

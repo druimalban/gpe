@@ -1,3 +1,15 @@
+2008-12-02  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (main): Set application name using g_set_application_name so that
+	correct window title appears on Hildon
+	(set_title): On Hildon just use date as window title as window manager adds
+	"GPE Calendar"
+	(main): Add day of week to toolbar (Bug 256)
+	(propagate_time): Update day of week on toolbar
+	(current_view_consider): Show/hide day of week depending on view
+
+	* gtkdatesel.c (gtk_date_sel_new): Increase width of month selector
+
 2008-12-01  Graham Cobb  <g+770@cobb.uk.net>
 
 	* debian/postinst: add postinst script to rebuild hildon icon cache

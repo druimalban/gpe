@@ -679,7 +679,7 @@ gtk_date_sel_new (GtkDateSelMode mode, GDate *date)
 
 #if IS_HILDON
   /* Hildon brain damage.  */
-  gtk_widget_set_size_request (e->display, 70, -1);
+  gtk_widget_set_size_request (e->display, 85, -1);
 #endif
 
   g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (month_update),
