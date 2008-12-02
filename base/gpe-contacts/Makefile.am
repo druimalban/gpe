@@ -3,6 +3,7 @@ SUBDIRS = po
 
 if HILDON
 DEPS_CFLAGS += -DIS_HILDON
+SUBDIRS += hildon
 endif
 
 INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS) $(SERVERDEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
@@ -26,11 +27,8 @@ gpe_contacts_SOURCES = main.h configure.c \
 
 if HILDON
 
-desktopdir = $(datadir)/applications/hildon
-desktop_in_files = hildon/gpe-contacts.desktop.in
-
-servicedir = $(datadir)/dbus-1/services
-service_in_files = hildon/com.nokia.gpe-contacts.service.in
+desktopdir = 
+desktop_in_files = 
                    
 gpe_contacts_SOURCES += main-hildon.c pimc-ui.c pimc-ui.h
 
@@ -42,9 +40,6 @@ else
 desktopdir = $(datadir)/applications
 desktop_in_files = gpe-contacts.desktop.in edit-vcard.desktop.in
 
-servicedir =
-service_in_files =
-
 gpe_contacts_SOURCES += main.c
 
 pixmaps_extradir = $(datadir)/gpe/pixmaps/default/gpe-contacts
@@ -55,7 +50,6 @@ pixmaps_extra_DATA = icons/entry.png \
 endif
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
-service_DATA = $(service_in_files:.service.in=.service)
 @INTLTOOL_DESKTOP_RULE@
 
 pixmapsdir = $(datadir)/pixmaps
@@ -63,13 +57,10 @@ metadir = $(datadir)/gpe-contacts
 
 if HILDON
 
-meta_DATA = hildon/default-layout-bigscreen.xml \
-            default-layout.xml \
+meta_DATA = default-layout.xml \
             well-known-tags
 
-# we need a 26x26 icon here 
-pixmaps_DATA = hildon/gpe-contacts.png \
-               icons/edit-vcard.png
+pixmaps_DATA = icons/edit-vcard.png
 
 else
 
@@ -83,16 +74,10 @@ pixmaps_DATA = icons/gpe-contacts.png \
 
 endif
 
-EXTRA_DIST = $(service_DATA) \
-             $(pixmaps_DATA) \
+EXTRA_DIST = $(pixmaps_DATA) \
              $(pixmaps_extra_DATA) \
-             default-layout-bigscreen.xml \
-             default-layout.xml \
-             well-known-tags \
-             hildon/default-layout-bigscreen.xml \
-             hildon/com.nokia.gpe-contacts.service.in \
-             hildon/gpe-contacts.desktop.in.in \
-             hildon/gpe-contacts.png \
+	     $(meta_DATA) \
+	     $(desktop_DATA) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \

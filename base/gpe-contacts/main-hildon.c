@@ -1519,7 +1519,7 @@ create_main (gboolean edit_structure)
 
   /* main application and appview */
   app = HILDON_PROGRAM ( hildon_program_get_instance () );
-  g_set_application_name ( _("Contacts") );
+  g_set_application_name ( _("GPE Contacts") );
   main_window = hildon_window_new();
   gtk_window_set_title (GTK_WINDOW (main_window), _("Main"));
   hildon_program_add_window (app, HILDON_WINDOW (main_window));

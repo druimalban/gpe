@@ -1,3 +1,22 @@
+2008-12-02  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main-hildon.c (create_main): Change name to GPE Contacts
+
+	* debian/rules: Add configuration and clean sections
+
+	* debian/postinst: Add postinst script to rebuild hildon icon cache
+
+	* gpe-contacts.desktop.in.in (_Name): Change name to GPE Contacts
+
+	* configure.ac: Add hildon/Makefile to AC_OUTPUT
+
+	* hildon/Makefile.am: Create separate Makefile to generate various icons for hildon
+
+	* hildon/*.png: Add icons for 26x26, 40x40 and 64x64.  
+	Rename gpe-contacts.png to gpe-contacts-48x48.png
+
+	* Makefile.am: Move hildon/ stuff into separate Makefile and add hildon to subdirs
+
 2008-09-06  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (update_categories): Adapt to new gpe_pim_categories_list

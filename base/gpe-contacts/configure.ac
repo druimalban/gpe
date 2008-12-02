@@ -82,6 +82,7 @@ AC_SUBST(DEPS_LIBS)
 AC_OUTPUT([
 Makefile
 po/Makefile.in
+hildon/Makefile
 edit-vcard.desktop.in
 gpe-contacts.desktop.in
 hildon/com.nokia.gpe-contacts.service
