@@ -2,6 +2,7 @@ SUBDIRS = po
 
 if HILDON
 CFLAGS += -DIS_HILDON
+SUBDIRS += hildon
 endif
 
 INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
@@ -16,23 +17,15 @@ gpe_timesheet_SOURCES = journal.c journal.h main.c main.h sql.c sql.h ui.c ui.h
 
 if HILDON
 
-# the hildon desktop fiel contains some special magic
-desktopdir = $(datadir)/applications/hildon
-desktop_in_files = hildon/gpe-timesheet.desktop.in
+desktopdir = 
+desktop_in_files = 
 
-servicedir = $(datadir)/dbus-1/services
-service_in_files = hildon/com.nokia.gpe-timesheet.service.in
-
-# we need a 26x26 icon here
-pixmaps_extra_DATA = hildon/gpe-timesheet.png
+pixmaps_extra_DATA = 
 
 else
 
 desktopdir = $(datadir)/applications
 desktop_in_files = gpe-timesheet.desktop.in
-
-servicedir =
-service_in_files =
 
 pixmaps_extra_DATA = pixmaps/gpe-timesheet.png
 
@@ -40,7 +33,6 @@ endif
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
-service_DATA = $(service_in_files:.service.in=.service)
 
 pixmapsdir = $(datadir)/gpe-timesheet
 
@@ -53,16 +45,12 @@ pixmapsdir = $(datadir)/gpe-timesheet
 pixmaps_extradir = $(datadir)/pixmaps
 
 
-EXTRA_DIST = gpe-timesheet.desktop.in hildon/gpe-timesheet.desktop.in \
-             hildon/com.nokia.gpe-timesheet.service.in \
+EXTRA_DIST = gpe-timesheet.desktop.in  \
              $(pixmaps_extra_DATA) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \
              gpe-timesheet.desktop.in.in \
-             hildon/gpe-timesheet.desktop.in.in \
-             hildon/com.nokia.gpe-timesheet.service.in \
-             hildon/gpe-timesheet.png \
              po/gpe-timesheet.pot
 			 
 

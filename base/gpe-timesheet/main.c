@@ -144,7 +144,7 @@ open_window (void)
 
 #if HILDON_VER > 0
   HildonProgram *program = HILDON_PROGRAM (hildon_program_get_instance());
-  g_set_application_name (_("TimeTracker"));
+  g_set_application_name (_("GPE Timesheet"));
   main_window = GTK_WIDGET (hildon_window_new());
   hildon_program_add_window (program, HILDON_WINDOW(main_window));
   main_vbox = GTK_WIDGET(create_interface(main_window));

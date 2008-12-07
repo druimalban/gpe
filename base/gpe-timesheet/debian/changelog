@@ -1,0 +1,5 @@
+gpe-timesheet (0.1) unstable; urgency=low
+
+  * Create debian directory for Maemo
+
+ -- Graham Cobb <g+gpe@cobb.uk.net>  Sun, 07 Dec 2008 23:43:26 +0000

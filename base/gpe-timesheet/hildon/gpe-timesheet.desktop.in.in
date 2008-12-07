@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-_Name=Timesheet
+_Name=GPE Timesheet
 _Comment=GPE Time Tracker
 Exec=@prefix@/bin/gpe-timesheet
 Terminal=false
