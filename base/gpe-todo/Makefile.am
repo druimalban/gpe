@@ -5,6 +5,7 @@ ENABLE_HILDON = @ENABLE_HILDON@
 
 if HILDON
 DEPS_CFLAGS += -DIS_HILDON
+SUBDIRS += hildon
 endif
 
 INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
@@ -19,23 +20,16 @@ gpe_todo_SOURCES = list-ui.c main.c todo-ui.c todo.h
 
 if HILDON
 
-# the hildon desktop fiel contains some special magic
-desktopdir = $(datadir)/applications/hildon
-desktop_in_files = hildon/gpe-todo.desktop.in
-
-servicedir = $(datadir)/dbus-1/services
-service_in_files = hildon/com.nokia.gpe-todo.service.in
+desktopdir = 
+desktop_in_files = 
 
 # we need a 26x26 icon here
-pixmaps_extra_DATA = hildon/gpe-todo.png
+pixmaps_extra_DATA = 
 
 else
 
 desktopdir = $(datadir)/applications
 desktop_in_files = gpe-todo.desktop.in
-
-servicedir =
-service_in_files =
 
 pixmaps_extra_DATA = pixmaps/gpe-todo.png
 
@@ -43,7 +37,6 @@ endif
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
-service_DATA = $(service_in_files:.service.in=.service)
 
 pixmapsdir = $(datadir)/gpe-todo
 

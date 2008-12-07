@@ -1,3 +1,22 @@
+2008-12-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (open_window): Change application name to GPE To-do
+
+	* debian/rules: Add configuration and clean sections
+
+	* debian/postinst: Add postinst script to rebuild hildon icon cache
+
+	* hildon/gpe-todo.desktop.in.in (_Name): Change name to GPE To-do
+
+	* configure.ac: Add hildon/Makefile to AC_OUTPUT
+
+	* hildon/*.png: Add icons for 26x26, 40x40 and 64x64.  
+	Rename gpe-todo.png to gpe-todo-48x48.png
+
+	* hildon/Makefile.am: Create separate Makefile to generate various icons for hildon
+
+	* Makefile.am: Move hildon/ stuff into separate Makefile and add hildon to subdirs
+
 2008-10-22  Persson Fink, Lars  <lars.p.fink@gmail.com>
 
 	* po/gpe-todo.pot: Regenerated.

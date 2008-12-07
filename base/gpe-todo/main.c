@@ -95,7 +95,7 @@ open_window (void)
     
 #ifdef IS_HILDON
   app = HILDON_PROGRAM ( hildon_program_get_instance () );
-  g_set_application_name ( _("ToDo") );
+  g_set_application_name ( _("GPE To-do") );
   window = hildon_window_new();
   gtk_window_set_title (GTK_WINDOW (window), _("List"));
   hildon_program_add_window (app, HILDON_WINDOW (window));
