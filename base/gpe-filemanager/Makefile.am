@@ -1,5 +1,5 @@
 
-SUBDIRS = po
+SUBDIRS = po pixmaps
 
 ENABLE_HILDON = @ENABLE_HILDON@
 
@@ -41,44 +41,8 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 service_DATA = $(service_in_files:.service.in=.service)
 
-pixmapsextradir = $(datadir)/gpe/pixmaps/default/filemanager/document-icons/
-pixmapsextra_DATA = \
-                   pixmaps/document-icons/directory.png \
-                   pixmaps/document-icons/image-png.png \
-                   pixmaps/document-icons/executable.png \
-                   pixmaps/document-icons/image-xpm.png \
-                   pixmaps/document-icons/application-pdf.png \
-                   pixmaps/document-icons/text-plain.png \
-                   pixmaps/document-icons/application-x-compress.png \
-                   pixmaps/document-icons/text-html.png \
-                   pixmaps/document-icons/application-x-gzip.png \
-                   pixmaps/document-icons/text-x-copying.png \
-                   pixmaps/document-icons/application-x-ipk.png \
-                   pixmaps/document-icons/text-x-credits.png \
-                   pixmaps/document-icons/application-x-ogg.png \
-                   pixmaps/document-icons/text-xml.png \
-                   pixmaps/document-icons/audio-mpeg.png \
-                   pixmaps/document-icons/text-x-python.png \
-                   pixmaps/document-icons/audio-x-gsm.png \
-                   pixmaps/document-icons/text-x-sql.png \
-                   pixmaps/document-icons/audio-x-wav.png \
-                   pixmaps/document-icons/video-mpeg.png \
-                   pixmaps/document-icons/font-ttf.png \
-                   pixmaps/document-icons/video-x-msvideo.png \
-                   pixmaps/document-icons/image-gif.png \
-                   pixmaps/document-icons/regular.png \
-                   pixmaps/document-icons/image-jpeg.png \
-                   pixmaps/document-icons/symlink.png
-
-
-pixmapsdir = $(datadir)/pixmaps
-pixmaps_DATA = pixmaps/gpe-filemanager.png
-
-
 EXTRA_DIST =  \
-             $(pixmaps_DATA) \
-			 $(service_DATA) \
-             $(pixmapsextra_DATA) \
+	     $(service_DATA) \
              intltool-extract.in \
              intltool-merge.in \
              intltool-update.in \

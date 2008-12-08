@@ -1,3 +1,20 @@
+2008-12-08  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (main): Set application name to GPE File manager
+
+	* debian/*: Create debian directory for Maemo
+
+	* hildon/gpe-filemanager.desktop.in.in (_Name): Change name to GPE File manager
+
+	* configure.ac: Add pixmaps/Makefile to AC_OUTPUT
+
+	* pixmaps/*.png: Add icons for 26x26, 40x40 and 64x64.  
+	Rename gpe-filemanager.png to gpe-filemanager-48x48.png
+
+	* pixmap/Makefile.am: Create separate Makefile to generate various icons for hildon
+
+	* Makefile.am: Move pixmap/ stuff into separate Makefile and add pixmap to subdirs
+
 2008-08-10  Florian Boor  <florian.boor@kernelconcepts.de>
 	
 	* Add Indonesian translation by Andhika Padmawan

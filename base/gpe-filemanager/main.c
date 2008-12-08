@@ -1847,6 +1847,7 @@ main (int argc, char *argv[])
   if (size_y < 320) size_y = 320;
   
 #ifdef USE_HILDON
+  g_set_application_name (_("GPE File manager"));
   window = hildon_window_new ();
   program = hildon_program_get_instance();
   hildon_program_add_window(program, HILDON_WINDOW(window));

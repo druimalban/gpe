@@ -61,6 +61,7 @@ AC_SUBST(DEPS_LIBS)
 AC_OUTPUT([
 Makefile
 po/Makefile.in
+pixmaps/Makefile
 gpe-filemanager.desktop.in
 hildon/gpe-filemanager.service
 hildon/gpe-filemanager.desktop.in
