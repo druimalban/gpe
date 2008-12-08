@@ -1,3 +1,16 @@
+2008-12-08  Graham Cobb  <g+770@cobb.uk.net>
+
+	* src/starling.c (starling_run): Change application name to GPE Audio player
+
+	* debian/postinst: Add postinst script to rebuild hildon icon cache
+
+	* hildon/gpe-todo.desktop.in.in (_Name): Change name to GPE Audio player
+
+	* hildon/*.png: Add icons for 26x26, 40x40, 48x48 and 64x64.  
+	Rename base.png to base-40x40.png
+
+	* data/Makefile.am (nobase_icons_DATA): Create various icons for hildon
+
 2008-11-27  Neal H. Walfield  <neal@gnu.org>
 
 	* src/musicdb.c (worker_thread): When scanning files, don't add

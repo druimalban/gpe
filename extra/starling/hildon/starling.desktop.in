@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Version=1.0
 Type=Application
-Name=Audio player
+Name=GPE Audio player
 Comment=Starling
 Exec=@prefix@/bin/starling
 Terminal=false

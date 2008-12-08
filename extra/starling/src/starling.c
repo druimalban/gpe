@@ -2631,7 +2631,7 @@ starling_run (void)
 #ifdef IS_HILDON
 #if HILDON_VER > 0
   HildonProgram *program = HILDON_PROGRAM (hildon_program_get_instance());
-  g_set_application_name ("Starling");
+  g_set_application_name ("GPE Audio player");
   st->window = GTK_WIDGET (hildon_window_new());
   hildon_program_add_window (program, HILDON_WINDOW(st->window));
 #else
