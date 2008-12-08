@@ -1,5 +1,7 @@
 2008-12-08  Graham Cobb  <g+770@cobb.uk.net>
 
+	* data/Makefile.am: Fix typo in icon filenames (bass... instead of base...)!
+
 	* src/starling.c (starling_run): Change application name to GPE Audio player
 
 	* debian/postinst: Add postinst script to rebuild hildon icon cache

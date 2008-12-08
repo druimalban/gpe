@@ -3,8 +3,8 @@ desktopdir = $(datadir)/applications
 if HILDON
 desktop_in_files =
 
-#nobase_icons_DATA = 26x26/hildon/base.png 40x40/hildon/base.png 48x48/hildon/base.png 64x64/hildon/base.png scalable/hildon/base.png
-nobase_icons_DATA = 26x26/hildon/base.png scalable/hildon/base.png
+#nobase_icons_DATA = 26x26/hildon/bass.png 40x40/hildon/bass.png 48x48/hildon/bass.png 64x64/hildon/bass.png scalable/hildon/bass.png
+nobase_icons_DATA = 26x26/hildon/bass.png scalable/hildon/bass.png
 else
 desktop_in_files = starling.desktop.in
 
@@ -17,28 +17,28 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 pixmapdir = $(datadir)/pixmaps
 pixmap_DATA = bass.png
 
-base.png: base-20x20.png
+bass.png: bass-20x20.png
 	cp $< $@
 
 iconsdir = $(datadir)/icons/hicolor
 
-26x26/hildon/base.png: base-26x26.png
+26x26/hildon/bass.png: bass-26x26.png
 	-mkdir -p 26x26/hildon
 	cp $< $@
 
-40x40/hildon/base.png: base-40x40.png
+40x40/hildon/bass.png: bass-40x40.png
 	-mkdir -p 40x40/hildon
 	cp $< $@
 
-48x48/hildon/base.png: base-48x48.png
+48x48/hildon/bass.png: bass-48x48.png
 	-mkdir -p 48x48/hildon
 	cp $< $@
 
-64x64/hildon/base.png: base-64x64.png
+64x64/hildon/bass.png: bass-64x64.png
 	-mkdir -p 64x64/hildon
 	cp $< $@
 
-scalable/hildon/base.png: base-64x64.png
+scalable/hildon/bass.png: bass-64x64.png
 	-mkdir -p scalable/hildon
 	cp $< $@
 
