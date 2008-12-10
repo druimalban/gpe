@@ -1,3 +1,9 @@
+2008-12-10  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpe-contacts.desktop.in.in (_Name): Undo change in non-hildon file
+
+	* hildon/gpe-contacts.desktop.in.in (_Name): Change name in correct version of .desktop file
+
 2008-12-02  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main-hildon.c (create_main): Change name to GPE Contacts

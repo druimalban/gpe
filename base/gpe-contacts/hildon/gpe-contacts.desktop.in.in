@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-_Name=Contacts
+_Name=GPE Contacts
 _Comment=GPE Contacts Application
 Exec=@prefix@/bin/gpe-contacts
 Terminal=false
