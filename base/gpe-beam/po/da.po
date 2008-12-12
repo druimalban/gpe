@@ -1,69 +1,68 @@
-# Vietnamese Translation for GPE Beam.
-# Copyright © 2005 Free Software Foundation, Inc.
+# Danish translation of GPE-beam.
+# Copyright (C) 2008 GPE.
 # This file is distributed under the same license as the gpe-beam package.
-# Clytie Siddall <clytie@riverland.net.au>, 2005-2008.
+# Joe Hansen <joedalton2@yahoo.dk>, 2008.
 #
+# Control -> ikke helt afklaret (flere navne anvendt indtil videre)
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-beam 0.2.9\n"
+"Project-Id-Version: gpe-beam-0.2.9\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-08-23 15:25+0200\n"
-"PO-Revision-Date: 2008-09-08 21:31+0930\n"
-"Last-Translator: Clytie Siddall <clytie@riverland.net.au>\n"
-"Language-Team: Vietnamese <vi-VN@googlegroups.com>\n"
+"PO-Revision-Date: 2008-08-23 00:00+0000\n"
+"Last-Translator: Joe Hansen <joedalton2@yahoo.dk>\n"
+"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: LocFactoryEditor 1.7b3\n"
 
 #: main.c:168
 msgid "Error"
-msgstr "Lỗi"
+msgstr "Fejl"
 
 #: main.c:173
 msgid "Failed"
-msgstr "Bị lỗi"
+msgstr "Mislykkedes"
 
 #: main.c:176
 msgid "Done"
-msgstr "Hoàn tất"
+msgstr "Færdig"
 
 #: main.c:179
 msgid "Connecting..."
-msgstr "Đang kết nối..."
+msgstr "Tilslutter..."
 
 #: main.c:183
 msgid "Disconnecting..."
-msgstr "Đang ngắt kết nối..."
+msgstr "Afbryder..."
 
 #: main.c:186
 msgid "Sending..."
-msgstr "Đang gửi..."
+msgstr "Sender..."
 
 #: main.c:189
 msgid "Receiving"
-msgstr "Đang nhận"
+msgstr "Modtager"
 
 #: main.c:198
 msgid "Waiting for incoming connection"
-msgstr "Đang đời sự kết nối gửi đến"
+msgstr "Venter på indkommende tilslutning"
 
 #: main.c:201
 msgid "Connected"
-msgstr "Có kết nối"
+msgstr "Tilsluttet"
 
 #: main.c:204
 msgid "Disconnecting"
-msgstr "Đang ngắt kết nối"
+msgstr "Afbryder"
 
 #: main.c:225
 msgid "Telephony"
-msgstr "Điện thoại"
+msgstr "Telefoni"
 
 #: main.c:231
 msgid "File Server"
-msgstr "Máy chủ tập tin"
+msgstr "Filserver"
 
 #: main.c:237
 msgid "IrCOMM"
@@ -79,167 +78,168 @@ msgstr "PnP"
 
 #: main.c:258
 msgid "PDA/Palmtop"
-msgstr "Máy cầm tay"
+msgstr "PDA/Palmtop"
 
 #: main.c:264
 msgid "Computer"
-msgstr "Máy tính"
+msgstr "Computer"
 
 #: main.c:270
 msgid "Printer"
-msgstr "Máy in"
+msgstr "Printer"
 
 #: main.c:276
 msgid "Modem"
-msgstr "Mô-đem"
+msgstr "Modem"
 
 #: main.c:282
 msgid "Fax"
-msgstr "Điện thư"
+msgstr "Fax"
 
 #: main.c:288
 msgid "LAN Access"
-msgstr "Truy cấp LAN"
+msgstr "LAN-adgang"
 
 #: main.c:362
 msgid "Transmitted file"
-msgstr "Tập tin được gửi"
+msgstr "Overført fil"
 
 #: main.c:371
 msgid "Could not transmit file"
-msgstr "Không truyền được tập tin"
+msgstr "Kunne ikke sende fil"
 
 #: main.c:397 main.c:448
 msgid "Unable to start file transmit."
-msgstr "Không bắt đầu được việc truyền tập tin"
+msgstr "Kunne ikke påbegynde filoverførsel."
 
 #: main.c:420 main.c:463
 msgid "IR Receive and Transmit....."
-msgstr "Nhận và Truyền loại IR....."
+msgstr "IR modtag og overfør....."
 
 #: main.c:472 main.c:474
 msgid "Error opening IR client."
-msgstr "Gặp lỗi khi mở ứng dụng khách IR."
+msgstr "Fejl under åbning af IR-klient."
 
 #: main.c:481
 msgid "Select file to transmit"
-msgstr "Chọn tập tin để truyền"
+msgstr "Vælg fil til overførsel"
 
 #: main.c:508
 msgid "Could not start import tool."
-msgstr "Đã không bắt đầu được công cụ nhập."
+msgstr "Kunne ikke starte importværktøj."
 
+# mangler der ikke et mellem/punktum i den engelske tekst her!
 #: main.c:532
 #, c-format
 msgid "File '%s' looks like a mimedir (vCard, vCal) filedo you want to import it?"
-msgstr "Tập tin « %s » hình như một thư mục MIME (thẻ vCard hay lịch vCal): bạn có muốn nhập nó không?"
+msgstr "Fil '%s' ligner en mimedir-fil (vCard, vCal). Ønsker du at importere den?"
 
 #: main.c:552 main.c:614
 msgid "Unable to start receiver."
-msgstr "Không bắt đầu được trình nhận."
+msgstr "Kunne ikke starte modtager."
 
 #: main.c:566
 msgid "IR Receive and transmit control"
-msgstr "Điều kiện nhận và truyền IR"
+msgstr "IR modtage- og overførelseskontrol"
 
 #: main.c:576 main.c:579
 msgid "Error opening IR server."
-msgstr "Gặp lỗi khi mở máy chủ IR"
+msgstr "Fejl ved åbning af IR-server."
 
 #: main.c:591
 msgid "Received file"
-msgstr "Tập tin được nhận"
+msgstr "Modtaget fil"
 
 #: main.c:629
 msgid "Transmitting VCard"
-msgstr "Đang truyền vCard"
+msgstr "Overfører VCard"
 
 #: main.c:645
 msgid "Unable to start sender."
-msgstr "Không bắt đầu được trình gửi."
+msgstr "Kunne ikke starte sender."
 
 #: main.c:737
 msgid "Name:"
-msgstr "Tên:"
+msgstr "Navn:"
 
 #: main.c:738
 msgid "Services:"
-msgstr "Dịch vụ:"
+msgstr "Tjenester:"
 
 #: main.c:739
 msgid "Address:"
-msgstr "Địa chỉ:"
+msgstr "Adresse:"
 
 #: main.c:746
 msgid "Peer Information"
-msgstr "Thông tin ngang hàng"
+msgstr "Serverinformation"
 
 #: main.c:749
 msgid "Peer Actions"
-msgstr "Hành vi ngang hàng"
+msgstr "Serverhandlinger"
 
 #: main.c:757 main.c:985
 msgid "Send File"
-msgstr "Gửi tập tin"
+msgstr "Send fil"
 
 #: main.c:765 main.c:986
 msgid "Receive File"
-msgstr "Nhận tập tin"
+msgstr "Modtag fil"
 
 #: main.c:815 main.c:880
 msgid "IR transceiver on"
-msgstr "Máy thu phát đã mở"
+msgstr "IR-transceiver tændt"
 
 #: main.c:817 main.c:904
 msgid "IR transceiver off"
-msgstr "Máy thu phát bị tắt"
+msgstr "IR-transceiver slukket"
 
 #: main.c:828
 msgid "Infrared Control"
-msgstr "Điều kiện hồng ngoạI"
+msgstr "Infrarød kontrol"
 
 #: main.c:977
 msgid "IrDa tool"
-msgstr "Công cụ IrDA"
+msgstr "IrDa værktøj"
 
 #: main.c:982
 msgid "Switch IR on"
-msgstr "Mở IR"
+msgstr "Sæt IR på"
 
 #: main.c:983
 msgid "Switch IR off"
-msgstr "Tất IR"
+msgstr "Slå IR fra"
 
 #: main.c:984
 msgid "Send vCard"
-msgstr "Gửi vCard"
+msgstr "Send vCard"
 
 #: main.c:987
 msgid "Controls..."
-msgstr "Điều kiện..."
+msgstr "Kontrol..."
 
 #: main.c:988
 msgid "Remove from dock"
-msgstr "Bỏ ra neo"
+msgstr "Fjern fra dok"
 
 #: main.c:1055
 msgid "This is the infrared communications control."
-msgstr "Đây là điều kiện truyền hồng ngoại."
+msgstr "Dette er et infrarødt kommunikationsværktøj."
 
 #: dbus.c:76
 #, c-format
 msgid "Failed to request name: %s"
-msgstr "Lỗi yêu cầu tên: %s"
+msgstr "Kunne ikke hente navn: %s"
 
 #: dbus.c:82
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
-msgstr "Lỗi mở kết nối tới mạch nối thông điệp buổi đăng nhập: %s"
+msgstr "Kunne ikke åbne forbindelse til sessionsbeskedbus: %s"
 
 #: gpe-beam.desktop.in.h:1
 msgid "IrDa control"
-msgstr "Điều khiển IrDA"
+msgstr "IrDa-kontrol"
 
 #: gpe-beam.desktop.in.h:2
 msgid "Panel based infrared communications control"
-msgstr "Điều khiển truyền hồng ngoại dựa vào bảng"
+msgstr "Panelbaseret infrarødt kommunikationsværktøj"

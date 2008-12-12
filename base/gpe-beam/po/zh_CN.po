@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gpe-beam 0.2.9\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-08-23 15:25+0200\n"
-"PO-Revision-Date: 2008-08-22 14:16中国标准时间\n"
+"PO-Revision-Date: 2008-11-11 21:05+0800\n"
 "Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
 "Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -30,15 +30,15 @@ msgstr "完成"
 
 #: main.c:179
 msgid "Connecting..."
-msgstr "正在连接"
+msgstr "正在连接..."
 
 #: main.c:183
 msgid "Disconnecting..."
-msgstr "正在断开"
+msgstr "正在断开..."
 
 #: main.c:186
 msgid "Sending..."
-msgstr "正在发送……"
+msgstr "正在发送..."
 
 #: main.c:189
 msgid "Receiving"
@@ -102,7 +102,7 @@ msgstr "局域网访问"
 
 #: main.c:362
 msgid "Transmitted file"
-msgstr "传输的文件"
+msgstr "已传送文件"
 
 #: main.c:371
 msgid "Could not transmit file"
@@ -114,7 +114,7 @@ msgstr "无法启动文件传输。"
 
 #: main.c:420 main.c:463
 msgid "IR Receive and Transmit....."
-msgstr "红外接收和传输…………"
+msgstr "红外接收和传输......"
 
 #: main.c:472 main.c:474
 msgid "Error opening IR client."
@@ -131,7 +131,7 @@ msgstr "无法启动导入工具。"
 #: main.c:532
 #, c-format
 msgid "File '%s' looks like a mimedir (vCard, vCal) filedo you want to import it?"
-msgstr "文件‘%s’似乎是个 mimedir (vCard, vCal) 文件，您希望导入它吗？"
+msgstr "文件‘%s’似乎是个 mimedir (vCard 名片, vCal) 文件，您希望导入它吗？"
 
 #: main.c:552 main.c:614
 msgid "Unable to start receiver."
@@ -147,7 +147,7 @@ msgstr "打开红外服务器端时出错。"
 
 #: main.c:591
 msgid "Received file"
-msgstr "接收的文件"
+msgstr "已接收文件"
 
 #: main.c:629
 msgid "Transmitting VCard"
@@ -175,7 +175,7 @@ msgstr "对等端信息"
 
 #: main.c:749
 msgid "Peer Actions"
-msgstr "对等端动作"
+msgstr "对等端操作"
 
 #: main.c:757 main.c:985
 msgid "Send File"
@@ -187,7 +187,7 @@ msgstr "接收文件"
 
 #: main.c:815 main.c:880
 msgid "IR transceiver on"
-msgstr "红外收发器，在"
+msgstr "红外收发器开启"
 
 #: main.c:817 main.c:904
 msgid "IR transceiver off"
@@ -199,7 +199,7 @@ msgstr "红外控制"
 
 #: main.c:977
 msgid "IrDa tool"
-msgstr "IrDA 工具"
+msgstr "红外控制工具"
 
 #: main.c:982
 msgid "Switch IR on"
@@ -215,11 +215,11 @@ msgstr "发送 vCard 名片"
 
 #: main.c:987
 msgid "Controls..."
-msgstr "控制……"
+msgstr "控制..."
 
 #: main.c:988
 msgid "Remove from dock"
-msgstr "从坞中删除"
+msgstr "从 dock 中删除"
 
 #: main.c:1055
 msgid "This is the infrared communications control."
@@ -228,7 +228,7 @@ msgstr "这是红外通信控制工具。"
 #: dbus.c:76
 #, c-format
 msgid "Failed to request name: %s"
-msgstr "无法查寻名称：%s"
+msgstr "无法查找名字：%s"
 
 #: dbus.c:82
 #, c-format
@@ -237,17 +237,8 @@ msgstr "无法打开到会话消息总线的连接：%s"
 
 #: gpe-beam.desktop.in.h:1
 msgid "IrDa control"
-msgstr "IrDA 控制"
+msgstr "IrDa 控制"
 
 #: gpe-beam.desktop.in.h:2
 msgid "Panel based infrared communications control"
 msgstr "基于面板的红外通信控制"
-
-#~ msgid "IR Receive and Transmit........."
-#~ msgstr "红外接收和传输…………"
-
-#~ msgid "vCard was imported successfully."
-#~ msgstr "vCard 名片已成功导入。"
-
-#~ msgid "Import of vCard failed."
-#~ msgstr "导入 vCard 名片失败。"
