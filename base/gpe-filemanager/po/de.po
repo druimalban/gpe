@@ -1,85 +1,84 @@
-# Chinese translations for gpe-filemanager package
-# gpe-filemanager 软件包的简体中文翻译.
-# Copyright (C) 2008 THE gpe-filemanager'S COPYRIGHT HOLDER
+# German translation for the GPE file manager.
+# Copyright (C) 2008 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-filemanager package.
-# Ji ZhengYu <zhengyuji@gmail.com>, 2008.
+# Roland Illig <roland.illig@gmx.de>, 2008.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-filemanager 0.31\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2008-01-21 16:15+0100\n"
-"PO-Revision-Date: 2008-11-12 08:48+0800\n"
-"Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
-"Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2008-11-24 14:06+0100\n"
+"Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
+"Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../bluetooth.c:57
 msgid "This file is too large to beam"
-msgstr "此文件太大而无法传送"
+msgstr "Diese Datei ist zu groß zum Übertragen"
 
 #: ../fileops.c:104
 msgid "Transfer progress"
-msgstr "传送进度"
+msgstr "Übertragungsfortschritt"
 
 #. error query dialog
 #: ../fileops.c:122 ../fileops.c:283 ../main.c:1269
 msgid "Error:"
-msgstr "错误:"
+msgstr "Fehler:"
 
 #: ../fileops.c:124 ../main.c:601
 msgid "Error"
-msgstr "错误"
+msgstr "Fehler"
 
 #: ../fileops.c:159
 msgid "File exists"
-msgstr "文件已存在"
+msgstr "Datei existiert bereits"
 
 #: ../fileops.c:167
 msgid "Apply to all"
-msgstr "全部应用"
+msgstr "Auf alle anwenden"
 
 #: ../fileops.c:259
 msgid "File(s) copied to clipboard."
-msgstr "复制到剪贴板的文件。"
+msgstr "Datei(en) in die Zwischenablage kopiert."
 
 #: ../fileops.c:289
 msgid "File copied."
-msgstr "文件已复制。"
+msgstr "Datei kopiert."
 
 #: ../fileops.c:428
 msgid "Delete selected object(s)?"
-msgstr "删除所选的目标？"
+msgstr "Ausgewählte(s) Objekt[e] löschen?"
 
 #: ../fileops.c:429
 msgid "Confirm"
-msgstr "确认"
+msgstr "Bestätigen"
 
 #: ../fileops.c:483
 msgid "File(s) moved."
-msgstr "文件已移动。"
+msgstr "Datei(en) verschoben."
 
 #: ../fileops.c:504
 msgid "Move to directory..."
-msgstr "移动至目录..."
+msgstr "In Verzeichnis verschieben..."
 
 #: ../guitools.c:186
 msgid "MMC-Card"
-msgstr "MMC 卡"
+msgstr "MMC-Karte"
 
 #: ../guitools.c:188
 msgid "PC-Card"
-msgstr "PC 卡"
+msgstr "PC-Karte"
 
 #: ../guitools.c:190
 msgid "CF-Card"
-msgstr "CF 卡"
+msgstr "CF-Karte"
 
 #: ../guitools.c:192
 msgid "USB-Device"
-msgstr "USB 设备"
+msgstr "USB-Gerät"
 
 #: ../guitools.c:194
 msgid "CDROM"
@@ -88,291 +87,291 @@ msgstr "CDROM"
 #. add defaults
 #: ../guitools.c:232 ../main.c:1408
 msgid "My Documents"
-msgstr "我的文档"
+msgstr "Meine Dokumente"
 
 #. if you change this order, change below too
 #: ../guitools.c:233
 msgid "Filesystem"
-msgstr "文件系统"
+msgstr "Dateisystem"
 
 #: ../main.c:98
 msgid "Help for this application is not installed."
-msgstr "此程序的帮助未安装。"
+msgstr "Die Hilfe für diese Anwendung ist nicht installiert."
 
 #: ../main.c:233
 msgid "/_File"
-msgstr "/文件(_F)"
+msgstr "/_Datei"
 
 #: ../main.c:234
 msgid "/_File/_Copy"
-msgstr "/文件(_F)/复制(_C)"
+msgstr "/_Datei/_Kopieren"
 
 #: ../main.c:235
 msgid "/_File/_Paste"
-msgstr "/文件(_F)/粘贴(_P)"
+msgstr "/_Datei/_Einfügen"
 
 #: ../main.c:236
 msgid "/_File/_Move"
-msgstr "/文件(_F)/移动(_M)"
+msgstr "/_Datei/_Verschieben"
 
 #: ../main.c:237
 msgid "/_File/_Rename"
-msgstr "/文件(_F)/重命名(_R)"
+msgstr "/_Datei/_Umbenennen"
 
 #: ../main.c:238
 msgid "/_File/_Delete"
-msgstr "/文件(_F)/删除(_D)"
+msgstr "/_Datei/_Löschen"
 
 #: ../main.c:239
 msgid "/_File/_Create Directory"
-msgstr "/文件(_F)/创建目录(_C)"
+msgstr "/_Datei/V_erzeichnis erstellen"
 
 #: ../main.c:240
 msgid "/_File/s1"
-msgstr "/文件(_F)/s1"
+msgstr "/_Datei/s1"
 
 #: ../main.c:241
 msgid "/_File/Select _All"
-msgstr "/文件(_F)/全选(_A)"
+msgstr "/_Datei/_Alle auswählen"
 
 #: ../main.c:242
 msgid "/_File/s2"
-msgstr "/文件(_F)/s2"
+msgstr "/_Datei/s2"
 
 #: ../main.c:243
 msgid "/_File/_Close"
-msgstr "/文件(_F)/关闭(_C)"
+msgstr "/_Datei/_Schließen"
 
 #: ../main.c:244
 msgid "/_Settings"
-msgstr "/设置(_S)"
+msgstr "/_Einstellungen"
 
 #: ../main.c:245
 msgid "/_Settings/Directory Browser"
-msgstr "/设置(_S)/目录浏览"
+msgstr "/_Einstellungen/Verzeichnisbrowser"
 
 #: ../main.c:246
 msgid "/_Settings/My Files only"
-msgstr "/设置(_S)/仅查看我的文件"
+msgstr "/_Einstellungen/Nur meine Dateien"
 
 #: ../main.c:247
 msgid "/_Settings/s3"
-msgstr "/设置(_S)/s3"
+msgstr "/_Einstellungen/s3"
 
 #: ../main.c:248
 msgid "/_Settings/View Icons"
-msgstr "/设置(_S)/图标查看"
+msgstr "/_Einstellungen/Als Icons darstellen"
 
 #: ../main.c:249
 msgid "/_Settings/View List"
-msgstr "/设置(_S)/列表查看"
+msgstr "/_Einstellungen/Als Liste darstellen"
 
 #: ../main.c:250
 msgid "/_Go To"
-msgstr "/转到(_G)"
+msgstr "/_Gehe zu"
 
 #: ../main.c:251
 msgid "/_Help"
-msgstr "/帮助(_H)"
+msgstr "/_Hilfe"
 
 #: ../main.c:252
 msgid "/_Help/Index"
-msgstr "/帮助(_H)/索引"
+msgstr "/_Hilfe/Index"
 
 #: ../main.c:253
 msgid "/_Help/About"
-msgstr "/帮助(_H)/关于"
+msgstr "/_Hilfe/Über..."
 
 #: ../main.c:314
 msgid "/Settings/Directory Browser"
-msgstr "/设置/目录浏览"
+msgstr "/Einstellungen/Verzeichnisbrowser"
 
 #: ../main.c:316
 msgid "/Settings/My Files only"
-msgstr "/设置/仅查看我的文件"
+msgstr "/Einstellungen/Nur meine Dateien"
 
 #: ../main.c:318
 msgid "/Settings/View Icons"
-msgstr "/设置/图标查看"
+msgstr "/Einstellungen/Als Icons anzeigen"
 
 #: ../main.c:320
 msgid "/Settings/View List"
-msgstr "/设置/列表查看"
+msgstr "/Einstellungen/Als Liste anzeigen"
 
 #: ../main.c:322
 msgid "/Go To"
-msgstr "/转到"
+msgstr "/Gehe zu"
 
 #: ../main.c:407
 msgid "Login failed, please try again"
-msgstr "登录失败，请重试"
+msgstr "Login fehlgeschlagen, bitte versuchen Sie es erneut"
 
 #: ../main.c:409
 msgid "Enter credentials to access"
-msgstr "输入密码方可登录"
+msgstr "Identifizieren Sie sich für den Zugriff"
 
 #: ../main.c:411
 msgid "Restricted Resource"
-msgstr "受限资源"
+msgstr "Eingeschränkte Ressource"
 
 #: ../main.c:434
 msgid "Username"
-msgstr "用户名"
+msgstr "Benutzername"
 
 #: ../main.c:437
 msgid "Password"
-msgstr "密码"
+msgstr "Kennwort"
 
 #: ../main.c:486
 msgid "Directory created."
-msgstr "目录已创建。"
+msgstr "Verzeichnis angelegt"
 
 #: ../main.c:559
 msgid "Starting"
-msgstr "正在启动"
+msgstr "Starten"
 
 #: ../main.c:589
 msgid "File is read only."
-msgstr "文件只读。"
+msgstr "Die Datei ist schreibgeschützt."
 
 #: ../main.c:592 ../main.c:1260
 msgid "Access denied."
-msgstr "拒绝访问。"
+msgstr "Zugriff verweigert."
 
 #: ../main.c:595 ../main.c:1263
 msgid "Read only file system."
-msgstr "只读文件系统。"
+msgstr "Schreibgeschütztes Dateisystem."
 
 #: ../main.c:598
 msgid "Destination file already exists."
-msgstr "目标文件已存在。"
+msgstr "Die Zieldatei existiert schon."
 
 #: ../main.c:610
 msgid "File renamed."
-msgstr "文件已改名。"
+msgstr "Datei umbenannt."
 
 #: ../main.c:627 ../main.c:630
 msgid "Rename file"
-msgstr "重命名文件"
+msgstr "Datei umbenennen"
 
 #: ../main.c:628
 msgid "to:"
-msgstr "到:"
+msgstr "in:"
 
 #. location
 #: ../main.c:681
 msgid "Location:"
-msgstr "地址:"
+msgstr "Ort:"
 
 #. size
 #: ../main.c:696
 msgid "Size:"
-msgstr "大小:"
+msgstr "Größe:"
 
 #. mime type
 #: ../main.c:709
 msgid "MIME-Type:"
-msgstr "MIME-Type:"
+msgstr "MIME-Typ:"
 
 #. change time
 #: ../main.c:720
 msgid "Changed:"
-msgstr "更改时间:"
+msgstr "Geändert:"
 
 #: ../main.c:750
 msgid "Open With..."
-msgstr "打开..."
+msgstr "Öffnen mit..."
 
 #: ../main.c:755
 msgid "Open with program"
-msgstr "用程序打开"
+msgstr "Öffnen mit Programm"
 
 #: ../main.c:824
 msgid "No available applications"
-msgstr "无可用的程序"
+msgstr "Keine Programme verfügbar"
 
 #: ../main.c:944
 #, c-format
 msgid "Symbolic link %s leads to inaccessable file!"
-msgstr "符号连接 %s 指向不可访问的文件！"
+msgstr "Der symbolische Link %s zeigt ins Nichts!"
 
 #: ../main.c:952
 #, c-format
 msgid "Maximum symbolic link depth exceeded for %s"
-msgstr "符号连接数超过最大值 %s"
+msgstr "Der symbolische Link %s übersteigt die maximale Verlinkungstiefe"
 
 #: ../main.c:1257
 msgid "Destination is read only."
-msgstr "目标只读。"
+msgstr "Das Ziel ist schreibgeschützt."
 
 #: ../main.c:1390 ../main.c:1397
 msgid "Opening"
-msgstr "正在打开"
+msgstr "Öffnen"
 
 #: ../main.c:1645 ../main.c:1746
 msgid "Icon"
-msgstr "图标"
+msgstr "Icon"
 
 #: ../main.c:1653
 msgid "Name"
-msgstr "名字"
+msgstr "Name"
 
 #: ../main.c:1662
 msgid "Size"
-msgstr "大小"
+msgstr "Größe"
 
 #: ../main.c:1671
 msgid "Changed"
-msgstr "更改时间"
+msgstr "Geändert"
 
 #: ../main.c:1753
 msgid "Directory"
-msgstr "目录"
+msgstr "Verzeichnis"
 
 #: ../main.c:1859 ../main.c:1862
 msgid "Filemanager"
-msgstr "文件管理器"
+msgstr "Dateimanager"
 
 #: ../main.c:1909
 msgid "Go back in history."
-msgstr "后退"
+msgstr "Gehe zurück in der Geschichte."
 
 #: ../main.c:1915
 msgid "Go forward in history."
-msgstr "前进"
+msgstr "Gehe vorwärts in der Geschichte."
 
 #: ../main.c:1921
 msgid "Go up one level."
-msgstr "向上一层"
+msgstr "Eine Ebene hoch."
 
 #: ../main.c:1934
 msgid "Goto your home directory."
-msgstr "转到主目录。"
+msgstr "Gehe zum persönlichen Verzeichnis."
 
 #: ../main.c:1941
 msgid "Refresh current directory."
-msgstr "刷新当前目录。"
+msgstr "Aktuelles Verzeichnis auffrischen."
 
 #: ../main.c:1948
 msgid "Stop the current process."
-msgstr "终止当前程序。"
+msgstr "Aktuellen Vorgang stoppen."
 
 #: ../main.c:1960
 msgid "Exit from this program."
-msgstr "退出程序。"
+msgstr "Dieses Programm beenden."
 
 #: ../main.c:1968
 msgid "Go!"
-msgstr "运行！"
+msgstr "Los!"
 
 #: ../main.c:1969
 msgid "Goto Location"
-msgstr "转到地址"
+msgstr "Zu einem bestimmten Ort gehen"
 
 #: ../gpe-filemanager.desktop.in.h:1 ../hildon/gpe-filemanager.desktop.in.h:1
 msgid "File Manager"
-msgstr "文件管理器"
+msgstr "Dateimanager"
 
 #: ../gpe-filemanager.desktop.in.h:2 ../hildon/gpe-filemanager.desktop.in.h:2
 msgid "GPE File Manager"
-msgstr "GPE 文件管理器"
+msgstr "GPE-Dateimanager"
