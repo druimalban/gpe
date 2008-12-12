@@ -1,14 +1,14 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# Daniel Nylander <po@danielnylander.se>, 2005
+# Swedish translation for gpe-package.
+# Copyright (C) 2008 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gpe-package package.
+# Daniel Nylander <po@danielnylander.se>, 2005, 2008.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-package 0.3\n"
+"Project-Id-Version: gpe-package 0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-08-26 15:13+0200\n"
-"PO-Revision-Date: 2005-12-25 09:23+0100\n"
+"POT-Creation-Date: 2007-08-01 21:31+0200\n"
+"PO-Revision-Date: 2008-12-12 08:06+0100\n"
 "Last-Translator: Daniel Nylander <po@danielnylander.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "MIME-Version: 1.0\n"
@@ -17,125 +17,145 @@ msgstr ""
 
 #: main.c:45
 msgid "Unable to fork"
-msgstr "Kunde inte dela process"
+msgstr "Kunde inte grena process"
 
-#: interface.c:67
+#: interface.c:68
 msgid "Help for this application is not installed."
 msgstr "Hjälp för denna applikation är inte installerad."
 
-#: interface.c:120
+#: interface.c:129
 msgid "/_File"
 msgstr "/_Fil"
 
-#: interface.c:121
+#: interface.c:130
 msgid "/File/_Install file"
 msgstr "/Fil/_Installera fil"
 
-#: interface.c:122
+#: interface.c:131
 msgid "/_File/s1"
 msgstr "/_Fil/s1"
 
-#: interface.c:123
+#: interface.c:132
 msgid "/File/_Close"
 msgstr "/Fil/_Stäng"
 
-#: interface.c:124
+#: interface.c:133
 msgid "/_Packages"
 msgstr "/_Paket"
 
-#: interface.c:125
+#: interface.c:134
 msgid "/Packages/Show Insta_lled"
 msgstr "/Paket/Visa insta_llerade"
 
-#: interface.c:126
+#: interface.c:135
 msgid "/Packages/Show _Not Installed"
 msgstr "/Paket/Visa ej i_nstallerade"
 
-#: interface.c:127
+#: interface.c:136
 msgid "/_Packages/s2"
 msgstr "/_Paket/s2"
 
-#: interface.c:128
-msgid "/Packages/Show _Info"
-msgstr "/Paket/Visa _info"
+#: interface.c:137
+msgid "/Packages/_Search"
+msgstr "/Paket/_Sök"
 
-#: interface.c:129 interface.c:132
+#: interface.c:138 interface.c:143
 msgid "/_Packages/s3"
 msgstr "/_Paket/s3"
 
-#: interface.c:130
+#: interface.c:139
+msgid "/Packages/Show _Info"
+msgstr "/Paket/Visa _info"
+
+#: interface.c:140
+msgid "/_Packages/s4"
+msgstr "/_Paket/s4"
+
+#: interface.c:141
 msgid "/Packages/_Update lists"
 msgstr "/Paket/_Uppdatera listor"
 
-#: interface.c:131
+#: interface.c:142
 msgid "/Packages/Upgrade _System"
 msgstr "/Paket/Uppgradera _system"
 
-#: interface.c:133
+#: interface.c:144
 msgid "/Packages/_Apply"
 msgstr "/Paket/_Verkställ"
 
-#: interface.c:134
+#: interface.c:145
 msgid "/_Help"
 msgstr "/_Hjälp"
 
-#: interface.c:135
+#: interface.c:146
 msgid "/_Help/Index"
 msgstr "/_Hjälp/Index"
 
-#: interface.c:136
+#: interface.c:147
 msgid "/_Help/About"
 msgstr "/_Hjälp/Om"
 
-#: interface.c:187
+#: interface.c:198
 msgid "Package information"
 msgstr "Paketinformation"
 
-#: interface.c:276
+#: interface.c:241
+msgid "Working"
+msgstr "Arbetar"
+
+#: interface.c:288
 msgid "Reading packages list..."
 msgstr "Läser paketlistor..."
 
-#: interface.c:282
+#: interface.c:294
 msgid "Updating package lists"
 msgstr "Uppdaterar paketlistor"
 
-#: interface.c:285
+#: interface.c:297
 msgid "Upgrading installed system"
 msgstr "Uppgraderar installerat system"
 
-#: interface.c:288
+#: interface.c:300
 msgid "Installing"
 msgstr "Installerar"
 
-#: interface.c:291
+#: interface.c:303
 msgid "Retrieving package information"
 msgstr "Hämtar paketinformation"
 
-#: interface.c:294
+#: interface.c:306
 msgid "Working..."
 msgstr "Arbetar..."
 
-#: interface.c:390
+#: interface.c:402
 msgid "Updating views, please wait..."
 msgstr "Uppdaterar vyer, var god vänta..."
 
-#: interface.c:502
+#: interface.c:518
+msgid "Search term:"
+msgstr "Sökterm:"
+
+#: interface.c:529
+msgid "Regular expression"
+msgstr "Reguljärt uttryck"
+
+#: interface.c:633
 msgid "Command finished. Please check log messages for errors."
 msgstr "Kommando klart. Vänligen kontrollera loggmeddelanden efter fel."
 
-#: interface.c:522
+#: interface.c:653
 msgid "Package selection was changed. Really exit?"
 msgstr "Paketval har ändrats. Verkligen avsluta?"
 
-#: interface.c:551
+#: interface.c:682
 msgid "IPKG backend failure, cannot continue."
 msgstr "Fel i baksystemet IPKG, kan inte fortsätta."
 
-#: interface.c:558
+#: interface.c:689
 msgid "Communication error, cannot continue."
 msgstr "Kommunikationsfel, kan inte fortsätta."
 
-#: interface.c:572
+#: interface.c:703
 msgid ""
 "An error occurred.\n"
 "Please consult the message log\n"
@@ -145,107 +165,107 @@ msgstr ""
 "Vänligen konsultera meddelandeloggen\n"
 "efter information om vad som gick fel."
 
-#: interface.c:658
+#: interface.c:789
 msgid "The selected file could not be accessed."
 msgstr "Den valda filen kunde inte tillgås."
 
-#: interface.c:769
+#: interface.c:900
 msgid "Make sure your internet connection is up or your update source is available and press OK to continue."
 msgstr "Kontrollera att din Internetanslutning är igång och din källa för uppdateringar är tillgänglig och tryck sedan OK för att fortsätta."
 
-#: interface.c:785
+#: interface.c:916
 msgid "Some packages could not be updated, please check your configuration."
 msgstr "Vissa paket kunde inte uppdateras, vänligen kontrollera din konfiguration."
 
-#: interface.c:788
+#: interface.c:919
 msgid "System updated sucessfully."
 msgstr "Systemet uppdaterat."
 
-#: interface.c:814
+#: interface.c:945
 msgid "Some lists could not be updated, please check your configuration."
 msgstr "Vissa listor kunde inte uppdateras, vänligen kontrollera din konfiguration."
 
-#: interface.c:817
+#: interface.c:948
 msgid "Package lists updated successfully."
 msgstr "Paketlistorna uppdaterade."
 
-#: interface.c:830
+#: interface.c:961
 msgid "changes could not be applied."
 msgstr "ändringar kunde inte verkställas."
 
-#: interface.c:834
+#: interface.c:965
 msgid "Packages installed sucessfully."
 msgstr "Paketen installerade."
 
-#: interface.c:920 gpe-package.desktop.in.h:2
+#: interface.c:1060 gpe-package.desktop.in.h:2
 msgid "Package Manager"
 msgstr "Pakethanterare"
 
-#: interface.c:970
+#: interface.c:1104
 msgid "List"
 msgstr "Lista"
 
-#: interface.c:975
+#: interface.c:1109
 msgid "Package List"
 msgstr "Paketlista"
 
-#: interface.c:999
+#: interface.c:1135
 msgid "Inst."
 msgstr "Inst."
 
-#: interface.c:1009 feededit.c:112 feededit.c:352
+#: interface.c:1145 feededit.c:129 feededit.c:363
 msgid "Name"
 msgstr "Namn"
 
-#: interface.c:1022
+#: interface.c:1158
 msgid "Messages"
 msgstr "Meddelanden"
 
-#: interface.c:1027
+#: interface.c:1163
 msgid "Messages Log"
 msgstr "Meddelandelogg"
 
-#: interface.c:1037
+#: interface.c:1173
 msgid "This window shows all messages from the packet manager."
 msgstr "Detta fönster visar alla meddelanden från pakethanteraren."
 
-#: interface.c:1044
+#: interface.c:1180
 msgid "Feeds"
 msgstr "Förråd"
 
-#: filechooser.c:40
+#: filechooser.c:44 filechooser.c:63
 msgid "Choose packages"
 msgstr "Välj paket"
 
-#: feededit.c:82
+#: feededit.c:99
 msgid "Could not open"
 msgstr "Kunde inte öppna"
 
-#: feededit.c:83
+#: feededit.c:100
 msgid "for writing."
 msgstr "för skrivning."
 
-#: feededit.c:103
+#: feededit.c:120
 msgid "Feed Properties"
 msgstr "Egenskaper för förråd"
 
-#: feededit.c:117
+#: feededit.c:134
 msgid "Location (URL)"
 msgstr "Plats (URL)"
 
-#: feededit.c:122
+#: feededit.c:139
 msgid "Compressed"
 msgstr "Komprimerad"
 
-#: feededit.c:225
+#: feededit.c:242
 msgid "Delete selected feed?"
 msgstr "Ta bort valt förråd?"
 
-#: feededit.c:315
+#: feededit.c:331
 msgid "Package Feeds"
 msgstr "Paketförråd"
 
-#: feededit.c:361
+#: feededit.c:372
 msgid "Location"
 msgstr "Plats"
 

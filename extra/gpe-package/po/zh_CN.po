@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gpe-package 0.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-08-01 21:31+0200\n"
-"PO-Revision-Date: 2008-06-19 20:18中国标准时间\n"
+"PO-Revision-Date: 2008-11-11 20:58+0800\n"
 "Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
 "Language-Team: Chinese (simplified) <translation-team-zh-cn@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #: main.c:45
 msgid "Unable to fork"
-msgstr "无法派生"
+msgstr "无法执行"
 
 #: interface.c:68
 msgid "Help for this application is not installed."
@@ -42,47 +42,47 @@ msgstr "/文件/关闭(_C)"
 
 #: interface.c:133
 msgid "/_Packages"
-msgstr "/程序包(_P)"
+msgstr "/软件包(_P)"
 
 #: interface.c:134
 msgid "/Packages/Show Insta_lled"
-msgstr "/程序包/显示已安装(_L)"
+msgstr "/软件包/显示已安装(_L)"
 
 #: interface.c:135
 msgid "/Packages/Show _Not Installed"
-msgstr "/程序包/显示未安装(_N)"
+msgstr "/软件包/显示未安装(_N)"
 
 #: interface.c:136
 msgid "/_Packages/s2"
-msgstr "/程序包(_P)/s2"
+msgstr "/软件包(_P)/s2"
 
 #: interface.c:137
 msgid "/Packages/_Search"
-msgstr "/程序包/查找(_S)"
+msgstr "/软件包/查找(_S)"
 
 #: interface.c:138 interface.c:143
 msgid "/_Packages/s3"
-msgstr "/程序包(_P)/s3"
+msgstr "/软件包(_P)/s3"
 
 #: interface.c:139
 msgid "/Packages/Show _Info"
-msgstr "/程序包/显示信息(_I)"
+msgstr "/软件包/显示信息(_I)"
 
 #: interface.c:140
 msgid "/_Packages/s4"
-msgstr "/程序包(_P)/s4"
+msgstr "/软件包(_P)/s4"
 
 #: interface.c:141
 msgid "/Packages/_Update lists"
-msgstr "/程序包/更新列表(_U)"
+msgstr "/软件包/更新列表(_U)"
 
 #: interface.c:142
 msgid "/Packages/Upgrade _System"
-msgstr "/程序包/升级系统(_S)"
+msgstr "/软件包/升级系统(_S)"
 
 #: interface.c:144
 msgid "/Packages/_Apply"
-msgstr "/程序包/应用(_A)"
+msgstr "/软件包/应用(_A)"
 
 #: interface.c:145
 msgid "/_Help"
@@ -98,7 +98,7 @@ msgstr "/帮助(_H)/关于"
 
 #: interface.c:198
 msgid "Package information"
-msgstr "程序包信息"
+msgstr "软件包信息"
 
 #: interface.c:241
 msgid "Working"
@@ -106,11 +106,11 @@ msgstr "正在处理..."
 
 #: interface.c:288
 msgid "Reading packages list..."
-msgstr "正在读取程序包列表..."
+msgstr "正在读取软件包列表..."
 
 #: interface.c:294
 msgid "Updating package lists"
-msgstr "正在更新程序包列表"
+msgstr "正在更新软件包列表"
 
 #: interface.c:297
 msgid "Upgrading installed system"
@@ -122,7 +122,7 @@ msgstr "正在安装"
 
 #: interface.c:303
 msgid "Retrieving package information"
-msgstr "正在检索包信息"
+msgstr "正在检索软件包信息"
 
 #: interface.c:306
 msgid "Working..."
@@ -146,7 +146,7 @@ msgstr "命令完成。请看日志信息检查错误。"
 
 #: interface.c:653
 msgid "Package selection was changed. Really exit?"
-msgstr "选中的程序包已更改。真的退出？"
+msgstr "选中的软件包已更改。真的退出？"
 
 #: interface.c:682
 msgid "IPKG backend failure, cannot continue."
@@ -176,7 +176,7 @@ msgstr "确保你的因特网连接已开启或是你的更新源可访问然后
 
 #: interface.c:916
 msgid "Some packages could not be updated, please check your configuration."
-msgstr "某些程序包无法更新，请检查您的配置。"
+msgstr "某些软件包无法更新，请检查您的配置。"
 
 #: interface.c:919
 msgid "System updated sucessfully."
@@ -188,7 +188,7 @@ msgstr "某些列表无法更新，请检查您的配置。"
 
 #: interface.c:948
 msgid "Package lists updated successfully."
-msgstr "程序包列表更新成功。"
+msgstr "软件包列表更新成功。"
 
 #: interface.c:961
 msgid "changes could not be applied."
@@ -196,11 +196,11 @@ msgstr "无法更改。"
 
 #: interface.c:965
 msgid "Packages installed sucessfully."
-msgstr "程序包安装成功。"
+msgstr "软件包安装成功。"
 
 #: interface.c:1060 gpe-package.desktop.in.h:2
 msgid "Package Manager"
-msgstr "程序包管理器"
+msgstr "软件包管理器"
 
 #: interface.c:1104
 msgid "List"
@@ -208,11 +208,11 @@ msgstr "列表"
 
 #: interface.c:1109
 msgid "Package List"
-msgstr "程序包列表"
+msgstr "软件包列表"
 
 #: interface.c:1135
 msgid "Inst."
-msgstr "Inst."
+msgstr "已安装"
 
 #: interface.c:1145 feededit.c:129 feededit.c:363
 msgid "Name"
@@ -236,15 +236,15 @@ msgstr "Feeds"
 
 #: filechooser.c:44 filechooser.c:63
 msgid "Choose packages"
-msgstr "选择程序包"
+msgstr "选择软件包"
 
 #: feededit.c:99
 msgid "Could not open"
-msgstr "无法打开"
+msgstr "无法以写方式"
 
 #: feededit.c:100
 msgid "for writing."
-msgstr "为写入。"
+msgstr "打开。"
 
 #: feededit.c:120
 msgid "Feed Properties"
@@ -256,7 +256,7 @@ msgstr "地址(URL)"
 
 #: feededit.c:139
 msgid "Compressed"
-msgstr "压缩的"
+msgstr "已压缩"
 
 #: feededit.c:242
 msgid "Delete selected feed?"
@@ -264,7 +264,7 @@ msgstr "删除所选的 feed？"
 
 #: feededit.c:331
 msgid "Package Feeds"
-msgstr "程序包 Feeds"
+msgstr "软件包 Feeds"
 
 #: feededit.c:372
 msgid "Location"
