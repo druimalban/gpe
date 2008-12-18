@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (C) 2002, 2003  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2002, 2003, 2008  Florian Boor <florian.boor@kernelconcepts.de>
  *               2004  Ole Reinhardt <ole.reinhardt@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
@@ -130,8 +130,6 @@ gint get_param_val(gchar* line, gchar* param, gchar* value)
 	param=strncpy(param,&line[st],sep-st);
 	param[sep-st]='\0';
 	
-//KC-OR: changed because singe character values not recognized correctly
-//		if ((b-a) > 0) value=strncpy(value,&line[a],b-a);	
 	if ((b-a) > 0) value=strncpy(value,&line[a],b-a);	
 	value[b-a]='\0';
 	return 0;
@@ -564,11 +562,13 @@ gchar *get_iflist()
 	return result;
 }
 
-void get_wifikey_string(NWInterface_t iface, char* key)
+void get_wifikey_string(NWInterface_t iface, gchar** key)
 {
 	gint nokeys = FALSE;
 	gint count;
 	gchar temp[42];
+	gchar *lkey = g_strdup(""), *t;
+	
 	
 	if ((strlen(iface.key[0]) == 0) && 
 	    (strlen(iface.key[1]) == 0) && 
@@ -583,25 +583,32 @@ void get_wifikey_string(NWInterface_t iface, char* key)
 		for (iface.keynr = 1; iface.keynr <=4; iface.keynr++)
 			if (strlen(iface.key[iface.keynr-1]) != 0) break;
 				
-	switch (iface.encmode)
-	{
-		case ENC_OFF: strcpy(key, "off"); break;
-		case ENC_OPEN: strcpy(key, "open"); break;
-		case ENC_RESTRICTED: strcpy(key, "restricted"); break;
-	}
-	
 	if (!nokeys)
 	{
 		for (count = 0; count < 4; count++)
 			if (strlen(iface.key[count]) > 0)
 			{
-				sprintf(temp, " key %s [%d]", iface.key[count], count+1);
-				strcat(key, temp);
+				t = lkey;
+				lkey = g_strdup_printf("%s key %s [%d]", lkey, iface.key[count], count+1);
+				g_free(t);
 			}
 		
-		sprintf(temp, " key [%d]", iface.keynr);
-		strcat(key, temp);
+		t = lkey;
+		lkey = g_strdup_printf(" %s key [%d]", lkey, iface.keynr);
+		g_free(t);
 	}
+	
+	t = lkey;
+	switch (iface.encmode)
+	{
+		case ENC_OPEN: lkey = g_strdup_printf ("%s key open", lkey); break;
+		case ENC_RESTRICTED: lkey = g_strdup_printf("%s key restricted", lkey); break;
+		case ENC_OFF: lkey = g_strdup_printf("%s key off", lkey); break;
+		default: lkey = g_strdup_printf("%s key off", lkey); break;
+	}
+	g_free(t);
+
+ 	*key = lkey;
 }
 
 gint write_sections()
@@ -615,7 +622,7 @@ gint write_sections()
 	gint svd[14];
 	gint lastwpos = 0;
 	gint last_i;
-	gchar key[128];
+	gchar *key;
 	
 	for (i=0;i<configlen;i++)
 	{
@@ -726,8 +733,9 @@ gint write_sections()
 			} else
 			if (!strcmp("wireless_key", paramval))
 			{
-				get_wifikey_string(iflist[l-1], key);
+				get_wifikey_string(iflist[l-1], &key);
 				configtext[i] = subst_val(configtext[i], key); 
+ 				g_free(key);
 				svd[Swifikey] = TRUE;
 				lastwpos = i;
 			}
@@ -809,7 +817,7 @@ gint write_sections()
 					} 
 					if (!svd[Swifikey])
 					{
-						get_wifikey_string(iflist[l-1], key);
+						get_wifikey_string(iflist[l-1], &key);
 						sprintf(outstr,"\twireless_key %s",key);
 						add_line(lastwpos,outstr);
 						i++;
@@ -886,8 +894,9 @@ gint write_sections()
 					sprintf(outstr,"\twireless_channel %s",iflist[i].channel);
 					add_line(configlen,outstr);
 				} 
-				get_wifikey_string(iflist[i], key);
-				sprintf(outstr,"\twireless_key %s",key);
+				get_wifikey_string(iflist[i], &key);
+ 				sprintf(outstr,"\twireless_key %s",key);
+				g_free(key);
 				add_line(configlen,outstr);
 			}					
 			

@@ -1,3 +1,7 @@
+2008-12-18  Florian Boor <florian@kernelconcepts.de>
+
+	* cfgfile.c: Some fixes to wifi key string generation.
+
 2008-12-12  Florian Boor <florian@kernelconcepts.de>
 
 	* po/zh_CN.po: Update Chinese translation contributed by Ji ZhengYu
