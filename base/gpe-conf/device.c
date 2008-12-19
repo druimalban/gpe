@@ -215,7 +215,6 @@ device_get_id (void)
 	local_device.name = g_strdup(_("Unknown Device"));
 
 out: 
-printf("f %s\n", local_device.name);
 	local_device_id = id;
 	if (strv) 
 		g_strfreev(strv);

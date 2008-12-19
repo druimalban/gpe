@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *	             2003,2004  Florian Boor <florian.boor@kernelconcepts.de>
+ *	         2003, 2004, 2008  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -11,7 +11,7 @@
  *
  * GPE busybox syslog access module.
  *
- * circular buffer syslog implementation for busybox
+ * Based on the circular buffer syslog implementation for busybox
  *
  * Copyright (C) 2000 by Gennady Feldman <gfeldman@cachier.com>
  *
@@ -48,33 +48,52 @@
 static const long KEY_ID = 0x414e4547; /*"GENA"*/
 
 static struct shbuf_ds {
-	int size;		// size of data written
-	int head;		// start of message list
-	int tail;		// end of message list
-	char data[1];		// data/messages
+	int32_t size;           // size of data - 1
+	int32_t tail;           // end of message list
+	char data[1];		// messages
 } *buf = NULL;			// shared memory pointer
 
 
 // Semaphore operation structures
-static struct sembuf SMrup[1] = {{0, -1, IPC_NOWAIT | SEM_UNDO}}; // set SMrup
-static struct sembuf SMrdn[2] = {{1, 0}, {0, +1, SEM_UNDO}}; // set SMrdn
+static const struct sembuf init_sem[3] = {
+	{0, -1, IPC_NOWAIT | SEM_UNDO},
+	{1, 0}, {0, +1, SEM_UNDO}
+};
 
-static int	log_shmid = -1;	// ipc shared memory id
-static int	log_semid = -1;	// ipc semaphore id
+struct globals {
+	struct sembuf SMrup[1]; // {0, -1, IPC_NOWAIT | SEM_UNDO},
+	struct sembuf SMrdn[2]; // {1, 0}, {0, +1, SEM_UNDO}
+	struct shbuf_ds *shbuf;
+};
+
+/* Providing hard guarantee on minimum size (think of BUFSIZ == 128) */
+enum { COMMON_BUFSIZE = (4096 >= 256*sizeof(void*) ? 4096+1 : 256*sizeof(void*)) };
+char bb_common_bufsiz1[COMMON_BUFSIZE];
+
+#define G (*(struct globals*)&bb_common_bufsiz1)
+#define SMrup (G.SMrup)
+#define SMrdn (G.SMrdn)
+#define shbuf (G.shbuf)
+#define INIT_G() do { \
+	memcpy(SMrup, init_sem, sizeof(init_sem)); \
+} while (0)
 
 
 /* --- module global variables --- */
 
 static GtkWidget *txLog, *txLog2;
-static int logtail = -1;
-static int fsession;
+static int fsession = -1;
 
 /* --- local intelligence --- */
 
+
 void
-printlog (GtkWidget * textview, gchar * str)
+printlog (GtkWidget *textview, const gchar *str)
 {
 	GtkTextBuffer *log;
+	if ((str == NULL) || (!strlen(str))) 
+          return;
+
 	log = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
 	gtk_text_buffer_insert_at_cursor (GTK_TEXT_BUFFER (log), str, -1);
 }
@@ -104,71 +123,82 @@ static inline void sem_down(int semid)
 }
 
 
-int logread_main()
+int logread_main(void)
 {
+	unsigned cur;
+	int log_semid; /* ipc semaphore id */
+	int log_shmid; /* ipc shared memory id */
 	int i;
 	char buffer[256];
 	struct pollfd pfd;
-		
-	if ( (log_shmid = shmget(KEY_ID, 0, 0)) == -1)
-	{
+	unsigned shbuf_size;
+	unsigned shbuf_tail;
+	const char *shbuf_data;
+ 		
+	INIT_G();
+
+	log_shmid = shmget(KEY_ID, 0, 0);
+	if (log_shmid == -1)
 		printlog(txLog,
 		  _("Can't find circular buffer, is syslog running?\n"));
-		return FALSE;
-	}
-	// Attach shared memory to our char*
-	if ( (buf = shmat(log_shmid, NULL, SHM_RDONLY)) == NULL)
-	{
+
+	/* Attach shared memory to our char* */
+	shbuf = shmat(log_shmid, NULL, SHM_RDONLY);
+	if (shbuf == NULL)
 		printlog(txLog,
 		  _("Can't get access to syslogd's circular buffer."));
-		return FALSE;
-	}
 
-	if ( (log_semid = semget(KEY_ID, 0, 0)) == -1)
-	{
+	log_semid = semget(KEY_ID, 0, 0);
+	if (log_semid == -1)
 	    printlog(txLog,
 		         _("Can't get access to semaphore(s) "\
 		         "for syslogd's circular buffer."));
-		return FALSE;
-	}
 
-	sem_down(log_semid);	
-	// Read Memory 
-	if (logtail==-1)				// init condition
-	{
-		i=buf->head;
-	}
-	else
-	{
-		if (logtail != buf->tail)	// append
-		{	
-			printlog(txLog,"new_item\n");
-			i=logtail;
+	/* Suppose atomic memory read */
+	/* Max possible value for tail is shbuf->size - 1 */
+	cur = shbuf->tail;
+       
+		if (semop(log_semid, SMrdn, 2) == -1) {
+        	shmdt(shbuf);
+            return FALSE;
+        }
+
+		/* Copy the info, helps gcc to realize that it doesn't change */
+		shbuf_size = shbuf->size;
+		shbuf_tail = shbuf->tail;
+		shbuf_data = shbuf->data; /* pointer! */
+#define DEBUG
+#ifdef DEBUG
+    	printf("cur:%d tail:%i size:%i\n",
+					cur, shbuf_tail, shbuf_size);
+#endif
+		/* advance to oldest complete message */
+		/* find NUL */
+		cur += strlen(shbuf_data + cur);
+		if (cur >= shbuf_size) { /* last byte in buffer? */
+			cur = strnlen(shbuf_data, shbuf_tail);
+			if (cur == shbuf_tail)
+				goto unlock; /* no complete messages */
 		}
-		else 						// nothing to do
-		{
-			shmdt(buf);
-			goto next;
+		/* advance to first byte of the message */
+		cur++;
+		if (cur >= shbuf_size) /* last byte in buffer? */
+			cur = 0;
+
+		/* Read from cur to tail */
+		while (cur != shbuf_tail) {
+			printlog(txLog, shbuf_data + cur);
+			cur += (strlen(shbuf_data + cur) + 1);
+			if (cur >= shbuf_size)
+				cur = 0;
 		}
-	}
-	
-	if (buf->head == buf->tail) {
-		printlog(txLog,_("<empty syslog>"));
-	}
-	
-	while ( i != buf->tail) {
-		printlog(txLog,buf->data+i);
-		i+= strlen(buf->data+i) + 1;
-		if (i >= buf->size )
-			i=0;
-	}
-	logtail = buf->tail;	
-	
+        
+unlock:
+	/* release the lock on the log chain */
 	sem_up(log_semid);
 
-	if (log_shmid != -1) 
-		shmdt(buf);
-next: 	
+	shmdt(shbuf);
+
 	/* read session file */
 	if (fsession > 0)
 	{
@@ -179,10 +209,10 @@ next:
 		pfd.fd = fsession;
 		pfd.events = POLLIN;
 		pfd.revents = 0;
-			i = read(fsession,buffer,255);
+			i = read(fsession, buffer, 255);
 			if (!i) break;
 			buffer[i] = 0;
-			printlog(txLog2,buffer);
+			printlog(txLog2, buffer);
 		}
 	}	
 	return TRUE;		
@@ -192,19 +222,19 @@ next:
 /* --- gpe-conf interface --- */
 
 void
-Logread_Free_Objects ()
+Logread_Free_Objects (void)
 {
 	close(fsession);
 }
 
 void
-Logread_Save ()
+Logread_Save (void)
 {
 
 }
 
 void
-Logread_Restore ()
+Logread_Restore (void)
 {
 	
 }
@@ -269,8 +299,8 @@ Logread_Build_Objects (void)
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook),vbox,tw);
   
   tstr = g_strdup_printf("%s/.xsession-errors",g_get_home_dir());
-  fsession = open(tstr,O_RDONLY);
-  fcntl(fsession,O_NONBLOCK);
+  fsession = open(tstr, O_RDONLY);
+  fcntl(fsession, O_NONBLOCK);
   if (fsession < 0) 
 	  printlog(txLog2,_("Could not open X session log.\n"));
   g_free(tstr);

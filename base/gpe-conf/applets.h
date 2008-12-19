@@ -21,7 +21,7 @@ struct Applet
 
 void change_cfg_value (const gchar *file, const gchar *var, const gchar* val, gchar seperator);
 void file_set_line (const gchar *file, const gchar *pattern, const gchar *newline);
-void printlog(GtkWidget *textview, gchar *str);
+void printlog(GtkWidget *textview, const gchar *str);
 
 /* Return 1 if a file exists & can be read, 0 otherwise.*/
 int file_exists (char *fn);

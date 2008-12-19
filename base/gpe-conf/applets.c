@@ -214,7 +214,7 @@ change_cfg_value (const gchar *file, const gchar *var, const gchar *val,
 
 
 void
-printlog (GtkWidget * textview, gchar * str)
+printlog (GtkWidget *textview, const gchar *str)
 {
 	GtkTextBuffer *log;
 	log = gtk_text_view_get_buffer (GTK_TEXT_VIEW (textview));
