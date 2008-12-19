@@ -40,6 +40,7 @@ typedef enum
 	DEV_MAINSTONE,
 	DEV_N810,
 	DEV_BEAGLEBOARD,
+	DEV_HW_SKEYEPADPOS,
 	DEV_MAX
 } DeviceID_t;
 

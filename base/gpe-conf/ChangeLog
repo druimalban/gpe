@@ -1,5 +1,6 @@
 2008-12-19  Florian Boor <florian@kernelconcepts.de>
 
+	* deviceinfo, device.h: Add skeye.pad POS
 	* logread.c: Update to more modern busybox buffer implementation.
           Needs testing and compatibility information.
 	* device.c: Remove debug output.
