@@ -39,6 +39,7 @@ typedef enum
 	DEV_NEON,
 	DEV_MAINSTONE,
 	DEV_N810,
+	DEV_BEAGLEBOARD,
 	DEV_MAX
 } DeviceID_t;
 
@@ -48,7 +49,8 @@ typedef enum {
 	DEVICE_FEATURE_PC          = 0x02,
 	DEVICE_FEATURE_TABLET      = 0x04,
 	DEVICE_FEATURE_CELLPHONE   = 0x08,
-	DEVICE_FEATURE_MDE         = 0x10
+	DEVICE_FEATURE_MDE         = 0x10,
+	DEVICE_FEATURE_EVALBOARD   = 0x20,
 } DeviceFeatureID_t;
 
 DeviceID_t device_get_id (void);

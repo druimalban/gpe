@@ -2,6 +2,8 @@
 
 	* logread.c: Update to more modern busybox buffer implementation.
           Needs testing and compatibility information.
+	* device.c: Remove debug output.
+        * deviceinfo: Add Beagle Board
 
 2008-12-18  Florian Boor <florian@kernelconcepts.de>
 

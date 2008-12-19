@@ -319,3 +319,12 @@ Type = nokia-tablet
 Manufacturer = Nokia
 Features = 0x04
 
+[TI Beagleboard]
+ID = 36
+Pattern = OMAP3 Beagle Board
+Name = Beagle Board
+Model = 
+Type = eval
+Manufacturer = Texas Instruments
+Features = 0x22
+
