@@ -31,7 +31,7 @@
 
 #include "player.h"
 #include "marshal.h"
-
+#include "config.h"
 #include "utils.h"
 
 struct _Player {
@@ -249,6 +249,13 @@ playbin_ensure (Player *pl)
       element = "playbin";
 #endif
       pl->playbin = gst_element_factory_make (element, "player");
+      if (! pl->playbin)
+	{
+	  starling_error_box_fmt (_("Failed to initialize gstreamer: "
+				    "could not create a %s element."),
+				  element);
+	  exit (1);
+	}
 
       GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pl->playbin));
       gst_bus_add_watch (bus, player_bus_cb, pl);

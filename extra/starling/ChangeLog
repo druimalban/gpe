@@ -1,3 +1,9 @@
+2008-12-19  Neal H. Walfield  <neal@gnu.org>
+
+	* src/player.c: Include "config.h".
+	(playbin_ensure): If we fail to create a playbin, display an error
+	message to the user.
+
 2008-12-08  Graham Cobb  <g+770@cobb.uk.net>
 
 	* data/Makefile.am: Fix typo in icon filenames (bass... instead of base...)!
