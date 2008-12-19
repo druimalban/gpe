@@ -1,5 +1,20 @@
 2008-12-19  Neal H. Walfield  <neal@gnu.org>
 
+	* src/main.c (main): Call g_thread_init and gdk_threads_init.
+	Surround gtk_main with a call to gdk_threads_enter and
+	gdk_threads_leave.
+	* src/musicdb.c (gdk_threads_enter): New weak declaration.
+	(gdk_threads_leave): Likewise.
+	(LOCK): New macro.
+	(UNLOCK): Likewise.
+	(music_db_init): Don't call g_thread_init here.
+	(music_db_add): Use LOCK and UNLOCK when emitted signals.
+	(music_db_set_info_internal): Likewise.
+	(status_update): Likewise.
+	(worker_thread): Likewise.
+
+2008-12-19  Neal H. Walfield  <neal@gnu.org>
+
 	* src/player.c: Include "config.h".
 	(playbin_ensure): If we fail to create a playbin, display an error
 	message to the user.

@@ -31,6 +31,16 @@
 #include <stdio.h>
 #include <gst/gst.h>
 
+extern void gdk_threads_enter () __attribute__ ((weak));
+extern void gdk_threads_leave () __attribute__ ((weak));
+
+#define LOCK()					\
+  if (&gdk_threads_enter)			\
+    gdk_threads_enter ();
+#define UNLOCK()				\
+  if (&gdk_threads_leave)			\
+    gdk_threads_leave ();
+
 #define obstack_chunk_alloc g_malloc
 #define obstack_chunk_free g_free
 #include <obstack.h>
@@ -194,9 +204,6 @@ music_db_class_init (MusicDBClass *klass)
 static void
 music_db_init (MusicDB *db)
 {
-  if (! g_thread_supported ())
-    g_thread_init (NULL);
-
   db->work_lock = g_mutex_new ();
   db->work_cond = g_cond_new ();
   db->meta_data_pending = g_queue_new ();
@@ -623,6 +630,8 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
     /* Nothing to do.  */
     return;
 
+  LOCK ();
+
   bool have_one = false;
   for (i = 0; i < total; i ++)
     {
@@ -642,6 +651,8 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 	  g_mutex_unlock (db->work_lock);
 	}
     }
+
+  UNLOCK ();
 
   if (have_one)
     g_cond_signal (db->work_cond);
@@ -1168,8 +1179,12 @@ music_db_set_info_internal (MusicDB *db, sqlite *sqliteh,
     {
       simple_cache_shootdown (&info_cache, uid);
 
+      LOCK ();
+
       g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->changed_entry_signal_id, 0,
 		     uid);
+
+      UNLOCK ();
     }
 }
 
@@ -1633,9 +1648,14 @@ status_update (MusicDB *db)
 			       files_pending,
 			       files_pending > 1 ? "files" : "file");
 
+  LOCK ();
+
   g_signal_emit (db,
 		 MUSIC_DB_GET_CLASS (db)->status_signal_id,
 		 0, message);
+
+  UNLOCK ();
+
   g_free (message);
 
   return message ? TRUE : FALSE;
@@ -1940,9 +1960,12 @@ worker_thread (gpointer data)
 	  else
 	    {
 	      simple_cache_shootdown (&info_cache, track->uid);
+
+	      LOCK ();
 	      g_signal_emit (db,
 			     MUSIC_DB_GET_CLASS (db)->deleted_entry_signal_id,
 			     0, track->uid);
+	      UNLOCK ();
 	    }
 
 	}

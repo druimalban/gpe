@@ -110,6 +110,10 @@ main (int argc, char *argv[])
   bindtextdomain (PACKAGE, PACKAGE_LOCALE_DIR);
   textdomain (PACKAGE);
 
+  if (! g_thread_supported ())
+    g_thread_init (NULL);
+  gdk_threads_init ();
+
 #ifdef ENABLE_GPE
   gpe_application_init (&argc, &argv);
 #else
@@ -152,7 +156,9 @@ main (int argc, char *argv[])
 
   st = starling_run ();
 
-  gtk_main();
+  gdk_threads_enter ();
+  gtk_main ();
+  gdk_threads_leave ();
 
   return 0;
 }
