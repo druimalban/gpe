@@ -39,8 +39,12 @@ struct _Player {
 
   GstElement *playbin;
   GstState last_state;
+  double volume;
+  char *sink;
 
   void *cookie;
+
+  guint bus_watch;
 };
 
 static void player_dispose (GObject *obj);
@@ -95,6 +99,8 @@ player_init (Player *pl)
       gst_init (NULL, NULL);
       gst_init_init = 1;
     }
+
+  pl->volume = -1;
 }
 
 static void
@@ -258,14 +264,36 @@ playbin_ensure (Player *pl)
 	}
 
       GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pl->playbin));
-      gst_bus_add_watch (bus, player_bus_cb, pl);
+      pl->bus_watch = gst_bus_add_watch (bus, player_bus_cb, pl);
       gst_object_unref (bus);
+
+      if (pl->volume >= 0)
+	g_object_set (G_OBJECT (pl->playbin), "volume", pl->volume, NULL);
     }
+}
+
+static void
+playbin_recreate (Player *pl)
+{
+  if (pl->playbin)
+    {
+      gst_element_set_state (pl->playbin, GST_STATE_NULL);
+
+      g_source_remove (pl->bus_watch);
+      g_object_unref (pl->playbin);
+      pl->playbin = 0;
+    }
+
+  playbin_ensure (pl);
 }
 
 gboolean
 player_set_sink (Player *pl, const gchar *sink)
 {
+  if (pl->sink)
+    g_free (pl->sink);
+  pl->sink = sink ? g_strdup (sink) : NULL;
+
   GstElement *audiosink = gst_element_factory_make (sink, "sink");
   if (! audiosink)
     return FALSE;
@@ -282,9 +310,7 @@ player_set_source (Player *pl, const char *source, gpointer cookie)
 {
   pl->cookie = cookie;
 
-  playbin_ensure (pl);
-
-  gst_element_set_state (pl->playbin, GST_STATE_NULL);
+  playbin_recreate (pl);
 
   if (*source == '/')
     /* It's a filename.  Create a URI.  */
@@ -326,20 +352,16 @@ player_get_source (Player *pl, void **cookie)
 double
 player_get_volume (Player *pl)
 {
-  playbin_ensure (pl);
-
-  double volume;
-  g_object_get (G_OBJECT (pl->playbin), "volume", &volume, NULL);
-
-  return volume;
+  return pl->volume;
 }
 
 gboolean
 player_set_volume (Player *pl, double volume)
 {
-  playbin_ensure (pl);
+  pl->volume = volume;
 
-  g_object_set (G_OBJECT (pl->playbin), "volume", volume, NULL);
+  if (pl->playbin)
+    g_object_set (G_OBJECT (pl->playbin), "volume", volume, NULL);
 }
 
 gboolean

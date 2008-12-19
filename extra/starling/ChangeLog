@@ -1,5 +1,20 @@
 2008-12-19  Neal H. Walfield  <neal@gnu.org>
 
+	* src/player.c (struct _Player): New fields volume, sink and
+	bus_watch.
+	(player_init): Set PL->VOLUME to -1.
+	(playbin_ensure): Save the bus callback's identifier in
+	PL->BUS_WATCH.  If PL->VOLUME >= 0, set PL->PLAYBIN's "volume"
+	property.
+	(playbin_recreate): New function.
+	(player_set_source): Don't call playbin_ensure but
+	playbin_recreate.
+	(player_get_volume): Just return PL->VOLUME.
+	(player_set_volume): Don't call playbin_ensure.  Save VOLUME in
+	PL->VOLUME.  Only set the volume if PL->PLAYBIN is not NULL.
+
+2008-12-19  Neal H. Walfield  <neal@gnu.org>
+
 	* src/main.c (main): Call g_thread_init and gdk_threads_init.
 	Surround gtk_main with a call to gdk_threads_enter and
 	gdk_threads_leave.
