@@ -1,5 +1,10 @@
 2008-12-20  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (worker_thread): Avoid scanning files multiple
+	times.
+
+2008-12-20  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.h: Include <stdint.h>.
 	(MDB_SIZE): Define.
 	(struct music_db_info): Add field size.
@@ -7,7 +12,6 @@
 	(music_db_create_table): Create columns uid, md5 and size.
 	(music_db_get_info_internal): Set INFO->SIZE if appropriate.
 	(meta_data_reader): Save the track's size.
-	(worker_thread): Avoid scanning files multiple times.
 
 2008-12-19  Neal H. Walfield  <neal@gnu.org>
 

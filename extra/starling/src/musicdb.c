@@ -1923,6 +1923,9 @@ worker_thread (gpointer data)
     char *filename;
     int uid;
     time_t mtime;
+    off64_t size;
+    bool removed;
+    bool tags_updated;
   };
 
   int check_dead_cb (void *arg, int argc, char **argv, char **names)
@@ -1931,6 +1934,9 @@ worker_thread (gpointer data)
     track->uid = atoi (argv[0]);
     track->filename = g_strdup (argv[1]);
     track->mtime = argv[2] ? atoi (argv[2]) : 0;
+    track->size = argv[3] ? atoll (argv[3]) : 0;
+    track->removed = argv[4] ? true : false;
+    track->tags_updated = argv[5] ? true : false;
 
     g_queue_push_tail (q, track);
 
@@ -1939,8 +1945,9 @@ worker_thread (gpointer data)
 
   char *err = NULL;
   sqlite_exec (sqliteh,
-	       "select ROWID, source, mtime from files"
-	       " where removed isnull and source like '/%';",
+	       "select ROWID, source, mtime, size, removed, date_tags_updated"
+	       " from files"
+	       " where source like '/%';",
 	       check_dead_cb, NULL, &err);
   if (err)
     {
@@ -1958,31 +1965,45 @@ worker_thread (gpointer data)
       if (ret < 0)
 	/* File cannot be stated.  Mark it as missing.  */
 	{
-	  sqlite_exec_printf (sqliteh,
-			      "update files"
-			      " set removed = strftime('%%s', 'now')"
-			      " where ROWID = %d;",
-			      NULL, NULL, &err, track->uid);
-	  if (err)
+	  if (! track->removed)
+	    /* It's already been marked as removed.  Ignore.  */
 	    {
-	      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-	      sqlite_freemem (err);
-	    }
-	  else
-	    {
-	      simple_cache_shootdown (&info_cache, track->uid);
+	      sqlite_exec_printf (sqliteh,
+				  "update files"
+				  " set removed = strftime('%%s', 'now')"
+				  " where ROWID = %d;",
+				  NULL, NULL, &err, track->uid);
+	      if (err)
+		{
+		  g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+		  sqlite_freemem (err);
+		}
+	      else
+		{
+		  simple_cache_shootdown (&info_cache, track->uid);
 
-	      LOCK ();
-	      g_signal_emit (db,
-			     MUSIC_DB_GET_CLASS (db)->deleted_entry_signal_id,
-			     0, track->uid);
-	      UNLOCK ();
+		  LOCK ();
+		  g_signal_emit
+		    (db, MUSIC_DB_GET_CLASS (db)->deleted_entry_signal_id,
+		     0, track->uid);
+		  UNLOCK ();
+		}
 	    }
-
 	}
-      else if (track->mtime && st.st_mtime != track->mtime)
-	/* mtime changed.  Rescan tags.  (We ignore for which the
-	   mtime is NULL.  We'll add those below.)  */
+      else if (/* It was marked as removed but now, it's back.  */
+	       track->removed
+	       /* The tags have never been updated.  */
+	       || ! track->tags_updated
+	       /* The modification time has changed.  */
+	       || (track->mtime && st.st_mtime != track->mtime
+		   /* If mtime == atime == ctime, then we are likely
+		      on a fat file system and this just means that */
+		   && (st.st_mtime != st.st_atime
+		       || st.st_mtime != st.st_ctime))
+	       /* The file size has changed.  */
+	       || track->size != st.st_size)
+	/* mtime or size changed.  Rescan tags.  (We ignore the case
+	   for which the mtime is NULL.  We'll add those below.)  */
 	{
 	  int *uidp = malloc (sizeof (int));
 	  *uidp = track->uid;
@@ -2023,28 +2044,6 @@ worker_thread (gpointer data)
   g_queue_free (q);
 
   g_mutex_lock (db->work_lock);
-
-
-  /* Find entries for which tags have not been read.  */
-  int no_tags_cb (void *arg, int argc, char **argv, char **names)
-  {
-    int *uidp = malloc (sizeof (int));
-    *uidp = atoi (argv[0]);
-    g_queue_push_tail (db->meta_data_pending, uidp);
-    return 0;
-  }
-  err = NULL;
-  sqlite_exec_printf (sqliteh,
-		      "select (ROWID) from files "
-		      "  where date_tags_updated isnull"
-		      "    and substr (source, 1, 1) = '/';",
-		      no_tags_cb, NULL, &err);
-  if (err)
-    {
-      g_debug ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-      sqlite_freemem (err);
-    }
-
 
   /* Wait for work.  */
   while (! db->exit)
