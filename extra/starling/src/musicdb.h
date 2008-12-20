@@ -28,6 +28,7 @@
 #include <gst/gstformat.h>
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #include <config.h>
 
@@ -150,6 +151,7 @@ enum mdb_fields
     MDB_VOLUME_NUMBER = 1 << 15,
     MDB_VOLUME_COUNT = 1 << 16,
     MDB_PERFORMER = 1 << 17,
+    MDB_SIZE = 1 << 18,
 
     /* These take precedent of the simple set variants.  */
     MDB_INC_PLAY_COUNT = 1 << 29,
@@ -184,6 +186,8 @@ struct music_db_info
 
   /* Source's last modification time.  */
   time_t mtime;
+  /* The file size.  */
+  uint64_t size;
 };
 
 /** music_db_get_info:

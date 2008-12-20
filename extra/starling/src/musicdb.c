@@ -73,6 +73,7 @@ struct info_cache_entry
   int rating;
 
   time_t mtime;
+  off64_t size;
 };
 
 void
@@ -292,7 +293,9 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
   sqlite_exec (db->sqliteh,
 	       /* Create the main table for the files.  */
 	       "create table files "
-	       " (source STRING NOT NULL UNIQUE, "
+	       " (uid INTEGER PRIMARY KEY, "
+	       "  md5 STRING, "
+	       "  source STRING NOT NULL UNIQUE, "
 	       /* Metadata.  */ 
 	       "  artist STRING COLLATE NOCASE, "
 	       "  album STRING COLLATE NOCASE, "
@@ -317,6 +320,7 @@ music_db_create_table (MusicDB *db, gboolean drop_first, GError **error)
 	       "  removed INTEGER,"
 
 	       /* To determine if the information is up to date.  */
+	       "  size INTEGER,"
 	       "  mtime INTEGER);"
 
 	       /* Create the table for the directories.  */
@@ -1028,6 +1032,8 @@ music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
     info->present = e->present;
   if ((info->fields & MDB_MTIME))
     info->mtime = e->mtime;
+  if ((info->fields & MDB_SIZE))
+    info->size = e->size;
   if ((info->fields & MDB_DATE))
     info->date = e->date ? g_strdup (e->date) : NULL;
   if ((info->fields & MDB_VOLUME_NUMBER))
@@ -1159,6 +1165,8 @@ music_db_set_info_internal (MusicDB *db, sqlite *sqliteh,
 
   if ((info->fields & MDB_MTIME))
     munge_int ("mtime", info->mtime);
+  if ((info->fields & MDB_SIZE))
+    munge_int ("size", info->size);
 
   obstack_printf (&sql, " where ROWID = %d;", uid);
 
@@ -1683,6 +1691,7 @@ new_decoded_pad (GstElement *decodebin, GstPad *pad,
 
   /* only link once */
   audiopad = gst_element_get_pad (GST_ELEMENT (data), "sink");
+  g_assert (audiopad);
   if (GST_PAD_IS_LINKED (audiopad))
     {
       g_object_unref (audiopad);
@@ -1691,6 +1700,7 @@ new_decoded_pad (GstElement *decodebin, GstPad *pad,
 
   /* check media type */
   caps = gst_pad_get_caps (pad);
+  g_assert (caps);
   str = gst_caps_get_structure (caps, 0);
   if (!g_strrstr (gst_structure_get_name (str), "audio"))
     {
@@ -1880,8 +1890,9 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 	  int ret = g_stat (source, &st);
 	  if (ret == 0)
 	    {
-	      info.fields |= MDB_MTIME;
+	      info.fields |= MDB_MTIME | MDB_SIZE;
 	      info.mtime = st.st_mtime;
+	      info.size = st.st_size;
 	    }
 
 	  music_db_set_info_internal (db, sqliteh, uid, &info);
