@@ -1,3 +1,8 @@
+
+2008-12-20  Florian Boor <florian@kernelconcepts.de>
+
+	* deviceinfo, device.h: Add Toshiba Topas board
+
 2008-12-19  Florian Boor <florian@kernelconcepts.de>
 
 	* deviceinfo, device.h: Add skeye.pad POS

@@ -41,6 +41,7 @@ typedef enum
 	DEV_N810,
 	DEV_BEAGLEBOARD,
 	DEV_HW_SKEYEPADPOS,
+	DEV_TOPAS,
 	DEV_MAX
 } DeviceID_t;
 

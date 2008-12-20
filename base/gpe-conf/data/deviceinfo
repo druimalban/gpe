@@ -330,10 +330,18 @@ Features = 0x22
 
 [skeye.pad POS]
 ID = 37
-Pattern =  Hoeft&Wessel skeye.pad POS aka Almex mobile
+Pattern = Hoeft&Wessel skeye.pad POS aka Almex mobile
 Name = skeye.pad POS / Almex Mobile
 Model =
 Type = pad
 Manufacturer = Höft&Wessel
 Features = 0x04
 
+[Topas 910]
+ID = 38
+Pattern = Toshiba Topas910
+Name = Toshiba Topas910
+Model =
+Type = eval
+Manufacturer = Toshiba
+Features = 0x21
