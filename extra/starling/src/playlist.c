@@ -218,7 +218,8 @@ do_refresh (gpointer data)
     return 0;
   }
   enum mdb_fields library_order[]
-    = { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
+    = { MDB_ARTIST, MDB_ALBUM, MDB_VOLUME_NUMBER, MDB_TRACK, 
+	MDB_TITLE, MDB_SOURCE, 0 };
   music_db_for_each (pl->db, pl->list, cb,
 		     pl->list ? NULL : library_order,
 		     pl->constraint);

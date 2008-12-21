@@ -1493,6 +1493,10 @@ music_db_for_each (MusicDB *db, const char *list,
 	      s = "track";
 	      is_string = false;
 	      break;
+	    case MDB_VOLUME_NUMBER:
+	      s = "volume_number";
+	      is_string = false;
+	      break;
 	    case MDB_TITLE:
 	      s = "title";
 	      break;

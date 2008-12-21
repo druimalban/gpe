@@ -1,5 +1,10 @@
 2008-12-21  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (music_db_for_each): Handle MDB_VOLUME_NUMBER.
+	* src/playlist.c (do_refresh): Sort by volume number.
+
+2008-12-21  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (LOCK): Don't take the lock if the thread is the
 	current thread is the main thread.
 	(UNLOCK): Likewise.
