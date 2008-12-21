@@ -1,5 +1,11 @@
 2008-12-21  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (LOCK): Don't take the lock if the thread is the
+	current thread is the main thread.
+	(UNLOCK): Likewise.
+
+2008-12-21  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (meta_data_reader): More robustly unreference
 	MSG.  Always update a track's stats.
 

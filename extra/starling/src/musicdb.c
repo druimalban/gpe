@@ -35,11 +35,15 @@
 extern void gdk_threads_enter () __attribute__ ((weak));
 extern void gdk_threads_leave () __attribute__ ((weak));
 
-#define LOCK()					\
-  if (&gdk_threads_enter)			\
+/* The main thread.  We track it so that we can make some
+   assertions.  */
+static GThread *main_thread;
+
+#define LOCK()							\
+  if (&gdk_threads_enter && g_thread_self () != main_thread)	\
     gdk_threads_enter ();
 #define UNLOCK()				\
-  if (&gdk_threads_leave)			\
+  if (&gdk_threads_leave && g_thread_self () != main_thread)	\
     gdk_threads_leave ();
 
 #define obstack_chunk_alloc g_malloc
@@ -101,10 +105,6 @@ info_cache_constructor (void)
 {
   simple_cache_init (&info_cache, info_cache_evict);
 }
-
-/* The main thread.  We track it so that we can make some
-   assertions.  */
-static GThread *main_thread;
 
 struct sig
 {
