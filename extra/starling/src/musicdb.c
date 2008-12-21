@@ -1891,10 +1891,14 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 	}
 
       GstMessage *msg = NULL;
+      time_t start = time (NULL);
       for (;;)
 	{
 	  if (msg)
 	    gst_message_unref (msg);
+
+	  if (time (NULL) - start > 3)
+	    break;
 
 	  msg = gst_bus_timed_pop_filtered
 	    (bus,

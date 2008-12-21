@@ -1,5 +1,10 @@
 2008-12-21  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (meta_data_reader): Spend at most 3 seconds on any
+	given song.
+
+2008-12-21  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c: Include <assert.h>.
 	(main_thread): New variable.
 	(struct sig): New structure.
