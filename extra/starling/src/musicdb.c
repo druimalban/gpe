@@ -2013,6 +2013,7 @@ worker_thread (gpointer data)
     char *filename;
     int uid;
     time_t mtime;
+    time_t last_played;
     off64_t size;
     bool removed;
     bool tags_updated;
@@ -2024,9 +2025,10 @@ worker_thread (gpointer data)
     track->uid = atoi (argv[0]);
     track->filename = g_strdup (argv[1]);
     track->mtime = argv[2] ? atoi (argv[2]) : 0;
-    track->size = argv[3] ? atoll (argv[3]) : 0;
-    track->removed = argv[4] ? true : false;
-    track->tags_updated = argv[5] ? true : false;
+    track->last_played = argv[3] ? atoi (argv[3]) : 0;
+    track->size = argv[4] ? atoll (argv[4]) : 0;
+    track->removed = argv[5] ? true : false;
+    track->tags_updated = argv[6] ? true : false;
 
     g_queue_push_tail (q, track);
 
@@ -2035,7 +2037,8 @@ worker_thread (gpointer data)
 
   char *err = NULL;
   sqlite_exec (sqliteh,
-	       "select ROWID, source, mtime, size, removed, date_tags_updated"
+	       "select ROWID, source, mtime, date_last_played, size, "
+	       " removed, date_tags_updated"
 	       " from files"
 	       " where source like '/%';",
 	       check_dead_cb, NULL, &err);
@@ -2084,10 +2087,11 @@ worker_thread (gpointer data)
 	       || ! track->tags_updated
 	       /* The modification time has changed.  */
 	       || (track->mtime && st.st_mtime != track->mtime
-		   /* If mtime == atime == ctime, then we are likely
-		      on a fat file system and this just means that */
-		   && (st.st_mtime != st.st_atime
-		       || st.st_mtime != st.st_ctime))
+		   /* If mtime ~= last played time, then we are likely
+		      on a fat file system.  Ignore it.  */
+		   && ! (track->last_played > st.st_mtime
+			 ? track->last_played - st.st_mtime
+			 : st.st_mtime - track->last_played < 5))
 	       /* The file size has changed.  */
 	       || track->size != st.st_size)
 	/* mtime or size changed.  Rescan tags.  (We ignore the case
@@ -2098,12 +2102,13 @@ worker_thread (gpointer data)
 	    g_debug ("%s removed", track->filename);
 	  if (! track->tags_updated)
 	    g_debug ("%s !tags_updated", track->filename);
-	  if ((track->mtime && st.st_mtime != track->mtime
-	       && (st.st_mtime != st.st_atime
-		   || st.st_mtime != st.st_ctime)))
-	    g_debug ("%s: mtime (%u, %u, %u, %u)",
-		     track->filename,
-		     track->mtime, st.st_mtime, st.st_atime, st.st_ctime);
+	  if (track->mtime && st.st_mtime != track->mtime
+	      && ! (track->last_played > st.st_mtime
+		    ? track->last_played - st.st_mtime
+		    : st.st_mtime - track->last_played < 5))
+	    g_debug ("%s: mtime (%u, %u; %u)",
+		     track->filename, track->mtime, st.st_mtime,
+		     track->last_played);
 	  if (track->size != st.st_size)
 	    g_debug ("%s: size %d -> %d",
 		     track->filename, (int) track->size, (int) st.st_size);

@@ -1,5 +1,9 @@
 2008-12-21  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (worker_thread): Improve FAT detection heuristic.
+	
+2008-12-21  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_for_each): Handle MDB_VOLUME_NUMBER.
 	* src/playlist.c (do_refresh): Sort by volume number.
 
