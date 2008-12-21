@@ -1,3 +1,23 @@
+2008-12-21  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c: Include <assert.h>.
+	(main_thread): New variable.
+	(struct sig): New structure.
+	(struct _MusicDB): Add fields signal_id, signal_queue and
+	signal_lock.
+	(signals_flush): New function.
+	(signal_schedule): Likewise.
+	(music_db_init): Initialize main_thread, db->signal_lock and
+	db->signal_queue.
+	(music_db_finalize): Free them.
+	(music_db_add): Don't call g_signal_emit, instead use
+	signal_schedule.
+	(music_db_set_info_internal): Likewise.
+	(worker_thread): Likewise.
+
+	(status_kick): Call LOCK() before calling g_timeout_add using and
+	UNLOCK() afterwards.
+
 2008-12-20  Neal H. Walfield  <neal@gnu.org>
 
 	* src/musicdb.c (worker_thread): Avoid scanning files multiple

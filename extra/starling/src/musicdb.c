@@ -30,6 +30,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <gst/gst.h>
+#include <assert.h>
 
 extern void gdk_threads_enter () __attribute__ ((weak));
 extern void gdk_threads_leave () __attribute__ ((weak));
@@ -101,6 +102,16 @@ info_cache_constructor (void)
   simple_cache_init (&info_cache, info_cache_evict);
 }
 
+/* The main thread.  We track it so that we can make some
+   assertions.  */
+static GThread *main_thread;
+
+struct sig
+{
+  int sig_id;
+  int uid;
+};
+
 struct _MusicDB
 {
   GObject parent;
@@ -125,8 +136,63 @@ struct _MusicDB
 
   /* If non-zero, the source id of the status handler.  */
   guint status_source;
-};
 
+  /* We don't want to emit signals in the worker thread.  However, the
+     worker thread needs to cause new entry signals, deleted entry
+     signals and change entry signals to be emitted.  We add these to
+     a queue and and schedule an flush via g_idle_add.  */
+  int signal_id;
+  GQueue *signal_queue;
+  GMutex *signal_lock;
+};
+
+static gboolean
+signals_flush (gpointer data)
+{
+  MusicDB *db = MUSIC_DB (data);
+
+  assert (g_thread_self () == main_thread);
+
+  g_mutex_lock (db->signal_lock);
+  while (! g_queue_is_empty (db->signal_queue))
+    {
+      struct sig *sig = g_queue_pop_head (db->signal_queue);
+      g_mutex_unlock (db->signal_lock);
+
+      g_signal_emit (db, sig->sig_id, 0, sig->uid);
+
+      free (sig);
+
+      g_mutex_lock (db->signal_lock);
+    }
+  db->signal_id = 0;
+
+  g_mutex_unlock (db->signal_lock);
+
+  return FALSE;
+}
+
+static void
+signal_schedule (MusicDB *db, int sig_id, int uid)
+{
+  struct sig *sig;
+
+  sig = malloc (sizeof (*sig));
+  sig->sig_id = sig_id;
+  sig->uid = uid;
+
+  g_mutex_lock (db->signal_lock);
+  g_queue_push_tail (db->signal_queue, sig);
+
+  if (! db->signal_id)
+    {
+      LOCK ();
+      db->signal_id = g_idle_add (signals_flush, db);
+      UNLOCK ();
+    }
+  g_mutex_unlock (db->signal_lock);
+}
+
 static void music_db_dispose (GObject *obj);
 static void music_db_finalize (GObject *object);
 
@@ -209,6 +275,11 @@ music_db_init (MusicDB *db)
   db->work_cond = g_cond_new ();
   db->meta_data_pending = g_queue_new ();
   db->dirs_pending = g_queue_new ();
+
+  db->signal_lock = g_mutex_new ();
+  db->signal_queue = g_queue_new ();
+
+  main_thread = g_thread_self ();
 }
 
 static void
@@ -256,6 +327,16 @@ music_db_finalize (GObject *object)
     }
   while (d);
   g_queue_free (db->dirs_pending);
+
+  g_mutex_free (db->signal_lock);
+  struct sig *sig;
+  do
+    {
+      sig = g_queue_pop_head (db->signal_queue);
+      g_free (sig);
+    }
+  while (sig);
+  g_queue_free (db->signal_queue);
 
 
   if (db->sqliteh)
@@ -634,13 +715,11 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
     /* Nothing to do.  */
     return;
 
-  LOCK ();
-
   bool have_one = false;
   for (i = 0; i < total; i ++)
     {
-      g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->new_entry_signal_id, 0,
-		     uids[i]);
+      signal_schedule (db, MUSIC_DB_GET_CLASS (db)->new_entry_signal_id,
+		       uids[i]);
 
       /* Queue the file in the meta-data crawler (if appropriate).  */
       if (crawl[i] && s[i][0] == '/')
@@ -655,8 +734,6 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 	  g_mutex_unlock (db->work_lock);
 	}
     }
-
-  UNLOCK ();
 
   if (have_one)
     g_cond_signal (db->work_cond);
@@ -1187,12 +1264,8 @@ music_db_set_info_internal (MusicDB *db, sqlite *sqliteh,
     {
       simple_cache_shootdown (&info_cache, uid);
 
-      LOCK ();
-
-      g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->changed_entry_signal_id, 0,
-		     uid);
-
-      UNLOCK ();
+      signal_schedule (db, MUSIC_DB_GET_CLASS (db)->changed_entry_signal_id,
+		       uid);
     }
 }
 
@@ -1362,6 +1435,8 @@ music_db_for_each (MusicDB *db, const char *list,
 		   enum mdb_fields *order,
 		   const char *constraint)
 {
+  assert (g_thread_self () == main_thread);
+
   if (constraint && ! *constraint)
     constraint = NULL;
 
@@ -1656,17 +1731,19 @@ status_update (MusicDB *db)
 			       files_pending,
 			       files_pending > 1 ? "files" : "file");
 
-  LOCK ();
-
   g_signal_emit (db,
 		 MUSIC_DB_GET_CLASS (db)->status_signal_id,
 		 0, message);
 
-  UNLOCK ();
-
   g_free (message);
 
-  return message ? TRUE : FALSE;
+  if (! message)
+    {
+      db->status_source = 0;
+      return FALSE;
+    }
+  else
+    return TRUE;
 }
 
 static void
@@ -1677,8 +1754,9 @@ status_kick (MusicDB *db)
 
   status_update (db);
   /* Update once every half a second.  */
-  db->status_source = g_timeout_add (500,
-				     (GSourceFunc) status_update, db);
+  LOCK ();
+  db->status_source = g_timeout_add (500, (GSourceFunc) status_update, db);
+  UNLOCK ();
 }
 
 static void
@@ -1982,11 +2060,9 @@ worker_thread (gpointer data)
 		{
 		  simple_cache_shootdown (&info_cache, track->uid);
 
-		  LOCK ();
-		  g_signal_emit
+		  signal_schedule
 		    (db, MUSIC_DB_GET_CLASS (db)->deleted_entry_signal_id,
-		     0, track->uid);
-		  UNLOCK ();
+		     track->uid);
 		}
 	    }
 	}
