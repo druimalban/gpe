@@ -1895,7 +1895,10 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
       for (;;)
 	{
 	  if (msg)
-	    gst_message_unref (msg);
+	    {
+	      gst_message_unref (msg);
+	      msg = NULL;
+	    }
 
 	  if (time (NULL) - start > 3)
 	    break;
@@ -1965,22 +1968,23 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 	    }
 
 	  gst_message_unref (msg);
-
-	  info.fields = MDB_UPDATE_DATE_TAGS_UPDATED;
-
-	  struct stat st;
-	  int ret = g_stat (source, &st);
-	  if (ret == 0)
-	    {
-	      info.fields |= MDB_MTIME | MDB_SIZE;
-	      info.mtime = st.st_mtime;
-	      info.size = st.st_size;
-	    }
-
-	  music_db_set_info_internal (db, sqliteh, uid, &info);
-
+	  msg = NULL;
 	  break;
 	}
+
+
+      info.fields = MDB_UPDATE_DATE_TAGS_UPDATED;
+
+      struct stat st;
+      int ret = g_stat (source, &st);
+      if (ret == 0)
+	{
+	  info.fields |= MDB_MTIME | MDB_SIZE;
+	  info.mtime = st.st_mtime;
+	  info.size = st.st_size;
+	}
+
+      music_db_set_info_internal (db, sqliteh, uid, &info);
 
       g_free (source);
 
@@ -2085,6 +2089,22 @@ worker_thread (gpointer data)
 	/* mtime or size changed.  Rescan tags.  (We ignore the case
 	   for which the mtime is NULL.  We'll add those below.)  */
 	{
+#if 0
+	  if (track->removed)
+	    g_debug ("%s removed", track->filename);
+	  if (! track->tags_updated)
+	    g_debug ("%s !tags_updated", track->filename);
+	  if ((track->mtime && st.st_mtime != track->mtime
+	       && (st.st_mtime != st.st_atime
+		   || st.st_mtime != st.st_ctime)))
+	    g_debug ("%s: mtime (%u, %u, %u, %u)",
+		     track->filename,
+		     track->mtime, st.st_mtime, st.st_atime, st.st_ctime);
+	  if (track->size != st.st_size)
+	    g_debug ("%s: size %d -> %d",
+		     track->filename, (int) track->size, (int) st.st_size);
+#endif
+
 	  int *uidp = malloc (sizeof (int));
 	  *uidp = track->uid;
 
