@@ -2,6 +2,9 @@
 
 MACHINE=`awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo`
 
+# since kdrive 1.4 there is no default keymap in server
+xmodmap - </etc/X11/default.xmodmap
+
 case $MACHINE in
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
 		xmodmap - < /etc/X11/shepherd.xmodmap

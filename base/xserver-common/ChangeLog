@@ -1,3 +1,12 @@
+2009-01-06  Florian Boor <florian@kernelconcepts.de>
+
+	* Apply patches from OE
+          - Install default xmodmap (for kdrive 1.4)
+	  - Add workaround for random key mapping failure. 
+	  - Changes in argument support and requirements.
+	  - Improve Xorg support 
+	  - Fix Xorg support for GTA01 and GTA02
+
 2008-03-04  Florian Boor <florian@kernelconcepts.de>
 
 	* Release 1.22
