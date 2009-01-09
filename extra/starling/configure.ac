@@ -1,4 +1,4 @@
-AC_INIT(starling, 0.9.2,[gpe-list@linuxtogo.org])
+AC_INIT(starling, 0.9.9,[gpe-list@linuxtogo.org])
 AC_CONFIG_SRCDIR([src/starling.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AC_PROG_INSTALL
