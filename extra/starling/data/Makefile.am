@@ -15,10 +15,11 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
 pixmapdir = $(datadir)/pixmaps
-pixmap_DATA = bass.png
+dist_pixmap_DATA = bass.png bass-20x20.png bass-26x26.png bass-40x40.png \
+	bass-48x48.png bass-64x64.png
 
 bass.png: bass-20x20.png
-	cp $< $@
+	ln -sf $< $@
 
 iconsdir = $(datadir)/icons/hicolor
 

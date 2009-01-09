@@ -1,3 +1,10 @@
+2009-01-09  Neal H. Walfield  <neal@gnu.org>
+
+	* data/Makefile.am (pixmap_DATA): Rename from this...
+	(dist_pixmap_DATA): ... to this.  Add bass-20x20.png,
+	bass-26x26.png, bass-40x40.png, bass-48x48.png and bass-64x64.png.
+	(bass.png): Don't copy the source, link to it.
+
 2008-12-21  Neal H. Walfield  <neal@gnu.org>
 
 	* src/musicdb.c (worker_thread): Improve FAT detection heuristic.
