@@ -645,8 +645,9 @@ mimedir_vcard_set_property (GObject		*object,
 		priv->nickname = mimedir_vcard_copy_string_list ((GSList *) g_value_get_pointer (value));
 		break;
 	case PROP_NICKNAME:
-	  /* Setting the Nickname attribute results in the specified nickname being prepended to the list */
-		priv->nickname = g_slist_prepend(priv->nickname, value);
+	  /* Setting the Nickname attribute replaces the list with the comma-separated nicknames */
+		mimedir_utils_free_string_slist (priv->nickname);
+		priv->nickname = mimedir_vcard_strsplit (g_value_get_string (value), ",");
 		break;
 	case PROP_PHOTO:
 		g_string_free (priv->photo, TRUE);
@@ -868,11 +869,9 @@ mimedir_vcard_get_property (GObject	*object,
 		g_value_set_pointer (value, priv->nickname);
 		break;
 	case PROP_NICKNAME:
-		if (priv->nickname)
-			s = (const gchar *) priv->nickname->data;
-		else
-			s = NULL;
-		g_value_set_string (value, s);
+		str = mimedir_vcard_strjoin (", ", priv->nickname);
+		g_value_set_string (value, str);
+		g_free (str);
 		break;
 	case PROP_PHOTO:
 		g_value_set_pointer (value, priv->photo);
@@ -1925,15 +1924,18 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 
 		/* Nick Name (3.1.3) */
 		else if (!g_ascii_strcasecmp (name, "NICKNAME")) {
-			GSList *list;
+			GSList *attr_list, *copy_list;
 
-			list = mimedir_attribute_get_value_text_list (attr, &err);
+			attr_list = mimedir_attribute_get_value_text_list (attr, &err);
 			if (err) {
 				g_propagate_error (error, err);
 				return FALSE;
 			}
+			
+			copy_list = mimedir_vcard_copy_string_list (attr_list);
+			mimedir_attribute_free_list (attr_list);
 
-			priv->nickname = g_slist_concat (priv->nickname, list);
+			priv->nickname = g_slist_concat (priv->nickname, copy_list);
 		}
 
 		/* Photo (3.1.4) */
@@ -2231,15 +2233,18 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 
 		/* Categories (3.6.1) */
 		else if (!g_ascii_strcasecmp (name, "CATEGORIES")) {
-			GSList *list;
+			GSList *attr_list, *copy_list;
 
-			list = mimedir_attribute_get_value_text_list (attr, &err);
+			attr_list = mimedir_attribute_get_value_text_list (attr, &err);
 			if (err) {
 				g_propagate_error (error, err);
 				return FALSE;
 			}
 
-			priv->categories = g_slist_concat (priv->categories, list);
+			copy_list = mimedir_vcard_copy_string_list (attr_list);
+			mimedir_attribute_free_list (attr_list);
+
+			priv->categories = g_slist_concat (priv->categories, copy_list);
 		}
 
 		/* Note (3.6.2) */
@@ -2569,7 +2574,7 @@ mimedir_vcard_write_to_profile (MIMEDirVCard *vcard)
 	/* Nick Name (3.1.3) */
 
 	if (priv->nickname) {
-		attr = mimedir_attribute_new_with_name ("N");
+		attr = mimedir_attribute_new_with_name ("NICKNAME");
 		mimedir_attribute_set_value_text_list (attr, priv->nickname);
 		mimedir_profile_append_attribute (profile, attr);
 		g_object_unref (G_OBJECT (attr));

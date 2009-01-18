@@ -1,3 +1,11 @@
+2009-01-18  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-vcard.c (mimedir_vcard_write_to_profile): Fix output field for Nickname
+	(mimedir_vcard_set_property): Setting "nickname" replaces list with comma-separated list
+	(mimedir_vcard_read_from_profile): Copy nickname list before appending it
+	(mimedir_vcard_read_from_profile): Copy categories list before appending it
+	(mimedir_vcard_get_property): Getting "nickname" returns comma-separated list
+
 2008-08-22  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-utils.c & .h (mimedir_utils_is_token_char): Take g_unichar argument.
