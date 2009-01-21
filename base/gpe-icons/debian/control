@@ -7,7 +7,7 @@ Standards-Version: 3.5.2
 
 Package: gpe-icons
 Architecture: all
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends} ${misc:Depends}
 Description: Common icons used by GPE programs
  This package contains the default icon theme used by the core applications of
  the GPE Palmtop Environment.
