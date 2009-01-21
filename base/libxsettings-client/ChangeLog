@@ -1,3 +1,7 @@
+2009-01-21  Graham Cobb  <g+770@cobb.uk.net>
+
+	* debian/compat: Move to debhelper compat level 4
+
 2007-03-14  Graham Cobb  <g+gpe@cobb.uk.net>
 
 	* debian/control: Correct dependencies and description
