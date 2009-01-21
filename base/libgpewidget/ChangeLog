@@ -1,3 +1,11 @@
+2009-01-21  Graham Cobb  <g+770@cobb.uk.net>
+
+	* debian/control (Depends): Add ${misc:Depends} (dh compat level 4)
+
+	* debian/rules: Remove debhelper compatability 3
+
+	* debian/compat: Add file to specify compatability level 4
+
 2008-09-06  Phil Blundell  <pb@reciva.com>
 
 	* po/da.po: Update from TP.

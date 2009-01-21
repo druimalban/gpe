@@ -16,7 +16,7 @@ Description: Development files for libgpewidget
 Package: libgpewidget1
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends} ${misc:Depends}
 Suggests: gpe-icons
 Description: GPE Palmtop Environment widget library
  This library contains Gtk+ widgets and other common code shared by
