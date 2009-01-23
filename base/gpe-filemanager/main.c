@@ -341,7 +341,7 @@ show_message(GtkMessageType type, char* message)
 					 GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 					 type,
 					 GTK_BUTTONS_OK,
-					 message);
+					 "%s", message);
 	gtk_dialog_run (GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
 }
@@ -624,6 +624,8 @@ popup_ask_rename_file ()
   GtkWidget *vbox, *label, *entry, *btnok;
   gchar *label_text;
 
+  g_return_if_fail(current_popup_file->vfs);
+
   label_text = g_strdup_printf ("%s %s %s", _("Rename file"), 
                                 current_popup_file->vfs->name, _("to:"));
 
@@ -649,6 +651,8 @@ popup_ask_rename_file ()
   g_free (label_text);
 
   entry = gtk_entry_new ();
+  gtk_entry_set_text (GTK_ENTRY(entry), current_popup_file->vfs->name);
+  gtk_editable_select_region (GTK_EDITABLE(entry), 0, -1);
   gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
   g_object_set_data (G_OBJECT (dialog_window), "entry", entry);
 
@@ -673,7 +677,7 @@ show_file_properties ()
 	                                    | GTK_DIALOG_MODAL,
 	                                  GTK_MESSAGE_INFO,
 	                                  GTK_BUTTONS_CLOSE,
-	                                  current_popup_file->vfs->name);
+	                                  "%s", current_popup_file->vfs->name);
   table = gtk_table_new(4,2,FALSE);
   gtk_table_set_col_spacings(GTK_TABLE(table),gpe_get_boxspacing());
   
