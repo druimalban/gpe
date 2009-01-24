@@ -1,0 +1,14 @@
+2009-01-24  Graham Cobb  <g+770@cobb.uk.net>
+
+	* debian/control (Build-Depends): Use Build-Depends instead of Build-Depends-Indep
+	(this seems to be a Debian policy issue but this works)
+	Remove Depends: as there is nothing which ever populates it.
+
+2009-01-21  Graham Cobb  <g+770@cobb.uk.net>
+
+	* debian/control (Depends): Add ${misc:Depends}
+
+	* debian/compat: Set debhelper compat level to 4
+
+	* debian/rules (install): Remove debhelper compat level 3 setting
+
