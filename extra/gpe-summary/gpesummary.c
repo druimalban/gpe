@@ -308,7 +308,8 @@ gint show_todos(GtkWidget *vbox, gint count) {
 	GSList *iter;
 
 	for (iter = todo_db_get_items_list(); iter; iter = g_slist_next(iter)) {
-		if (((struct todo_item *)iter->data)->state == COMPLETED)
+		if (((struct todo_item *)iter->data)->state == COMPLETED
+		 || ((struct todo_item *)iter->data)->state == ABANDONED)
 			continue;
 		if (((struct todo_item *)iter->data)->time > todaystop)
 			continue;
