@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  * Copyright (C) 2005 - 2008 Florian Boor <florian@kernelconcepts.de>
+ * Copyright (C) 2008 Lars Persson Fink <lars.p.fink@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,7 +49,7 @@
 
 static GtkWidget *g_option;
 static gint selected_category = -1;
-static gboolean show_completed_tasks = TRUE;
+static gboolean show_completed_tasks = TRUE, show_status_col = TRUE, show_color_col = TRUE;
 
 GtkListStore *list_store;
 GtkWidget *item_menu;
@@ -183,6 +184,7 @@ categories_menu (void)
   GSList *l = gpe_pim_categories_list (), *iter;
   GtkWidget *i;
   gboolean found;
+  gint selected_category_index = 0, item_index = 0;
 
   found = FALSE;
 
@@ -190,6 +192,7 @@ categories_menu (void)
   gtk_menu_append (GTK_MENU (menu), i);
   g_signal_connect (G_OBJECT (i), "activate", G_CALLBACK (set_category), (gpointer)-1);
   gtk_widget_show (i);
+  item_index++;
 
   for (iter = l; iter; iter = iter->next)
     {
@@ -200,7 +203,11 @@ categories_menu (void)
       gtk_widget_show (i);
 
       if (id == selected_category)
-        found = TRUE;
+	{
+	  found = TRUE;
+	  selected_category_index = item_index;
+	}
+      item_index++;
     }
   g_slist_free (l);
 
@@ -228,6 +235,7 @@ categories_menu (void)
       gtk_widget_destroy(gtk_option_menu_get_menu(GTK_OPTION_MENU (g_option)));
     }
   gtk_option_menu_set_menu (GTK_OPTION_MENU (g_option), menu);
+  gtk_option_menu_set_history(GTK_OPTION_MENU(g_option), selected_category_index);
 }
 
 static void
@@ -868,6 +876,7 @@ top_level (GtkWidget *window)
                                                         "text", COL_PRIORITY_TEXT,
                                                         "strikethrough", COL_STRIKETHROUGH, NULL);
         gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+	gtk_tree_view_column_set_visible(col, show_status_col);
       }
     renderer = gtk_cell_renderer_text_new ();
     col = gtk_tree_view_column_new_with_attributes (_("Summary"), renderer,
@@ -895,6 +904,7 @@ top_level (GtkWidget *window)
     col = gtk_tree_view_column_new_with_attributes (_("C"), renderer,
                                                     "colorlist", COL_COLORS, NULL);
     gtk_tree_view_insert_column (GTK_TREE_VIEW (list_view), col, -1);
+    gtk_tree_view_column_set_visible(col, show_color_col);
           
     if (large_screen)
       {
@@ -955,6 +965,42 @@ conf_read (void)
       else
 	show_completed_tasks = b;
 
+      b = g_key_file_get_boolean (conf, "gpe-todo",
+				 "show_status_col", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error = NULL;
+	}
+      else
+	show_status_col = b;
+
+      b = g_key_file_get_boolean (conf, "gpe-todo",
+				 "show_color_col", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error = NULL;
+	}
+      else
+	show_color_col = b;
+
+      gint i;
+      i = g_key_file_get_integer (conf, "gpe-todo",
+				 "selected_category", &error);
+      if (error)
+	{
+	  g_error_free (error);
+	  error = NULL;
+	}
+      else
+	{
+	  if(gpe_pim_category_name(i))
+	    selected_category = i;
+	  else
+	    selected_category = -1;
+	}
+
     }
   g_free (filename);
   g_key_file_free (conf);
@@ -971,6 +1017,12 @@ conf_write (void)
 
   g_key_file_set_boolean (conf, "gpe-todo", "show_completed_tasks", 
 			  show_completed_tasks);
+  g_key_file_set_boolean (conf, "gpe-todo", "show_status_col", 
+			  show_status_col);
+  g_key_file_set_boolean (conf, "gpe-todo", "show_color_col", 
+			  show_color_col);
+  g_key_file_set_integer (conf, "gpe-todo", "selected_category",
+			  selected_category);
 
   gsize length;
   char *data = g_key_file_to_data (conf, &length, NULL);
