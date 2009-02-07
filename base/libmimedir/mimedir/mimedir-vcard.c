@@ -954,7 +954,7 @@ mimedir_vcard_get_property (GObject	*object,
 		g_value_set_pointer (value, priv->logo);
 		break;
 	case PROP_LOGO_URI:
-		g_value_set_pointer (value, priv->logo_uri);
+		g_value_set_string (value, priv->logo_uri);
 		break;
 	case PROP_AGENT:
 		g_value_set_object (value, priv->agent);
@@ -994,13 +994,13 @@ mimedir_vcard_get_property (GObject	*object,
 		g_value_set_object (value, priv->revision);
 		break;
 	case PROP_SORT_STRING:
-		g_value_set_pointer (value, priv->sort_string);
+		g_value_set_string (value, priv->sort_string);
 		break;
 	case PROP_SOUND:
 		g_value_set_pointer (value, priv->sound);
 		break;
 	case PROP_SOUND_URI:
-		g_value_set_pointer (value, priv->sound_uri);
+		g_value_set_string (value, priv->sound_uri);
 		break;
 	case PROP_UID:
 		g_value_set_string (value, priv->uid);
@@ -2462,8 +2462,8 @@ mimedir_vcard_read_from_profile (MIMEDirVCard *vcard, MIMEDirProfile *profile, G
 		}
 		g_string_append (s, priv->familyname);
 		if (priv->suffix) {
-			g_string_append (s, priv->suffix);
 			g_string_append_c (s, ' ');
+			g_string_append (s, priv->suffix);
 		}
 
 		priv->fn = g_string_free (s, FALSE);

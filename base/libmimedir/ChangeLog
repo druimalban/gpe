@@ -1,3 +1,9 @@
+2009-02-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-vcard.c (mimedir_vcard_read_from_profile): Correct suffix handling
+	when creating FN: [Bug 269]
+	(mimedir_vcard_get_property): Return string for logo-uri, sort-string, sound-uri properties
+
 2009-01-18  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-vcard.c (mimedir_vcard_write_to_profile): Fix output field for Nickname
