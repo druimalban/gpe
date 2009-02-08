@@ -68,10 +68,12 @@
  *
  * 1.2.2    PATH VEVENT command added.
  *
+ * 1.3.3    Support for additional RFC2426 attributes implemented in libmimedir and libgpevtype.
+ *
  */
 #define PROTOCOL_MAJOR 1
-#define PROTOCOL_MINOR 2
-#define PROTOCOL_EDIT 2
+#define PROTOCOL_MINOR 3
+#define PROTOCOL_EDIT 3
 
 #define BUFFER_LEN 25 
 

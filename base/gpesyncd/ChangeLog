@@ -1,3 +1,7 @@
+2009-02-08  Graham Cobb  <g+770@cobb.uk.net>
+
+	* src/gpesyncd.h (PROTOCOL_MINOR): Create new version 1.3.3.
+
 2008-05-07  Graham Cobb  <g+770@cobb.uk.net>
 
 	* src/main.c (command_loop): On EOF perform a QUIT command
