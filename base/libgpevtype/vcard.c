@@ -25,6 +25,7 @@ static struct tag_map map[] =
   {
     { "name", NULL },
     { "given_name", "givenname" },
+    { "middle_name", "middlename" },
     { "family_name", "familyname" },
     { "title", "prefix" },
     { "honorific_suffix", "suffix" },
@@ -37,6 +38,23 @@ static struct tag_map map[] =
     //categories handled separately    { "category", "categories"},
     { "work.www", "url" },
     //birthday handled specially { "birthday", NULL },
+    //{ "photo", NULL }, /* FIXME -- pointer */
+    { "photo_uri", "photo-uri" },
+    { "mailer", NULL },
+    //{ "timezone", NULL }, /* FIXME -- int, or do we use timezone-string?*/
+    //{ "latitude", NULL }, /* FIXME -- double */
+    //{ "longitude", NULL }, /* FIXME -- double */
+    { "role", NULL },
+    //{ "logo", NULL }, /* FIXME -- pointer */
+    { "logo_uri", "logo-uri" },
+    //{ "agent", NULL }, /* FIXME -- object or do we use agent-string? */
+    { "agent_uri", "agent-uri" },
+    { "sort_string", "sort-string" },
+    //{ "sound", NULL }, /* FIXME -- pointer */
+    { "sound_uri", "sound-uri" },
+    { "uid", NULL },
+    { "class", NULL },
+    //{ "keys", "key-list" }, /* FIXME -- list */
     { NULL, NULL }
   };
 

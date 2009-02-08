@@ -1,3 +1,9 @@
+2009-02-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* vcard.c: Add middle_name to tags list
+	Add remaining string attributes to tags list: photo_uri, mailer, role, logo_uri
+	agent_uri, sort_string, sound_uri, uid, class
+
 2008-05-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* vcard.c (vcard_to_tags): Put locality before region when creating
