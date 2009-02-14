@@ -75,7 +75,7 @@ get_device_model (void)
 #ifdef __sgi__
   result = g_strdup (_("Silicon Graphics Machine"));
 #else
-  result = g_strdup (_("MIPS, %s"), uinfo.machine);
+  result = g_strdup_printf (_("MIPS, %s"), uinfo.machine);
 #endif
 #endif
 #ifdef _POWER

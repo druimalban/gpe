@@ -1,3 +1,7 @@
+2009-02-14  Florian Boor <fb@kernelconcepts.de>
+
+	* Fix compilation for MIPS basd devices. Courtesy by Adam Ward.
+
 2008-01-26  Florian Boor <fb@kernelconcepts.de>
 
 	* Allow using libglade 2.4.0 (by Robert Schuster)
