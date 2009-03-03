@@ -1,3 +1,7 @@
+2009-03-03  Florian Boor <florian@kernelconcepts.de>
+
+	* Add support for skeye.allegro LS
+
 2009-01-07  Florian Boor <florian@kernelconcepts.de>
 
 	* Release 1.23
@@ -10,6 +14,10 @@
 	  - Changes in argument support and requirements.
 	  - Improve Xorg support 
 	  - Fix Xorg support for GTA01 and GTA02
+
+2008-12-09  Florian Boor <florian@kernelconcepts.de>
+
+	* Add skeye.pad POS
 
 2008-03-04  Florian Boor <florian@kernelconcepts.de>
 
