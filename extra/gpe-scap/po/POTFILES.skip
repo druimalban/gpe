@@ -1,0 +1,4 @@
+src/gpe-scap.c
+src/scr-shot-common.c
+src/scr-shot-x.c
+src/screenshot-utils.c

@@ -21,8 +21,6 @@ gpe_scap_SOURCES = scr-i18n.h \
              cfgfile.h \
              cfgfile.c
 
-pkgdata_SCRIPTS = scap-png-upload
-
 pkgdata_DATA = gpe-scap.glade
 
 EXTRA_DIST = $(pkgdata_SCRIPTS) $(pkgdata_DATA) gpe-scap.gladep

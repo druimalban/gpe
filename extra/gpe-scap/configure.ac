@@ -1,4 +1,4 @@
-AC_INIT(gpe-scap, 1.3)
+AC_INIT(gpe-scap, 1.4)
 
 AC_CONFIG_SRCDIR([src/gpe-scap.c])
 AM_CONFIG_HEADER(config.h)
