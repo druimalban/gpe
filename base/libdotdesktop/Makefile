@@ -1,4 +1,4 @@
-PREFIX = /usr
+PREFIX = /usr/local
 PACKAGE = libdotdesktop
 DEBUG = no
 VERSION = 0.11
