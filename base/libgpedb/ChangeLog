@@ -1,0 +1,4 @@
+2009-03-11      Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Makefile: Install binaries without using '-s'. Patch courtesy by
+      Ned Ludd <solar@gentoo.org>

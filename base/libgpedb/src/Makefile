@@ -18,7 +18,7 @@ libgpedb.so.0: $(OBJS)
 
 install: libgpedb.so.0
 	install -D libgpedb.so.0 $(DESTDIR)$(PREFIX)/lib/libgpedb.so.0
-	strip $(DESTDIR)$(PREFIX)/lib/libgpedb.so.0
+	#strip $(DESTDIR)$(PREFIX)/lib/libgpedb.so.0
 
 ipkg:
 	rm -rf familiar/dist
