@@ -2,9 +2,9 @@ PREFIX = /usr
 PACKAGE = libdotdesktop
 DEBUG = no
 VERSION = 0.11
-CC=gcc
+CC?=gcc
 STRIP=strip
-BUILD = ../build
+BUILD = $(shell [ -e build ] && echo build || echo ../build)
 
 LINGUAS = 
 
@@ -22,7 +22,8 @@ CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -MD
 
-CPPFLAGS += -I./gpe `pkg-config --cflags glib-2.0`
+PACKAGE_CFLAGS = `pkg-config --cflags glib-2.0`
+PACKAGE_LDFLAGS = `pkg-config --libs glib-2.0`
 
 HEADERS = dotdesktop.h
 
@@ -36,13 +37,13 @@ libdotdesktop.so: $(SONAME)
 	ln -sf $^ $@
 
 $(SONAME): $(OBJS)
-	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(LDFLAGS)
+	$(CC) -nostartfiles -shared -o $@ $^ -Wl,-soname -Wl,$(SONAME) $(PACKAGE_LDFLAGS) $(LDFLAGS)
 
 libdotdesktop.a: $(OBJS)
 	ar cq $@ $^
 
-.c.s:;
-	$(CC) $(CFLAGS) -S $<
+.c.o:;
+	$(CC) $(PACKAGE_CFLAGS) $(MY_CFLAGS) $(CFLAGS) -c $< -o $@
 
 upstream: clean
 	( VERSION=`dpkg-parsechangelog | grep ^Version | cut -d\  -f2 | cut -d- -f1`; cd ..; cp -a libdotdesktop libdotdesktop-$$VERSION.orig; tar czf libdotdesktop_$$VERSION.orig.tar.gz --exclude=libdotdesktop-$$VERSION.orig/debian --exclude=libdotdekstop-$$VERSION.orig/CVS --exclude=libdotdesktop-$$VERSION.orig/familiar libdotdesktop-$$VERSION.orig ; rm -rf libdotdesktop-$$VERSION.orig )
@@ -58,14 +59,14 @@ install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
 	ln -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/libdotdesktop.so
 
-#ipkg: clean
-#	rm -rf familiar/dist
-#	mkdir -p familiar/dist/CONTROL
-#	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
-#	cp familiar/postinst familiar/dist/CONTROL
-#	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
-#	chown -R root.root familiar/dist
-#	ipkg-build familiar/dist
+ipkg: clean
+	rm -rf familiar/dist
+	mkdir -p familiar/dist/CONTROL
+	cp familiar/$(CONTROL) familiar/dist/CONTROL/control
+	cp familiar/postinst familiar/dist/CONTROL
+	make DESTDIR=`pwd`/familiar/dist PREFIX=/usr DEBUG=no install
+	chown -R root.root familiar/dist
+	ipkg-build familiar/dist
 
 clean:
 	rm -f $(OBJS) $(SONAME) libdotdesktop.so $(DEPS)
