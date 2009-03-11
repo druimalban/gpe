@@ -36,7 +36,7 @@ $(PACKAGE): $(OBJS)
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/matchbox/mbdock/
 	install -m 644 $(PACKAGE).dock $(DESTDIR)$(PREFIX)/share/matchbox/mbdock
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps/
