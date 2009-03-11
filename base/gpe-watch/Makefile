@@ -39,7 +39,7 @@ $(PACKAGE): $(OBJS) $(LIB)
 
 install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/$(PACKAGE).png
 	#mkdir -p $(DESTDIR)$(PREFIX)/share/$(PACKAGE)
