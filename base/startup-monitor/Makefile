@@ -41,7 +41,7 @@ $(PACKAGE): $(OBJS)
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)/etc/X11/Xsession.d
 	install $(PACKAGE).xsession $(DESTDIR)/etc/X11/Xsession.d/70startup-monitor
 
