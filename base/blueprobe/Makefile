@@ -28,7 +28,7 @@ $(PACKAGE): $(OBJS)
 install-program: $(PACKAGE)
 	install -d $(DESTDIR)/etc/sysconfig
 	install -d $(DESTDIR)$(PREFIX)/bin
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)/etc/init.d
 	install $(PACKAGE).init $(DESTDIR)/etc/init.d/$(PACKAGE)
 	install -d $(DESTDIR)/etc/rcS.d
