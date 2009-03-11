@@ -1,3 +1,8 @@
+2009-03-11      Florian Boor <florian.boor@kernelconcepts.de>
+
+	* suid.c: Use 'shutdown' command instead of 'poweroff' which might
+	  fail in some cases.
+
 2009-01-05      Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Relase version 0.2.8

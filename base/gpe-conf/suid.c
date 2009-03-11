@@ -2,7 +2,7 @@
  * gpe-conf
  *
  * Copyright (C) 2002  Pierre TARDY <tardyp@free.fr>
- *               2003 - 2005, 2007, 2008  Florian Boor <florian.boor@kernelconcepts.de>
+ *               2003 - 2005, 2007, 2008, 2009  Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -454,7 +454,7 @@ suidloop (int write, int read)
 				else if (strcmp (cmd, "SHDN") == 0)  // shutdown device
 				{
 					fscanf (in, "%100s", arg2);
-					system ("/sbin/poweroff");
+					system ("/sbin/shutdown -h now");
 				}
 				else if (strcmp (cmd, "MODP") == 0)  /* modprobe kernel module */
 				{
