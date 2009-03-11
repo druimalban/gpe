@@ -47,7 +47,7 @@ $(PACKAGE): $(OBJS)
 
 install-program: all 
 	install -d $(DESTDIR)$(PREFIX)/bin
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)

@@ -1,3 +1,7 @@
+2009-03-11      Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Makefile: Install binaries without using '-s'. Patch courtesy by
+      Ned Ludd <solar@gentoo.org>
 
 2007-08-02  Florian Boor <florian@kernelconcepts.de>
 
@@ -10,7 +14,7 @@
 
 2006-02-21  Joe McCarthy <jjmcc@pitt.edu>
 
-        * callbacks.c: fix use of VoluemReset flag and snooze handling 
+        * callbacks.c: fix use of VolumeReset flag and snooze handling 
 	
 2005-09-06  Luca De Cicco <ldecicco@gmail.com>       
 	* Make gst library loaded at runtime (dlopen)	
