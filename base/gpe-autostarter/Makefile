@@ -28,7 +28,7 @@ $(PACKAGE): $(OBJS)
 
 install-program: all
 	install -d $(DESTDIR)$(PREFIX)/bin
-	install -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
+	install $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/
 	install -d $(DESTDIR)/etc/X11/Xsession.d
 	install $(PACKAGE).xsession $(DESTDIR)/etc/X11/Xsession.d/50$(PACKAGE)
 
