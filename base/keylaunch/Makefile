@@ -31,7 +31,7 @@ $(PROG): $(OBJS)
 	$(CC) $(OBJS) $(LIBS) -o $@
 
 install-program: all
-	install -sD $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
+	install -D $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
 	install -D -m 644 $(PROG)rc $(DESTDIR)/etc/$(PROG)rc
 	install -d $(DESTDIR)/etc/X11/Xsession.d
 	install 90$(PROG)  $(DESTDIR)/etc/X11/Xsession.d/90$(PROG)
