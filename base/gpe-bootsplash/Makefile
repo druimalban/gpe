@@ -19,7 +19,7 @@ install-program: gpe-bootsplash
 	mkdir -p $(DESTDIR)/etc/init.d
 	cp gpe-bootsplash.init $(DESTDIR)/etc/init.d/gpe-bootsplash
 	#install -m 644 $(SPLASH) $(DESTDIR)/usr/share/gpe/splash.png
-	install -s gpe-bootsplash $(DESTDIR)/usr/bin/
+	install gpe-bootsplash $(DESTDIR)/usr/bin/
 	ln -sf ../init.d/gpe-bootsplash $(DESTDIR)/etc/rcS.d/S00bootsplash
 
 clean:
