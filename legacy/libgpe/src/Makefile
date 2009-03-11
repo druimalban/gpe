@@ -41,8 +41,8 @@ $(SONAME): $(OBJS)
 
 install-program: $(SONAME)
 	mkdir -p $(DESTDIR)$(PREFIX)/lib/
-	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/
-	strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	install $(SONAME) $(DESTDIR)$(PREFIX)/lib/
+	#strip $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
 install-devel: #$(PACKAGE).pc
 	for i in $(HEADERS); do install -m 644 -D ../include/$$i $(DESTDIR)$(PREFIX)/include/gpe/$$i; done
