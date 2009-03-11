@@ -36,7 +36,7 @@ $(SONAME): $(OBJS)
 
 install-program: $(SONAME)
 	install -d $(DESTDIR)$(PREFIX)/lib
-	install -s $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
+	install $(SONAME) $(DESTDIR)$(PREFIX)/lib/$(SONAME)
 
 install-devel:
 	for i in $(HEADERS); do install -m 644 -D $$i $(DESTDIR)$(PREFIX)/include/$$i; done
