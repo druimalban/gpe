@@ -12,7 +12,8 @@ LIBS      = `pkg-config --libs xtst xau`
 
 PROG      = keylaunch
 
-PREFIX    = /usr/local
+PREFIX   ?= /usr/local
+INSTALL   = install
 RCFILE1	  = .$(PROG)rc
 RCFILE2   = /etc/$(PROG)rc
 PACKAGE_CFLAGS  += -DRCFILE1=\"$(RCFILE1)\" -DRCFILE2=\"$(RCFILE2)\" -DDEBUG
@@ -31,12 +32,12 @@ $(PROG): $(OBJS)
 	$(CC) $(OBJS) $(LIBS) -o $@
 
 install-program: all
-	install -D $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
-	install -D -m 644 $(PROG)rc $(DESTDIR)/etc/$(PROG)rc
-	install -d $(DESTDIR)/etc/X11/Xsession.d
-	install 90$(PROG)  $(DESTDIR)/etc/X11/Xsession.d/90$(PROG)
-	install -d $(DESTDIR)/etc/X11/Xinit.d
-	install 90norepeat  $(DESTDIR)/etc/X11/Xinit.d/90norepeat
+	$(INSTALL) -D $(PROG) $(DESTDIR)$(PREFIX)/bin/$(PROG)
+	$(INSTALL) -D -m 644 $(PROG)rc $(DESTDIR)/etc/$(PROG)rc
+	$(INSTALL) -d $(DESTDIR)/etc/X11/Xsession.d
+	$(INSTALL) 90$(PROG)  $(DESTDIR)/etc/X11/Xsession.d/90$(PROG)
+	$(INSTALL) -d $(DESTDIR)/etc/X11/Xinit.d
+	$(INSTALL) 90norepeat  $(DESTDIR)/etc/X11/Xinit.d/90norepeat
 
 clean:
 	rm -f $(PROG) $(OBJS)
