@@ -1,6 +1,6 @@
-PREFIX = /usr/local
+STRIP ?= strip
+PREFIX ?= /usr/local
 PACKAGE = detect-stylus
-STRIP = strip
 DEBUG = no
 CVSBUILD = yes
 VERSION = 0.13
