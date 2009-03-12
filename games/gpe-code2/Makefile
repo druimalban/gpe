@@ -1,5 +1,5 @@
 PACKAGE = gpe-code
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 DEBUG = no
 LINGUAS = 
 
@@ -34,7 +34,6 @@ $(PACKAGE): $(OBJS)
 
 install: all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -d $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
