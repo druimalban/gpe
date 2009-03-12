@@ -1,5 +1,5 @@
 PACKAGE = gpe-othello
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 DEBUG = no
 LINGUAS = 
 VERSION = 0.2-1
@@ -37,7 +37,6 @@ $(PACKAGE): $(OBJS)
 
 install-program: all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).png $(DESTDIR)$(PREFIX)/share/pixmaps/
 	install -d $(DESTDIR)$(PREFIX)/share/applications
