@@ -1,4 +1,4 @@
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 PACKAGE = gpe-su
 DEBUG = yes
 CVSBUILD = yes
@@ -34,7 +34,7 @@ clean:
 
 install-program: all $(PACKAGE).desktop
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	install -m 755 -s $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
+	install -m 755 $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications
 	mkdir -p $(DESTDIR)$(PREFIX)/share/pixmaps
