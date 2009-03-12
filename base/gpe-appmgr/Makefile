@@ -10,12 +10,12 @@ PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libgpelaunch/.libs -lgpel
 PACKAGE_CFLAGS += $(shell pkg-config --cflags cairo)
 PACKAGE_LDFLAGS += $(shell pkg-config --libs cairo)
 
-DESTDIR=
-PREFIX=/usr
-BINDIR=$(PREFIX)/bin
-ETCDIR=etc
-INSTALL=install
-STRIP=strip
+DESTDIR =
+PREFIX ?= /usr
+BINDIR = $(PREFIX)/bin
+ETCDIR = etc
+INSTALL = install
+STRIP ?= strip
 
 ifeq ($(CVSBUILD),yes)
 BUILD = ../build
