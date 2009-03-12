@@ -2,7 +2,7 @@ PACKAGE = gpe-julia
 VERSION = 0.0.6
 DEBUG = no
 CVSBUILD = yes
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 
 MEMBERS = main
 
@@ -34,7 +34,6 @@ install-program: all install-mo $(PACKAGE).desktop
 	install -m 644 pixmaps/zoom_out.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$(PACKAGE)/zoom_out.png
 	mkdir -p $(DESTDIR)$(PREFIX)/share/applications
 	install -m 644 $(PACKAGE).desktop $(DESTDIR)$(PREFIX)/share/applications/$(PACKAGE).desktop
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 
 clean:
 	rm -f $(PACKAGE) $(OBJS) $(DEPS)
