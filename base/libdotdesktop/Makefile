@@ -1,9 +1,9 @@
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 PACKAGE = libdotdesktop
 DEBUG = no
 VERSION = 0.11
-CC?=gcc
-STRIP=strip
+CC ?= gcc
+STRIP ?= strip
 BUILD = $(shell [ -e build ] && echo build || echo ../build)
 
 LINGUAS = 
