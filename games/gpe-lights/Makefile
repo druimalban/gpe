@@ -1,5 +1,5 @@
 PACKAGE = gpe-lights
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 DEBUG = no
 LINGUAS = de pt_PT
 
@@ -39,7 +39,6 @@ $(PACKAGE): $(OBJS)
 
 install: all 
 	install -D $(PACKAGE) $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
-	strip $(DESTDIR)$(PREFIX)/bin/$(PACKAGE)
 	install -d $(DESTDIR)$(PREFIX)/lib/menu
 	install -d $(DESTDIR)$(PREFIX)/share/pixmaps
 	install -m 644 $(PACKAGE).menu $(DESTDIR)$(PREFIX)/lib/menu/$(PACKAGE)
