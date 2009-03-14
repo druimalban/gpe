@@ -768,7 +768,7 @@ static inline gboolean accept_tokenchar(const gunichar uc, const gchar *full_lin
     return FALSE;
 
   if (!mimedir_utils_is_token_char(uc))
-    g_log("Ignoring invalid token character '%c' in line %s", uc, full_line);
+    g_message("Ignoring invalid token character '%c' in line %s", uc, full_line);
 
   return TRUE;
 }

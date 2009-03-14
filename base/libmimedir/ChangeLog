@@ -1,3 +1,12 @@
+2009-03-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-attribute.c (accept_tokenchar): Use g_message instead of g_log.
+
+2009-02-08  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-vcard.c (mimedir_vcard_set_property): g_string_free doesn't like
+	freeing NULL strings
+
 2009-02-07  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-vcard.c (mimedir_vcard_read_from_profile): Correct suffix handling

@@ -650,7 +650,7 @@ mimedir_vcard_set_property (GObject		*object,
 		priv->nickname = mimedir_vcard_strsplit (g_value_get_string (value), ",");
 		break;
 	case PROP_PHOTO:
-		g_string_free (priv->photo, TRUE);
+		if (priv->photo) g_string_free (priv->photo, TRUE);
 		g_free (priv->photo_uri);
 		priv->photo = NULL;
 		priv->photo_uri = NULL;
@@ -659,7 +659,7 @@ mimedir_vcard_set_property (GObject		*object,
 			priv->photo = g_string_new_len (str->str, str->len);
 		break;
 	case PROP_PHOTO_URI:
-		g_string_free (priv->photo, TRUE);
+		if (priv->photo) g_string_free (priv->photo, TRUE);
 		g_free (priv->photo_uri);
 		priv->photo = NULL;
 		priv->photo_uri = NULL;
@@ -712,7 +712,7 @@ mimedir_vcard_set_property (GObject		*object,
 		mimedir_utils_set_property_string (&priv->jobrole, value);
 		break;
 	case PROP_LOGO:
-		g_string_free (priv->logo, TRUE);
+		if (priv->logo) g_string_free (priv->logo, TRUE);
 		g_free (priv->logo_uri);
 		priv->logo = NULL;
 		priv->logo_uri = NULL;
@@ -721,7 +721,7 @@ mimedir_vcard_set_property (GObject		*object,
 			priv->logo = g_string_new_len (str->str, str->len);
 		break;
 	case PROP_LOGO_URI:
-		g_string_free (priv->logo, TRUE);
+		if (priv->logo) g_string_free (priv->logo, TRUE);
 		g_free (priv->logo_uri);
 		priv->logo = NULL;
 		priv->logo_uri = NULL;
@@ -764,7 +764,7 @@ mimedir_vcard_set_property (GObject		*object,
 		mimedir_utils_set_property_string (&priv->sort_string, value);
 		break;
 	case PROP_SOUND:
-		g_string_free (priv->sound, TRUE);
+		if (priv->sound) g_string_free (priv->sound, TRUE);
 		g_free (priv->sound_uri);
 		priv->sound = NULL;
 		priv->sound_uri = NULL;
@@ -773,7 +773,7 @@ mimedir_vcard_set_property (GObject		*object,
 			priv->sound = g_string_new_len (str->str, str->len);
 		break;
 	case PROP_SOUND_URI:
-		g_string_free (priv->sound, TRUE);
+		if (priv->sound) g_string_free (priv->sound, TRUE);
 		g_free (priv->sound_uri);
 		priv->sound = NULL;
 		priv->sound_uri = NULL;
