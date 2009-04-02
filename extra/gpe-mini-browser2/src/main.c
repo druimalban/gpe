@@ -61,6 +61,7 @@ int main (int argc, char *argv[])
   int opt;
 
   /* application init */
+  g_thread_init(NULL);
   gpe_application_init (&argc, &argv);
 
   if (gpe_load_icons (my_icons) == FALSE)
