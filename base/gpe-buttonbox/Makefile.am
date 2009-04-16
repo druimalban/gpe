@@ -14,7 +14,7 @@ desktop_in_files = apps/gpe-buttonbox.desktop.in \
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 
-pixmapsdir = $(datadir)/gpe/pixmaps/default/gpe-buttonbox/
+pixmapsdir = $(datadir)/pixmaps/gpe/default/gpe-buttonbox/
 
 pixmaps_DATA = pixmaps/show-desktop.png \
                pixmaps/other-app.png \
