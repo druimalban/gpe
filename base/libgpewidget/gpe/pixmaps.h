@@ -40,7 +40,7 @@ extern "C" {
  *
  * shortname: Short symbolic name to identify the icon.
  *
- * filename: Image file with full path or file in theme location (PREFIX /share/gpe/pixmaps/&lt;theme&gt;).
+ * filename: Image file with full path or file in theme location (PREFIX /share/pixmaps/gpe/&lt;theme&gt;).
  *	
  * pixbuf: GdkPixbuf with icon data.
  */

@@ -35,9 +35,9 @@
 #define _(x) (x)
 #endif
 
-#define GPE_THEME_LOCATION      PREFIX "/share/gpe/pixmaps/"
-#define DEFAULT_ICON_LOCATION   PREFIX "/share/pixmaps/"
-#define SYSTEM_ICON_LOCATION    "/usr/share/pixmaps/"
+#define SYSTEM_ICON_LOCATION    PREFIX "/share/pixmaps/"
+#define GPE_THEME_LOCATION      SYSTEM_ICON_LOCATION "/gpe/"
+#define DEFAULT_ICON_LOCATION   SYSTEM_ICON_LOCATION
 
 static GData *pbdata = NULL;
 
