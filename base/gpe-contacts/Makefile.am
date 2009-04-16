@@ -42,7 +42,7 @@ desktop_in_files = gpe-contacts.desktop.in edit-vcard.desktop.in
 
 gpe_contacts_SOURCES += main.c
 
-pixmaps_extradir = $(datadir)/gpe/pixmaps/default/gpe-contacts
+pixmaps_extradir = $(datadir)/pixmaps/gpe/default/gpe-contacts
 pixmaps_extra_DATA = icons/entry.png \
                icons/export.png \
                icons/frame.png \
