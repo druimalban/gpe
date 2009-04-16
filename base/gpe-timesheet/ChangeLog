@@ -1,3 +1,8 @@
+2009-04-15 Ned Ludd  <solar@gentoo.org>
+	* gpe-base/gpe-timesheet: ui.h 
+	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
+	* Targeted for gpe-3.0 release.
+
 2008-12-07  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (open_window): Change application name to GPE Timesheet

@@ -2,7 +2,7 @@
   #define _GPE_TIMESHEET_UI_H
 #endif
 
-#define MY_PIXMAPS_DIR PREFIX "/share/gpe/pixmaps/default"
+#define MY_PIXMAPS_DIR PREFIX "/share/pixmaps/gpe/default"
 #ifdef IS_HILDON
   #define ICON_PATH PREFIX "/share/icons/hicolor/26x26/hildon"
 #endif
