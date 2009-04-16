@@ -1,3 +1,8 @@
+2009-04-15 Ned Ludd  <solar@gentoo.org>
+	* gpe-base/gpe-icons: Makefile 
+	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
+	* Targeted for gpe-3.0 release.
+
 2009-01-24  Graham Cobb  <g+770@cobb.uk.net>
 
 	* debian/control (Build-Depends): Use Build-Depends instead of Build-Depends-Indep

@@ -22,8 +22,8 @@ all:
 PIXMAPS_DIR = default
 
 install-program:
-	for i in $(PIXMAPS); do install -m 644 -D $(PIXMAPS_DIR)/$$i $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/default/$$i; done
-	install -D -m 644 gpe-logo.png $(DESTDIR)$(PREFIX)/share/gpe/pixmaps/gpe-logo.png
+	for i in $(PIXMAPS); do install -m 644 -D $(PIXMAPS_DIR)/$$i $(DESTDIR)$(PREFIX)/share/pixmaps/gpe/default/$$i; done
+	install -D -m 644 gpe-logo.png $(DESTDIR)$(PREFIX)/share/pixmaps/gpe/gpe-logo.png
 
 clean:
 
