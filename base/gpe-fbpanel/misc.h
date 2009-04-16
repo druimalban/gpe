@@ -9,7 +9,7 @@
 
 #include "panel.h"
 
-#define GPE_PIXMAPS_DIR PREFIX "/share/gpe/pixmaps/default"
+#define GPE_PIXMAPS_DIR PREFIX "/share/pixmaps/gpe/default"
 
 enum { LINE_NONE, LINE_BLOCK_START, LINE_BLOCK_END, LINE_VAR };
 

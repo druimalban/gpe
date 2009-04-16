@@ -107,7 +107,7 @@ Global {
 Plugin {
     type = menu
     config {
-        image = /usr/local/share/gpe/pixmaps/default/gpe-buttonbox/show-desktop.png
+        image = /usr/local/share/pixmaps/gpe/default/gpe-buttonbox/show-desktop.png
         
         menu {
             name = Networking

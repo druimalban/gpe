@@ -57,7 +57,7 @@ FbEv *fbev;
 
 struct gpe_icon my_icons[] = 
 {
-  { "gpe-logo", PREFIX "/share/gpe/pixmaps/gpe-logo.png"},
+  { "gpe-logo", PREFIX "/share/pixmaps/gpe/gpe-logo.png"},
   {NULL, NULL}
 };
 
