@@ -33,7 +33,7 @@
 
 #define _(x) gettext (x)
 
-#define DEFAULT_THEME_DIR PREFIX "/share/gpe/pixmaps/default/"
+#define DEFAULT_THEME_DIR PREFIX "/share/pixmaps/gpe/default/"
 
 static void 
 cpanel_do_suspend (GtkWidget *button, GtkWidget *panel)

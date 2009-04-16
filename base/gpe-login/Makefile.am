@@ -35,7 +35,7 @@ gpe_DATA = gpe-login.conf locale.alias
 sysdir = $(sysconfdir)/sysconfig
 sys_DATA = gpe-login.sysconfig
 
-pixmapsdir = $(datadir)/gpe/pixmaps/default
+pixmapsdir = $(datadir)/pixmaps/gpe/default
 pixmaps_DATA = \
                pixmaps/session-back.png \
                pixmaps/session-lock.png \
