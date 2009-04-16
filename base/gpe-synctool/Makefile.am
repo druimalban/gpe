@@ -13,7 +13,7 @@ gpe_synctool_SOURCES = main.c
 desktopdir = $(datadir)/applications
 desktop_in_files = gpe-synctool.desktop.in
 
-pixmapsdir = $(datadir)/gpe/pixmaps/default
+pixmapsdir = $(datadir)/pixmaps/gpe/default
 pixmaps_DATA = pixmaps/sync-on.png \
                pixmaps/sync-off.png
 
