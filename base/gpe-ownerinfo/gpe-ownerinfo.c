@@ -55,7 +55,7 @@ static GtkWidget *address;
 static GdkPixbuf *photopixbuf;
 static GtkWidget *smallphotobutton;
 static GtkWidget *bigphotobutton;
-static gchar *photofile = PREFIX "/share/gpe/pixmaps/gpe-logo.png";
+static gchar *photofile = PREFIX "/share/pixmaps/gpe/gpe-logo.png";
 
 /* redraw the pixbuf */
 static gboolean
@@ -163,7 +163,7 @@ upgrade_to_v2 (guint new_version)
       fputs (firstline, fp);
       fputs ("\n", fp);
 
-      fputs (PREFIX "/share/gpe/pixmaps/default/tux-48.png", fp);
+      fputs (PREFIX "/share/pixmaps/gpe/default/tux-48.png", fp);
       fputs ("\n", fp);
 
       fputs (oldcontent, fp);

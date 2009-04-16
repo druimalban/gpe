@@ -1,3 +1,8 @@
+2009-04-15 Ned Ludd  <solar@gentoo.org>
+	* gpe-base/gpe-ownerinfo: gpe-ownerinfo.c 
+	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
+	* Targeted for gpe-3.0 release.
+
 2008-09-30 Florian Boor <florian@kernelconcepts.de>
 
 	* Apply autotols support patch by D. Marlin
