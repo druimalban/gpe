@@ -48,7 +48,7 @@ Sketchbook sketchbook;
 static struct gpe_icon my_icons[] = {
   //Apps icon
   { "this_app_icon", PREFIX "/share/pixmaps/gpe-sketchbook.png" },
-  { "gpe-logo",      PREFIX "/share/gpe/pixmaps/gpe-logo.png" },
+  { "gpe-logo",      PREFIX "/share/pixmaps/gpe/gpe-logo.png" },
 
   //GPE stock icons
   { "import",     "open"  },
