@@ -80,7 +80,7 @@ static gchar *background_filename;
 
 static GSList *rows, *labels;
 
-#define DEFAULT_BACKGROUND PREFIX "/share/gpe/pixmaps/default/gpe-appmgr/desktop-background.png"
+#define DEFAULT_BACKGROUND PREFIX "/share/pixmaps/gpe/default/gpe-appmgr/desktop-background.png"
 
 #define ICONLIST_XOFFSET	52
 #define LABEL_WIDTH		24
