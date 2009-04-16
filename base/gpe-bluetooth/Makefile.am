@@ -32,7 +32,7 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 service_DATA = $(service_in_files:.service.in=.service)
 
-pixmapsdir = $(datadir)/gpe/pixmaps/default/bluetooth
+pixmapsdir = $(datadir)/pixmaps/gpe/default/bluetooth
 
 pixmaps_DATA = pixmaps/bt-off.png \
                pixmaps/bt-on.png \

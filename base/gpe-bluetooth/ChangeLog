@@ -1,3 +1,8 @@
+2009-04-15 Ned Ludd  <solar@gentoo.org>
+	* gpe-base/gpe-bluetooth: gpe-bluetooth.desktop.in Makefile.am 
+	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
+	* Targeted for gpe-3.0 release.
+
 2008-08-28  Phil Blundell  <pb@reciva.com>
 
 	* po/nl.po: New translation, courtesy Benno Schulenberg.
