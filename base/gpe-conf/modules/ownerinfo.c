@@ -553,7 +553,7 @@ upgrade_to_v2 (guint new_version)
       fputs (firstline, fp);
       fputs ("\n", fp);
 
-      fputs (PREFIX "/share/gpe/pixmaps/gpe-logo.png", fp);
+      fputs (PREFIX "/share/pixmaps/gpe/gpe-logo.png", fp);
       fputs ("\n", fp);
 
       fputs (oldcontent, fp);
