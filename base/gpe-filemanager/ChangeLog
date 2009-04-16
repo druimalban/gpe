@@ -1,3 +1,8 @@
+2009-04-15 Ned Ludd  <solar@gentoo.org>
+	* gpe-base/gpe-filemanager: pixmaps/Makefile.am main.c 
+	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
+	* Targeted for gpe-3.0 release.
+
 2009-01-24  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* main.c (popup_ask_rename_file): Improve dialog and add sanity

@@ -72,7 +72,7 @@
 #define LAST_SIGNAL 1
 
 #define DEFAULT_TERMINAL "rxvt -e"
-#define FILEMANAGER_ICON_PATH "/share/gpe/pixmaps/default/filemanager/document-icons"
+#define FILEMANAGER_ICON_PATH "/share/pixmaps/gpe/default/filemanager/document-icons"
 #define ZOOM_INCREMENT 8
 
 #ifdef USE_HILDON

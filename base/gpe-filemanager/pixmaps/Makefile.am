@@ -34,7 +34,7 @@ scalable/hildon/gpe-filemanager.png: gpe-filemanager-64x64.png
 	-mkdir -p scalable/hildon
 	cp $< $@
 
-pixmapsextradir = $(datadir)/gpe/pixmaps/default/filemanager/document-icons/
+pixmapsextradir = $(datadir)/pixmaps/gpe/default/filemanager/document-icons/
 pixmapsextra_DATA = \
                    document-icons/directory.png \
                    document-icons/image-png.png \
