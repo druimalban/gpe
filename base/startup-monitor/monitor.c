@@ -209,7 +209,7 @@ main (int argc, char **argv)
   SnDisplay *display;
   SnMonitorContext *context;
   int x, y, w, h;
-  static char *icon_name = PREFIX "/share/gpe/pixmaps/default/loading.png";
+  static char *icon_name = PREFIX "/share/pixmaps/gpe/default/loading.png";
   int fd;
   Window root;
   XSetWindowAttributes attr;
