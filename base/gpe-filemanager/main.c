@@ -76,7 +76,7 @@
 #define ZOOM_INCREMENT 8
 
 #ifdef USE_HILDON
-#define DEFAULT_ICON_PATH "gpe/pixmaps/default"
+#define DEFAULT_ICON_PATH "pixmaps/gpe/default"
 #else
 #define DEFAULT_ICON_PATH "/pixmaps"
 
