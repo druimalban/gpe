@@ -46,7 +46,8 @@ guint update_icon_list(gpointer user_data)
   GtkTreeIter iter;
   GError *err = NULL;
   gchar pathname[255];
-  char dline[64], func[12], value[64];
+  char func[12], value[64];
+  char dline[sizeof(func)+sizeof(value)+4];
   char essid[100];
   FILE *f;
 
@@ -70,11 +71,11 @@ guint update_icon_list(gpointer user_data)
   system(WIFISCANSH);
 
   f=fopen("/tmp/wifi.scan", "r");
-	
+
   if (! f) fprintf(stderr, "problem opening /tmp/wifi.conf\n");
 	else {
 		while(fgets(dline,sizeof(dline),f)) {
-			if (sscanf(dline,"%s = %s\n", func, value) == 2) {
+			if (sscanf(dline,"%.12s = %.64s\n", func, value) == 2) {
 				if (strcmp(func, "essid")==0) {
 				    sprintf(essid,"- %s",value);
 				    gtk_list_store_append (list_store, &iter);
