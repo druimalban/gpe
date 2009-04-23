@@ -38,7 +38,6 @@ static int check_essid(gpointer user_data) {
 		while(fgets(dline,sizeof(dline),f)) {
 			if (sscanf(dline,"%s %s", func, value) == 2) {
 				if (strcmp(func, "wireless-essid")==0) {
-				    printf("found essid! %s\n",value);
 				    gtk_entry_set_text(GTK_ENTRY(entry6),_(value));
 				}
 
