@@ -24,15 +24,11 @@ set_net_profile(GtkIconView *iconview, GtkTreePath *path, gpointer user_data)
 	GtkWidget * window1 = lookup_widget(GTK_WIDGET(user_data), "window1");
 	GtkTreeIter iter;
 	gchar essid[64];
-	printf("set_profile called!");
 
 	gtk_tree_model_get_iter(model, &iter, path);
 	gtk_tree_model_get (model, &iter, COL_DISPLAY_NAME, &name, -1);
 	sscanf(name,"- %s",essid);
-	printf("got:%s\n",essid);
 	gtk_window_set_title(window1,_(essid));
-	printf("set_profile complete!\n");
-
 
 }
 
@@ -75,7 +71,6 @@ guint update_icon_list(gpointer user_data)
 				    gtk_list_store_append (list_store, &iter);
 				    sprintf(pathname,"/etc/wifi/%s.cfg",value);
 				    if (g_file_test (pathname, G_FILE_TEST_EXISTS)) {
-					printf("found %s profile!\n",pathname);
 					gtk_list_store_set (list_store, &iter, COL_DISPLAY_NAME, _(essid),
                     			    COL_PIXBUF, p1, -1);
                     		    }
@@ -206,14 +201,11 @@ on_button3_button_release_event        (GtkWidget       *widget,
    {
 
 	gtk_icon_view_selected_foreach(GTK_ICON_VIEW(iconview1),set_net_profile,user_data);
-	printf("title set as %s!\n",gtk_window_get_title(GTK_WINDOW(window1))); 
 
 	if (!strcmp("WiFi Network Scan",gtk_window_get_title(GTK_WINDOW(window1)))){
-	    printf("Wifi Network Scan set for title!\n"); 
 	    execl("/usr/bin/net-connect","/usr/bin/net-connect","None",(char *)0);
 	}
 	else {
-	    printf("title set for essid!\n"); 
 	    execl("/usr/bin/net-connect","/usr/bin/net-connect",gtk_window_get_title(GTK_WINDOW(window1)),(char *)0);
 	}
     
@@ -245,15 +237,12 @@ on_button2_button_release_event        (GtkWidget       *widget,
    {
 
 	gtk_icon_view_selected_foreach(GTK_ICON_VIEW(iconview1),set_net_profile,user_data);
-	printf("title set as %s!\n",gtk_window_get_title(GTK_WINDOW(window1))); 
 
 	if (!strcmp("WiFi Network Scan",gtk_window_get_title(GTK_WINDOW(window1)))){
-	    printf("Wifi Network Scan set for title!\n"); 
 	    execl("/usr/bin/net-config","/usr/bin/net-config","None",	\
 		    "/usr/bin/wifi-scan",(char *)0);
 	}
 	else {
-	    printf("title set for essid!\n"); 
 	    execl("/usr/bin/net-config","/usr/bin/net-config",	\
 		    gtk_window_get_title(GTK_WINDOW(window1)),	\
 		    "/usr/bin/wifi-scan",(char *)0);
