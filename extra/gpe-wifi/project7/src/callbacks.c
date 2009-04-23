@@ -42,7 +42,7 @@ guint update_icon_list(gpointer user_data)
 
   GtkWidget * iconview1 = lookup_widget(GTK_WIDGET(user_data), "iconview1");
   GtkListStore *list_store = GTK_LIST_STORE(gtk_icon_view_get_model(GTK_ICON_VIEW(iconview1)));
-  GdkPixbuf *p1, *p2;
+  GdkPixbuf *p1, *p2, *p3, *p4;
   GtkTreeIter iter;
   GError *err = NULL;
   gchar pathname[255];
@@ -60,6 +60,10 @@ guint update_icon_list(gpointer user_data)
   p1 = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/gtk-yes.png", &err);
                             /* No error checking is done here */
   p2 = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/gtk-no.png", &err);
+
+  p3 = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/gtk-apply.png", &err);
+
+  p4 = gdk_pixbuf_new_from_file ("/usr/share/pixmaps/gtk-dialog-question.png", &err);
 
   list_store = gtk_list_store_new (NUM_COLS, G_TYPE_STRING, GDK_TYPE_PIXBUF);
 
@@ -82,6 +86,20 @@ guint update_icon_list(gpointer user_data)
                     		    else {
 					gtk_list_store_set (list_store, &iter, COL_DISPLAY_NAME, _(essid),
                     			    COL_PIXBUF, p2, -1);
+                    		    }
+				}
+
+				if (strcmp(func, "connected")==0) {
+				    sprintf(essid,"- %s",value);
+				    gtk_list_store_append (list_store, &iter);
+				    sprintf(pathname,"/etc/wifi/%s.cfg",value);
+				    if (g_file_test (pathname, G_FILE_TEST_EXISTS)) {
+					gtk_list_store_set (list_store, &iter, COL_DISPLAY_NAME, _(essid),
+                    			    COL_PIXBUF, p3, -1);
+                    		    }
+                    		    else {
+					gtk_list_store_set (list_store, &iter, COL_DISPLAY_NAME, _(essid),
+                    			    COL_PIXBUF, p4, -1);
                     		    }
 				}
 			}
