@@ -21,6 +21,8 @@
 #include "interface.h"
 #include "support.h"
 
+#define IF_WIFI "eth0"
+
 static int Wfd;
 
 static struct wireless_info WInfo;
@@ -82,21 +84,21 @@ guint update_wireless(gpointer user_data) {
     gchar tmp_str[64];
     int sig_level=0;
 
-  if (iw_get_basic_config(Wfd, "eth0", &WInfo.b) < 0)
+  if (iw_get_basic_config(Wfd, IF_WIFI, &WInfo.b) < 0)
     {
       fprintf(stderr, "mb-applet-wireless: unable to read wireless config\n" );
       return FALSE;
     }
 
-  if(iw_get_range_info(Wfd,"eth0", &(WInfo.range)) >= 0)
+  if(iw_get_range_info(Wfd,IF_WIFI, &(WInfo.range)) >= 0)
     WInfo.has_range = 1;  
 
-  if (iw_get_stats(Wfd, "eth0", 
+  if (iw_get_stats(Wfd, IF_WIFI, 
 		   &(WInfo.stats),
                    &(WInfo.range), WInfo.has_range) >= 0)
     WInfo.has_stats = 1;
 
-    iw_get_ext(Wfd, "eth0", SIOCGIWAP, &wrq);    
+    iw_get_ext(Wfd, IF_WIFI, SIOCGIWAP, &wrq);    
 
     status=iw_sawap_ntop(&wrq.u.ap_addr, tmp_str);
     if (strcmp("Not-Associated",status)==0) {
@@ -128,7 +130,7 @@ guint update_wireless(gpointer user_data) {
 	    exit(EXIT_FAILURE);
 	}
 
-	get_addr(sockfd,"eth0",&ifa);
+	get_addr(sockfd,IF_WIFI,&ifa);
 	gtk_entry_set_text(GTK_ENTRY(entry12),_(inet_ntoa(*(struct in_addr *)&ifa.sa_data[sizeof sa.sin_port])));
     }
 
