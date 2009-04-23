@@ -165,7 +165,6 @@ set_wpamethod                  (gpointer value, gpointer user_data)
 static void set_radio_button(gpointer local_button, gpointer user_data) {
     GList *child = gtk_container_children(GTK_CONTAINER(local_button));
     if (!strcmp(gtk_label_get_text(GTK_LABEL(child->data)),user_data)){
-	printf("found a match: %s\n",user_data);
 	gtk_toggle_button_set_active(local_button,TRUE);
     }
 
@@ -175,7 +174,6 @@ void
 set_return_cmd(gchar *return_str){
 
 sprintf(return_cmd,"%s",return_str);
-printf("return_cmd=%s\n",return_cmd);
 
 }
 
@@ -197,7 +195,6 @@ gtk_notebook_remove_page(GTK_NOTEBOOK(notebook1),-1);
 gtk_notebook_remove_page(GTK_NOTEBOOK(notebook1),-1);
 
  if (g_file_test (pathname, G_FILE_TEST_EXISTS)) {
-	printf("found %s profile!\n",pathname);
 	f=fopen(pathname, "r");
 	
 	if (f)
@@ -207,12 +204,10 @@ gtk_notebook_remove_page(GTK_NOTEBOOK(notebook1),-1);
 				if (strcmp(func, "ipmethod")==0) {
 					GtkWidget * radiobutton5 = lookup_widget(GTK_WIDGET(user_data), "radiobutton5");
 					GSList *buttonlist = gtk_radio_button_get_group(GTK_RADIO_BUTTON(radiobutton5));
-					printf("found ipmethod entry: %s\n",value);
 					g_slist_foreach(buttonlist,set_radio_button,&value);
 					set_ipmethod(&value,user_data);
 				}
 				if (strcmp(func, "security")==0) {
-					printf("found security entry: %s\n",value);
 					if (strcmp(value,"WEP")==0) {
 					    GtkWidget * radiobutton6 = lookup_widget(GTK_WIDGET(user_data), "radiobutton6");
 					    GtkWidget * fixed4 = lookup_widget(GTK_WIDGET(user_data), "fixed4");
@@ -251,34 +246,28 @@ gtk_notebook_remove_page(GTK_NOTEBOOK(notebook1),-1);
 				    if (strcmp(func, "default_key")==0) {
 					GtkWidget * spinbutton1 = lookup_widget(GTK_WIDGET(user_data), "spinbutton1");
 					gtk_spin_button_set_value(GTK_SPIN_BUTTON(spinbutton1),atoi(value));
-					printf("found default_key entry: %s\n",value);
 				    }
 				    if (strcmp(func, "key_0")==0) {
 					GtkWidget * entry7 = lookup_widget(GTK_WIDGET(user_data), "entry7");
 					gtk_entry_set_text(GTK_ENTRY(entry7),value);
-					printf("found key_0 entry: %s\n",value);
 				    }
 				    if (strcmp(func, "key_1")==0) {
 					GtkWidget * entry8 = lookup_widget(GTK_WIDGET(user_data), "entry8");
 					gtk_entry_set_text(GTK_ENTRY(entry8),value);
-					printf("found key_1 entry: %s\n",value);
 				    }
 				    if (strcmp(func, "key_2")==0) {
 					GtkWidget * entry9 = lookup_widget(GTK_WIDGET(user_data), "entry9");
 					gtk_entry_set_text(GTK_ENTRY(entry9),value);
-					printf("found key_2 entry: %s\n",value);
 				    }
 				    if (strcmp(func, "key_3")==0) {
 					GtkWidget * entry10 = lookup_widget(GTK_WIDGET(user_data), "entry10");
 					gtk_entry_set_text(GTK_ENTRY(entry10),value);
-					printf("found key_3 entry: %s\n",value);
 				    }
 				}
 				else if (security==2) {
 				    if (strcmp(func, "passphrase")==0) {
 					GtkWidget * entry11 = lookup_widget(GTK_WIDGET(user_data), "entry11");
 					gtk_entry_set_text(GTK_ENTRY(entry11),value);
-					printf("found passphrase entry: %s\n",value);
 				    }
 				    if (strcmp(func, "wpa_encryption")==0) {
 					GtkWidget * radiobutton10 = lookup_widget(GTK_WIDGET(user_data), "radiobutton10");
@@ -291,24 +280,20 @@ gtk_notebook_remove_page(GTK_NOTEBOOK(notebook1),-1);
 					    wpamethod=2;
 					    g_slist_foreach(buttonlist,set_radio_button,_("TKIP"));
 					}
-					printf("found wpa_encryption entry: %s\n",value);
 				    }
 				}
 				else if (security==3) {
 				    if (strcmp(func, "passphrase")==0) {
 					GtkWidget * entry14 = lookup_widget(GTK_WIDGET(user_data), "entry14");
 					gtk_entry_set_text(GTK_ENTRY(entry14),value);
-					printf("found passphrase entry: %s\n",value);
 				    }
 				    if (strcmp(func, "username")==0) {
 					GtkWidget * entry12 = lookup_widget(GTK_WIDGET(user_data), "entry12");
 					gtk_entry_set_text(GTK_ENTRY(entry12),value);
-					printf("found username entry: %s\n",value);
 				    }
 				    if (strcmp(func, "password")==0) {
 					GtkWidget * entry13 = lookup_widget(GTK_WIDGET(user_data), "entry13");
 					gtk_entry_set_text(GTK_ENTRY(entry13),value);
-					printf("found password entry: %s\n",value);
 				    }
 				    if (strcmp(func, "wpa_encryption")==0) {
 					GtkWidget * radiobutton12 = lookup_widget(GTK_WIDGET(user_data), "radiobutton12");
@@ -328,8 +313,6 @@ gtk_notebook_remove_page(GTK_NOTEBOOK(notebook1),-1);
 					    set_wpamethod(&value,user_data);
 					    wpamethod=5;
 					}
-					
-					printf("found wpa_encryption entry: %s\n",value);
 				    }
 				}
 			}
@@ -341,8 +324,6 @@ gtk_notebook_remove_page(GTK_NOTEBOOK(notebook1),-1);
 	gtk_entry_set_text(GTK_ENTRY(entry6),gtk_entry_get_text(GTK_ENTRY(entry15)));
 
  }
- else
-	printf("could not find %s profile!\n",pathname);
 
 
 
