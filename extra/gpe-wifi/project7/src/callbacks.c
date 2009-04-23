@@ -9,6 +9,11 @@
 #include "interface.h"
 #include "support.h"
 
+#define WIFISCAN "/usr/bin/wifi-scan"
+#define WIFISCANSH "/usr/bin/wifi-scan.sh"
+#define WIFICONNECT "/usr/bin/net-connect"
+#define WIFICONFIG "/usr/bin/net-config"
+
 enum
 {
   COL_DISPLAY_NAME,
@@ -28,7 +33,7 @@ set_net_profile(GtkIconView *iconview, GtkTreePath *path, gpointer user_data)
 	gtk_tree_model_get_iter(model, &iter, path);
 	gtk_tree_model_get (model, &iter, COL_DISPLAY_NAME, &name, -1);
 	sscanf(name,"- %s",essid);
-	gtk_window_set_title(window1,_(essid));
+	gtk_window_set_title(GTK_WINDOW(window1),_(essid));
 
 }
 
@@ -58,7 +63,7 @@ guint update_icon_list(gpointer user_data)
 
   list_store = gtk_list_store_new (NUM_COLS, G_TYPE_STRING, GDK_TYPE_PIXBUF);
 
-  system("/usr/bin/wifi-scan.sh");
+  system(WIFISCANSH);
 
   f=fopen("/tmp/wifi.scan", "r");
 	
@@ -125,7 +130,7 @@ guint refresh_icon_list(gpointer user_data)
   gtk_icon_view_set_selection_mode (GTK_ICON_VIEW (iconview1),
                                     GTK_SELECTION_MULTIPLE);
 
-  g_timeout_add_full(G_PRIORITY_DEFAULT,1000,update_icon_list,user_data,NULL)	;
+  g_timeout_add_full(G_PRIORITY_DEFAULT,1000,(GSourceFunc)update_icon_list,user_data,NULL)	;
 
 
     return FALSE;
@@ -203,10 +208,10 @@ on_button3_button_release_event        (GtkWidget       *widget,
 	gtk_icon_view_selected_foreach(GTK_ICON_VIEW(iconview1),set_net_profile,user_data);
 
 	if (!strcmp("WiFi Network Scan",gtk_window_get_title(GTK_WINDOW(window1)))){
-	    execl("/usr/bin/net-connect","/usr/bin/net-connect","None",(char *)0);
+	    execl(WIFICONNECT, WIFICONNECT, "None", (char *)0);
 	}
 	else {
-	    execl("/usr/bin/net-connect","/usr/bin/net-connect",gtk_window_get_title(GTK_WINDOW(window1)),(char *)0);
+	    execl(WIFICONNECT, WIFICONNECT, gtk_window_get_title(GTK_WINDOW(window1)), (char *)0);
 	}
     
    }
@@ -239,13 +244,13 @@ on_button2_button_release_event        (GtkWidget       *widget,
 	gtk_icon_view_selected_foreach(GTK_ICON_VIEW(iconview1),set_net_profile,user_data);
 
 	if (!strcmp("WiFi Network Scan",gtk_window_get_title(GTK_WINDOW(window1)))){
-	    execl("/usr/bin/net-config","/usr/bin/net-config","None",	\
-		    "/usr/bin/wifi-scan",(char *)0);
+	    execl(WIFICONFIG, WIFICONFIG, "None",	\
+		    WIFISCAN, (char *)0);
 	}
 	else {
-	    execl("/usr/bin/net-config","/usr/bin/net-config",	\
+	    execl(WIFICONFIG,WIFICONFIG,	\
 		    gtk_window_get_title(GTK_WINDOW(window1)),	\
-		    "/usr/bin/wifi-scan",(char *)0);
+		    WIFISCAN,(char *)0);
 	}
     
    }
