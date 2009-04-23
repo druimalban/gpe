@@ -16,12 +16,7 @@ void set_profile(char *essid,gpointer user_data){
 
 GtkWidget * label4 = lookup_widget(GTK_WIDGET(user_data), "label4");
 
-printf("set_profile called!\n");
-
 gtk_label_set_text(GTK_LABEL(label4),_(essid));
-
-printf("set_profile completed!\n");
-
 
 }
 
@@ -40,7 +35,6 @@ main (int argc, char *argv[])
   gtk_set_locale ();
   gtk_init (&argc, &argv);
 
-//  add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
   add_pixmap_directory ("/usr/share/pixmaps");
 
   /*
