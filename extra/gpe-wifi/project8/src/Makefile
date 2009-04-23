@@ -14,7 +14,6 @@
 
 
 
-CROSS_INCLUDES= /home/dave/poky-svn/build/tmp/staging/arm-poky-linux-gnueabi
 
 pkgdatadir = $(datadir)/project8
 pkglibdir = $(libdir)/project8
@@ -61,18 +60,18 @@ DIST_SOURCES = $(project8_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/dave/project8/missing --run aclocal-1.10
-AMTAR = ${SHELL} /home/dave/project8/missing --run tar
-AUTOCONF = ${SHELL} /home/dave/project8/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/dave/project8/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/dave/project8/missing --run automake-1.10
+ACLOCAL = ${SHELL} /home/dave/gpe/trunk/extra/gpe-wifi/project8/missing --run aclocal-1.10
+AMTAR = ${SHELL} /home/dave/gpe/trunk/extra/gpe-wifi/project8/missing --run tar
+AUTOCONF = ${SHELL} /home/dave/gpe/trunk/extra/gpe-wifi/project8/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/dave/gpe/trunk/extra/gpe-wifi/project8/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/dave/gpe/trunk/extra/gpe-wifi/project8/missing --run automake-1.10
 AWK = gawk
 CATALOGS = 
 CATOBJEXT = .gmo
-CC = arm-poky-linux-gnueabi-gcc
+CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
-CPP = arm-poky-linux-gnueabi-gcc -E
+CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
 DATADIRNAME = share
@@ -98,8 +97,8 @@ LDFLAGS =
 LIBOBJS = 
 LIBS = 
 LTLIBOBJS = 
-MAINT = #
-MAKEINFO = ${SHELL} /home/dave/project8/missing --run makeinfo
+MAINT = 
+MAKEINFO = ${SHELL} /home/dave/gpe/trunk/extra/gpe-wifi/project8/missing --run makeinfo
 MKDIR_P = /bin/mkdir -p
 MKINSTALLDIRS = ./mkinstalldirs
 MSGFMT = /usr/bin/msgfmt
@@ -121,15 +120,15 @@ PO_IN_DATADIR_FALSE =
 PO_IN_DATADIR_TRUE = 
 SET_MAKE = 
 SHELL = /bin/sh
-STRIP = arm-poky-linux-gnueabi-strip
+STRIP = 
 USE_NLS = yes
 VERSION = 0.1
 XGETTEXT = /usr/bin/xgettext
-abs_builddir = /home/dave/project8/src
-abs_srcdir = /home/dave/project8/src
-abs_top_builddir = /home/dave/project8
-abs_top_srcdir = /home/dave/project8
-ac_ct_CC = 
+abs_builddir = /home/dave/gpe/trunk/extra/gpe-wifi/project8/src
+abs_srcdir = /home/dave/gpe/trunk/extra/gpe-wifi/project8/src
+abs_top_builddir = /home/dave/gpe/trunk/extra/gpe-wifi/project8
+abs_top_srcdir = /home/dave/gpe/trunk/extra/gpe-wifi/project8
+ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
 am__quote = 
@@ -143,11 +142,11 @@ datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-host_alias = arm-poky-linux-gnueabi
+host_alias = 
 htmldir = ${docdir}
-includedir = /home/dave/poky-svn/build/tmp/staging/arm-poky-linux-gnueabi
+includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = $(SHELL) /home/dave/project8/install-sh
+install_sh = $(SHELL) /home/dave/gpe/trunk/extra/gpe-wifi/project8/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -169,7 +168,7 @@ top_srcdir = ..
 INCLUDES = \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
-	-I$(CROSS_INCLUDES)/usr/include/gtk-2.0 -I$(CROSS_INCLUDES)/usr/lib/gtk-2.0/include -I$(CROSS_INCLUDES)/usr/include/atk-1.0 -I$(CROSS_INCLUDES)/usr/include/cairo -I$(CROSS_INCLUDES)/usr/include/pango-1.0 -I$(CROSS_INCLUDES)/usr/include/glib-2.0 -I$(CROSS_INCLUDES)/usr/lib/glib-2.0/include  
+	-I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include  
 
 project8_SOURCES = \
 	main.c \
@@ -177,12 +176,12 @@ project8_SOURCES = \
 	interface.c interface.h \
 	callbacks.c callbacks.h
 
-project8_LDADD = -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lpango-1.0 -lcairo -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -liw  $(INTLLIBS)
+project8_LDADD = -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lpangocairo-1.0 -lpango-1.0 -lcairo -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0   $(INTLLIBS)
 all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .o .obj
-$(srcdir)/Makefile.in: # $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -207,9 +206,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure: # $(am__configure_deps)
+$(top_srcdir)/configure:  $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4): # $(am__aclocal_m4_deps)
+$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
