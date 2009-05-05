@@ -1,3 +1,6 @@
+2009-05-05      Florian Boor <florian.boor@kernelconcepts.de>
+	* Add information about the mini2440 class of devices.
+
 2009-04-15 Ned Ludd  <solar@gentoo.org>
 	* gpe-base/gpe-conf: modules/ownerinfo.c 
 	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/

@@ -345,3 +345,12 @@ Model =
 Type = eval
 Manufacturer = Toshiba
 Features = 0x21
+
+[Mini2440]
+ID = 39
+Pattern = MINI2440
+Name = Mini2440 / Micro2440
+Model =
+Type = eval
+Manufacturer = FriendlyARM
+Features = 0x25
