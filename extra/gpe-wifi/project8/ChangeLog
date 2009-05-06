@@ -1,0 +1,3 @@
+2009-05-06  Florian Boor <florian.boor@kernelconcepts.de>
+	* Add libiw to LDFLAGS
+	* Remove generated files

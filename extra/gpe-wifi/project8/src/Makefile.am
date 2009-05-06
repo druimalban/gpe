@@ -13,5 +13,5 @@ project8_SOURCES = \
 	interface.c interface.h \
 	callbacks.c callbacks.h
 
-project8_LDADD = @PACKAGE_LIBS@ $(INTLLIBS)
+project8_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) -liw
 
