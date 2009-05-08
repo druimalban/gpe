@@ -1,3 +1,7 @@
+2009-05-08      Florian Boor <florian.boor@kernelconcepts.de>
+
+	* Release 0.14
+
 2009-03-11      Florian Boor <florian.boor@kernelconcepts.de>
 
     * Makefile: Install binaries without using '-s'. Patch courtesy by
