@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script.
 dnl gpe-mixer-0.42
 
 AC_PREREQ(2.59)
-AC_INIT(gpe-mixer,0.42,gpe-list@linuxtogo.org)
+AC_INIT(gpe-mixer,0.50,gpe-list@linuxtogo.org)
 AC_CONFIG_SRCDIR([gpe-mixer.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 

@@ -1,3 +1,9 @@
+2009-05-10	Florian Boor <florian@kernelconcepts.de>
+
+	- Release 0.50
+	- Some minor build system fixes
+	- Bump version to 0.50
+
 2008-04-12	Florian Boor <florian@kernelconcepts.de>
 
 	- Add autotools support, patch contributed by David Marlin

@@ -2,7 +2,7 @@
 SUBDIRS = po
 
 INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir) \
-           -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
+           -DPREFIX=\"@prefix@\" -D_GNU_SOURCE -DUSE_GPE \ 
 	   -DPACKAGE_LOCALE_DIR=\"@gpemixer_localedir@\"
 
 bin_PROGRAMS = gpe-mixer
