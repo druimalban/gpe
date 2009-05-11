@@ -134,6 +134,9 @@ case `module_id` in
 	"Hoeft&Wessel HW90250")
 		 ARGS="$ARGS -dpi 100 -screen 240x320@90 -mouse tslib"
 		 ;;
+	"MINI2440")
+		 ARGS="$ARGS -dpi 100 -screen ${SCREEN_SIZE} -mouse tslib"
+		 ;;
 	# This is a fallback for PCs
 	"")
 		if [ -f /usr/bin/Xvesa ]; then
