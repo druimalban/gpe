@@ -1,3 +1,9 @@
+2009-05-13  Florian Boor <florian@kernelconcepts.de>
+
+	* Release 1.24
+	* Move calibration script to run later. This works around
+	  failing touchscreen detection on slow devices.
+
 2009-05-12  Florian Boor <florian@kernelconcepts.de>
 
 	* Support for FriendlyARM Mini/Micro 2440
