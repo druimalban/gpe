@@ -1,3 +1,7 @@
+2009-05-12  Florian Boor <floriankernelconcepts.de>
+
+	* Remove minimix from default applets.
+
 2008-09-30  Florian Boor <floriankernelconcepts.de>
 
 	* Autotools support by D. Marlin
