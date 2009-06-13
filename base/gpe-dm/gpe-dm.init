@@ -7,7 +7,7 @@ PIDFILE="/var/run/gpe-dm.pid"
 case "$1" in
   start)
 	echo "Starting GPE display manager: gpe-dm"
-	/usr/bin/gpe-dm
+	gpe-dm
   ;;
 
   stop)
