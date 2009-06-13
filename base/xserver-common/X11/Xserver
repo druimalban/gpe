@@ -2,30 +2,33 @@
 #
 
 XSERVER=Xfbdev
+BINDIR=/usr/bin
 
-if [ -f /usr/bin/Xepson ]; then
+if [ -f $BINDIR/Xepson ]; then
   XSERVER=Xepson
 fi
-if [ -f /usr/bin/Xorg ]; then
+if [ -f $BINDIR/Xorg ]; then
   XSERVER=Xorg
 fi
-if [ -f /usr/bin/Xomap ]; then
+if [ -f $BINDIR/Xomap ]; then
   XSERVER=Xomap
 fi
-if [ -f /usr/bin/Xw100 ]; then
+if [ -f $BINDIR/Xw100 ]; then
   XSERVER=Xw100
 fi
-if [ -f /usr/bin/Xvesa ]; then
+if [ -f $BINDIR/Xvesa ]; then
   XSERVER=Xvesa
 fi
-if [ -f /usr/bin/Ximageon ]; then
+if [ -f $BINDIR/Ximageon ]; then
   XSERVER=Ximageon
 fi
-if [ -f /usr/bin/Xglamo ]; then
+if [ -f $BINDIR/Xglamo ]; then
   XSERVER=Xglamo
 fi
 
-. /etc/profile
+if [ -f /etc/profile ]; then
+  . /etc/profile
+fi
 
 fallback_screen_arg() {
     geom=`fbset | grep geometry`
@@ -139,7 +142,7 @@ case `module_id` in
 		 ;;
 	# This is a fallback for PCs
 	"")
-		if [ -f /usr/bin/Xvesa ]; then
+		if [ -f $BINDIR/Xvesa ]; then
 			ARGS="$ARGS -dpi 100 -mode 0x0114"
 		else
 			ARGS="$ARGS -dpi 100"
