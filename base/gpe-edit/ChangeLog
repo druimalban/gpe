@@ -1,3 +1,7 @@
+2009-07-08  Florian Boor <florian.boor@kernelconcepts.de>
+
+    * Correct file lists for i18n. Fix by Angelo Arrifano <miknix@gentoo.org>
+
 2008-10-14  Florian Boor <florian.boor@kernelconcepts.de>
 
     * Add Danish translation and determine available translations
