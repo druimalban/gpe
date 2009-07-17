@@ -1,3 +1,24 @@
+2009-07-17  Florian Boor <florian@kernelconcepts.de>
+
+	* Import patch series Marcin Juszkiewicz <marcin@juszkiewicz.com.pl>
+	0001-moved-xmodmap-files-to-xmodmap-dir.patch
+	0002-xmodmap-files-moved-to-own-dir.patch                       
+	0003-use-machine_id-from-init.d-functions.patch                 
+	0004-xserver-at91-boards-have-RGB-screen-with-recent-kern.patch 
+	0005-xserver-set-DPI-in-variable.patch                          
+	0006-xserver-merge-nokia-n800-and-n810.patch                    
+	0007-xserver-reorder-openmoko-devices.patch                     
+	0008-xserver-use-etc-default-xserver-if-present-and-fallb.patch 
+	0009-xserver-added-example-etc-default-xserver-file-for-p.patch 
+	0010-xserver-atmel-boards-do-not-need-setup-defaults-are-.patch 
+	0011-added-README-with-ideas.patch                              	
+	0012-xserver-added-some-devices-from-xserver-kdrive-commo.patch 
+	0013-xserver-added-Ronetix-PM9261-3-boards.patch                
+	0014-xserver-no-need-to-set-mouse-tslib-as-this-is-set-fo.patch 
+	0015-xserver-moved-Nokia-770-to-nokia-tablets.patch             
+	0016-machine_id-substitutes-spaces-with-underscores.patch       
+	0017-xserver-if-we-have-unknown-device-then-give-it-s-scr.patch
+
 2009-06-13  Phil Blundell  <pb@reciva.com>
 
 	* Version 1.25 released.

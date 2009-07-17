@@ -1,0 +1,15 @@
+xserver-common patching ideas:
+
+- set DPI in separate variable instead of being part of ARGS
+  + some devices needs only DPI setting
+  + default ARGS are usually fine for devices
+
+- use /etc/default/xserver for setting ARGS/DPI for new devices
+  + no need to patch Xserver anymore
+  + easy to tweak on device itself
+
+- xmodmap stuff should be machine dependent so only one xmodmap is
+  present on device
+
+- zaurusd, devmand should provide session scripts instead of being
+  called from Ts_calibrate script

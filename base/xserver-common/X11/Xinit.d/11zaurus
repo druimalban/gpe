@@ -1,23 +1,32 @@
 #!/bin/sh
 
-if [ -z "`which chkhinge`" ]; then
-   # probably not a clamshell zaurus
-   exit 0
+if [ -z "`which chkhinge 2>/dev/null`" ]; then
+   # not a clamshell zaurus or we have kernel 2.6
+   # no rotation status check available
+   CHCK=true
+else
+   CHCK=chkhinge
 fi
 
-module_id() {
-    # Get model name
-    echo `grep "^Hardware" /proc/cpuinfo | sed -e "s/.*: *//" | tr a-z A-Z`
-}
+. /etc/init.d/functions
 
-chkhinge -e
+$CHCK -e
 if [ $? = 12 ]; then
-   case `module_id` in
-   	*SPITZ | *AKITA | *BORZOI)
-   		DIRECTION="left" ;;
-        default)
+   case `machine_id` in
+   	*Spitz | *Akita | *Borzoi)
+   		DIRECTION="normal" ;;
+        *)
                 DIRECTION="right" ;;
    esac
-   xrandr -o $DIRECTION
+else
+   case `machine_id` in
+   	*Spitz | *Akita | *Borzoi)
+		# Xfbdev needs to settle
+		sleep 2
+   		DIRECTION="right" ;;
+        *)
+                DIRECTION="normal" ;;
+   esac
 fi
 
+xrandr -o $DIRECTION

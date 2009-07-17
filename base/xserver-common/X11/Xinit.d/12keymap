@@ -3,30 +3,30 @@
 MACHINE=`awk 'BEGIN { FS=": " } /Hardware/ { print $2 } ' </proc/cpuinfo`
 
 # since kdrive 1.4 there is no default keymap in server
-xmodmap - </etc/X11/default.xmodmap
+xmodmap - </etc/X11/xmodmap/default.xmodmap
 
 case $MACHINE in
 	"SHARP Shepherd" | "SHARP Husky" | "SHARP Corgi")
-		xmodmap - < /etc/X11/shepherd.xmodmap
+		xmodmap - < /etc/X11/xmodmap/shepherd.xmodmap
 		;;
 	"SHARP Akita" | "SHARP Borzoi" | "SHARP Spitz")
-		xmodmap - < /etc/X11/slcXXXX.xmodmap
+		xmodmap - < /etc/X11/xmodmap/slcXXXX.xmodmap
 		;;				
 	"SHARP Poodle")
-		xmodmap - < /etc/X11/poodle.xmodmap
+		xmodmap - < /etc/X11/xmodmap/poodle.xmodmap
 		;;
         "Sharp-Collie")
-                xmodmap - < /etc/X11/collie.xmodmap
+                xmodmap - < /etc/X11/xmodmap/collie.xmodmap
                 ;;
 	"HP iPAQ h6300")
-		xmodmap - < /etc/X11/h6300.xmodmap
+		xmodmap - < /etc/X11/xmodmap/h6300.xmodmap
 		;;
 	"TI-OSK")
-		xmodmap - < /etc/X11/omap5912osk.xmodmap
+		xmodmap - < /etc/X11/xmodmap/omap5912osk.xmodmap
 		;;
 	# All the rest of keyboardless PDA machines use common buttonmap
 	"Simpad" | "HP iPAQ"* | "Asus MyPal"*)
-		xmodmap - < /etc/X11/keyboardless.xmodmap
+		xmodmap - < /etc/X11/xmodmap/keyboardless.xmodmap
 		;;
 esac
 

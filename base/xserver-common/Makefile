@@ -1,6 +1,6 @@
 PREFIX = /usr/local
 PACKAGE = xserver-common
-CVSBUILD = yes
+CVSBUILD = no
 VERSION = 1.25
 DEBUG = no
 
@@ -22,7 +22,7 @@ install-program:
 	install -m 755 X11/Xinit $(DESTDIR)/etc/X11/Xinit
 	install -m 755 X11/Xserver $(DESTDIR)/etc/X11/Xserver
 	install -m 755 X11/Xsession $(DESTDIR)/etc/X11/Xsession
-	install -m 644 X11/*.xmodmap $(DESTDIR)/etc/X11/
+	install -m 644 X11/xmodmap/*.xmodmap $(DESTDIR)/etc/X11/
 	install -m 644 X11/xmodmap-* $(DESTDIR)/etc/X11/
 
 clean:

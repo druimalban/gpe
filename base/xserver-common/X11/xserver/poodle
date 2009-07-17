@@ -1,0 +1,3 @@
+	    *poodle)
+		    ARGS="$ARGS -rgba vrgb -screen 320x240@270"
+		    DPI="100" ;;

@@ -1,0 +1,4 @@
+keycode 111 = Right
+keycode 116 = Left
+keycode 114 = Down
+keycode 113 = Up
