@@ -13,14 +13,14 @@ fi
 $CHCK -e
 if [ $? = 12 ]; then
    case `machine_id` in
-   	*Spitz | *Akita | *Borzoi)
+   	*spitz | *akita | *borzoi)
    		DIRECTION="normal" ;;
         *)
                 DIRECTION="right" ;;
    esac
 else
    case `machine_id` in
-   	*Spitz | *Akita | *Borzoi)
+   	*spitz | *akita | *borzoi)
 		# Xfbdev needs to settle
 		sleep 2
    		DIRECTION="right" ;;

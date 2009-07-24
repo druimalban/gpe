@@ -1,7 +1,7 @@
 PREFIX = /usr/local
 PACKAGE = xserver-common
 CVSBUILD = no
-VERSION = 1.30
+VERSION = 1.31
 DEBUG = no
 
 LINGUAS = 
@@ -23,7 +23,7 @@ install-program:
 	install -m 755 X11/Xserver $(DESTDIR)/etc/X11/Xserver
 	install -m 755 X11/Xsession $(DESTDIR)/etc/X11/Xsession
 	install -m 644 X11/xmodmap/*.xmodmap $(DESTDIR)/etc/X11/
-	install -m 644 X11/xmodmap-* $(DESTDIR)/etc/X11/
+	install -m 644 X11/xmodmap/xmodmap-* $(DESTDIR)/etc/X11/
 
 clean:
 

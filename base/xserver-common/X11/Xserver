@@ -62,7 +62,7 @@ else
   fi
 fi
 
-if [ -e /etc/default/xserver ]
+if [ -e /etc/default/xserver ] ; then
     . /etc/default/xserver
 else
     # start off server in conventional location.
