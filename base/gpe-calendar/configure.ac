@@ -13,7 +13,7 @@ AC_PROG_LIBTOOL
 DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 libgpepimc \
              libgpevtype >= 0.50 libeventdb >= 0.90 \
 	     libxsettings-client \
-	     libhandoff libsoup-2.2 libsoundgen >= 0.5"
+	     libhandoff libsoup-2.2"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
@@ -80,6 +80,15 @@ if test x$with_libschedule != xno
 then
   DEP_MODULES="$DEP_MODULES libschedule"
   AC_DEFINE(WITH_LIBSCHEDULE)
+fi
+
+# See if we should use libsoundgen.
+AC_ARG_WITH(libsoundgen,
+	[AC_HELP_STRING([--without-libsoundgen],[disable use of libsoundgen])])
+if test x$with_libsoundgen != xno
+then
+  DEP_MODULES="$DEP_MODULES libsoundgen >= 0.5"
+  AC_DEFINE(WITH_LIBSOUNDGEN)
 fi
 
 

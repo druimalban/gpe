@@ -343,7 +343,9 @@ ack_event_clicked (GtkWidget *button, gpointer d)
   gtk_container_remove (GTK_CONTAINER (data->alarm_dialog->event_container),
 			data->container);
   event_acknowledge (data->event, NULL);
+#ifdef WITH_LIBSOUNDGEN
   soundgen_alarm_stop();
+#endif
   g_object_unref (data->event);
   g_free (data);
 

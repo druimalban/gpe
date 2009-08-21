@@ -20,7 +20,10 @@
 #ifndef ALARM_DIALOG_H
 #define ALARM_DIALOG_H
 
+#ifdef WITH_LIBSOUNDGEN
 #include <gpe/soundgen.h>
+#endif
+
 #include <gtk/gtkwindow.h>
 #include <gpe/event-db.h>
 

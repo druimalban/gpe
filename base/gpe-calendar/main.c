@@ -32,6 +32,10 @@
 #include <gpe/schedule.h>
 #endif
 
+#ifdef WITH_LIBSOUNDGEN
+#include <gpe/soundgen.h>
+#endif
+
 #include <handoff.h>
 
 #ifdef IS_HILDON
@@ -1356,7 +1360,9 @@ alarm_fired (EventDB *edb, Event *ev)
   alarm_dialog_required ();
 
   alarm_dialog_add_event (alarm_dialog, ev);
+#ifdef WITH_LIBSOUNDGEN
   soundgen_alarm_start();
+#endif
   gtk_window_present (GTK_WINDOW (alarm_dialog));
 }
 
