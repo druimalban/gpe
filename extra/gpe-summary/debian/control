@@ -7,5 +7,5 @@ Standards-Version: 3.6.0
 
 Package: gpesummary
 Architecture: any
-Depends: gpe-calendar, gpe-contacts, gpe-todo
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: GPE Summary applet for the N800

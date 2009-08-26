@@ -1,3 +1,11 @@
+2009-08-26  Graham Cobb  <g+770@cobb.uk.net>
+
+	* debian/rules: Uncomment dh_shlibdeps so shared library dependencies
+	are recorded.
+
+	* debian/control (Depends): Remove dependency on gpe-calendar, etc.
+	Depend on needed libaries instead.
+
 2008-07-13  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c: Fix handling of events which cross day boundary (bug 206).
