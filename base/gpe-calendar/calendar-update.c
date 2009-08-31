@@ -295,7 +295,11 @@ need_retry (struct info *info)
 }
 
 static void
+#ifdef LIBSOUP22
 pushed (SoupMessage *msg, gpointer data)
+#else
+pushed (SoupSession *session, SoupMessage *msg, gpointer data)
+#endif
 {
   struct info *info = data;
 
@@ -364,8 +368,13 @@ calendar_push_internal (struct info *info)
   g_object_ref (info->ec);
 
   char *s = cal_export_as_string (info->ec);
+#ifdef LIBSOUP22
   soup_message_set_request (msg, "text/calendar",
 			    SOUP_BUFFER_SYSTEM_OWNED, s, strlen (s));
+#else
+  soup_message_set_request (msg, "text/calendar",
+			    SOUP_MEMORY_TAKE, s, strlen (s));
+#endif
 
   soup_session_queue_message (session, msg, pushed, info);
 }
@@ -386,7 +395,11 @@ calendar_push (EventCalendar *ec)
 }
 
 static void
+#ifdef LIBSOUP22
 pulled (SoupMessage *msg, gpointer data)
+#else
+pulled (SoupSession *session, SoupMessage *msg, gpointer data)
+#endif
 {
   struct info *info = data;
 
@@ -403,8 +416,13 @@ pulled (SoupMessage *msg, gpointer data)
     }
   else
     {
+#ifdef LIBSOUP22
       GIOChannel *channel = g_io_channel_from_buffer (msg->response.body,
 						      msg->response.length);
+#else
+      GIOChannel *channel = g_io_channel_from_buffer (msg->response_body->data,
+						      msg->response_body->length);
+#endif
       GError *error = NULL;
       int res = cal_import_from_channel (info->ec, channel, &error);
       g_io_channel_unref (channel);

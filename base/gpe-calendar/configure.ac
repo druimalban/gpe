@@ -13,7 +13,7 @@ AC_PROG_LIBTOOL
 DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 libgpewidget >= 0.109 libgpepimc \
              libgpevtype >= 0.50 libeventdb >= 0.90 \
 	     libxsettings-client \
-	     libhandoff libsoup-2.2"
+	     libhandoff"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
@@ -91,6 +91,21 @@ then
   AC_DEFINE(WITH_LIBSOUNDGEN)
 fi
 
+# Check which version of libsoup is installed
+AC_MSG_CHECKING([which libsoup version to use]);
+PKG_CHECK_EXISTS([libsoup-2.4],
+			   [
+			   AC_MSG_RESULT(2.4)
+			   AC_DEFINE(LIBSOUP_VER, 24, [Version of libsoup library])
+			   AC_DEFINE(LIBSOUP24, 1, [Using libsoup-2.4 library])
+			   DEP_MODULES="$DEP_MODULES libsoup-2.4"
+			   ],
+			   [
+			   AC_MSG_RESULT(2.2)
+			   AC_DEFINE(LIBSOUP_VER, 22, [Version of libsoup library])
+			   AC_DEFINE(LIBSOUP22, 1, [Using libsoup-2.2 library])
+			   DEP_MODULES="$DEP_MODULES libsoup-2.2"
+			   ])
 
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
 
