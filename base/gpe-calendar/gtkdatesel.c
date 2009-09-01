@@ -29,12 +29,14 @@
 #include "globals.h"
 
 #ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
   #define LABEL_ADD  16
   #define ARROW_SIZE 30
+#endif /* MAEMO_VERSION_MAJOR */
 #else
   #define LABEL_ADD   8
   #define ARROW_SIZE 20
-#endif
+#endif /* IS_HILDON */
 
 static guint my_signals[1];
 
@@ -308,8 +310,10 @@ make_field (GtkDateSel *sel, struct elem *e,
   arrow_button_r = gtk_button_new ();
   e->container = gtk_hbox_new (FALSE, 0);
 
+#ifdef ARROW_SIZE
   gtk_widget_set_size_request (arrow_button_l, ARROW_SIZE, ARROW_SIZE);
   gtk_widget_set_size_request (arrow_button_r, ARROW_SIZE, ARROW_SIZE);
+#endif
   GTK_WIDGET_UNSET_FLAGS (arrow_button_l, GTK_CAN_FOCUS);
   GTK_WIDGET_UNSET_FLAGS (arrow_button_r, GTK_CAN_FOCUS);
 
@@ -679,7 +683,7 @@ gtk_date_sel_new (GtkDateSelMode mode, GDate *date)
 
 #if IS_HILDON
   /* Hildon brain damage.  */
-  gtk_widget_set_size_request (e->display, 85, -1);
+  //GRC  gtk_widget_set_size_request (e->display, 85, -1);
 #endif
 
   g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (month_update),

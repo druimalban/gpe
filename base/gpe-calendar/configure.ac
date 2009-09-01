@@ -52,24 +52,35 @@ fi
 
 ENABLE_HILDON=false
 AC_ARG_ENABLE(hildon,
-[  --enable-hildon         Enable Hildon GUI],
-[
-	ENABLE_HILDON=true
-        PKG_CHECK_MODULES(HILDON, hildon-1,
-		[
-			AC_DEFINE(HILDON_VER, 2, [Version of hildon libraries])
-			DEP_MODULES="$DEP_MODULES hildon-fm-2"
-		],
-                [
-                        AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
-                        PKG_CHECK_MODULES(HILDON, hildon-lgpl hildon-libs)
-			DEP_MODULES="$DEP_MODULES hildon-fm"
-                ])
-	DEP_MODULES="$DEP_MODULES libosso"
-],
-[
-	ENABLE_HILDON=false
-])
+	[  --enable-hildon         Enable Hildon GUI],
+	[
+		ENABLE_HILDON=true
+		PKG_CHECK_MODULES(HILDON, hildon-1,
+			[
+				AC_DEFINE(HILDON_VER, 2, [Version of hildon libraries])
+				DEP_MODULES="$DEP_MODULES hildon-fm-2"
+			],
+			[
+				AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
+				PKG_CHECK_MODULES(HILDON, hildon-lgpl hildon-libs)
+				DEP_MODULES="$DEP_MODULES hildon-fm"
+			])
+		PKG_CHECK_EXISTS(maemo-version,
+			[
+				VERSION=`pkg-config --modversion maemo-version`
+				AC_MSG_NOTICE([Configuring for Maemo $VERSION])
+				CFLAGS="$CFLAGS -DMAEMO_VERSION=\\\"$VERSION\\\""
+				MAJOR=`echo $VERSION | cut -b1 -`
+				CFLAGS="$CFLAGS -DMAEMO_VERSION_MAJOR=$MAJOR"
+			],
+			[
+				AC_MSG_ERROR([maemo-version not found])
+			])
+		DEP_MODULES="$DEP_MODULES libosso"
+	],
+	[
+		ENABLE_HILDON=false
+	])
 AC_SUBST(ENABLE_HILDON)
 AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
 

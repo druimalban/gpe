@@ -2457,11 +2457,13 @@ main (int argc, char *argv[])
   main_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size (GTK_WINDOW (main_window), window_x, window_y);
 #endif
+
   set_title ();
   g_signal_connect (G_OBJECT (main_window), "delete-event",
                     G_CALLBACK (gpe_handle_close), NULL);
   gtk_widget_show (main_window);
   main_box = GTK_BOX (gtk_vbox_new (FALSE, 0));
+
 #if IS_HILDON
 #if HILDON_VER > 0
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (main_box));
@@ -2471,8 +2473,10 @@ main (int argc, char *argv[])
 #else
   gtk_container_add (GTK_CONTAINER (main_window), GTK_WIDGET (main_box));
 #endif
+
   gtk_widget_show (GTK_WIDGET (main_box));
   GtkMenuShell *menu_main;
+
 #ifdef IS_HILDON
 #if HILDON_VER > 0
   menu_main = gtk_menu_new ();
@@ -2485,6 +2489,7 @@ main (int argc, char *argv[])
   gtk_box_pack_start (main_box, GTK_WIDGET (menu_main), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (menu_main));
 #endif
+
   /* Tool bar.  We fill it before the menu bar as the menu bar
      requires some of its widgets.  */
   tooltips = gtk_tooltips_new ();
@@ -2511,6 +2516,7 @@ main (int argc, char *argv[])
 #else
   gtk_box_pack_start (GTK_BOX (main_box), toolbar, FALSE, FALSE, 0);
 #endif
+
   GtkToolItem *item;
 
   /* Initialize the day view button.  */
@@ -2598,8 +2604,8 @@ main (int argc, char *argv[])
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
     }
   
-  /* Initialize the alarm button.  */
 #ifndef IS_HILDON
+  /* Initialize the alarm button.  */
   p = gpe_find_icon_scaled ("bell",
 			    gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
@@ -2639,6 +2645,7 @@ main (int argc, char *argv[])
   GDate date;
   g_date_set_time_t (&date, viewtime);
 
+#ifndef IS_HILDON
   /* Initialize the day-of-week label */
   /* Note: if a platform does not want to include this label
      just conditionalise out this code -- the rest of gpe-calendar
@@ -2651,6 +2658,7 @@ main (int argc, char *argv[])
   day_of_week = GTK_LABEL(gtk_label_new(dow));
   gtk_widget_show (GTK_WIDGET (day_of_week));
   gtk_container_add (GTK_CONTAINER (item), GTK_WIDGET (day_of_week));
+#endif
   
   /* Initialize the date selector widget */
   item = gtk_tool_item_new ();
@@ -2664,7 +2672,10 @@ main (int argc, char *argv[])
   gtk_widget_show (GTK_WIDGET (datesel));
   gtk_container_add (GTK_CONTAINER (item), GTK_WIDGET (datesel));
 
+  /* Calculate required toolbar width */
+#ifndef IS_HILDON /* Allow toolbar to go to edges on Hildon */
   main_toolbar_width = 20;
+#endif
   void iter (GtkWidget *widget, gpointer data)
     {
       GtkRequisition req;
@@ -2731,7 +2742,7 @@ main (int argc, char *argv[])
   /* File -> Quit.  */
 #ifdef IS_HILDON
   GtkWidget *quit_item = mitem = gtk_menu_item_new_with_label (_("Close"));
- #else
+#else
   mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
   gtk_menu_shell_append (menu, mitem);
 #endif
