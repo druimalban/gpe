@@ -1,7 +1,131 @@
 #! /usr/bin/make -f
 
-include /usr/share/cdbs/1/rules/debhelper.mk
-include /usr/share/cdbs/1/class/autotools.mk
-
 DEB_CONFIGURE_USER_FLAGS=--enable-gpe --prefix=/usr
 
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+CFLAGS = -Wall
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0 -g3
+else
+	CFLAGS += -O2 -g
+endif
+
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+	INSTALL_PROGRAM += -s
+endif
+
+ifneq (,$(findstring debug,$(DEB_BUILD_OPTIONS)))
+	DEBUG_FLAGS="--enable-debug"
+endif
+
+# Use hardware floating point
+ifneq (,$(findstring vfp,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -mfpu=vfp -mfloat-abi=softfp
+else
+	# Use soft-float and thumb mode if it enabled.
+	ifneq (,$(findstring thumb,$(DEB_BUILD_OPTIONS)))
+		CFLAGS += -mthumb
+	endif
+endif
+
+DEB_HOST_ARCH      ?= $(shell dpkg-architecture -qDEB_HOST_ARCH)
+DEB_BUILD_ARCH     ?= $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+ifneq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
+	confflags += --build=$(DEB_BUILD_GNU_TYPE)
+endif
+
+INSTALL=/usr/bin/install
+
+export DH_OPTIONS
+
+confflags += --enable-gpe $(DEBUG_FLAGS)
+
+build: build-stamp
+build-stamp: configure-stamp
+	dh_testdir
+
+	# Add here commands to compile the package.
+	cd obj-$(DEB_BUILD_GNU_TYPE) && $(MAKE)
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+	touch build-stamp
+
+	autoreconf -f -i -s
+
+	mkdir -p obj-$(DEB_BUILD_GNU_TYPE)/GL
+	cd obj-$(DEB_BUILD_GNU_TYPE) && \
+	../configure --prefix=/usr --mandir=\$${prefix}/share/man \
+	             --infodir=\$${prefix}/share/info --sysconfdir=/etc \
+	             --localstatedir=/var $(confflags) CFLAGS="$(CFLAGS)" 
+
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+
+	rm -f config.cache config.log config.status
+	rm -f */config.cache */config.log */config.status
+	rm -f conftest* */conftest*
+	rm -rf autom4te.cache */autom4te.cache
+	rm -rf obj-*
+
+	# Add here commands to clean up after the build process.
+	-$(MAKE) clean
+
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	cd obj-$(DEB_BUILD_GNU_TYPE) && $(MAKE) DESTDIR=$(CURDIR)/debian/starling install
+
+# Build architecture-dependent files here.
+binary-arch: DH_OPTIONS=-s
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installexamples
+	dh_install
+	dh_installmenu
+	dh_installdebconf	
+	dh_installlogrotate
+	dh_installemacsen
+	dh_installpam
+	dh_installmime
+	dh_installinit
+	dh_installcron
+	dh_installinfo
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_perl
+	dh_python
+#	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+# Build architecture-independent files here.
+binary-indep: build install
+# Nothing to do
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

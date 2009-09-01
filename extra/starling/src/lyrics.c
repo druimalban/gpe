@@ -90,7 +90,11 @@ lyrcar_parse (SoupMessage *msg)
     gint ii;
     gchar *pos;
 
+#ifdef LIBSOUP22
     lines = g_strsplit (msg->response.body, "\n", 4096);
+#else
+    lines = g_strsplit (msg->response_body->data, "\n", 4096);
+#endif
 
     int len = g_strv_length (lines);
     if (len < 130)
@@ -168,7 +172,11 @@ lyricwiki_parse (SoupMessage *msg)
 {
   const gchar *div = "<div class='lyricbox' >";
 
+#ifdef LIBSOUP22
   char *start = strstr (msg->response.body, div);
+#else
+  char *start = strstr (msg->response_body->data, div);
+#endif
   if (! start)
     return NULL;
 
@@ -320,7 +328,11 @@ lyrics_store (const gchar *lyrics)
 }
 
 static void
+#ifdef LIBSOUP22
 got_lyrics (SoupMessage *msg, gpointer provider)
+#else
+got_lyrics (SoupSession *session, SoupMessage *msg, gpointer provider)
+#endif
 {
   if (msg->status_code == SOUP_STATUS_CANCELLED)
     return;

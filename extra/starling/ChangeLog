@@ -1,3 +1,11 @@
+2009-08-31  Graham Cobb  <g+770@cobb.uk.net>
+
+	* src/lyrics.c: Support libsoup2.4 as well as 2.2
+
+	* src/lastfm.c: Support libsoup2.4 as well as 2.2
+
+	* configure.ac (LIBSOUP22): Support libsoup2.4 as well as 2.2
+
 2009-01-09  Neal H. Walfield  <neal@gnu.org>
 
 	* configure.ac: Bump version to 0.9.9.  Release it.

@@ -57,7 +57,11 @@ static int auto_submit;
 static void lastfm_delete_by_id (gint id);
 static gint lastfm_submit_real_helper (gpointer data, gint argc, gchar **argv, gchar **col);
 static gboolean lastfm_submit_real (lastfm_data *data);
+#ifdef LIBSOUP22
 static void got_handshake_response (SoupMessage *msg, gpointer arg);
+#else
+static void got_handshake_response (SoupSession *session, SoupMessage *msg, gpointer arg);
+#endif
 static void submit (void);
 static gint lastfm_count (void) __attribute__ ((pure));
 
@@ -219,8 +223,13 @@ lastfm_enqueue (const gchar *artist, const gchar *title, gint length)
 }
 
 static void
+#ifdef LIBSOUP22
 got_submission_response (SoupMessage *msg, gpointer arg)
+#else
+got_submission_response (SoupSession *session, SoupMessage *msg, gpointer arg)
+#endif
 {
+  const char *resp_data;
   lastfm_data *data = arg;
 
   if (msg->status_code == SOUP_STATUS_CANCELLED)
@@ -233,7 +242,13 @@ got_submission_response (SoupMessage *msg, gpointer arg)
   if (! SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
     goto out;
 
-  if (strncmp (msg->response.body, "OK\n", 3) == 0)
+#ifdef LIBSOUP22
+  resp_data = msg->response.body;
+#else
+  resp_data = msg->response_body->data;
+#endif
+
+  if (strncmp (resp_data, "OK\n", 3) == 0)
     {
       lastfm_delete_by_id (last_id_sent);
       last_id_sent = 0;
@@ -250,8 +265,8 @@ got_submission_response (SoupMessage *msg, gpointer arg)
   else
     /* command is FAILED <reason> */
     starling_error_box_fmt (_("Lastfm submission failed: %s"),
-			    strchr (msg->response.body, ' ')
-			    ?: msg->response.body);
+			    strchr (resp_data, ' ')
+			    ?: resp_data);
 
   /* If we reach this point, we're done with the submission */
   extant = 0;
@@ -308,14 +323,19 @@ lastfm_submit_real (lastfm_data *data)
 
   SoupMessage *msg = soup_message_new (SOUP_METHOD_POST, data->post_uri);
 
+#ifdef LIBSOUP22
   msg->request.body = str->str;
   msg->request.length = str->len;
   msg->request.owner = SOUP_BUFFER_SYSTEM_OWNED;
-  g_string_free (str, FALSE);
 
   soup_message_add_header (msg->request_headers, "Content-Type", 
 			   "application/x-www-form-urlencoded");
-
+#else
+  soup_message_set_request (msg, "application/x-www-form-urlencoded",
+			    SOUP_MEMORY_TAKE, str->str, str->len);
+#endif
+  g_string_free (str, FALSE);
+ 
   soup_session_queue_message (session, msg, got_submission_response, data);
 
   /* Don't call me again */
@@ -323,16 +343,26 @@ lastfm_submit_real (lastfm_data *data)
 }
 
 static void
+#ifdef LIBSOUP22
 got_handshake_response (SoupMessage *msg, gpointer arg)
+#else
+got_handshake_response (SoupSession *session, SoupMessage *msg, gpointer arg)
+#endif
 {
   gchar *command;
   gchar **lines;
 
   g_return_if_fail (SOUP_STATUS_IS_SUCCESSFUL (msg->status_code));
 
+#ifdef LIBSOUP22
   //g_message("Handshake response = %s\n", msg->response.body);
 
   lines = g_strsplit (msg->response.body, "\n", 5);
+#else
+  //g_message("Handshake response = %s\n", msg->response_body->data);
+
+  lines = g_strsplit (msg->response_body->data, "\n", 5);
+#endif
 
   command = lines[0];
 

@@ -17,7 +17,7 @@ AC_PROG_INTLTOOL([0.23])
 BASE_MODULES="glib-2.0 sqlite >= 2.8 \
 	gstreamer-0.10 gstreamer-plugins-base-0.10"
 
-GUI_MODULES="${BASE_MODULES} gtk+-2.0 libsoup-2.2 libhandoff"
+GUI_MODULES="${BASE_MODULES} gtk+-2.0 libhandoff"
 
 dnl Optional stuff
 AC_ARG_ENABLE(gpe, [ --enable-gpe   Enable GPE support], [gpe=$enableval], [gpe=no])
@@ -48,6 +48,22 @@ AC_SUBST(ENABLE_HILDON)
 AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
 AC_SUBST(HILDON_CFLAGS)
 AC_SUBST(HILDON_LIBS)
+
+# Check which version of libsoup is installed
+AC_MSG_CHECKING([which libsoup version to use]);
+PKG_CHECK_EXISTS([libsoup-2.4],
+			   [
+			   AC_MSG_RESULT(2.4)
+			   AC_DEFINE(LIBSOUP_VER, 24, [Version of libsoup library])
+			   AC_DEFINE(LIBSOUP24, 1, [Using libsoup-2.4 library])
+			   GUI_MODULES="$GUI_MODULES libsoup-2.4"
+			   ],
+			   [
+			   AC_MSG_RESULT(2.2)
+			   AC_DEFINE(LIBSOUP_VER, 22, [Version of libsoup library])
+			   AC_DEFINE(LIBSOUP22, 1, [Using libsoup-2.2 library])
+			   GUI_MODULES="$GUI_MODULES libsoup-2.2"
+			   ])
 
 PKG_CHECK_MODULES(BASE, $BASE_MODULES)
 AC_SUBST(BASE_CFLAGS)
