@@ -1864,7 +1864,16 @@ toolbar_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
       gtk_toolbar_set_style (GTK_TOOLBAR (date_toolbar), GTK_TOOLBAR_ICONS);
       GTK_WIDGET_UNSET_FLAGS (date_toolbar, GTK_CAN_FOCUS);
       gtk_widget_show (date_toolbar);
+
+#ifdef IS_HILDON
+#if HILDON_VER > 0
+      hildon_window_add_toolbar(main_window, GTK_TOOLBAR(date_toolbar));
+#else
       gtk_box_pack_end (main_box, date_toolbar, FALSE, FALSE, 0);
+#endif /* HILDON_VER  */
+#else
+      gtk_box_pack_end (main_box, date_toolbar, FALSE, FALSE, 0);
+#endif
 
       g_object_ref (G_OBJECT (today_button));
       gtk_container_remove (GTK_CONTAINER (main_toolbar), today_button);
@@ -1891,6 +1900,12 @@ toolbar_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
 			    GTK_WIDGET (datesel_item));
       gtk_toolbar_insert (GTK_TOOLBAR (main_toolbar),
 			  datesel_item, -1);
+
+#ifdef IS_HILDON
+#if HILDON_VER > 0
+      hildon_window_remove_toolbar(main_window, GTK_TOOLBAR(date_toolbar));
+#endif
+#endif
 
       gtk_widget_destroy (date_toolbar);
       date_toolbar = NULL;
@@ -2506,7 +2521,7 @@ main (int argc, char *argv[])
 
 #ifdef IS_HILDON
 #if HILDON_VER > 0
-  gtk_box_pack_start (GTK_BOX (main_box), toolbar, FALSE, FALSE, 0);
+  hildon_window_add_toolbar(main_window, GTK_TOOLBAR(toolbar));
 #else
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   hildon_appview_set_toolbar (HILDON_APPVIEW (main_appview),

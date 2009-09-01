@@ -1,3 +1,12 @@
+2009-09-02  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (main): Add toolbar using hildon_window_add_toolbar
+	(toolbar_size_allocate): Add/remove date toolbar using
+	hildon_window_add/remove_toolbar
+
+	* gtkdatesel.c (gtk_date_sel_new): Only force month widget size on
+	Maemo versions less than 5
+
 2009-09-01  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac: On Hildon, set up MAEMO_VERSION and MAEMO_VERSION_MAJOR

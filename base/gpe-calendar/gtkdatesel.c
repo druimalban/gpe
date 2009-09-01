@@ -681,9 +681,11 @@ gtk_date_sel_new (GtkDateSelMode mode, GDate *date)
   /* Three columns.  */
   gtk_combo_box_set_wrap_width (GTK_COMBO_BOX (e->display), 3);
 
-#if IS_HILDON
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
   /* Hildon brain damage.  */
-  //GRC  gtk_widget_set_size_request (e->display, 85, -1);
+  gtk_widget_set_size_request (e->display, 85, -1);
+#endif
 #endif
 
   g_signal_connect (G_OBJECT (sel), "changed", G_CALLBACK (month_update),
