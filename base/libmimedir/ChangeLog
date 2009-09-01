@@ -1,3 +1,7 @@
+2009-09-01  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-attribute.c (accept_tokenchar): Correctly handle unicode characters in message
+
 2009-03-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-attribute.c (accept_tokenchar): Use g_message instead of g_log.
