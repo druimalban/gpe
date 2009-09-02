@@ -754,22 +754,12 @@ top_level (GtkWidget *window)
   gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
 
   /* New button */
-#ifdef IS_HILDON  
-  w = gtk_image_new_from_file(ICON_PATH "/qgn_indi_gene_plus.png");
-  item = gtk_tool_button_new(w, _("New"));
-#else
   item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
-#endif
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (new_todo_item), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
   /* Delete button */
-#ifdef IS_HILDON  
-  w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_gene_deletebutton.png");
-  item = gtk_tool_button_new(w, _("Delete"));
-#else
   item = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
-#endif
   g_signal_connect(G_OBJECT(item), "clicked", 
                    G_CALLBACK (delete_completed_items), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
@@ -777,15 +767,15 @@ top_level (GtkWidget *window)
 #ifdef IS_HILDON
   create_app_menu (HILDON_WINDOW (window));
   
-  w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_gene_refresh.png");
-  item = gtk_tool_button_new(w, _("Refresh"));
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_REFRESH);
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (refresh_items), 
                    NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 	  
   if (mode_landscape || large_screen)
     {
-      w = gtk_image_new_from_file(ICON_PATH "/qgn_list_gene_bullets.png");
+      w = gtk_image_new_from_stock(GTK_STOCK_INDEX,
+				   gtk_toolbar_get_icon_size(GTK_TOOLBAR (toolbar)));
       item = gtk_tool_button_new(w, _("Categories"));
       g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (edit_categories), 
                        NULL);
@@ -807,6 +797,9 @@ top_level (GtkWidget *window)
 #endif
     
   item = gtk_separator_tool_item_new();
+#ifdef IS_HILDON
+  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
+#endif
   gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
