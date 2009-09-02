@@ -607,22 +607,6 @@ GtkWidget * create_interface(GtkWidget *main_window)
 ** these are objects creation, and it's rather different
 ** between standard GPE and HILDON */
 
-#ifdef IS_HILDON
-  /*new task button*/
-    new = gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
-  /* new sub-task button */
-    w = gtk_image_new_from_file(ICON_PATH "/qgn_indi_gene_plus.png");
-    new_sub = gtk_tool_button_new(w, _("New subtask"));
-  /* delete task button */
-    w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_gene_deletebutton.png");
-    delete = gtk_tool_button_new(w, _("Delete task"));
-  /* refresh task list button */
-    w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_gene_refresh.png");
-    refresh = gtk_tool_button_new(w, _("Refresh tasks list"));
-  /* edit task/journal button */
-    edit = gtk_tool_button_new_from_stock (GTK_STOCK_EDIT);
-    gtk_widget_set_sensitive (GTK_WIDGET(edit), FALSE);
-#else
   /* new task button */
     new = gtk_tool_button_new_from_stock (GTK_STOCK_NEW);
     gtk_tool_button_set_label (GTK_TOOL_BUTTON (new),  _("New task"));
@@ -635,6 +619,10 @@ GtkWidget * create_interface(GtkWidget *main_window)
     refresh = gtk_tool_button_new_from_stock (GTK_STOCK_REFRESH);
   /* edit task/journal button */
     edit = gtk_tool_button_new_from_stock (GTK_STOCK_EDIT);
+
+#ifdef IS_HILDON
+    gtk_widget_set_sensitive (GTK_WIDGET(edit), FALSE);
+#else
   /* show inline journal button */
     p = gpe_find_icon ("journal");
     pw = gtk_image_new_from_pixbuf (p);
@@ -663,12 +651,12 @@ GtkWidget * create_interface(GtkWidget *main_window)
       gtk_toolbar_insert (GTK_TOOLBAR(main_toolbar), sep1, -1);
     }
 /* clock-in button */
-  p = gpe_find_icon ("clock");
+  p = gpe_find_icon_scaled ("clock", gtk_toolbar_get_icon_size(GTK_TOOLBAR (main_toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   clock_in = gtk_tool_button_new (GTK_WIDGET(pw), _("Clock in"));
   gtk_toolbar_insert (GTK_TOOLBAR(main_toolbar), clock_in, -1);
 /* stop-clock button */
-  p = gpe_find_icon ("stop_clock");
+  p = gpe_find_icon_scaled ("stop_clock", gtk_toolbar_get_icon_size(GTK_TOOLBAR (main_toolbar)));
   pw = gtk_image_new_from_pixbuf (p);
   clock_out = gtk_tool_button_new (GTK_WIDGET(pw), _("Clock out"));
   gtk_toolbar_insert (GTK_TOOLBAR(main_toolbar), clock_out, -1);

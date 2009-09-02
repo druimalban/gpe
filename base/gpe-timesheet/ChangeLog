@@ -1,3 +1,9 @@
+2009-09-02  Graham Cobb  <g+770@cobb.uk.net>
+
+	* ui.c (create_interface): Use stock icons on hildon where possible
+	to simplify port to Fremantle
+	(create_interface): Scale start/stop clock icons to fit toolbar
+
 2009-04-15 Ned Ludd  <solar@gentoo.org>
 	* gpe-base/gpe-timesheet: ui.h 
 	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
