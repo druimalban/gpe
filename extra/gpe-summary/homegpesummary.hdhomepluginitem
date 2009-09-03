@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=GPE Summary
+Comment=Summary of GPE todos and appointments
+Type=default
+X-Path=libgpesummary.so

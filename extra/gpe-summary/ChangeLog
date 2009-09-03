@@ -1,3 +1,25 @@
+2009-09-03  Graham Cobb  <g+770@cobb.uk.net>
+
+	* homegpesummary.hildonhomeapplet: Rename old format desktop file
+	Fix typo in comment
+
+	* homegpesummary.hdhomepluginitem: create desktop file for HDHomePluginItem format
+
+	* Makefile.am (libsbdir): Use APPLETDIR to install library file
+	and DESKTOPFILE to select correct desktop file to install
+
+	* configure.ac: Add APPLETDIR and DESKTOPFILE to support old and
+	new home page locations and desktop file
+
+	* Makefile.am (libgpesummary_la_LDFLAGS): Rationalise library handling
+
+	* configure.ac (HILDON_CFLAGS): Rationalise library handling
+
+	* gpesummary.c: Change HILDON_VER test to >0 instead of =1
+	Add HDHomePluginItem code for new applet invocation
+
+	* configure.ac: Check for Maemo version
+
 2009-08-26  Graham Cobb  <g+770@cobb.uk.net>
 
 	* debian/rules: Uncomment dh_shlibdeps so shared library dependencies

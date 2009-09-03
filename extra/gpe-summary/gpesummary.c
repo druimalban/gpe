@@ -40,7 +40,7 @@
 
 
 /* Hildon includes */
-#if HILDON_VER == 1
+#if HILDON_VER > 0
 #include <hildon/hildon-program.h>
 #include <hildon/hildon-window.h>
 #include <hildon/hildon-defines.h>
@@ -50,7 +50,7 @@
 #include <hildon-widgets/hildon-window.h>
 #include <hildon-home-plugin/hildon-home-plugin-interface.h>
 #include <hildon-widgets/hildon-note.h>
-#endif /* HILDON_VER == 1 */
+#endif /* HILDON_VER > 0 */
 
 #include <libosso.h>
 
@@ -345,7 +345,7 @@ gint show_todos(GtkWidget *vbox, gint count) {
 	}
 	
 	if (todocount==0) {
-		//g_warning("todocount 0");
+		//g_message("todocount 0");
 		GtkWidget *eventbox;
 		eventbox = gtk_event_box_new();
 		gtk_box_pack_start(GTK_BOX(vbox),eventbox,doshow_vexpand,doshow_vexpand,0);	
@@ -363,7 +363,7 @@ gint show_todos(GtkWidget *vbox, gint count) {
 	
 	g_slist_free(iter);
 	gtk_widget_show_all(GTK_WIDGET(vbox));
-	g_warning("todosjow finished");
+	g_message("todosjow finished");
 	return todocount+count;
 }
 
@@ -441,7 +441,7 @@ void prepare_birthdays() {
 	tm=*localtime(&start);	
 	strftime (day7, sizeof(day7), "%m%d", &tm);
 
-	//g_warning( buf2 );
+	//g_message( buf2 );
 
 	
 	addBirthdaysAtDay(day1);
@@ -470,22 +470,22 @@ gboolean show_birthdays (GtkWidget *vbox,time_t start,gchar *title) {
 	struct contacts_person *p;
 	struct contacts_tag_value *ctv =NULL;
 	
-	//g_warning("birthdaylist reading %p",&birthdaylist);
+	//g_message("birthdaylist reading %p",&birthdaylist);
 	
 	for (iter = birthdaylist; iter; iter = g_slist_next(iter)) {
 		guint id = (guint)iter->data;
-		g_warning("birthday id %i",id);
+		g_message("birthday id %i",id);
 		p = contacts_db_get_by_uid(id);
 		ctv=contacts_db_find_tag(p,"BIRTHDAY");
 		
 		if (strncmp(buf2,(ctv->value)+4,4)==0) {
-				g_warning(ctv->value);
+				g_message(ctv->value);
 				if (titletoshow==TRUE) show_title(vbox,title);
 				titletoshow=FALSE;
 				GString *label = g_string_new( _(" Birthday "));
 				ctv=contacts_db_find_tag(p,"NAME");
 				g_string_append(label,ctv->value);
-				g_warning( label->str );
+				g_message( label->str );
 
 				GtkWidget *eventbox= gtk_event_box_new();
 				gtk_box_pack_start(GTK_BOX(vbox),eventbox,doshow_vexpand,doshow_vexpand,0);
@@ -621,8 +621,8 @@ gint show_events(GtkWidget *vbox, gint count) {
 	/*char buf[200];
 	tm=*localtime(&stop);
 	strftime (buf, sizeof (buf), "%d %H:%M %S", &tm); //%d.%m 
-	g_warning("endtime");
-	g_warning(buf);*/
+	g_message("endtime");
+	g_message(buf);*/
 	
 	// Note we re-open the event DB (if we can find it), even if we are not showing appointments
 	if (!calendar_file) calendar_file = CALENDAR_FILE();
@@ -644,11 +644,11 @@ gint show_events(GtkWidget *vbox, gint count) {
 	//titletoshow=show_birthdays(vbox,stop+2,"Tomorrow");
 	//count=add_events(vbox,event_db,stop+2,stop+3600*24-2,"Tomorrow",titletoshow, count);
 		
-	//g_warning("Tomorrow %i",count);
+	//g_message("Tomorrow %i",count);
 	stop++; // Tomorrow
 	while ((count<doshow_countitems)&&(stop<start+3600*24*6)) {
 		char buf2[20];
-		//g_warning("Tomorrow %i",count);
+		//g_message("Tomorrow %i",count);
 		memset (&tm, 0, sizeof (tm));
 		memset (&buf2, 0, sizeof (buf2));
 		tm=*localtime(&stop);
@@ -673,7 +673,7 @@ void loadPrefs(){
 	GError **error = NULL;
         GError *error2 = NULL;
 
-	g_warning ("load_prefs 1");
+	g_message ("load_prefs 1");
   
 	/* Create a new GKeyFile object and a bitwise list of flags. */
 	keyfile = g_key_file_new ();
@@ -683,16 +683,16 @@ void loadPrefs(){
 	GString *label = g_string_new( g_get_home_dir() );
 	g_string_append(label,"/.gpesummary");
 
-	g_warning ("load_prefs 2");
+	g_message ("load_prefs 2");
 
 	if (!g_key_file_load_from_file (keyfile, label->str , flags, &error2)) {
 		g_warning ("failed to open conffile");
 		g_warning (error2->message);
-		g_warning ("failed to open conffile");
+		g_message ("failed to open conffile");
 		return ;
 	}
  
-	g_warning ("load_prefs 3");
+	g_message ("load_prefs 3");
 
 	/* Read in data from the key file from the group "username". */
 	doshow_birthdays = g_key_file_get_boolean(keyfile, "options","show_birthdays", error);
@@ -704,19 +704,19 @@ void loadPrefs(){
 	doshow_countitems = g_key_file_get_integer(keyfile, "options", "show_countitems", error);
 	doshow_extended = g_key_file_get_boolean(keyfile, "options","show_extended", error);
 
-	g_warning ("load_prefs 4");
+	g_message ("load_prefs 4");
 	g_key_file_free (keyfile);
 	g_string_free(label,TRUE);
 
-	g_warning ("load_prefs 5");
+	g_message ("load_prefs 5");
 }
 
 
 void show_all() {
-	g_warning ("show_all 1");	
+	g_message ("show_all 1");	
 	last_gui_update=time(NULL);
 	loadPrefs();
-	g_warning ("show_all 2");
+	g_message ("show_all 2");
 	GtkWidget *vbox_todo;
 	GtkWidget *vbox_events;
 	
@@ -793,7 +793,7 @@ void show_all() {
 	}
 
 	gtk_widget_show_all(GTK_WIDGET(mainvbox));
-	g_warning ("show_all 7");
+	g_message ("show_all 7");
 }
 
 
@@ -844,7 +844,7 @@ gint update_clock(gpointer data) {
 		gtk_label_set_markup(GTK_LABEL(headtitle),timestring);
 		gtk_widget_show(GTK_WIDGET(headtitle));
 	} 
-	//g_warning("Updating clock");
+	//g_message("Updating clock");
 	//printTime("p3");
 	return TRUE;
 }
@@ -855,7 +855,7 @@ void save_prefs() {
 	//GKeyFileFlags flags;
 	//GError *error = NULL;
   
-	g_warning ("save_prefs 1");
+	g_message ("save_prefs 1");
 	/* Create a new GKeyFile object and a bitwise list of flags. */
 	keyfile = g_key_file_new ();
 
@@ -863,7 +863,7 @@ void save_prefs() {
 		g_warning (error->message);
 		return ;
 	}*/
-	g_warning ("save_prefs 2");  
+	g_message ("save_prefs 2");  
  
 	/* Read in data from the key file from the group "username". */
 	g_key_file_set_boolean(keyfile, "options","show_birthdays", doshow_birthdays);
@@ -875,7 +875,7 @@ void save_prefs() {
 	g_key_file_set_boolean(keyfile, "options","show_extended", doshow_extended);
 	g_key_file_set_integer(keyfile, "options", "show_countitems", doshow_countitems);
 
-	g_warning ("save_prefs 3");
+	g_message ("save_prefs 3");
 
 	gsize length = 0;
 	gchar* conf=g_key_file_to_data (keyfile,&length,NULL);
@@ -883,12 +883,12 @@ void save_prefs() {
 	GString *label = g_string_new( g_get_home_dir() );
 	g_string_append(label,"/.gpesummary");
 
-	g_warning ("save_prefs 4");
-	g_warning (label->str);
-	g_warning (conf);
+	g_message ("save_prefs 4");
+	g_message (label->str);
+	g_message (conf);
 
 	if (g_file_set_contents (label->str,conf,length,NULL)==TRUE) { 
-		g_warning("saved");
+		g_message("saved");
 	} else {
 		g_warning("NOT saved");
 	}
@@ -897,7 +897,7 @@ void save_prefs() {
 	g_string_free(label,TRUE);
 	g_free(conf);
 
-	g_warning ("save_prefs 5");
+	g_message ("save_prefs 5");
 
 }
 
@@ -905,38 +905,38 @@ static gboolean options_clicked( GtkWidget      *button,
 			  GdkEventButton *event,
 			  gpointer user_data ) {
 
-	g_warning("options_clicked");
+	g_message("options_clicked");
 	GString *label = g_string_new( gtk_widget_get_name(button) );
-	//g_warning(label->str);
+	//g_message(label->str);
 	if (strcmp(label->str,"birthdays")==0) { 
-		g_warning("doshow_birthdays");
+		g_message("doshow_birthdays");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_birthdays=FALSE; } else { doshow_birthdays=TRUE;}
 	}
 	if (strcmp(label->str,"appointments")==0) { 
-		g_warning("appointments");
+		g_message("appointments");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_appointments=FALSE; } else { doshow_appointments=TRUE;}
 	}
 	if (strcmp(label->str,"todos")==0) { 
-		g_warning("todos");
+		g_message("todos");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_todos=FALSE; } else { doshow_todos=TRUE;}
 	}
 	if (strcmp(label->str,"alltodos")==0) { 
-		g_warning("alltodos");
+		g_message("alltodos");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_alltodos=FALSE; } else { doshow_alltodos=TRUE;}
 	}
 
 	if (strcmp(label->str,"buttons")==0) { 
-		g_warning("buttons");
+		g_message("buttons");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_buttons=FALSE; } else { doshow_buttons=TRUE;}
 	}
 
 	/*if (strcmp(label->str,"refresh")==0) { 
-		g_warning("refresh");
+		g_message("refresh");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_autorefresh=FALSE; } else { doshow_autorefresh=TRUE;}
 	}*/	
 
 	if (strcmp(label->str,"extended")==0) { 
-		g_warning("extended");
+		g_message("extended");
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_extended=FALSE; } else { doshow_extended=TRUE;}
 	}	
 	
@@ -961,7 +961,7 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
     
 	if (window && GTK_IS_WINDOW(window))*/
 	//execute_rss_settings(rss_appl_inf->osso, NULL, TRUE);
-	g_warning("on_menuitem_settings");
+	g_message("on_menuitem_settings");
 	//settingswidget=gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	//gtk_widget_show_all(GTK_WIDGET(settingswidget));
 
@@ -1045,7 +1045,7 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 	gtk_window_set_modal(GTK_WINDOW(dialog),TRUE);
 	gtk_widget_show_all (GTK_WIDGET(dialog));
 	gtk_dialog_run(GTK_DIALOG(dialog));
-	g_warning("widget showed");
+	g_message("widget showed");
 	gtk_widget_destroy(dialog);
 
 	while (gtk_events_pending()) { gtk_main_iteration(); }
@@ -1060,10 +1060,10 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 
 /*
 gboolean focus_in(GtkWidget *widget, GdkEventFocus *event, gpointer user_data) {
-  //g_warning("Focus in event");
+  //g_message("Focus in event");
 	if (last_gui_update+3 < time(NULL)) {
 		show_all();
-		g_warning("gui updated");
+		g_message("gui updated");
 	}
 	return TRUE;
 }
@@ -1112,11 +1112,26 @@ int main (int argc, char *argv[])
     return 0;
 }*/
 
+static guint log_handler_id = 0;
+#define LOG_HANDLER "/tmp/gpesummary.log"
+#ifdef LOG_HANDLER
+static void log_handler (const char *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
+{
+  static FILE *log = NULL;
+  time_t now = time(NULL);
+  struct tm tm;
+  char buf[200];
 
+  if (!log) log = fopen(LOG_HANDLER,"a");
 
+  tm=*localtime(&now);
+  strftime (buf, sizeof (buf), "%c", &tm);
 
+  fprintf(log, "[%s] %s:%x:%s\n", buf, log_domain, log_level, message);
+  fflush(log);
+}
+#endif
 
-//Home Applet stuff
 static void add_home_applet_timer (void);
 
 /* Do updates for this minute */
@@ -1145,25 +1160,8 @@ static void add_home_applet_timer (void)
   g_timeout_add (delay * 1000, home_applet_timer, NULL);
 }
 
-static guint log_handler_id = 0;
-//#define LOG_HANDLER "/tmp/gpesummary.log"
-#ifdef LOG_HANDLER
-static void log_handler (const char *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
-{
-  static FILE *log = NULL;
-  time_t now = time(NULL);
-  struct tm tm;
-  char buf[200];
-
-  if (!log) log = fopen(LOG_HANDLER,"a");
-
-  tm=*localtime(&now);
-  strftime (buf, sizeof (buf), "%c", &tm);
-
-  fprintf(log, "[%s] %s:%x:%s\n", buf, log_domain, log_level, message);
-  fflush(log);
-}
-#endif
+#if MAEMO_VERSION_MAJOR < 5
+//Home Applet stuff
 
 void *
 		hildon_home_applet_lib_initialize (void *state_data,
@@ -1171,7 +1169,7 @@ void *
 		GtkWidget **widget)
 {
 #ifdef LOG_HANDLER
-  log_handler_id = g_log_set_handler (NULL, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL
+  log_handler_id = g_log_set_handler (G_LOG_DOMAIN, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL
                      | G_LOG_FLAG_RECURSION, log_handler, NULL);
 #endif
 
@@ -1190,10 +1188,10 @@ void *
 
 	/* Initialize the GTK. */
 	mainwidget = gtk_frame_new(NULL); //gtk_vbox_new (FALSE, 0);
-	gtk_widget_set_name (mainwidget, "osso-speeddial");
+	gtk_widget_set_name (mainwidget, "GPE Summary");
 	gtk_widget_set_size_request (mainwidget, WIDTH, HEIGHT); 
 	*widget = mainwidget;
-	g_warning("mainwidget created");
+	g_message("mainwidget created");
 
   
   	gtk_container_set_border_width (GTK_CONTAINER (mainwidget), 0);
@@ -1218,26 +1216,26 @@ void *
 void
 		hildon_home_applet_lib_deinitialize (void *applet_data)
 {
-	g_warning("hildon_home_applet_lib_deinitialize 1");
+	g_message("hildon_home_applet_lib_deinitialize 1");
 	if (osso)
 		osso_deinitialize (osso);
-	g_warning("hildon_home_applet_lib_deinitialize 2");
+	g_message("hildon_home_applet_lib_deinitialize 2");
 	g_slist_free(birthdaylist);
 	birthdaylist=NULL;
-	g_warning("hildon_home_applet_lib_deinitialize 3");
+	g_message("hildon_home_applet_lib_deinitialize 3");
 	if (prefsvbox) gtk_widget_destroy(prefsvbox);
-	g_warning("hildon_home_applet_lib_deinitialize 4");
+	g_message("hildon_home_applet_lib_deinitialize 4");
 	if (mainwidget) gtk_widget_destroy(mainwidget);
-	g_warning("hildon_home_applet_lib_deinitialize 5");
+	g_message("hildon_home_applet_lib_deinitialize 5");
         //if (mainwidget) g_free(mainwidget);
 	mainwidget=NULL;
-	g_warning("hildon_home_applet_lib_deinitialize 6");
+	g_message("hildon_home_applet_lib_deinitialize 6");
 	/*if (app) {
 		g_free (app);
 		app = NULL;
 	}*/ //FixME
 
-	if (log_handler_id) g_log_remove_handler(NULL, log_handler_id);
+	if (log_handler_id) g_log_remove_handler(G_LOG_DOMAIN, log_handler_id);
 }
 
 int
@@ -1298,6 +1296,99 @@ GtkWidget *
 			  G_CALLBACK (on_menuitem_settings), NULL);
 
 	return settings;
-	return NULL;
 
 }
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+
+#if MAEMO_VERSION_MAJOR >= 5
+// Use HDHomePluginItem
+
+#ifndef GPE_SUMMARY_PLUGIN_H
+#define GPE_SUMMARY_PLUGIN_H
+
+#include <glib-object.h>
+
+#include <libhildondesktop/libhildondesktop.h>
+
+G_BEGIN_DECLS
+
+typedef struct _GpeSummaryPlugin GpeSummaryPlugin;
+typedef struct _GpeSummaryPluginClass GpeSummaryPluginClass;
+
+#define GPE_SUMMARY_TYPE_HOME_PLUGIN   (gpe_summary_home_plugin_get_type ())
+
+#define GPE_SUMMARY_HOME_PLUGIN(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
+                        GPE_SUMMARY_TYPE_HOME_PLUGIN, GpeSummaryHomePlugin))
+
+#define GPE_SUMMARY_HOME_PLUGIN_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), \
+                        GPE_SUMMARY_TYPE_HOME_PLUGIN,  GpeSummaryHomePluginClass))
+
+#define GPE_SUMMARY_IS_HOME_PLUGIN(obj)  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), \
+                        GPE_SUMMARY_TYPE_HOME_PLUGIN))
+ 
+#define GPE_SUMMARY_IS_HOME_PLUGIN_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), \
+                        GPE_SUMMARY_TYPE_HOME_PLUGIN))
+
+#define GPE_SUMMARY_HOME_PLUGIN_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), \
+                        GPE_SUMMARY_TYPE_HOME_PLUGIN,  GpeSummaryHomePluginClass))
+ 
+struct _GpeSummaryPlugin
+{
+    HDHomePluginItem hitem;
+};
+ 
+struct _GpeSummaryPluginClass
+{
+    HDHomePluginItemClass parent_class;
+};
+ 
+GType gpe_summary_home_plugin_get_type(void);
+
+G_END_DECLS
+
+#endif
+
+HD_DEFINE_PLUGIN_MODULE (GpeSummaryPlugin, gpe_summary_plugin,      HD_TYPE_HOME_PLUGIN_ITEM)
+
+static void
+gpe_summary_plugin_init (GpeSummaryPlugin *desktop_plugin)
+{
+	mainwidget = gtk_frame_new(NULL);
+	gtk_widget_set_name (mainwidget, "GPE Summary");
+	gtk_widget_set_size_request (mainwidget, WIDTH, HEIGHT); 
+	g_message("mainwidget created");
+  
+  	gtk_container_set_border_width (GTK_CONTAINER (mainwidget), 0);
+
+  	GtkWidget* alignment = gtk_alignment_new (0.5,0.5,1.0,1.0);
+
+  	gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 15, 15, 15, 15);
+
+	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC); //GTK_POLICY_NEVER
+	gtk_container_add (GTK_CONTAINER (mainwidget), alignment);
+	gtk_container_add( GTK_CONTAINER( alignment ), scrolled_window );	
+
+	update_clock(NULL); //->Also shows all because it runs show_all()
+	gtk_widget_show_all(GTK_WIDGET(mainwidget));
+	add_home_applet_timer();
+
+  gtk_container_add (GTK_CONTAINER (desktop_plugin), mainwidget);
+} 
+
+static void
+gpe_summary_plugin_class_init (GpeSummaryPluginClass *class)
+{
+#ifdef LOG_HANDLER
+  log_handler_id = g_log_set_handler (G_LOG_DOMAIN, G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL
+                     | G_LOG_FLAG_RECURSION, log_handler, NULL);
+#endif
+} 
+
+static void
+gpe_summary_plugin_class_finalize (GpeSummaryPluginClass *class)
+{
+  if (log_handler_id) g_log_remove_handler(G_LOG_DOMAIN, log_handler_id);
+} 
+
+#endif /* MAEMO_VERSION_MAJOR >= 5 */
