@@ -1,5 +1,10 @@
 2009-09-03  Graham Cobb  <g+770@cobb.uk.net>
 
+	* gpesummary.c (gpe_summary_plugin_init): Use hd_home_plugin_item_heartbeat_signal_add
+	for timer
+	Improve some debugging log messages
+	Add settings support for fremantle
+
 	* homegpesummary.hildonhomeapplet: Rename old format desktop file
 	Fix typo in comment
 
