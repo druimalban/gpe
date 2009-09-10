@@ -62,6 +62,17 @@ AC_ARG_ENABLE(hildon,
                         PKG_CHECK_MODULES(HILDON, hildon-lgpl hildon-libs)
 			DEP_MODULES="$DEP_MODULES hildon-fm"
                 ])
+	PKG_CHECK_EXISTS(maemo-version,
+		[
+			VERSION=`pkg-config --modversion maemo-version`
+			AC_MSG_NOTICE([Configuring for Maemo $VERSION])
+			CFLAGS="$CFLAGS -DMAEMO_VERSION=\\\"$VERSION\\\""
+			MAJOR=`echo $VERSION | cut -b1 -`
+			CFLAGS="$CFLAGS -DMAEMO_VERSION_MAJOR=$MAJOR"
+		],
+		[
+			AC_MSG_ERROR([maemo-version not found])
+		])
 	DEP_MODULES="$DEP_MODULES libosso"
 ],
 [

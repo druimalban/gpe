@@ -46,6 +46,12 @@
 #include <hildon/hildon-date-editor.h>
 #include <hildon/hildon-program.h>
 #include <hildon/hildon-window.h>
+#if MAEMO_VERSION_MAJOR >= 5
+#include <hildon/hildon-picker-button.h>
+#include <hildon/hildon-touch-selector.h>
+#include <hildon/hildon-button.h>
+#include <hildon/hildon-entry.h>
+#endif 
 #else
 #include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 #include <hildon-widgets/hildon-caption.h>
@@ -76,10 +82,15 @@
 #define SERVICE_VERSION VERSION
 
 
-static GtkWidget *categories_smenu;
 GtkWidget *mainw;
 static GtkListStore *list_store, *filter_store;
-static GtkWidget *list_view, *filter_view;
+static GtkWidget *list_view;
+static GtkWidget *filter_view;
+#if MAEMO_VERSION_MAJOR < 5
+static GtkWidget *categories_smenu;
+#else
+static GtkWidget *categories_picker_button;
+#endif
 static GtkWidget *search_entry;
 static GtkWidget *popup_menu;
 static GtkWidget *bluetooth_menu_item;
@@ -201,6 +212,7 @@ static void
 update_categories (void)
 {
   GSList *categories = gpe_pim_categories_list (), *iter;
+#if MAEMO_VERSION_MAJOR < 5
   GtkWidget *menu = categories_smenu;
 
   gtk_simple_menu_flush (GTK_SIMPLE_MENU (menu));
@@ -212,6 +224,32 @@ update_categories (void)
       gint id = (gint) iter->data;
       gtk_simple_menu_append_item (GTK_SIMPLE_MENU (menu), gpe_pim_category_name(id));
     }
+#else /* MAEMO_VERSION_MAJOR < 5 */
+  static GtkWidget *selector = NULL;
+
+  if (selector) gtk_widget_destroy(selector);
+
+  /* Create a HildonTouchSelector with a single text column */
+  selector = hildon_touch_selector_new_text();
+
+  /* Attach the touch selector to the picker button*/
+  hildon_picker_button_set_selector (HILDON_PICKER_BUTTON (categories_picker_button),
+                                     HILDON_TOUCH_SELECTOR (selector));
+
+  /* Set the selection mode */
+  hildon_touch_selector_set_column_selection_mode (HILDON_TOUCH_SELECTOR (selector),
+                                    HILDON_TOUCH_SELECTOR_SELECTION_MODE_SINGLE);
+
+  hildon_touch_selector_append_text (HILDON_TOUCH_SELECTOR (selector),
+                                       _("All categories"));
+
+
+  for (iter = categories; iter; iter = iter->next)
+    {
+      gint id = (gint) iter->data;
+     hildon_touch_selector_append_text (HILDON_TOUCH_SELECTOR (selector), gpe_pim_category_name(id));
+    }
+#endif /* MAEMO_VERSION_MAJOR < 5 */
 
   g_slist_free (categories);
 }
@@ -831,12 +869,13 @@ match_for_search (struct contacts_person *p, const gchar *text, gint catid)
 static void
 do_search (GObject *obj, GtkWidget *entry)
 {
-  gchar *text = g_utf8_strdown (gtk_entry_get_text (GTK_ENTRY (entry)), -1);
-  guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
   gchar *cat_id = NULL;
   GSList *sel_entries = NULL, *iter = NULL;
   GtkTreePath *path;
 
+#if MAEMO_VERSION_MAJOR < 5
+  gchar *text = g_utf8_strdown (gtk_entry_get_text (GTK_ENTRY (entry)), -1);
+  guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
   if (category)
     {
       GSList *l = gpe_pim_categories_list ();
@@ -849,6 +888,13 @@ do_search (GObject *obj, GtkWidget *entry)
 
       g_slist_free (l);
     }
+#else
+  gchar *text = g_utf8_strdown (hildon_entry_get_text (HILDON_ENTRY (entry)), -1);
+  gint category = gpe_pim_category_id (hildon_button_get_value (HILDON_BUTTON (categories_picker_button)));
+  if (category >= 0) {
+    cat_id = g_strdup_printf("%u", category);
+  }
+#endif
 
   sel_entries = contacts_db_get_entries_list_filtered (text, filter[current_filter].list, cat_id);
     
@@ -884,12 +930,13 @@ do_search (GObject *obj, GtkWidget *entry)
 static void
 do_find (void)
 {
-  guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
   gchar *cat_id = NULL;
   GSList *all_entries = NULL, *iter = NULL;
   gint c = -1;
   GtkTreePath *path;
 
+#if MAEMO_VERSION_MAJOR < 5
+  guint category = gtk_option_menu_get_history (GTK_OPTION_MENU (categories_smenu));
   if (category)
     {
       GSList *l = gpe_pim_categories_list ();
@@ -903,6 +950,12 @@ do_find (void)
 
       g_slist_free (l);
     }
+#else
+  gint category = gpe_pim_category_id (hildon_button_get_value (HILDON_BUTTON (categories_picker_button)));
+  if (category >= 0) {
+    cat_id = g_strdup_printf("%u", category);
+  }
+#endif
 
   all_entries = do_find_contacts(GTK_WINDOW(gtk_widget_get_toplevel(mainw)), cat_id);
   if (cat_id) 
@@ -1129,7 +1182,9 @@ window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
   if (k->keyval == GDK_Return)
     {
       edit_contact(NULL, NULL);
+      return TRUE;
     }
+
   /* toggle fullscreen */
   if (k->keyval == GDK_F6)
         gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (fullscreen_control), 
@@ -1281,6 +1336,7 @@ create_popup (GtkWidget *window)
   return gtk_item_factory_get_widget (item_factory, "<main>");
 }
 
+#if MAEMO_VERSION_MAJOR < 5
 void 
 on_main_focus(GtkWindow *window,  GdkEventExpose *event,gpointer user_data)
 {
@@ -1289,6 +1345,7 @@ on_main_focus(GtkWindow *window,  GdkEventExpose *event,gpointer user_data)
   gtk_widget_grab_focus(searchentry);
   gtk_editable_select_region(GTK_EDITABLE(searchentry),0,-1);
 }
+#endif
 
 static int 
 import_one_file(const gchar *filename, GError **error)
@@ -1446,6 +1503,7 @@ create_app_menu(HildonWindow *window)
   GtkWidget *item_fullscreen = gtk_check_menu_item_new_with_label(_("Fullscreen"));
   GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
   GtkWidget *item_tools = gtk_menu_item_new_with_label(_("Tools"));
+  GtkWidget *item_find = gtk_menu_item_new_with_label(_("Find contact..."));
   GtkWidget *item_import = gtk_menu_item_new_with_label(_("Import VCard"));
   GtkWidget *item_export = gtk_menu_item_new_with_label(_("Export listed contacts..."));
 
@@ -1460,6 +1518,7 @@ create_app_menu(HildonWindow *window)
   gtk_menu_append (menu_main, item_view);
   gtk_menu_append (menu_main, item_tools);
   gtk_menu_append (menu_main, item_close);
+  gtk_menu_append (menu_tools, item_find);
   gtk_menu_append (menu_tools, item_import);
   gtk_menu_append (menu_tools, item_export);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_contacts), menu_contacts);
@@ -1479,6 +1538,7 @@ create_app_menu(HildonWindow *window)
   g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcard), NULL);
   g_signal_connect(G_OBJECT(item_export), "activate", G_CALLBACK(on_export_vcard), NULL);
   g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gtk_main_quit), NULL);
+  g_signal_connect(G_OBJECT(item_find), "activate", G_CALLBACK(do_find), NULL);
 
   gtk_widget_show_all (GTK_WIDGET(menu_main));  
   fullscreen_control = item_fullscreen;
@@ -1500,8 +1560,10 @@ create_main (gboolean edit_structure)
   GtkWidget *btnNew;
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
-  GtkTreeSelection *tree_sel, *filter_sel;
-  GtkWidget *scrolled_window, *filter_window;
+  GtkWidget *filter_window;
+  GtkTreeSelection *filter_sel;
+  GtkTreeSelection *tree_sel;
+  GtkWidget *scrolled_window;
   GtkWidget *lStatus = NULL;
   gint size_x, size_y;
 	
@@ -1538,57 +1600,51 @@ create_main (gboolean edit_structure)
   hildon_window_add_toolbar(HILDON_WINDOW(main_window), GTK_TOOLBAR(toolbar));
   
   /* buttons left */
-  w = gtk_image_new_from_file(ICON_PATH "/qgn_list_gene_unknown_file.png");
-  item = gtk_tool_button_new(w, _("New"));
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(new_contact), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
   g_object_set_data (G_OBJECT (main_window), "new-button", item);
   btnNew = GTK_WIDGET(item);
   
-  w = gtk_image_new_from_file(ICON_PATH "/qgn_list_messagin_editor.png");
-  item = gtk_tool_button_new(w, _("Edit"));
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_EDIT);
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(edit_contact), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   g_object_set_data (G_OBJECT (main_window), "edit-button", item);
   gtk_widget_set_sensitive(GTK_WIDGET(item), FALSE);
   
-  w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_gene_deletebutton.png");
-  item = gtk_tool_button_new(w, _("Delete"));
+  item = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(delete_contact), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   g_object_set_data (G_OBJECT (main_window), "delete-button", item);
   gtk_widget_set_sensitive(GTK_WIDGET(item), FALSE);
   
-  w = gtk_image_new_from_file(ICON_PATH "/qgn_toolb_messagin_bullets.png");
+  w = gtk_image_new_from_stock(GTK_STOCK_INDEX,
+			       gtk_toolbar_get_icon_size(GTK_TOOLBAR (toolbar)));
   item = gtk_tool_button_new(w, _("Categories"));
   g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (edit_categories), NULL);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
-  item = gtk_tool_button_new_from_stock(GTK_STOCK_FIND);
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK(do_find), NULL);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);    
-    
-  item = gtk_separator_tool_item_new();
-  gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), TRUE);
-  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
-
-  /* find section of toolbar */
+  /* "find" section of toolbar */
   item = gtk_separator_tool_item_new();
   gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
-  
+
   label83 = gtk_label_new (_("Find:"));
   item = gtk_tool_item_new();
   gtk_container_add(GTK_CONTAINER(item), label83);
   gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
+#if MAEMO_VERSION_MAJOR < 5
   item = gtk_separator_tool_item_new();
   gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
   entry1 = gtk_entry_new ();
   gtk_widget_set_size_request(entry1, 120, -1);
+#else
+  entry1 = hildon_entry_new (HILDON_SIZE_AUTO);
+#endif
   item = gtk_tool_item_new();
   gtk_container_add(GTK_CONTAINER(item), entry1);
   gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
@@ -1608,9 +1664,19 @@ create_main (gboolean edit_structure)
   gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
-  categories_smenu = gtk_simple_menu_new ();
   item = gtk_tool_item_new();
+#if MAEMO_VERSION_MAJOR < 5
+  categories_smenu = gtk_simple_menu_new ();
   gtk_container_add(GTK_CONTAINER(item), categories_smenu);
+#else
+  /* Create a picker button */
+  categories_picker_button = hildon_picker_button_new (HILDON_SIZE_AUTO,
+                                            HILDON_BUTTON_ARRANGEMENT_VERTICAL);
+  /* Set a title to the button */
+  hildon_button_set_title (HILDON_BUTTON (categories_picker_button), _("Category"));
+
+  gtk_container_add(GTK_CONTAINER(item), categories_picker_button);
+#endif
   gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), TRUE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
@@ -1697,8 +1763,13 @@ create_main (gboolean edit_structure)
 	
 
   /* connect actions to widgets */
+#if MAEMO_VERSION_MAJOR < 5
   g_signal_connect (G_OBJECT (categories_smenu), "changed", 
                     G_CALLBACK (do_search), entry1);
+#else
+  g_signal_connect (G_OBJECT (categories_picker_button), "value-changed", 
+                    G_CALLBACK (do_search), entry1);
+#endif
   g_signal_connect (G_OBJECT (entry1), "activate", G_CALLBACK (do_search), entry1);
   g_signal_connect (G_OBJECT (entry1), "changed", G_CALLBACK (schedule_search), NULL);
 
@@ -1718,7 +1789,7 @@ create_main (gboolean edit_structure)
   g_signal_connect (G_OBJECT (toolbar), "key_press_event", 
                     G_CALLBACK (toolbar_key_press_event), NULL);
   g_signal_connect (G_OBJECT (entry1), "key_press_event", 
-                    G_CALLBACK (search_entry_key_press_event), btnNew);
+  G_CALLBACK (search_entry_key_press_event), btnNew);
  
   search_entry = entry1;
 
@@ -1765,8 +1836,10 @@ create_main (gboolean edit_structure)
 		    G_CALLBACK (selection_made), main_window);
   g_signal_connect (G_OBJECT (filter_sel), "changed",
 		    G_CALLBACK (filter_selected), main_window);
+#if MAEMO_VERSION_MAJOR < 5
   g_signal_connect (G_OBJECT (main_window), "focus-in-event",
-		    G_CALLBACK (on_main_focus), entry1);
+     G_CALLBACK (on_main_focus), entry1);
+#endif
   
   return main_window;
 }

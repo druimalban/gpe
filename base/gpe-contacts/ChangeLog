@@ -1,3 +1,15 @@
+2009-09-09  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main-hildon.c: Port category selection to a hildon selector.
+	Modify "find" entry handling to work with Fremantle focus style
+
+	* configure.ac: Add maemo-version checking
+
+2009-09-02  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main-hildon.c: Use stock toolbar icons so they work on fremantle
+	(create_app_menu): Add Find to menu
+
 2009-04-15 Ned Ludd  <solar@gentoo.org>
 	* gpe-base/gpe-contacts: Makefile.am 
 	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
