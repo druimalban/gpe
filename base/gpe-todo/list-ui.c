@@ -30,6 +30,11 @@
 
 #if HILDON_VER > 0
 #include <hildon/hildon-program.h>
+#if MAEMO_VERSION_MAJOR >= 5
+#include <hildon/hildon-picker-button.h>
+#include <hildon/hildon-touch-selector.h>
+#include <hildon/hildon-check-button.h>
+#endif 
 #else
 #include <hildon-widgets/hildon-program.h>
 #endif /* HILDON_VER */
@@ -165,21 +170,36 @@ item_do_delete (GtkWidget *w)
 static void
 set_category (GtkWidget *w, gpointer user_data)
 {
+#if MAEMO_VERSION_MAJOR < 5
   selected_category = (gint)user_data;
+#else
+  selected_category = gpe_pim_category_id (hildon_button_get_value (HILDON_BUTTON (g_option)));
+#endif
   refresh_items ();
 }
 
 static void
 toggle_completed_items (GtkWidget *w, gpointer user_data)
 {
+#if MAEMO_VERSION_MAJOR < 5
    show_completed_tasks = 
        gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM (w));
+#else
+   show_completed_tasks = 
+       hildon_check_button_get_active(HILDON_CHECK_BUTTON (w));
+#endif
    refresh_items ();
 }
 
 void
 categories_menu (void)
 {
+#if MAEMO_VERSION_MAJOR < 5
+
+  /* If not Hildon, or a Hildon version before Fremantle, the category
+     picker is implemented as a menu, with the Show Completed option
+     included */
+
   GtkWidget *menu = gtk_menu_new ();
   GSList *l = gpe_pim_categories_list (), *iter;
   GtkWidget *i;
@@ -236,6 +256,41 @@ categories_menu (void)
     }
   gtk_option_menu_set_menu (GTK_OPTION_MENU (g_option), menu);
   gtk_option_menu_set_history(GTK_OPTION_MENU(g_option), selected_category_index);
+
+#else /* MAEMO_VERSION_MAJOR < 5 */
+
+  /* In Hildon Fremantle, the category picker is implemented
+     as a Hildon Selector and the Show Completed option is not included */
+
+  GSList *categories = gpe_pim_categories_list (), *iter;
+  static GtkWidget *selector = NULL;
+
+  if (selector) gtk_widget_destroy(selector);
+
+  /* Create a HildonTouchSelector with a single text column */
+  selector = hildon_touch_selector_new_text();
+
+  /* Attach the touch selector to the picker button*/
+  hildon_picker_button_set_selector (HILDON_PICKER_BUTTON (g_option),
+                                     HILDON_TOUCH_SELECTOR (selector));
+
+  /* Set the selection mode */
+  hildon_touch_selector_set_column_selection_mode (HILDON_TOUCH_SELECTOR (selector),
+                                    HILDON_TOUCH_SELECTOR_SELECTION_MODE_SINGLE);
+
+  hildon_touch_selector_append_text (HILDON_TOUCH_SELECTOR (selector),
+                                       _("All categories"));
+
+
+  for (iter = categories; iter; iter = iter->next)
+    {
+      gint id = (gint) iter->data;
+     hildon_touch_selector_append_text (HILDON_TOUCH_SELECTOR (selector), gpe_pim_category_name(id));
+    }
+
+  g_slist_free (categories);
+
+#endif /* MAEMO_VERSION_MAJOR < 5 */
 }
 
 static void
@@ -583,6 +638,7 @@ static void
 update_categories (GtkWidget *w, GSList *new, gpointer t)
 {
   categories_menu ();
+
   if (new)
       g_slist_free(new);
 }
@@ -723,7 +779,7 @@ GtkWidget *
 top_level (GtkWidget *window)
 {
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
-  GtkWidget *option = gtk_option_menu_new ();
+  GtkWidget *option;
   GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
   GtkWidget *list_view;
   GtkAccelGroup *accel_group;
@@ -736,9 +792,6 @@ top_level (GtkWidget *window)
   bar_icon = gpe_find_icon ("bar-box");
   dot_icon = gpe_find_icon ("dot-box");
   high_icon = gpe_find_icon ("high");
-
-  g_option = option;
-  categories_menu ();
 
   accel_group = gtk_accel_group_new ();
   item_factory = gtk_item_factory_new (GTK_TYPE_MENU, "<main>", accel_group);
@@ -813,12 +866,40 @@ top_level (GtkWidget *window)
     }
     
   /* Category menu */    
+#if MAEMO_VERSION_MAJOR < 5
+  option = gtk_option_menu_new ();
+#else
+  /* Create a picker button */
+  option = hildon_picker_button_new (HILDON_SIZE_AUTO,
+                                            HILDON_BUTTON_ARRANGEMENT_VERTICAL);
+  /* Set a title to the button */
+  hildon_button_set_title (HILDON_BUTTON (option), _("Category"));
+
+  g_signal_connect (G_OBJECT (option), "value-changed", 
+                    G_CALLBACK (set_category), option);
+#endif
+  g_option = option;
+  categories_menu ();
+
   item = gtk_tool_item_new();
   gtk_container_add(GTK_CONTAINER(item), option);
   gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 
-#ifndef IS_HILDON    
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR >= 5
+  /* Add checkbox for Show Completed */
+  w = hildon_check_button_new (HILDON_SIZE_AUTO);
+  hildon_check_button_set_active (HILDON_CHECK_BUTTON(w), TRUE);
+  gtk_button_set_label(GTK_BUTTON(w), _("Completed"));
+  g_signal_connect (G_OBJECT (w), "toggled", 
+                    G_CALLBACK (toggle_completed_items), NULL);
+  item = gtk_tool_item_new();
+  gtk_container_add(GTK_CONTAINER(item), w);
+  gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
+  gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
+#endif /* MAEMO_VERSION_MAJOR >= 5 */
+#else
   /* Some space and quit button */
   item = gtk_separator_tool_item_new();
   gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(item), FALSE);

@@ -1,3 +1,10 @@
+2009-09-09  Graham Cobb  <g+770@cobb.uk.net>
+
+	* list-ui.c: Port category menu to Fremantle hildon selector and add checkbox
+	for Completed Items display
+
+	* configure.ac: Add check for maemo-version
+
 2009-09-02  Graham Cobb  <g+770@cobb.uk.net>
 
 	* list-ui.c (top_level): Use stock icons for toolbar to simplify Fremantle porting
