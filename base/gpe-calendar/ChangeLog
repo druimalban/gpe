@@ -1,3 +1,10 @@
+2009-09-09  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac: Define MAEMO_VERSION and MAEMO_VERSION_MAJOR
+	even on non-hildon platforms to make conditional tests easier
+
+	* main.c (main): Use HildonDateButton in Fremantle
+
 2009-09-02  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (main): Add toolbar using hildon_window_add_toolbar

@@ -63,7 +63,17 @@
 #include "day_view.h"
 #include "week_view.h"
 #include "month_view.h"
+
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
 #include "gtkdatesel.h"
+#else /* MAEMO_VERSION_MAJOR < 5 */
+#include <hildon/hildon-date-button.h>
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+#else /* IS_HILDON */
+#include "gtkdatesel.h"
+#endif /* IS_HILDON */
+
 #include "event-cal.h"
 #include "event-list.h"
 #include "alarm-dialog.h"
@@ -127,7 +137,15 @@ static GtkWidget *date_toolbar;
 static GtkWidget *today_button;
 static GtkLabel *day_of_week = NULL;
 static GtkToolItem *datesel_item;
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
 static GtkDateSel *datesel;
+#else /* MAEMO_VERSION_MAJOR < 5 */
+static HildonDateButton *datesel;
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+#else /* IS_HILDON */
+static GtkDateSel *datesel;
+#endif /* IS_HILDON */
 static GtkContainer *main_panel;
 static int current_view_hidden;
 static GtkContainer *current_view_container;
@@ -675,12 +693,36 @@ propagate_time (void)
     }
 
   GDate date;
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
   gtk_date_sel_get_date (GTK_DATE_SEL (datesel), &date);
+#else /* MAEMO_VERSION_MAJOR < 5 */
+  guint y, m, d;
+  hildon_date_button_get_date (datesel, &y, &m, &d);
+  g_date_set_dmy(&date, d, m+1, y);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+#else /* IS_HILDON */
+  gtk_date_sel_get_date (GTK_DATE_SEL (datesel), &date);
+#endif /* IS_HILDON */
+
   GDate viewing;
   g_date_set_time_t (&viewing, viewtime);
 
   if (g_date_compare (&date, &viewing) != 0)
-    gtk_date_sel_set_date (GTK_DATE_SEL (datesel), &viewing);
+    {
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
+      gtk_date_sel_set_date (GTK_DATE_SEL (datesel), &viewing);
+#else /* MAEMO_VERSION_MAJOR < 5 */
+      hildon_date_button_set_date (datesel,
+						g_date_get_year(&viewing),
+						g_date_get_month(&viewing)-1,
+						g_date_get_day(&viewing));
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+#else /* IS_HILDON */
+      gtk_date_sel_set_date (GTK_DATE_SEL (datesel), &viewing);
+#endif /* IS_HILDON */
+    }
 
   if (current_view && GTK_IS_VIEW (current_view))
     {
@@ -695,10 +737,20 @@ propagate_time (void)
 }
 
 static gboolean
-datesel_changed (GtkWidget *datesel, gpointer data)
+datesel_changed (GtkWidget *w, gpointer data)
 {
   GDate date;
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
   gtk_date_sel_get_date (GTK_DATE_SEL (datesel), &date);
+#else /* MAEMO_VERSION_MAJOR < 5 */
+  guint y, m, d;
+  hildon_date_button_get_date (datesel, &y, &m, &d);
+  g_date_set_dmy(&date, d, m+1, y);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+#else /* IS_HILDON */
+  gtk_date_sel_get_date (GTK_DATE_SEL (datesel), &date);
+#endif /* IS_HILDON */
 
   struct tm tm;
   localtime_r (&viewtime, &tm);
@@ -1223,14 +1275,26 @@ current_view_consider (void)
     {
     case view_day_view:
       current_view = day_view_new (viewtime);
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
       gtk_date_sel_set_mode (datesel, GTKDATESEL_FULL);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+#else /* IS_HILDON */
+      gtk_date_sel_set_mode (datesel, GTKDATESEL_FULL);
+#endif /* IS_HILDON */
       gtk_widget_show (GTK_WIDGET (datesel));
       gtk_widget_show (today_button);
       if (day_of_week) gtk_widget_show (GTK_WIDGET (day_of_week));
       break;
     case view_week_view:
       current_view = gtk_week_view_new (viewtime);
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
       gtk_date_sel_set_mode (datesel, GTKDATESEL_WEEK);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+#else /* IS_HILDON */
+      gtk_date_sel_set_mode (datesel, GTKDATESEL_WEEK);
+#endif /* IS_HILDON */
       gtk_widget_show (GTK_WIDGET (datesel));
       gtk_widget_show (today_button);
       if (day_of_week) gtk_widget_show (GTK_WIDGET (day_of_week));
@@ -1238,7 +1302,13 @@ current_view_consider (void)
     case view_month_view:
       calendar_hidden ++;
       current_view = gtk_month_view_new (viewtime);
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
       gtk_date_sel_set_mode (datesel, GTKDATESEL_MONTH);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+#else /* IS_HILDON */
+      gtk_date_sel_set_mode (datesel, GTKDATESEL_MONTH);
+#endif /* IS_HILDON */
       gtk_widget_show (GTK_WIDGET (datesel));
       gtk_widget_show (today_button);
       if (day_of_week) gtk_widget_hide (GTK_WIDGET (day_of_week));
@@ -2681,9 +2751,26 @@ main (int argc, char *argv[])
   gtk_widget_show (GTK_WIDGET (item));
   datesel_item = GTK_TOOL_ITEM (item);
 
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
   datesel = GTK_DATE_SEL (gtk_date_sel_new (GTKDATESEL_FULL, &date));
   g_signal_connect (G_OBJECT (datesel), "changed",
 		    G_CALLBACK (datesel_changed), NULL);
+#else /* MAEMO_VERSION_MAJOR < 5 */
+  datesel = hildon_date_button_new(HILDON_SIZE_AUTO,
+				   HILDON_BUTTON_ARRANGEMENT_VERTICAL);
+  hildon_date_button_set_date (datesel,
+			       g_date_get_year(&date),
+			       g_date_get_month(&date)-1,
+			       g_date_get_day(&date));
+  g_signal_connect (G_OBJECT (datesel), "value-changed",
+		    G_CALLBACK (datesel_changed), NULL);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+#else /* IS_HILDON */
+  datesel = GTK_DATE_SEL (gtk_date_sel_new (GTKDATESEL_FULL, &date));
+  g_signal_connect (G_OBJECT (datesel), "changed",
+		    G_CALLBACK (datesel_changed), NULL);
+#endif /* IS_HILDON */
   gtk_widget_show (GTK_WIDGET (datesel));
   gtk_container_add (GTK_CONTAINER (item), GTK_WIDGET (datesel));
 
