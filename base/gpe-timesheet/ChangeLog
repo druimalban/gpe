@@ -1,3 +1,9 @@
+2009-09-13  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac: set up MAEMO5 condition for automake
+
+	* hildon/Makefile.am (gpe-timesheet.png): Conditionalise application icon size
+
 2009-09-02  Graham Cobb  <g+770@cobb.uk.net>
 
 	* ui.c (create_interface): Use stock icons on hildon where possible
