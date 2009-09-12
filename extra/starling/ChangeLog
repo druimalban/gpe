@@ -1,3 +1,9 @@
+2009-09-13  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac: set up MAEMO5 condition for automake
+
+	* data/Makefile.am (bass.png): Conditionalise application icon size
+
 2009-08-31  Graham Cobb  <g+770@cobb.uk.net>
 
 	* src/lyrics.c: Support libsoup2.4 as well as 2.2

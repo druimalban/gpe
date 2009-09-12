@@ -18,8 +18,15 @@ pixmapdir = $(datadir)/pixmaps
 dist_pixmap_DATA = bass.png bass-20x20.png bass-26x26.png bass-40x40.png \
 	bass-48x48.png bass-64x64.png
 
-bass.png: bass-20x20.png
+if MAEMO5
+# Application icon 64x64
+bass.png: bass-64x64.png
 	ln -sf $< $@
+else
+# Application icon 48x48
+bass.png: bass-48x48.png
+	ln -sf $< $@
+endif
 
 iconsdir = $(datadir)/icons/hicolor
 

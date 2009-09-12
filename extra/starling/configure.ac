@@ -42,10 +42,22 @@ AC_CHECK_LIB([osso], [osso_initialize],
                         PKG_CHECK_MODULES(HILDON, hildon-lgpl hildon-libs)
 			GUI_MODULES="$GUI_MODULES hildon-fm"
                 ])
+	 PKG_CHECK_EXISTS(maemo-version,
+		[
+			VERSION=`pkg-config --modversion maemo-version`
+			AC_MSG_NOTICE([Configuring for Maemo $VERSION])
+			CFLAGS="$CFLAGS -DMAEMO_VERSION=\\\"$VERSION\\\""
+			MAEMO_MAJOR=`echo $VERSION | cut -b1 -`
+			CFLAGS="$CFLAGS -DMAEMO_VERSION_MAJOR=$MAEMO_MAJOR"
+		],
+		[
+			AC_MSG_ERROR([maemo-version not found])
+		])
 	 GUI_MODULES="$GUI_MODULES libosso"],
 	[ENABLE_HILDON=false])
 AC_SUBST(ENABLE_HILDON)
 AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
+AM_CONDITIONAL(MAEMO5, test x$MAEMO_MAJOR = x5)
 AC_SUBST(HILDON_CFLAGS)
 AC_SUBST(HILDON_LIBS)
 
