@@ -12,11 +12,17 @@ metadir = $(datadir)/gpe-contacts
 meta_DATA = default-layout-bigscreen.xml
 
 pixmapsdir = $(datadir)/pixmaps
-# we need a 26x26 icon here 
 pixmaps_DATA = gpe-contacts.png
 
+if MAEMO5
+# Application icon 64x64
+gpe-contacts.png: gpe-contacts-64x64.png
+	cp $< $@
+else
+# Application icon 48x48
 gpe-contacts.png: gpe-contacts-48x48.png
 	cp $< $@
+endif
 
 iconsdir = $(datadir)/icons/hicolor
 

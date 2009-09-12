@@ -1,3 +1,9 @@
+2009-09-12  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac (MAEMO5): set up MAEMO5 condition for automake
+
+	* hildon/Makefile.am (gpe-contacts.png): Conditionalise application icon size
+
 2009-09-09  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main-hildon.c: Port category selection to a hildon selector.
