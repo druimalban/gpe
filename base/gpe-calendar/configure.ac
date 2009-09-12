@@ -70,8 +70,8 @@ AC_ARG_ENABLE(hildon,
 				VERSION=`pkg-config --modversion maemo-version`
 				AC_MSG_NOTICE([Configuring for Maemo $VERSION])
 				CFLAGS="$CFLAGS -DMAEMO_VERSION=\\\"$VERSION\\\""
-				MAJOR=`echo $VERSION | cut -b1 -`
-				CFLAGS="$CFLAGS -DMAEMO_VERSION_MAJOR=$MAJOR"
+				MAEMO_MAJOR=`echo $VERSION | cut -b1 -`
+				CFLAGS="$CFLAGS -DMAEMO_VERSION_MAJOR=$MAEMO_MAJOR"
 			],
 			[
 				AC_MSG_ERROR([maemo-version not found])
@@ -85,6 +85,7 @@ AC_ARG_ENABLE(hildon,
 	])
 AC_SUBST(ENABLE_HILDON)
 AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
+AM_CONDITIONAL(MAEMO5, test x$MAEMO_MAJOR = x5)
 
 # See if we should use libschedule.
 AC_ARG_WITH(libschedule,

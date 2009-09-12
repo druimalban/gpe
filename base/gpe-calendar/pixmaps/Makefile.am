@@ -3,8 +3,15 @@ pixmapsdir = $(datadir)/pixmaps
 
 pixmaps_DATA = gpe-calendar.png
 
+if MAEMO5
+# Application icon 64x64
+gpe-calendar.png: gpe-calendar-64x64.png
+	cp $< $@
+else
+# Application icon 48x48
 gpe-calendar.png: gpe-calendar-48x48.png
 	cp $< $@
+endif
 
 EXTRA_DIST = $(pixmaps_DATA)
 
