@@ -9,11 +9,17 @@ service_DATA = $(service_in_files:.service.in=.service)
 @INTLTOOL_DESKTOP_RULE@
 
 pixmapsdir = $(datadir)/pixmaps
-# we need a 26x26 icon here 
 pixmaps_DATA = gpe-todo.png
 
+if MAEMO5
+# Application icon 64x64
+gpe-todo.png: gpe-todo-64x64.png
+	cp $< $@
+else
+# Application icon 48x48
 gpe-todo.png: gpe-todo-48x48.png
 	cp $< $@
+endif
 
 iconsdir = $(datadir)/icons/hicolor
 

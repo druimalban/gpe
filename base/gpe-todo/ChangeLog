@@ -1,3 +1,9 @@
+2009-09-13  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac: set up MAEMO5 condition for automake
+
+	* hildon/Makefile.am (gpe-todo.png): Conditionalise application icon size
+
 2009-09-09  Graham Cobb  <g+770@cobb.uk.net>
 
 	* list-ui.c: Port category menu to Fremantle hildon selector and add checkbox
