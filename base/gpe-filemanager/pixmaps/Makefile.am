@@ -9,8 +9,15 @@ nobase_icons_DATA =
 
 endif
 
+if MAEMO5
+# Application icon 64x64
+gpe-filemanager.png: gpe-filemanager-64x64.png
+	cp $< $@
+else
+# Application icon 48x48
 gpe-filemanager.png: gpe-filemanager-48x48.png
 	cp $< $@
+endif
 
 iconsdir = $(datadir)/icons/hicolor
 

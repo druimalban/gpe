@@ -1,3 +1,9 @@
+2009-09-13  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac: set up MAEMO5 condition for automake
+
+	* pixmaps/Makefile.am (gpe-filemanager.png): Conditionalise application icon size
+
 2009-04-15 Ned Ludd  <solar@gentoo.org>
 	* gpe-base/gpe-filemanager: pixmaps/Makefile.am main.c 
 	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
