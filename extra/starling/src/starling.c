@@ -123,7 +123,9 @@ struct _Starling {
   gint64 current_length;
   gboolean enqueued;
 #ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
   GtkCheckMenuItem *fullscreen;
+#endif /* MAEMO_VERSION_MAJOR < 5 */
 #endif
   GtkCheckMenuItem *download_lyrics;
 
@@ -1299,6 +1301,7 @@ clear_cb (GtkWidget *w, Starling *st)
 }
 
 #ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
 #if HILDON_VER > 0
 static void
 toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
@@ -1316,6 +1319,7 @@ toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
 				 gtk_check_menu_item_get_active (menuitem));
 }
 #endif /* HILDON_VER */
+#endif /* MAEMO_VERSION_MAJOR < 5 */
 #endif /*IS_HILDON*/
 
 static void
@@ -2767,6 +2771,7 @@ starling_run (void)
   gtk_widget_show (mitem);
 
 #ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
   /* Options -> Full Screen.  */
   mitem = gtk_check_menu_item_new_with_mnemonic (_("_Full Screen"));
   st->fullscreen = GTK_CHECK_MENU_ITEM(mitem);
@@ -2779,6 +2784,7 @@ starling_run (void)
 #endif /* HILDON_VER */
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
 #endif
 
   /* Options -> Caption Format.  */
