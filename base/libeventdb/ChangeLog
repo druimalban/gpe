@@ -1,3 +1,11 @@
+2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* sqlite.c (event_db_readonly): do not close the database by hand as
+	it is closed automatically when unref'ing
+	(event_db_new): do not close the database by hand as
+	it is closed automatically when unref'ing
+	(sqlite_db_finalize): only close DB if it has been opened
+
 2008-10-22  Neal H. Walfield  <neal@gnu.org>
 
 	* gpe/event-db.h (event_duplicate): New declaration.

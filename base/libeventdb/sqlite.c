@@ -1194,9 +1194,9 @@ sqlite_db_finalize (GObject *object)
 {
   SqliteDB *db = SQLITE_DB (object);
 
-  G_OBJECT_CLASS (sqlite_db_parent_class)->finalize (object);
+  if (db->sqliteh) sqlite_close (db->sqliteh);
 
-  sqlite_close (db->sqliteh);
+  G_OBJECT_CLASS (sqlite_db_parent_class)->finalize (object);
 }
 
 static int
@@ -1715,9 +1715,6 @@ event_db_new (const char *fname, GError **error)
   else
       SIGNAL_ERROR (edb, error, "unspecified sqlite error");
 
-  if (SQLITE_DB (edb)->sqliteh)
-    sqlite_close (SQLITE_DB (edb)->sqliteh);
-
   g_object_unref (edb);
 
   return NULL;
@@ -1802,9 +1799,6 @@ event_db_readonly (const char *fname, GError **error)
     }
   else
       SIGNAL_ERROR (edb, error, "unspecified sqlite error");
-
-  if (SQLITE_DB (edb)->sqliteh)
-    sqlite_close (SQLITE_DB (edb)->sqliteh);
 
   g_object_unref (edb);
 
