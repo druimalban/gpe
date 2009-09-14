@@ -179,7 +179,9 @@ static int main_toolbar_width;
 static GtkWidget *main_toolbar;
 static GtkWidget *day_button, *month_button;
 #ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
 static GtkCheckMenuItem *fullscreen_button;
+#endif
 #endif
 
 static void propagate_time (void);
@@ -1675,6 +1677,7 @@ gpe_handle_close (GtkWidget *widget, GdkEvent *event, gpointer user_data)
 }
 
 #ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
 static void
 toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
 {
@@ -1687,6 +1690,7 @@ toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
   hildon_appview_set_fullscreen (HILDON_APPVIEW (main_appview), gtk_check_menu_item_get_active (menuitem)); 
 #endif /* HILDON_VER  */
 }
+#endif /*MAEMO_VERSION_MAJOR < 5*/
 #endif /*IS_HILDON*/
 
 static void
@@ -1721,12 +1725,14 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
     /* in hildon there is nothing like control, shift etc buttons */
     switch (k->keyval)
       {
+#if MAEMO_VERSION_MAJOR < 5
       case GDK_F6:
 	/* toggle button for going full screen */
 	gtk_check_menu_item_set_active
 	  (fullscreen_button,
 	   ! gtk_check_menu_item_get_active (fullscreen_button));
         break;	
+#endif /* MAEMO_VERSION_MAJOR < 5 */
       }
 #else
   if (k->state & GDK_CONTROL_MASK)
@@ -3000,6 +3006,8 @@ main (int argc, char *argv[])
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 
+#ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
   mitem = gtk_separator_menu_item_new ();
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
@@ -3012,7 +3020,6 @@ main (int argc, char *argv[])
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 
-#ifdef IS_HILDON
   /* Tools -> Full Screen.  */
   mitem = gtk_check_menu_item_new_with_mnemonic (_("_Full Screen"));
   g_signal_connect (G_OBJECT (mitem), "activate",
@@ -3020,10 +3027,23 @@ main (int argc, char *argv[])
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
   fullscreen_button = GTK_CHECK_MENU_ITEM (mitem);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
   
   /* Finally attach close item. */
   gtk_menu_shell_append (menu_main, quit_item);
-#endif
+#else /* IS_HILDON */
+  mitem = gtk_separator_menu_item_new ();
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+  /* Tools -> Toolbar.  */
+  mitem = gtk_check_menu_item_new_with_mnemonic (_("_Toolbar"));
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (mitem), TRUE);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (toggle_toolbar), toolbar);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+#endif /* IS_HILDON */
 
   /* The rest of the application window.  */
   if (display_tiny)
