@@ -95,7 +95,9 @@ static GtkWidget *search_entry;
 static GtkWidget *popup_menu;
 static GtkWidget *bluetooth_menu_item;
 static GtkWidget *irda_menu_item;
+#if MAEMO_VERSION_MAJOR < 5
 static GtkWidget *fullscreen_control;
+#endif
 guint menu_uid;
 gboolean mode_landscape;
 gboolean mode_large_screen;
@@ -131,6 +133,7 @@ t_filter filter[]= {
 gint num_filter = sizeof(filter) / sizeof(t_filter);
 gint current_filter = 0;
 
+#if MAEMO_VERSION_MAJOR < 5
 static void
 toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
 {
@@ -139,6 +142,7 @@ toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
   else
     gtk_window_unfullscreen (GTK_WINDOW (mainw));
 }
+#endif
 
 static void 
 populate_filter(void)
@@ -1185,10 +1189,12 @@ window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkTreeView *tree)
       return TRUE;
     }
 
+#if MAEMO_VERSION_MAJOR < 5
   /* toggle fullscreen */
   if (k->keyval == GDK_F6)
         gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (fullscreen_control), 
              !gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (fullscreen_control)));
+#endif
   
   /* automatic search */
   if (!k->state && k->string && isalpha(k->string[0]))
@@ -1489,19 +1495,23 @@ create_app_menu(HildonWindow *window)
   GtkMenu   *menu_main = GTK_MENU (gtk_menu_new());
   GtkWidget *menu_contacts = gtk_menu_new();
   GtkWidget *menu_categories = gtk_menu_new();
+#if MAEMO_VERSION_MAJOR < 5
   GtkWidget *menu_view = gtk_menu_new();
+#endif
   GtkWidget *menu_tools = gtk_menu_new();
     
   GtkWidget *item_contacts = gtk_menu_item_new_with_label(_("Contact"));
   GtkWidget *item_categories = gtk_menu_item_new_with_label(_("Categories"));
-  GtkWidget *item_view = gtk_menu_item_new_with_label(_("View"));
   GtkWidget *item_close = gtk_menu_item_new_with_label(_("Close"));
   GtkWidget *item_open = gtk_menu_item_new_with_label(_("Open..."));
   GtkWidget *item_add = gtk_menu_item_new_with_label(_("Add new"));
   GtkWidget *item_delete = gtk_menu_item_new_with_label(_("Delete"));
   GtkWidget *item_catedit = gtk_menu_item_new_with_label(_("Edit categories"));
+#if MAEMO_VERSION_MAJOR < 5
+  GtkWidget *item_view = gtk_menu_item_new_with_label(_("View"));
   GtkWidget *item_fullscreen = gtk_check_menu_item_new_with_label(_("Fullscreen"));
   GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
+#endif
   GtkWidget *item_tools = gtk_menu_item_new_with_label(_("Tools"));
   GtkWidget *item_find = gtk_menu_item_new_with_label(_("Find contact..."));
   GtkWidget *item_import = gtk_menu_item_new_with_label(_("Import VCard"));
@@ -1511,11 +1521,15 @@ create_app_menu(HildonWindow *window)
   gtk_menu_append (GTK_MENU(menu_contacts), item_add);
   gtk_menu_append (GTK_MENU(menu_contacts), item_delete);
   gtk_menu_append (GTK_MENU(menu_categories), item_catedit);
+#if MAEMO_VERSION_MAJOR < 5
   gtk_menu_append (GTK_MENU(menu_view), item_fullscreen);
   gtk_menu_append (GTK_MENU(menu_view), item_toolbar);
+#endif
   gtk_menu_append (menu_main, item_contacts);
   gtk_menu_append (menu_main, item_categories);
+#if MAEMO_VERSION_MAJOR < 5
   gtk_menu_append (menu_main, item_view);
+#endif
   gtk_menu_append (menu_main, item_tools);
   gtk_menu_append (menu_main, item_close);
   gtk_menu_append (menu_tools, item_find);
@@ -1523,17 +1537,21 @@ create_app_menu(HildonWindow *window)
   gtk_menu_append (menu_tools, item_export);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_contacts), menu_contacts);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_categories), menu_categories);
+#if MAEMO_VERSION_MAJOR < 5
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_view), menu_view);
-  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_tools), menu_tools);
-  
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_fullscreen), FALSE);
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_toolbar), TRUE);
+#endif
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_tools), menu_tools);
+  
 
   g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_contact), NULL);
   g_signal_connect(G_OBJECT(item_open), "activate", G_CALLBACK(edit_contact), NULL);
   g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), NULL);
+#if MAEMO_VERSION_MAJOR < 5
   g_signal_connect(G_OBJECT(item_fullscreen), "activate", G_CALLBACK(toggle_fullscreen), NULL);
   g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
+#endif
   g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(delete_contact), NULL);
   g_signal_connect(G_OBJECT(item_import), "activate", G_CALLBACK(on_import_vcard), NULL);
   g_signal_connect(G_OBJECT(item_export), "activate", G_CALLBACK(on_export_vcard), NULL);
@@ -1541,7 +1559,9 @@ create_app_menu(HildonWindow *window)
   g_signal_connect(G_OBJECT(item_find), "activate", G_CALLBACK(do_find), NULL);
 
   gtk_widget_show_all (GTK_WIDGET(menu_main));  
+#if MAEMO_VERSION_MAJOR < 5
   fullscreen_control = item_fullscreen;
+#endif
   hildon_window_set_menu (HILDON_WINDOW (window), menu_main);
 }
 #endif

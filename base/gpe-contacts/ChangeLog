@@ -2,6 +2,7 @@
 
 	* main-hildon.c (create_main): Change Main window name to List on Maemo 4 and earlier
 	and GPE Contacts on Fremantle as Fremantle does not display the application name
+	(create_app_menu): Remove View submenu and Fullscreen and Toolbar options
 
 2009-09-12  Graham Cobb  <g+770@cobb.uk.net>
 
