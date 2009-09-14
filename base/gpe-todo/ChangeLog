@@ -1,3 +1,8 @@
+2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* list-ui.c (create_app_menu): Remove View menu and Toolbar and Fullscreen
+	options for Fremantle
+
 2009-09-13  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac: set up MAEMO5 condition for automake
