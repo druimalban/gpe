@@ -1,3 +1,12 @@
+2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* ui.h: remove toggle_toolbar
+
+	* ui.c (create_interface): Remove Show menu for Fremantle
+	(toggle_journal, toggle_toolbar): Remove for Fremantle
+
+	* main.c (key_press_cb): Remove fullscreen support for Fremantle
+
 2009-09-13  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac: set up MAEMO5 condition for automake

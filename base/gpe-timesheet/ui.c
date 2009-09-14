@@ -418,6 +418,7 @@ view_selected_row_cb (GtkTreeSelection *selection, gpointer data)
 
 #ifdef IS_HILDON
 
+#if MAEMO_VERSION_MAJOR < 5
 static void
 toggle_toolbar(GtkCheckMenuItem *menuitem, gpointer user_data)
 { /* this one switchs on/off the main toolbar */
@@ -439,6 +440,7 @@ toggle_journal(GtkCheckMenuItem *menuitem, gpointer user_data)
   else
     gtk_widget_hide(treeview);
 }
+#endif /* MAEMO_VERSION_MAJOR < 5 */
 
 static void 
 filter_show_task(GtkCheckMenuItem *menuitem, gpointer user_data)
@@ -709,11 +711,13 @@ GtkWidget * create_interface(GtkWidget *main_window)
     menu_view_group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (item_view_task));
     GtkWidget *item_view_todo = gtk_radio_menu_item_new_with_label(menu_view_group, _("Only todo items"));
     menu_view_group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (item_view_todo));
+#if MAEMO_VERSION_MAJOR < 5
   /*show menu declarations*/
     GtkWidget *menu_show = gtk_menu_new();
     GtkWidget *item_show = gtk_menu_item_new_with_label(_("Show"));
     GtkWidget *item_switch_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
     GtkWidget *item_switch_journal = gtk_check_menu_item_new_with_label(_("Show journal"));
+#endif /* MAEMO_VERSION_MAJOR < 5 */
   /*menu building*/
     if (!todo_db_start())
       {/* only if we found the todo db*/
@@ -725,6 +729,7 @@ GtkWidget * create_interface(GtkWidget *main_window)
         gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item_view_both), TRUE);
       }
   
+#if MAEMO_VERSION_MAJOR < 5
     gtk_menu_append (GTK_MENU(menu_main), item_show);
     gtk_menu_append (GTK_MENU(menu_show), item_switch_toolbar);
     gtk_menu_append (GTK_MENU(menu_show), item_switch_journal);
@@ -732,6 +737,7 @@ GtkWidget * create_interface(GtkWidget *main_window)
   /*menu initial settings*/
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_switch_toolbar), TRUE);
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_switch_journal), FALSE);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
   /* fire! */
     gtk_widget_show_all (GTK_WIDGET(menu_main));
 #if HILDON_VER > 0
@@ -818,12 +824,14 @@ GtkWidget * create_interface(GtkWidget *main_window)
       g_signal_connect (G_OBJECT(task_selection), "changed",
                         G_CALLBACK (prepare_onscreen_journal), NULL);
     /*here follows signals for the menu/toolbar voices*/
+#if MAEMO_VERSION_MAJOR < 5
     /* this is the signal to activate and deactivate hildon toolbar */
       g_signal_connect(G_OBJECT(item_switch_toolbar), "activate",
         G_CALLBACK(toggle_toolbar), main_toolbar);
     /* this is the one to show or hide the journal */
       g_signal_connect(G_OBJECT(item_switch_journal), "activate",
         G_CALLBACK(toggle_journal), rframe);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
     /*these are filtering view options for tasks and todos
     ** only if we found the todo db */
       if (!todo_db_start())

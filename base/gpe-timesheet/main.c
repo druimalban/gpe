@@ -82,6 +82,7 @@ static void osso_top_callback (const gchar* arguments, gpointer ptr)
     gtk_window_present (GTK_WINDOW (window));
 }
 
+#if MAEMO_VERSION_MAJOR < 5
 #if HILDON_VER > 0
 static gboolean key_press_cb(GtkWidget *w, GdkEventKey *event, GtkWindow *window)
 {
@@ -126,6 +127,7 @@ static gboolean key_press_cb(GtkWidget *w, GdkEventKey *event, HildonApp *app)
 
 }
 #endif /* HILDON_VER */
+#endif /* MAEMO_VERSION_MAJOR < 5 */
 #endif /* IS_HILDON */
 
 
