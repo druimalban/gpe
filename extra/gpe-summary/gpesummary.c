@@ -88,7 +88,8 @@ GtkWidget *scrolled_window;
 time_t last_gui_update = 0;
 char timestring[40];
 
-gboolean doshow_birthdays=TRUE;
+gboolean doshow_birthdays=TRUE; /* Whether we are currently showing birthdays */
+gboolean show_birthdays_pref=TRUE; /* Whether the user wants us to try to show birthdays */
 gboolean doshow_appointments=TRUE;
 gboolean doshow_todos=TRUE;
 gboolean doshow_alltodos=TRUE;
@@ -148,7 +149,11 @@ static void todo_clicked( GtkWidget      *button,
 					GdkEventButton *event,
 					gpointer user_data ) {
 	//g_message(gtk_widget_get_name(button));	
-	todo_db_start ();
+
+  if (todo_db_start () != 0) {
+    g_message("todo_db_start returned error");
+    return;
+  }
 	
 	GSList *iter;
 
@@ -302,8 +307,10 @@ gint show_todos(GtkWidget *vbox, gint count) {
 	todocount=0;
 	
 	if (!todo_file) todo_file = TODO_FILE();
-	todo_db_start ();
-	
+	if (todo_db_start () != 0) {
+	  g_message("todo_db_start returned error");
+	  return count;
+	}
 
 	GSList *iter;
 
@@ -612,7 +619,6 @@ gint add_events(GtkWidget *vbox,EventDB *event_db, time_t start, time_t stop, gc
 
 
 gint show_events(GtkWidget *vbox, gint count) {
-  // g_message("%s",__func__);
         struct tm tm;
 	time_t start = time (NULL); // Now
 	memset (&tm, 0, sizeof (tm));	
@@ -630,11 +636,13 @@ gint show_events(GtkWidget *vbox, gint count) {
 	  g_object_unref(event_db);
 	  event_db = NULL;
 	}
-	GError **error = NULL;
+	GError *error = NULL;
 	// If the event DB doesn't exist, event_db_new will return NULL
-	event_db = event_db_readonly (calendar_file, error);
+	event_db = event_db_readonly (calendar_file, &error);
 
-	if (doshow_birthdays==TRUE) contacts_db_open(FALSE);
+	if (doshow_birthdays==TRUE) {
+	  if (contacts_db_open(FALSE) != 0) doshow_birthdays = FALSE;
+	}
 	prepare_birthdays();
 
 	//Today already set as head	
@@ -695,7 +703,8 @@ void loadPrefs(){
 	g_message ("load_prefs 3");
 
 	/* Read in data from the key file from the group "username". */
-	doshow_birthdays = g_key_file_get_boolean(keyfile, "options","show_birthdays", error);
+	show_birthdays_pref = g_key_file_get_boolean(keyfile, "options","show_birthdays", error);
+	doshow_birthdays = show_birthdays_pref;
 	doshow_appointments = g_key_file_get_boolean(keyfile, "options","show_appointments", error);
 	doshow_todos = g_key_file_get_boolean(keyfile, "options","show_todos", error);
 	doshow_alltodos = g_key_file_get_boolean(keyfile, "options","show_alltodos", error);
@@ -866,7 +875,7 @@ void save_prefs() {
 	g_message ("save_prefs 2");  
  
 	/* Read in data from the key file from the group "username". */
-	g_key_file_set_boolean(keyfile, "options","show_birthdays", doshow_birthdays);
+	g_key_file_set_boolean(keyfile, "options","show_birthdays", show_birthdays_pref);
 	g_key_file_set_boolean(keyfile, "options","show_appointments", doshow_appointments);
 	g_key_file_set_boolean(keyfile, "options","show_todos", doshow_todos);
 	g_key_file_set_boolean(keyfile, "options","show_alltodos", doshow_alltodos);
@@ -910,7 +919,8 @@ static gboolean options_clicked( GtkWidget      *button,
 	//g_message(label->str);
 	if (strcmp(label->str,"birthdays")==0) { 
 		g_message("doshow_birthdays");
-		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { doshow_birthdays=FALSE; } else { doshow_birthdays=TRUE;}
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(button))==FALSE) { show_birthdays_pref=FALSE; } else { show_birthdays_pref=TRUE;}
+		doshow_birthdays = show_birthdays_pref;
 	}
 	if (strcmp(label->str,"appointments")==0) { 
 		g_message("appointments");
@@ -990,7 +1000,7 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 	button = gtk_check_button_new_with_label(_("Show birthdays (long loading)"));
 	gtk_container_add (GTK_CONTAINER (GTK_DIALOG(dialog)->vbox),button);
 	gtk_widget_set_name(button, "birthdays");	
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),doshow_birthdays);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(button),show_birthdays_pref);
 	g_signal_connect( GTK_OBJECT( button ), "clicked",   GTK_SIGNAL_FUNC( options_clicked ), NULL );
 	
 	button = gtk_check_button_new_with_label(_("Show appointments"));

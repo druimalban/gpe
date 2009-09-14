@@ -1,7 +1,11 @@
 2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c (gpe_summary_plugin_init): Initialise DBUS and OSSO
-	(gpe_summary_plugin_class_finalize): Tidy up DBUS, OSSO and other resources
+	(gpe_summary_plugin_class_finalize): Tidy up DBUS, OSSO and other resources.
+	(show_todos, todo_clicked): Handle error opening todo DB.
+	Add show_birthdays_pref to distinguish between the user preference for showing
+	birthdays and the fact of whether we can currently show them.  This is needed to
+	handle a missing contacts DB.
 
 2009-09-03  Graham Cobb  <g+770@cobb.uk.net>
 
