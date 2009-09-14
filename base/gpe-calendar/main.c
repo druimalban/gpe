@@ -1714,7 +1714,7 @@ edit_categories (GtkWidget *w)
   dialog = gpe_pim_categories_dialog (NULL, NULL, NULL);
 #endif
   gtk_window_set_transient_for(GTK_WINDOW(dialog), 
-                               GTK_WINDOW(gtk_widget_get_toplevel(w)));
+     GTK_WINDOW(main_window));
   gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 }
 
