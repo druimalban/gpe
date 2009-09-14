@@ -1,3 +1,8 @@
+2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpesummary.c (gpe_summary_plugin_init): Initialise DBUS and OSSO
+	(gpe_summary_plugin_class_finalize): Tidy up DBUS, OSSO and other resources
+
 2009-09-03  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c (gpe_summary_plugin_init): Use hd_home_plugin_item_heartbeat_signal_add

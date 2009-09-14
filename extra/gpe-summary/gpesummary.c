@@ -126,7 +126,7 @@ void printTime(gchar * comment) {
 static void async_cb(const gchar *interface, const gchar *method,
                      osso_rpc_t *retval, gpointer data)
 {
-        printf("method '%s' returned\n", method);
+        g_warning("method '%s' returned\n", method);
 }
 
 void todo_gpestart(GtkButton *button, gpointer user_data) {
@@ -140,7 +140,7 @@ void todo_gpestart(GtkButton *button, gpointer user_data) {
                                  "this is the top_application parameter",
                                  DBUS_TYPE_INVALID);
         if (ret != OSSO_OK) {
-                printf("ERROR!\n");
+                g_warning("%s: osso_rpc_async_run returned %d",__func__,ret);
         }
 }
 
@@ -199,7 +199,7 @@ void calendar_gpestart(GtkButton *button, gpointer user_data) {
                                  "this is the top_application parameter",
                                  DBUS_TYPE_INVALID);
         if (ret != OSSO_OK) {
-                printf("ERROR!\n");
+                g_warning("%s: osso_rpc_async_run returned %d",__func__,ret);
         }	
 }
 
@@ -214,7 +214,7 @@ void contacts_gpestart(GtkButton *button, gpointer user_data) {
                                  "this is the top_application parameter",
                                  DBUS_TYPE_INVALID);
         if (ret != OSSO_OK) {
-                printf("ERROR!\n");
+                g_warning("%s: osso_rpc_async_run returned %d",__func__,ret);
         }
 }
 
@@ -229,7 +229,7 @@ static gboolean start_clock(GtkWidget *button, GdkEventButton *event, gpointer u
                                  "this is the top_application parameter",
                                  DBUS_TYPE_INVALID);
         if (ret != OSSO_OK) {
-                printf("ERROR!\n");
+                g_warning("%s: osso_rpc_async_run returned %d",__func__,ret);
                 return 1;
         }
 	return FALSE;
@@ -1361,13 +1361,41 @@ static gboolean home_applet_timer (gpointer data)
   return TRUE;
 }
 
+static DBusConnection *dbus_system, *dbus_session;
+
 static void
 gpe_summary_plugin_init (GpeSummaryPlugin *desktop_plugin)
 {
+  DBusError dbus_error;
+
   g_message("%s",__func__);
   const gchar *file = hd_home_plugin_item_get_dl_filename(HD_HOME_PLUGIN_ITEM(desktop_plugin));
   g_message("plugin loaded from %s", file);
 
+  /* Initialise OSSO */
+  g_message("Initialising DBUS and OSSO");
+  dbus_error_init(&dbus_error);
+
+  if (!dbus_system) {
+    dbus_system = hd_home_plugin_item_get_dbus_connection
+      (HD_HOME_PLUGIN_ITEM(desktop_plugin), DBUS_BUS_SYSTEM, &dbus_error);
+    if (dbus_error_is_set(&dbus_error)) g_warning("DBus System Connection error %s: %s", dbus_error.name, dbus_error.message);
+    dbus_error_free(&dbus_error);
+  }
+
+  if (!dbus_session) {
+    dbus_session = hd_home_plugin_item_get_dbus_connection
+      (HD_HOME_PLUGIN_ITEM(desktop_plugin), DBUS_BUS_SESSION, &dbus_error);
+    if (dbus_error_is_set(&dbus_error)) g_warning("DBus System Connection error %s: %s", dbus_error.name, dbus_error.message);
+    dbus_error_free(&dbus_error);
+  }
+
+  if (!osso) {
+    osso = osso_initialize_with_connections ("gpesummary", "0.7.2", dbus_system, dbus_session);
+    if (!osso) g_warning("Error initializing the osso context for gpesummary applet");
+  }
+
+  g_message("Initialising GPE Summary widget");
 	mainwidget = gtk_frame_new(NULL);
 	gtk_widget_set_name (mainwidget, "GPE Summary");
 	gtk_widget_set_size_request (mainwidget, WIDTH, HEIGHT); 
@@ -1415,6 +1443,26 @@ static void
 gpe_summary_plugin_class_finalize (GpeSummaryPluginClass *class)
 {
   g_message("%s",__func__);
+
+  if (osso) osso_deinitialize (osso);
+  osso = NULL;
+  if (dbus_system) dbus_connection_unref(dbus_system);
+  dbus_system = NULL;
+  g_message("hildon_home_applet_lib_deinitialize 2");
+  if (dbus_session) dbus_connection_unref(dbus_session);
+  dbus_session = NULL;
+
+  g_slist_free(birthdaylist);
+  birthdaylist=NULL;
+  g_message("hildon_home_applet_lib_deinitialize 3");
+  if (prefsvbox) gtk_widget_destroy(prefsvbox);
+  g_message("hildon_home_applet_lib_deinitialize 4");
+  if (mainwidget) gtk_widget_destroy(mainwidget);
+  g_message("hildon_home_applet_lib_deinitialize 5");
+  //if (mainwidget) g_free(mainwidget);
+  mainwidget=NULL;
+  g_message("hildon_home_applet_lib_deinitialize 6");
+
   if (log_handler_id) g_log_remove_handler(G_LOG_DOMAIN, log_handler_id);
 } 
 
