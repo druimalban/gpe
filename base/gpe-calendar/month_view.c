@@ -710,6 +710,17 @@ render (GtkMonthView *month_view)
   pango_font_description_set_size (font, s);
   pango_layout_set_font_description (pl_evt, font);
 
+  /* Set day of week headings font to black */
+  PangoAttrList *attrs = pango_attr_list_new ();
+  PangoAttribute *black = pango_attr_foreground_new (0,0,0);
+  black->start_index = PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING;
+  black->end_index = PANGO_ATTR_INDEX_TO_TEXT_END;
+  pango_attr_list_insert (attrs, black);
+  black = NULL;
+  pango_layout_set_attributes (pl_evt, attrs);
+  pango_attr_list_unref(attrs);
+  attrs = NULL;
+
   gdk_draw_rectangle (drawable, light_gray_gc, 1,
 		      0, 0, month_view->width, month_view->title_height);
   gdk_draw_line (drawable, black_gc, 0, month_view->title_height - 1,
@@ -723,6 +734,17 @@ render (GtkMonthView *month_view)
   { ABDAY_1, ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, ABDAY_6, ABDAY_7, ABDAY_1 };
   const nl_item *days = &days_of_week[week_starts_sunday ? 0 : 1];
   PangoLayout *pl = gtk_widget_create_pango_layout (widget, NULL);
+
+  /* Set event text font to black */
+  attrs = pango_attr_list_new ();
+  black = pango_attr_foreground_new (0,0,0);
+  black->start_index = PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING;
+  black->end_index = PANGO_ATTR_INDEX_TO_TEXT_END;
+  pango_attr_list_insert (attrs, black);
+  black = NULL;
+  pango_layout_set_attributes (pl, attrs);
+  pango_attr_list_unref(attrs);
+  attrs = NULL;
 
   gint col;
   for (col = 0; col < 7; col ++)

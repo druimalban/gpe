@@ -358,6 +358,17 @@ draw_expose_event (GtkWidget *widget, GdkEventExpose *event, GtkWidget *wv)
 
   black_gc = widget->style->black_gc;
 
+  /* Set text font to black */
+  PangoAttrList *attrs = pango_attr_list_new ();
+  PangoAttribute *black = pango_attr_foreground_new (0,0,0);
+  black->start_index = PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING;
+  black->end_index = PANGO_ATTR_INDEX_TO_TEXT_END;
+  pango_attr_list_insert (attrs, black);
+  black = NULL;
+  pango_layout_set_attributes (pl_evt, attrs);
+  pango_attr_list_unref(attrs);
+  attrs = NULL;
+
   int day_start, day_end;
   int top;
   if (week_view->have_extents)
@@ -694,7 +705,8 @@ reload_events_hard (GtkWeekView *week_view)
 
       struct tm tm;
       g_date_to_struct_tm (&d->date, &tm);
-      d->banner = strftime_strdup_utf8_utf8 ("<b>%a %-d %b</b> ", &tm);
+      /* Dark Olive Green */
+      d->banner = strftime_strdup_utf8_utf8 ("<span foreground='#556b2f' font_desc='normal'><b>%a %-d %b</b> </span>", &tm);
     }
 
   struct tm period_start_tm;

@@ -293,15 +293,23 @@ event_rect_expose (struct event_rect *er, GtkWidget *widget, GdkDrawable *w,
   pango_layout_set_width (pl, PANGO_SCALE * gr.width);
   pango_layout_set_text (pl, buffer, -1);
 
+  PangoAttrList *attrs = pango_attr_list_new ();
   if (summary)
     {
-      PangoAttrList *attrs = pango_attr_list_new ();
       PangoAttribute *bold = pango_attr_weight_new (PANGO_WEIGHT_BOLD);
       bold->start_index = 0;
       bold->end_index = strlen (summary);
       pango_attr_list_insert (attrs, bold);
-      pango_layout_set_attributes (pl, attrs);
+      bold = NULL;
     }
+  PangoAttribute *black = pango_attr_foreground_new (0,0,0);
+  black->start_index = PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING;
+  black->end_index = PANGO_ATTR_INDEX_TO_TEXT_END;
+  pango_attr_list_insert (attrs, black);
+  black = NULL;
+  pango_layout_set_attributes (pl, attrs);
+  pango_attr_list_unref(attrs);
+  attrs = NULL;
 
   PangoRectangle pr;
   pango_layout_get_pixel_extents (pl, NULL, &pr);
@@ -919,7 +927,8 @@ time_layout (PangoLayout *pl, time_t time)
   strftime (timebuf, sizeof (timebuf),
 	    am && *am ? "%I%P" : "%H", &tm);
   char buf[60];
-  snprintf (buf, sizeof (buf), "<span font_desc='normal'>%s</span>",
+  /* Dark Olive Green */
+  snprintf (buf, sizeof (buf), "<span foreground='#556b2f' font_desc='normal'>%s</span>",
 	    *timebuf == '0' ? &timebuf[1] : timebuf);
   char *buffer = g_locale_to_utf8 (buf, -1, NULL, NULL, NULL);
   pango_layout_set_markup (pl, buffer, -1);

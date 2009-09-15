@@ -1,3 +1,14 @@
+2009-09-15  Graham Cobb  <g+770@cobb.uk.net>
+
+	* month_view.c (render): Set column heading font and event font
+	to black
+
+	* week_view.c (draw_expose_event): set event font to black
+	(reload_events_hard): set day font to Dark Olive Green
+
+	* day_view.c (time_layout): Set time foreground to Dark Olive Green
+	(event_rect_expose): Set event foreground to Black
+
 2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (main): Remove Tools->Toolbar and Tools->Fullscreen for Fremantle
