@@ -68,3 +68,9 @@ extern const gchar *TIMEFMT;
 #endif
 #define APP_ICON       PREFIX "/share/pixmaps/gpe-calendar.png"
 
+#ifndef PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING
+#define PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING 0
+#endif
+#ifndef PANGO_ATTR_INDEX_TO_TEXT_END
+#define PANGO_ATTR_INDEX_TO_TEXT_END MAXINT
+#endif

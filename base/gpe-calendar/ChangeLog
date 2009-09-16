@@ -1,3 +1,14 @@
+2009-09-17  Graham Cobb  <g+770@cobb.uk.net>
+
+	* pannedwindow.c (process_motion): swap argument order to workround compiler bug
+	with double arguments
+
+2009-09-16  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (main): Remove some compilation warnings about types
+
+	* globals.h: add definitions for missing PANGO constants
+
 2009-09-15  Graham Cobb  <g+770@cobb.uk.net>
 
 	* month_view.c (render): Set column heading font and event font

@@ -347,7 +347,7 @@ process_motion (PannedWindow *pw)
   gdouble dx_share = (gdouble) (dx * dx) / (dx * dx + dy * dy);
   gdouble dy_share = (gdouble) (dy * dy) / (dx * dx + dy * dy);
 
-  void scroll_by (GtkAdjustment *adj, gdouble delta, int *acc)
+  void scroll_by (GtkAdjustment *adj, int *acc, gdouble delta)
     {
       if (! adj)
 	{
@@ -376,8 +376,8 @@ process_motion (PannedWindow *pw)
   if (inside)
     /* The mouse is inside the child.  Do normal panning.  */
     {
-      scroll_by (vadj, - (y - priv->y), &priv->y_distance);
-      scroll_by (hadj, - (x - priv->x), &priv->x_distance);
+      scroll_by (vadj, &priv->y_distance, - (y - priv->y));
+      scroll_by (hadj, &priv->x_distance, - (x - priv->x));
 
       if (! at_edge)
 	goto out;
@@ -386,8 +386,8 @@ process_motion (PannedWindow *pw)
     /* We are outside the viewport.  We scroll a few pixels
        automatically.  */
     {
-      void scroll (GtkAdjustment *adj, int diff,
-		   gdouble share, int *acc)
+      void scroll (GtkAdjustment *adj, int *acc, int diff,
+		   gdouble share)
 	{
 	  if (! (diff < -10 || 10 <= diff))
 	    return;
@@ -397,11 +397,11 @@ process_motion (PannedWindow *pw)
 	  if (diff < 0)
 	    delta = -delta;
 
-	  scroll_by (adj, delta, acc);
+	  scroll_by (adj, acc, delta);
 	}
 
-      scroll (hadj, dx, dx_share, &priv->x_distance);
-      scroll (vadj, dy, dy_share, &priv->y_distance);
+      scroll (hadj, &priv->x_distance, dx, dx_share);
+      scroll (vadj, &priv->y_distance, dy, dy_share);
     }
 
 

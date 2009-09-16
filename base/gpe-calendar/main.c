@@ -243,7 +243,7 @@ import_file_list (GSList *import_files, const gchar *selected_calendar)
 {
   GSList *i;
   gint n = g_slist_length (import_files);
-  gchar *files[n+1];
+  const char *files[n+1];
   
   EventCalendar *ec = NULL;
 
@@ -1794,6 +1794,7 @@ main_window_key_press_event (GtkWidget *widget, GdkEventKey *k, GtkWidget *data)
 }
 
 /* Another instance started and has passed some state to us.  */
+/* Note that this routine modifies the data passed to it */
 static void
 handoff_callback (Handoff *handoff, char *data)
 {
@@ -1919,7 +1920,12 @@ handoff_serialize (Handoff *handoff)
 static void
 osso_top_callback (const gchar *arguments, gpointer data)
 {
-  handoff_callback (NULL, arguments);
+  gchar *arguments_copy;
+
+  /* handoff_callback modifies the string so we need to copy it */
+  arguments_copy = g_strdup(arguments);
+  handoff_callback (NULL, arguments_copy);
+  g_free(arguments_copy);
 }
 #endif
 
@@ -2552,7 +2558,7 @@ main (int argc, char *argv[])
   set_title ();
   g_signal_connect (G_OBJECT (main_window), "delete-event",
                     G_CALLBACK (gpe_handle_close), NULL);
-  gtk_widget_show (main_window);
+  gtk_widget_show (GTK_WIDGET(main_window));
   main_box = GTK_BOX (gtk_vbox_new (FALSE, 0));
 
 #if IS_HILDON
@@ -2570,8 +2576,8 @@ main (int argc, char *argv[])
 
 #ifdef IS_HILDON
 #if HILDON_VER > 0
-  menu_main = gtk_menu_new ();
-  hildon_window_set_menu (main_window,menu_main);
+  menu_main = GTK_MENU_SHELL (gtk_menu_new ());
+  hildon_window_set_menu (main_window, GTK_MENU(menu_main));
 #else
   menu_main = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
 #endif /* HILDON_VER  */
@@ -2794,7 +2800,7 @@ main (int argc, char *argv[])
   gtk_container_foreach (GTK_CONTAINER (main_toolbar), iter, NULL);
 
 
-  gpe_set_window_icon (main_window, "icon");
+  gpe_set_window_icon (GTK_WIDGET(main_window), "icon");
 
   g_signal_connect (G_OBJECT (main_window), "key_press_event", 
 		    G_CALLBACK (main_window_key_press_event), NULL);
