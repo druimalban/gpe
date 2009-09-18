@@ -1,3 +1,9 @@
+2009-09-19  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpesummary.c (gpe_summary_plugin_init): Create GPE home directory if it
+	doesn't exist as libtododb and libcontactsdb produce errors if it doesn't
+	exist
+
 2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c (gpe_summary_plugin_init): Initialise DBUS and OSSO

@@ -61,16 +61,20 @@
 #define ICON_PATH "/usr/share/icons/hicolor/26x26/hildon"
 
 
-#define CALENDAR_FILE_ "/.gpe/calendar"
+#define GPE_DIR_ "/.gpe"
+#define GPE_DIR() \
+  g_strdup_printf ("%s" GPE_DIR_, g_get_home_dir ())
+
+#define CALENDAR_FILE_ "/calendar"
 #define CALENDAR_FILE() \
-  g_strdup_printf ("%s" CALENDAR_FILE_, g_get_home_dir ())
+  g_strdup_printf ("%s" GPE_DIR_ CALENDAR_FILE_, g_get_home_dir ())
 gchar *calendar_file = NULL;
 
-#define TODO_FILE_ "/.gpe/todo"
+#define TODO_FILE_ "/todo"
 #define TODO_FILE() \
-  g_strdup_printf ("%s" TODO_FILE_, g_get_home_dir ())
+  g_strdup_printf ("%s" GPE_DIR_ TODO_FILE_, g_get_home_dir ())
 gchar *todo_file = NULL;
-  
+ 
 #define _(String) dgettext (PACKAGE,String)
 
 #define WIDTH 300
@@ -1404,6 +1408,11 @@ gpe_summary_plugin_init (GpeSummaryPlugin *desktop_plugin)
     osso = osso_initialize_with_connections ("gpesummary", "0.7.2", dbus_system, dbus_session);
     if (!osso) g_warning("Error initializing the osso context for gpesummary applet");
   }
+
+  /* Create the GPE directory if it does not already exist */
+  const gchar *gpe_dir = GPE_DIR();
+  if (mkdir(gpe_dir, 0777) == 0) g_message("GPE directory %s created", gpe_dir);
+  g_free(gpe_dir);
 
   g_message("Initialising GPE Summary widget");
 	mainwidget = gtk_frame_new(NULL);
