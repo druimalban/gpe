@@ -72,5 +72,6 @@ extern const gchar *TIMEFMT;
 #define PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING 0
 #endif
 #ifndef PANGO_ATTR_INDEX_TO_TEXT_END
-#define PANGO_ATTR_INDEX_TO_TEXT_END MAXINT
+#include <limits.h>
+#define PANGO_ATTR_INDEX_TO_TEXT_END INT_MAX
 #endif

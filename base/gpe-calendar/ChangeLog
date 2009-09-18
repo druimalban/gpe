@@ -1,3 +1,7 @@
+2009-09-18  Graham Cobb  <g+770@cobb.uk.net>
+
+	* globals.h: define PANGO symbols if they are not defined
+
 2009-09-17  Graham Cobb  <g+770@cobb.uk.net>
 
 	* pannedwindow.c (process_motion): swap argument order to workround compiler bug
