@@ -6,7 +6,11 @@ if HILDON
 GPEWIDGET_CFLAGS += -DIS_HILDON
 
 backupcfgdir = $(sysconfdir)/osso-backup/applications
+if MAEMO5
+backupcfg_DATA = hildon/gpe-freemantle.conf
+else
 backupcfg_DATA = hildon/gpe.conf
+endif
 
 endif
 
@@ -59,6 +63,7 @@ EXTRA_DIST = $(pixmap_DATA) \
              intltool-merge.in \
              intltool-update.in \
              hildon/gpe.conf \
+             hildon/gpe-fremantle.conf \
              po/libgpewidget.pot
 
 DISTCLEANFILES = intltool-extract intltool-merge intltool-update po/.intltool-merge-cache *.d autom4te.cache ./po/stamp-it

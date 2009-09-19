@@ -50,9 +50,22 @@ AC_ARG_ENABLE(hildon,
                 [
                         AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
                 ])
+	PKG_CHECK_EXISTS(maemo-version,
+		[
+			VERSION=`pkg-config --modversion maemo-version`
+			AC_MSG_NOTICE([Configuring for Maemo $VERSION])
+			CFLAGS="$CFLAGS -DMAEMO_VERSION=\\\"$VERSION\\\""
+			MAEMO_MAJOR=`echo $VERSION | cut -b1 -`
+			CFLAGS="$CFLAGS -DMAEMO_VERSION_MAJOR=$MAEMO_MAJOR"
+		],
+		[
+			AC_MSG_ERROR([maemo-version not found])
+		])
 ],
 [
 	ENABLE_HILDON=false
+	CFLAGS="$CFLAGS -DMAEMO_VERSION=\\\"\\\""
+	CFLAGS="$CFLAGS -DMAEMO_VERSION_MAJOR=0"
 ])
 
 AC_SUBST(ENABLE_HILDON)
@@ -60,6 +73,7 @@ AC_SUBST(ENABLE_CAIRO)
 
 AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
 AM_CONDITIONAL(CAIRO, test x$ENABLE_CAIRO = xyes)
+AM_CONDITIONAL(MAEMO5, test x$MAEMO_MAJOR = x5)
 
 if test x$ENABLE_CAIRO = xyes; then
     DEPS="$DEPS cairo >= 0.4.0"

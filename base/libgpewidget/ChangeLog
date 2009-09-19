@@ -1,3 +1,11 @@
+2009-09-19  Graham Cobb  <g+770@cobb.uk.net>
+
+	* hildon/gpe-fremantle.conf: Add backup file for Fremantle
+
+	* Makefile.am: Install correct backup configuration file based on Maemo version
+
+	* configure.ac: Check Maemo version
+
 2009-04-15 Ned Ludd  <solar@gentoo.org>
 	* gpe-base/libgpewidget: pixmaps.c gpe/pixmaps.h 
 	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
