@@ -7,7 +7,7 @@ GPEWIDGET_CFLAGS += -DIS_HILDON
 
 backupcfgdir = $(sysconfdir)/osso-backup/applications
 if MAEMO5
-backupcfg_DATA = hildon/gpe-freemantle.conf
+backupcfg_DATA = hildon/gpe-fremantle.conf
 else
 backupcfg_DATA = hildon/gpe.conf
 endif
