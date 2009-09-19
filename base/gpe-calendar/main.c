@@ -1616,15 +1616,25 @@ gpe_handle_close (GtkWidget *widget, GdkEvent *event, gpointer user_data)
 							  GTK_WINDOW (main_window),
 							  GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
 							  GTK_STOCK_CLOSE, GTK_RESPONSE_YES,
+#if MAEMO_VERSION_MAJOR < 5
 							  _("Iconise"), GTK_RESPONSE_NO,
+#endif
 							  GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 							  NULL);
 
 #ifdef IS_HILDON
+#if MAEMO_VERSION_MAJOR < 5
     exit_label = gtk_label_new (_("For alarms to fire, either gpe-calendar or\n"
-					     "the gpesummary home applet must be running.\n\n"
+					     "the GPE Summary home applet must be running.\n\n"
 					     "If you are not running gpesummary you are\n"
 					     "recommended to select the Iconise button below.\n"));
+#else /* MAEMO_VERSION_MAJOR < 5 */
+    exit_label = gtk_label_new (_("For alarms to fire, either gpe-calendar or\n"
+				  "the GPE Summary widget must be running.\n"
+				  "If you are not running GPE Summary you are\n"
+				  "recommended to cancel this dialog and iconise\n"
+				  "GPE Calendar instead.\n"));
+#endif /* MAEMO_VERSION_MAJOR < 5 */
 #else /* IS_HILDON */
     exit_label = gtk_label_new (_("For alarms to fire, gpe-calendar must be running.\n\n"
 					     "You are recommended to select the Iconise button below.\n"));

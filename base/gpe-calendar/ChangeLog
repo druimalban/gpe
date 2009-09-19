@@ -1,3 +1,7 @@
+2009-09-19  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (gpe_handle_close): Remove Iconise option for Fremantle
+
 2009-09-18  Graham Cobb  <g+770@cobb.uk.net>
 
 	* globals.h: define PANGO symbols if they are not defined
