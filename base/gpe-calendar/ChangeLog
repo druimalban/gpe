@@ -1,3 +1,11 @@
+2009-10-04  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (main): Swap categories and calendars in menu
+
+	* alarm-dialog.c (alarm_dialog_get_type): Subclass HildonStackableWindow on Fremantle
+
+	* calendars-dialog.c (calendars_dialog_get_type): Subclass HildonStackableWindow on Fremantle
+
 2009-10-03  Graham Cobb  <g+770@cobb.uk.net>
 
 	* globals.h: Declare main_window as HildonStackableWindow on Fremantle

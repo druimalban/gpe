@@ -28,9 +28,17 @@
 #include "calendar-update.h"
 #include "globals.h"
 
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+#include <hildon/hildon-stackable-window.h>
+#endif
+
 struct _CalendarsDialog
 {
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+  HildonStackableWindow dialog;
+#else /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
   GtkWindow dialog;
+#endif /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
 
   GSList *cals;
 
@@ -46,7 +54,11 @@ struct _CalendarsDialog
 
 struct _CalendarsDialogClass
 {
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+  HildonStackableWindowClass hildon_stackable_window_class;
+#else /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
   GtkWindowClass gtk_window_class;
+#endif /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
 };
 
 static void calendars_dialog_class_init (gpointer klass, gpointer klass_data);
@@ -76,8 +88,13 @@ calendars_dialog_get_type (void)
 	calendars_dialog_init
       };
 
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+      type = g_type_register_static (hildon_stackable_window_get_type (),
+				     "CalendarsDialog", &info, 0);
+#else /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
       type = g_type_register_static (gtk_window_get_type (),
 				     "CalendarsDialog", &info, 0);
+#endif /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
     }
 
   return type;
@@ -465,11 +482,13 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_box_pack_end (hbox, GTK_WIDGET (buttons), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (buttons));
 
+#if !defined(IS_HILDON) || (MAEMO_VERSION_MAJOR < 5)
   GtkWidget *button = gtk_button_new_with_label (_("Dismiss"));
   g_signal_connect_swapped (G_OBJECT (button), "clicked",
 			    G_CALLBACK (gtk_widget_destroy), d);
   gtk_box_pack_start (buttons, button, FALSE, TRUE, 0);
   gtk_widget_show (button);
+#endif
 
   d->edb_modified_signal = g_signal_connect_swapped
     (event_db, "calendar-modified",

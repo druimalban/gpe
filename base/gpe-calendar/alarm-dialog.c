@@ -25,9 +25,17 @@
 #include "alarm-dialog.h"
 #include "globals.h"
 
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+#include <hildon/hildon-stackable-window.h>
+#endif
+
 struct _AlarmDialog
 {
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+  HildonStackableWindow dialog;
+#else /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
   GtkWindow window;
+#endif /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
 
   GtkBox *event_container;
 
@@ -41,7 +49,11 @@ struct _AlarmDialog
 
 struct _AlarmDialogClass
 {
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+  HildonStackableWindowClass hildon_stackable_window_class;
+#else /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
   GtkWindowClass gtk_window_class;
+#endif /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
 
   AlarmDialogShowEventFunc show_event;
 
@@ -86,8 +98,13 @@ alarm_dialog_get_type (void)
 	alarm_dialog_init
       };
 
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+      type = g_type_register_static (hildon_stackable_window_get_type (),
+				     "AlarmDialog", &info, 0);
+#else /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
       type = g_type_register_static (gtk_window_get_type (),
 				     "AlarmDialog", &info, 0);
+#endif /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
     }
 
   return type;
@@ -212,11 +229,13 @@ alarm_dialog_init (GTypeInstance *instance, gpointer klass)
   gtk_box_pack_start (buttons, button, FALSE, TRUE, 0);
   gtk_widget_show (button);
 
+#if !defined(IS_HILDON) || (MAEMO_VERSION_MAJOR < 5)
   button = gtk_button_new_with_label (_("Dismiss"));
   g_signal_connect (G_OBJECT (button), "clicked",
                     G_CALLBACK (dismiss_clicked), alarm_dialog);
   gtk_box_pack_start (buttons, button, FALSE, TRUE, 0);
   gtk_widget_show (button);
+#endif
 
   /* And a separator just above it.  */
   GtkWidget *sep = gtk_hseparator_new ();

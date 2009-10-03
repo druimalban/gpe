@@ -2902,12 +2902,12 @@ main (int argc, char *argv[])
   g_signal_connect_after (button, "clicked", G_CALLBACK (dialog_options), NULL);
   hildon_app_menu_append (menu_main, GTK_BUTTON (button));
 
-  button = gtk_button_new_with_label (_("Calendars"));
-  g_signal_connect_after (button, "clicked", G_CALLBACK (calendars_button_clicked), NULL);
-  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
-
   button = gtk_button_new_with_label (_("Categories"));
   g_signal_connect_after (button, "clicked", G_CALLBACK (edit_categories), NULL);
+  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
+
+  button = gtk_button_new_with_label (_("Calendars"));
+  g_signal_connect_after (button, "clicked", G_CALLBACK (calendars_button_clicked), NULL);
   hildon_app_menu_append (menu_main, GTK_BUTTON (button));
 
   button = gtk_button_new_with_label (_("Alarms"));
