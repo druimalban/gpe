@@ -43,7 +43,6 @@
 #if HILDON_VER > 0
 #include <hildon/hildon-program.h>
 //#include <hildon/hildon-input-mode-hint.h>
-#include <hildon/hildon-window.h>
 #include <hildon/hildon-defines.h>
 #include <hildon/hildon-banner.h>
 #else
@@ -67,9 +66,11 @@
 #ifdef IS_HILDON
 #if MAEMO_VERSION_MAJOR < 5
 #include "gtkdatesel.h"
+#include <hildon/hildon-window.h>
 #else /* MAEMO_VERSION_MAJOR < 5 */
 #include <hildon/hildon-date-button.h>
 #include <hildon/hildon-check-button.h>
+#include <hildon/hildon-stackable-window.h>
 #endif /* MAEMO_VERSION_MAJOR < 5 */
 #else /* IS_HILDON */
 #include "gtkdatesel.h"
@@ -125,7 +126,11 @@ static struct gpe_icon my_icons[] = {
 
 #ifdef IS_HILDON
 #if HILDON_VER > 0
+#if MAEMO_VERSION_MAJOR < 5
   HildonWindow *main_window;
+#else /* MAEMO_VERSION_MAJOR < 5 */
+  HildonStackableWindow *main_window;
+#endif /* MAEMO_VERSION_MAJOR < 5 */
 #else
   GtkWidget *main_appview;
   GtkWidget *main_window;
@@ -1926,7 +1931,7 @@ toolbar_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
 
 #ifdef IS_HILDON
 #if HILDON_VER > 0
-      hildon_window_add_toolbar(main_window, GTK_TOOLBAR(date_toolbar));
+      hildon_window_add_toolbar(HILDON_WINDOW(main_window), GTK_TOOLBAR(date_toolbar));
 #else
       gtk_box_pack_end (main_box, date_toolbar, FALSE, FALSE, 0);
 #endif /* HILDON_VER  */
@@ -1962,7 +1967,7 @@ toolbar_size_allocate (GtkWidget *widget, GtkAllocation *allocation,
 
 #ifdef IS_HILDON
 #if HILDON_VER > 0
-      hildon_window_remove_toolbar(main_window, GTK_TOOLBAR(date_toolbar));
+      hildon_window_remove_toolbar(HILDON_WINDOW(main_window), GTK_TOOLBAR(date_toolbar));
 #endif
 #endif
 
@@ -2012,7 +2017,7 @@ static void log_handler (const char *log_domain, GLogLevelFlags log_level, const
 }
 #endif
 
-#ifdef IS_HILDON
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
 /* Setting options */
 static void
 dialog_options (GtkWidget *w, gpointer data)
@@ -2077,7 +2082,7 @@ dialog_options (GtkWidget *w, gpointer data)
   gtk_widget_destroy(options_dialog);
 }
 
-#else /* IS_HILDON */
+#else /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
 static void
 calendar_toggle (GtkCheckMenuItem *menuitem, gpointer data)
 {
@@ -2112,7 +2117,7 @@ sidebar_toggle (GtkCheckMenuItem *menuitem, gpointer data)
   sidebar_disabled = ! gtk_check_menu_item_get_active (menuitem);
   sidebar_consider ();
 }
-#endif /* IS_HILDON */
+#endif /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
 
 int
 main (int argc, char *argv[])
@@ -2620,8 +2625,12 @@ main (int argc, char *argv[])
   /* Create the hildon program and setup the title */
   program = HILDON_PROGRAM (hildon_program_get_instance());
   /* Create HildonWindow and set it to HildonProgram */
+#if MAEMO_VERSION_MAJOR < 5
   main_window = HILDON_WINDOW (hildon_window_new());
-  hildon_program_add_window (program, main_window);
+#else /* MAEMO_VERSION_MAJOR < 5 */
+  main_window = HILDON_STACKABLE_WINDOW (hildon_stackable_window_new());
+#endif /* MAEMO_VERSION_MAJOR < 5 */
+  hildon_program_add_window (program, HILDON_WINDOW(main_window));
 #else
   main_window = hildon_app_new ();
   hildon_app_set_two_part_title (HILDON_APP (main_window), FALSE);
@@ -2668,7 +2677,7 @@ main (int argc, char *argv[])
 
 #ifdef IS_HILDON
 #if HILDON_VER > 0
-  hildon_window_add_toolbar(main_window, GTK_TOOLBAR(toolbar));
+  hildon_window_add_toolbar(HILDON_WINDOW(main_window), GTK_TOOLBAR(toolbar));
 #else
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
   hildon_appview_set_toolbar (HILDON_APPVIEW (main_appview),
@@ -2915,7 +2924,7 @@ main (int argc, char *argv[])
 #if HILDON_VER > 0
   GtkMenuShell *menu_main;
   menu_main = GTK_MENU_SHELL (gtk_menu_new ());
-  hildon_window_set_menu (main_window, GTK_MENU(menu_main));
+  hildon_window_set_menu (HILDON_WINDOW(main_window), GTK_MENU(menu_main));
 #else
   GtkMenuShell *menu_main;
   menu_main = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
@@ -3044,19 +3053,6 @@ main (int argc, char *argv[])
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 
-#ifdef IS_HILDON
-  /* On Hildon we use an options dialog */
-  /* View -> Options.  */
-  mitem = gtk_image_menu_item_new_with_mnemonic (_("_Options"));
-  p = gpe_find_icon_scaled ("preferences", GTK_ICON_SIZE_MENU);
-  pw = gtk_image_new_from_pixbuf (p);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), pw);
-  g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (dialog_options), NULL);
-  gtk_menu_shell_append (menu, mitem);
-  gtk_widget_show (mitem);
-
-#else /* IS_HILDON */
   mitem = gtk_separator_menu_item_new ();
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
@@ -3105,7 +3101,6 @@ main (int argc, char *argv[])
 		    G_CALLBACK (event_list_toggle), NULL);
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
-#endif /* IS_HILDON */
 
   /* Tools menu.  */
   mitem = gtk_menu_item_new_with_mnemonic (_("_Tools"));

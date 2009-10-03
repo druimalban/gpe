@@ -1,7 +1,11 @@
 2009-10-03  Graham Cobb  <g+770@cobb.uk.net>
 
+	* globals.h: Declare main_window as HildonStackableWindow on Fremantle
+
 	* main.c (main): Add HildonAppMenu for Fremantle
 	(options_dialog): Create options dialog for all Hildon versions
+	(main): Use HildonStackableWindow on Fremantle
+	(main): Only use options dialog on Fremantle
 
 2009-09-19  Graham Cobb  <g+770@cobb.uk.net>
 

@@ -33,7 +33,11 @@ extern void set_time_and_day_view (time_t selected_time);
 
 #ifdef IS_HILDON
 #if HILDON_VER > 0
+#if MAEMO_VERSION_MAJOR < 5
   extern HildonWindow *main_window;
+#else /* MAEMO_VERSION_MAJOR < 5 */
+  extern HildonStackableWindow *main_window;
+#endif /* MAEMO_VERSION_MAJOR < 5 */
 #else
   extern GtkWidget *main_window;
 #endif /* HILDON_VER  */
