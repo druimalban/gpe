@@ -69,6 +69,7 @@
 #include "gtkdatesel.h"
 #else /* MAEMO_VERSION_MAJOR < 5 */
 #include <hildon/hildon-date-button.h>
+#include <hildon/hildon-check-button.h>
 #endif /* MAEMO_VERSION_MAJOR < 5 */
 #else /* IS_HILDON */
 #include "gtkdatesel.h"
@@ -849,13 +850,6 @@ calendar_consider (void)
 }
 
 static void
-calendar_toggle (GtkCheckMenuItem *menuitem, gpointer data)
-{
-  calendar_disabled = ! gtk_check_menu_item_get_active (menuitem);
-  calendar_consider ();
-}
-
-static void
 calendars_row_inserted (GtkTreeModel *treemodel, GtkTreePath *path,
 			GtkTreeIter *iter, gpointer user_data)
 {
@@ -981,13 +975,6 @@ calendars_consider (void)
 }
 
 static void
-calendars_toggle (GtkCheckMenuItem *menuitem, gpointer data)
-{
-  calendars_disabled = ! gtk_check_menu_item_get_active (menuitem);
-  calendars_consider ();
-}
-
-static void
 event_list_event_clicked (EventList *el, Event *ev, GdkEventButton *b,
 			  gpointer data)
 {
@@ -1064,19 +1051,6 @@ event_list_consider (void)
       gtk_container_add (event_list_container, GTK_WIDGET (event_list));
       return TRUE;
     }
-}
-
-static void
-event_list_toggle (GtkCheckMenuItem *menuitem, gpointer data)
-{
-  event_list_disabled = ! gtk_check_menu_item_get_active (menuitem);
-  event_list_consider ();
-}
-static void
-week_starts_toggle (GtkCheckMenuItem *menuitem, gpointer data)
-{
-	week_starts_sunday = gtk_check_menu_item_get_active (menuitem);
-	update_view ();
 }
 
 
@@ -1179,13 +1153,6 @@ sidebar_consider (void)
 
       return TRUE;
     }
-}
-
-static void
-sidebar_toggle (GtkCheckMenuItem *menuitem, gpointer data)
-{
-  sidebar_disabled = ! gtk_check_menu_item_get_active (menuitem);
-  sidebar_consider ();
 }
 
 static void
@@ -2045,6 +2012,108 @@ static void log_handler (const char *log_domain, GLogLevelFlags log_level, const
 }
 #endif
 
+#ifdef IS_HILDON
+/* Setting options */
+static void
+dialog_options (GtkWidget *w, gpointer data)
+{
+  GtkWidget *options_dialog, *sunday_button, *calendar_button, *calendars_button, *event_list_button, *sidebar_button;
+  gint resp;
+
+  options_dialog = gtk_dialog_new_with_buttons (_("Options"),
+						GTK_WINDOW (main_window),
+						GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+						GTK_STOCK_SAVE, GTK_RESPONSE_YES,
+						GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+						NULL);
+
+  sunday_button = hildon_check_button_new (HILDON_SIZE_AUTO);
+  gtk_button_set_label (GTK_BUTTON(sunday_button), _("Week starts on Sunday"));
+  hildon_check_button_set_active (HILDON_CHECK_BUTTON (sunday_button), week_starts_sunday);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG(options_dialog)->vbox),
+		     sunday_button);
+
+  sidebar_button = hildon_check_button_new (HILDON_SIZE_AUTO);
+  gtk_button_set_label (GTK_BUTTON(sidebar_button), _("Sidebar"));
+  hildon_check_button_set_active (HILDON_CHECK_BUTTON (sidebar_button), !sidebar_disabled);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG(options_dialog)->vbox),
+		     sidebar_button);
+
+  calendar_button = hildon_check_button_new (HILDON_SIZE_AUTO);
+  gtk_button_set_label (GTK_BUTTON(calendar_button), _("Calendar"));
+  hildon_check_button_set_active (HILDON_CHECK_BUTTON (calendar_button), !calendar_disabled);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG(options_dialog)->vbox),
+		     calendar_button);
+
+  calendars_button = hildon_check_button_new (HILDON_SIZE_AUTO);
+  gtk_button_set_label (GTK_BUTTON(calendars_button), _("Calendar Selector"));
+  hildon_check_button_set_active (HILDON_CHECK_BUTTON (calendars_button), !calendars_disabled);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG(options_dialog)->vbox),
+		     calendars_button);
+
+  event_list_button = hildon_check_button_new (HILDON_SIZE_AUTO);
+  gtk_button_set_label (GTK_BUTTON(event_list_button), _("Agenda"));
+  hildon_check_button_set_active (HILDON_CHECK_BUTTON (event_list_button), !event_list_disabled);
+  gtk_container_add (GTK_CONTAINER (GTK_DIALOG(options_dialog)->vbox),
+		     event_list_button);
+
+  gtk_widget_show_all (options_dialog);
+
+  resp = gtk_dialog_run(GTK_DIALOG(options_dialog));
+
+  if (resp == GTK_RESPONSE_YES) {
+    week_starts_sunday = hildon_check_button_get_active(HILDON_CHECK_BUTTON(sunday_button));
+    calendar_disabled = ! hildon_check_button_get_active(HILDON_CHECK_BUTTON(calendar_button));
+    calendars_disabled = ! hildon_check_button_get_active(HILDON_CHECK_BUTTON(calendars_button));
+    event_list_disabled = ! hildon_check_button_get_active(HILDON_CHECK_BUTTON(event_list_button));
+    sidebar_disabled = ! hildon_check_button_get_active(HILDON_CHECK_BUTTON(sidebar_button));
+
+    sidebar_consider();
+    calendar_consider();
+    calendars_consider();
+    event_list_consider();
+  }
+
+  gtk_widget_destroy(options_dialog);
+}
+
+#else /* IS_HILDON */
+static void
+calendar_toggle (GtkCheckMenuItem *menuitem, gpointer data)
+{
+  calendar_disabled = ! gtk_check_menu_item_get_active (menuitem);
+  calendar_consider ();
+}
+
+static void
+calendars_toggle (GtkCheckMenuItem *menuitem, gpointer data)
+{
+  calendars_disabled = ! gtk_check_menu_item_get_active (menuitem);
+  calendars_consider ();
+}
+
+static void
+event_list_toggle (GtkCheckMenuItem *menuitem, gpointer data)
+{
+  event_list_disabled = ! gtk_check_menu_item_get_active (menuitem);
+  event_list_consider ();
+}
+
+static void
+week_starts_toggle (GtkCheckMenuItem *menuitem, gpointer data)
+{
+	week_starts_sunday = gtk_check_menu_item_get_active (menuitem);
+	update_view ();
+}
+
+static void
+sidebar_toggle (GtkCheckMenuItem *menuitem, gpointer data)
+{
+  sidebar_disabled = ! gtk_check_menu_item_get_active (menuitem);
+  sidebar_consider ();
+}
+#endif /* IS_HILDON */
+
 int
 main (int argc, char *argv[])
 {
@@ -2582,20 +2651,6 @@ main (int argc, char *argv[])
 #endif
 
   gtk_widget_show (GTK_WIDGET (main_box));
-  GtkMenuShell *menu_main;
-
-#ifdef IS_HILDON
-#if HILDON_VER > 0
-  menu_main = GTK_MENU_SHELL (gtk_menu_new ());
-  hildon_window_set_menu (main_window, GTK_MENU(menu_main));
-#else
-  menu_main = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
-#endif /* HILDON_VER  */
-#else
-  menu_main = GTK_MENU_SHELL (gtk_menu_bar_new ());
-  gtk_box_pack_start (main_box, GTK_WIDGET (menu_main), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (menu_main));
-#endif
 
   /* Tool bar.  We fill it before the menu bar as the menu bar
      requires some of its widgets.  */
@@ -2818,6 +2873,60 @@ main (int argc, char *argv[])
   gtk_widget_add_events (GTK_WIDGET (main_window), 
                          GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK);
 
+  /* Now the menu */
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+  /* Use Fremantle HildonAppMenu */
+  HildonAppMenu *menu_main;
+  GtkWidget *button;
+
+  menu_main = HILDON_APP_MENU (hildon_app_menu_new ());
+
+  button = gtk_button_new_with_label (_("New appointment"));
+  g_signal_connect_after (button, "clicked", G_CALLBACK (new_appointment), NULL);
+  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
+
+  button = gtk_button_new_with_label (_("Import"));
+  g_signal_connect_after (button, "clicked", G_CALLBACK (import_callback), NULL);
+  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
+
+  button = gtk_button_new_with_label (_("Options"));
+  g_signal_connect_after (button, "clicked", G_CALLBACK (dialog_options), NULL);
+  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
+
+  button = gtk_button_new_with_label (_("Calendars"));
+  g_signal_connect_after (button, "clicked", G_CALLBACK (calendars_button_clicked), NULL);
+  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
+
+  button = gtk_button_new_with_label (_("Categories"));
+  g_signal_connect_after (button, "clicked", G_CALLBACK (edit_categories), NULL);
+  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
+
+  button = gtk_button_new_with_label (_("Alarms"));
+  g_signal_connect_after (button, "clicked", G_CALLBACK (alarm_button_clicked), NULL);
+  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
+
+  gtk_widget_show_all (GTK_WIDGET (menu_main));
+  hildon_window_set_app_menu (HILDON_WINDOW (main_window), menu_main);
+
+#else /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
+
+  /* Use traditional menu */
+#ifdef IS_HILDON
+#if HILDON_VER > 0
+  GtkMenuShell *menu_main;
+  menu_main = GTK_MENU_SHELL (gtk_menu_new ());
+  hildon_window_set_menu (main_window, GTK_MENU(menu_main));
+#else
+  GtkMenuShell *menu_main;
+  menu_main = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
+#endif /* HILDON_VER  */
+#else
+  GtkMenuShell *menu_main;
+  menu_main = GTK_MENU_SHELL (gtk_menu_bar_new ());
+  gtk_box_pack_start (main_box, GTK_WIDGET (menu_main), FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (menu_main));
+#endif
+
   GtkWidget *mitem;
   GtkMenuShell *menu;
 
@@ -2935,6 +3044,19 @@ main (int argc, char *argv[])
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 
+#ifdef IS_HILDON
+  /* On Hildon we use an options dialog */
+  /* View -> Options.  */
+  mitem = gtk_image_menu_item_new_with_mnemonic (_("_Options"));
+  p = gpe_find_icon_scaled ("preferences", GTK_ICON_SIZE_MENU);
+  pw = gtk_image_new_from_pixbuf (p);
+  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (mitem), pw);
+  g_signal_connect (G_OBJECT (mitem), "activate",
+		    G_CALLBACK (dialog_options), NULL);
+  gtk_menu_shell_append (menu, mitem);
+  gtk_widget_show (mitem);
+
+#else /* IS_HILDON */
   mitem = gtk_separator_menu_item_new ();
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
@@ -2983,6 +3105,7 @@ main (int argc, char *argv[])
 		    G_CALLBACK (event_list_toggle), NULL);
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
+#endif /* IS_HILDON */
 
   /* Tools menu.  */
   mitem = gtk_menu_item_new_with_mnemonic (_("_Tools"));
@@ -3060,6 +3183,7 @@ main (int argc, char *argv[])
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 #endif /* IS_HILDON */
+#endif /* defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5) */
 
   /* The rest of the application window.  */
   if (display_tiny)

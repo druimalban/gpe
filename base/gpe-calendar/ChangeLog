@@ -1,3 +1,8 @@
+2009-10-03  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (main): Add HildonAppMenu for Fremantle
+	(options_dialog): Create options dialog for all Hildon versions
+
 2009-09-19  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (gpe_handle_close): Remove Iconise option for Fremantle
