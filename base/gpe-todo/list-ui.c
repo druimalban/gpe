@@ -128,7 +128,7 @@ show_info_dialog(GtkWidget *w, const gchar *message)
 {
   GtkWidget *dialog;
 
-  dialog = gtk_message_dialog_new (GTK_WINDOW(gtk_widget_get_toplevel(w)),
+  dialog = gtk_message_dialog_new (GTK_WINDOW(w),
                                    GTK_DIALOG_MODAL 
                                    | GTK_DIALOG_DESTROY_WITH_PARENT,
                                    GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
@@ -138,8 +138,10 @@ show_info_dialog(GtkWidget *w, const gchar *message)
 }
 
 static void
-item_do_edit (GtkWidget *w)
+item_do_edit (GtkWidget *w, gpointer main_window)
 {
+  if (!main_window) main_window = gtk_widget_get_toplevel(w);
+
   if(current_menu_item)
     {
       gtk_widget_show_all (edit_item (current_menu_item, -1, GTK_WINDOW(window)));
@@ -148,13 +150,15 @@ item_do_edit (GtkWidget *w)
     }
   else
     {
-      show_info_dialog(w, _("You must select an item to edit."));
+      show_info_dialog(GTK_WIDGET(main_window), _("You must select an item to edit."));
     }
 }
 
 static void
-item_do_delete (GtkWidget *w)
+item_do_delete (GtkWidget *w, gpointer main_window)
 {
+  if (!main_window) main_window = gtk_widget_get_toplevel(w);
+
   if(current_menu_item)
     {
       todo_db_delete_item (current_menu_item);
@@ -165,7 +169,7 @@ item_do_delete (GtkWidget *w)
     }
   else
     {
-      show_info_dialog(w, _("You must select an item to delete."));
+      show_info_dialog(GTK_WIDGET(main_window), _("You must select an item to delete."));
     }      
 }
 
@@ -305,26 +309,25 @@ new_todo_item (GtkWidget *w, gpointer user_data)
 
 
 static void
-delete_completed_items (GtkWidget *w, gpointer user_data)
+delete_completed_items (GtkWidget *w, gpointer main_window)
 {
   GtkWidget *dialog;
 
+  if (!main_window) main_window = gtk_widget_get_toplevel(w);
+
 #ifdef IS_HILDON
-  dialog = gtk_message_dialog_new (GTK_WINDOW(gtk_widget_get_toplevel(w)),
-                                   GTK_DIALOG_MODAL 
-                                   | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                   GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE,
-                                   "Are you sure you want to delete all " \
-                                   "completed items permanently?");
-  gtk_dialog_add_buttons(GTK_DIALOG(dialog),
-                         _("OK"), GTK_RESPONSE_YES,
-                         _("Cancel"), GTK_RESPONSE_NO, NULL);
-#else
-  dialog = gtk_message_dialog_new (GTK_WINDOW(gtk_widget_get_toplevel(w)),
+  dialog = gtk_message_dialog_new (GTK_WINDOW(main_window),
                                    GTK_DIALOG_MODAL 
                                    | GTK_DIALOG_DESTROY_WITH_PARENT,
                                    GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO,
-                                   "Delete completed items?");
+                                   _("Are you sure you want to delete all " \
+                                   "completed items permanently?"));
+#else
+  dialog = gtk_message_dialog_new (GTK_WINDOW(main_window),
+                                   GTK_DIALOG_MODAL 
+                                   | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                   GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO,
+                                   _("Delete completed items?"));
 #endif  
   if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_YES)
     {
@@ -674,6 +677,31 @@ toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
 static void
 create_app_menu(HildonWindow *window)
 {
+#if MAEMO_VERSION_MAJOR >= 5
+  /* Use Fremantle HildonAppMenu */
+  HildonAppMenu *menu_main;
+  GtkWidget *button;
+
+  menu_main = HILDON_APP_MENU (hildon_app_menu_new ());
+
+  button = gtk_button_new_with_label (_("Move completed items"));
+  g_signal_connect_after (button, "clicked", G_CALLBACK (refresh_items), window);
+  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
+
+  button = gtk_button_new_with_label (_("Delete completed items"));
+  g_signal_connect_after (button, "clicked", G_CALLBACK (delete_completed_items), window);
+  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
+
+  button = gtk_button_new_with_label (_("Categories"));
+  g_signal_connect_after (button, "clicked", G_CALLBACK (edit_categories), window);
+  hildon_app_menu_append (menu_main, GTK_BUTTON (button));
+
+  gtk_widget_show_all (GTK_WIDGET (menu_main));
+  hildon_window_set_app_menu (HILDON_WINDOW (window), menu_main);
+
+#else /* MAEMO_VERSION_MAJOR >= 5 */
+
+  /* Use traditional menu */
   GtkMenu *menu_main = GTK_MENU (gtk_menu_new());
   GtkWidget *menu_items = gtk_menu_new();
   GtkWidget *menu_categories = gtk_menu_new();
@@ -690,12 +718,10 @@ create_app_menu(HildonWindow *window)
   GtkWidget *item_delete_completed = gtk_menu_item_new_with_label(_("Delete completed items"));
   GtkWidget *item_move = gtk_menu_item_new_with_label(_("Move completed items to the end"));
 
-#if MAEMO_VERSION_MAJOR < 5
   GtkWidget *menu_view = gtk_menu_new();
   GtkWidget *item_view = gtk_menu_item_new_with_label(_("View"));
   GtkWidget *item_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
   GtkWidget *item_fullscreen = gtk_check_menu_item_new_with_label(_("Fullscreen"));
-#endif /* MAEMO_VERSION_MAJOR < 5 */
 
   gtk_menu_append (GTK_MENU(menu_items), item_open);
   gtk_menu_append (GTK_MENU(menu_items), item_add);
@@ -705,42 +731,35 @@ create_app_menu(HildonWindow *window)
   gtk_menu_append (GTK_MENU(menu_tools), item_move);
   gtk_menu_append (menu_main, item_items);
   gtk_menu_append (menu_main, item_categories);
-#if MAEMO_VERSION_MAJOR < 5
   gtk_menu_append (menu_main, item_view);
-#endif /* MAEMO_VERSION_MAJOR < 5 */
   gtk_menu_append (menu_main, item_tools);
   gtk_menu_append (menu_main, item_close);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_items), menu_items);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_categories), menu_categories);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_tools), menu_tools);
 
-#if MAEMO_VERSION_MAJOR < 5
   gtk_menu_append (GTK_MENU(menu_view), item_fullscreen);
   gtk_menu_append (GTK_MENU(menu_view), item_toolbar);
   gtk_menu_item_set_submenu(GTK_MENU_ITEM(item_view), menu_view);
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_toolbar), TRUE);
   gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_fullscreen), FALSE);
-#endif /* MAEMO_VERSION_MAJOR < 5 */
 
-  g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_todo_item), NULL);
-  g_signal_connect(G_OBJECT(item_open), "activate", G_CALLBACK(item_do_edit), NULL);
-  g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(item_do_delete), NULL);
-  g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), NULL);
-#if MAEMO_VERSION_MAJOR < 5
-  g_signal_connect(G_OBJECT(item_fullscreen), "activate", G_CALLBACK(toggle_fullscreen), NULL);
-  g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), NULL);
-#endif /* MAEMO_VERSION_MAJOR < 5 */
-  g_signal_connect(G_OBJECT(item_delete_completed), "activate", G_CALLBACK(delete_completed_items), NULL);
-  g_signal_connect(G_OBJECT(item_move), "activate", G_CALLBACK(refresh_items), NULL);
-  g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gpe_todo_exit), NULL);
+  g_signal_connect(G_OBJECT(item_add), "activate", G_CALLBACK(new_todo_item), window);
+  g_signal_connect(G_OBJECT(item_open), "activate", G_CALLBACK(item_do_edit), window);
+  g_signal_connect(G_OBJECT(item_delete), "activate", G_CALLBACK(item_do_delete), window);
+  g_signal_connect(G_OBJECT(item_catedit), "activate", G_CALLBACK(edit_categories), window);
+  g_signal_connect(G_OBJECT(item_fullscreen), "activate", G_CALLBACK(toggle_fullscreen), window);
+  g_signal_connect(G_OBJECT(item_toolbar), "activate", G_CALLBACK(toggle_toolbar), window);
+  g_signal_connect(G_OBJECT(item_delete_completed), "activate", G_CALLBACK(delete_completed_items), window);
+  g_signal_connect(G_OBJECT(item_move), "activate", G_CALLBACK(refresh_items), window);
+  g_signal_connect(G_OBJECT(item_close), "activate", G_CALLBACK(gpe_todo_exit), window);
 
   gtk_widget_show_all (GTK_WIDGET(menu_main));
-#if MAEMO_VERSION_MAJOR < 5
   fullscreen_control = item_fullscreen;
-#endif /* MAEMO_VERSION_MAJOR < 5 */
   hildon_window_set_menu (HILDON_WINDOW (window), menu_main);
+#endif /* MAEMO_VERSION_MAJOR >= 5 */
 }
-#endif
+#endif /* IS_HILDON */
 
 static gboolean
 window_key_press_event (GtkWidget *window, GdkEventKey *k, GtkWidget *data)
@@ -827,13 +846,13 @@ top_level (GtkWidget *window)
 
   /* New button */
   item = gtk_tool_button_new_from_stock(GTK_STOCK_NEW);
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (new_todo_item), NULL);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (new_todo_item), window);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
   /* Delete button */
   item = gtk_tool_button_new_from_stock(GTK_STOCK_DELETE);
   g_signal_connect(G_OBJECT(item), "clicked", 
-                   G_CALLBACK (delete_completed_items), NULL);
+                   G_CALLBACK (delete_completed_items), window);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   
 #ifdef IS_HILDON
@@ -850,7 +869,7 @@ top_level (GtkWidget *window)
 				   gtk_toolbar_get_icon_size(GTK_TOOLBAR (toolbar)));
       item = gtk_tool_button_new(w, _("Categories"));
       g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (edit_categories), 
-                       NULL);
+                       window);
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
     }
     
@@ -861,7 +880,7 @@ top_level (GtkWidget *window)
     {
       item = gtk_tool_button_new_from_stock(GTK_STOCK_REFRESH);
       g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (refresh_items), 
-                       NULL);
+                       window);
       gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);        
     }
 	
@@ -912,7 +931,7 @@ top_level (GtkWidget *window)
   hildon_check_button_set_active (HILDON_CHECK_BUTTON(w), TRUE);
   gtk_button_set_label(GTK_BUTTON(w), _("Completed"));
   g_signal_connect (G_OBJECT (w), "toggled", 
-                    G_CALLBACK (toggle_completed_items), NULL);
+                    G_CALLBACK (toggle_completed_items), window);
   item = gtk_tool_item_new();
   gtk_container_add(GTK_CONTAINER(item), w);
   gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), FALSE);
@@ -925,7 +944,7 @@ top_level (GtkWidget *window)
   gtk_tool_item_set_expand(GTK_TOOL_ITEM(item), TRUE);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
   item = gtk_tool_button_new_from_stock(GTK_STOCK_QUIT);
-  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (gpe_todo_exit), NULL);
+  g_signal_connect(G_OBJECT(item), "clicked", G_CALLBACK (gpe_todo_exit), window);
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, -1);
 #endif
     

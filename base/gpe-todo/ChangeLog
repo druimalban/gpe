@@ -1,3 +1,8 @@
+2009-10-04  Graham Cobb  <g+770@cobb.uk.net>
+
+	* list-ui.c (create_app_menu): Create Fremantle menu
+	(delete_completed_items): Correct parent window for dialog
+
 2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* list-ui.c (create_app_menu): Remove View menu and Toolbar and Fullscreen
