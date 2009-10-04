@@ -1,3 +1,8 @@
+2009-10-04  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main-hildon.c (create_app_menu): Create a real Fremantle menu.
+	Make sure dialog boxes are parented by the main window.
+
 2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main-hildon.c (create_main): Change Main window name to List on Maemo 4 and earlier
