@@ -166,23 +166,47 @@ priority_map[] =
   };
 
 static void
-set_item_state (GtkMenuItem *w, gpointer p)
+set_item_state (GtkComboBox *w, gpointer p)
 {
   struct edit_todo *t = p;
-  struct menu_map *m;
+  int i;
+  gchar *name;
 
-  m = g_object_get_data (G_OBJECT (w), "menu-map");
-  t->state = m->value;
+  name = gtk_combo_box_get_active_text(w);
+
+  for (i = 0; i < sizeof (state_map) / sizeof (state_map[0]); i++)
+    {
+      if (strcmp(name, state_map[i].string) == 0) {
+        t->state = state_map[i].value;
+	g_free(name);
+	return;
+      }
+    }
+
+  /* Name not found ??? */
+  g_assert_not_reached();
 }
 
 static void
-set_item_priority (GtkMenuItem *w, gpointer p)
+set_item_priority (GtkComboBox *w, gpointer p)
 {
   struct edit_todo *t = p;
-  struct menu_map *m;
+  int i;
+  gchar *name;
 
-  m = g_object_get_data (G_OBJECT (w), "menu-map");
-  t->priority = m->value;
+  name = gtk_combo_box_get_active_text(w);
+
+  for (i = 0; i < sizeof (priority_map) / sizeof (priority_map[0]); i++)
+    {
+      if (strcmp(name, priority_map[i].string) == 0) {
+        t->priority = priority_map[i].value;
+	g_free(name);
+	return;
+      }
+    }
+
+  /* Name not found ??? */
+  g_assert_not_reached();
 }
 
 
@@ -266,10 +290,9 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
 #endif    
   GtkWidget *buttondelete;
   GtkWidget *label_priority = gtk_label_new (_("Priority:"));
-  GtkWidget *priority_menu, *priority_optionmenu;
+  GtkWidget *priority_combo;
   GtkWidget *label_state = gtk_label_new (_("Status:"));
-  GtkWidget *state = gtk_option_menu_new ();
-  GtkWidget *state_menu;
+  GtkWidget *state_combo;
   GtkWidget *label_summary = gtk_label_new (_("Summary:"));
   GtkWidget *label_details = gtk_label_new (_("Details:"));
   GtkWidget *entry_summary = gtk_entry_new ();
@@ -338,23 +361,19 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   gtk_table_set_row_spacings (GTK_TABLE(table), gpe_spacing);
   gtk_box_set_spacing (GTK_BOX(top_vbox), gpe_spacing);
     
-  state_menu = gtk_menu_new ();
+  state_combo = gtk_combo_box_new_text();
   for (i = 0; i < sizeof (state_map) / sizeof (state_map[0]); i++)
     {
-      GtkWidget *l = gtk_menu_item_new_with_label (gettext (state_map[i].string));
-      g_object_set_data (G_OBJECT (l), "menu-map", &state_map[i]);
-      gtk_menu_append (GTK_MENU (state_menu), l);
-      g_signal_connect (G_OBJECT (l), "activate", G_CALLBACK (set_item_state), t);
+      gtk_combo_box_append_text (GTK_COMBO_BOX(state_combo), gettext (state_map[i].string));
     }
+  g_signal_connect (G_OBJECT (state_combo), "changed", G_CALLBACK (set_item_state), t);
 		   
-  priority_menu = gtk_menu_new ();
+  priority_combo = gtk_combo_box_new_text();
   for (i = 0; i < sizeof (priority_map) / sizeof (priority_map[0]); i++)
     {
-      GtkWidget *l = gtk_menu_item_new_with_label (gettext (priority_map[i].string));
-      g_object_set_data (G_OBJECT (l), "menu-map", &priority_map[i]);
-      gtk_menu_append (GTK_MENU (priority_menu), l);
-      g_signal_connect (G_OBJECT (l), "activate", G_CALLBACK (set_item_priority), t);
+      gtk_combo_box_append_text (GTK_COMBO_BOX(priority_combo), gettext (priority_map[i].string));
     }
+  g_signal_connect (G_OBJECT (priority_combo), "changed", G_CALLBACK (set_item_priority), t);
 
   t->duetoggle = gtk_check_button_new_with_label (_("Due:"));
   t->duedate = gtk_date_combo_new ();
@@ -410,10 +429,6 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   gtk_box_pack_start (GTK_BOX (buttonbox), buttoncancel, TRUE, FALSE, 0);
   gtk_box_pack_start (GTK_BOX (buttonbox), buttonok, TRUE, FALSE, 0);
 #endif
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (state), state_menu);
-
-  priority_optionmenu = gtk_option_menu_new ();
-  gtk_option_menu_set_menu (GTK_OPTION_MENU (priority_optionmenu), priority_menu);
 
   gtk_misc_set_alignment (GTK_MISC (label_details), 0.0, 0.0);
   gtk_misc_set_alignment (GTK_MISC (label_summary), 0.0, 0.5);
@@ -438,7 +453,7 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   /* Priority */ 
   gtk_table_attach(GTK_TABLE(table), label_priority, 0, 1, pos, pos+1,
                    GTK_FILL, GTK_FILL, 0, 0);
-  gtk_table_attach(GTK_TABLE(table), priority_optionmenu, 1, 
+  gtk_table_attach(GTK_TABLE(table), priority_combo, 1, 
                    mode_landscape ? 3 : 5, pos, pos+1, 
                    GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
   /* State */                 
@@ -446,7 +461,7 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
     {    
       gtk_table_attach(GTK_TABLE(table), label_state, 3, 4, pos, pos+1,
                        GTK_FILL, GTK_FILL, 0, 0);
-      gtk_table_attach(GTK_TABLE(table), state, 4, 5, pos, pos+1,
+      gtk_table_attach(GTK_TABLE(table), state_combo, 4, 5, pos, pos+1,
                        GTK_FILL | GTK_EXPAND, GTK_FILL, 0, 0);
     }
   else
@@ -454,7 +469,7 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
       pos++;
       gtk_table_attach(GTK_TABLE(table), label_state, 0, 1, pos, pos+1,
                        GTK_FILL, GTK_FILL, 0, 0);
-      gtk_table_attach(GTK_TABLE(table), state, 1, 5, pos, pos+1,
+      gtk_table_attach(GTK_TABLE(table), state_combo, 1, 5, pos, pos+1,
                        GTK_FILL, GTK_FILL, 0, 0);
     }
     pos++;
@@ -508,12 +523,12 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
                                   item->what, -1);
       if (item->summary)
         gtk_entry_set_text (GTK_ENTRY (entry_summary), item->summary);
-      gtk_option_menu_set_history (GTK_OPTION_MENU (state), item->state);
+      gtk_combo_box_set_active(GTK_COMBO_BOX(state_combo), item->state);
       if (item->priority > PRIORITY_STANDARD)
-        prio_level = 0;
+	prio_level = 0;
       else if (item->priority < PRIORITY_STANDARD)
-        prio_level = 2;
-      gtk_option_menu_set_history (GTK_OPTION_MENU (priority_optionmenu), prio_level);
+	prio_level = 2;
+      gtk_combo_box_set_active(GTK_COMBO_BOX(priority_combo), prio_level);
       t->state = item->state;
       t->priority = item->priority;
 
@@ -530,8 +545,9 @@ edit_item (struct todo_item *item, gint initial_category, GtkWindow *parent)
   else
     {
       t->state = NOT_STARTED;
+      gtk_combo_box_set_active(GTK_COMBO_BOX(state_combo), t->state);
       t->priority = PRIORITY_STANDARD;
-      gtk_option_menu_set_history (GTK_OPTION_MENU (priority_optionmenu), 1);
+      gtk_combo_box_set_active(GTK_COMBO_BOX(priority_combo), 1);
 #ifdef IS_HILDON        
       gtk_widget_destroy (buttondelete);
 #endif        
