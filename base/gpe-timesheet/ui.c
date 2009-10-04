@@ -35,6 +35,10 @@
 #include "sql.h"
 #include "journal.h"
 #include "ui.h"
+#if defined(IS_HILDON) && MAEMO_VERSION_MAJOR >= 5
+#include <hildon/hildon-button.h>
+#endif
+
 
 #define _(_x) gettext(_x)
 
@@ -247,7 +251,8 @@ stop_timing (GtkWidget *w, gpointer user_data)
     }
 }
 
-static journal_changed_row_cb (GtkWidget *selection, gpointer user_data)
+static void
+journal_changed_row_cb (GtkWidget *selection, gpointer user_data)
 {
   GtkWidget *edit_button = user_data;
 
@@ -272,7 +277,6 @@ ui_delete_task (GtkWidget *w, gpointer user_data)
   GtkTreeIter iter;
   GtkTreeModel *model;
   //GtkTreeModelFilter *filter;
-  GtkTreeStore *store;
   int idx;
 
   if (gtk_tree_selection_get_selected(selection, &model, &iter))
@@ -443,21 +447,21 @@ toggle_journal(GtkCheckMenuItem *menuitem, gpointer user_data)
 #endif /* MAEMO_VERSION_MAJOR < 5 */
 
 static void 
-filter_show_task(GtkCheckMenuItem *menuitem, gpointer user_data)
+filter_show_task(GtkWidget *menuitem, gpointer user_data)
 {
   gtk_tree_store_clear(global_task_store);
   sql_start();
 }
 
 static void
-filter_show_todo(GtkCheckMenuItem *menuitem, gpointer user_data)
+filter_show_todo(GtkWidget *menuitem, gpointer user_data)
 {
   gtk_tree_store_clear(global_task_store);
   sql_append_todo();
 }
 
 static void
-filter_show_both(GtkCheckMenuItem *menuitem, gpointer user_data)
+filter_show_both(GtkWidget *menuitem, gpointer user_data)
 {
   gtk_tree_store_clear(global_task_store);
   sql_start();
@@ -694,8 +698,34 @@ GtkWidget * create_interface(GtkWidget *main_window)
 
 #ifdef IS_HILDON
 /* this is Hildon Main Menu */
+#if MAEMO_VERSION_MAJOR >= 5
+  /* Use Fremantle HildonAppMenu */
+  HildonAppMenu *menu_main;
+  GtkWidget *filter;
 
-  /*main menu*/
+  menu_main = HILDON_APP_MENU (hildon_app_menu_new ());
+
+  filter = hildon_gtk_button_new (HILDON_SIZE_AUTO);
+  gtk_button_set_label(GTK_BUTTON(filter), _("Tasks"));
+  g_signal_connect_after (filter, "clicked", G_CALLBACK (filter_show_task), task_view);
+  hildon_app_menu_add_filter (menu_main, GTK_BUTTON (filter));
+
+  filter = hildon_gtk_button_new (HILDON_SIZE_AUTO);
+  gtk_button_set_label(GTK_BUTTON(filter), _("Todos"));
+  g_signal_connect_after (filter, "clicked", G_CALLBACK (filter_show_todo), task_view);
+  hildon_app_menu_add_filter (menu_main, GTK_BUTTON (filter));
+
+  filter = hildon_gtk_button_new (HILDON_SIZE_AUTO);
+  gtk_button_set_label(GTK_BUTTON(filter), _("Both"));
+  g_signal_connect_after (filter, "clicked", G_CALLBACK (filter_show_both), task_view);
+  hildon_app_menu_add_filter (menu_main, GTK_BUTTON (filter));
+
+  gtk_widget_show_all (GTK_WIDGET (menu_main));
+  hildon_window_set_app_menu (HILDON_WINDOW (main_window), menu_main);
+
+#else /* MAEMO_VERSION_MAJOR >= 5 */
+
+  /* Use traditional menu */
 #if HILDON_VER > 0
     GtkMenu   *menu_main = gtk_menu_new();
 #else
@@ -711,13 +741,11 @@ GtkWidget * create_interface(GtkWidget *main_window)
     menu_view_group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (item_view_task));
     GtkWidget *item_view_todo = gtk_radio_menu_item_new_with_label(menu_view_group, _("Only todo items"));
     menu_view_group = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (item_view_todo));
-#if MAEMO_VERSION_MAJOR < 5
   /*show menu declarations*/
     GtkWidget *menu_show = gtk_menu_new();
     GtkWidget *item_show = gtk_menu_item_new_with_label(_("Show"));
     GtkWidget *item_switch_toolbar = gtk_check_menu_item_new_with_label(_("Show toolbar"));
     GtkWidget *item_switch_journal = gtk_check_menu_item_new_with_label(_("Show journal"));
-#endif /* MAEMO_VERSION_MAJOR < 5 */
   /*menu building*/
     if (!todo_db_start())
       {/* only if we found the todo db*/
@@ -729,7 +757,6 @@ GtkWidget * create_interface(GtkWidget *main_window)
         gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item_view_both), TRUE);
       }
   
-#if MAEMO_VERSION_MAJOR < 5
     gtk_menu_append (GTK_MENU(menu_main), item_show);
     gtk_menu_append (GTK_MENU(menu_show), item_switch_toolbar);
     gtk_menu_append (GTK_MENU(menu_show), item_switch_journal);
@@ -737,12 +764,12 @@ GtkWidget * create_interface(GtkWidget *main_window)
   /*menu initial settings*/
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_switch_toolbar), TRUE);
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item_switch_journal), FALSE);
-#endif /* MAEMO_VERSION_MAJOR < 5 */
   /* fire! */
     gtk_widget_show_all (GTK_WIDGET(menu_main));
 #if HILDON_VER > 0
     hildon_window_set_menu(HILDON_WINDOW(main_window), menu_main);
 #endif
+#endif /* MAEMO_VERSION_MAJOR >= 5 */
   /*these are necessary to show all toolbar's items*/
 #if HILDON_VER > 0
     hildon_window_add_toolbar(HILDON_WINDOW(main_window), GTK_TOOLBAR(main_toolbar));
@@ -831,7 +858,6 @@ GtkWidget * create_interface(GtkWidget *main_window)
     /* this is the one to show or hide the journal */
       g_signal_connect(G_OBJECT(item_switch_journal), "activate",
         G_CALLBACK(toggle_journal), rframe);
-#endif /* MAEMO_VERSION_MAJOR < 5 */
     /*these are filtering view options for tasks and todos
     ** only if we found the todo db */
       if (!todo_db_start())
@@ -846,6 +872,7 @@ GtkWidget * create_interface(GtkWidget *main_window)
     /* we also have the menu for change visuals between todos and tasks*/
       g_signal_connect (G_OBJECT(refresh), "clicked",
                       G_CALLBACK (refresh_list), item_view_both);
+#endif /* MAEMO_VERSION_MAJOR < 5 */
   #else
     /* signal for refreshing task list */
     g_signal_connect (G_OBJECT(refresh), "clicked",

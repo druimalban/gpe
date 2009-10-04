@@ -1,3 +1,7 @@
+2009-10-04  Graham Cobb  <g+770@cobb.uk.net>
+
+	* ui.c (create_interface): Create real Fremantle menu with filter buttons
+
 2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* ui.h: remove toggle_toolbar
