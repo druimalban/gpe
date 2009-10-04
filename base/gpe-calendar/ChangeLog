@@ -1,6 +1,7 @@
 2009-10-04  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (main): Swap categories and calendars in menu
+	(main): Disable Calendars display by default as it causes confusion
 
 	* alarm-dialog.c (alarm_dialog_get_type): Subclass HildonStackableWindow on Fremantle
 

@@ -2505,6 +2505,9 @@ main (int argc, char *argv[])
   if (MIN (gdk_screen_width (), gdk_screen_height ()) < 640)
     calendar_disabled = TRUE;
 
+  /* Disable the Calendars display by default because it causes confusion */
+  calendars_disabled = TRUE;
+
   /* Read the configuration file.  */
   GKeyFile *conf = g_key_file_new ();
   filename = CONF_FILE ();
