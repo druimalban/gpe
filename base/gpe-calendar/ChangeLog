@@ -1,3 +1,11 @@
+2009-10-05  Graham Cobb  <g+770@cobb.uk.net>
+
+	* calendars-dialog.c (calendars_dialog_init): HACK to workround Maemo5 bug with toggle rendering.
+
+	* calendars-widgets.c (get_layout): HACK to workround Maemo5 bug with toggle rendering.
+
+	* main.c (calendars_consider): HACK to workround Maemo5 bug with toggle rendering.
+
 2009-10-04  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (main): Swap categories and calendars in menu

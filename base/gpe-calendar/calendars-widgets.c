@@ -111,16 +111,30 @@ get_layout (CalendarTextCellRenderer *cell,
 	    int force_bold)
 {
   PangoLayout *layout;
+  char *buf;
 
   if (force_bold || cell->bold)
     {
-      char *buf = g_strdup_printf ("<b>%s</b>", cell->text);
-      layout = gtk_widget_create_pango_layout (widget, NULL);
-      pango_layout_set_markup (layout, buf, -1);
-      g_free (buf);
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+      /* The HACK to workround Maemo5 bug with toggle rendering (see calendars_consider())
+	 means that we have to force the font size here */
+      buf = g_strdup_printf ("<span font='24'><b>%s</b></span>", cell->text);
+#else
+      buf = g_strdup_printf ("<b>%s</b>", cell->text);
+#endif
     }
   else
-    layout = gtk_widget_create_pango_layout (widget, cell->text);
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+      /* The HACK to workround Maemo5 bug with toggle rendering (see main())
+	 means that we have to force the font size here */
+    buf = g_strdup_printf ("<span font='24'>%s</span>", cell->text);
+#else
+    buf = g_strdup_printf ("%s", cell->text);
+#endif
+
+  layout = gtk_widget_create_pango_layout (widget, NULL);
+  pango_layout_set_markup (layout, buf, -1);
+  g_free (buf);
 
   return layout;
 }

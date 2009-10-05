@@ -412,6 +412,21 @@ calendars_dialog_init (GTypeInstance *instance, gpointer klass)
 				      tree_view,
 				      NULL);
 
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+  /* HACK to workround Maemo5 bug with toggle rendering.
+     Thanks to Conny Hald for this workround */
+  /* Apply the HildonCheckButton style to the whole tree view */
+  /* Note: this means the formatting of the text column is wrong and has to be forced in
+     the layout of the calendar_text_cell_renderer */
+  GtkStyle *style = gtk_rc_get_style_by_paths (gtk_widget_get_settings (GTK_WIDGET(instance)),
+					       NULL,
+					       "*.HildonCheckButton.GtkAlignment.GtkHBox.GtkCellView",
+					       G_TYPE_NONE);
+  gtk_widget_set_style(GTK_WIDGET(tree_view), style);
+  /* Set the indicator to the right size (the size of the pixmap) */
+  g_object_set (renderer, "indicator-size", 38, NULL);
+#endif
+
   col = gtk_tree_view_column_new ();
   gtk_tree_view_append_column (tree_view, col);
   renderer = calendar_text_cell_renderer_new ();
