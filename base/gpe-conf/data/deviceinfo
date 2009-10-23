@@ -354,3 +354,12 @@ Model =
 Type = eval
 Manufacturer = FriendlyARM
 Features = 0x25
+
+[Topas A900]
+ID = 40
+Pattern = Toshiba TopasA900
+Name = Toshiba Topas A910
+Model =
+Type = eval
+Manufacturer = Toshiba
+Features = 0x21
