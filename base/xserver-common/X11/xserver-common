@@ -154,6 +154,9 @@ else
 	    "hoeft&wessel_hw90250")
 		    ARGS="$ARGS -screen 240x320@90"
 		    DPI="100" ;;
+	    "hoeft&wessel_skeye.pad_pos_aka_almex_mobile")
+		    DPI="100"
+		    ARGS="$ARGS -screen 640x480@180 -hide-cursor" ;;
 	    "mini2440")
 		    ARGS="$ARGS -screen ${SCREEN_SIZE}"
 		    DPI="100" ;;
