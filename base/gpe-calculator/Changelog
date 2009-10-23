@@ -1,3 +1,8 @@
+2009-10-23 Florian Boor <fb@kernelconcepts.de>
+
+	* Apply patch to set window icon. Contributed by 
+          Daniel Faulkner <daniel.faulkner@boltblue.com>
+
 2008-04-11 Florian Boor <fb@kernelconcepts.de>
 
 	* Add autotools support contirbuted by D. Marlin
