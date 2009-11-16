@@ -2,242 +2,234 @@
 # Copyright © 2008 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-beam package.
 #
-# Jorma Karvonen <karvjorm@users.sf.net>, 2008.
+# Jorma Karvonen <karvonen.jorma@gmail.com>, 2008-2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-beam 0.2.6\n"
+"Project-Id-Version: gpe-beam 0.2.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-16 14:18+0200\n"
-"PO-Revision-Date: 2008-01-15 18:46+0200\n"
-"Last-Translator: Jorma Karvonen <karvjorm@users.sf.net>\n"
+"POT-Creation-Date: 2006-08-23 15:25+0200\n"
+"PO-Revision-Date: 2009-07-28 18:41+0200\n"
+"Last-Translator: Jorma Karvonen <karvonen.jorma@gmail.com>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: main.c:167
+#: main.c:168
 msgid "Error"
 msgstr "Virhe"
 
-#: main.c:172
+#: main.c:173
 msgid "Failed"
 msgstr "Ei onnistunut"
 
-#: main.c:175
+#: main.c:176
 msgid "Done"
 msgstr "Valmis"
 
-#: main.c:178
+#: main.c:179
 msgid "Connecting..."
 msgstr "Yhdistetään..."
 
-#: main.c:182
+#: main.c:183
 msgid "Disconnecting..."
 msgstr "Puretaan yhteys..."
 
-#: main.c:185
+#: main.c:186
 msgid "Sending..."
 msgstr "Lähetetään..."
 
-#: main.c:188
+#: main.c:189
 msgid "Receiving"
 msgstr "Vastaanotetaan"
 
-#: main.c:197
+#: main.c:198
 msgid "Waiting for incoming connection"
 msgstr "Odotetaan tulevaa yhteyttä"
 
-#: main.c:200
+#: main.c:201
 msgid "Connected"
 msgstr "Yhdistetty"
 
-#: main.c:203
+#: main.c:204
 msgid "Disconnecting"
 msgstr "Puretaan yhteys"
 
-#: main.c:224
+#: main.c:225
 msgid "Telephony"
 msgstr "Puhelinpalvelu"
 
-#: main.c:230
+#: main.c:231
 msgid "File Server"
 msgstr "Tiedostopalvelin"
 
-#: main.c:236
+#: main.c:237
 msgid "IrCOMM"
 msgstr "IrCOMM-yhteyskäytäntö"
 
-#: main.c:242
+#: main.c:243
 msgid "IrOBEX"
 msgstr "IrOBEX-objektisiirto"
 
-#: main.c:251
+#: main.c:252
 msgid "PnP"
 msgstr "PnP"
 
-#: main.c:257
+#: main.c:258
 msgid "PDA/Palmtop"
 msgstr "PDA/Palmtop"
 
-#: main.c:263
+#: main.c:264
 msgid "Computer"
 msgstr "Tietokone"
 
-#: main.c:269
+#: main.c:270
 msgid "Printer"
 msgstr "Tulostin"
 
-#: main.c:275
+#: main.c:276
 msgid "Modem"
 msgstr "Modeemi"
 
-#: main.c:281
+#: main.c:282
 msgid "Fax"
 msgstr "Faksi"
 
-#: main.c:287
+#: main.c:288
 msgid "LAN Access"
 msgstr "LAN-käyttöoikeus"
 
-#: main.c:361
+#: main.c:362
 msgid "Transmitted file"
 msgstr "Lähetetty tiedosto"
 
-#: main.c:370
+#: main.c:371
 msgid "Could not transmit file"
 msgstr "Ei voitu lähettää tiedostoa"
 
-#: main.c:396 main.c:447
+#: main.c:397 main.c:448
 msgid "Unable to start file transmit."
 msgstr "Ei voitu käynnistää tiedostonsiirtoa."
 
-#: main.c:419
-msgid "IR Receive and Transmit........."
-msgstr "Infrapunavastaanotto ja -lähetys........."
-
-#: main.c:462
+#: main.c:420 main.c:463
 msgid "IR Receive and Transmit....."
 msgstr "Infrapunavastaanotto ja -lähetys....."
 
-#: main.c:471 main.c:473
+#: main.c:472 main.c:474
 msgid "Error opening IR client."
 msgstr "Virhe avattaessa infrapuna-asiakasta."
 
-#: main.c:480
+#: main.c:481
 msgid "Select file to transmit"
 msgstr "Valitse lähetettävä tiedosto"
 
-#: main.c:504
+#: main.c:508
 msgid "Could not start import tool."
 msgstr "Ei voitu käynnistää tuontityökalua."
 
-#: main.c:511
-msgid "vCard was imported successfully."
-msgstr "VCard-kortti tuotiin onnistuneesti."
-
-#: main.c:519
-msgid "Import of vCard failed."
-msgstr "VCard-kortin tuonti ei onnistunut."
-
-#: main.c:548
+#: main.c:532
 #, c-format
-msgid "File '%s' looks like a vCard, do you want to import it?"
-msgstr "Tiedosto ”%s” näyttää vCard-tiedostolta, haluatko tuoda sen?"
+msgid "File '%s' looks like a mimedir (vCard, vCal) filedo you want to import it?"
+msgstr "Tiedosto ”%s” näyttää mimedir (vCard, vCal) -tiedostolta, haluatko tuoda sen?"
 
-#: main.c:568 main.c:630
+#: main.c:552 main.c:614
 msgid "Unable to start receiver."
 msgstr "Vastaanotinta ei voitu käynnistää."
 
 #  Infrapunaohjaus on ollut pitkään käytössä kauko-ohjaimissa.
-#: main.c:582
+#: main.c:566
 msgid "IR Receive and transmit control"
 msgstr "Infrapunavastaanotto- ja -lähetysohjaus"
 
-#: main.c:592 main.c:595
+#: main.c:576 main.c:579
 msgid "Error opening IR server."
 msgstr "Virhe avattaessa infrapunapalvelinta."
 
-#: main.c:607
+#: main.c:591
 msgid "Received file"
 msgstr "Vastaanotettu tiedosto"
 
-#: main.c:645
+#: main.c:629
 msgid "Transmitting VCard"
 msgstr "Lähetetään VCard-korttia"
 
-#: main.c:743
+#: main.c:645
+msgid "Unable to start sender."
+msgstr "Vastaanotinta ei voitu käynnistää."
+
+#: main.c:737
 msgid "Name:"
 msgstr "Nimi:"
 
-#: main.c:744
+#: main.c:738
 msgid "Services:"
 msgstr "Palvelut:"
 
-#: main.c:745
+#: main.c:739
 msgid "Address:"
 msgstr "Osoite:"
 
-#: main.c:752
+#: main.c:746
 msgid "Peer Information"
 msgstr "Vertaistiedot"
 
-#: main.c:755
+#: main.c:749
 msgid "Peer Actions"
 msgstr "Vertaistoiminnot"
 
-#: main.c:763 main.c:991
+#: main.c:757 main.c:985
 msgid "Send File"
 msgstr "Lähetä tiedosto"
 
-#: main.c:771 main.c:992
+#: main.c:765 main.c:986
 msgid "Receive File"
 msgstr "Vastaanota tiedosto"
 
-#: main.c:821 main.c:886
+#: main.c:815 main.c:880
 msgid "IR transceiver on"
 msgstr "Infrapunalähetin päällä"
 
-#: main.c:823 main.c:910
+#: main.c:817 main.c:904
 msgid "IR transceiver off"
 msgstr "Infrapunalähetin pois päältä"
 
-#: main.c:834
+#: main.c:828
 msgid "Infrared Control"
 msgstr "Infrapunaohjain"
 
-#: main.c:983
+#: main.c:977
 msgid "IrDa tool"
 msgstr "IrDa-työkalu"
 
-#: main.c:988
+#: main.c:982
 msgid "Switch IR on"
 msgstr "Kytke infrapuna päälle"
 
-#: main.c:989
+#: main.c:983
 msgid "Switch IR off"
 msgstr "Kytke infrapuna pois päältä"
 
-#: main.c:990
+#: main.c:984
 msgid "Send vCard"
 msgstr "Lähetä vCard"
 
-#: main.c:993
+#: main.c:987
 msgid "Controls..."
 msgstr "Ohjaimet..."
 
-#: main.c:994
+#: main.c:988
 msgid "Remove from dock"
 msgstr "Poista telakasta"
 
-#: main.c:1061
+#: main.c:1055
 msgid "This is the infrared communications control."
 msgstr "Tämä on infrapunaviestinnän ohjain."
 
 #: dbus.c:76
 #, c-format
-msgid "Failed to acquire service: %s"
-msgstr "Palvelun haku ei onnistunut: %s"
+msgid "Failed to request name: %s"
+msgstr "Nimen haku ei onnistunut: %s"
 
 #: dbus.c:82
 #, c-format
@@ -251,3 +243,12 @@ msgstr "IrDA-ohjain"
 #: gpe-beam.desktop.in.h:2
 msgid "Panel based infrared communications control"
 msgstr "Paneeleita käyttävä infrapunaviestinnän ohjain"
+
+#~ msgid "IR Receive and Transmit........."
+#~ msgstr "Infrapunavastaanotto ja -lähetys........."
+
+#~ msgid "vCard was imported successfully."
+#~ msgstr "VCard-kortti tuotiin onnistuneesti."
+
+#~ msgid "Import of vCard failed."
+#~ msgstr "VCard-kortin tuonti ei onnistunut."
