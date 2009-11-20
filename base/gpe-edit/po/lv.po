@@ -1,128 +1,129 @@
-# German translation for the gpe-edit package.
-# Copyright (C) 2009 Free Software Foundation, Inc.
+# Latvian translation of gpe-edit.
+# Copyright (C) 2009 gpe-edit
 # This file is distributed under the same license as the gpe-edit package.
-# Roland Illig <roland.illig@gmx.de>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-edit 0.41\n"
+"Project-Id-Version: gpe-edit-0.41\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-12-17 23:21+0100\n"
-"PO-Revision-Date: 2009-11-17 18:02+0100\n"
-"Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
-"Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2009-06-05 01:01+0200\n"
+"Last-Translator: Rihards Prieditis <RPrieditis@inbox.lv>\n"
+"Language-Team: Latvian <translation-team-lv@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #: ../gpe-edit.desktop.in.in.h:1
 msgid "GPE Text Editor"
-msgstr "GPE Texteditor"
+msgstr "GPE Teksta redaktors"
 
 #: ../gpe-edit.desktop.in.in.h:2
 msgid "Text Editor"
-msgstr "Texteditor"
+msgstr "Teksta redaktors"
 
 #: ../main.c:78
 msgid "Help not (or incorrectly) installed. Or no helpviewer application registered."
-msgstr "Die Hilfe ist nicht (oder nicht korrekt) installiert. Oder es ist keine Hilfeanzeige-Anwendung registriert."
+msgstr "Palīdzība nav (vai nepareizi) instalēta. Vai helpviewer lietotne nav reģistrēta."
 
 #: ../main.c:99
 msgid "Untitled"
-msgstr "Unbenannt"
+msgstr "Bez virsraksta"
 
 #: ../main.c:140
 msgid "Current file is modified, save?"
-msgstr "Die aktuelle Datei wurde geändert. Speichern?"
+msgstr "Esošais fails ir modificēts, saglabāt?"
 
 #: ../main.c:140 ../main.c:367
 msgid "Question"
-msgstr "Frage"
+msgstr "Jautājums"
 
 #: ../main.c:271
 msgid "Open File ..."
-msgstr "Datei öffnen..."
+msgstr "Atvērt failu..."
 
 #: ../main.c:322
 msgid "Save as..."
-msgstr "Speichern als..."
+msgstr "Saglabāt kā..."
 
 #: ../main.c:367
 msgid "Save current file before exiting?"
-msgstr "Aktuelle Datei vor dem Beenden speichern?"
+msgstr "Saglabāt esošo failu pirms iziešanas?"
 
 #: ../main.c:368
 msgid "Don't save"
-msgstr "Nicht speichern"
+msgstr "Nesaglabāt"
 
 #: ../main.c:433
 msgid "Text not found"
-msgstr "Text nicht gefunden"
+msgstr "Teksts nav atrasts"
 
 #: ../main.c:473
 msgid "Unable to replace text"
-msgstr "Kann Text nicht ersetzen"
+msgstr "Neizdevās aizvietot tekstu"
 
 #: ../main.c:486
 msgid "Search for: "
-msgstr "Suche nach: "
+msgstr "Meklēt:"
 
 #: ../main.c:489 ../main.c:546
 msgid "Find"
-msgstr "Suchen"
+msgstr "Meklēt"
 
 #: ../main.c:538
 msgid "Search for:"
-msgstr "Suche nach:"
+msgstr "Meklēt:"
 
 #: ../main.c:540
 msgid "Replace with:"
-msgstr "Ersetzen durch:"
+msgstr "Aizvietot ar:"
 
 #: ../main.c:545
 msgid "Replace"
-msgstr "Ersetzen"
+msgstr "Aizvietot"
 
 #: ../main.c:671
 msgid "File editing field, additional functions are available by tap&hold or right click."
-msgstr "Dateibearbeitungsfeld, zusätzliche Funktionen sind möglich mit drücken-und-festhalten oder Rechtsklick."
+msgstr "Faila rediģēšanas lauks, papildus funkcijas ir pieejamas pēc uzsišanas&paturēšanas vai labā klikšķa"
 
 #: ../main.c:678
 msgid "New document"
-msgstr "Neues Dokument"
+msgstr "Jauns dokuments"
 
 #: ../main.c:683
 msgid "Open file"
-msgstr "Datei öffnen"
+msgstr "Atvērt failu"
 
 #: ../main.c:688
 msgid "Save current file"
-msgstr "Aktuelle Datei speichern"
+msgstr "Saglabāt esošo failu"
 
 #: ../main.c:693
 msgid "Save current file as"
-msgstr "Aktuelle Datei unter anderem Namen speichern"
+msgstr "Saglābāt esošo failu kā"
 
 #: ../main.c:704
 msgid "Search text for a string"
-msgstr "Text nach einer Zeichenfolge durchsuchen"
+msgstr "Meklēt virkni tekstā"
 
 #: ../main.c:710
 msgid "Replace a string"
-msgstr "Eine Zeichenfolge ersetzen"
+msgstr "Aizvietot virkni"
 
 #: ../main.c:725
 msgid "Copy selected, paste is possible by tap&hold"
-msgstr "Ausgewählten Text kopieren; Einfügen ist möglich mit drücken-und-festhalten"
+msgstr "Kopēt atlasīto, ielīmēšana iespēja caur uzsitienu&turēšanu"
 
 #: ../main.c:735
 msgid "Paste from clipboard"
-msgstr "Aus der Zwischenablage einfügen"
+msgstr "Ielīmēt no starpliktuves"
 
 #: ../main.c:743
 msgid "Get help"
-msgstr "Hilfe bekommen"
+msgstr "Iegūt palīdzību"
 
 #: ../main.c:751
 msgid "Exit gpe-edit"
-msgstr "gpe-edit beenden"
+msgstr "Iziet no gpe-edit"
