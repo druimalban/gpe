@@ -23,8 +23,9 @@ install-program:
 	install -m 755 X11/Xserver $(DESTDIR)/etc/X11/Xserver
 	install -m 755 X11/Xsession $(DESTDIR)/etc/X11/Xsession
 	install -m 755 X11/xserver-common $(DESTDIR)/etc/X11/xserver-common
-	install -m 644 X11/xmodmap/*.xmodmap $(DESTDIR)/etc/X11/
-	install -m 644 X11/xmodmap/xmodmap-* $(DESTDIR)/etc/X11/
+	install -d $(DESTDIR)/etc/X11/xmodmap
+	install -m 644 X11/xmodmap/*.xmodmap $(DESTDIR)/etc/X11/xmodmap
+	install -m 644 X11/xmodmap/xmodmap-* $(DESTDIR)/etc/X11/xmodmap
 
 clean:
 
