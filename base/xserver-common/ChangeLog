@@ -1,5 +1,6 @@
 
 2009-11-20  Florian Boor <florian@kernelconcepts.de>
+	* Release 1.33
 	* Install all modmap files to /etc/X11/xmodmap
 
 2009-10-23  Florian Boor <florian@kernelconcepts.de>
