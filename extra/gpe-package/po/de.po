@@ -1,161 +1,159 @@
-# translation of gpe-package-0.4.pot to Finnish
-# Copyright © 2008 Free Software Foundation, Inc.
+# German translation for gpe-package.
+# Copyright (C) 2009 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gpe-package package.
-# Jorma Karvonen <karvonen.jorma@gmail.com>, 2008-2009.
+# Roland Illig <roland.illig@gmx.de>, 2009.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-package 0.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-08-01 21:31+0200\n"
-"PO-Revision-Date: 2009-07-29 09:25+0200\n"
-"Last-Translator: Jorma Karvonen <karvonen.jorma@gmail.com>\n"
-"Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
+"PO-Revision-Date: 2009-11-20 14:57+0100\n"
+"Last-Translator: Roland Illig <roland.illig@gmx.de>\n"
+"Language-Team: German <translation-team-de@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.11.4\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: main.c:45
 msgid "Unable to fork"
-msgstr "Ei voitu käynnistää uusia tehtäviä"
+msgstr "Kann nicht forken"
 
 #: interface.c:68
 msgid "Help for this application is not installed."
-msgstr "Tälle sovellukselle ei ole asennettu ohjetta."
+msgstr "Die Hilfe für diese Anwendung ist nicht installiert."
 
 #: interface.c:129
 msgid "/_File"
-msgstr "/_Tiedosto"
+msgstr "/_Datei"
 
 #: interface.c:130
 msgid "/File/_Install file"
-msgstr "/Tiedosto/_Asenna tiedosto"
+msgstr "Datei/Datei _installieren"
 
 #: interface.c:131
 msgid "/_File/s1"
-msgstr "/Tiedosto/s_1"
+msgstr "/_Datei/s1"
 
 #: interface.c:132
 msgid "/File/_Close"
-msgstr "/Tiedosto/Sul_je"
+msgstr "/Datei/_Schließen"
 
 #: interface.c:133
 msgid "/_Packages"
-msgstr "/_Paketit"
+msgstr "/_Pakete"
 
 #: interface.c:134
 msgid "/Packages/Show Insta_lled"
-msgstr "/Paketit/Näytä a_sennetut"
+msgstr "Pakete/Insta_llierte anzeigen"
 
 #: interface.c:135
 msgid "/Packages/Show _Not Installed"
-msgstr "/Paketit/Näytä ase_ntamattomat"
+msgstr "/Pakete/_Nicht installierte anzeigen"
 
 #: interface.c:136
 msgid "/_Packages/s2"
-msgstr "/Paketit/s_2"
+msgstr "/_Pakete/s2"
 
 #: interface.c:137
 msgid "/Packages/_Search"
-msgstr "/Paketit/_Haku"
+msgstr "/Pakete/_Suche"
 
 #: interface.c:138 interface.c:143
 msgid "/_Packages/s3"
-msgstr "/Paketit/s_3"
+msgstr "/_Pakete/s3"
 
 #: interface.c:139
 msgid "/Packages/Show _Info"
-msgstr "/Paketit/Näytä tie_dot"
+msgstr "/Pakete/_Infos anzeigen"
 
 #: interface.c:140
 msgid "/_Packages/s4"
-msgstr "/Paketit/s_4"
+msgstr "/_Pakete/s4"
 
 #: interface.c:141
 msgid "/Packages/_Update lists"
-msgstr "/Paketit/Päi_vitä luettelot"
+msgstr "/Pakete/Listen akt_ualisieren"
 
 #: interface.c:142
 msgid "/Packages/Upgrade _System"
-msgstr "/Paketit/Päivitä järjestel_mä"
+msgstr "/Pakete/_System aktualisieren"
 
 #: interface.c:144
 msgid "/Packages/_Apply"
-msgstr "/Paketit/Tote_uta"
+msgstr "/Pakete/_Anwenden"
 
 #: interface.c:145
 msgid "/_Help"
-msgstr "/_Ohje"
+msgstr "/_Hilfe"
 
 #: interface.c:146
 msgid "/_Help/Index"
-msgstr "/Ohje/Hak_emisto"
+msgstr "/_Hilfe/Index"
 
 #: interface.c:147
 msgid "/_Help/About"
-msgstr "/Ohje/Ohje_lmasta"
+msgstr "/_Hilfe/Über"
 
 #: interface.c:198
 msgid "Package information"
-msgstr "Pakettitiedot"
+msgstr "Paketinformation"
 
 #: interface.c:241
 msgid "Working"
-msgstr "Työskennellään"
+msgstr "Arbeite"
 
 #: interface.c:288
 msgid "Reading packages list..."
-msgstr "Luetaan pakettiluettelo..."
+msgstr "Lese Paketliste..."
 
 #: interface.c:294
 msgid "Updating package lists"
-msgstr "Päivitetään pakettiluetteloita..."
+msgstr "Aktualisiere Paketlisten"
 
 #: interface.c:297
 msgid "Upgrading installed system"
-msgstr "Päivitetään asennettu järjestelmä"
+msgstr "Aktualisiere installiertes System"
 
 #: interface.c:300
 msgid "Installing"
-msgstr "Asennetaan"
+msgstr "Installiere"
 
 #: interface.c:303
 msgid "Retrieving package information"
-msgstr "Haetaan pakettitietoja"
+msgstr "Empfange Paketinformation"
 
 #: interface.c:306
 msgid "Working..."
-msgstr "Työskennellään..."
+msgstr "Arbeite..."
 
 #: interface.c:402
 msgid "Updating views, please wait..."
-msgstr "Päivitetään näkymiä, odota..."
+msgstr "Aktualisiere Ansichten, bitte warten..."
 
 #: interface.c:518
 msgid "Search term:"
-msgstr "Hakutermi:"
+msgstr "Suchbegriff:"
 
 #: interface.c:529
 msgid "Regular expression"
-msgstr "Säännöllinen lauseke"
+msgstr "Regulärer Ausdruck"
 
 #: interface.c:633
 msgid "Command finished. Please check log messages for errors."
-msgstr "Käsky valmistunut. Tarkista loki virheiden varalta."
+msgstr "Befehl erledigt. Bitte überprüfen Sie die Lognachrichten auf Fehler."
 
 #: interface.c:653
 msgid "Package selection was changed. Really exit?"
-msgstr "Pakettivalinta muuttui. Haluatko varmasti poistua?"
+msgstr "Die Paketauswahl wurde geändert. Wirklich beenden?"
 
 #: interface.c:682
 msgid "IPKG backend failure, cannot continue."
-msgstr "IPKG-taustavirhe, ei voida jatkaa."
+msgstr "IPKG-Backend-Fehler, kann nicht fortsetzen."
 
 #: interface.c:689
 msgid "Communication error, cannot continue."
-msgstr "Tiedonsiirtovirhe, ei voida jatkaa."
+msgstr "Kommunikationsfehler, kann nicht fortsetzen."
 
 #: interface.c:703
 msgid ""
@@ -163,118 +161,114 @@ msgid ""
 "Please consult the message log\n"
 "for hints what went wrong."
 msgstr ""
-"Tapahtui virhe.\n"
-"Etsi viestilokista vihjeitä\n"
-"siitä mikä meni vikaan."
+"Ein Fehler ist aufgetreten.\n"
+"Bitte sehen Sie in den Lognachrichten\n"
+"nach, was schiefgegangen sein könnte."
 
 #: interface.c:789
 msgid "The selected file could not be accessed."
-msgstr "Valittua tiedostoa ei voitu käyttää."
+msgstr "Auf die ausgewählte Datei konnte nicht zugegriffen werden."
 
 #: interface.c:900
 msgid "Make sure your internet connection is up or your update source is available and press OK to continue."
-msgstr "Varmista, että internet-yhteytesi on päällä tai päivityslähde on saatavilla ja jatka painamalla OK-painiketta."
+msgstr "Stellen Sie sicher, dass Ihre Internetverbindung steht und die Updatequelle verfügbar ist. Drücken Sie dann OK, um fortzusetzen."
 
 #: interface.c:916
 msgid "Some packages could not be updated, please check your configuration."
-msgstr "Joitakin paketteja ei voitu päivittää, tarkista asetuksesi."
+msgstr "Einige Pakete konnten nicht aktualisiert werden, bitte überprüfen Sie Ihre Konfiguration."
 
-#  sucessfully -> successfully
 #: interface.c:919
 msgid "System updated sucessfully."
-msgstr "Järjestelmän päivitys onnistui."
+msgstr "System erfolgreich aktualisiert."
 
 #: interface.c:945
 msgid "Some lists could not be updated, please check your configuration."
-msgstr "Joitakin luetteloja ei voitu päivittää, tarkista asetuksesi."
+msgstr "Einige Listen konnten nicht aktualisiert werden, bitte überprüfen Sie Ihre Konfiguration."
 
 #: interface.c:948
 msgid "Package lists updated successfully."
-msgstr "Pakettiluettelot päivitettiin onnistuneesti."
+msgstr "Paketlisten erfolgreich aktualisiert."
 
-#  Tätä virheilmoitusta edeltää numero, joka kertoo kuinka montaa muutosta virheilmoitus koskee. Siksi tämä virheilmoitus alkaa pienellä kirjaimella.
 #: interface.c:961
 msgid "changes could not be applied."
-msgstr "muutoksia ei voitu toteuttaa."
+msgstr "Änderungen konnten nicht angewendet werden."
 
-#  sucessfully -> successfully
 #: interface.c:965
 msgid "Packages installed sucessfully."
-msgstr "Pakettien asennus onnistui."
+msgstr "Pakete erfolgreich installiert."
 
 #: interface.c:1060 gpe-package.desktop.in.h:2
 msgid "Package Manager"
-msgstr "Pakettihallinta"
+msgstr "Paketmanager"
 
 #: interface.c:1104
 msgid "List"
-msgstr "Luettelo"
+msgstr "Liste"
 
 #: interface.c:1109
 msgid "Package List"
-msgstr "Pakettiluettelo"
+msgstr "Paketliste"
 
 #: interface.c:1135
 msgid "Inst."
-msgstr "Asen."
+msgstr "Inst."
 
 #: interface.c:1145 feededit.c:129 feededit.c:363
 msgid "Name"
-msgstr "Nimi"
+msgstr "Name"
 
 #: interface.c:1158
 msgid "Messages"
-msgstr "Viestit"
+msgstr "Nachrichten"
 
 #: interface.c:1163
 msgid "Messages Log"
-msgstr "Viestiloki"
+msgstr "Lognachrichten"
 
 #: interface.c:1173
 msgid "This window shows all messages from the packet manager."
-msgstr "Tämä ikkuna näyttää kaikki viestit pakettihallinnasta."
+msgstr "Dieses Fenster zeigt alle Nachrichten des Paketmanagers an."
 
 #: interface.c:1180
 msgid "Feeds"
-msgstr "Syötteet"
+msgstr "Feeds"
 
 #: filechooser.c:44 filechooser.c:63
 msgid "Choose packages"
-msgstr "Valitse paketit"
+msgstr "Pakete auswählen"
 
 #: feededit.c:99
 msgid "Could not open"
-msgstr "Ei voitu avata"
+msgstr "Konnte"
 
-#  Ilmeisesti jatkoa edelliseen
 #: feededit.c:100
 msgid "for writing."
-msgstr "kirjoitusta varten."
+msgstr "nicht zum Schreiben öffnen."
 
 #: feededit.c:120
 msgid "Feed Properties"
-msgstr "Syöteominaisuudet"
+msgstr "Feed-Eigenschaften"
 
 #: feededit.c:134
 msgid "Location (URL)"
-msgstr "Osoite (URL)"
+msgstr "Ort (URL)"
 
 #: feededit.c:139
 msgid "Compressed"
-msgstr "Tiivistetty"
+msgstr "Komprimiert"
 
 #: feededit.c:242
 msgid "Delete selected feed?"
-msgstr "Poistetaanko valittu syöte?"
+msgstr "Ausgewählten Feed löschen?"
 
 #: feededit.c:331
 msgid "Package Feeds"
-msgstr "Pakettisyötteet"
+msgstr "Paket-Feeds"
 
 #: feededit.c:372
 msgid "Location"
-msgstr "Sijainti"
+msgstr "Ort"
 
 #: gpe-package.desktop.in.h:1
 msgid "Install and update packages"
-msgstr "Asenna ja päivitä paketteja"
+msgstr "Pakete installieren und aktualisieren"
