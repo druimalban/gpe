@@ -244,7 +244,9 @@ playbin_ensure (Player *pl)
   if (! pl->playbin)
     {
       char *element;
-#if defined(IS_HILDON)
+#if defined(MAEMO5)
+      element = "playbin2";
+#elif defined(IS_HILDON)
 # if HILDON_VER == 0
       /* Evil, evil, evil, evil.  playbin is broken on Bora.  */
       element = "playbinmaemo";
