@@ -1,3 +1,9 @@
+2009-12-13  Neal H. Walfield  <neal@gnu.org>
+
+	* src/musicdb.c (status_update): Assert that this function is only
+	called from the main thread.
+	(status_kick): Don't call status_update directly.
+
 2009-09-14  Graham Cobb  <g+770@cobb.uk.net>
 
 	* src/starling.c (starling_run): Remove Full Screen menu item for Fremantle

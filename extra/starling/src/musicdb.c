@@ -1717,6 +1717,8 @@ music_db_play_lists_for_each (MusicDB *db,
 static int
 status_update (MusicDB *db)
 {
+  assert (g_thread_self () == main_thread);
+
   int dirs_pending = g_queue_get_length (db->dirs_pending);
   int files_pending = g_queue_get_length (db->meta_data_pending);
   char *message = NULL;
@@ -1756,7 +1758,6 @@ status_kick (MusicDB *db)
   if (db->status_source)
     return;
 
-  status_update (db);
   /* Update once every half a second.  */
   LOCK ();
   db->status_source = g_timeout_add (500, (GSourceFunc) status_update, db);
@@ -1802,7 +1803,7 @@ meta_data_reader (MusicDB *db, sqlite *sqliteh)
 {
   /* 200702 - NHW
 
-     A streamer's tags are typically delivered before we reach the
+     A stream's tags are typically delivered before we reach the
      PAUSED state.  Thus, we just need to wait until the paused state
      is reached.  Unfortunately, there is a bug in the oggdemuxer such
      that if the stream is immediately changed to the NULL state, we
