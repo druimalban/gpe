@@ -2964,9 +2964,13 @@ starling_run (void)
 
   st->searches = gtk_list_store_new (2, GTK_TYPE_STRING, GTK_TYPE_UINT);
 
+  GtkWidget *vbox2 = gtk_vbox_new (FALSE, 0);
+  gtk_box_pack_start (hbox, vbox2, TRUE, TRUE, 0);
+  gtk_widget_show (GTK_WIDGET (vbox2));
+
   GtkWidget *search_entry_combo
     = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (st->searches), 0);
-  gtk_box_pack_start (hbox, search_entry_combo, TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (vbox2), search_entry_combo, FALSE, TRUE, 0);
 
   st->search_entry = gtk_bin_get_child (GTK_BIN (search_entry_combo));
   g_signal_connect_swapped (G_OBJECT (st->search_entry),

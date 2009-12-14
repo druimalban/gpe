@@ -1,5 +1,10 @@
 2009-12-14  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (starling_run): Put the search entry combo box in
+	a vbox to avoid vertical stretching.
+
+2009-12-14  Neal H. Walfield  <neal@gnu.org>
+
 	* src/player.c (playbin_ensure): Use playbin2 on Maemo 5.
 
 2009-12-13  Neal H. Walfield  <neal@gnu.org>
