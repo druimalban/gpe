@@ -256,6 +256,7 @@ playbin_ensure (Player *pl)
 #else
       element = "playbin";
 #endif
+      printf ("Using player %s\n", element);
       pl->playbin = gst_element_factory_make (element, "player");
       if (! pl->playbin)
 	{
