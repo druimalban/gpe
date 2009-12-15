@@ -99,6 +99,9 @@ struct _Starling {
   GtkWidget *library_view;
   struct caption *caption;
   GtkComboBox *playlist;
+  GtkBox *playlist_alpha_seek;
+  int playlist_alpha_current_height;
+  int playlist_alpha_seek_timer_source;
   int playlist_count;
   int playlist_changed_signal;
   GtkToggleButton *search_enabled;
@@ -1674,7 +1677,166 @@ search_text_gen (Starling *st, const char *text)
 	= g_timeout_add (60 * 1000, (GSourceFunc) search_text_save, st);
     }
 }
+
+static void playlist_alpha_seek_build_queue (Starling *st);
 
+/* Regenerate the alpha scroll bar accordingly.  */
+static bool
+playlist_alpha_seek_build (Starling *st)
+{
+  st->playlist_alpha_seek_timer_source = 0;
+
+  /* First, remove any labels.  */
+  int label_height = 0;
+  int labels = 0;
+  bool once = false;
+  void callback (GtkWidget *widget, gpointer ignore)
+  {
+    g_assert (GTK_IS_LABEL (widget));
+
+    labels ++;
+
+    if (label_height > 1)
+      {
+	g_assert (once);
+	gtk_widget_destroy (widget);
+      }
+
+    if (once)
+      return;
+    once = true;
+
+    label_height = widget->allocation.height;
+    if (label_height > 1)
+      gtk_widget_destroy (widget);
+  }
+  gtk_container_foreach (GTK_CONTAINER (st->playlist_alpha_seek),
+			 callback, NULL);
+  if (label_height == 1 && labels == 1)
+    /* The size has not settled yet.  Note: when stable, we always add
+       at least two labels and request a minimum height of 2
+       pixels.  */
+    return;
+
+  int space = GTK_WIDGET (st->playlist_alpha_seek)->allocation.height;
+
+  GtkLabel *display (int idx, int rubber)
+  {
+    /* Load the entry at IDX.  */
+    int uid = play_list_index_to_uid (st->library, idx);
+    struct music_db_info info;
+    memset (&info, 0, sizeof (info));
+    /* We sort firstly by artist.  */
+    info.fields = MDB_ARTIST;
+    bool succ = music_db_get_info (st->db, uid, &info);
+    g_assert (succ);
+
+    /* Create the label.  */
+    char buffer[2] = "?";
+    if (info.artist)
+      {
+	strncpy (buffer, info.artist, sizeof (buffer) - 1);
+	buffer[0] = toupper (buffer[0]);
+	int i;
+	for (i = 1; i < sizeof (buffer) - 1; i ++)
+	  buffer[i] = tolower (buffer[i]);
+	buffer[sizeof (buffer) - 1] = 0;
+      }
+    GtkLabel *label = GTK_LABEL (gtk_label_new (buffer));
+
+    free (info.artist);
+
+    /* Add it to the container.  */
+    gtk_box_pack_start (GTK_BOX (st->playlist_alpha_seek), GTK_WIDGET (label),
+			rubber, rubber, 0);
+    if (rubber)
+      gtk_widget_set_size_request (GTK_WIDGET (label), -1, 2);
+    gtk_widget_show (GTK_WIDGET (label));
+
+    return label;
+  }
+
+  if (labels != 1)
+    /* We need to get the proper height of the label.  Insert a label,
+       get it to display and then actually build the bar.  */
+    {
+      /* Don't allow the label to stretch.  This way we can get its
+	 natural height.  */
+      GtkLabel *l = display (0, FALSE);
+      g_signal_connect_swapped (G_OBJECT (l), "size-allocate",
+				G_CALLBACK (playlist_alpha_seek_build_queue),
+				st);
+      return;
+    }
+
+  int count = play_list_count (st->library);
+  if (count > 1)
+    {
+      display (0, TRUE);
+      g_assert (label_height);
+
+      int labels = (space - label_height)
+	/ (label_height + label_height / 10);
+
+      if (labels > 26)
+	labels = 26;
+      if (labels > count)
+	labels = count;
+      if (labels < 1)
+	/* We display at least 2.  */
+	labels = 1;
+
+      int i;
+      for (i = 1; i <= labels; i ++)
+	display ((i * count / labels) - 1, TRUE);
+    }
+
+  st->playlist_alpha_current_height = 
+    GTK_WIDGET (st->playlist_alpha_seek)->allocation.height;
+
+  return FALSE;
+}
+
+static void
+playlist_alpha_seek_build_queue (Starling *st)
+{
+  if (st->playlist_alpha_seek_timer_source)
+    g_source_remove (st->playlist_alpha_seek_timer_source);
+  st->playlist_alpha_seek_timer_source
+    = g_timeout_add (200, (GSourceFunc) playlist_alpha_seek_build, st);
+}
+
+static void
+playlist_alpha_seek_build_queue_size_allocate (Starling *st)
+{
+  if (GTK_WIDGET (st->playlist_alpha_seek)->allocation.height
+      != st->playlist_alpha_current_height)
+    /* Ignore non-height changes.  */
+    playlist_alpha_seek_build_queue (st);
+}
+
+static gboolean
+playlist_alpha_seek_clicked (Starling *st,
+			     GdkEventButton *event, GtkWidget *widget)
+{
+  if (event->button != 1)
+    /* Not button 1.  Propagate further.  */
+    return FALSE;
+  if (event->type != GDK_BUTTON_RELEASE)
+    /* Not a release event.  Propagate further.  */
+    return FALSE;
+
+  int count = play_list_count (st->library);
+  if (count == 0)
+    return TRUE;
+
+  int height = GTK_WIDGET (st->playlist_alpha_seek)->allocation.height;
+  int idx = event->y * count / height;
+  starling_scroll_to (st, idx);
+
+  return TRUE;
+}
+
 static int regen_source;
 
 static int
@@ -1700,6 +1862,8 @@ search_text_regen (gpointer data)
     search_text_gen (st, NULL);
 
   play_list_state_restore (st);
+
+  playlist_alpha_seek_build_queue (st);
 
   return FALSE;
 }
@@ -2989,6 +3153,11 @@ starling_run (void)
 			    G_CALLBACK (search_text_clear), st);
   gtk_box_pack_start (hbox, clear, FALSE, FALSE, 0);
 
+
+  hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
+  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), TRUE, TRUE, 0);
+  gtk_widget_show (GTK_WIDGET (hbox));
+
   st->library_view
     = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->library));
   g_signal_connect (G_OBJECT (st->library_view), "row-activated",
@@ -3028,7 +3197,39 @@ starling_run (void)
 				  GTK_POLICY_AUTOMATIC);
     
   gtk_container_add (GTK_CONTAINER (scrolled), st->library_view);
-  gtk_container_add (GTK_CONTAINER (vbox), scrolled);
+  gtk_container_add (GTK_CONTAINER (hbox), scrolled);
+
+
+  /* Build the alpha scroller.  */
+  GtkEventBox *event_box = GTK_EVENT_BOX (gtk_event_box_new ());
+  gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (event_box),
+		      FALSE, FALSE, 0);
+  /* Make the event box invisible.  */
+  gtk_event_box_set_visible_window (event_box, FALSE);
+  /* Set it above the contained widget.  */
+  gtk_event_box_set_above_child (event_box, TRUE);
+  gtk_widget_show (GTK_WIDGET (event_box));
+  g_signal_connect_swapped (G_OBJECT (event_box),
+			    "button-release-event",
+			    G_CALLBACK (playlist_alpha_seek_clicked),
+			    st);
+  
+  st->playlist_alpha_seek = GTK_BOX (gtk_vbox_new (FALSE, 0));
+  gtk_container_add (GTK_CONTAINER (event_box),
+		     GTK_WIDGET (st->playlist_alpha_seek));
+  gtk_widget_show (GTK_WIDGET (st->playlist_alpha_seek));
+
+  /* We connect to ST->LIBRARY_VIEW_WINDOW's size-allocate signal and
+     not ST->PLAYLIST_ALPHA_SEEK's as after we repopulate the latter,
+     a new size-allocate signal is emitted, which creates an infinate
+     loop.  */
+  g_signal_connect_swapped (G_OBJECT (st->library_view_window),
+			    "size-allocate",
+			    G_CALLBACK (playlist_alpha_seek_build_queue_size_allocate),
+			    st);
+
+  
+  
     
   /* XXX: Currently disable as "save as" functionality is
      unimplemented (see musicdb.c).  */

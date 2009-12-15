@@ -1,3 +1,16 @@
+2009-12-15  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c (struct _Starling): Add fields
+	playlist_alpha_seek, playlist_alpha_current_height, and
+	playlist_alpha_seek_timer_source.
+	(playlist_alpha_seek_build): New function.
+	(playlist_alpha_seek_build_queue): Likewise.
+	(playlist_alpha_seek_build_queue_size_allocate): Likewise.
+	(playlist_alpha_seek_clicked): Likewise.
+	(search_text_regen): Call playlist_alpha_seek_build_queue.
+	(starling_run): Create a vbox next to the library view, which acts
+	an as alpha seeker.
+
 2009-12-14  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (starling_run): Put the search entry combo box in
