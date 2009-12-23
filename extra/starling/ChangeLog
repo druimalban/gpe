@@ -1,3 +1,8 @@
+2009-12-23  Neal Walfield  <neal@gnu.org>
+
+	* src/starling.c (playlist_alpha_seek_build): Don't display the
+	alpha seek bar if there are no entries.
+
 2009-12-15  Neal H. Walfield  <neal@gnu.org>
 
 	* src/player.c (playbin_ensure): Add some debugging output.

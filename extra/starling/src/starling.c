@@ -1756,39 +1756,43 @@ playlist_alpha_seek_build (Starling *st)
     return label;
   }
 
-  if (labels != 1)
-    /* We need to get the proper height of the label.  Insert a label,
-       get it to display and then actually build the bar.  */
-    {
-      /* Don't allow the label to stretch.  This way we can get its
-	 natural height.  */
-      GtkLabel *l = display (0, FALSE);
-      g_signal_connect_swapped (G_OBJECT (l), "size-allocate",
-				G_CALLBACK (playlist_alpha_seek_build_queue),
-				st);
-      return;
-    }
-
   int count = play_list_count (st->library);
-  if (count > 1)
+  if (count > 0)
     {
-      display (0, TRUE);
-      g_assert (label_height);
+      if (labels != 1)
+	/* We need to get the proper height of the label.  Insert a label,
+	   get it to display and then actually build the bar.  */
+	{
+	  /* Don't allow the label to stretch.  This way we can get its
+	     natural height.  */
+	  GtkLabel *l = display (0, FALSE);
+	  g_signal_connect_swapped
+	    (G_OBJECT (l), "size-allocate",
+	     G_CALLBACK (playlist_alpha_seek_build_queue),
+	     st);
+	  return;
+	}
 
-      int labels = (space - label_height)
-	/ (label_height + label_height / 10);
+      if (count > 1)
+	{
+	  display (0, TRUE);
+	  g_assert (label_height);
 
-      if (labels > 26)
-	labels = 26;
-      if (labels > count)
-	labels = count;
-      if (labels < 1)
-	/* We display at least 2.  */
-	labels = 1;
+	  int labels = (space - label_height)
+	    / (label_height + label_height / 10);
 
-      int i;
-      for (i = 1; i <= labels; i ++)
-	display ((i * count / labels) - 1, TRUE);
+	  if (labels > 26)
+	    labels = 26;
+	  if (labels > count)
+	    labels = count;
+	  if (labels < 1)
+	    /* We display at least 2.  */
+	    labels = 1;
+
+	  int i;
+	  for (i = 1; i <= labels; i ++)
+	    display ((i * count / labels) - 1, TRUE);
+	}
     }
 
   st->playlist_alpha_current_height = 
