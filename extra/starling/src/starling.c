@@ -1689,30 +1689,24 @@ playlist_alpha_seek_build (Starling *st)
   /* First, remove any labels.  */
   int label_height = 0;
   int labels = 0;
-  bool once = false;
+  bool first = true;
   void callback (GtkWidget *widget, gpointer ignore)
   {
     g_assert (GTK_IS_LABEL (widget));
 
     labels ++;
 
-    if (label_height > 1)
-      {
-	g_assert (once);
-	gtk_widget_destroy (widget);
-      }
+    if (first)
+      label_height = widget->allocation.height;
 
-    if (once)
-      return;
-    once = true;
-
-    label_height = widget->allocation.height;
     if (label_height > 1)
       gtk_widget_destroy (widget);
+
+    first = false;
   }
   gtk_container_foreach (GTK_CONTAINER (st->playlist_alpha_seek),
 			 callback, NULL);
-  if (label_height == 1 && labels == 1)
+  if (label_height == 1)
     /* The size has not settled yet.  Note: when stable, we always add
        at least two labels and request a minimum height of 2
        pixels.  */
@@ -1770,7 +1764,7 @@ playlist_alpha_seek_build (Starling *st)
 	    (G_OBJECT (l), "size-allocate",
 	     G_CALLBACK (playlist_alpha_seek_build_queue),
 	     st);
-	  return;
+	  return FALSE;
 	}
 
       if (count > 1)
