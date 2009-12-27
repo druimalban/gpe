@@ -1,3 +1,11 @@
+2009-12-27  Neal Walfield  <neal@gnu.org>
+
+	* src/starling.c (PROGRAM_NAME): Define to the program name.
+	(ERROR_DOMAIN): Use it instead of a string.
+	(starling_run): Likewise.
+	(set_title): Likewise.  Also place the program name at the end of
+	the title bar, not the start.
+
 2009-12-23  Neal Walfield  <neal@gnu.org>
 
 	* src/starling.c (playlist_alpha_seek_build): Always return a

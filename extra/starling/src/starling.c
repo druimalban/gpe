@@ -20,7 +20,8 @@
 
 #define _GNU_SOURCE
 
-#define ERROR_DOMAIN() g_quark_from_static_string ("starling")
+#define PROGRAM_NAME "Starling"
+#define ERROR_DOMAIN() g_quark_from_static_string (PROGRAM_NAME)
 
 #include "starling.h"
 
@@ -161,7 +162,7 @@ set_title (Starling *st)
   info.fields = MDB_SOURCE | MDB_ARTIST | MDB_TITLE | MDB_RATING;
   if (! music_db_get_info (st->db, st->loaded_song, &info))
     {
-      title_bar = "Starling";
+      title_bar = PROGRAM_NAME;
       free_title_bar = false;
       goto do_set;
     }
@@ -193,17 +194,19 @@ set_title (Starling *st)
 	title ++;
     }
 
-#define PREFIX "Starling: "
+  char *caption;
   if (artist)
-    title_bar = g_strdup_printf (_("%s %s - %s"),
-				 _(PREFIX),
-				 artist, title);
+    caption = g_strdup_printf (_("%s by %s"), artist, title);
   else
-    title_bar = g_strdup_printf (_("%s %s"), _(PREFIX), title);
+    caption = g_strdup (title);
 
-  gtk_label_set_text (GTK_LABEL (st->title),
-		      title_bar
-		      + sizeof (PREFIX) - 1 /* NULL */ + 1 /* ' ' */);
+  title_bar = g_strdup_printf (_("%s - %s"),
+			       caption, _(PROGRAM_NAME));
+  free_title_bar = true;
+
+  gtk_label_set_text (GTK_LABEL (st->title), caption);
+
+  free (caption);
 
   g_free (info.artist);
   g_free (info.title);
@@ -2797,7 +2800,7 @@ starling_run (void)
 #ifdef IS_HILDON
 #if HILDON_VER > 0
   HildonProgram *program = HILDON_PROGRAM (hildon_program_get_instance());
-  g_set_application_name ("GPE Audio player");
+  g_set_application_name (PROGRAM_NAME);
   st->window = GTK_WIDGET (hildon_window_new());
   hildon_program_add_window (program, HILDON_WINDOW(st->window));
 #else
@@ -2807,11 +2810,11 @@ starling_run (void)
   hildon_app_set_appview (HILDON_APP (st->window),
 			  HILDON_APPVIEW (main_appview));
 
-  hildon_app_set_title (HILDON_APP (st->window), "Starling");
+  hildon_app_set_title (HILDON_APP (st->window), PROGRAM_NAME);
 #endif /* HILDON_VER */
 #else    
   st->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (st->window), "Starling");
+  gtk_window_set_title (GTK_WINDOW (st->window), PROGRAM_NAME);
 #endif /* IS_HILDON */
   g_signal_connect_swapped (G_OBJECT (st->window), "delete-event", 
 			    G_CALLBACK (starling_quit), st);
