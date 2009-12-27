@@ -1,3 +1,14 @@
+2009-12-27  Neal Walfield  <neal@randal>
+
+	* configure.ac: Check for sqlite3 and prefer it if available.
+	Define HAVE_SQLITE_VERSION appropriately.
+	* src/Makefile.am (starling_SOURCES): Add sqlite.h.
+	(starling_catalog_SOURCES): Likewise.
+	* src/sqlite.h: New file.
+	* src/utils.h: Include "sqlite.h", not <sqlite.h>.
+	* src/musicdb.c (busy_handler): Only use the second parameter if
+	HAVE_SQLITE_VERSION is 2.
+
 2009-12-27  Neal Walfield  <neal@gnu.org>
 
 	* configure.ac: Sanitize Hildon and Maemo environment detection.

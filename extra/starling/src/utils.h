@@ -13,7 +13,7 @@
 
 #include <glib/gtypes.h>
 
-#include <sqlite.h>
+#include "sqlite.h"
 
 gboolean has_db_table (sqlite *db, const gchar *name);
 

@@ -1,5 +1,5 @@
 /* musicdb.c - Music DB support.
-   Copyright (C) 2007, 2008 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2007, 2008, 2009 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -424,7 +424,11 @@ struct worker
 static gboolean worker_start (gpointer data);
 
 static int
-busy_handler (void *cookie, const char *table, int retries)
+busy_handler (void *cookie,
+#if HAVE_SQLITE_VERSION == 2
+	      const char *table,
+#endif
+	      int retries)
 {
   if (cookie)
     {

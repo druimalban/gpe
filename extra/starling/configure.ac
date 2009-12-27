@@ -101,6 +101,21 @@ PKG_CHECK_EXISTS([libsoup-2.4],
 			   GUI_MODULES="$GUI_MODULES libsoup-2.2"
 			   ])
 
+
+# Check which version of libsqlite is installed (prefer version 3).
+AC_MSG_CHECKING([which sqlite to use]);
+PKG_CHECK_EXISTS([sqlite3],
+		 [
+		   AC_MSG_RESULT(sqlite3)
+		   AC_DEFINE(HAVE_SQLITE_VERSION, 3, [Version of sqlite])
+		   BASE_MODULES="$BASE_MODULES sqlite3"
+		 ],
+		 [
+		   AC_MSG_RESULT(sqlite2)
+		   AC_DEFINE(HAVE_SQLITE_VERSION, 2, [Version of sqlite])
+		   BASE_MODULES="$BASE_MODULES sqlite >= 2.8"
+		 ])
+
 PKG_CHECK_MODULES(BASE, $BASE_MODULES)
 AC_SUBST(BASE_CFLAGS)
 AC_SUBST(BASE_LIBS)

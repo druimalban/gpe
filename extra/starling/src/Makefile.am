@@ -20,7 +20,8 @@ starling_SOURCES = main.c \
 		config.h \
 		search.y \
 		caption.h caption.c \
-		md5sum.h md5sum.c
+		md5sum.h md5sum.c \
+		sqlite.h
 
 starling_catalog_CFLAGS = $(BASE_CFLAGS)
 starling_catalog_LDADD = $(BASE_LIBS) $(LIBOBJS)
@@ -30,7 +31,8 @@ starling_catalog_SOURCES = starling-catalog.c \
 		musicdb.h musicdb.c \
 		config.h \
 		search.y \
-		caption.h caption.c
+		caption.h caption.c \
+		sqlite.h
 
 BUILT_SOURCES = marshal.h marshal.c search.h search.c
 AM_YFLAGS = -d
