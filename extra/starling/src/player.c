@@ -243,18 +243,16 @@ playbin_ensure (Player *pl)
 {
   if (! pl->playbin)
     {
-      char *element;
-#if defined(MAEMO5)
+      char *element = "playbin";
+#if defined(MAEMO)
+# if HAVE_MAEMO_VERSION >= 500
+      /* On Maemo5, playbin does not work.  */
       element = "playbin2";
-#elif defined(IS_HILDON)
-# if HILDON_VER == 0
-      /* Evil, evil, evil, evil.  playbin is broken on Bora.  */
+# elif HAVE_HILDON_VERSION == 0
+      /* On Bora, playbin is broken and we need the special
+	 playbinmaemo package.  */
       element = "playbinmaemo";
-# else
-      element = "playbin";
 # endif
-#else
-      element = "playbin";
 #endif
       printf ("Using player %s\n", element);
       pl->playbin = gst_element_factory_make (element, "player");

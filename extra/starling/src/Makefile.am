@@ -4,8 +4,8 @@ bin_PROGRAMS = starling starling-catalog
 # and with the system cflags.
 AM_CFLAGS = -Wall $(BASE_CFLAGS)
 
-starling_CFLAGS = $(GUI_CFLAGS) $(HILDON_CFLAGS)
-starling_LDADD = $(GUI_LIBS) $(HILDON_LIBS) $(LIBOBJS)
+starling_CFLAGS = $(GUI_CFLAGS)
+starling_LDADD = $(GUI_LIBS) $(LIBOBJS)
 starling_SOURCES = main.c \
 		starling.h starling.c \
 		musicdb.h musicdb.c \

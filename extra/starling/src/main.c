@@ -32,9 +32,9 @@
 #   include <gpe/init.h>
 #endif
 
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
 /* Hildon includes */
-# if HILDON_VER > 0
+# if HAVE_HILDON_VERSION > 0
 #  include <hildon/hildon-program.h>
 #  include <hildon/hildon-window.h>
 #  include <hildon/hildon-file-chooser-dialog.h>
@@ -42,11 +42,11 @@
 #  include <hildon-widgets/hildon-app.h>
 #  include <hildon-widgets/hildon-appview.h>
 #  include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
-# endif /* HILDON_VER */
+# endif /* HAVE_HILDON_VERSION */
 
 # include <libosso.h>
 # define APPLICATION_DBUS_SERVICE "starling"
-#endif /* IS_HILDON */
+#endif /* HAVE_HILDON */
 
 static Starling *st;
 
@@ -95,7 +95,7 @@ handoff_serialize (Handoff *handoff)
   return NULL;
 }
 
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
 static void
 osso_top_callback (const gchar *arguments, gpointer data)
 {
@@ -138,7 +138,7 @@ main (int argc, char *argv[])
     exit (0);
 
 
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
   osso_context_t *osso_context;
 
   /* Initialize maemo application */

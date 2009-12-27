@@ -1,5 +1,15 @@
 2009-12-27  Neal Walfield  <neal@gnu.org>
 
+	* configure.ac: Sanitize Hildon and Maemo environment detection.
+	* src/Makefile.am (starling_CFLAGS): Don't add $(HILDON_CFLAGS).
+	(starling_LDADD): Don't add $(HILDON_LIBS).
+	* src/main.c: Change use of IS_HILDON to HAVE_HILDON and
+	HILDON_VER to HAVE_HILDON_VERSION.
+	* src/player.c (playbin_ensure): Likewise.
+	* src/starling.c: Likewise.
+
+2009-12-27  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c (PROGRAM_NAME): Define to the program name.
 	(ERROR_DOMAIN): Use it instead of a string.
 	(starling_run): Likewise.

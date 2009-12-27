@@ -49,9 +49,9 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
 /* Hildon includes */
-# if HILDON_VER > 0
+# if HAVE_HILDON_VERSION > 0
 #  include <hildon/hildon-program.h>
 #  include <hildon/hildon-window.h>
 #  include <hildon/hildon-file-chooser-dialog.h>
@@ -59,11 +59,11 @@
 #  include <hildon-widgets/hildon-app.h>
 #  include <hildon-widgets/hildon-appview.h>
 #  include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
-# endif /* HILDON_VER */
+# endif /* HAVE_HILDON_VERSION */
 
 # include <libosso.h>
 # define APPLICATION_DBUS_SERVICE "starling"
-#endif /* IS_HILDON */
+#endif /* HAVE_HILDON */
 
 struct play_list_view_config
 {
@@ -126,7 +126,7 @@ struct _Starling {
   gboolean has_lyrics;
   gint64 current_length;
   gboolean enqueued;
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
 #if MAEMO_VERSION_MAJOR < 5
   GtkCheckMenuItem *fullscreen;
 #endif /* MAEMO_VERSION_MAJOR < 5 */
@@ -213,15 +213,15 @@ set_title (Starling *st)
   g_free (info.source);
 
  do_set:
-#ifdef IS_HILDON
-#if HILDON_VER > 0
+#ifdef HAVE_HILDON
+#if HAVE_HILDON_VERSION > 0
   gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
 #else
   hildon_app_set_title (HILDON_APP (st->window), title_bar);
-#endif /* HILDON_VER */
+#endif /* HAVE_HILDON_VERSION */
 #else
   gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
-#endif /* IS_HILDON */
+#endif /* HAVE_HILDON */
 
   if (free_title_bar)
     g_free (title_bar);
@@ -1140,7 +1140,7 @@ add_cb (GtkWidget *w, Starling *st, GtkFileChooserAction action)
 {
   GtkWidget *fc;
 
-#if IS_HILDON
+#if HAVE_HILDON
     fc = hildon_file_chooser_dialog_new
       (GTK_WINDOW (st->window), action);
 #else
@@ -1306,9 +1306,9 @@ clear_cb (GtkWidget *w, Starling *st)
     }
 }
 
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
 #if MAEMO_VERSION_MAJOR < 5
-#if HILDON_VER > 0
+#if HAVE_HILDON_VERSION > 0
 static void
 toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
 {
@@ -1324,9 +1324,9 @@ toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
   hildon_appview_set_fullscreen (HILDON_APPVIEW (user_data),
 				 gtk_check_menu_item_get_active (menuitem));
 }
-#endif /* HILDON_VER */
+#endif /* HAVE_HILDON_VERSION */
 #endif /* MAEMO_VERSION_MAJOR < 5 */
-#endif /*IS_HILDON*/
+#endif /*HAVE_HILDON*/
 
 static void
 change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
@@ -2196,7 +2196,7 @@ player_state_changed (Player *pl, gpointer uid, int state, Starling *st)
 
   if (st->pending_seek >= 0
       && (state == GST_STATE_PLAYING
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
 	  || state == GST_STATE_PAUSED
 #endif
 	  ))
@@ -2241,7 +2241,7 @@ key_press_event (GtkWidget *widget, GdkEventKey *k, Starling *st)
   /* in hildon there is nothing like control, shift etc buttons */
   switch (k->keyval)
     {
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
     case GDK_F6:
 #if 0
       /* toggle button for going full screen */
@@ -2714,7 +2714,7 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
   return FALSE;
 }
 
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
 static void
 library_tap_and_hold_cb (GtkWidget *widget, gpointer user_data)
 {
@@ -2797,8 +2797,8 @@ starling_run (void)
   GtkCellRenderer *renderer = NULL;
   GtkWidget *scrolled = NULL;
 
-#ifdef IS_HILDON
-#if HILDON_VER > 0
+#ifdef HAVE_HILDON
+#if HAVE_HILDON_VERSION > 0
   HildonProgram *program = HILDON_PROGRAM (hildon_program_get_instance());
   g_set_application_name (PROGRAM_NAME);
   st->window = GTK_WIDGET (hildon_window_new());
@@ -2811,24 +2811,24 @@ starling_run (void)
 			  HILDON_APPVIEW (main_appview));
 
   hildon_app_set_title (HILDON_APP (st->window), PROGRAM_NAME);
-#endif /* HILDON_VER */
+#endif /* HAVE_HILDON_VERSION */
 #else    
   st->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (st->window), PROGRAM_NAME);
-#endif /* IS_HILDON */
+#endif /* HAVE_HILDON */
   g_signal_connect_swapped (G_OBJECT (st->window), "delete-event", 
 			    G_CALLBACK (starling_quit), st);
 
   GtkBox *main_box = GTK_BOX (gtk_vbox_new (FALSE, 0));
-#ifdef IS_HILDON
-#if HILDON_VER > 0
+#ifdef HAVE_HILDON
+#if HAVE_HILDON_VERSION > 0
   gtk_container_add (GTK_CONTAINER (st->window), GTK_WIDGET (main_box));
 #else
   gtk_container_add (GTK_CONTAINER (main_appview), GTK_WIDGET (main_box));
-#endif /* HILDON_VER */
+#endif /* HAVE_HILDON_VERSION */
 #else
   gtk_container_add (GTK_CONTAINER (st->window), GTK_WIDGET (main_box));
-#endif /* IS_HILDON */
+#endif /* HAVE_HILDON */
 
   g_signal_connect (G_OBJECT (st->window), "key_press_event", 
 		    G_CALLBACK (key_press_event), st);
@@ -2836,23 +2836,23 @@ starling_run (void)
 
   /* Menu bar.  */
   GtkMenuShell *menu_main;
-#ifdef IS_HILDON
-#if HILDON_VER > 0
+#ifdef HAVE_HILDON
+#if HAVE_HILDON_VERSION > 0
   menu_main = GTK_MENU_SHELL (gtk_menu_new ());
 #else
   menu_main
     = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
-#endif /* HILDON_VER */
+#endif /* HAVE_HILDON_VERSION */
 #else
   menu_main = GTK_MENU_SHELL (gtk_menu_bar_new ());
   gtk_box_pack_start (main_box, GTK_WIDGET (menu_main), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (menu_main));
-#endif /* IS_HILDON */
+#endif /* HAVE_HILDON */
 
   GtkMenuShell *menu;
   GtkWidget *mitem;
 
-#ifndef IS_HILDON
+#ifndef HAVE_HILDON
   /* File menu.  */
   menu = GTK_MENU_SHELL (gtk_menu_new ());
   mitem = gtk_menu_item_new_with_mnemonic (_("_File"));
@@ -2866,7 +2866,7 @@ starling_run (void)
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (add_file_cb), st);
   gtk_widget_show (mitem);
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
   gtk_menu_shell_append (menu_main, mitem);
 #else
   gtk_menu_shell_append (menu, mitem);
@@ -2877,14 +2877,14 @@ starling_run (void)
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (add_directory_cb), st);
   gtk_widget_show (mitem);
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
   gtk_menu_shell_append (menu_main, mitem);
 #else
   gtk_menu_shell_append (menu, mitem);
 #endif
 
   /* File -> Quit.  */
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
   GtkWidget *quit_item = mitem = gtk_menu_item_new_with_mnemonic (_("Quit"));
 #else
   mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
@@ -2892,7 +2892,7 @@ starling_run (void)
   g_signal_connect_swapped (G_OBJECT (mitem), "activate",
 			    G_CALLBACK (starling_quit), st);
   gtk_widget_show (mitem);
-#ifndef IS_HILDON
+#ifndef HAVE_HILDON
   /* Don't append this to the file menu in hildon but the main menu
      (which we do at the very end).  */
   gtk_menu_shell_append (menu, mitem);
@@ -2935,18 +2935,18 @@ starling_run (void)
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
 #if MAEMO_VERSION_MAJOR < 5
   /* Options -> Full Screen.  */
   mitem = gtk_check_menu_item_new_with_mnemonic (_("_Full Screen"));
   st->fullscreen = GTK_CHECK_MENU_ITEM(mitem);
-#if HILDON_VER > 0
+#if HAVE_HILDON_VERSION > 0
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (toggle_fullscreen), st->window);
 #else
   g_signal_connect (G_OBJECT (mitem), "activate",
 		    G_CALLBACK (toggle_fullscreen), main_appview);
-#endif /* HILDON_VER */
+#endif /* HAVE_HILDON_VERSION */
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 #endif /* MAEMO_VERSION_MAJOR < 5 */
@@ -2965,17 +2965,17 @@ starling_run (void)
   gtk_menu_shell_append (menu, mitem);
   gtk_widget_show (mitem);
 
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
   /* Finally attach close item. */
   mitem = gtk_separator_menu_item_new ();
   gtk_menu_shell_append (menu_main, mitem);
   gtk_widget_show (mitem);
 
   gtk_menu_shell_append (menu_main, quit_item);
-#if HILDON_VER > 0
+#if HAVE_HILDON_VERSION > 0
   hildon_window_set_menu (HILDON_WINDOW(st->window), GTK_MENU(menu_main));
-#endif /* HILDON_VER */
-#endif /* IS_HILDON */
+#endif /* HAVE_HILDON_VERSION */
+#endif /* HAVE_HILDON */
 
 
 
@@ -2987,15 +2987,15 @@ starling_run (void)
   GTK_WIDGET_UNSET_FLAGS (toolbar, GTK_CAN_FOCUS);
   gtk_widget_show (toolbar);
 
-#ifdef IS_HILDON
-#if HILDON_VER == 0
+#ifdef HAVE_HILDON
+#if HAVE_HILDON_VERSION == 0
   hildon_appview_set_toolbar (HILDON_APPVIEW (main_appview),
 			      GTK_TOOLBAR (toolbar));
   gtk_widget_show_all (main_appview);
-#endif /* HILDON_VER */
+#endif /* HAVE_HILDON_VERSION */
 #else
   gtk_box_pack_start (GTK_BOX (main_box), toolbar, FALSE, FALSE, 0);
-#endif /* IS_HILDON */
+#endif /* HAVE_HILDON */
 
   /* Previous button.  */
   GtkToolItem *item;
@@ -3026,8 +3026,8 @@ starling_run (void)
   gtk_container_add (GTK_CONTAINER (item), GTK_WIDGET (hbox));
   gtk_toolbar_insert (GTK_TOOLBAR (toolbar), item, -1);
 
-#ifdef IS_HILDON
-#if HILDON_VER > 0
+#ifdef HAVE_HILDON
+#if HAVE_HILDON_VERSION > 0
   /* Add toolbar to the HildonWindow */
   hildon_window_add_toolbar (HILDON_WINDOW(st->window), GTK_TOOLBAR(toolbar));
 #endif
@@ -3165,7 +3165,7 @@ starling_run (void)
 		    G_CALLBACK (activated_cb), st);
   g_signal_connect (G_OBJECT (st->library_view), "button-press-event",
 		    G_CALLBACK (library_button_press_event), st);
-#ifdef IS_HILDON
+#ifdef HAVE_HILDON
   g_signal_connect (G_OBJECT (st->library_view),
 		    "tap-and-hold", G_CALLBACK (library_tap_and_hold_cb), st);
   gtk_widget_tap_and_hold_setup (st->library_view, NULL, NULL, 0);

@@ -14,10 +14,9 @@ AC_SUBST(starling_localedir)
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL([0.23])
 
-BASE_MODULES="glib-2.0 sqlite >= 2.8 \
-	gstreamer-0.10 gstreamer-plugins-base-0.10"
+BASE_MODULES="glib-2.0 gstreamer-0.10 gstreamer-plugins-base-0.10"
 
-GUI_MODULES="${BASE_MODULES} gtk+-2.0 libhandoff"
+GUI_MODULES="gtk+-2.0 libhandoff"
 
 dnl Optional stuff
 AC_ARG_ENABLE(gpe, [ --enable-gpe   Enable GPE support], [gpe=$enableval], [gpe=no])
@@ -27,42 +26,67 @@ if test "x"$gpe = "xyes"; then
   AC_DEFINE([ENABLE_GPE], [1], [Define to 1 to enable GPE widgets])
 fi
 
-# Whether to build for Hildon.
-AC_CHECK_LIB([osso], [osso_initialize],
-	[AC_MSG_NOTICE([building for Hildon])
-	 AC_DEFINE([IS_HILDON], [1], [Define to 1 to integrate with Hildon])
-	 ENABLE_HILDON=true
-	 PKG_CHECK_MODULES(HILDON, hildon-1,
-		[
-                AC_DEFINE(HILDON_VER, 2, [Version of hildon libraries])
-		GUI_MODULES="$GUI_MODULES hildon-fm-2"
-		],
-                [
-                        AC_DEFINE(HILDON_VER, 0, [Version of hildon libraries])
-                        PKG_CHECK_MODULES(HILDON, hildon-lgpl hildon-libs)
-			GUI_MODULES="$GUI_MODULES hildon-fm"
-                ])
-	 PKG_CHECK_EXISTS(maemo-version,
-		[
-			VERSION=`pkg-config --modversion maemo-version`
-			AC_MSG_NOTICE([Configuring for Maemo $VERSION])
-			CFLAGS="$CFLAGS -DMAEMO_VERSION=\\\"$VERSION\\\""
-			MAEMO_MAJOR=`echo $VERSION | cut -b1 -`
-			CFLAGS="$CFLAGS -DMAEMO_VERSION_MAJOR=$MAEMO_MAJOR"
-		],
-		[
-			AC_MSG_ERROR([maemo-version not found])
-		])
-	 GUI_MODULES="$GUI_MODULES libosso"],
-	[ENABLE_HILDON=false])
-AC_SUBST(ENABLE_HILDON)
-AM_CONDITIONAL(HILDON, test x$ENABLE_HILDON = xtrue)
-AM_CONDITIONAL(MAEMO5, test x$MAEMO_MAJOR = x5)
-AC_SUBST(HILDON_CFLAGS)
-AC_SUBST(HILDON_LIBS)
+PKG_PROG_PKG_CONFIG
+
+# Whether to build for a Hildon-based desktop.
+AC_MSG_CHECKING([for a Hildon Desktop environment])
+PKG_CHECK_EXISTS(libosso,
+	[
+		GUI_MODULES="$GUI_MODULES libosso"
+
+		HAVE_HILDON_VERSION=0
+		PKG_CHECK_EXISTS(hildon-1,
+			[
+				HAVE_HILDON_VERSION=2
+				GUI_MODULES="$GUI_MODULES hildon-1 hildon-fm-2"
+			],
+			[
+				GUI_MODULES="$GUI_MODULES hildon-fm hildon-lgpl hildon-libs"
+			])
+		AC_MSG_RESULT([yes, version $HAVE_HILDON_VERSION])
+		AC_DEFINE_UNQUOTED(HAVE_HILDON_VERSION, $HAVE_HILDON_VERSION,
+			[The version of hildon we are building for.])
+	],
+	[
+		AC_MSG_RESULT([no])
+	])
+HAVE_HILDON=$(if test x$HAVE_HILDON_VERSION = x; then echo 0; else echo 1; fi)
+AC_DEFINE_UNQUOTED(HAVE_HILDON,
+	[$HAVE_HILDON],
+	[Whether we are building for Hildon.])
+AM_CONDITIONAL([HILDON], test x$HAVE_HILDON = x1)
+
+# Check whether we are running on Maemo and which version.
+AC_MSG_CHECKING([for a Maemo environment])
+PKG_CHECK_EXISTS(maemo-version,
+	[
+		HAVE_MAEMO_VERSION_RAW=$(pkg-config --modversion maemo-version)
+		AC_MSG_RESULT([yes, version $HAVE_MAEMO_VERSION_RAW])
+	        # Extract the version as four digit number, AABB where
+	        # AA is the major version number and BB is the minor
+	        # version number.
+		HAVE_MAEMO_VERSION=$(echo "$HAVE_MAEMO_VERSION_RAW" \
+		   | awk 'BEGIN { FS="." }
+                          /[0-9]+([.][0-9]+)?/
+                            { printf ("%02d%02d", $1, $2); }
+                         ')
+		HAVE_MAEMO_VERSION_MAJOR=$(expr $HAVE_MAEMO_VERSION / 100)
+                AC_DEFINE_UNQUOTED([HAVE_MAEMO_VERSION], $HAVE_MAEMO_VERSION,
+                          [Version of Maemo (format: XXYY, XX: Major, Y: Minor).])
+	],
+	[
+		AC_MSG_RESULT([no, configuring for a GTK-based environment])
+	])
+HAVE_MAEMO=$(if test x$HAVE_MAEMO_VERSION = x; then echo 0; else echo 1; fi)
+AC_DEFINE_UNQUOTED(HAVE_MAEMO,
+	[$HAVE_MAEMO],
+	[Whether we are building for Maemo.])
+AM_CONDITIONAL([MAEMO], [test 0$HAVE_MAEMO_VERSION -gt 0])
+AM_CONDITIONAL([MAEMO5], [test 0$HAVE_MAEMO_VERSION -ge 500])
+
 
 # Check which version of libsoup is installed
-AC_MSG_CHECKING([which libsoup version to use]);
+AC_MSG_CHECKING([which libsoup version to use])
 PKG_CHECK_EXISTS([libsoup-2.4],
 			   [
 			   AC_MSG_RESULT(2.4)
@@ -81,6 +105,7 @@ PKG_CHECK_MODULES(BASE, $BASE_MODULES)
 AC_SUBST(BASE_CFLAGS)
 AC_SUBST(BASE_LIBS)
 
+GUI_MODULES="$GUI_MODULES $BASE_MODULES"
 PKG_CHECK_MODULES(GUI, $GUI_MODULES)
 AC_SUBST(GUI_CFLAGS)
 AC_SUBST(GUI_LIBS)
