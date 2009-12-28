@@ -31,25 +31,33 @@ PKG_PROG_PKG_CONFIG
 # Whether to build for a Hildon-based desktop.
 AC_MSG_CHECKING([for a Hildon Desktop environment])
 PKG_CHECK_EXISTS(libosso,
-	[
-		GUI_MODULES="$GUI_MODULES libosso"
-
-		HAVE_HILDON_VERSION=0
-		PKG_CHECK_EXISTS(hildon-1,
-			[
-				HAVE_HILDON_VERSION=2
-				GUI_MODULES="$GUI_MODULES hildon-1 hildon-fm-2"
-			],
-			[
-				GUI_MODULES="$GUI_MODULES hildon-fm hildon-lgpl hildon-libs"
-			])
-		AC_MSG_RESULT([yes, version $HAVE_HILDON_VERSION])
-		AC_DEFINE_UNQUOTED(HAVE_HILDON_VERSION, $HAVE_HILDON_VERSION,
-			[The version of hildon we are building for.])
-	],
-	[
-		AC_MSG_RESULT([no])
-	])
+  [
+    GUI_MODULES="$GUI_MODULES libosso"
+  
+    HAVE_HILDON_VERSION=0
+    PKG_CHECK_EXISTS(hildon-1,
+      [
+        HAVE_HILDON_VERSION_RAW=$(pkg-config --modversion hildon-1)
+        # Extract the version as four digit number, AABB where AA is the
+        # major version number and BB is the minor version number.
+        HAVE_HILDON_VERSION=$(echo "$HAVE_HILDON_VERSION_RAW" \
+          | awk 'BEGIN { FS="." }
+                 /[0-9]+([.][0-9]+)?([.][0-9]+)?/
+                   { printf ("%d%02d", $1, $2); }
+                ')
+        GUI_MODULES="$GUI_MODULES hildon-1 hildon-fm-2"
+      ],
+      [
+        HAVE_HILDON_VERSION=0
+        GUI_MODULES="$GUI_MODULES hildon-fm hildon-lgpl hildon-libs"
+      ])
+      AC_MSG_RESULT([yes, version $HAVE_HILDON_VERSION])
+      AC_DEFINE_UNQUOTED([HAVE_HILDON_VERSION], $HAVE_HILDON_VERSION,
+        [Version of Hildon (format: XXYY, XX: Major, Y: Minor).])
+  ],
+  [
+    AC_MSG_RESULT([no])
+  ])
 HAVE_HILDON=$(if test x$HAVE_HILDON_VERSION = x; then echo 0; else echo 1; fi)
 AC_DEFINE_UNQUOTED(HAVE_HILDON,
 	[$HAVE_HILDON],
@@ -67,10 +75,9 @@ PKG_CHECK_EXISTS(maemo-version,
 	        # version number.
 		HAVE_MAEMO_VERSION=$(echo "$HAVE_MAEMO_VERSION_RAW" \
 		   | awk 'BEGIN { FS="." }
-                          /[0-9]+([.][0-9]+)?/
-                            { printf ("%02d%02d", $1, $2); }
+		          /[0-9]+([.][0-9]+)?([.][0-9]+)?/
+                            { printf ("%d%02d", $1, $2); }
                          ')
-		HAVE_MAEMO_VERSION_MAJOR=$(expr $HAVE_MAEMO_VERSION / 100)
                 AC_DEFINE_UNQUOTED([HAVE_MAEMO_VERSION], $HAVE_MAEMO_VERSION,
                           [Version of Maemo (format: XXYY, XX: Major, Y: Minor).])
 	],

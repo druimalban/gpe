@@ -1,5 +1,5 @@
 /* player.c - Player support.
-   Copyright (C) 2007, 2008 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2007, 2008, 2009 Neal H. Walfield <neal@walfield.org>
    Copyright (C) 2006 Alberto García Hierro <skyhusker@handhelds.org>
 
    This file is part of GPE.
@@ -244,15 +244,13 @@ playbin_ensure (Player *pl)
   if (! pl->playbin)
     {
       char *element = "playbin";
-#if defined(MAEMO)
-# if HAVE_MAEMO_VERSION >= 500
+#if HAVE_MAEMO && HAVE_MAEMO_VERSION >= 500
       /* On Maemo5, playbin does not work.  */
       element = "playbin2";
-# elif HAVE_HILDON_VERSION == 0
+#elif HAVE_HILDON && HAVE_HILDON_VERSION == 0
       /* On Bora, playbin is broken and we need the special
 	 playbinmaemo package.  */
       element = "playbinmaemo";
-# endif
 #endif
       printf ("Using player %s\n", element);
       pl->playbin = gst_element_factory_make (element, "player");

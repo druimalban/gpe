@@ -1,7 +1,7 @@
 /*
    Copyright (C) 2006 Alberto García Hierro
         <skyhusker@handhelds.org>
-   Copyright (C) 2007, 2008 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2007, 2008, 2009 Neal H. Walfield <neal@walfield.org>
   
    This file is part of GPE.
 
@@ -32,7 +32,7 @@
 #   include <gpe/init.h>
 #endif
 
-#ifdef HAVE_HILDON
+#if HAVE_HILDON
 /* Hildon includes */
 # if HAVE_HILDON_VERSION > 0
 #  include <hildon/hildon-program.h>
@@ -138,7 +138,7 @@ main (int argc, char *argv[])
     exit (0);
 
 
-#ifdef HAVE_HILDON
+#if HAVE_HILDON
   osso_context_t *osso_context;
 
   /* Initialize maemo application */

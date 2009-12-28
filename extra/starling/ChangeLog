@@ -1,4 +1,15 @@
-2009-12-27  Neal Walfield  <neal@randal>
+2009-12-28  Neal Walfield  <neal@gnu.org>
+
+	* configure.ac: Use a major/minor scheme for HAVE_HILDON_VERSION.
+	Ignore any micro version when grokking HAVE_HILDON_VERSION and
+	HAVE_MAEMO_VERSION.  Don't include a leading zero.
+	* src/main.c: Don't check if HAVE_HILDON is defined but if it is
+	1.
+	* src/starling.c: Likewise.
+	* src/player.c (playbin_ensure): Correctly use preprocessor
+	version defines.
+
+2009-12-27  Neal Walfield  <neal@gnu.org>
 
 	* configure.ac: Check for sqlite3 and prefer it if available.
 	Define HAVE_SQLITE_VERSION appropriately.
