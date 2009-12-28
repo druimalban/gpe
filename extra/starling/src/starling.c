@@ -183,9 +183,12 @@ set_title (Starling *st)
 	 FALSE);
     }
 
-  g_signal_handler_block (st->rating, st->rating_change_signal_id);
-  gtk_combo_box_set_active (st->rating, info.rating);
-  g_signal_handler_unblock (st->rating, st->rating_change_signal_id);
+  if (st->rating)
+    {
+      g_signal_handler_block (st->rating, st->rating_change_signal_id);
+      gtk_combo_box_set_active (st->rating, info.rating);
+      g_signal_handler_unblock (st->rating, st->rating_change_signal_id);
+    }
 
   if (! title)
     {
@@ -206,7 +209,8 @@ set_title (Starling *st)
 			       caption, _(PROGRAM_NAME));
   free_title_bar = true;
 
-  gtk_label_set_text (GTK_LABEL (st->title), caption);
+  if (st->title)
+    gtk_label_set_text (GTK_LABEL (st->title), caption);
 
   free (caption);
 
@@ -2910,7 +2914,7 @@ starling_run (void)
 #ifdef HAVE_HILDON_APP_MENU
   /* Create a hildon application menu.  */
   menu = hildon_app_menu_new ();
-  hildon_window_set_app_menu (HILDON_WINDOW (st->window), menu);
+  hildon_window_set_app_menu (HILDON_WINDOW (st->window), HILDON_APP_MENU (menu));
 #elif HAVE_HILDON && HAVE_HILDON_VERSION == 0
   /* Hildon version 0 has a built in menu.  */
   menu = hildon_appview_get_menu (HILDON_APPVIEW (main_appview));
@@ -3060,6 +3064,7 @@ starling_run (void)
 		      FALSE, FALSE, 0);
 #endif
     
+#if ! (HAVE_MAEMO && HAVE_MAEMO_VERSION >= 500)
   /* The currently playing song.  */
   /* Stuff the title label in an hbox to prevent it from being
      centered.  */
@@ -3095,7 +3100,7 @@ starling_run (void)
   g_signal_connect_swapped (G_OBJECT (jump_to), "clicked",
 			    G_CALLBACK (jump_to_current), st);
   gtk_box_pack_start (hbox, jump_to, FALSE, FALSE, 0);
-
+#endif
 
   /* The notebook containing the tabs.  */
   st->notebook = gtk_notebook_new ();
