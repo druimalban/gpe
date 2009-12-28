@@ -144,6 +144,7 @@ AC_CHECK_FUNCS([g_compute_checksum_for_data], [],
                [AC_CHECK_FUNCS([md5_buffer], [], [AC_LIBOBJ([md5])])])
 AC_REPLACE_FUNCS([gst_bus_timed_pop_filtered])
 AC_REPLACE_FUNCS([gst_bus_timed_pop])
+AC_CHECK_FUNC([hildon_app_menu_append], [AC_DEFINE(HAVE_HILDON_APP_MENU, 1)])
 CFLAGS="$old_CFLAGS"
 CPPFLAGS="$old_CPPFLAGS"
 LDFLAGS="$old_LDFLAGS"

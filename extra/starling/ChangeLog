@@ -1,5 +1,30 @@
 2009-12-28  Neal Walfield  <neal@gnu.org>
 
+	* configure.ac: Check for hildon_app_menu_append.  If it is
+	present, define HAVE_HILDON_APP_MENU.
+	* src/starling.c (struct _Starling): Change download_lyrics to a
+	GtkWidget *.
+	(set_title): Handle the case where ST->DOWNLOAD_LYRICS is a
+	gtk_toggle_button.
+	(starling_random): Handle the case where ST->RANDOM is a
+	gtk_toggle_button.
+	(starling_random_set): Likewise.
+	(deserialize): Handle the case where ST->DOWNLOAD_LYRICS and
+	ST->RANDOM are gtk_toggle_button's.
+	(add_file_cb): Reverse order parameters.
+	(add_directory_cb): Likewise.
+	(set_random_cb): Likewise.
+	(remove_cb): Likewise.
+	(clear_cb): Likewise.
+	(change_caption_format): Likewise.
+	(toggle_fullscreen): Likewise.  Handle the case where MENUITEM is
+	a gtk_toggle_button.
+	(menu_item_add): New function, which abstract menu item creation.
+	(menu_separator): New function.
+	(starling_run): Use them to create the menus.
+
+2009-12-28  Neal Walfield  <neal@gnu.org>
+
 	* configure.ac: Use a major/minor scheme for HAVE_HILDON_VERSION.
 	Ignore any micro version when grokking HAVE_HILDON_VERSION and
 	HAVE_MAEMO_VERSION.  Don't include a leading zero.

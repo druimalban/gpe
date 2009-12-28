@@ -130,7 +130,7 @@ struct _Starling {
 # define HAVE_TOGGLE_FULLSCREEN
   GtkWidget *fullscreen;
 #endif
-  GtkCheckMenuItem *download_lyrics;
+  GtkWidget *download_lyrics;
 
   Player *player;
   MusicDB *db;
@@ -175,9 +175,12 @@ set_title (Starling *st)
   if (!st->has_lyrics && artist && title)
     {
       st->has_lyrics = TRUE;
-      lyrics_display (artist, title, GTK_TEXT_VIEW (st->textview),
-		      gtk_check_menu_item_get_active (st->download_lyrics),
-		      FALSE);
+      lyrics_display
+	(artist, title, GTK_TEXT_VIEW (st->textview),
+	 GTK_IS_CHECK_MENU_ITEM (st->download_lyrics)
+	 ? gtk_check_menu_item_get_active ((void *) st->download_lyrics)
+	 : gtk_toggle_button_get_active ((void *) st->download_lyrics),
+	 FALSE);
     }
 
   g_signal_handler_block (st->rating, st->rating_change_signal_id);
@@ -236,7 +239,13 @@ meta_data_changed (Starling *st, gint uid, MusicDB *db)
 bool
 starling_random (Starling *st)
 {
-  return gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (st->random));
+  if (GTK_IS_CHECK_MENU_ITEM (st->random))
+    return gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (st->random));
+  else
+    {
+      g_assert (GTK_IS_TOGGLE_BUTTON (st->random));
+      return gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (st->random));
+    }
 }
 
 void
@@ -245,7 +254,13 @@ starling_random_set (Starling *st, bool value)
   if (value == starling_random (st))
     return;
 
-  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (st->random), value);
+  if (GTK_IS_CHECK_MENU_ITEM (st->random))
+    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (st->random), value);
+  else
+    {
+      g_assert (GTK_IS_TOGGLE_BUTTON (st->random));
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (st->random), value);
+    }
 }
 
 static gboolean
@@ -742,9 +757,12 @@ deserialize (Starling *st)
   bh->page = g_key_file_get_integer (keyfile, GROUP, KEY_CURRENT_PAGE, NULL);
 
   /* Lyrics download.  */
-  gtk_check_menu_item_set_active
-    (st->download_lyrics,
-     g_key_file_get_boolean (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, NULL));
+  bool b = g_key_file_get_boolean (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, NULL);
+  if (GTK_IS_CHECK_MENU_ITEM (st->download_lyrics))
+    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (st->download_lyrics),
+				    b);
+  else
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (st->download_lyrics), b);
 
   /* Caption format.  */
   value = g_key_file_get_string (keyfile, GROUP, KEY_CAPTION_FORMAT, NULL);
@@ -860,7 +878,7 @@ serialize (Starling *st)
 
   /* The current play list.  */
   char *value = gtk_combo_box_get_active_text (st->playlist);
-  g_key_file_set_string (keyfile, GROUP, KEY_CURRENT_PLAYLIST, value);
+  g_key_file_set_string (keyfile, GROUP, KEY_CURRENT_PLAYLIST, value ?: "");
   g_free (value);
 
   /* Search text.  */
@@ -905,9 +923,11 @@ serialize (Starling *st)
   g_key_file_set_integer (keyfile, GROUP, KEY_CURRENT_PAGE, page);
 
   /* Lyrics download.  */
-  g_key_file_set_boolean (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, 
-			  gtk_check_menu_item_get_active
-			  (st->download_lyrics));
+  g_key_file_set_boolean
+    (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, 
+     GTK_IS_CHECK_MENU_ITEM (st->download_lyrics)
+     ? gtk_check_menu_item_get_active ((void *) st->download_lyrics)
+     : gtk_toggle_button_get_active ((void *) st->download_lyrics));
 
 
   config_file_save (keyfile);
@@ -1190,13 +1210,13 @@ add_cb (GtkWidget *w, Starling *st, GtkFileChooserAction action)
 }
 
 static void
-add_file_cb (GtkWidget *w, Starling *st)
+add_file_cb (Starling *st, GtkWidget *w)
 {
   add_cb (w, st, GTK_FILE_CHOOSER_ACTION_OPEN);
 }
 
 static void
-add_directory_cb (GtkWidget *w, Starling *st)
+add_directory_cb (Starling *st, GtkWidget *w)
 {
   add_cb (w, st, GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER);
 }
@@ -1216,13 +1236,13 @@ starling_quit (Starling *st)
 }
 
 static void
-set_random_cb (GtkWidget *w, Starling *st)
+set_random_cb (Starling *st, GtkWidget *w)
 {
   serialize (st);
 }
 
 static void
-remove_cb (GtkWidget *w, Starling *st)
+remove_cb (Starling *st, GtkWidget *w)
 {
   /* We need to remove them in reverse numerical order.  Consider: 1
      and 3 are selected.  We remove the track at index 1 and then 3.
@@ -1274,7 +1294,7 @@ remove_cb (GtkWidget *w, Starling *st)
 }
 
 static void
-clear_cb (GtkWidget *w, Starling *st)
+clear_cb (Starling *st, GtkWidget *w)
 {
   switch (gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook)))
     {
@@ -1305,30 +1325,26 @@ clear_cb (GtkWidget *w, Starling *st)
     }
 }
 
-#if HAVE_HILDON
-#if MAEMO_VERSION_MAJOR < 5
-#if HAVE_HILDON_VERSION > 0
+#ifdef HAVE_TOGGLE_FULLSCREEN
 static void
-toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
+toggle_fullscreen (gpointer user_data, GtkWidget *menuitem)
 {
-  if (gtk_check_menu_item_get_active (menuitem))
+# if HAVE_HILDON_VERSION == 0
+  hildon_appview_set_fullscreen (HILDON_APPVIEW (user_data),
+				 gtk_check_menu_item_get_active (menuitem));
+# else
+  if (GTK_IS_CHECK_MENU_ITEM (menuitem)
+      ? gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem))
+      : gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (menuitem)))
     gtk_window_fullscreen(GTK_WINDOW(user_data));
   else
     gtk_window_unfullscreen(GTK_WINDOW(user_data));
+# endif
 }
-#else
-static void
-toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
-{
-  hildon_appview_set_fullscreen (HILDON_APPVIEW (user_data),
-				 gtk_check_menu_item_get_active (menuitem));
-}
-#endif /* HAVE_HILDON_VERSION */
-#endif /* MAEMO_VERSION_MAJOR < 5 */
-#endif /*HAVE_HILDON*/
+#endif
 
 static void
-change_caption_format (GtkMenuItem *menuitem, gpointer user_data)
+change_caption_format (gpointer user_data, GtkMenuItem *menuitem)
 {
   Starling *st = user_data;
 
@@ -2828,147 +2844,140 @@ starling_run (void)
   g_signal_connect (G_OBJECT (st->window), "key_press_event", 
 		    G_CALLBACK (key_press_event), st);
 
+  GtkWidget *menu;
+  GtkWidget *menu_item_add (bool check_menu_item,
+			    const char *text, const char *stock, GCallback cb,
+			    gpointer user_data)
+  {
+    g_assert (text || stock);
 
+    GtkWidget *item;
+    char *signal;
+    void (*append) (void *menu, void *item);
+
+    /* A hildon app menu consists of buttons.  */
+#ifdef HAVE_HILDON_APP_MENU
+    if (check_menu_item)
+      item = gtk_toggle_button_new_with_mnemonic (text);
+    else
+      item = gtk_button_new_with_mnemonic (text);
+    signal = "clicked";
+    append = (void *) hildon_app_menu_append;
+#else
+    if (check_menu_item)
+      {
+	item = gtk_check_menu_item_new_with_mnemonic (text);
+	signal = "toggled";
+      }
+    else
+      {
+	if (stock && !HAVE_HILDON)
+	  item = gtk_image_menu_item_new_from_stock (stock, NULL);
+	else
+	  item = gtk_menu_item_new_with_mnemonic (text);
+	signal = "activate";
+      }
+    append = (void *) gtk_menu_shell_append;
+#endif
+
+    if (cb)
+      g_signal_connect_swapped (G_OBJECT (item), signal,
+				(GCallback) cb, user_data);
+    gtk_widget_show (item);
+    append (menu, item);
+
+    return item;
+  }
+
+  void menu_separator (void)
+  {
+#ifndef HAVE_HILDON_APP_MENU
+    GtkWidget *mitem = gtk_separator_menu_item_new ();
+    gtk_menu_shell_append (GTK_MENU_SHELL (menu), mitem);
+    gtk_widget_show (mitem);
+#endif
+  }
+
+#if !(defined (HAVE_HILDON_APP_MENU) || HAVE_HILDON)
+# define MENU_HIERARCHY
   /* Menu bar.  */
-  GtkMenuShell *menu_main;
-#if HAVE_HILDON
-#if HAVE_HILDON_VERSION > 0
-  menu_main = GTK_MENU_SHELL (gtk_menu_new ());
-#else
-  menu_main
-    = GTK_MENU_SHELL (hildon_appview_get_menu (HILDON_APPVIEW (main_appview)));
-#endif /* HAVE_HILDON_VERSION */
-#else
-  menu_main = GTK_MENU_SHELL (gtk_menu_bar_new ());
-  gtk_box_pack_start (main_box, GTK_WIDGET (menu_main), FALSE, FALSE, 0);
-  gtk_widget_show (GTK_WIDGET (menu_main));
-#endif /* HAVE_HILDON */
+  GtkWidget *menu_bar = gtk_menu_bar_new ();
+  gtk_box_pack_start (main_box, menu_bar, FALSE, FALSE, 0);
+  gtk_widget_show (GTK_WIDGET (menu_bar));
+#endif
 
-  GtkMenuShell *menu;
+  /* Get the top-level menu.  */
+#ifdef HAVE_HILDON_APP_MENU
+  /* Create a hildon application menu.  */
+  menu = hildon_app_menu_new ();
+  hildon_window_set_app_menu (HILDON_WINDOW (st->window), menu);
+#elif HAVE_HILDON && HAVE_HILDON_VERSION == 0
+  /* Hildon version 0 has a built in menu.  */
+  menu = hildon_appview_get_menu (HILDON_APPVIEW (main_appview));
+#elif HAVE_HILDON && HAVE_HILDON_VERSION > 0
+  /* Hildon version 2 requires a GtkMenu.  */
+  menu = gtk_menu_new ();
+  hildon_window_set_menu (HILDON_WINDOW(st->window), GTK_MENU (menu));
+#else
+  menu = gtk_menu_new ();
+#endif
+
   GtkWidget *mitem;
 
-#if !HAVE_HILDON
+#ifdef MENU_HIERARCHY
   /* File menu.  */
-  menu = GTK_MENU_SHELL (gtk_menu_new ());
   mitem = gtk_menu_item_new_with_mnemonic (_("_File"));
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
-  gtk_menu_shell_append (menu_main, GTK_WIDGET (mitem));
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), GTK_WIDGET (mitem));
   gtk_widget_show (mitem);
 #endif
     
-  /* File -> Open.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("Add _File"));
-  g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (add_file_cb), st);
-  gtk_widget_show (mitem);
-#if HAVE_HILDON
-  gtk_menu_shell_append (menu_main, mitem);
-#else
-  gtk_menu_shell_append (menu, mitem);
+#if 0
+  /* XXX: Disable adding individual files.  */
+  menu_item_add (false, _("Add _File"), NULL, G_CALLBACK (add_file_cb), st);
+#endif
+  menu_item_add (false, _("Add _Directory"), NULL,
+		 G_CALLBACK (add_directory_cb), st);
+#ifdef MENU_HIERARCHY
+  menu_item_add (false, _("_Quit"), GTK_STOCK_QUIT,
+		 G_CALLBACK (starling_quit), st);
 #endif
 
-  /* File -> Open directory.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("Add _Directory"));
-  g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (add_directory_cb), st);
-  gtk_widget_show (mitem);
-#if HAVE_HILDON
-  gtk_menu_shell_append (menu_main, mitem);
-#else
-  gtk_menu_shell_append (menu, mitem);
-#endif
-
-  /* File -> Quit.  */
-#if HAVE_HILDON
-  GtkWidget *quit_item = mitem = gtk_menu_item_new_with_mnemonic (_("Quit"));
-#else
-  mitem = gtk_image_menu_item_new_from_stock (GTK_STOCK_QUIT, NULL);
-#endif
-  g_signal_connect_swapped (G_OBJECT (mitem), "activate",
-			    G_CALLBACK (starling_quit), st);
-  gtk_widget_show (mitem);
-#if !HAVE_HILDON
-  /* Don't append this to the file menu in hildon but the main menu
-     (which we do at the very end).  */
-  gtk_menu_shell_append (menu, mitem);
-#endif
-
-
+#ifdef MENU_HIERARCHY
   /* Options menu.  */
-  menu = GTK_MENU_SHELL (gtk_menu_new ());
+  menu = gtk_menu_new ();
   mitem = gtk_menu_item_new_with_mnemonic (_("_Options"));
   gtk_menu_item_set_submenu (GTK_MENU_ITEM (mitem), GTK_WIDGET (menu));
-  gtk_menu_shell_append (menu_main, GTK_WIDGET (mitem));
-  gtk_widget_show (mitem);
-    
-  /* Options -> Random.  */
-  st->random = gtk_check_menu_item_new_with_mnemonic (_("_Random"));
-  g_signal_connect (G_OBJECT (st->random), "toggled",
-		    G_CALLBACK (set_random_cb), st);
-  gtk_widget_show (st->random);
-  gtk_menu_shell_append (menu, st->random);
-
-  mitem = gtk_separator_menu_item_new ();
-  gtk_menu_shell_append (menu, mitem);
-  gtk_widget_show (mitem);
-
-  /* Options -> Remove selected.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("Remove Selecte_d"));
-  g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (remove_cb), st);
-  gtk_widget_show (mitem);
-  gtk_menu_shell_append (menu, mitem);
-
-  /* Options -> Clear list.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("_Clear list"));
-  g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (clear_cb), st);
-  gtk_widget_show (mitem);
-  gtk_menu_shell_append (menu, mitem);
-
-  mitem = gtk_separator_menu_item_new ();
-  gtk_menu_shell_append (menu, mitem);
-  gtk_widget_show (mitem);
-
-#ifdef HAVE_TOGGLE_FULLSCREEN
-  /* Options -> Full Screen.  */
-  mitem = gtk_check_menu_item_new_with_mnemonic (_("_Full Screen"));
-  st->fullscreen = GTK_CHECK_MENU_ITEM(mitem);
-#if HAVE_HILDON_VERSION > 0
-  g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (toggle_fullscreen), st->window);
-#else
-  g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (toggle_fullscreen), main_appview);
-#endif /* HAVE_HILDON_VERSION */
-  gtk_menu_shell_append (menu, mitem);
+  gtk_menu_shell_append (GTK_MENU_SHELL (menu_bar), GTK_WIDGET (mitem));
   gtk_widget_show (mitem);
 #endif
 
-  /* Options -> Caption Format.  */
-  mitem = gtk_menu_item_new_with_mnemonic (_("_Caption Format"));
-  g_signal_connect (G_OBJECT (mitem), "activate",
-		    G_CALLBACK (change_caption_format), st);
-  gtk_menu_shell_append (menu, mitem);
-  gtk_widget_show (mitem);
+#ifdef HAVE_TOGGLE_FULLSCREEN
+  st->fullscreen = menu_item_add (true, _("_Full Screen"), NULL,
+				  G_CALLBACK (toggle_fullscreen),
+# if HAVE_HILDON_VERSION == 0
+				  main_appview
+# else
+				  st->window
+# endif
+				  );
+#endif
+    
+  st->random = menu_item_add (true, _("_Random"), NULL,
+			      G_CALLBACK (set_random_cb), st);
+  menu_separator ();
+  menu_item_add (false, _("Remove Selecte_d"), NULL,
+		 G_CALLBACK (remove_cb), st);
+  menu_item_add (false, _("_Clear list"), NULL, G_CALLBACK (clear_cb), st);
+  menu_separator ();
 
-  /* Options -> Download Lyrics.  */
-  mitem = gtk_check_menu_item_new_with_mnemonic (_("Download _Lyrics"));
-  st->download_lyrics = GTK_CHECK_MENU_ITEM(mitem);
-  gtk_menu_shell_append (menu, mitem);
-  gtk_widget_show (mitem);
 
-#if HAVE_HILDON
-  /* Finally attach close item. */
-  mitem = gtk_separator_menu_item_new ();
-  gtk_menu_shell_append (menu_main, mitem);
-  gtk_widget_show (mitem);
+  menu_item_add (false, _("_Caption Format"), NULL,
+		 G_CALLBACK (change_caption_format), st);
+  /* check_menu.  */
+  st->download_lyrics
+    = menu_item_add (true, _("Download _Lyrics"), NULL, NULL, NULL);
 
-  gtk_menu_shell_append (menu_main, quit_item);
-#if HAVE_HILDON_VERSION > 0
-  hildon_window_set_menu (HILDON_WINDOW(st->window), GTK_MENU(menu_main));
-#endif /* HAVE_HILDON_VERSION */
-#endif /* HAVE_HILDON */
 
 
 
