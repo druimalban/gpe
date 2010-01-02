@@ -1,5 +1,5 @@
 /* starling.c - Starling.
-   Copyright (C) 2007, 2008, 2009 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2007, 2008, 2009, 2010 Neal H. Walfield <neal@walfield.org>
    Copyright (C) 2006 Alberto García Hierro <skyhusker@handhelds.org>
 
    This file is part of GPE.
@@ -31,6 +31,7 @@
 #include "lyrics.h"
 #include "utils.h"
 #include "playlist.h"
+#include "playlists.h"
 #include "player.h"
 #include "search.h"
 #include "caption.h"
@@ -91,6 +92,7 @@ struct _Starling {
 
   GtkWidget *notebook;
   GtkWidget *library_tab;
+  guint library_tab_update_source;
   GtkWidget *queue_tab;
   GtkWidget *playlist_tab;
 
@@ -103,7 +105,6 @@ struct _Starling {
   GtkBox *playlist_alpha_seek;
   int playlist_alpha_current_height;
   int playlist_alpha_seek_timer_source;
-  int playlist_count;
   int playlist_changed_signal;
   GtkToggleButton *search_enabled;
   GtkWidget *search_entry;
@@ -150,6 +151,10 @@ struct _Starling {
   /* Hash mapping play lists to their position.  */
   GHashTable *playlists_conf;
 };
+
+/* Forward declarations.  */
+static void playlist_alpha_seek_build_queue (Starling *st);
+static void update_library_count (Starling *st);
 
 static void
 set_title (Starling *st)
@@ -479,8 +484,7 @@ struct deserialize_bottom_half
   int loaded_song;
 };
 
-static void play_list_combo_refresh (Starling *st, char *active,
-				     bool save_old_config);
+static void play_list_combo_changed (Starling *st, gpointer do_save);
 
 static int
 deserialize_bottom_half (gpointer data)
@@ -491,9 +495,22 @@ deserialize_bottom_half (gpointer data)
 
   gtk_notebook_set_current_page (GTK_NOTEBOOK (st->notebook), bh->page);
 
-  play_list_combo_refresh (st, bh->playlist, false);
-  g_free (bh->playlist);
 
+  /* Set the correct play list.  */
+  int i = play_lists_index_of (PLAY_LISTS (gtk_combo_box_get_model
+					   (st->playlist)),
+			       bh->playlist);
+  g_free (bh->playlist);
+  if (i == -1)
+    /* It doesn't seem to exist.  Select the library instead.  */
+    i = 0;
+
+  g_signal_handler_block (st->playlist, st->playlist_changed_signal);
+  gtk_combo_box_set_active (st->playlist, i);
+  g_signal_handler_unblock (st->playlist, st->playlist_changed_signal);
+  if (i != 0)
+    play_list_combo_changed (st, 0);
+  
   gtk_toggle_button_set_active (st->search_enabled, bh->search_enabled);
   gtk_entry_set_text (GTK_ENTRY (st->search_entry), bh->search_terms);
   g_free (bh->search_terms);
@@ -881,7 +898,11 @@ serialize (Starling *st)
     g_key_file_remove_key (keyfile, GROUP, KEY_PLAYLISTS_CONFIG, NULL);
 
   /* The current play list.  */
-  char *value = gtk_combo_box_get_active_text (st->playlist);
+  char *value = NULL;
+  GtkTreeIter iter;
+  if (gtk_combo_box_get_active_iter (st->playlist, &iter))
+    gtk_tree_model_get (gtk_combo_box_get_model (st->playlist), &iter,
+			PLS_COL_NAME, &value, -1);
   g_key_file_set_string (keyfile, GROUP, KEY_CURRENT_PLAYLIST, value ?: "");
   g_free (value);
 
@@ -1091,6 +1112,18 @@ play_list_state_restore (Starling *st)
     }
 }
 
+static gboolean
+play_list_combo_set_library (gpointer user_data)
+{
+  Starling *st = user_data;
+
+  g_signal_handler_block (st->playlist, st->playlist_changed_signal);
+  gtk_combo_box_set_active (st->playlist, 0);
+  g_signal_handler_unblock (st->playlist, st->playlist_changed_signal);
+
+  return FALSE;
+}
+
 static void
 play_list_combo_changed (Starling *st, gpointer do_save)
 {
@@ -1098,64 +1131,40 @@ play_list_combo_changed (Starling *st, gpointer do_save)
   if (! play_list)
     play_list = "Library";
 
-  char *active = gtk_combo_box_get_active_text (st->playlist);
+  char *active = NULL;
+  GtkTreeIter iter;
+  if (gtk_combo_box_get_active_iter (st->playlist, &iter))
+    gtk_tree_model_get (gtk_combo_box_get_model (st->playlist), &iter,
+			PLS_COL_NAME, &active, -1);
+
   if (! active || strcmp (play_list, active) != 0)
     {
       /* Save the current position and selection.  */
       if (do_save)
 	play_list_state_save (st);
 
+      if (! active)
+	/* Currently the combo box is set to the default value, i.e.,
+	   "" but we really want it to be set to "Library".  If we set
+	   it here, we end up getting a seg fault (likely due to other
+	   functions not be reentrant--setting would cause the
+	   "changed" signal to be emitted again but it is currently
+	   being emitted).  */
+	gtk_idle_add (play_list_combo_set_library, st);  
+
       play_list_set (st->library,
 		     ! active || strcmp (active, "Library") == 0
 		     ? NULL : active);
 
+
       play_list_state_restore (st);
+
+      update_library_count (st);
+
+      /* Rebuild the alpha seek bar.  */
+      playlist_alpha_seek_build_queue (st);
     }
   g_free (active);
-}
-
-static void
-play_list_combo_refresh (Starling *st, char *active, bool save_old_config)
-{
-  g_signal_handler_block (st->playlist, st->playlist_changed_signal);
-
-  bool free_active = false;
-  if (! active)
-    {
-      free_active = true;
-      active = gtk_combo_box_get_active_text (st->playlist);
-    }
-
-  for (; st->playlist_count > 0; st->playlist_count --)
-    gtk_combo_box_remove_text (st->playlist, 0);
-
-  gtk_combo_box_append_text (st->playlist, _("Library"));
-  st->playlist_count = 1;
-
-  int active_i = 0;
-  int playlist_iter (const char *list)
-  {
-    if (strcmp ("queue", list) != 0)
-      {
-	gtk_combo_box_append_text (st->playlist, list);
-	if (active && strcmp (list, active) == 0)
-	  active_i = st->playlist_count;
-
-	st->playlist_count ++;
-      }
-    return 0;
-  }
-  music_db_play_lists_for_each (st->db, playlist_iter);
-
-  if (free_active)
-    g_free (active);
-
-  if (! save_old_config)
-    play_list_combo_changed (st, (gpointer) FALSE);
-
-  g_signal_handler_unblock (st->playlist, st->playlist_changed_signal);
-
-  gtk_combo_box_set_active (st->playlist, active_i);
 }
 
 static void
@@ -1293,8 +1302,6 @@ remove_cb (Starling *st, GtkWidget *w)
   g_queue_free (selected);
 
   gtk_tree_selection_unselect_all (selection);
-
-  play_list_combo_refresh (st, NULL, true);
 }
 
 static void
@@ -1304,7 +1311,11 @@ clear_cb (Starling *st, GtkWidget *w)
     {
     case 0:
       {
-	char *text = gtk_combo_box_get_active_text (st->playlist);
+	char *text = NULL;
+	GtkTreeIter iter;
+	if (gtk_combo_box_get_active_iter (st->playlist, &iter))
+	  gtk_tree_model_get (gtk_combo_box_get_model (st->playlist), &iter,
+			      PLS_COL_NAME, &text, -1);
 
 	if (strcmp (text, "Library") == 0)
 	  {
@@ -1315,8 +1326,6 @@ clear_cb (Starling *st, GtkWidget *w)
 	  music_db_play_list_clear (st->db, text);
 
 	g_free (text);
-
-	play_list_combo_refresh (st, NULL, false);
 
 	if (strcmp (text, "Library") == 0)
 	  starling_load (st, 0);
@@ -1700,13 +1709,20 @@ search_text_gen (Starling *st, const char *text)
     }
 }
 
-static void playlist_alpha_seek_build_queue (Starling *st);
-
 /* Regenerate the alpha scroll bar accordingly.  */
 static bool
 playlist_alpha_seek_build (Starling *st)
 {
   st->playlist_alpha_seek_timer_source = 0;
+
+  const char *play_list = play_list_get (st->library);
+  if (play_list && strcmp (play_list, "Library") != 0)
+    {
+      gtk_widget_hide (GTK_WIDGET (st->playlist_alpha_seek));
+      return FALSE;
+    }
+  else
+    gtk_widget_show (GTK_WIDGET (st->playlist_alpha_seek));
 
   /* First, remove any labels.  */
   int label_height = 0;
@@ -2123,35 +2139,24 @@ update_queue_count (Starling *st)
   last_count = count;
 }
 
-static void
-update_library_count (Starling *st)
+static gboolean
+update_library_count_flush (gpointer user_data)
 {
-  int count = play_list_count (st->library);
+  Starling *st = user_data;
 
-  static int old_count;
-  static int old_total;
+  assert (st->library_tab_update_source);
+
+  int count = play_list_count (st->library);
+  int total = play_list_total (st->library);
+
+  char *playlist = NULL;
+  GtkTreeIter iter;
+  if (gtk_combo_box_get_active_iter (st->playlist, &iter))
+    gtk_tree_model_get (gtk_combo_box_get_model (st->playlist), &iter,
+			PLS_COL_NAME, &playlist, -1);
+
 
   const char *search_text = play_list_constraint_get (st->library);
-  int total = 0;
-  if (search_text && *search_text)
-    {
-      total = play_list_total (st->library);
-
-      if (old_count == count && old_total == total)
-	return;
-
-      old_total = total;
-    }
-  else
-    {
-      if (old_count == count)
-	return;
-    }
-  old_count = count;
-
-
-  char *playlist = gtk_combo_box_get_active_text (st->playlist);
-
   char *text;
   if (search_text && *search_text)
     text = g_strdup_printf (_("%s (%d/%d)"),
@@ -2164,7 +2169,19 @@ update_library_count (Starling *st)
   gtk_notebook_set_tab_label_text (GTK_NOTEBOOK (st->notebook),
 				   st->library_tab, text);
   g_free (text);
+
+  st->library_tab_update_source = 0;
+  return FALSE;
 }
+
+static void
+update_library_count (Starling *st)
+{
+  if (! st->library_tab_update_source)
+    st->library_tab_update_source
+      = gtk_idle_add (update_library_count_flush, st);  
+}
+
 
 static void
 lyrics_download (Starling *st)
@@ -2368,7 +2385,6 @@ queue_cb (GtkWidget *widget, gpointer d)
   struct menu_info *info = d;
   Starling *st = info->st;
 
-  bool new_list = false;
   if (strcmp (info->list, "new play list") == 0)
     {
       GtkWidget *dialog = gtk_dialog_new_with_buttons
@@ -2392,7 +2408,6 @@ queue_cb (GtkWidget *widget, gpointer d)
 	case GTK_RESPONSE_OK:
 	  g_free (info->list);
 	  info->list = g_strdup (gtk_entry_get_text (GTK_ENTRY (entry)));
-	  new_list = true;
 	  break;
 
 	default:
@@ -2458,9 +2473,6 @@ queue_cb (GtkWidget *widget, gpointer d)
       if (need_free)
 	sqlite_freemem (s);
     }
-
-  if (new_list)
-    play_list_combo_refresh (st, NULL, true);
 }
 
 static gboolean
@@ -3119,7 +3131,17 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
-  st->playlist = GTK_COMBO_BOX (gtk_combo_box_new_text ());
+  PlayLists *play_lists = play_lists_new (st->db);
+  st->playlist = GTK_COMBO_BOX (gtk_combo_box_new_with_model
+				(GTK_TREE_MODEL (play_lists)));
+  g_object_unref (play_lists);
+
+  renderer = gtk_cell_renderer_text_new ();
+  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (st->playlist),
+			      renderer, false);
+  gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (st->playlist),
+				  renderer, "text", PLS_COL_NAME, NULL);
+
   st->playlist_changed_signal
     = g_signal_connect_swapped (G_OBJECT (st->playlist), "changed",
 				G_CALLBACK (play_list_combo_changed), st);

@@ -1,3 +1,32 @@
+2010-01-02  Neal Walfield  <neal@gnu.org>
+
+	* src/Makefile.am (starling_SOURCES): Add playlists.h and
+	playlists.c.
+	* src/playlists.h: New file.
+	* src/playlists.c: New file.
+	* src/starling.c: Include "playlists.h".
+	(struct _Starling): Add field library_tab_update_source.  Remove
+	field playlist_count.
+	(deserialize_bottom_half): Don't call play_list_combo_refresh.
+	Get the index of BH->PLAYLIST and make it active.
+	(serialize): Don't use gtk_combo_box_get_active_text to get the
+	current playlist but gtk_combo_box_get_active_iter.
+	(play_list_combo_changed): Likewise.
+	(clear_cb): Likewise.
+	(play_list_combo_set_library): New function.
+	(play_list_combo_changed): If ACTIVE is NULL, set up an idle
+	handler to call play_list_combo_set_library.
+	(play_list_combo_refresh): Remove function.
+	(remove_cb): Remove call to play_list_combo_refresh.
+	(clear_cb): Likewise.
+	(queue_cb): Likewise.
+	(update_library_count): Move body...
+	(update_library_count_flush): ... to this function.  Rely on the
+	model to do the heavy lifting.
+	(update_library_count): Set up an idle handler to call
+	update_library_count_flush.
+	(starling_run): Change ST->PLAYLIST use a play lists model.
+
 2009-12-28  Neal Walfield  <neal@gnu.org>
 
 	* src/starling.c (set_title): Only update ST->RATING and ST->TITLE

@@ -11,6 +11,7 @@ starling_SOURCES = main.c \
 		musicdb.h musicdb.c \
 		player.h player.c \
 		playlist.h playlist.c \
+		playlists.h playlists.c \
 		utils.h utils.c \
 		lyrics.h lyrics.c \
 		lastfm.h lastfm.c \
