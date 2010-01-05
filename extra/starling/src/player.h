@@ -84,7 +84,7 @@ extern double player_get_volume (Player *pl);
 /* player_set_volume:
 
    Set volume to a value between 0 and 10.  */
-extern gboolean player_set_volume (Player *pl, double volume);
+extern void player_set_volume (Player *pl, double volume);
 
 /** player_play:
 

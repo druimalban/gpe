@@ -238,7 +238,9 @@ extern void music_db_play_list_remove (MusicDB *db, const char *list,
 /* Clear the play list.  */
 extern void music_db_play_list_clear (MusicDB *db, const char *list);
 
-/* Iterate over each play list in the database.  */
+/* Iterate over each play list in the database invoking the callback
+   CB on it.  The play lists are sorted in a case-insensitive
+   manner.  */
 extern int music_db_play_lists_for_each (MusicDB *db,
 					 int (*cb) (const char *list));
 #endif

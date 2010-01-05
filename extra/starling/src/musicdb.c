@@ -26,11 +26,11 @@
 
 #include <glib.h>
 #include <glib/gstdio.h>
-#include <sqlite.h>
 #include <string.h>
 #include <stdio.h>
 #include <gst/gst.h>
 #include <assert.h>
+#include "sqlite.h"
 
 extern void gdk_threads_enter () __attribute__ ((weak));
 extern void gdk_threads_leave () __attribute__ ((weak));
@@ -496,6 +496,7 @@ music_db_open (const char *file, GError **error)
   if (err)
     goto generic_error;
 
+  bool created = false;
   if (version < 2)
     {
       if (version == 1)
@@ -514,6 +515,8 @@ music_db_open (const char *file, GError **error)
 		   NULL, NULL, &err);
       if (err)
 	goto generic_error;
+
+      created = true;
     }
 
   err = NULL;
@@ -532,6 +535,16 @@ music_db_open (const char *file, GError **error)
       worker->sqliteh = sqliteh;
 
       db->worker_idle = g_idle_add (worker_start, worker);
+    }
+
+  if (created)
+    {
+#ifdef HAVE_MAEMO
+      music_db_add_recursive (db, "/media", NULL);
+#endif
+      char *home = ("HOME");
+      if (home)
+	music_db_add_recursive (db, home, NULL);
     }
 
   return db;

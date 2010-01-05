@@ -20,17 +20,17 @@
 
 #include <string.h>
 
-#include <sqlite.h>
-
 #include <gtk/gtklabel.h>
 
 #include <libsoup/soup.h>
 
+#include "sqlite.h"
 #include "config.h"
 #include "errorbox.h"
 #include "utils.h"
 #include "md5sum.h"
 #include <time.h>
+#include <stdlib.h>
 
 #define LASTFM_MAX_ITEMS_PER_SUBMISSION "10"
 
@@ -55,7 +55,6 @@ static int auto_submit;
 
 /* Forward declarations */
 static void lastfm_delete_by_id (gint id);
-static gint lastfm_submit_real_helper (gpointer data, gint argc, gchar **argv, gchar **col);
 static gboolean lastfm_submit_real (lastfm_data *data);
 #ifdef LIBSOUP22
 static void got_handshake_response (SoupMessage *msg, gpointer arg);

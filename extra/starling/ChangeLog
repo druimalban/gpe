@@ -1,5 +1,35 @@
 2010-01-05  Neal Walfield  <neal@gnu.org>
 
+	House cleaning.
+	* src/caption.c (build): If we haven't allocated anything yet,
+	return the base of CAPTION->POOL.
+	* src/lyrics.c: Don't include <sqlite.h>.  Include "sqlite.h"
+	instead.
+	* src/lastfm.c: Include <stdlib.h>.  Don't include <sqlite.h>.
+	Include "sqlite.h" instead.
+	(lastfm_submit_real_helper): Remove unused prototype.
+	* src/musicdb.h (music_db_play_lists_for_each): Improve comment.
+	* src/musicdb.c: Don't include <sqlite.h>.  Include "sqlite.h"
+	instead.
+	(music_db_open): On creating the database, add the user's home
+	directory.
+	[HAVE_MAEMO]: Add /media.
+	* src/player.h (player_set_volume): Change return type to void.
+	* src/player.c: Include <stdio.h>.
+	(player_set_sink): Add debugging output.
+	(player_set_volume): Change return type to void.
+	* src/playlists.c (play_lists_finalize): Remove unused variable.
+	* src/starling.c: Include <ctype.h>
+	[HAVE_HILDON_GTK_TREE_VIEW]: Include <hildon/hildon-gtk.h>.
+	(change_caption_format): Change history_len to be unsigned.
+	(playlist_alpha_seek_build): Return TRUE if LABEL_HEIGHT is 1, not
+	void.
+	(position_slider_button_released_cb): Don't assert that
+	ST->USER_SEEKING is true.
+	* README: Improve.
+
+2010-01-05  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c [defined(HAVE_GTK_VOLUME_BUTTON_NEW) && (!
 	defined (HAVE_MAEMO) || HAVE_MAEMO_VERSION < 500)]: Define
 	HAVE_VOLUME_BUTTON.

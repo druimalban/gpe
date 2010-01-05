@@ -28,6 +28,7 @@
 #define obstack_chunk_alloc g_malloc
 #define obstack_chunk_free g_free
 #include <obstack.h>
+#include <stdio.h>
 
 #include "player.h"
 #include "marshal.h"
@@ -295,7 +296,10 @@ player_set_sink (Player *pl, const gchar *sink)
 
   GstElement *audiosink = gst_element_factory_make (sink, "sink");
   if (! audiosink)
-    return FALSE;
+    {
+      g_debug ("Failed to create an audio sink of type %s\n", sink);
+      return FALSE;
+    }
 
   playbin_ensure (pl);
 
@@ -354,7 +358,7 @@ player_get_volume (Player *pl)
   return pl->volume;
 }
 
-gboolean
+void
 player_set_volume (Player *pl, double volume)
 {
   pl->volume = volume;

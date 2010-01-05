@@ -41,6 +41,7 @@
 #include <obstack.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include <glib.h>
 #include <glib/gtypes.h>
 #include <glib/gkeyfile.h>
@@ -71,6 +72,9 @@
 #endif
 #ifdef HAVE_HILDON_PANNABLE_AREA
 # include <hildon/hildon-pannable-area.h>
+#endif
+#ifdef HAVE_HILDON_GTK_TREE_VIEW
+# include <hildon/hildon-gtk.h>
 #endif
 
 struct play_list_view_config
@@ -1481,7 +1485,7 @@ change_caption_format (gpointer user_data, GtkMenuItem *menuitem)
   GKeyFile *keyfile = config_file_load ();
   char *caption = NULL;
   char **history = NULL;
-  int history_len;
+  unsigned int history_len;
   if (keyfile)
     {
       caption = g_key_file_get_string (keyfile, GROUP,
@@ -1862,7 +1866,7 @@ playlist_alpha_seek_build (Starling *st)
     /* The size has not settled yet.  Note: when stable, we always add
        at least two labels and request a minimum height of 2
        pixels.  */
-    return;
+    return TRUE;
 
   int space = GTK_WIDGET (st->playlist_alpha_seek)->allocation.height;
 
@@ -2106,7 +2110,11 @@ static gboolean
 position_slider_button_released_cb (GtkRange *range, GdkEventButton *event,
 				    Starling *st)
 {
-  g_assert (st->user_seeking);
+  /* At least on Maemo, we can get a released without having first
+     gotten a pressed signal.  */
+  if (! st->user_seeking)
+    return FALSE;
+
   g_source_remove (st->user_seeking);
   st->user_seeking = 0;
 

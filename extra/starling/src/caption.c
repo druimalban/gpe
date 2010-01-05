@@ -1,5 +1,5 @@
 /* caption.c - Generate captions.
-   Copyright (C) 2008 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2008, 2010 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -100,7 +100,7 @@ build (struct caption *caption, const char *fmt)
   {
     if (obstack_object_size (&caption->pool) == sizeof (struct chunk))
       /* Nothing has been added to this chunk.  */
-      return;
+      return obstack_base (&caption->pool);
 
     finish_chunk ();
     return start_chunk ();

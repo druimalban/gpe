@@ -1,15 +1,15 @@
 In order to build this software you'll need (the package names
 correspond to Ubuntu):
 
-    * libsoup2.2-dev
-    * libgtk2.0-dev
-    * libgstreamer0.10-dev
-    * libgstreamer-plugins-base0.10-dev
-    * libsqlite-dev
-    * libglib2.0-dev
-    * libhandoff-dev
-    * intltool
-    * bison
+    libsoup2.4-dev (or libsoup2.2-dev)
+    libgtk2.0-dev
+    libgstreamer0.10-dev
+    libgstreamer-plugins-base0.10-dev
+    libsqlite3-dev (or libsqlite-dev)
+    libglib2.0-dev
+    libhandoff-dev
+    intltool
+    bison
 
 If libgpewidget is installed, configure will detect that and use it.
 

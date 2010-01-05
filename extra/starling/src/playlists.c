@@ -147,7 +147,7 @@ play_lists_dispose (GObject *obj)
 static void
 play_lists_finalize (GObject *object)
 {
-  PlayLists *pl = PLAY_LISTS (object);
+  // PlayLists *pl = PLAY_LISTS (object);
 
   G_OBJECT_CLASS (play_lists_parent_class)->finalize (object);
 }
