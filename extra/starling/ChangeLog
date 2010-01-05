@@ -1,5 +1,9 @@
 2010-01-05  Neal Walfield  <neal@gnu.org>
 
+	* src/playlists.c (do_refresh): Set L->NEXT to NULL.
+	
+2010-01-05  Neal Walfield  <neal@gnu.org>
+
 	* src/playlists.h (play_lists_new): Take additional parameter
 	include_queue.
 	* src/playlists.c (struct _PlayLists): Add field include_queue.

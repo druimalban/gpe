@@ -241,6 +241,7 @@ do_refresh (gpointer data)
     l->total = -1;
     memcpy (l->name, list, len + 1);
 
+    l->next = NULL;
     if (last)
       last->next = l;
     last = l;
