@@ -1,5 +1,5 @@
 /* musicdb.c - Music DB support.
-   Copyright (C) 2007, 2008, 2009 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2007, 2008, 2009, 2010 Neal H. Walfield <neal@walfield.org>
 
    This file is part of GPE.
 
@@ -1057,7 +1057,7 @@ music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
 	i ++;
 	e->performer = argv[i] ? g_strdup (argv[i]) : NULL;
 
-	return 1;
+	return 0;
       }
 
       char *err = NULL;
@@ -1068,7 +1068,7 @@ music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
 			  "  date_last_played, date_tags_updated, "
 			  "  rating, removed, mtime, date,"
 			  "  volume_number, volume_count, performer"
-			  " from files where ROWID = %d;",
+			  " from files where ROWID = %d limit 1;",
 			  callback, NULL, &err, (int) uid);
       if (err)
 	{
