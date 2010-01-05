@@ -1,5 +1,5 @@
 /* playlist.c - Playlist support.
-   Copyright (C) 2007, 2008 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2007, 2008, 2010 Neal H. Walfield <neal@walfield.org>
    Copyright (C) 2006 Alberto García Hierro <skyhusker@handhelds.org>
 
    This file is part of GPE.
@@ -24,8 +24,6 @@
 #include <sys/time.h>
 #include <glib.h>
 #include <gtk/gtktreemodel.h>
-#include <gst/gst.h>
-#include <gst/audio/gstaudiosink.h>
 
 #include "playlist.h"
 #include "musicdb.h"
@@ -747,7 +745,7 @@ iter_next (GtkTreeModel *tree_model, GtkTreeIter *iter)
 
   int pos = 1 + (int) iter->user_data;
   ITER_INIT (tree_model, iter, pos);
-  if (pos == play_list_count (pl))
+  if (pos >= play_list_count (pl))
     {
       ITER_INIT (tree_model, iter, -1);
       return FALSE;
@@ -783,10 +781,9 @@ iter_has_child (GtkTreeModel *tree_model, GtkTreeIter *iter)
 static gint
 iter_n_children (GtkTreeModel *tree_model, GtkTreeIter *iter)
 {
-  g_assert (iter->user_data != (gpointer) -1);
-
   if (! iter)
     return play_list_count (PLAY_LIST (tree_model));
+
   return 0;
 }
 

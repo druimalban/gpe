@@ -1,5 +1,14 @@
 2010-01-05  Neal Walfield  <neal@gnu.org>
 
+	* src/playlist.c: Don't include <gst/gst.h> or
+	<gst/audio/gstaudiosink.h>.
+	
+	(iter_next): Also bail if POS > PLAY_LIST_COUNT (PL).
+
+	(iter_n_children): Remove incorrect assertion.
+
+2010-01-05  Neal Walfield  <neal@gnu.org>
+
 	* configure.ac: Define HAVE_HILDON_STACKABLE_WINDOWS if the
 	function hildon_stackable_window_new is available.
 	* src/starling.c [HAVE_HILDON_STACKABLE_WINDOWS]: Include
