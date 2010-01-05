@@ -1,5 +1,19 @@
 2010-01-05  Neal Walfield  <neal@gnu.org>
 
+	* src/starling.c [defined(HAVE_GTK_VOLUME_BUTTON_NEW) && (!
+	defined (HAVE_MAEMO) || HAVE_MAEMO_VERSION < 500)]: Define
+	HAVE_VOLUME_BUTTON.
+	(struct _Starling) [HAVE_VOLUME_BUTTON]: Only have field
+	volume_button in this case.
+	(deserialize): Conditionalize volume functionality according to
+	whether HAVE_VOLUME_BUTTON is defined, not
+	HAVE_GTK_VOLUME_BUTTON_NEW.
+	(serialize): Likewise.
+	(volume_changed): Likewise.
+	(starling_run): Likewise.
+
+2010-01-05  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c [HAVE_HILDON_PANNABLE_AREA]: Include
 	<hildon/hildon-pannable-area.h>.
 	(struct _Starling): Change fields library_view_window and

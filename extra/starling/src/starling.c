@@ -89,7 +89,9 @@ struct _Starling {
   GtkWidget *position_slider;
   int user_seeking;
 
-#ifdef HAVE_GTK_VOLUME_BUTTON_NEW
+#if defined(HAVE_GTK_VOLUME_BUTTON_NEW) \
+  && (! defined (HAVE_MAEMO) || HAVE_MAEMO_VERSION < 500)
+# define HAVE_VOLUME_BUTTON
   GtkWidget *volume_button;
 #endif
 
@@ -663,7 +665,7 @@ deserialize (Starling *st)
   starling_random_set (st, g_key_file_get_boolean (keyfile,
 						   GROUP, KEYRANDOM, NULL));
 
-#ifdef HAVE_GTK_VOLUME_BUTTON_NEW
+#ifdef HAVE_VOLUME_BUTTON
   /* Volume mode.  */
   double vol = 0.8;
   if (g_key_file_has_key (keyfile, GROUP, KEYVOLUME, NULL))
@@ -887,7 +889,7 @@ serialize (Starling *st)
   g_key_file_set_boolean (keyfile, GROUP, KEYRANDOM,
 			  starling_random (st));
 
-#ifdef HAVE_GTK_VOLUME_BUTTON_NEW
+#ifdef HAVE_VOLUME_BUTTON
   /* Volume.  */
   g_key_file_set_double
     (keyfile, GROUP, KEYVOLUME,
@@ -2207,7 +2209,7 @@ position_update (Starling *st)
   return TRUE;
 }
 
-#ifdef HAVE_GTK_VOLUME_BUTTON_NEW
+#ifdef HAVE_VOLUME_BUTTON
 static gboolean
 volume_changed (GtkScaleButton *button, gdouble value, Starling *st)
 {
@@ -3229,7 +3231,7 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->duration),
 		      FALSE, FALSE, 0);
 
-#ifdef HAVE_GTK_VOLUME_BUTTON_NEW
+#ifdef HAVE_VOLUME_BUTTON
   st->volume_button = gtk_volume_button_new ();
   g_signal_connect (G_OBJECT (st->volume_button), "value-changed", 
 		    G_CALLBACK (volume_changed), st);
