@@ -201,6 +201,10 @@ do_refresh (gpointer data)
       return TRUE;
   }
 
+  /* Forget timeout source.  */
+  pl->reschedule_timeout = 0;
+  pl->reschedule_requests = 0;
+
   int old_total = pl->total;
 
   if (pl->play_lists)
@@ -300,10 +304,6 @@ do_refresh (gpointer data)
 	  gtk_tree_path_free (path);
 	}
     }
-
-  /* Remove timeout source.  */
-  pl->reschedule_timeout = 0;
-  pl->reschedule_requests = 0;
 
   gettimeofday (&pl->last_refresh, NULL);
 
@@ -457,6 +457,17 @@ play_lists_index_of (PlayLists *pls, const char *play_list)
     if (strcmp (play_list, l->name) == 0)
       return i;
   return -1;
+}
+
+gboolean
+play_lists_iter_of (PlayLists *pls, GtkTreeIter *iter, const char *play_list)
+{
+  int i = play_lists_index_of (pls, play_list);
+  if (i == -1)
+    return FALSE;
+
+  ITER_INIT (pls, iter, i);
+  return TRUE;
 }
 
 void

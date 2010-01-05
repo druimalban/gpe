@@ -1,3 +1,54 @@
+2010-01-05  Neal Walfield  <neal@gnu.org>
+
+	* configure.ac: Define HAVE_HILDON_STACKABLE_WINDOWS if the
+	function hildon_stackable_window_new is available.
+	* src/starling.c [HAVE_HILDON_STACKABLE_WINDOWS]: Include
+	<hildon/hildon-touch-selector.h>.
+	(struct _Starling): Rename field playlist to play_list_selector.
+	Change type to GtkWidget *.  Update all users.  Add field
+	play_lists_model.  Rename field playlist_changed_signal to
+	play_list_selector_changed_signal.  Update all users.
+	[HAVE_HILDON_STACKABLE_WINDOWS]: Add new field
+	play_list_selector_view.
+	(play_list_selector_get_active): New function.
+	(serialize): Use it.
+	(clear_cb): Likewise.
+	(update_library_count_flush): Likewise.
+	(set_title) [HAVE_HILDON_STACKABLE_WINDOWS]: Also set
+	ST->PLAY_LIST_SELECTOR_VIEW.WINDOW's title.
+	(deserialize_bottom_half): Use play_lists_iter_of instead of
+	play_lists_index_of.
+	[HAVE_HILDON_STACKABLE_WINDOWS]: Treat ST->PLAY_LIST_SELECTOR as a
+	HildonTouchSelector.
+	[! HAVE_HILDON_STACKABLE_WINDOWS]: Use
+	gtk_combo_box_set_active_iter instead of
+	gtk_combo_box_set_active.
+	Call play_list_selector_changed_to instead of
+	play_list_combo_changed.
+	(play_list_combo_set_library) [HAVE_HILDON_STACKABLE_WINDOWS]:
+	Treat ST->PLAY_LIST_SELECTOR as a HildonTouchSelector.
+	(play_list_combo_changed): Move body...
+	(play_list_selector_changed_to): ... to this new function.
+	[HAVE_HILDON_STACKABLE_WINDOWS]: Show ST->WINDOW.
+	(play_list_combo_changed): Rename...
+	(play_list_selector_changed): ... to this.  Just call
+	play_list_selector_changed_to with the save parameter set to true.
+	[HAVE_HILDON_STACKABLE_WINDOWS]: Take additional parameter column.
+	(window_x): New function.
+	(starling_run) [HAVE_HILDON_STACKABLE_WINDOWS]: Build a top menu
+	allowing the user to choose among the play lists.  Create windows
+	using hildon_stackable_window_new, not hildon_window_new.  Connect
+	windows' "delete-event" signal to window_x, not starling_quit.
+	[! HAVE_HILDON_STACKABLE_WINDOWS]: Don't create the play list
+	combo box in this case.
+	Be sure to show the search_entry_combo and clear icon.  Call
+	set_title.
+	* src/playlists.h: Include <gtk/gtktreemodel.h>.
+	(play_lists_iter_of): New declaration.
+	* src/playlists.c (do_refresh): Reset PL->RESCHEDULE_TIMEOUT and
+	PL->RESCHEDULE_REQUESTS at function entry.
+	(play_lists_iter_of): New function.
+
 2010-01-02  Neal Walfield  <neal@gnu.org>
 
 	* src/Makefile.am (starling_SOURCES): Add playlists.h and

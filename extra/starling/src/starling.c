@@ -66,6 +66,10 @@
 # define APPLICATION_DBUS_SERVICE "starling"
 #endif /* HAVE_HILDON */
 
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+# include <hildon/hildon-touch-selector.h>
+#endif
+
 struct play_list_view_config
 {
   int position;
@@ -101,11 +105,12 @@ struct _Starling {
   GtkScrolledWindow *library_view_window;
   GtkWidget *library_view;
   struct caption *caption;
-  GtkComboBox *playlist;
+  PlayLists *play_lists_model;
+  GtkWidget *play_list_selector;
   GtkBox *playlist_alpha_seek;
   int playlist_alpha_current_height;
   int playlist_alpha_seek_timer_source;
-  int playlist_changed_signal;
+  int play_list_selector_changed_signal;
   GtkToggleButton *search_enabled;
   GtkWidget *search_entry;
   GtkListStore *searches;
@@ -150,12 +155,47 @@ struct _Starling {
 
   /* Hash mapping play lists to their position.  */
   GHashTable *playlists_conf;
+
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  struct
+  {
+    GtkWindow *window;
+  } play_list_selector_view;
+#endif
 };
 
 /* Forward declarations.  */
 static void playlist_alpha_seek_build_queue (Starling *st);
 static void update_library_count (Starling *st);
 
+/* Return the currectly selected playlist or NULL if none.  The
+   returned string must be freed.  */
+static char *
+play_list_selector_get_active (Starling *st)
+{
+  GtkTreeIter iter;
+  bool have_iter = false;
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  GtkTreePath *path = hildon_touch_selector_get_last_activated_row
+    (HILDON_TOUCH_SELECTOR (st->play_list_selector), 0);
+  if (path)
+    {
+      have_iter = gtk_tree_model_get_iter
+	(GTK_TREE_MODEL (st->play_lists_model), &iter, path);
+      gtk_tree_path_free (path);
+    }
+#else
+  have_iter = gtk_combo_box_get_active_iter
+    (GTK_COMBO_BOX (st->play_list_selector), &iter);
+#endif
+  char *value = NULL;
+  if (have_iter)
+    gtk_tree_model_get (GTK_TREE_MODEL (st->play_lists_model), &iter,
+			PLS_COL_NAME, &value, -1);
+
+  return value;
+}
+
 static void
 set_title (Starling *st)
 {
@@ -233,6 +273,11 @@ set_title (Starling *st)
 #else
   gtk_window_set_title (GTK_WINDOW (st->window), title_bar);
 #endif /* HAVE_HILDON */
+
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  gtk_window_set_title (GTK_WINDOW (st->play_list_selector_view.window),
+			title_bar);
+#endif
 
   if (free_title_bar)
     g_free (title_bar);
@@ -484,7 +529,10 @@ struct deserialize_bottom_half
   int loaded_song;
 };
 
-static void play_list_combo_changed (Starling *st, gpointer do_save);
+static void play_list_selector_changed_to
+  (Starling *st,
+   const char *play_list,
+   gboolean do_save_current_play_lists_selection);
 
 static int
 deserialize_bottom_half (gpointer data)
@@ -497,19 +545,28 @@ deserialize_bottom_half (gpointer data)
 
 
   /* Set the correct play list.  */
-  int i = play_lists_index_of (PLAY_LISTS (gtk_combo_box_get_model
-					   (st->playlist)),
-			       bh->playlist);
-  g_free (bh->playlist);
-  if (i == -1)
-    /* It doesn't seem to exist.  Select the library instead.  */
-    i = 0;
+  GtkTreeIter iter;
+  if (play_lists_iter_of (st->play_lists_model, &iter, bh->playlist))
+    {
+      g_debug ("%s: Setting active play list to %s\n",
+	       __func__, bh->playlist);
 
-  g_signal_handler_block (st->playlist, st->playlist_changed_signal);
-  gtk_combo_box_set_active (st->playlist, i);
-  g_signal_handler_unblock (st->playlist, st->playlist_changed_signal);
-  if (i != 0)
-    play_list_combo_changed (st, 0);
+      /* Don't sent the play list selector changed signal as we don't
+	 want to save the current selection.  */
+      g_signal_handler_block (st->play_list_selector,
+			      st->play_list_selector_changed_signal);
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+      hildon_touch_selector_select_iter
+	(HILDON_TOUCH_SELECTOR (st->play_list_selector), 0, &iter, TRUE);
+#else
+      gtk_combo_box_set_active_iter (GTK_COMBO_BOX (st->play_list_selector),
+				     &iter);
+#endif
+      g_signal_handler_unblock (st->play_list_selector,
+				st->play_list_selector_changed_signal);
+      play_list_selector_changed_to (st, bh->playlist, false);
+    }
+  g_free (bh->playlist);
   
   gtk_toggle_button_set_active (st->search_enabled, bh->search_enabled);
   gtk_entry_set_text (GTK_ENTRY (st->search_entry), bh->search_terms);
@@ -898,11 +955,8 @@ serialize (Starling *st)
     g_key_file_remove_key (keyfile, GROUP, KEY_PLAYLISTS_CONFIG, NULL);
 
   /* The current play list.  */
-  char *value = NULL;
-  GtkTreeIter iter;
-  if (gtk_combo_box_get_active_iter (st->playlist, &iter))
-    gtk_tree_model_get (gtk_combo_box_get_model (st->playlist), &iter,
-			PLS_COL_NAME, &value, -1);
+  char *value = play_list_selector_get_active (st);
+  printf ("Saving play list %s\n", value);
   g_key_file_set_string (keyfile, GROUP, KEY_CURRENT_PLAYLIST, value ?: "");
   g_free (value);
 
@@ -1117,33 +1171,40 @@ play_list_combo_set_library (gpointer user_data)
 {
   Starling *st = user_data;
 
-  g_signal_handler_block (st->playlist, st->playlist_changed_signal);
-  gtk_combo_box_set_active (st->playlist, 0);
-  g_signal_handler_unblock (st->playlist, st->playlist_changed_signal);
+  g_signal_handler_block (st->play_list_selector,
+			  st->play_list_selector_changed_signal);
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  printf ("%s: Setting active %d\n", __func__, 0);
+  hildon_touch_selector_set_active
+    (HILDON_TOUCH_SELECTOR (st->play_list_selector), 0, 0);
+#else
+  gtk_combo_box_set_active (GTK_COMBO_BOX (st->play_list_selector), 0);
+#endif
+  g_signal_handler_unblock (st->play_list_selector,
+			    st->play_list_selector_changed_signal);
 
   return FALSE;
 }
 
 static void
-play_list_combo_changed (Starling *st, gpointer do_save)
+play_list_selector_changed_to (Starling *st,
+			       const char *play_list,
+			       gboolean do_save_current_play_lists_selection)
 {
-  const char *play_list = play_list_get (st->library);
-  if (! play_list)
-    play_list = "Library";
+  const char *old = play_list_get (st->library);
+  if (! old)
+    old = "Library";
 
-  char *active = NULL;
-  GtkTreeIter iter;
-  if (gtk_combo_box_get_active_iter (st->playlist, &iter))
-    gtk_tree_model_get (gtk_combo_box_get_model (st->playlist), &iter,
-			PLS_COL_NAME, &active, -1);
+  printf ("%s: active play list %s -> %s\n",
+	  __func__, old, play_list);
 
-  if (! active || strcmp (play_list, active) != 0)
+  if (! play_list || strcmp (old, play_list) != 0)
     {
       /* Save the current position and selection.  */
-      if (do_save)
+      if (do_save_current_play_lists_selection)
 	play_list_state_save (st);
 
-      if (! active)
+      if (! play_list)
 	/* Currently the combo box is set to the default value, i.e.,
 	   "" but we really want it to be set to "Library".  If we set
 	   it here, we end up getting a seg fault (likely due to other
@@ -1153,8 +1214,8 @@ play_list_combo_changed (Starling *st, gpointer do_save)
 	gtk_idle_add (play_list_combo_set_library, st);  
 
       play_list_set (st->library,
-		     ! active || strcmp (active, "Library") == 0
-		     ? NULL : active);
+		     ! play_list || strcmp (play_list, "Library") == 0
+		     ? NULL : play_list);
 
 
       play_list_state_restore (st);
@@ -1164,7 +1225,22 @@ play_list_combo_changed (Starling *st, gpointer do_save)
       /* Rebuild the alpha seek bar.  */
       playlist_alpha_seek_build_queue (st);
     }
-  g_free (active);
+
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  gtk_widget_show (st->window);
+#endif
+}
+
+static void
+play_list_selector_changed (Starling *st,
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+			    int column,
+#endif
+			    gpointer user_data)
+{
+  char *play_list = play_list_selector_get_active (st);
+  play_list_selector_changed_to (st, play_list, TRUE);
+  g_free (play_list);
 }
 
 static void
@@ -1247,6 +1323,17 @@ starling_quit (Starling *st)
   serialize (st);
   gtk_main_quit();
 }
+
+static void
+window_x (Starling *st, GdkEvent *event, GtkWidget *w)
+{
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  if (w != GTK_WIDGET (st->play_list_selector_view.window))
+    gtk_widget_hide (w);
+  else
+#endif
+    starling_quit (st);
+}
 
 static void
 set_random_cb (Starling *st, GtkWidget *w)
@@ -1311,12 +1398,7 @@ clear_cb (Starling *st, GtkWidget *w)
     {
     case 0:
       {
-	char *text = NULL;
-	GtkTreeIter iter;
-	if (gtk_combo_box_get_active_iter (st->playlist, &iter))
-	  gtk_tree_model_get (gtk_combo_box_get_model (st->playlist), &iter,
-			      PLS_COL_NAME, &text, -1);
-
+	char *text = play_list_selector_get_active (st);
 	if (strcmp (text, "Library") == 0)
 	  {
 	    player_pause (st->player);
@@ -1325,10 +1407,10 @@ clear_cb (Starling *st, GtkWidget *w)
 	else
 	  music_db_play_list_clear (st->db, text);
 
-	g_free (text);
-
 	if (strcmp (text, "Library") == 0)
 	  starling_load (st, 0);
+
+	g_free (text);
 
 	break;
       }
@@ -2149,13 +2231,7 @@ update_library_count_flush (gpointer user_data)
   int count = play_list_count (st->library);
   int total = play_list_total (st->library);
 
-  char *playlist = NULL;
-  GtkTreeIter iter;
-  if (gtk_combo_box_get_active_iter (st->playlist, &iter))
-    gtk_tree_model_get (gtk_combo_box_get_model (st->playlist), &iter,
-			PLS_COL_NAME, &playlist, -1);
-
-
+  char *playlist = play_list_selector_get_active (st);
   const char *search_text = play_list_constraint_get (st->library);
   char *text;
   if (search_text && *search_text)
@@ -2819,8 +2895,51 @@ starling_run (void)
 		    G_CALLBACK (player_state_changed), st);
   g_signal_connect_swapped (G_OBJECT (st->player), "tags",
 			    G_CALLBACK (music_db_set_info_from_tags), st->db);
-    
+
+  st->play_lists_model = play_lists_new (st->db);
+
   /* Build the GUI.  */
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  {
+    /* We have stackable windows.  Specialize the GUI using them.  */
+
+    /* The top view is a menu allowing the user to choose among the
+       available play lists.  */
+    st->play_list_selector_view.window
+      = GTK_WINDOW (hildon_stackable_window_new ());
+    // gtk_window_fullscreen (GTK_WINDOW (st->play_list_selector_view.window));
+    gtk_widget_show (GTK_WIDGET (st->play_list_selector_view.window));
+    g_signal_connect_swapped (G_OBJECT (st->play_list_selector_view.window),
+			      "delete-event", G_CALLBACK (window_x), st);
+
+    st->play_list_selector = hildon_touch_selector_new ();
+    gtk_widget_show (GTK_WIDGET (st->play_list_selector));
+
+    GtkCellRenderer *renderer = gtk_cell_renderer_text_new ();
+
+    hildon_touch_selector_append_column
+      (HILDON_TOUCH_SELECTOR (st->play_list_selector),
+       GTK_TREE_MODEL (st->play_lists_model),
+       renderer, "text", PLS_COL_NAME, NULL);
+
+    hildon_touch_selector_set_column_selection_mode
+      (HILDON_TOUCH_SELECTOR (st->play_list_selector),
+       HILDON_TOUCH_SELECTOR_SELECTION_MODE_SINGLE);
+
+    hildon_touch_selector_set_hildon_ui_mode
+      (HILDON_TOUCH_SELECTOR (st->play_list_selector),
+       HILDON_UI_MODE_NORMAL);
+
+    st->play_list_selector_changed_signal
+      = g_signal_connect_swapped (G_OBJECT (st->play_list_selector),
+				  "changed",
+				  G_CALLBACK (play_list_selector_changed), st);
+    gtk_container_add (GTK_CONTAINER (st->play_list_selector_view.window),
+		       GTK_WIDGET (st->play_list_selector));
+  }
+#endif  
+
+
   GtkWidget *hbox1 = NULL;
   GtkWidget *hbox2 = NULL;
   GtkWidget *vbox = NULL;
@@ -2832,7 +2951,11 @@ starling_run (void)
 #if HAVE_HILDON_VERSION > 0
   HildonProgram *program = HILDON_PROGRAM (hildon_program_get_instance());
   g_set_application_name (PROGRAM_NAME);
+# ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  st->window = GTK_WIDGET (hildon_stackable_window_new());
+# else
   st->window = GTK_WIDGET (hildon_window_new());
+# endif
   hildon_program_add_window (program, HILDON_WINDOW(st->window));
 #else
   st->window = hildon_app_new ();
@@ -2840,15 +2963,12 @@ starling_run (void)
   GtkWidget *main_appview = hildon_appview_new (_("Main"));
   hildon_app_set_appview (HILDON_APP (st->window),
 			  HILDON_APPVIEW (main_appview));
-
-  hildon_app_set_title (HILDON_APP (st->window), PROGRAM_NAME);
 #endif /* HAVE_HILDON_VERSION */
 #else    
   st->window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_title (GTK_WINDOW (st->window), PROGRAM_NAME);
 #endif /* HAVE_HILDON */
-  g_signal_connect_swapped (G_OBJECT (st->window), "delete-event", 
-			    G_CALLBACK (starling_quit), st);
+  g_signal_connect_swapped (G_OBJECT (st->window),
+			    "delete-event", G_CALLBACK (window_x), st);
 
   GtkBox *main_box = GTK_BOX (gtk_vbox_new (FALSE, 0));
 #if HAVE_HILDON && HAVE_HILDON_VERSION == 0
@@ -3131,21 +3251,24 @@ starling_run (void)
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
-  PlayLists *play_lists = play_lists_new (st->db);
-  st->playlist = GTK_COMBO_BOX (gtk_combo_box_new_with_model
-				(GTK_TREE_MODEL (play_lists)));
-  g_object_unref (play_lists);
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
+  st->play_list_selector
+    = gtk_combo_box_new_with_model (GTK_TREE_MODEL (st->play_lists_model));
+  g_object_unref (st->play_lists_model);
 
   renderer = gtk_cell_renderer_text_new ();
-  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (st->playlist),
+  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (st->play_list_selector),
 			      renderer, false);
-  gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (st->playlist),
+  gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (st->play_list_selector),
 				  renderer, "text", PLS_COL_NAME, NULL);
 
-  st->playlist_changed_signal
-    = g_signal_connect_swapped (G_OBJECT (st->playlist), "changed",
-				G_CALLBACK (play_list_combo_changed), st);
-  gtk_box_pack_start (hbox, GTK_WIDGET (st->playlist), FALSE, FALSE, 0);
+  st->play_list_selector_changed_signal
+    = g_signal_connect_swapped (G_OBJECT (st->play_list_selector),
+				"changed",
+				G_CALLBACK (play_list_selector_changed), st);
+  gtk_box_pack_start (hbox, st->play_list_selector,
+		      FALSE, FALSE, 0);
+#endif
 
   st->search_enabled = GTK_TOGGLE_BUTTON (gtk_check_button_new ());
   g_signal_connect_swapped (G_OBJECT (st->search_enabled), "toggled",
@@ -3161,6 +3284,7 @@ starling_run (void)
   GtkWidget *search_entry_combo
     = gtk_combo_box_entry_new_with_model (GTK_TREE_MODEL (st->searches), 0);
   gtk_box_pack_end (GTK_BOX (vbox2), search_entry_combo, FALSE, TRUE, 0);
+  gtk_widget_show (search_entry_combo);
 
   st->search_entry = gtk_bin_get_child (GTK_BIN (search_entry_combo));
   g_signal_connect_swapped (G_OBJECT (st->search_entry),
@@ -3177,6 +3301,7 @@ starling_run (void)
 						  GTK_ICON_SIZE_BUTTON));
   g_signal_connect_swapped (G_OBJECT (clear), "clicked",
 			    G_CALLBACK (search_text_clear), st);
+  gtk_widget_show (clear);
   gtk_box_pack_start (hbox, clear, FALSE, FALSE, 0);
 
 
@@ -3406,7 +3531,10 @@ starling_run (void)
   deserialize (st);
 
   gtk_widget_show_all (st->window);
+
   gtk_widget_hide (GTK_WIDGET (st->status));
+
+  set_title (st);
 
   return st;
 }

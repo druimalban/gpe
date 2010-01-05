@@ -21,6 +21,7 @@
 #define PLAYLISTS_H
 
 #include <glib-object.h>
+#include <gtk/gtktreemodel.h>
 
 #include "musicdb.h"
 
@@ -70,5 +71,10 @@ extern void play_lists_force_changed (PlayLists *pls, gint n);
 
 /* Return the index (= row) of the play list PLAY_LIST.  */
 extern gint play_lists_index_of (PlayLists *pls, const char *play_list);
+
+/* Returns true and sets iter to the row containing play list
+   PLAY_LIST if PLAY_LIST exists.  Otherwise, returns false.  */
+extern gboolean play_lists_iter_of (PlayLists *pls, GtkTreeIter *iter,
+				    const char *play_list);
 
 #endif
