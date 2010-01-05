@@ -1,5 +1,17 @@
 2010-01-05  Neal Walfield  <neal@gnu.org>
 
+	* src/starling.c [HAVE_HILDON_PANNABLE_AREA]: Include
+	<hildon/hildon-pannable-area.h>.
+	(struct _Starling): Change fields library_view_window and
+	queue_view_window to GtkWidget *s.  Rename field textview to
+	lyrics_textview.  Update users.
+	(starling_run) [HAVE_HILDON_GTK_TREE_VIEW]: Use
+	hildon_gtk_tree_view_new_with_model to create the tree view.
+	[HAVE_HILDON_PANNABLE_AREA]: Use HildonPannableArea:s in place of
+	GtkScrolledWindow:s.
+
+2010-01-05  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c (struct _Starling): Add fields lyrics_tab and
 	lastfm_tab.
 	[HAVE_HILDON_STACKABLE_WINDOWS]: Don't include the notebook,

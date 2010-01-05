@@ -69,6 +69,9 @@
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
 # include <hildon/hildon-touch-selector.h>
 #endif
+#ifdef HAVE_HILDON_PANNABLE_AREA
+# include <hildon/hildon-pannable-area.h>
+#endif
 
 struct play_list_view_config
 {
@@ -105,7 +108,7 @@ struct _Starling {
 
   GtkLabel *status;
 
-  GtkScrolledWindow *library_view_window;
+  GtkWidget *library_view_window;
   GtkWidget *library_view;
   struct caption *caption;
   PlayLists *play_lists_model;
@@ -119,7 +122,7 @@ struct _Starling {
   GtkListStore *searches;
 
 #ifndef HAVE_HILDON_STACKABLE_WINDOWS
-  GtkScrolledWindow *queue_view_window;
+  GtkWidget *queue_view_window;
   GtkWidget *queue_view;
 #endif
 
@@ -132,9 +135,10 @@ struct _Starling {
 
   GtkWidget *random;
   gchar *fs_last_path;
-  GtkWidget *textview;
 
+  GtkWidget *lyrics_textview;
   gboolean has_lyrics;
+
   gint64 current_length;
   gboolean enqueued;
 #if HAVE_HILDON && !(HAVE_MAEMO && HAVE_MAEMO_VERSION >= 500)
@@ -226,7 +230,7 @@ set_title (Starling *st)
     {
       st->has_lyrics = TRUE;
       lyrics_display
-	(artist, title, GTK_TEXT_VIEW (st->textview),
+	(artist, title, GTK_TEXT_VIEW (st->lyrics_textview),
 	 GTK_IS_CHECK_MENU_ITEM (st->download_lyrics)
 	 ? gtk_check_menu_item_get_active ((void *) st->download_lyrics)
 	 : gtk_toggle_button_get_active ((void *) st->download_lyrics),
@@ -2297,7 +2301,7 @@ lyrics_download (Starling *st)
 
   st->has_lyrics = TRUE;
   lyrics_display (info.artist ?: "", info.title ?: "",
-		  GTK_TEXT_VIEW (st->textview),
+		  GTK_TEXT_VIEW (st->lyrics_textview),
 		  TRUE, TRUE);
 
   g_free (info.artist);
@@ -3350,8 +3354,14 @@ starling_run (void)
   gtk_widget_show (GTK_WIDGET (hbox));
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), TRUE, TRUE, 0);
 
-  st->library_view
-    = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->library));
+#ifdef HAVE_HILDON_GTK_TREE_VIEW
+  st->library_view =
+    hildon_gtk_tree_view_new_with_model (HILDON_UI_MODE_NORMAL,
+					 GTK_TREE_MODEL (st->library));
+#else
+  st->library_view =
+    gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->library));
+#endif
   g_signal_connect (G_OBJECT (st->library_view), "row-activated",
 		    G_CALLBACK (activated_cb), st);
   g_signal_connect (G_OBJECT (st->library_view), "button-press-event",
@@ -3383,12 +3393,16 @@ starling_run (void)
 				      st, NULL);
   gtk_widget_show (st->library_view);
 
+#ifdef HAVE_HILDON_PANNABLE_AREA
+  scrolled = hildon_pannable_area_new ();
+#else
   scrolled = gtk_scrolled_window_new (NULL, NULL);
-  st->library_view_window = GTK_SCROLLED_WINDOW (scrolled);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
 				  GTK_POLICY_AUTOMATIC,
 				  GTK_POLICY_AUTOMATIC);
-    
+#endif
+  st->library_view_window = scrolled;
+
   gtk_container_add (GTK_CONTAINER (scrolled), st->library_view);
   gtk_widget_show (scrolled);
   gtk_container_add (GTK_CONTAINER (hbox), scrolled);
@@ -3525,16 +3539,21 @@ starling_run (void)
     gtk_box_pack_start (GTK_BOX (vbox), download, FALSE, FALSE, 0);
 
     /* ...Lyrics...  */
-    GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
+    GtkWidget *scrolled;
+#ifdef HAVE_HILDON_PANNABLE_AREA
+    scrolled = hildon_pannable_area_new ();
+#else
+    scrolled = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
 				    GTK_POLICY_ALWAYS, GTK_POLICY_ALWAYS);
+#endif
     gtk_widget_show (scrolled);
     gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 3);
 
-    st->textview = gtk_text_view_new ();
-    GTK_TEXT_VIEW (st->textview)->editable = FALSE;
-    gtk_widget_show (st->textview);
-    gtk_container_add (GTK_CONTAINER (scrolled), st->textview);
+    st->lyrics_textview = gtk_text_view_new ();
+    GTK_TEXT_VIEW (st->lyrics_textview)->editable = FALSE;
+    gtk_widget_show (st->lyrics_textview);
+    gtk_container_add (GTK_CONTAINER (scrolled), st->lyrics_textview);
   }
 
   /* Web services tab (for now, last.fm) */
