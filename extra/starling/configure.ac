@@ -146,7 +146,8 @@ AC_REPLACE_FUNCS([gst_bus_timed_pop_filtered])
 AC_REPLACE_FUNCS([gst_bus_timed_pop])
 AC_CHECK_FUNC([hildon_app_menu_append], [AC_DEFINE(HAVE_HILDON_APP_MENU, 1)])
 AC_CHECK_FUNC([hildon_stackable_window_new], [AC_DEFINE(HAVE_HILDON_STACKABLE_WINDOWS, 1)])
-
+AC_CHECK_FUNC([hildon_pannable_area_new], [AC_DEFINE(HAVE_HILDON_PANNABLE_AREA, 1)])
+AC_CHECK_FUNC([hildon_gtk_tree_view_new], [AC_DEFINE(HAVE_HILDON_GTK_TREE_VIEW, 1)])
 CFLAGS="$old_CFLAGS"
 CPPFLAGS="$old_CPPFLAGS"
 LDFLAGS="$old_LDFLAGS"

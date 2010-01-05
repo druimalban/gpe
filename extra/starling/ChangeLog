@@ -14,6 +14,10 @@
 
 2010-01-05  Neal Walfield  <neal@gnu.org>
 
+	* configure.ac: Check for hildon_pannable_area_new.  Define
+	HAVE_HILDON_PANNABLE_AREA if it is available.  Check for
+	hildon_gtk_tree_view_new.  Define HAVE_HILDON_GTK_TREE_VIEW if it
+	is available.
 	* src/starling.c [HAVE_HILDON_PANNABLE_AREA]: Include
 	<hildon/hildon-pannable-area.h>.
 	(struct _Starling): Change fields library_view_window and
