@@ -94,11 +94,14 @@ struct _Starling {
   GtkComboBox *rating;
   int rating_change_signal_id;
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
   GtkWidget *notebook;
+#endif
   GtkWidget *library_tab;
   guint library_tab_update_source;
   GtkWidget *queue_tab;
-  GtkWidget *playlist_tab;
+  GtkWidget *lyrics_tab;
+  GtkWidget *lastfm_tab;
 
   GtkLabel *status;
 
@@ -115,8 +118,10 @@ struct _Starling {
   GtkWidget *search_entry;
   GtkListStore *searches;
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
   GtkScrolledWindow *queue_view_window;
   GtkWidget *queue_view;
+#endif
 
   /* Lastfm tab.  */
   GtkWidget *webuser_entry;
@@ -277,6 +282,8 @@ set_title (Starling *st)
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
   gtk_window_set_title (GTK_WINDOW (st->play_list_selector_view.window),
 			title_bar);
+  gtk_window_set_title (GTK_WINDOW (st->lyrics_tab), title_bar);
+  gtk_window_set_title (GTK_WINDOW (st->lastfm_tab), title_bar);
 #endif
 
   if (free_title_bar)
@@ -487,6 +494,7 @@ starling_prev (Starling *st)
 void
 starling_set_sink (Starling *st, char *sink)
 {
+  g_debug ("Setting sink to %s\n", sink);
   player_set_sink (st->player, sink);
 }
 
@@ -541,8 +549,9 @@ deserialize_bottom_half (gpointer data)
 
   Starling *st = bh->st;
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
   gtk_notebook_set_current_page (GTK_NOTEBOOK (st->notebook), bh->page);
-
+#endif
 
   /* Set the correct play list.  */
   GtkTreeIter iter;
@@ -997,9 +1006,11 @@ serialize (Starling *st)
   obstack_free (&history, NULL);
 
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
   /* The current page.  */
   int page = gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook));
   g_key_file_set_integer (keyfile, GROUP, KEY_CURRENT_PAGE, page);
+#endif
 
   /* Lyrics download.  */
   g_key_file_set_boolean
@@ -1220,7 +1231,9 @@ play_list_selector_changed_to (Starling *st,
 
       play_list_state_restore (st);
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
       update_library_count (st);
+#endif
 
       /* Rebuild the alpha seek bar.  */
       playlist_alpha_seek_build_queue (st);
@@ -1351,6 +1364,10 @@ remove_cb (Starling *st, GtkWidget *w)
 
   GtkWidget *view = NULL;
   PlayList *pl;
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  view = st->library_view;
+  pl = st->library;
+#else
   switch (gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook)))
     {
     case 0:
@@ -1365,6 +1382,7 @@ remove_cb (Starling *st, GtkWidget *w)
 
   if (! view)
     return;
+#endif
 
   GtkTreeSelection *selection
     = gtk_tree_view_get_selection (GTK_TREE_VIEW (view));
@@ -1394,10 +1412,12 @@ remove_cb (Starling *st, GtkWidget *w)
 static void
 clear_cb (Starling *st, GtkWidget *w)
 {
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
   switch (gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook)))
     {
     case 0:
       {
+#endif
 	char *text = play_list_selector_get_active (st);
 	if (strcmp (text, "Library") == 0)
 	  {
@@ -1412,12 +1432,14 @@ clear_cb (Starling *st, GtkWidget *w)
 
 	g_free (text);
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
 	break;
       }
     case 1:
       music_db_play_list_clear (st->db, "queue");
       break;
     }
+#endif
 }
 
 #ifdef HAVE_TOGGLE_FULLSCREEN
@@ -1585,7 +1607,9 @@ change_caption_format (gpointer user_data, GtkMenuItem *menuitem)
       g_free (fmt);
 
       gtk_widget_queue_draw (st->library_view);
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
       gtk_widget_queue_draw (st->queue_view);
+#endif
 
       break;
 
@@ -1724,7 +1748,9 @@ static void
 jump_to_current (Starling *st)
 {
   starling_scroll_to (st, -1);
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
   gtk_notebook_set_current_page (GTK_NOTEBOOK (st->notebook), 0);
+#endif
 }
 
 static int search_text_save_source;
@@ -2201,6 +2227,7 @@ volume_changed (GtkScaleButton *button, gdouble value, Starling *st)
 }
 #endif
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
 static void
 update_queue_count (Starling *st)
 {
@@ -2257,6 +2284,7 @@ update_library_count (Starling *st)
     st->library_tab_update_source
       = gtk_idle_add (update_library_count_flush, st);  
 }
+#endif
 
 
 static void
@@ -3243,15 +3271,17 @@ starling_run (void)
   gtk_box_pack_start (hbox, jump_to, FALSE, FALSE, 0);
 #endif
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
   /* The notebook containing the tabs.  */
   st->notebook = gtk_notebook_new ();
   gtk_container_add (GTK_CONTAINER (main_box), GTK_WIDGET (st->notebook));
-
+#endif
 
   /* Library view tab.  Place a search field at the top and the
      library view at the bottom.  */
 
   vbox = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox);
 
   /* The currently playing song.  */
   /* Stuff the title label in an hbox to prevent it from being
@@ -3275,6 +3305,7 @@ starling_run (void)
     = g_signal_connect_swapped (G_OBJECT (st->play_list_selector),
 				"changed",
 				G_CALLBACK (play_list_selector_changed), st);
+  gtk_widget_show (st->play_list_selector);
   gtk_box_pack_start (hbox, st->play_list_selector,
 		      FALSE, FALSE, 0);
 #endif
@@ -3282,6 +3313,7 @@ starling_run (void)
   st->search_enabled = GTK_TOGGLE_BUTTON (gtk_check_button_new ());
   g_signal_connect_swapped (G_OBJECT (st->search_enabled), "toggled",
 			    G_CALLBACK (search_text_changed), st);
+  gtk_widget_show (GTK_WIDGET (st->search_enabled));
   gtk_box_pack_start (hbox, GTK_WIDGET (st->search_enabled), FALSE, FALSE, 0);
 
   st->searches = gtk_list_store_new (2, GTK_TYPE_STRING, GTK_TYPE_UINT);
@@ -3315,8 +3347,8 @@ starling_run (void)
 
 
   hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
-  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), TRUE, TRUE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
+  gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), TRUE, TRUE, 0);
 
   st->library_view
     = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->library));
@@ -3349,7 +3381,8 @@ starling_run (void)
 				      renderer,
 				      title_data_func,
 				      st, NULL);
-    
+  gtk_widget_show (st->library_view);
+
   scrolled = gtk_scrolled_window_new (NULL, NULL);
   st->library_view_window = GTK_SCROLLED_WINDOW (scrolled);
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
@@ -3357,6 +3390,7 @@ starling_run (void)
 				  GTK_POLICY_AUTOMATIC);
     
   gtk_container_add (GTK_CONTAINER (scrolled), st->library_view);
+  gtk_widget_show (scrolled);
   gtk_container_add (GTK_CONTAINER (hbox), scrolled);
 
 
@@ -3399,6 +3433,10 @@ starling_run (void)
 		    G_CALLBACK (save_cb), st);
 #endif
     
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  gtk_box_pack_start (GTK_BOX (main_box), vbox, TRUE, TRUE, 0);
+  st->library_tab = GTK_WIDGET (st->window);
+#else
   st->library_tab = GTK_WIDGET (vbox);
   gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
 			    gtk_label_new (_("Library")));
@@ -3408,10 +3446,12 @@ starling_run (void)
 			    G_CALLBACK (update_library_count), st);
   g_signal_connect_swapped (G_OBJECT (st->library), "row-deleted",
 			    G_CALLBACK (update_library_count), st);
+#endif
 
 
   /* Play queue tab.  */
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
   vbox = gtk_vbox_new (FALSE, 0);
 
   st->queue_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (st->queue));
@@ -3453,82 +3493,135 @@ starling_run (void)
 			    G_CALLBACK (update_queue_count), st);
   g_signal_connect_swapped (G_OBJECT (st->queue), "row-deleted",
 			    G_CALLBACK (update_queue_count), st);
+#endif
 
 
   /* Lyrics tab */
+  {
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+    st->lyrics_tab = hildon_stackable_window_new ();
+    g_signal_connect_swapped (G_OBJECT (st->lyrics_tab),
+			      "delete-event", G_CALLBACK (window_x), st);
+    menu_item_add (false, _("Lyrics"), NULL,
+		   G_CALLBACK (gtk_widget_show), st->lyrics_tab);
+#endif
 
-  vbox = gtk_vbox_new (FALSE, 0);
+    vbox = gtk_vbox_new (FALSE, 0);
+    gtk_widget_show (vbox);
 
-  GtkWidget *download = gtk_button_new_with_label (_("Download"));
-  g_signal_connect_swapped (G_OBJECT (download), "clicked",
-			    G_CALLBACK (lyrics_download), st);
-  gtk_box_pack_start (GTK_BOX (vbox), download, FALSE, FALSE, 0);
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+    gtk_container_add (GTK_CONTAINER (st->lyrics_tab), vbox);
+#else
+    st->lyrics_tab = vbox;
+    gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
+			      gtk_label_new (_("Lyrics")));
+#endif
 
-  st->textview = gtk_text_view_new ();
-  GTK_TEXT_VIEW (st->textview)->editable = FALSE;
+    /* [Download].  */
+    GtkWidget *download = gtk_button_new_with_label (_("Download"));
+    g_signal_connect_swapped (G_OBJECT (download), "clicked",
+			      G_CALLBACK (lyrics_download), st);
+    gtk_widget_show (download);
+    gtk_box_pack_start (GTK_BOX (vbox), download, FALSE, FALSE, 0);
 
-  scrolled = gtk_scrolled_window_new (NULL, NULL);
-    
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
-				  GTK_POLICY_ALWAYS, GTK_POLICY_ALWAYS);
+    /* ...Lyrics...  */
+    GtkWidget *scrolled = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
+				    GTK_POLICY_ALWAYS, GTK_POLICY_ALWAYS);
+    gtk_widget_show (scrolled);
+    gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 3);
 
-  gtk_container_add (GTK_CONTAINER (scrolled), st->textview);
-
-  gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 3);
-
-  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
-			    gtk_label_new (_("Lyrics")));
+    st->textview = gtk_text_view_new ();
+    GTK_TEXT_VIEW (st->textview)->editable = FALSE;
+    gtk_widget_show (st->textview);
+    gtk_container_add (GTK_CONTAINER (scrolled), st->textview);
+  }
 
   /* Web services tab (for now, last.fm) */
+  {
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+    st->lastfm_tab = hildon_stackable_window_new ();
+    g_signal_connect_swapped (G_OBJECT (st->lastfm_tab),
+			      "delete-event", G_CALLBACK (window_x), st);
+    menu_item_add (false, _("Last FM"), NULL,
+		   G_CALLBACK (gtk_widget_show), st->lastfm_tab);
+#endif
 
-  hbox1 = gtk_hbox_new (FALSE, 2);
-  label = gtk_label_new (_("Username:"));
-  st->webuser_entry = gtk_entry_new ();
+    GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
+    gtk_widget_show (vbox);
 
-  gtk_box_pack_start (GTK_BOX (hbox1), label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox1), st->webuser_entry, TRUE, TRUE, 0);
-    
-  hbox2 = gtk_hbox_new (FALSE, 2);
-  label = gtk_label_new (_("Password:"));
-  st->webpasswd_entry = gtk_entry_new ();
-  gtk_entry_set_visibility (GTK_ENTRY (st->webpasswd_entry), FALSE);
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+    gtk_container_add (GTK_CONTAINER (st->lastfm_tab), vbox);
+#else
+    gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
+			      gtk_label_new (_("last.fm")));
+    st->lastfm_tab = vbox;
+#endif
 
-  gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (hbox2), st->webpasswd_entry, TRUE, TRUE, 0);
-    
-  /*gtk_box_pack_start (GTK_BOX (hbox), st->webuser_entry, TRUE, TRUE, 0);
-
+    /* Username: [         ]  */
+    GtkWidget *hbox = gtk_hbox_new (FALSE, 2);
     gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
-  */
-  vbox = gtk_vbox_new (FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox1, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
+    gtk_widget_show (hbox);
 
-  hbox2 = gtk_hbox_new (FALSE, 2);
-  label = gtk_label_new (_("Auto submit after"));
-  gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
+    GtkWidget *label = gtk_label_new (_("Username:"));
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+    gtk_widget_show (label);
 
-  st->lastfm_autosubmit
-    = GTK_SPIN_BUTTON (gtk_spin_button_new_with_range (0, 100, 1));
-  gtk_box_pack_start (GTK_BOX (hbox2), GTK_WIDGET (st->lastfm_autosubmit),
-		      FALSE, FALSE, 0);
-    
-  label = gtk_label_new (_("pending submissions."));
-  gtk_box_pack_start (GTK_BOX (hbox2), label, FALSE, FALSE, 0);
-
-  gtk_box_pack_start (GTK_BOX (vbox), hbox2, FALSE, FALSE, 0);
-
-  st->web_count = gtk_label_new ("");
-  st->web_submit = gtk_button_new_with_label (_("Submit"));
-  g_signal_connect (G_OBJECT (st->web_submit), "clicked",
-		    G_CALLBACK (lastfm_submit_cb), st);
-  gtk_box_pack_start (GTK_BOX (vbox), st->web_count, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (vbox), st->web_submit, FALSE, FALSE, 0);
-    
-  gtk_notebook_append_page (GTK_NOTEBOOK (st->notebook), vbox,
-			    gtk_label_new (_("last.fm")));
+    st->webuser_entry = gtk_entry_new ();
+    gtk_box_pack_start (GTK_BOX (hbox), st->webuser_entry, TRUE, TRUE, 0);
+    gtk_widget_show (st->webuser_entry);
 
 
+    /* Password: [         ]  */
+    hbox = gtk_hbox_new (FALSE, 2);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+    gtk_widget_show (hbox);
+
+    label = gtk_label_new (_("Password:"));
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+    gtk_widget_show (label);
+  
+    st->webpasswd_entry = gtk_entry_new ();
+    gtk_entry_set_visibility (GTK_ENTRY (st->webpasswd_entry), FALSE);
+    gtk_widget_show (st->webpasswd_entry);
+    gtk_box_pack_start (GTK_BOX (hbox), st->webpasswd_entry, TRUE, TRUE, 0);
+
+
+    /* Auto submit after [   ] pending submissions.  */
+    hbox = gtk_hbox_new (FALSE, 2);
+    gtk_widget_show (hbox);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox, FALSE, FALSE, 0);
+
+    label = gtk_label_new (_("Auto submit after"));
+    gtk_widget_show (label);
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+
+    st->lastfm_autosubmit
+      = GTK_SPIN_BUTTON (gtk_spin_button_new_with_range (0, 100, 1));
+    gtk_widget_show (GTK_WIDGET (st->lastfm_autosubmit));
+    gtk_box_pack_start (GTK_BOX (hbox), GTK_WIDGET (st->lastfm_autosubmit),
+			FALSE, FALSE, 0);
+
+    label = gtk_label_new (_("pending submissions."));
+    gtk_widget_show (label);
+    gtk_box_pack_start (GTK_BOX (hbox), label, FALSE, FALSE, 0);
+
+
+    /* [  ] tracks pending.  */
+    st->web_count = gtk_label_new ("");
+    gtk_widget_show (st->web_count);
+    gtk_box_pack_start (GTK_BOX (vbox), st->web_count, FALSE, FALSE, 0);
+
+    /* [Submit]  */
+    st->web_submit = gtk_button_new_with_label (_("Submit Now"));
+    g_signal_connect (G_OBJECT (st->web_submit), "clicked",
+		      G_CALLBACK (lastfm_submit_cb), st);
+    gtk_widget_show (st->web_submit);
+    gtk_box_pack_start (GTK_BOX (vbox), st->web_submit, FALSE, FALSE, 0);
+  }
+
+  /* The status label used to show the amount of background work
+     (e.g., files to scan).  */
   st->status = GTK_LABEL (gtk_label_new (NULL));
   gtk_box_pack_start (GTK_BOX (main_box), GTK_WIDGET (st->status),
 		      FALSE, FALSE, 0);

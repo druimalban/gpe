@@ -1,5 +1,36 @@
 2010-01-05  Neal Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct _Starling): Add fields lyrics_tab and
+	lastfm_tab.
+	[HAVE_HILDON_STACKABLE_WINDOWS]: Don't include the notebook,
+	queue_view_window and queue_view fields.
+	(set_title) [HAVE_HILDON_STACKABLE_WINDOWS]: Set the title for the
+	ST->LYRICS_TAB and ST->LASTFM_TAB windows.
+	(deserialize_bottom_half) [HAVE_HILDON_STACKABLE_WINDOWS]: Don't
+	update ST->NOTEBOOK in this case.
+	(serialize) [HAVE_HILDON_STACKABLE_WINDOWS]: Don't save
+	ST->NOTEBOOK's state in this case.
+	(play_list_selector_changed_to) [HAVE_HILDON_STACKABLE_WINDOWS]:
+	Don't call update_library_count.
+	(remove_cb) [HAVE_HILDON_STACKABLE_WINDOWS]: Assume the library
+	view.
+	(clear_cb) [HAVE_HILDON_STACKABLE_WINDOWS]: Likewise.
+	(change_caption_format) [HAVE_HILDON_STACKABLE_WINDOWS]: Don't
+	call gtk_widget_queue_draw on ST->QUEUE_VIEW.
+	(jump_to_current) [HAVE_HILDON_STACKABLE_WINDOWS]: Don't update
+	ST->NOTEBOOK.
+	(update_library_count) [HAVE_HILDON_STACKABLE_WINDOWS]: Don't
+	define.
+	(update_library_count_flush) [HAVE_HILDON_STACKABLE_WINDOWS]:
+	Likewise.
+	(update_library_count) [HAVE_HILDON_STACKABLE_WINDOWS]: Likewise.
+	(starling_run) [HAVE_HILDON_STACKABLE_WINDOWS]: Don't create a
+	notebook.  Show all widgets individually.  Don't create the queue
+	view tab.  Create the lyrics tab and lastfm tab in a stackable
+	window.
+
+2010-01-05  Neal Walfield  <neal@gnu.org>
+
 	* src/playlists.c (do_refresh): Set L->NEXT to NULL.
 	
 2010-01-05  Neal Walfield  <neal@gnu.org>
