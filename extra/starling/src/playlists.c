@@ -62,6 +62,9 @@ struct _PlayLists {
 
   struct play_list *play_lists;
 
+  /* Whether to include the queue in the list of play lists.  */
+  gboolean include_queue;
+
   /* See the definition of version in the struct play_list above.  */
   unsigned int version;
 
@@ -215,7 +218,7 @@ do_refresh (gpointer data)
 
   struct play_list *last = NULL;
 
-  bool saw_queue = false;
+  bool saw_queue = ! pl->include_queue;
   int cb (const char *list)
   {
     if (strcmp (list, "queue") == 0)
@@ -401,12 +404,14 @@ removed_from_play_list (MusicDB *db, const char *list, gint offset,
 
 
 PlayLists *
-play_lists_new (MusicDB *db)
+play_lists_new (MusicDB *db, gboolean include_queue)
 {
   PlayLists *pl = PLAY_LISTS (g_object_new (PLAY_LISTS_TYPE, NULL));
 
   g_object_ref (db);
   pl->db = db;
+
+  pl->include_queue = include_queue;
 
   pl->new_entry_signal_id
     = g_signal_connect (G_OBJECT (db), "new-entry",

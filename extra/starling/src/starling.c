@@ -2896,7 +2896,16 @@ starling_run (void)
   g_signal_connect_swapped (G_OBJECT (st->player), "tags",
 			    G_CALLBACK (music_db_set_info_from_tags), st->db);
 
-  st->play_lists_model = play_lists_new (st->db);
+  /* If we use the note book, then we have a queue tab.  If we use
+     stackable windows, then we don't and we need to show the
+     queue.  */
+  st->play_lists_model = play_lists_new (st->db,
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+					 TRUE
+#else
+					 FALSE
+#endif
+					 );
 
   /* Build the GUI.  */
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS

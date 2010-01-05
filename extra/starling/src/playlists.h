@@ -58,8 +58,10 @@ enum
 
 /** play_lists_open:
 
-    Create a new play lists object based on music database DB.  */
-extern PlayLists *play_lists_new (MusicDB *db);
+    Create a new play lists object based on music database DB.  If
+    INCLUDE_QUEUE is TRUE, then the list includes the queue play list.
+    Otherwise, the queue play list is excluded.  */
+extern PlayLists *play_lists_new (MusicDB *db, gboolean include_queue);
 
 extern void play_lists_sort_set (PlayLists *pls);
 

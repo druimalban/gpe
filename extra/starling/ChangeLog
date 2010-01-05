@@ -1,5 +1,20 @@
 2010-01-05  Neal Walfield  <neal@gnu.org>
 
+	* src/playlists.h (play_lists_new): Take additional parameter
+	include_queue.
+	* src/playlists.c (struct _PlayLists): Add field include_queue.
+	(play_lists_new): Take additional parameter include_queue.  Set
+	PL->INCLUDE_QUEUE to it.
+	(do_refresh): Only include the "Queue" play list if
+	PL->INCLUDE_QUEUE is TRUE.
+	* src/starling.c (starling_run) [HAVE_HILDON_STACKABLE_WINDOWS]:
+	Update the call to play_list_new to have it include the "Queue"
+	playlist.
+	[! HAVE_HILDON_STACKABLE_WINDOWS]: Update the call to
+	play_list_new to have it not include the "Queue" playlist.
+
+2010-01-05  Neal Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_get_info_internal): Add limit 1 to the
 	SQL statement.  Don't abort in the callback.
 
