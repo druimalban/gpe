@@ -1465,7 +1465,7 @@ toggle_fullscreen (gpointer user_data, GtkWidget *menuitem)
 # else
   if (GTK_IS_CHECK_MENU_ITEM (menuitem)
       ? gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem))
-      : gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (menuitem)))
+      : hildon_check_button_get_active (HILDON_CHECK_BUTTON (menuitem)))
     gtk_window_fullscreen(GTK_WINDOW(user_data));
   else
     gtk_window_unfullscreen(GTK_WINDOW(user_data));
