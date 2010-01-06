@@ -3037,10 +3037,11 @@ starling_run (void)
   g_signal_connect (G_OBJECT (st->window), "key_press_event", 
 		    G_CALLBACK (key_press_event), st);
 
-  GtkWidget *menu;
-  GtkWidget *menu_item_add (bool check_menu_item,
+  GtkWidget *menu_item_add (GtkMenu *menu,
+			    bool check_menu_item,
 			    const char *text, const char *stock, GCallback cb,
 			    gpointer user_data)
+    
   {
     g_assert (text || stock);
 
@@ -3099,7 +3100,7 @@ starling_run (void)
     return item;
   }
 
-  void menu_separator (void)
+  void menu_separator (GtkWidget *menu)
   {
 #ifndef HAVE_HILDON_APP_MENU
     GtkWidget *mitem = gtk_separator_menu_item_new ();
@@ -3107,6 +3108,8 @@ starling_run (void)
     gtk_widget_show (mitem);
 #endif
   }
+
+  GtkWidget *menu;
 
 #if !(defined (HAVE_HILDON_APP_MENU) || HAVE_HILDON)
 # define MENU_HIERARCHY
@@ -3144,12 +3147,13 @@ starling_run (void)
     
 #if 0
   /* XXX: Disable adding individual files.  */
-  menu_item_add (false, _("Add _File"), NULL, G_CALLBACK (add_file_cb), st);
+  menu_item_add (menu, false, _("Add _File"), NULL,
+		 G_CALLBACK (add_file_cb), st);
 #endif
-  menu_item_add (false, _("Add _Directory"), NULL,
+  menu_item_add (menu, false, _("Add _Directory"), NULL,
 		 G_CALLBACK (add_directory_cb), st);
 #ifdef MENU_HIERARCHY
-  menu_item_add (false, _("_Quit"), GTK_STOCK_QUIT,
+  menu_item_add (menu, false, _("_Quit"), GTK_STOCK_QUIT,
 		 G_CALLBACK (starling_quit), st);
 #endif
 
@@ -3163,7 +3167,7 @@ starling_run (void)
 #endif
 
 #ifdef HAVE_TOGGLE_FULLSCREEN
-  st->fullscreen = menu_item_add (true, _("_Full Screen"), NULL,
+  st->fullscreen = menu_item_add (menu, true, _("_Full Screen"), NULL,
 				  G_CALLBACK (toggle_fullscreen),
 # if HAVE_HILDON_VERSION == 0
 				  main_appview
@@ -3173,20 +3177,21 @@ starling_run (void)
 				  );
 #endif
     
-  st->random = menu_item_add (true, _("_Random"), NULL,
+  st->random = menu_item_add (menu, true, _("_Random"), NULL,
 			      G_CALLBACK (set_random_cb), st);
-  menu_separator ();
-  menu_item_add (false, _("Remove Selecte_d"), NULL,
+  menu_separator (menu);
+  menu_item_add (menu, false, _("Remove Selecte_d"), NULL,
 		 G_CALLBACK (remove_cb), st);
-  menu_item_add (false, _("_Clear list"), NULL, G_CALLBACK (clear_cb), st);
-  menu_separator ();
+  menu_item_add (menu, false, _("_Clear list"), NULL,
+		 G_CALLBACK (clear_cb), st);
+  menu_separator (menu);
 
 
-  menu_item_add (false, _("_Caption Format"), NULL,
+  menu_item_add (menu, false, _("_Caption Format"), NULL,
 		 G_CALLBACK (change_caption_format), st);
   /* check_menu.  */
   st->download_lyrics
-    = menu_item_add (true, _("Download _Lyrics"), NULL, NULL, NULL);
+    = menu_item_add (menu, true, _("Download _Lyrics"), NULL, NULL, NULL);
 
 
 
@@ -3548,8 +3553,9 @@ starling_run (void)
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
     st->lyrics_tab = hildon_stackable_window_new ();
     g_signal_connect_swapped (G_OBJECT (st->lyrics_tab),
-			      "delete-event", G_CALLBACK (window_x), st);
-    menu_item_add (false, _("Lyrics"), NULL,
+			      "delete-event", G_CALLBACK (window_x),
+			      st->lyrics_tab);
+    menu_item_add (menu, false, _("Lyrics"), NULL,
 		   G_CALLBACK (gtk_widget_show), st->lyrics_tab);
 #endif
 
@@ -3594,8 +3600,9 @@ starling_run (void)
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
     st->lastfm_tab = hildon_stackable_window_new ();
     g_signal_connect_swapped (G_OBJECT (st->lastfm_tab),
-			      "delete-event", G_CALLBACK (window_x), st);
-    menu_item_add (false, _("Last FM"), NULL,
+			      "delete-event", G_CALLBACK (window_x),
+			      st->lastfm_tab);
+    menu_item_add (menu, false, _("Last FM"), NULL,
 		   G_CALLBACK (gtk_widget_show), st->lastfm_tab);
 #endif
 

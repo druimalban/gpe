@@ -1,5 +1,13 @@
 2010-01-06  Neal Walfield  <neal@gnu.org>
 
+	* src/starling.c (menu_item_add): Add parameter menu to avoid
+	menu_item_add being implemented as a nested function, which is
+	compiled incorrectly using Nokia's Maemo 5 SDK:
+	Cf. https://bugs.maemo.org/show_bug.cgi?id=7699.  Update users.
+	(menu_separator): Likewise.
+
+2010-01-06  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c (window_x): Change return type to a gboolean.
 	Return TRUE.
 
