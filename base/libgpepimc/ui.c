@@ -700,9 +700,29 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
       g_object_set_data (G_OBJECT (tree_view), "toggle-col", col);
       g_signal_connect(G_OBJECT(renderer), "toggled", 
                        G_CALLBACK(category_toggled), (gpointer) list_store);
+
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+      /* HACK to workround Maemo5 bug with toggle rendering.
+	 Thanks to Conny Hald for this workround */
+      /* Apply the HildonCheckButton style to the whole tree view */
+      /* Note: this means the formatting of the text column is wrong and has to be forced in
+	 the layout of the calendar_text_cell_renderer */
+      GtkStyle *style = gtk_rc_get_style_by_paths (gtk_widget_get_settings (GTK_WIDGET(window)),
+						   NULL,
+						   "*.HildonCheckButton.GtkAlignment.GtkHBox.GtkCellView",
+						   G_TYPE_NONE);
+      gtk_widget_set_style(GTK_WIDGET(tree_view), style);
+      /* Set the indicator to the right size (the size of the pixmap) */
+      g_object_set (renderer, "indicator-size", 38, NULL);
+#endif
     }
   renderer = gtk_cell_renderer_text_new ();
   g_object_set (G_OBJECT (renderer), "editable", TRUE, NULL);
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+  /* The HACK to workround Maemo5 bug with toggle rendering (see above)
+     means that we have to force the font size here */
+  g_object_set (G_OBJECT (renderer), "size-points", (gdouble) 24, NULL);
+#endif
   col = gtk_tree_view_column_new_with_attributes (NULL, renderer, 
                                                   "text", LS_NAME, NULL);
 
@@ -728,11 +748,15 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
   if (select)
   {
     okbutton = gtk_button_new_with_label (_("OK"));
+#if MAEMO_VERSION_MAJOR < 5
     cancelbutton = gtk_button_new_with_label (_("Cancel"));
+#endif
   }
   else
   {
+#if MAEMO_VERSION_MAJOR < 5
     okbutton = gtk_button_new_with_label (_("Close"));
+#endif
     newbutton = gtk_button_new_with_label (_("New"));
     editbutton = gtk_button_new_with_label (_("Edit"));
     deletebutton = gtk_button_new_with_label (_("Delete"));
@@ -761,8 +785,8 @@ gtk_tree_view_set_hover_selection(GTK_TREE_VIEW(tree_view), FALSE);
 if (select)
   {
     gtk_window_set_title (GTK_WINDOW (window), _("Select categories"));
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancelbutton, TRUE, TRUE, 0);
+    if (okbutton) gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
+    if (cancelbutton) gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), cancelbutton, TRUE, TRUE, 0);
   }
 else
   {
@@ -770,7 +794,7 @@ else
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), newbutton, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), editbutton, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), deletebutton, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
+    if (okbutton) gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
     g_signal_connect (G_OBJECT (newbutton), "clicked", G_CALLBACK (new_category), tree_view);
     g_signal_connect (G_OBJECT (deletebutton), "clicked", G_CALLBACK (delete_category), tree_view);
   }
@@ -780,8 +804,10 @@ else
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->action_area), okbutton, TRUE, TRUE, 0);
 #endif
   
-  GTK_WIDGET_SET_FLAGS (okbutton, GTK_CAN_DEFAULT);
-  gtk_widget_grab_default (okbutton);
+  if (okbutton) {
+    GTK_WIDGET_SET_FLAGS (okbutton, GTK_CAN_DEFAULT);
+    gtk_widget_grab_default (okbutton);
+  }
   
   gtk_window_set_default_size (GTK_WINDOW (window), 240, 320);
 

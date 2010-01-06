@@ -1,3 +1,13 @@
+2010-01-06  Graham Cobb  <g+770@cobb.uk.net>
+
+	* ui.c (gpe_pim_categories_dialog): HACK to workround Maemo5 bug with toggle rendering.
+
+2009-10-04  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac: Check for Maemo version
+
+	* ui.c (gpe_pim_categories_dialog): Remove Cancel button on Fremantle
+
 2008-09-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* debian/control: change binary package name to libgpepimc1
