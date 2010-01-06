@@ -57,6 +57,8 @@
 #  include <hildon/hildon-program.h>
 #  include <hildon/hildon-window.h>
 #  include <hildon/hildon-file-chooser-dialog.h>
+#  include <hildon/hildon-button.h>
+#  include <hildon/hildon-check-button.h>
 # else
 #  include <hildon-widgets/hildon-app.h>
 #  include <hildon-widgets/hildon-appview.h>
@@ -239,7 +241,7 @@ set_title (Starling *st)
 	(artist, title, GTK_TEXT_VIEW (st->lyrics_textview),
 	 GTK_IS_CHECK_MENU_ITEM (st->download_lyrics)
 	 ? gtk_check_menu_item_get_active ((void *) st->download_lyrics)
-	 : gtk_toggle_button_get_active ((void *) st->download_lyrics),
+	 : hildon_check_button_get_active ((void *) st->download_lyrics),
 	 FALSE);
     }
 
@@ -314,8 +316,8 @@ starling_random (Starling *st)
     return gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (st->random));
   else
     {
-      g_assert (GTK_IS_TOGGLE_BUTTON (st->random));
-      return gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (st->random));
+      g_assert (HILDON_IS_CHECK_BUTTON (st->random));
+      return hildon_check_button_get_active (HILDON_CHECK_BUTTON (st->random));
     }
 }
 
@@ -329,8 +331,8 @@ starling_random_set (Starling *st, bool value)
     gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (st->random), value);
   else
     {
-      g_assert (GTK_IS_TOGGLE_BUTTON (st->random));
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (st->random), value);
+      g_assert (HILDON_IS_CHECK_BUTTON (st->random));
+      hildon_check_button_set_active (HILDON_CHECK_BUTTON (st->random), value);
     }
 }
 
@@ -859,7 +861,8 @@ deserialize (Starling *st)
     gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (st->download_lyrics),
 				    b);
   else
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (st->download_lyrics), b);
+    hildon_check_button_set_active
+      (HILDON_CHECK_BUTTON (st->download_lyrics), b);
 
   /* Caption format.  */
   value = g_key_file_get_string (keyfile, GROUP, KEY_CAPTION_FORMAT, NULL);
@@ -1027,7 +1030,7 @@ serialize (Starling *st)
     (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, 
      GTK_IS_CHECK_MENU_ITEM (st->download_lyrics)
      ? gtk_check_menu_item_get_active ((void *) st->download_lyrics)
-     : gtk_toggle_button_get_active ((void *) st->download_lyrics));
+     : hildon_check_button_get_active ((void *) st->download_lyrics));
 
 
   config_file_save (keyfile);
@@ -3044,10 +3047,27 @@ starling_run (void)
 
     /* A hildon app menu consists of buttons.  */
 #ifdef HAVE_HILDON_APP_MENU
+    /* Remove any _:s.  */
+    char t[strlen (text) + 1];
+    char *p = t;
+    int i;
+    for (i = 0; text[i]; i ++)
+      if (text[i] != '_')
+	{
+	  *p = text[i];
+	  p ++;
+	}
+    *p = 0;
+
     if (check_menu_item)
-      item = gtk_toggle_button_new_with_mnemonic (text);
+      {
+	item = hildon_check_button_new (HILDON_SIZE_AUTO);
+	gtk_button_set_label (GTK_BUTTON (item), t);
+      }
     else
-      item = gtk_button_new_with_mnemonic (text);
+      item = hildon_button_new_with_text (HILDON_SIZE_AUTO,
+					  HILDON_BUTTON_ARRANGEMENT_VERTICAL,
+					  t, NULL);
     signal = "clicked";
     append = (void *) hildon_app_menu_append;
 #else
