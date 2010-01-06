@@ -1,5 +1,10 @@
 2010-01-06  Neal Walfield  <neal@gnu.org>
 
+	* src/main.c (main) [HAVE_HILDON && HAVE_HILDON_VERSION >= 202]:
+	Call hildon_init.
+
+2010-01-06  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c (menu_item_add): Add parameter menu to avoid
 	menu_item_add being implemented as a nested function, which is
 	compiled incorrectly using Nokia's Maemo 5 SDK:

@@ -1,7 +1,7 @@
 /*
    Copyright (C) 2006 Alberto García Hierro
         <skyhusker@handhelds.org>
-   Copyright (C) 2007, 2008, 2009 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2007, 2008, 2009, 2010 Neal H. Walfield <neal@walfield.org>
   
    This file is part of GPE.
 
@@ -119,6 +119,10 @@ main (int argc, char *argv[])
 #else
   gtk_init (&argc, &argv);
 #endif
+#if HAVE_HILDON && HAVE_HILDON_VERSION >= 202
+  hildon_init ();
+#endif
+
 
   /* See if there is another instance of Starling already running.  If
      so, try to handoff any arguments and exit.  Otherwise, take
