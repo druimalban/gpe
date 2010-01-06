@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *               2006, 2007 Florian Boor <florian.boor@kernelconcepts.de>
+ *		 2007-2010 Graham Cobb <g+gpe@cobb.uk.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License

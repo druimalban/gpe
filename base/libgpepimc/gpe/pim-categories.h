@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2002 Philip Blundell <philb@gnu.org>
  *               2006 Florian Boor <florian.boor@kernelconcepts.de>
- *               2007 Graham R. Cobb <g+gpe@cobb.uk.net>
+ *               2007, 2008 Graham R. Cobb <g+gpe@cobb.uk.net>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
