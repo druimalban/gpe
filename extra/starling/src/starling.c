@@ -65,6 +65,10 @@
 #  include <hildon-fm/hildon-widgets/hildon-file-chooser-dialog.h>
 # endif /* HAVE_HILDON_VERSION */
 
+# if HAVE_HILDON_VERSION >= 202
+#  include <hildon/hildon-defines.h>
+# endif
+
 # include <libosso.h>
 # define APPLICATION_DBUS_SERVICE "starling"
 #endif /* HAVE_HILDON */
@@ -1905,8 +1909,14 @@ playlist_alpha_seek_build (Starling *st)
     /* Add it to the container.  */
     gtk_box_pack_start (GTK_BOX (st->playlist_alpha_seek), GTK_WIDGET (label),
 			rubber, rubber, 0);
+
+    int w = -1;
+#if HAVE_MAEMO && HAVE_MAEMO_VERSION >= 500
+    w = HILDON_ICON_PIXEL_SIZE_FINGER;
+#endif
+
     if (rubber)
-      gtk_widget_set_size_request (GTK_WIDGET (label), -1, 2);
+      gtk_widget_set_size_request (GTK_WIDGET (label), w, 2);
     gtk_widget_show (GTK_WIDGET (label));
 
     return label;
