@@ -1,3 +1,7 @@
+2010-01-06  Graham Cobb  <g+770@cobb.uk.net>
+
+	* todo-ui.c (set_item_priority, get_item_state): check translated names
+
 2009-10-04  Graham Cobb  <g+770@cobb.uk.net>
 
 	* todo-ui.c (edit_item): Use GtkComboBox for priority and state

@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *               2005, 2006, 2008 Florian Boor <florian@kernelconcepts.de>
+ *               2009, 2010 Graham Cobb <g+gpe@cobb.uk.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -176,7 +177,7 @@ set_item_state (GtkComboBox *w, gpointer p)
 
   for (i = 0; i < sizeof (state_map) / sizeof (state_map[0]); i++)
     {
-      if (strcmp(name, state_map[i].string) == 0) {
+      if (strcmp(name, gettext(state_map[i].string)) == 0) {
         t->state = state_map[i].value;
 	g_free(name);
 	return;
@@ -198,7 +199,7 @@ set_item_priority (GtkComboBox *w, gpointer p)
 
   for (i = 0; i < sizeof (priority_map) / sizeof (priority_map[0]); i++)
     {
-      if (strcmp(name, priority_map[i].string) == 0) {
+      if (strcmp(name, gettext(priority_map[i].string)) == 0) {
         t->priority = priority_map[i].value;
 	g_free(name);
 	return;
