@@ -3285,6 +3285,19 @@ starling_run (void)
 		      FALSE, FALSE, 0);
 #endif
     
+  /* Jump to the currently playing song.  In Maemo, we add this to the
+     standard tool bar.  Otherwise, we add it to the currently playing
+     toolbar.  */
+  GtkWidget *jump_to = gtk_button_new ();
+  gtk_button_set_image (GTK_BUTTON (jump_to),
+			gtk_image_new_from_stock (GTK_STOCK_JUMP_TO,
+						  GTK_ICON_SIZE_BUTTON));
+  g_signal_connect_swapped (G_OBJECT (jump_to), "clicked",
+			    G_CALLBACK (jump_to_current), st);
+#if (HAVE_MAEMO && HAVE_MAEMO_VERSION >= 500)
+  gtk_box_pack_start (hbox, jump_to, FALSE, FALSE, 0);
+#endif
+
 #if ! (HAVE_MAEMO && HAVE_MAEMO_VERSION >= 500)
   /* The currently playing song.  */
   /* Stuff the title label in an hbox to prevent it from being
@@ -3313,13 +3326,6 @@ starling_run (void)
 				G_CALLBACK (rate), st);
   gtk_box_pack_start (hbox, GTK_WIDGET (st->rating), FALSE, FALSE, 0);
 
-  /* Jump to the currently playing song.  */
-  GtkWidget *jump_to = gtk_button_new ();
-  gtk_button_set_image (GTK_BUTTON (jump_to),
-			gtk_image_new_from_stock (GTK_STOCK_JUMP_TO,
-						  GTK_ICON_SIZE_BUTTON));
-  g_signal_connect_swapped (G_OBJECT (jump_to), "clicked",
-			    G_CALLBACK (jump_to_current), st);
   gtk_box_pack_start (hbox, jump_to, FALSE, FALSE, 0);
 #endif
 

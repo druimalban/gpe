@@ -1,5 +1,10 @@
 2010-01-06  Neal Walfield  <neal@gnu.org>
 
+	* src/starling.c (starling_run) [HAVE_MAEMO && HAVE_MAEMO_VERSION
+	>= 500]: Add the jump to button to the tool bar.
+
+2010-01-06  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c [HAVE_HILDON && HAVE_HILDON_VERSION >= 202]:
 	Include <hildon/hildon-defines.h>.
 	(playlist_alpha_seek_build): Set the alpha bar's width to
