@@ -243,9 +243,11 @@ set_title (Starling *st)
       st->has_lyrics = TRUE;
       lyrics_display
 	(artist, title, GTK_TEXT_VIEW (st->lyrics_textview),
-	 GTK_IS_CHECK_MENU_ITEM (st->download_lyrics)
-	 ? gtk_check_menu_item_get_active ((void *) st->download_lyrics)
-	 : hildon_check_button_get_active ((void *) st->download_lyrics),
+#ifdef HAVE_HILDON_APP_MENU
+	 hildon_check_button_get_active ((void *) st->download_lyrics),
+#else
+	 gtk_check_menu_item_get_active ((void *) st->download_lyrics),
+#endif
 	 FALSE);
     }
 
@@ -316,13 +318,11 @@ meta_data_changed (Starling *st, gint uid, MusicDB *db)
 bool
 starling_random (Starling *st)
 {
-  if (GTK_IS_CHECK_MENU_ITEM (st->random))
-    return gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (st->random));
-  else
-    {
-      g_assert (HILDON_IS_CHECK_BUTTON (st->random));
-      return hildon_check_button_get_active (HILDON_CHECK_BUTTON (st->random));
-    }
+#ifdef HAVE_HILDON_APP_MENU
+  return hildon_check_button_get_active (HILDON_CHECK_BUTTON (st->random));
+#else
+  return gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (st->random));
+#endif
 }
 
 void
@@ -331,13 +331,11 @@ starling_random_set (Starling *st, bool value)
   if (value == starling_random (st))
     return;
 
-  if (GTK_IS_CHECK_MENU_ITEM (st->random))
-    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (st->random), value);
-  else
-    {
-      g_assert (HILDON_IS_CHECK_BUTTON (st->random));
-      hildon_check_button_set_active (HILDON_CHECK_BUTTON (st->random), value);
-    }
+#ifdef HAVE_HILDON_APP_MENU
+  hildon_check_button_set_active (HILDON_CHECK_BUTTON (st->random), value);
+#else
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (st->random), value);
+#endif
 }
 
 static gboolean
@@ -861,12 +859,13 @@ deserialize (Starling *st)
 
   /* Lyrics download.  */
   bool b = g_key_file_get_boolean (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, NULL);
-  if (GTK_IS_CHECK_MENU_ITEM (st->download_lyrics))
-    gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (st->download_lyrics),
-				    b);
-  else
-    hildon_check_button_set_active
-      (HILDON_CHECK_BUTTON (st->download_lyrics), b);
+#ifdef HAVE_HILDON_APP_MENU
+  hildon_check_button_set_active
+    (HILDON_CHECK_BUTTON (st->download_lyrics), b);
+#else
+  gtk_check_menu_item_set_active
+    (GTK_CHECK_MENU_ITEM (st->download_lyrics), b);
+#endif
 
   /* Caption format.  */
   value = g_key_file_get_string (keyfile, GROUP, KEY_CAPTION_FORMAT, NULL);
@@ -1032,10 +1031,12 @@ serialize (Starling *st)
   /* Lyrics download.  */
   g_key_file_set_boolean
     (keyfile, GROUP, KEY_LYRICS_DOWNLOAD, 
-     GTK_IS_CHECK_MENU_ITEM (st->download_lyrics)
-     ? gtk_check_menu_item_get_active ((void *) st->download_lyrics)
-     : hildon_check_button_get_active ((void *) st->download_lyrics));
-
+#ifdef HAVE_HILDON_APP_MENU
+     hildon_check_button_get_active ((void *) st->download_lyrics)
+#else
+     gtk_check_menu_item_get_active ((void *) st->download_lyrics)
+#endif
+     );
 
   config_file_save (keyfile);
 }
@@ -3047,7 +3048,7 @@ starling_run (void)
   g_signal_connect (G_OBJECT (st->window), "key_press_event", 
 		    G_CALLBACK (key_press_event), st);
 
-  GtkWidget *menu_item_add (GtkMenu *menu,
+  GtkWidget *menu_item_add (GtkWidget *menu,
 			    bool check_menu_item,
 			    const char *text, const char *stock, GCallback cb,
 			    gpointer user_data)
@@ -3545,7 +3546,7 @@ starling_run (void)
 				      st, NULL);
     
   scrolled = gtk_scrolled_window_new (NULL, NULL);
-  st->queue_view_window = GTK_SCROLLED_WINDOW (scrolled);
+  st->queue_view_window = scrolled;
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
 				  GTK_POLICY_AUTOMATIC,
 				  GTK_POLICY_AUTOMATIC);
