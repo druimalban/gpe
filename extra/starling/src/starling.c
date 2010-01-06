@@ -1350,7 +1350,7 @@ starling_quit (Starling *st)
   gtk_main_quit();
 }
 
-static void
+static gboolean
 window_x (Starling *st, GdkEvent *event, GtkWidget *w)
 {
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
@@ -1359,6 +1359,9 @@ window_x (Starling *st, GdkEvent *event, GtkWidget *w)
   else
 #endif
     starling_quit (st);
+
+  /* Don't propagate it.  */
+  return TRUE;
 }
 
 static void
