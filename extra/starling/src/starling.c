@@ -123,6 +123,7 @@ struct _Starling {
   GtkWidget *library_view_window;
   GtkWidget *library_view;
   struct caption *caption;
+  char *caption_format;
   PlayLists *play_lists_model;
   GtkWidget *play_list_selector;
   GtkBox *playlist_alpha_seek;
@@ -132,6 +133,10 @@ struct _Starling {
   GtkToggleButton *search_enabled;
   GtkWidget *search_entry;
   GtkListStore *searches;
+
+  /* The current grouping.  */
+  enum mdb_fields group_by;
+  GSList *group_by_radio_widgets;
 
 #ifndef HAVE_HILDON_STACKABLE_WINDOWS
   GtkWidget *queue_view_window;
@@ -873,8 +878,8 @@ deserialize (Starling *st)
     {
       if (st->caption)
 	caption_free (st->caption);
+      st->caption_format = value;
       st->caption = caption_create (value);
-      g_free (value);
     }
 
   g_key_file_free (keyfile);
@@ -1592,14 +1597,16 @@ change_caption_format (gpointer user_data, GtkMenuItem *menuitem)
       if (st->caption)
 	caption_free (st->caption);
 
-      char *fmt = gtk_combo_box_get_active_text (GTK_COMBO_BOX (combo));
-      st->caption = caption_create (fmt);
-      g_key_file_set_string (keyfile, GROUP, KEY_CAPTION_FORMAT, fmt);
+      st->caption_format
+	= gtk_combo_box_get_active_text (GTK_COMBO_BOX (combo));
+      st->caption = caption_create (st->caption_format);
+      g_key_file_set_string (keyfile, GROUP, KEY_CAPTION_FORMAT,
+			     st->caption_format);
 
-      /* See if FMT is already in the history.  */
+      /* See if ST->CAPTION_FORMAT is already in the history.  */
       int i;
       for (i = 0; history && history[i]; i ++)
-	if (strcmp (history[i], fmt) == 0)
+	if (strcmp (history[i], st->caption_format) == 0)
 	  /* Already in the history.  */
 	  break;
 
@@ -1609,7 +1616,7 @@ change_caption_format (gpointer user_data, GtkMenuItem *menuitem)
 	  struct obstack s;
 	  obstack_init (&s);
 	  
-	  obstack_printf (&s, "%s", fmt);
+	  obstack_printf (&s, "%s", st->caption_format);
 
 	  if (history)
 	    for (i = 0; history[i]; i ++)
@@ -1624,8 +1631,6 @@ change_caption_format (gpointer user_data, GtkMenuItem *menuitem)
 
 	  obstack_free (&s, NULL);
 	}
-
-      g_free (fmt);
 
       gtk_widget_queue_draw (st->library_view);
 #ifndef HAVE_HILDON_STACKABLE_WINDOWS
@@ -1714,11 +1719,16 @@ activated_cb (GtkTreeView *view, GtkTreePath *path,
 {
   g_assert (gtk_tree_path_get_depth (path) == 1);
 
-  gint *pos = gtk_tree_path_get_indices (path);
-
   PlayList *pl = view == GTK_TREE_VIEW (st->library_view)
     ? st->library : st->queue;
+  if (pl == st->library && st->group_by)
+    {
+      gtk_check_menu_item_set_active
+	(GTK_CHECK_MENU_ITEM (st->group_by_radio_widgets->data), true);
+      return;
+    }
 
+  gint *pos = gtk_tree_path_get_indices (path);
   int uid = play_list_index_to_uid (pl, pos[0]);
 
   if (pl == st->queue)
@@ -2056,6 +2066,45 @@ search_text_clear (Starling *st)
 {
   gtk_entry_set_text (GTK_ENTRY (st->search_entry), "");
 }
+
+
+static void
+group_by (Starling *st, enum mdb_fields scope)
+{
+  if (scope == st->group_by)
+    return;
+
+  play_list_state_save (st);
+
+  st->group_by = scope;
+  if (st->caption)
+    {
+      caption_free (st->caption);
+      st->caption = NULL;
+    }
+  play_list_group_by (st->library, scope);
+
+  play_list_state_restore (st);
+
+  playlist_alpha_seek_build_queue (st);
+}
+
+static void
+group_by_cb (Starling *st, GtkRadioMenuItem *radiomenuitem)
+{
+  int i;
+  GSList *n;
+  for (i = 0, n = st->group_by_radio_widgets;
+       ! gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (n->data));
+       i ++, n = n->next)
+    ;
+
+  enum mdb_fields scope[] = { 0, MDB_ARTIST, MDB_ALBUM };
+  g_assert (i < sizeof (scope) / sizeof (scope[0]));
+
+  group_by (st, scope[i]);
+}
+
 
 static void
 set_position_text (Starling *st, int seconds)
@@ -2449,7 +2498,20 @@ title_data_func (GtkCellLayout *cell_layout,
   Starling *st = data;
 
   if (G_UNLIKELY (! st->caption))
-    st->caption = caption_create (CAPTION_FMT_DEFAULT);
+    switch (st->group_by)
+      {
+      case 0:
+	st->caption
+	  = caption_create (st->caption_format ?: CAPTION_FMT_DEFAULT);
+	break;
+      case MDB_ALBUM:
+	st->caption = caption_create ("%a?(%.50a)(%.-90u) - %A");
+	break;
+      case MDB_ARTIST:
+	st->caption = caption_create ("%a?(%.50a)(%.-90u)");
+	break;
+      }
+
 
   int uid;
   gtk_tree_model_get (model, iter, PL_COL_UID, &uid, -1);
@@ -2604,7 +2666,7 @@ queue_cb (GtkWidget *widget, gpointer d)
       enum mdb_fields sort_order[]
 	= { MDB_ARTIST, MDB_ALBUM, MDB_TRACK, MDB_TITLE, MDB_SOURCE, 0 };
       music_db_for_each (st->db, play_list_get (st->library),
-			 callback, sort_order, s);
+			 callback, sort_order, 0, s);
       if (need_free)
 	sqlite_freemem (s);
     }
@@ -3403,6 +3465,37 @@ starling_run (void)
 			    G_CALLBACK (search_text_clear), st);
   gtk_widget_show (clear);
   gtk_box_pack_start (hbox, clear, FALSE, FALSE, 0);
+
+  /* Group by button.  */
+  {
+    GtkWidget *group
+      = GTK_WIDGET (gtk_menu_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT));
+    gtk_widget_show (group);
+    gtk_box_pack_start (hbox, group, FALSE, FALSE, 0);
+
+    GtkWidget *menu = gtk_menu_new ();
+    gtk_menu_tool_button_set_menu (GTK_MENU_TOOL_BUTTON (group), menu);
+    gtk_widget_show (menu);
+
+    char *options[] = { _("None"), _("Artist"), _("Album") };
+    GSList *radio = NULL;
+    int i;
+    for (i = 0; i < sizeof (options) / sizeof (options[0]); i ++)
+      {
+	GtkWidget *item
+	  = gtk_radio_menu_item_new_with_label (radio, options[i]);
+	st->group_by_radio_widgets
+	  = g_slist_append (st->group_by_radio_widgets, item);
+	radio = gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (item));
+	gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
+	gtk_widget_show (item);
+	if (i == 0)
+	  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (item), TRUE);
+
+	g_signal_connect_swapped (G_OBJECT (item), "toggled",
+				  G_CALLBACK (group_by_cb), st);
+      }
+  }
 
 
   hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));

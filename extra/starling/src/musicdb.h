@@ -1,5 +1,5 @@
 /* musicdb.h - Music DB interface.
-   Copyright 2007 Neal H. Walfield <neal@walfield.org>
+   Copyright 2007, 2010 Neal H. Walfield <neal@walfield.org>
    Copyright (C) 2006 Alberto García Hierro
         <skyhusker@handhelds.org>
 
@@ -182,6 +182,10 @@ struct music_db_info
 
   int rating;
 
+  /* If aggregated (using the scope parameter to music_db_for_each),
+     then the number of rows in the group.  This is always set.  */
+  int aggregate;
+
   bool present;
 
   /* Source's last modification time.  */
@@ -209,13 +213,21 @@ extern void music_db_set_info (MusicDB *db, int uid,
 extern void music_db_set_info_from_tags (MusicDB *db, int uid,
 					 GstTagList *tags);
 
-/* Iterate over each entry in the list.  Order the results according
-   to ORDER, which is a zero-terminated array of enum mdb_fields.  If
-   CONSTRAINT is non-NULL, it is where SQL clause (without the where),
-   e.g., `artist in ("Foo", "Bar")'.  */
+/* Iterate over each entry in the list.
+
+   Order the results according to ORDER, which is a zero-terminated
+   array of enum mdb_fields.
+
+   If SCOPE is not 0, then groups records according to that field and
+   only returns a single record for each group.  SCOPE may either be 0,
+   MDB_ARTIST or MDB_ALBUM.
+
+   If CONSTRAINT is non-NULL, it is where SQL clause (without the
+   where), e.g., `artist in ("Foo", "Bar")'.  */
 extern int music_db_for_each (MusicDB *db, const char *list,
 			      int (*cb) (int uid, struct music_db_info *info),
 			      enum mdb_fields *order,
+			      enum mdb_fields scope,
 			      const char *constraint);
 
 /* Enqueue UID to the end of the play list.  */

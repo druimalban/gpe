@@ -45,6 +45,8 @@ struct _PlayList {
 
   /* The visible entries.  */
   char *constraint;
+  /* The grouping parameter.  */
+  enum mdb_fields scope;
 
   /* The number of entries in the playlist as constrained by CONSTRAINT.  */
   int count;
@@ -220,7 +222,17 @@ do_refresh (gpointer data)
 	MDB_TITLE, MDB_SOURCE, 0 };
   music_db_for_each (pl->db, pl->list, cb,
 		     pl->list ? NULL : library_order,
-		     pl->constraint);
+		     pl->scope, pl->constraint);
+
+  if (idx != pl->count)
+    /* If we group, there may be less entires than music_db_count
+       returned since it does not take a scope parameter.  */
+    {
+      g_assert (idx < pl->count);
+      pl->count = idx;
+      pl->idx_uid_map = realloc (pl->idx_uid_map,
+				 pl->count * sizeof (pl->idx_uid_map[0]));
+    }
 
   /* We need to emit some signals now so the thing using this model
      will stay in sync.  We brute force it as calculating the
@@ -487,6 +499,25 @@ const char *
 play_list_constraint_get (PlayList *pl)
 {
   return pl->constraint;
+}
+
+void
+play_list_group_by (PlayList *pl, enum mdb_fields scope)
+{
+  if (scope == pl->scope)
+    return;
+
+  g_return_if_fail (scope == 0 || scope == MDB_ARTIST || scope == MDB_ALBUM);
+  pl->scope = scope;
+
+  play_list_idx_uid_refresh_schedule (pl, true);
+}
+
+/* Return the currenting grouping parameter.  */
+enum mdb_fields
+play_list_group_by_get (PlayList *pl)
+{
+  return pl->scope;
 }
 
 gint

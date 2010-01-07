@@ -85,6 +85,16 @@ extern void play_list_constrain (PlayList *pl, const char *constraint);
 /* Return the current constraint.  */
 extern const char *play_list_constraint_get (PlayList *pl);
 
+
+/* Group records according to the field SCOPE and only return a single
+   record for each group.  SCOPE may be iether 0, MDB_ARTIST or
+   MDB_ALBUM.  */
+extern void play_list_group_by (PlayList *pl, enum mdb_fields scope);
+
+/* Return the currenting grouping parameter.  */
+extern enum mdb_fields play_list_group_by_get (PlayList *pl);
+
+
 /* Return the number of entries.  */
 extern gint play_list_count (PlayList *pl);
 

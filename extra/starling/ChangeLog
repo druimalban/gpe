@@ -1,3 +1,38 @@
+2010-01-07  Neal H. Walfield  <neal@gnu.org>
+
+	Add group by artist and group by album functionality.
+	* src/musicdb.h (struct music_db_info): Add field aggregate.
+	(music_db_for_each): Add parameter scope.
+	* src/musicdb.c (music_db_get_info_internal): Set INFO->AGGREGATE
+	to 1.
+	(struct info_callback_data): Add field ignore.
+	(info_callback): Ignore the first DATA->IGNORE fields.  Set
+	INFO.AGGREGATE to the first non-ignored column.  Adjust other
+	fields appropriately.
+	(music_db_for_each): Take additional parameter SCOPE.  Group rows
+	by that parameter.  Set DATA.IGNORE to 1.
+	* src/playlist.h (play_list_group_by): New declaration.
+	(play_list_group_by_get): Likewise.
+	* src/playlist.c (struct _PlayList): Add field scope.
+	(do_refresh): Pass PL->SCOPE to music_db_for_each.
+	(play_list_group_by): New function.
+	(play_list_group_by_get): Likewise.
+	* src/starling-catalog.c (main): Update use of music_db_for_each
+	according to new API.
+	* src/starling.c (struct _Starling): Add fields caption_format,
+	group_by and group_by_radio_widgets.
+	(deserialize): Save the caption format in ST->CAPTION_FORMAT.
+	(change_caption_format): Likewise.
+	(activated_cb): If ST->GROUP_BY is not 0, set turn off grouping
+	and return.
+	(group_by): New function.
+	(group_by_cb): Likewise.
+	(title_data_func): Set the caption renderer according to
+	ST->GROUP_BY.
+	(queue_cb): Update use of music_db_for_each
+	according to new API.
+	(starling_run): Add a group by button.
+
 2010-01-06  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c (set_title): Conditionalize at compile time, not

@@ -218,7 +218,7 @@ main (int argc, char *argv[])
     return 0;
   }
 
-  music_db_for_each (db, playlist, callback, NULL, query);
+  music_db_for_each (db, playlist, callback, NULL, 0, query);
 
   return 0;
 }

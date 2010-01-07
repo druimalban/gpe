@@ -1137,6 +1137,8 @@ music_db_get_info_internal (MusicDB *db, sqlite *sqliteh,
   if ((info->fields & MDB_PERFORMER))
     info->performer = e->performer ? g_strdup (e->performer) : NULL;
 
+  info->aggregate = 1;
+
   return true;
 }
 
@@ -1399,6 +1401,8 @@ struct info_callback_data
 {
   int (*user_callback) (int uid, struct music_db_info *info);
   int ret;
+  /* The number of leading columns to ignore.  */
+  int ignore;
 };
 
 static int
@@ -1406,39 +1410,44 @@ info_callback (void *arg, int argc, char **argv, char **names)
 {
   struct info_callback_data *data = arg;
 
-  g_assert (argc == 7);
+  g_assert (argc == data->ignore + 8);
+  argv = &argv[data->ignore];
 
   struct music_db_info info;
 
-  int uid = atoi (argv[0]);
+  info.aggregate = 1;
+  if (argv[0])
+    info.aggregate = atoi (argv[0]);
+
+  int uid = atoi (argv[1]);
 
   info.fields = 0;
 
-  info.source = argv[1];
+  info.source = argv[2];
   if (info.source)
     info.fields |= MDB_SOURCE;
 
-  info.artist = argv[2];
+  info.artist = argv[3];
   if (info.artist)
     info.fields |= MDB_ARTIST;
 
-  info.album = argv[3];
+  info.album = argv[4];
   if (info.album)
     info.fields |= MDB_ALBUM;
 
-  if (argv[4])
+  if (argv[5])
     {
-      info.track = atoi (argv[4]);
+      info.track = atoi (argv[5]);
       info.fields |= MDB_TRACK;
     }
 
-  info.title = argv[5];
+  info.title = argv[6];
   if (info.title)
     info.fields |= MDB_TITLE;
 
-  if (argv[6])
+  if (argv[7])
     {
-      info.duration = atoi (argv[6]);
+      info.duration = atoi (argv[7]);
       info.fields |= MDB_DURATION;
     }
 
@@ -1450,9 +1459,11 @@ int
 music_db_for_each (MusicDB *db, const char *list,
 		   int (*user_callback) (int uid, struct music_db_info *info),
 		   enum mdb_fields *order,
+		   enum mdb_fields scope,
 		   const char *constraint)
 {
   assert (g_thread_self () == main_thread);
+  assert (scope == 0 || scope == MDB_ARTIST || scope == MDB_ALBUM);
 
   if (constraint && ! *constraint)
     constraint = NULL;
@@ -1461,25 +1472,46 @@ music_db_for_each (MusicDB *db, const char *list,
 
   obstack_init (&sql);
 
+  char *scope_sql1 = "NULL, ";
+  char *scope_sql2 = NULL;
+  switch (scope)
+    {
+    case MDB_ARTIST:
+      scope_sql1 = "distinct files.artist, count (*), ";
+      scope_sql2 = "group by files.artist ";
+      break;
+    case MDB_ALBUM:
+      scope_sql1 = "distinct files.album, count (*), ";
+      scope_sql2 = "group by files.album ";
+      break;
+    default:
+      break;
+    }
+
+
   if (list)
     {
       char *l = sqlite_mprintf ("%q", list);
       obstack_printf (&sql,
-		      "select files.ROWID, files.source, files.artist,"
+		      "select %sfiles.ROWID, files.source, files.artist,"
 		      "  files.album, files.track, files.title, files.duration"
 		      " from playlists left join files"
 		      "  on playlists.uid = files.ROWID"
 		      " where playlists.list = '%s' ",
-		      l);
+		      scope_sql1, l);
       sqlite_freemem (l);
     }
   else
     obstack_printf (&sql,
-		    "select ROWID, source, artist, album, track,"
-		    " title, duration from files where removed isnull ");
+		    "select %sROWID, source, artist, album, track,"
+		    " title, duration from files where removed isnull ",
+		    scope_sql1);
 
   if (constraint && *constraint)
     obstack_printf (&sql, "and (%s) ", constraint);
+
+  if (scope_sql2)
+    obstack_printf (&sql, "%s", scope_sql2);
 
   if (order)
     {
@@ -1551,6 +1583,9 @@ music_db_for_each (MusicDB *db, const char *list,
   struct info_callback_data data;
   data.ret = 0;
   data.user_callback = user_callback;
+  data.ignore = 0;
+  if (scope)
+    data.ignore = 1;
 
   char *err = NULL;
   sqlite_exec (db->sqliteh, statement, info_callback, &data, &err);
