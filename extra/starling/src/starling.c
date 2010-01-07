@@ -275,7 +275,7 @@ set_title (Starling *st)
 
   char *caption;
   if (artist)
-    caption = g_strdup_printf (_("%s by %s"), artist, title);
+    caption = g_strdup_printf (_("%s by %s"), title, artist);
   else
     caption = g_strdup (title);
 
