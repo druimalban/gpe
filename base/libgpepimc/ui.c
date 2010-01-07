@@ -755,12 +755,13 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
   }
   else
   {
-#if MAEMO_VERSION_MAJOR < 5
-    okbutton = gtk_button_new_with_label (_("Close"));
-#endif
+    okbutton = gtk_button_new_with_label (_("OK"));
     newbutton = gtk_button_new_with_label (_("New"));
     editbutton = gtk_button_new_with_label (_("Edit"));
     deletebutton = gtk_button_new_with_label (_("Delete"));
+#if MAEMO_VERSION_MAJOR < 5
+    cancelbutton = gtk_button_new_with_label (_("Cancel"));
+#endif
     gtk_widget_set_sensitive (deletebutton, FALSE);
     gtk_widget_set_sensitive (editbutton, FALSE);
     g_signal_connect (G_OBJECT (editbutton), "clicked", 

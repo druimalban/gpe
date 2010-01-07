@@ -1,3 +1,7 @@
+2010-01-07  Graham Cobb  <g+770@cobb.uk.net>
+
+	* ui.c (gpe_pim_categories_dialog): Bring back OK button on Fremantle
+
 2010-01-06  Graham Cobb  <g+770@cobb.uk.net>
 
 	* ui.c (gpe_pim_categories_dialog): HACK to workround Maemo5 bug with toggle rendering.
