@@ -136,6 +136,7 @@ struct _Starling {
 
   /* The current grouping.  */
   enum mdb_fields group_by;
+  GtkWidget *group_by_button;
   GSList *group_by_radio_widgets;
 
 #ifndef HAVE_HILDON_STACKABLE_WINDOWS
@@ -2087,6 +2088,21 @@ group_by (Starling *st, enum mdb_fields scope)
   play_list_state_restore (st);
 
   playlist_alpha_seek_build_queue (st);
+
+  const char *id = NULL;
+  switch (scope)
+    {
+    case 0:
+      id = GTK_STOCK_ZOOM_100;
+      break;
+    case MDB_ARTIST:
+      id = GTK_STOCK_ZOOM_IN;
+      break;
+    case MDB_ALBUM:
+      id = GTK_STOCK_ZOOM_FIT;
+      break;
+    }
+  gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (st->group_by_button), id);
 }
 
 static void
@@ -2105,6 +2121,23 @@ group_by_cb (Starling *st, GtkRadioMenuItem *radiomenuitem)
   group_by (st, scope[i]);
 }
 
+static void
+group_by_button_clicked_cb (Starling *st, GtkToolButton *toolbutton)
+{
+  enum mdb_fields scopes[] = { 0, MDB_ARTIST, MDB_ALBUM };
+  GSList *n;
+  int i;
+  for (i = 0, n = st->group_by_radio_widgets;
+       i < sizeof (scopes) / sizeof (scopes[0]); i ++, n = n->next)
+    if (st->group_by == scopes[i])
+      break;
+  if (n->next)
+    n = n->next;
+  else
+    n = st->group_by_radio_widgets;
+
+  gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (n->data), true);
+}
 
 static void
 set_position_text (Starling *st, int seconds)
@@ -3469,7 +3502,10 @@ starling_run (void)
   /* Group by button.  */
   {
     GtkWidget *group
-      = GTK_WIDGET (gtk_menu_tool_button_new_from_stock (GTK_STOCK_ZOOM_FIT));
+      = GTK_WIDGET (gtk_menu_tool_button_new_from_stock (GTK_STOCK_ZOOM_100));
+    st->group_by_button = group;
+    g_signal_connect_swapped (G_OBJECT (group), "clicked",
+			      G_CALLBACK (group_by_button_clicked_cb), st);
     gtk_widget_show (group);
     gtk_box_pack_start (hbox, group, FALSE, FALSE, 0);
 

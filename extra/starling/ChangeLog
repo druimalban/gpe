@@ -1,5 +1,13 @@
 2010-01-07  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct _Starling): Add field group_by_button.
+	(group_by): Change the icon.
+	(group_by_button_clicked_cb): New function.
+	(starling_run): Set ST->GROUP_BY_BUTTON to the group by button.
+	Connect its "clicked" signal to group_by_button_clicked_cb.
+
+2010-01-07  Neal H. Walfield  <neal@gnu.org>
+
 	Add group by artist and group by album functionality.
 	* src/musicdb.h (struct music_db_info): Add field aggregate.
 	(music_db_for_each): Add parameter scope.
