@@ -1,5 +1,26 @@
 2010-01-08  Neal Walfield  <neal@gnu.org>
 
+	* src/starling.c [HAVE_HILDON_VERSION >= 202]: Include
+	<hildon/hildon-picker-button.h>.
+	(play): New function.
+	(activated_cb) [HAVE_HILDON && HAVE_HILDON_VERSION >= 202]: Call
+	track_popup_menu.
+	[! (HAVE_HILDON && HAVE_HILDON_VERSION >= 202)]: Call play.
+	(enum menu_op): Add play_song.
+	(struct menu_info): Add fields obstack, menu and choosen_op.
+	Remove field list.
+	(struct menu_info_sub): New structure.
+	(struct menu_info_sub_sub): Likewise.
+	(menu_destroy): Update according to new data structures.
+	(queue_cb): Likewise.
+	(track_popup_menu_cb): New function.
+	(track_popup_menu_button_clicked): New function.
+	(library_button_press_event): Move body...
+	(track_popup_menu): ... to this new function.  Change it to use
+	Hildon Dialogs for the menu.
+
+2010-01-08  Neal Walfield  <neal@gnu.org>
+
 	* src/playlist.c (do_refresh): Only free OLD_IDX_UID_MAP, if it is
 	not NULL.
 

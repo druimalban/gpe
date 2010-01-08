@@ -67,6 +67,7 @@
 
 # if HAVE_HILDON_VERSION >= 202
 #  include <hildon/hildon-defines.h>
+#  include <hildon/hildon-picker-button.h>
 # endif
 
 # include <libosso.h>
@@ -1713,6 +1714,26 @@ save_cb (GtkWidget *w, Starling *st)
 #endif
 
 static void
+play (Starling *st, PlayList *pl, int uid)
+{
+  if (pl == st->library && st->group_by)
+    gtk_check_menu_item_set_active
+      (GTK_CHECK_MENU_ITEM (st->group_by_radio_widgets->data), true);
+
+  if (pl == st->queue)
+    /* When playing a song from the queue, remove it.  */
+    {
+      int idx = play_list_uid_to_index (pl, uid);
+      music_db_play_list_remove (st->db, "queue", idx);
+    }
+
+  starling_load (st, uid);
+  starling_play (st);
+}
+
+static void track_popup_menu (Starling *st, int idx, GdkEventButton *event);
+
+static void
 activated_cb (GtkTreeView *view, GtkTreePath *path,
 	      GtkTreeViewColumn *col, Starling *st)
 {
@@ -1720,6 +1741,7 @@ activated_cb (GtkTreeView *view, GtkTreePath *path,
 
   PlayList *pl = view == GTK_TREE_VIEW (st->library_view)
     ? st->library : st->queue;
+
   if (pl == st->library && st->group_by)
     {
       gtk_check_menu_item_set_active
@@ -1728,14 +1750,14 @@ activated_cb (GtkTreeView *view, GtkTreePath *path,
     }
 
   gint *pos = gtk_tree_path_get_indices (path);
-  int uid = play_list_index_to_uid (pl, pos[0]);
+  int idx = pos[0];
 
-  if (pl == st->queue)
-    /* When playing a song in the queue, remove it.  */
-    music_db_play_list_remove (st->db, "queue", pos[0]);
-
-  starling_load (st, uid);
-  starling_play (st);
+#if HAVE_HILDON && HAVE_HILDON_VERSION >= 202
+  track_popup_menu (st, idx, NULL);
+#else
+  int uid = play_list_index_to_uid (pl, idx);
+  play (st, pl, uid);
+#endif
 }
 
 static void
@@ -2099,6 +2121,9 @@ group_by (Starling *st, enum mdb_fields scope)
     case MDB_ALBUM:
       id = GTK_STOCK_ZOOM_FIT;
       break;
+    default:
+      g_assert (! "Impossible value");
+      return;
     }
   gtk_tool_button_set_stock_id (GTK_TOOL_BUTTON (st->group_by_button), id);
 }
@@ -2541,6 +2566,9 @@ title_data_func (GtkCellLayout *cell_layout,
       case MDB_ARTIST:
 	st->caption = caption_create ("%a?(%.50a)(%.-90u)");
 	break;
+      default:
+	g_assert (! "Unexpected value for ST->GROUP_BY");
+	return;
       }
 
 
@@ -2566,6 +2594,7 @@ title_data_func (GtkCellLayout *cell_layout,
 
 enum menu_op
   {
+    play_song,
     add_song,
     add_album,
     add_artist,
@@ -2576,15 +2605,31 @@ enum menu_op
 
 struct menu_info
 {
+  struct obstack obstack;
+
   Starling *st;
+  GtkWidget *menu;
+
   int uid;
   char *artist;
   char *album;
-  char *list;
   GList *selection;
-  enum menu_op op;
-  struct menu_info *next;
+
+  int choosen_op;
 };
+
+struct menu_info_sub
+{
+  struct menu_info *info;
+  enum menu_op op;
+};
+
+struct menu_info_sub_sub
+{
+  struct menu_info_sub *sub;
+  char *list;
+};
+
 
 static void
 menu_destroy (GtkWidget *widget, gpointer d)
@@ -2594,26 +2639,24 @@ menu_destroy (GtkWidget *widget, gpointer d)
   g_free (info->album);
   g_list_free (info->selection);
 
-  struct menu_info *i;
-  struct menu_info *n = info->next;
-  while ((i = n))
-    {
-      n = i->next;
+  obstack_free (&info->obstack, NULL);
 
-      g_free (i->list);
-      g_free (i);
-    }
+  if (widget && widget != info->menu)
+    gtk_widget_destroy (widget);
 
-  gtk_widget_destroy (widget);
+  g_free (info);
 }
 
 static void
 queue_cb (GtkWidget *widget, gpointer d)
 {
-  struct menu_info *info = d;
+  struct menu_info_sub_sub *sub_sub = d;
+  const char *list = sub_sub->list;
+  struct menu_info_sub *sub = sub_sub->sub;
+  struct menu_info *info = sub->info;
   Starling *st = info->st;
 
-  if (strcmp (info->list, "new play list") == 0)
+  if (strcmp (list, "new play list") == 0)
     {
       GtkWidget *dialog = gtk_dialog_new_with_buttons
 	(_("New play list's name:"),
@@ -2631,23 +2674,29 @@ queue_cb (GtkWidget *widget, gpointer d)
       gtk_widget_show_all (dialog);
 
       gint result = gtk_dialog_run (GTK_DIALOG (dialog));
+      bool ret = false;
       switch (result)
 	{
 	case GTK_RESPONSE_OK:
-	  g_free (info->list);
-	  info->list = g_strdup (gtk_entry_get_text (GTK_ENTRY (entry)));
-	  break;
+	  {
+	    const char *s = gtk_entry_get_text (GTK_ENTRY (entry));
+	    list = obstack_copy (&info->obstack, s, strlen (s) + 1);
+	    break;
+	  }
 
 	default:
-	  return;
+	  ret = true;
+	  break;
 	}
 
       gtk_widget_destroy (dialog);
+      if (ret)
+	return;
     }
 
   int callback (int uid, struct music_db_info *i)
   {
-    music_db_play_list_enqueue (st->db, info->list, uid);
+    music_db_play_list_enqueue (st->db, list, uid);
 
     return 0;
   }
@@ -2656,10 +2705,10 @@ queue_cb (GtkWidget *widget, gpointer d)
   bool need_free = true;
   const char *constraint = play_list_constraint_get (st->library);
 
-  switch (info->op)
+  switch (sub->op)
     {
     case add_song:
-      music_db_play_list_enqueue (st->db, info->list, info->uid);
+      music_db_play_list_enqueue (st->db, list, info->uid);
       s = NULL;
       break;
 
@@ -2703,6 +2752,376 @@ queue_cb (GtkWidget *widget, gpointer d)
     }
 }
 
+#if HAVE_HILDON && HAVE_HILDON_VERSION >= 202
+static void
+track_popup_menu_cb (struct menu_info_sub *sub, HildonPickerButton *button)
+{
+  struct menu_info *info = sub->info;
+  Starling *st = info->st;
+
+  sub->op = info->choosen_op;
+  switch (sub->op)
+    {
+    case play_song:
+      play (st, st->library, info->uid);
+      break;
+
+    case add_song:
+    case add_album:
+    case add_artist:
+    case add_all:
+      {
+	HildonTouchSelector *selector
+	  = hildon_picker_button_get_selector (button);
+	char *list = hildon_touch_selector_get_current_text (selector);
+
+	struct menu_info_sub_sub sub_sub;
+	memset (&sub_sub, 0, sizeof (sub_sub));
+	sub_sub.sub = sub;
+	sub_sub.list = list;
+
+	g_signal_handlers_disconnect_by_func (G_OBJECT (info->menu),
+					      G_CALLBACK (menu_destroy), info);
+
+	gtk_widget_destroy (info->menu);
+	info->menu = NULL;
+
+	queue_cb (NULL, &sub_sub);
+
+	g_free (list);
+	menu_destroy (NULL, info);
+
+	break;
+      }
+
+    default:
+      g_assert (!"Bad resposne code!");
+      break;
+    }
+
+  if (info->menu)
+    gtk_widget_destroy (info->menu);
+}
+
+/* See comment in the add function in track_popup_menu below.  */
+static void
+track_popup_menu_button_clicked (struct menu_info_sub *sub,
+				 GtkButton *button)
+{
+  sub->info->choosen_op = sub->op;
+
+  if (sub->op == play_song)
+    track_popup_menu_cb (sub, NULL);
+}
+#endif
+
+static void
+track_popup_menu (Starling *st, int idx, GdkEventButton *event)
+{
+#if HAVE_HILDON && HAVE_HILDON_VERSION >= 202
+#define ITALICS_O
+#define ITALICS_C
+#define ELLIPSES "..."
+#define WIDTHS "80"
+#define WIDTH 80
+#else
+#define USE_MARKUP
+#define ITALICS_O "<i>" 
+#define ITALICS_C "</i>"
+#define ELLIPSES
+#define WIDTHS "20"
+#define WIDTH 20
+#endif
+
+  int uid = play_list_index_to_uid (st->library, idx);
+
+  struct music_db_info info;
+  info.fields = MDB_SOURCE | MDB_ARTIST | MDB_ALBUM | MDB_TITLE;
+  music_db_get_info (st->db, uid, &info);
+
+#ifdef USE_MARKUP
+  if (info.source)
+    info.source = html_escape_string (info.source);
+  if (info.artist)
+    info.artist = html_escape_string (info.artist);
+  if (info.album)
+    info.album = html_escape_string (info.album);
+  if (info.title)
+    info.title = html_escape_string (info.title);
+#endif
+
+  struct menu_info *main_info = g_malloc (sizeof (*main_info));
+  memset (main_info, 0, sizeof (*main_info));
+  obstack_init (&main_info->obstack);
+  main_info->st = st;
+  main_info->uid = uid;
+  main_info->artist = info.artist;
+  main_info->album = info.album;
+
+#if HAVE_HILDON && HAVE_HILDON_VERSION >= 202
+  GtkWidget *menu = gtk_dialog_new_with_buttons
+    ("" /*_("Action:")*/, GTK_WINDOW (st->window),
+     GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+     NULL);
+  g_signal_connect (G_OBJECT (menu), "destroy",
+		    G_CALLBACK (menu_destroy), main_info);
+
+  GtkWidget *selector = hildon_touch_selector_new_text ();
+  gtk_widget_show (selector);
+  bool connected_selector = false;
+#else
+  GtkMenu *menu = GTK_MENU (gtk_menu_new ());
+  g_signal_connect (G_OBJECT (menu), "selection-done",
+		    G_CALLBACK (menu_destroy), main_info);
+
+  GtkMenu *submenus[add_count];
+  struct menu_info_sub *subs[add_count];
+  int item_count = 0;
+#endif
+  main_info->menu = GTK_WIDGET (menu);
+
+  void add (char *text, int op)
+  {
+    struct menu_info_sub *sub
+      = obstack_alloc (&main_info->obstack, sizeof (*sub));
+    sub->info = main_info;
+    sub->op = op;
+
+#if HAVE_HILDON && HAVE_HILDON_VERSION >= 202
+    GtkWidget *item;
+    if (op == play_song)
+      {
+	item = hildon_button_new
+	  (HILDON_SIZE_AUTO_WIDTH | HILDON_SIZE_FINGER_HEIGHT,
+	   HILDON_BUTTON_ARRANGEMENT_VERTICAL);
+	hildon_button_set_title (HILDON_BUTTON (item), text);
+      }
+    else
+      {
+	item = hildon_picker_button_new
+	  (HILDON_SIZE_AUTO_WIDTH | HILDON_SIZE_FINGER_HEIGHT,
+	   HILDON_BUTTON_ARRANGEMENT_VERTICAL);
+	hildon_button_set_title (HILDON_BUTTON (item), text);
+	hildon_picker_button_set_selector (HILDON_PICKER_BUTTON (item),
+					   HILDON_TOUCH_SELECTOR (selector));
+	if (! connected_selector)
+	  /* Since the selector is shared, we only need to add the
+	     value-changed signal handler to once picker instance: it
+	     doesn't matter which picker instance is used, all see the
+	     selectors selection and emit a value-changed signal.  */
+	  {
+	    g_signal_connect_swapped (G_OBJECT (item), "value-changed",
+				      (GCallback) track_popup_menu_cb, sub);
+	    connected_selector = true;
+	  }
+      }
+
+    /* Given the above, to figure out which picker was choosen, we
+       connect to the clicked function of the button and save SUB->OP
+       in INFO->CHOOSEN_OP.  */
+    g_signal_connect_swapped (G_OBJECT (item), "clicked",
+			      (GCallback) track_popup_menu_button_clicked, sub);
+    gtk_widget_show (item);
+    gtk_container_add
+      (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (menu))), item);
+#else
+    /* Allocate the menu item.  */
+    GtkWidget *item = gtk_menu_item_new_with_label ("");
+    gtk_label_set_markup (GTK_LABEL (GTK_BIN (item)->child), text);
+    gtk_widget_show (item);
+    gtk_menu_attach (menu, item, 0, 1, item_count, item_count + 1);
+
+    /* And the sub menu.  */
+    submenus[item_count] = GTK_MENU (gtk_menu_new ());
+    gtk_widget_show (GTK_WIDGET (submenus[item_count]));
+    gtk_menu_item_set_submenu (GTK_MENU_ITEM (item),
+			       GTK_WIDGET (submenus[item_count]));
+
+    subs[item_count] = sub;
+    item_count ++;
+#endif
+
+    g_free (text);
+  }
+	    
+
+  char *str;
+#if HAVE_HILDON && HAVE_HILDON_VERSION >= 202
+  /* Create a "Play track" button.  */
+  if (info.title)
+    str = g_strdup_printf (_("Play %s%s%s"),
+			     info.title,
+			     info.artist ? " by " : "",
+			     info.artist ?: "");
+  else
+    str = g_strdup_printf (_("Play %s"), info.source);
+  add (str, play_song);
+#endif
+
+  /* Create a "Add this track" button.  */
+  if (info.title)
+    str = g_strdup_printf (_("Add track "
+			     ITALICS_O"%."WIDTHS"s%s"ITALICS_C" to"ELLIPSES),
+			   info.title,
+			   strlen (info.title) > WIDTH ? "..." : "");
+  else
+    {
+      char *s = info.source;
+      if (strlen (s) > 40)
+	s = s + strlen (s) - 37;
+
+      str = g_strdup_printf (_("Add track "
+			       ITALICS_O"%s%s"ITALICS_C" to"ELLIPSES),
+			     s == info.source ? "" : "...", s);
+    }
+  add (str, add_song);
+
+  /* Create a "Add this album" button.  */
+  if (info.album)
+    {
+      str = g_strdup_printf (_("Add album "
+			       ITALICS_O"%."WIDTHS"s%s"ITALICS_C" to"ELLIPSES),
+			     info.album,
+			     strlen (info.album) > WIDTH ? "..." : "");
+      add (str, add_album);
+    }
+
+  /* Create an "Add this artist" button.  */
+  if (info.artist)
+    {
+      str = g_strdup_printf (_("Add tracks by "
+			       ITALICS_O"%."WIDTHS"s%s"ITALICS_C" to"ELLIPSES),
+			     info.artist,
+			     strlen (info.artist) > WIDTH ? "..." : "");
+      add (str, add_artist);
+    }
+
+  /* Create an "Add tracks matching" button.  */
+  if (gtk_toggle_button_get_active (st->search_enabled))
+    {
+      const char *search_text
+	= gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+      if (search_text && *search_text)
+	{
+	  str = g_strdup_printf (_("Add tracks matching "
+				   ITALICS_O"%s"ITALICS_C" to"ELLIPSES),
+				 search_text);
+	  add (str, add_all);
+	}
+    }
+
+  /* Multi-selection is not enabled on Hildon 2.2.  */
+#ifndef HAVE_HILDON_GTK_TREE_VIEW
+  GtkTreeSelection *selection
+    = gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
+  int sel_count = 0;
+  GList *selection_list = NULL;
+  char *first_source = NULL;
+  char *first_title = NULL;
+
+  bool first = true;
+  void sel_callback (GtkTreeModel *model,
+		     GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+  {
+    gint *indices = gtk_tree_path_get_indices (path);
+
+    int uid = play_list_index_to_uid (st->library, indices[0]);
+    if (first)
+      {
+	struct music_db_info info;
+	info.fields = MDB_SOURCE | MDB_TITLE;
+	music_db_get_info (st->db, uid, &info);
+
+	first_title = info.title;
+	first_source = info.source;
+
+	first = false;
+      }
+
+    selection_list
+      = g_list_append (selection_list, (gpointer) uid);
+    sel_count ++;
+  }
+  gtk_tree_selection_selected_foreach (selection, sel_callback, NULL);
+  main_info->selection = selection_list;
+
+  if (sel_count)
+    {
+      if (sel_count > 1)
+	str = g_strdup_printf (_("Add %d selected tracks to"ELLIPSES),
+			       sel_count);
+      else
+	str = g_strdup_printf (_("Add selected track "
+				 ITALICS_O"%."WIDTHS"s%s"ITALICS_C
+				 " to"ELLIPSES),
+			       first_title ?: first_source,
+			       strlen (first_title ?: first_source) > WIDTH
+			       ? "..." : "");
+
+      g_free (first_title);
+      g_free (first_source);
+
+      add (str, add_sel);
+    }
+#endif
+
+  /* Populate the submenus.  On Hildon, we add popup a new note.  */
+
+  int submenu_pos = 0;
+  bool saw_queue = false;
+  int callback (const char *list)
+  {
+    if (strcmp (list, "queue") == 0)
+      {
+	if (saw_queue)
+	  return 0;
+	else
+	  saw_queue = true;
+      }
+
+#if HAVE_HILDON && HAVE_HILDON_VERSION >= 202
+    hildon_touch_selector_append_text (HILDON_TOUCH_SELECTOR (selector), list);
+#else
+    char *s = obstack_copy (&main_info->obstack, list, strlen (list) + 1);
+    int i;
+    for (i = 0; i < item_count; i ++)
+      {
+	struct menu_info_sub_sub *sub_sub
+	  = obstack_alloc (&main_info->obstack, sizeof (*sub_sub));
+	sub_sub->sub = subs[i];
+	sub_sub->list = s;
+
+	GtkWidget *widget = gtk_menu_item_new_with_label (list);
+	g_signal_connect (G_OBJECT (widget), "activate",
+			  G_CALLBACK (queue_cb), sub_sub);
+	gtk_widget_show (widget);
+	gtk_menu_attach (submenus[i], widget, 0, 1,
+			 submenu_pos, submenu_pos + 1);
+	submenu_pos ++;
+      }
+#endif
+
+    return 0;
+  }
+
+  /* Add queue at the beginning of the menu.  */
+  callback ("queue");
+  callback ("new play list");
+  music_db_play_lists_for_each (st->db, callback);
+
+  /* Show the menu.  */
+#if HAVE_HILDON && HAVE_HILDON_VERSION >= 202
+  gtk_widget_show (menu);
+#else
+  gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
+		  event ? event->button : 0,
+		  event ? event->time : gtk_get_current_event_time());
+#endif
+
+  g_free (info.source);
+  g_free (info.title);
+}
+
 static gboolean
 library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 			    Starling *st)
@@ -2722,251 +3141,8 @@ library_button_press_event (GtkWidget *widget, GdkEventButton *event,
 
       gtk_tree_path_free (path);
 
-      GtkMenu *menu = GTK_MENU (gtk_menu_new ());
+      track_popup_menu (st, idx, event);
 
-      int uid = play_list_index_to_uid (st->library, idx);
-
-      struct music_db_info info;
-      info.fields = MDB_SOURCE | MDB_ARTIST | MDB_ALBUM | MDB_TITLE;
-      music_db_get_info (st->db, uid, &info);
-
-      if (info.source)
-	info.source = html_escape_string (info.source);
-      if (info.artist)
-	info.artist = html_escape_string (info.artist);
-      if (info.album)
-	info.album = html_escape_string (info.album);
-      if (info.title)
-	info.title = html_escape_string (info.title);
-
-      GtkMenu *submenus[add_count];
-      int ops[add_count];
-      int submenu_count = 0;
-
-      /* Create a "queue this track" button.  */
-      GtkWidget *button = gtk_menu_item_new_with_label ("");
-      char *str;
-      if (info.title)
-	str = g_strdup_printf (_("Add track <i>%.20s%s</i> to"),
-			       info.title,
-			       strlen (info.title) > 20 ? "..." : "");
-      else
-	{
-	  char *s = info.source;
-	  if (strlen (s) > 40)
-	    s = s + strlen (s) - 37;
-
-	  str = g_strdup_printf (_("Add track <i>%s%s</i> to"),
-				 s == info.source ? "" : "...", s);
-	}
-      gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
-      g_free (str);
-      gtk_widget_show (button);
-      gtk_menu_attach (menu, button, 0, 1, submenu_count, submenu_count + 1);
-
-      submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
-      gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
-      gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
-				 GTK_WIDGET (submenus[submenu_count]));
-
-      ops[submenu_count] = add_song;
-
-      submenu_count ++;
-
-      if (info.album)
-	/* Create a "queue this album button."  */
-	{
-	  button = gtk_menu_item_new_with_label ("");
-	  str = g_strdup_printf (_("Add album <i>%.20s%s</i> to"),
-				 info.album,
-				 strlen (info.album) > 20 ? "..." : "");
-	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
-	  g_free (str);
-	  gtk_widget_show (button);
-	  gtk_menu_attach (menu, button, 0, 1,
-			   submenu_count, submenu_count + 1);
-
-	  submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
-	  gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
-	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
-				     GTK_WIDGET (submenus[submenu_count]));
-
-	  ops[submenu_count] = add_album;
-
-	  submenu_count ++;
-	}
-
-      if (info.album)
-	/* Create a "queue this artist button."  */
-	{
-	  button = gtk_menu_item_new_with_label ("");
-	  str = g_strdup_printf (_("Add tracks by <i>%.20s%s</i> to"),
-				 info.artist,
-				 strlen (info.artist) > 20 ? "..." : "");
-	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
-	  g_free (str);
-	  gtk_widget_show (button);
-	  gtk_menu_attach (menu, button, 0, 1,
-			   submenu_count, submenu_count + 1);
-
-	  submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
-	  gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
-	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
-				     GTK_WIDGET (submenus[submenu_count]));
-
-	  ops[submenu_count] = add_artist;
-
-	  submenu_count ++;
-	}
-
-      if (gtk_toggle_button_get_active (st->search_enabled))
-	{
-	  const char *search_text
-	    = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
-	  if (search_text && *search_text)
-	    {
-	      button = gtk_menu_item_new_with_label ("");
-	      str = g_strdup_printf (_("Add tracks matching <i>%s</i> to"),
-				     search_text);
-	      gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
-	      gtk_widget_show (button);
-	      gtk_menu_attach (menu, button, 0, 1,
-			       submenu_count, submenu_count + 1);
-
-	      submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
-	      gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
-	      gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
-					 GTK_WIDGET (submenus[submenu_count]));
-
-	      ops[submenu_count] = add_all;
-
-	      submenu_count ++;
-	    }
-	}
-
-      GtkTreeSelection *selection
-	= gtk_tree_view_get_selection (GTK_TREE_VIEW (st->library_view));
-      int sel_count = 0;
-      GList *selection_list = NULL;
-      char *first_source = NULL;
-      char *first_title = NULL;
-
-      bool first = true;
-      void sel_callback (GtkTreeModel *model,
-			 GtkTreePath *path, GtkTreeIter *iter, gpointer data)
-      {
-	gint *indices = gtk_tree_path_get_indices (path);
-
-	int uid = play_list_index_to_uid (st->library, indices[0]);
-	if (first)
-	  {
-	    struct music_db_info info;
-	    info.fields = MDB_SOURCE | MDB_TITLE;
-	    music_db_get_info (st->db, uid, &info);
-
-	    first_title = info.title;
-	    first_source = info.source;
-
-	    first = false;
-	  }
-
-	selection_list
-	  = g_list_append (selection_list, (gpointer) uid);
-	sel_count ++;
-      }
-      gtk_tree_selection_selected_foreach (selection, sel_callback, NULL);
-
-      if (sel_count)
-	{
-	  button = gtk_menu_item_new_with_label ("");
-	  if (sel_count > 1)
-	    str = g_strdup_printf (_("Add %d selected tracks to"),
-				   sel_count);
-	  else
-	    str = g_strdup_printf (_("Add selected track <i>%.15s%s</i> to"),
-				   first_title ?: first_source,
-				   strlen (first_title ?: first_source) > 15
-				     ? "..." : "");
-
-	  g_free (first_title);
-	  g_free (first_source);
-
-	  gtk_label_set_markup (GTK_LABEL (GTK_BIN (button)->child), str);
-	  g_free (str);
-	  gtk_widget_show (button);
-	  gtk_menu_attach (menu, button, 0, 1,
-			   submenu_count, submenu_count + 1);
-
-	  submenus[submenu_count] = GTK_MENU (gtk_menu_new ());
-	  gtk_widget_show (GTK_WIDGET (submenus[submenu_count]));
-	  gtk_menu_item_set_submenu (GTK_MENU_ITEM (button),
-				     GTK_WIDGET (submenus[submenu_count]));
-
-	  ops[submenu_count] = add_sel;
-
-	  submenu_count ++;
-	}
-
-
-      /* Add queue at the beginning of the menu.  */
-      int submenu_pos = 0;
-
-      struct menu_info *main_info = g_malloc (sizeof (*main_info));
-      memset (main_info, 0, sizeof (*main_info));
-      main_info->st = st;
-      main_info->uid = uid;
-      main_info->artist = info.artist;
-      main_info->album = info.album;
-      main_info->selection = selection_list;
-
-      g_signal_connect (G_OBJECT (menu), "selection-done",
-			G_CALLBACK (menu_destroy), main_info);
-
-
-      bool force = true;
-      int callback (const char *list)
-      {
-	if (strcmp (list, "queue") == 0)
-	  {
-	    if (force)
-	      force = false;
-	    else
-	      return 0;
-	  }
-
-	int i;
-	for (i = 0; i < submenu_count; i ++)
-	  {
-	    struct menu_info *info = g_malloc (sizeof (*info));
-	    *info = *main_info;
-
-	    info->next = main_info->next;
-	    main_info->next = info;
-
-	    info->op = ops[i];
-	    info->list = g_strdup (list);
-
-	    button = gtk_menu_item_new_with_label (list);
-	    g_signal_connect (G_OBJECT (button), "activate",
-			      G_CALLBACK (queue_cb), info);
-	    gtk_widget_show (button);
-	    gtk_menu_attach (submenus[i], button, 0, 1,
-			     submenu_pos, submenu_pos + 1);
-	    submenu_pos ++;
-	  }
-
-	return 0;
-      }
-
-      callback ("queue");
-      callback ("new play list");
-      music_db_play_lists_for_each (st->db, callback);
-
-      g_free (info.source);
-      g_free (info.title);
-
-      gtk_menu_popup (menu, NULL, NULL, NULL, NULL,
-		      event->button, event->time);
       return TRUE;
     }
 
