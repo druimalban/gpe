@@ -280,7 +280,8 @@ do_refresh (gpointer data)
 	gtk_tree_path_free (path);
       }
 
-  g_array_free (old_idx_uid_map, TRUE);
+  if (old_idx_uid_map)
+    g_array_free (old_idx_uid_map, TRUE);
 
   pl->total = -1;
 

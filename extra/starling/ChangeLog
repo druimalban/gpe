@@ -1,3 +1,8 @@
+2010-01-08  Neal Walfield  <neal@gnu.org>
+
+	* src/playlist.c (do_refresh): Only free OLD_IDX_UID_MAP, if it is
+	not NULL.
+
 2010-01-08  Neal H. Walfield  <neal@gnu.org>
 
 	* src/playlist.c (struct _PlayList): Change idx_uid_map to a
