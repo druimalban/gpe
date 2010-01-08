@@ -1,5 +1,10 @@
 2010-01-08  Neal H. Walfield  <neal@gnu.org>
 
+	* src/playlist.c (struct _PlayList): Change idx_uid_map to a
+	GArray *.  Update users.
+
+2010-01-08  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_open): Set home to the value of the
 	environment variable "HOME", not the string "HOME".
 	[HAVE_MAEMO]: Only add $HOME in this case.

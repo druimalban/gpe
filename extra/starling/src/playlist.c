@@ -54,7 +54,7 @@ struct _PlayList {
   int total;
 
   /* Map from indexes to UID.  */
-  int *idx_uid_map;
+  GArray *idx_uid_map;
   /* Hash mapping UIDs to indexes.  If in queue mode, the maps to one
      index.  */
   GHashTable *uid_idx_hash;
@@ -137,7 +137,8 @@ play_list_finalize (GObject *object)
 
   G_OBJECT_CLASS (play_list_parent_class)->finalize (object);
 
-  free (pl->idx_uid_map);
+  if (pl->idx_uid_map)
+    g_array_free (pl->idx_uid_map, TRUE);
   if (pl->uid_idx_hash)
     g_hash_table_destroy (pl->uid_idx_hash);
 
@@ -196,24 +197,27 @@ do_refresh (gpointer data)
   }
 
   int old_count = pl->count;
+  pl->count = 0;
 
-  int *old_idx_uid_map = pl->idx_uid_map;
+
+  GArray *old_idx_uid_map = pl->idx_uid_map;
 
   if (pl->uid_idx_hash)
     g_hash_table_destroy (pl->uid_idx_hash);
   pl->uid_idx_hash = g_hash_table_new (NULL, NULL);
 
-  pl->count = music_db_count (pl->db, pl->list, pl->constraint);
-
-  pl->idx_uid_map = malloc (pl->count * sizeof (pl->idx_uid_map[0]));
-
-  int idx = 0;
+  /* We can't get the play list's count.  That is not reliable: there
+     is a race.  Between getting the count and iterating over all of
+     the elements, the number of elements may have changed!  */
+  pl->idx_uid_map = g_array_sized_new (false, false, sizeof (int), pl->count);
+  pl->count = 0;
 
   int cb (int uid, struct music_db_info *info)
   {
-    pl->idx_uid_map[idx] = uid;
-    g_hash_table_insert (pl->uid_idx_hash, (gpointer) uid, (gpointer) idx);
-    idx ++;
+    g_array_append_val (pl->idx_uid_map, uid);
+    g_hash_table_insert (pl->uid_idx_hash,
+			 (gpointer) uid, (gpointer) pl->count);
+    pl->count ++;
 
     return 0;
   }
@@ -224,15 +228,8 @@ do_refresh (gpointer data)
 		     pl->list ? NULL : library_order,
 		     pl->scope, pl->constraint);
 
-  if (idx != pl->count)
-    /* If we group, there may be less entires than music_db_count
-       returned since it does not take a scope parameter.  */
-    {
-      g_assert (idx < pl->count);
-      pl->count = idx;
-      pl->idx_uid_map = realloc (pl->idx_uid_map,
-				 pl->count * sizeof (pl->idx_uid_map[0]));
-    }
+  g_assert (pl->count == pl->idx_uid_map->len);
+  g_array_set_size (pl->idx_uid_map, pl->count);
 
   /* We need to emit some signals now so the thing using this model
      will stay in sync.  We brute force it as calculating the
@@ -271,7 +268,8 @@ do_refresh (gpointer data)
 
   int i;
   for (i = 0; i < min_count; i ++)
-    if (pl->idx_uid_map[i] != old_idx_uid_map[i])
+    if (g_array_index (pl->idx_uid_map, int, i)
+	!= g_array_index (old_idx_uid_map, int, i))
       {
 	GtkTreePath *path = gtk_tree_path_new_from_indices (i, -1);
 	GtkTreeIter iter;
@@ -282,7 +280,7 @@ do_refresh (gpointer data)
 	gtk_tree_path_free (path);
       }
 
-  free (old_idx_uid_map);
+  g_array_free (old_idx_uid_map, TRUE);
 
   pl->total = -1;
 
@@ -327,7 +325,7 @@ play_list_index_to_uid (PlayList *pl, int idx)
   g_assert (idx >= 0);
   g_assert (idx < count || (idx == 0 && count == 0));
 
-  return pl->idx_uid_map[idx];
+  return g_array_index (pl->idx_uid_map, int, idx);
 }
 
 int
