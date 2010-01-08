@@ -541,10 +541,10 @@ music_db_open (const char *file, GError **error)
     {
 #ifdef HAVE_MAEMO
       music_db_add_recursive (db, "/media", NULL);
-#endif
-      char *home = ("HOME");
+      char *home = getenv ("HOME");
       if (home)
 	music_db_add_recursive (db, home, NULL);
+#endif
     }
 
   return db;

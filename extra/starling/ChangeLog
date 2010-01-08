@@ -1,5 +1,11 @@
 2010-01-08  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (music_db_open): Set home to the value of the
+	environment variable "HOME", not the string "HOME".
+	[HAVE_MAEMO]: Only add $HOME in this case.
+
+2010-01-08  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (play_list_selector_changed_to): Change argument
 	do_save_current_play_lists_selection to initial_restore.  If
 	INITIAL_RESTORE is true, don't save the current configuration and
