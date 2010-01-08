@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <gst/gst.h>
 #include <assert.h>
-#include "sqlite.h"
+#include "sqlitex.h"
 
 extern void gdk_threads_enter () __attribute__ ((weak));
 extern void gdk_threads_leave () __attribute__ ((weak));

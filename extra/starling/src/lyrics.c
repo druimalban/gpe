@@ -23,7 +23,7 @@
 
 #include <string.h>
 
-#include "sqlite.h"
+#include "sqlitex.h"
 
 #include <glib/gstrfuncs.h>
 #include <glib/gstdio.h>

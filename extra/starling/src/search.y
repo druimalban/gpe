@@ -19,7 +19,7 @@
 
 %{
 #include <glib.h>
-#include <sqlite.h> /* For sqlite_mprintf.  */
+#include "sqlitex.h" /* For sqlite_mprintf.  */
 #include <string.h>
 #include <stdlib.h>
 

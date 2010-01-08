@@ -24,7 +24,7 @@
 
 #include <libsoup/soup.h>
 
-#include "sqlite.h"
+#include "sqlitex.h"
 #include "config.h"
 #include "errorbox.h"
 #include "utils.h"

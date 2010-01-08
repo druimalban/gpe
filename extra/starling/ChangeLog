@@ -1,3 +1,8 @@
+2010-01-08  Neal H. Walfield  <neal@gnu.org>
+
+	* src/sqlite.h: Rename file from this...
+	* src/sqlitex.h: ... to this.  Update users.
+
 2010-01-07  Neal Walfield  <neal@gnu.org>
 
 	* src/starling.c (set_title): Reverse title and artist.
