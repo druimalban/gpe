@@ -1,13 +1,13 @@
 # -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for gpe-beam-0.2.6.
-# Copyright (C) 2005 Free Software Foundation, Inc.
-# Matej Urbančič <matej.urban@gmail.com>, 2005.
+# This file is distributed under the same license as the gpe-beam package.
+# Matej Urbančič <matej.urban@gmail.com>, 2005 - 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-beam 0.2.6\n"
+"Project-Id-Version: gpe-beam 0.2.9\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-10-16 14:18+0200\n"
-"PO-Revision-Date: 2005-10-11 11:12+0100\n"
+"POT-Creation-Date: 2006-08-23 15:25+0200\n"
+"PO-Revision-Date: 2010-01-07 20:49+0100\n"
 "Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -18,232 +18,224 @@ msgstr ""
 "X-Poedit-Country: SLOVENIA\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: main.c:167
+#: main.c:168
 msgid "Error"
 msgstr "Napaka"
 
-#: main.c:172
+#: main.c:173
 msgid "Failed"
 msgstr "Spodletelo"
 
-#: main.c:175
+#: main.c:176
 msgid "Done"
 msgstr "Končano"
 
-#: main.c:178
+#: main.c:179
 msgid "Connecting..."
 msgstr "Povezovanje ..."
 
-#: main.c:182
+#: main.c:183
 msgid "Disconnecting..."
-msgstr "Razvezovanje..."
+msgstr "Prekinjanje povezave ..."
 
-#: main.c:185
+#: main.c:186
 msgid "Sending..."
 msgstr "Pošiljanje ..."
 
-#: main.c:188
+#: main.c:189
 msgid "Receiving"
 msgstr "Sprejemanje ..."
 
-#: main.c:197
+#: main.c:198
 msgid "Waiting for incoming connection"
-msgstr "Čakam na prihajajočo povezavo"
+msgstr "Čakanje na prihajajočo povezavo"
 
-#: main.c:200
+#: main.c:201
 msgid "Connected"
-msgstr "Povezan"
+msgstr "Povezano"
 
-#: main.c:203
+#: main.c:204
 msgid "Disconnecting"
-msgstr "Razvezan"
+msgstr "Brez povezave"
 
-#: main.c:224
+#: main.c:225
 msgid "Telephony"
 msgstr "Telefonija"
 
-#: main.c:230
+#: main.c:231
 msgid "File Server"
 msgstr "Datotečni strežnik"
 
-#: main.c:236
+#: main.c:237
 msgid "IrCOMM"
 msgstr "IrCOMM"
 
-#: main.c:242
+#: main.c:243
 msgid "IrOBEX"
 msgstr "IrOBEX"
 
-#: main.c:251
+#: main.c:252
 msgid "PnP"
 msgstr "PnP"
 
-#: main.c:257
+#: main.c:258
 msgid "PDA/Palmtop"
-msgstr "PDA/Palmtop"
+msgstr "Dlančnik/Palmtop"
 
-#: main.c:263
+#: main.c:264
 msgid "Computer"
 msgstr "Računalnik"
 
-#: main.c:269
+#: main.c:270
 msgid "Printer"
 msgstr "Tiskalnik"
 
-#: main.c:275
+#: main.c:276
 msgid "Modem"
 msgstr "Modem"
 
-#: main.c:281
+#: main.c:282
 msgid "Fax"
 msgstr "Faks"
 
-#: main.c:287
+#: main.c:288
 msgid "LAN Access"
 msgstr "Dostop do LAN omrežja"
 
-#: main.c:361
+#: main.c:362
 msgid "Transmitted file"
 msgstr "Odposlana datoteka"
 
-#: main.c:370
+#: main.c:371
 msgid "Could not transmit file"
-msgstr "Ne morem odposlati datoteke"
+msgstr "Ni mogoče odposlati datoteke"
 
-#: main.c:396 main.c:447
+#: main.c:397 main.c:448
 msgid "Unable to start file transmit."
-msgstr "Ne morem pričeti z odpošiljanjem datoteke."
+msgstr "Ni mogoče začeti z odpošiljanjem datoteke."
 
-#: main.c:419
-msgid "IR Receive and Transmit........."
-msgstr "IR Sprejem in odpošiljanje........."
-
-#: main.c:462
+#: main.c:420 main.c:463
 msgid "IR Receive and Transmit....."
-msgstr "IR Sprejem in odpošiljanje....."
+msgstr "IR sprejem in odpošiljanje ..."
 
-#: main.c:471 main.c:473
+#: main.c:472 main.c:474
 msgid "Error opening IR client."
 msgstr "Napaka pri odpiranju IR odjemalca"
 
-#: main.c:480
+#: main.c:481
 msgid "Select file to transmit"
-msgstr "Izberite datoteko z odpošiljanje"
+msgstr "Izberite datoteko za odpošiljanje"
 
-#: main.c:504
+#: main.c:508
 msgid "Could not start import tool."
-msgstr "Ne morem zagnati orodja za uvoz."
+msgstr "Ni mogoče zagnati orodja za uvoz."
 
-#: main.c:511
-msgid "vCard was imported successfully."
-msgstr "vKartica je bila uspešno uvožena."
-
-#: main.c:519
-msgid "Import of vCard failed."
-msgstr "Uvoz vKartice je spodletel."
-
-#: main.c:548
+#: main.c:532
 #, c-format
-msgid "File '%s' looks like a vCard, do you want to import it?"
-msgstr "Datoteka '%s' izgleda kot vKartica. Jo želite uvoziti?"
+msgid "File '%s' looks like a mimedir (vCard, vCal) filedo you want to import it?"
+msgstr "Datoteka '%s' je videti kot vCard ali vCal datoteka. Ali jo želite uvoziti?"
 
-#: main.c:568 main.c:630
+#: main.c:552 main.c:614
 msgid "Unable to start receiver."
-msgstr "Ne morem zagnati sprejemnika."
+msgstr "Ni mogoče zagnati sprejemnika."
 
-#: main.c:582
+#: main.c:566
 msgid "IR Receive and transmit control"
 msgstr "Nadzornik IR sprejemanja in odpošiljanja"
 
-#: main.c:592 main.c:595
+#: main.c:576 main.c:579
 msgid "Error opening IR server."
 msgstr "Napaka pri odpiranju IR strežnika."
 
-#: main.c:607
+#: main.c:591
 msgid "Received file"
 msgstr "Sprejeta datoteka"
 
-#: main.c:645
+#: main.c:629
 msgid "Transmitting VCard"
-msgstr "Odpošiljam vKartico"
+msgstr "Odpošiljanje vCard"
 
-#: main.c:743
+#: main.c:645
+msgid "Unable to start sender."
+msgstr "Ni mogoče začeti pošiljanja."
+
+#: main.c:737
 msgid "Name:"
 msgstr "Ime:"
 
-#: main.c:744
+#: main.c:738
 msgid "Services:"
 msgstr "Storitve:"
 
-#: main.c:745
+#: main.c:739
 msgid "Address:"
 msgstr "Naslov:"
 
-#: main.c:752
+#: main.c:746
 msgid "Peer Information"
 msgstr "Vrstniške informacije"
 
-#: main.c:755
+#: main.c:749
 msgid "Peer Actions"
 msgstr "Vrstniški dogodki"
 
-#: main.c:763 main.c:991
+#: main.c:757 main.c:985
 msgid "Send File"
 msgstr "Pošlji datoteko"
 
-#: main.c:771 main.c:992
+#: main.c:765 main.c:986
 msgid "Receive File"
 msgstr "Sprejmi datoteko"
 
-#: main.c:821 main.c:886
+#: main.c:815 main.c:880
 msgid "IR transceiver on"
 msgstr "IR sprejemnik vključen"
 
-#: main.c:823 main.c:910
+#: main.c:817 main.c:904
 msgid "IR transceiver off"
 msgstr "IR sprejemnik izključen"
 
-#: main.c:834
+#: main.c:828
 msgid "Infrared Control"
 msgstr "Nadzornik Infrardeče povezave"
 
-#: main.c:983
+#: main.c:977
 msgid "IrDa tool"
 msgstr "IrDa orodje"
 
-#: main.c:988
+#: main.c:982
 msgid "Switch IR on"
-msgstr "Priključi IR"
+msgstr "Vključi IR"
 
-#: main.c:989
+#: main.c:983
 msgid "Switch IR off"
 msgstr "Izključi IR"
 
-#: main.c:990
+#: main.c:984
 msgid "Send vCard"
-msgstr "Pošlji vKartico"
+msgstr "Pošlji vCard"
 
-#: main.c:993
+#: main.c:987
 msgid "Controls..."
-msgstr "Nadzornik..."
+msgstr "Upravljanje ..."
 
-#: main.c:994
+#: main.c:988
 msgid "Remove from dock"
 msgstr "Odstrani z doka"
 
-#: main.c:1061
+#: main.c:1055
 msgid "This is the infrared communications control."
 msgstr "To je nadzornik infrardeče komunikacije."
 
 #: dbus.c:76
 #, c-format
-msgid "Failed to acquire service: %s"
-msgstr "Ne morem pridobiti storitve: %s"
+msgid "Failed to request name: %s"
+msgstr "Ni mogoče zahtevati imena: %s"
 
 #: dbus.c:82
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
-msgstr "Nisem uspel odpreti povezave do sporočilnega vodila: %s"
+msgstr "Ni mogoče odpreti povezave do sporočilnega vodila: %s"
 
 #: gpe-beam.desktop.in.h:1
 msgid "IrDa control"
@@ -252,3 +244,12 @@ msgstr "Nadzornik IrDa"
 #: gpe-beam.desktop.in.h:2
 msgid "Panel based infrared communications control"
 msgstr "Okenski nadzornik infrardeče komunikacije."
+
+#~ msgid "IR Receive and Transmit........."
+#~ msgstr "IR Sprejem in odpošiljanje........."
+
+#~ msgid "vCard was imported successfully."
+#~ msgstr "vKartica je bila uspešno uvožena."
+
+#~ msgid "Import of vCard failed."
+#~ msgstr "Uvoz vKartice je spodletel."

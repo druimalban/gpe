@@ -1,68 +1,68 @@
-# Simplified Chinese(zh-CN) messages for gpe-beam
-# Copyright (C) 2008 Free Software Foundation, Inc.
+# Latvian translation of gpe-beam.
+# Copyright (C) 2009 gpe-beam
 # This file is distributed under the same license as the gpe-beam package.
-# Meng Jie <zuxyhere@eastday.com>, 2004.
-# Ji ZhengYu <zhengyuji@gmail.com>, 2008.
+# Rihards Prieditis <RPrieditis@inbox.lv>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-beam 0.2.9\n"
+"Project-Id-Version: gpe-beam-0.2.9\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2006-08-23 15:25+0200\n"
-"PO-Revision-Date: 2008-11-11 21:05+0800\n"
-"Last-Translator: Ji ZhengYu <zhengyuji@gmail.com>\n"
-"Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
+"PO-Revision-Date: 2009-06-05 18:34+0200\n"
+"Last-Translator: Rihards Prieditis <RPrieditis@inbox.lv>\n"
+"Language-Team: Latvian <translation-team-lv@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #: main.c:168
 msgid "Error"
-msgstr "错误"
+msgstr "Kļūda"
 
 #: main.c:173
 msgid "Failed"
-msgstr "失败"
+msgstr "Neizdevās"
 
 #: main.c:176
 msgid "Done"
-msgstr "完成"
+msgstr "Darīts"
 
 #: main.c:179
 msgid "Connecting..."
-msgstr "正在连接..."
+msgstr "Savienošanās..."
 
 #: main.c:183
 msgid "Disconnecting..."
-msgstr "正在断开..."
+msgstr "Atvienošanās..."
 
 #: main.c:186
 msgid "Sending..."
-msgstr "正在发送..."
+msgstr "Sūtīšana..."
 
 #: main.c:189
 msgid "Receiving"
-msgstr "正在接收"
+msgstr "Saņemšana"
 
 #: main.c:198
 msgid "Waiting for incoming connection"
-msgstr "正在等待传入连接"
+msgstr "Tiek gaidīts ienākošs savienojums"
 
 #: main.c:201
 msgid "Connected"
-msgstr "已连接"
+msgstr "Savienots"
 
 #: main.c:204
 msgid "Disconnecting"
-msgstr "正在断开"
+msgstr "Atvienošanās"
 
 #: main.c:225
 msgid "Telephony"
-msgstr "电话"
+msgstr "Telefonija"
 
 #: main.c:231
 msgid "File Server"
-msgstr "文件服务器"
+msgstr "Faila serveris"
 
 #: main.c:237
 msgid "IrCOMM"
@@ -78,167 +78,167 @@ msgstr "PnP"
 
 #: main.c:258
 msgid "PDA/Palmtop"
-msgstr "PDA/掌上电脑"
+msgstr "PDA/Palmtop"
 
 #: main.c:264
 msgid "Computer"
-msgstr "电脑"
+msgstr "Dators"
 
 #: main.c:270
 msgid "Printer"
-msgstr "打印机"
+msgstr "Printeris"
 
 #: main.c:276
 msgid "Modem"
-msgstr "调制解调器"
+msgstr "Modēms"
 
 #: main.c:282
 msgid "Fax"
-msgstr "传真机"
+msgstr "Faks"
 
 #: main.c:288
 msgid "LAN Access"
-msgstr "局域网访问"
+msgstr "LAN pieeja"
 
 #: main.c:362
 msgid "Transmitted file"
-msgstr "已传送文件"
+msgstr "Sūtīais fails"
 
 #: main.c:371
 msgid "Could not transmit file"
-msgstr "无法传输文件"
+msgstr "Nevar sūtīt failu"
 
 #: main.c:397 main.c:448
 msgid "Unable to start file transmit."
-msgstr "无法启动文件传输。"
+msgstr "Nevar sākt faila sūtīšanu."
 
 #: main.c:420 main.c:463
 msgid "IR Receive and Transmit....."
-msgstr "红外接收和传输......"
+msgstr "IR saņemt un sūtīt..."
 
 #: main.c:472 main.c:474
 msgid "Error opening IR client."
-msgstr "打开红外客户端时出错。"
+msgstr "Kļūda atverot IS klientu."
 
 #: main.c:481
 msgid "Select file to transmit"
-msgstr "选择要传输的文件"
+msgstr "Norādiet sūtāmo failu"
 
 #: main.c:508
 msgid "Could not start import tool."
-msgstr "无法启动导入工具。"
+msgstr "Nevarēja sākt importēšanas rīku."
 
 #: main.c:532
 #, c-format
 msgid "File '%s' looks like a mimedir (vCard, vCal) filedo you want to import it?"
-msgstr "文件‘%s’似乎是个 mimedir (vCard 名片, vCal) 文件，您希望导入它吗？"
+msgstr "Fails \"%s\" izskatās pēc mimedir (vKarte, vKalendārs), vai vēlaties to importēt?"
 
 #: main.c:552 main.c:614
 msgid "Unable to start receiver."
-msgstr "无法启动接收器。"
+msgstr "Nevarēja sākt saņemēju."
 
 #: main.c:566
 msgid "IR Receive and transmit control"
-msgstr "红外接收和传输控制"
+msgstr "IS saņemšanas un sūtīšanas kontrolieris"
 
 #: main.c:576 main.c:579
 msgid "Error opening IR server."
-msgstr "打开红外服务器端时出错。"
+msgstr "Kļūda atverot IS serveri."
 
 #: main.c:591
 msgid "Received file"
-msgstr "已接收文件"
+msgstr "Saņemu failu"
 
 #: main.c:629
 msgid "Transmitting VCard"
-msgstr "正在传送 vCard 名片"
+msgstr "vKartes pārsūtīšana"
 
 #: main.c:645
 msgid "Unable to start sender."
-msgstr "无法启动发送器。"
+msgstr "Nevar sākt sūtītāju."
 
 #: main.c:737
 msgid "Name:"
-msgstr "姓名："
+msgstr "Nosaukums:"
 
 #: main.c:738
 msgid "Services:"
-msgstr "服务："
+msgstr "Pakalpojumi:"
 
 #: main.c:739
 msgid "Address:"
-msgstr "地址："
+msgstr "Adrese:"
 
 #: main.c:746
 msgid "Peer Information"
-msgstr "对等端信息"
+msgstr "Dalībnieka informācija"
 
 #: main.c:749
 msgid "Peer Actions"
-msgstr "对等端操作"
+msgstr "Dalībnieka darbības"
 
 #: main.c:757 main.c:985
 msgid "Send File"
-msgstr "发送文件"
+msgstr "Sūtīt failu"
 
 #: main.c:765 main.c:986
 msgid "Receive File"
-msgstr "接收文件"
+msgstr "Saņemt failu"
 
 #: main.c:815 main.c:880
 msgid "IR transceiver on"
-msgstr "红外收发器开启"
+msgstr "IS raidītājs ieslēgts"
 
 #: main.c:817 main.c:904
 msgid "IR transceiver off"
-msgstr "红外收发器关闭"
+msgstr "IS raidītājs izslēgts"
 
 #: main.c:828
 msgid "Infrared Control"
-msgstr "红外控制"
+msgstr "Infrasarkanās ierīces kontrolieris"
 
 #: main.c:977
 msgid "IrDa tool"
-msgstr "红外控制工具"
+msgstr "IrDa rīks"
 
 #: main.c:982
 msgid "Switch IR on"
-msgstr "打开红外"
+msgstr "Ieslēgt IS"
 
 #: main.c:983
 msgid "Switch IR off"
-msgstr "关闭红外"
+msgstr "Izslēgt IS"
 
 #: main.c:984
 msgid "Send vCard"
-msgstr "发送 vCard 名片"
+msgstr "Sūtīt vKarti"
 
 #: main.c:987
 msgid "Controls..."
-msgstr "控制..."
+msgstr "Kontroļi..."
 
 #: main.c:988
 msgid "Remove from dock"
-msgstr "从 dock 中删除"
+msgstr "Izņemt no paneļa"
 
 #: main.c:1055
 msgid "This is the infrared communications control."
-msgstr "这是红外通信控制工具。"
+msgstr "Šis ir infrasarknās komunikācijas kontrolieris."
 
 #: dbus.c:76
 #, c-format
 msgid "Failed to request name: %s"
-msgstr "无法查找名字：%s"
+msgstr "Neizdevās vaicāt nosaukumu: %s"
 
 #: dbus.c:82
 #, c-format
 msgid "Failed to open connection to session message bus: %s"
-msgstr "无法打开到会话消息总线的连接：%s"
+msgstr "Neizdevās atvērt savienojumu uz sesijas ziņu kopni: %s"
 
 #: gpe-beam.desktop.in.h:1
 msgid "IrDa control"
-msgstr "IrDa 控制"
+msgstr "IrDa kontrolieris"
 
 #: gpe-beam.desktop.in.h:2
 msgid "Panel based infrared communications control"
-msgstr "基于面板的红外通信控制"
+msgstr "Paneļa balstīts infrasarkanās komunikācijas kontrolieris"
