@@ -1,5 +1,12 @@
 2010-01-08  Neal H. Walfield  <neal@gnu.org>
 
+	* src/starling.c (play_list_selector_changed_to): Change argument
+	do_save_current_play_lists_selection to initial_restore.  If
+	INITIAL_RESTORE is true, don't save the current configuration and
+	do restore the configuration.  Update users.
+
+2010-01-08  Neal H. Walfield  <neal@gnu.org>
+
 	* src/sqlite.h: Rename file from this...
 	* src/sqlitex.h: ... to this.  Update users.
 

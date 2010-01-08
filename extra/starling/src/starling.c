@@ -558,9 +558,7 @@ struct deserialize_bottom_half
 };
 
 static void play_list_selector_changed_to
-  (Starling *st,
-   const char *play_list,
-   gboolean do_save_current_play_lists_selection);
+  (Starling *st, const char *play_list, gboolean inital_restore);
 
 static int
 deserialize_bottom_half (gpointer data)
@@ -593,7 +591,7 @@ deserialize_bottom_half (gpointer data)
 #endif
       g_signal_handler_unblock (st->play_list_selector,
 				st->play_list_selector_changed_signal);
-      play_list_selector_changed_to (st, bh->playlist, false);
+      play_list_selector_changed_to (st, bh->playlist, true);
     }
   g_free (bh->playlist);
   
@@ -1224,7 +1222,7 @@ play_list_combo_set_library (gpointer user_data)
 static void
 play_list_selector_changed_to (Starling *st,
 			       const char *play_list,
-			       gboolean do_save_current_play_lists_selection)
+			       gboolean inital_restore)
 {
   const char *old = play_list_get (st->library);
   if (! old)
@@ -1233,10 +1231,10 @@ play_list_selector_changed_to (Starling *st,
   printf ("%s: active play list %s -> %s\n",
 	  __func__, old, play_list);
 
-  if (! play_list || strcmp (old, play_list) != 0)
+  if (inital_restore || ! play_list || strcmp (old, play_list) != 0)
     {
       /* Save the current position and selection.  */
-      if (do_save_current_play_lists_selection)
+      if (! inital_restore)
 	play_list_state_save (st);
 
       if (! play_list)
@@ -1276,7 +1274,7 @@ play_list_selector_changed (Starling *st,
 			    gpointer user_data)
 {
   char *play_list = play_list_selector_get_active (st);
-  play_list_selector_changed_to (st, play_list, TRUE);
+  play_list_selector_changed_to (st, play_list, false);
   g_free (play_list);
 }
 
