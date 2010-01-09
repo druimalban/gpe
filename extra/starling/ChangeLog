@@ -1,5 +1,13 @@
 2010-01-09  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (struct _MusicDB): Add field scanning.
+	(status_update): Set DIRS_PENDIGN to the length of
+	DB->DIRS_PENDING plus DB->SCANNING.
+	(worker_thread): When scanning a directory, set DB->SCANNING to
+	true.
+
+2010-01-09  Neal H. Walfield  <neal@gnu.org>
+
 	* src/starling.c (starling_run) [HAVE_HILDON_STACKABLE_WINDOWS]:
 	Hide ST->LIBRARY_VIEW_WINDOW in this case.
 	[USE_SEARCH_BAR_TOGGLE]: Not this case.

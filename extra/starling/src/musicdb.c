@@ -133,6 +133,8 @@ struct _MusicDB
   GQueue *meta_data_pending;
   /* List of directories (char *) that the worker should scan.  */
   GQueue *dirs_pending;
+  /* If we are scanning a directory.  */
+  bool scanning;
 
   /* If non-zero, the source id of the status handler.  */
   guint status_source;
@@ -1771,7 +1773,7 @@ status_update (MusicDB *db)
 {
   assert (g_thread_self () == main_thread);
 
-  int dirs_pending = g_queue_get_length (db->dirs_pending);
+  int dirs_pending = db->scanning + g_queue_get_length (db->dirs_pending);
   int files_pending = g_queue_get_length (db->meta_data_pending);
   char *message = NULL;
   if (dirs_pending && files_pending)
@@ -2212,6 +2214,8 @@ worker_thread (gpointer data)
     {
       while (! g_queue_is_empty (db->dirs_pending))
 	{
+	  db->scanning = true;
+
 	  status_kick (db);
 
 	  char *filename = g_queue_pop_head (db->dirs_pending);
@@ -2219,6 +2223,8 @@ worker_thread (gpointer data)
 
 	  music_db_add_recursive_internal (db, sqliteh, filename, NULL);
 	  g_free (filename);
+
+	  db->scanning = false;
 
 	  g_mutex_lock (db->work_lock);
 	}
