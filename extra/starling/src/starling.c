@@ -131,6 +131,13 @@ struct _Starling {
   int playlist_alpha_current_height;
   int playlist_alpha_seek_timer_source;
   int play_list_selector_changed_signal;
+
+  GtkWidget *search_bar;
+#if HAVE_MAEMO && HAVE_MAEMO_VERSION >= 500
+#define USE_SEARCH_BAR_TOGGLE
+  GtkWidget *search_bar_toggle;
+  guint search_bar_toggle_toggled_signal;
+#endif
   GtkToggleButton *search_enabled;
   GtkWidget *search_entry;
   GtkListStore *searches;
@@ -1229,9 +1236,6 @@ play_list_selector_changed_to (Starling *st,
   if (! old)
     old = "Library";
 
-  printf ("%s: active play list %s -> %s\n",
-	  __func__, old, play_list);
-
   if (inital_restore || ! play_list || strcmp (old, play_list) != 0)
     {
       /* Save the current position and selection.  */
@@ -1805,6 +1809,48 @@ jump_to_current (Starling *st)
 #endif
 }
 
+/* Update the search button's state to reflect whether a constraint
+   is active.  */
+static void
+search_bar_toggle_toggle_update (Starling *st)
+{
+#ifdef USE_SEARCH_BAR_TOGGLE
+  bool active = gtk_toggle_button_get_active (st->search_enabled);
+  if (active)
+    {
+      const char *text = gtk_entry_get_text (GTK_ENTRY (st->search_entry));
+      if (! (text && *text))
+	active = false;
+    }
+
+  if (active != (gtk_toggle_button_get_active
+		 (GTK_TOGGLE_BUTTON (st->search_bar_toggle))))
+    {
+      g_signal_handler_block (st->search_bar_toggle,
+			      st->search_bar_toggle_toggled_signal);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (st->search_bar_toggle),
+				    active);
+      g_signal_handler_unblock (st->search_bar_toggle,
+				st->search_bar_toggle_toggled_signal);
+    }
+#endif
+}
+
+#ifdef USE_SEARCH_BAR_TOGGLE
+static void
+search_bar_toggle_toggled_cb (Starling *st, GtkToggleButton *search_toggle)
+{
+  bool visible = false;
+  g_object_get (G_OBJECT (st->search_bar), "visible", &visible, NULL);
+  if (visible)
+    gtk_widget_hide (st->search_bar);
+  else
+    gtk_widget_show (st->search_bar);
+
+  search_bar_toggle_toggle_update (st);
+}
+#endif
+
 static int search_text_save_source;
 
 static int
@@ -2080,6 +2126,8 @@ search_text_changed (Starling *st)
   if (regen_source)
     g_source_remove (regen_source);
   regen_source = g_timeout_add (200, search_text_regen, st);
+
+  search_bar_toggle_toggle_update (st);
 }
 
 static void
@@ -3605,6 +3653,23 @@ starling_run (void)
   gtk_container_add (GTK_CONTAINER (main_box), GTK_WIDGET (st->notebook));
 #endif
 
+#ifdef USE_SEARCH_BAR_TOGGLE
+  /* Add a button to the main tool bar to show the search bar.  */
+  {
+    GtkWidget *search
+      = hildon_gtk_toggle_button_new (HILDON_SIZE_FINGER_HEIGHT);
+    st->search_bar_toggle = search;
+    gtk_button_set_image (GTK_BUTTON (search),
+			  gtk_image_new_from_stock (GTK_STOCK_FIND,
+						    GTK_ICON_SIZE_BUTTON));
+    st->search_bar_toggle_toggled_signal
+      = g_signal_connect_swapped (G_OBJECT (search), "toggled",
+				  G_CALLBACK (search_bar_toggle_toggled_cb),
+				  st);
+    gtk_box_pack_start (hbox, search, FALSE, FALSE, 0);
+  }
+#endif
+
   /* Library view tab.  Place a search field at the top and the
      library view at the bottom.  */
 
@@ -3614,7 +3679,7 @@ starling_run (void)
   /* The currently playing song.  */
   /* Stuff the title label in an hbox to prevent it from being
      centered.  */
-  hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
+  st->search_bar = hbox = GTK_BOX (gtk_hbox_new (FALSE, 0));
   gtk_box_pack_start (GTK_BOX (vbox), GTK_WIDGET (hbox), FALSE, FALSE, 0);
   gtk_widget_show (GTK_WIDGET (hbox));
 
@@ -4014,6 +4079,10 @@ starling_run (void)
   gtk_widget_show_all (st->window);
 
   gtk_widget_hide (GTK_WIDGET (st->status));
+#ifdef USE_SEARCH_BAR_TOGGLE
+  /* Hide the search bar by default.  */
+  gtk_widget_hide (GTK_WIDGET (st->search_bar));
+#endif
 
   set_title (st);
 

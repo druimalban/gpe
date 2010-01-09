@@ -1,3 +1,17 @@
+2010-01-09  Neal Walfield  <neal@gnu.org>
+
+	* src/starling.c [HAVE_MAEMO && HAVE_MAEMO_VERSION >= 500]: Define
+	USE_SEARCH_BAR_TOGGLE.
+	(struct _Starling): Add field search_bar.
+	[USE_SEARCH_BAR_TOGGLE]: Add fields search_bar_toggle and
+	search_bar_toggle_toggled_signal.
+	(search_bar_toggle_toggle_update): New function.
+	(search_bar_toggle_toggled_cb): Likewise.
+	(search_text_changed): Call search_bar_toggle_toggle_update.
+	(starling_run) [USE_SEARCH_BAR_TOGGLE]: Create a toggle to toggle
+	the visibility of the search bar.  Add it to the main tool bar.
+	Hide it initially.
+
 2010-01-08  Neal Walfield  <neal@gnu.org>
 
 	* src/starling.c [HAVE_HILDON_VERSION >= 202]: Include
