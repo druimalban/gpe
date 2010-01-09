@@ -112,10 +112,10 @@ struct _Starling {
 
 #ifndef HAVE_HILDON_STACKABLE_WINDOWS
   GtkWidget *notebook;
+  GtkWidget *queue_tab;
 #endif
   GtkWidget *library_tab;
   guint library_tab_update_source;
-  GtkWidget *queue_tab;
   GtkWidget *lyrics_tab;
   GtkWidget *lastfm_tab;
 
@@ -123,6 +123,9 @@ struct _Starling {
 
   GtkWidget *library_view_window;
   GtkWidget *library_view;
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  GtkWidget *library_view_loading_label;
+#endif
   struct caption *caption;
   char *caption_format;
   PlayLists *play_lists_model;
@@ -176,7 +179,9 @@ struct _Starling {
   Player *player;
   MusicDB *db;
   PlayList *library;
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
   PlayList *queue;
+#endif
 
   /* UID of the loaded song.  */
   int loaded_song;
@@ -1207,22 +1212,73 @@ play_list_state_restore (Starling *st)
     }
 }
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
 static gboolean
 play_list_combo_set_library (gpointer user_data)
 {
   Starling *st = user_data;
 
-  g_signal_handler_block (st->play_list_selector,
-			  st->play_list_selector_changed_signal);
-#ifdef HAVE_HILDON_STACKABLE_WINDOWS
-  printf ("%s: Setting active %d\n", __func__, 0);
-  hildon_touch_selector_set_active
-    (HILDON_TOUCH_SELECTOR (st->play_list_selector), 0, 0);
-#else
-  gtk_combo_box_set_active (GTK_COMBO_BOX (st->play_list_selector), 0);
+  return FALSE;
+}
 #endif
-  g_signal_handler_unblock (st->play_list_selector,
-			    st->play_list_selector_changed_signal);
+
+struct play_list_selector_changed
+{
+  Starling *st;
+  bool initial_restore;
+  char *play_list;
+};
+
+static bool
+play_list_selector_changed_flush (struct play_list_selector_changed *info)
+{
+  Starling *st = info->st;
+  char *play_list = info->play_list;
+  bool initial_restore = info->initial_restore;
+  g_free (info);
+
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
+  if (! play_list)
+    /* Currently the combo box is set to the default value, i.e.,
+       "" but we really want it to be set to "Library".  If we set
+       it here, we end up getting a seg fault (likely due to other
+       functions not be reentrant--setting would cause the
+       "changed" signal to be emitted again but it is currently
+       being emitted).  */
+    {
+      g_signal_handler_block (st->play_list_selector,
+			      st->play_list_selector_changed_signal);
+      gtk_combo_box_set_active (GTK_COMBO_BOX (st->play_list_selector), 0);
+      g_signal_handler_unblock (st->play_list_selector,
+				st->play_list_selector_changed_signal);
+    }
+
+#endif
+
+  /* Save the current position and selection.  */
+  if (! initial_restore)
+    play_list_state_save (st);
+
+  play_list_set (st->library,
+		 ! play_list || strcmp (play_list, "Library") == 0
+		 ? NULL : play_list);
+
+
+  play_list_state_restore (st);
+
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
+  update_library_count (st);
+#endif
+
+  /* Rebuild the alpha seek bar.  */
+  playlist_alpha_seek_build_queue (st);
+
+  g_free (play_list);
+
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  gtk_widget_hide (st->library_view_loading_label);
+  gtk_widget_show (st->library_view_window);
+#endif
 
   return FALSE;
 }
@@ -1230,40 +1286,27 @@ play_list_combo_set_library (gpointer user_data)
 static void
 play_list_selector_changed_to (Starling *st,
 			       const char *play_list,
-			       gboolean inital_restore)
+			       gboolean initial_restore)
 {
   const char *old = play_list_get (st->library);
   if (! old)
     old = "Library";
 
-  if (inital_restore || ! play_list || strcmp (old, play_list) != 0)
+  if (initial_restore || ! play_list || strcmp (old, play_list) != 0)
     {
-      /* Save the current position and selection.  */
-      if (! inital_restore)
-	play_list_state_save (st);
+      struct play_list_selector_changed *info = g_malloc (sizeof (*info));
 
-      if (! play_list)
-	/* Currently the combo box is set to the default value, i.e.,
-	   "" but we really want it to be set to "Library".  If we set
-	   it here, we end up getting a seg fault (likely due to other
-	   functions not be reentrant--setting would cause the
-	   "changed" signal to be emitted again but it is currently
-	   being emitted).  */
-	gtk_idle_add (play_list_combo_set_library, st);  
+      info->st = st;
+      info->play_list = g_strdup (play_list);
+      info->initial_restore = initial_restore;
 
-      play_list_set (st->library,
-		     ! play_list || strcmp (play_list, "Library") == 0
-		     ? NULL : play_list);
+      gtk_idle_add (play_list_selector_changed_flush, info);  
 
-
-      play_list_state_restore (st);
-
-#ifndef HAVE_HILDON_STACKABLE_WINDOWS
-      update_library_count (st);
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+      gtk_widget_hide (GTK_WIDGET (st->playlist_alpha_seek));
+      gtk_widget_hide (st->library_view_window);
+      gtk_widget_show (st->library_view_loading_label);
 #endif
-
-      /* Rebuild the alpha seek bar.  */
-      playlist_alpha_seek_build_queue (st);
     }
 
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
@@ -1361,11 +1404,11 @@ void
 starling_quit (Starling *st)
 {
   /* Make the application appear to close faster...  */
-  gtk_widget_hide (GTK_WINDOW (st->window));
+  gtk_widget_hide (GTK_WIDGET (st->window));
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
-  gtk_widget_hide (GTK_WINDOW (st->play_list_selector_view.window));
-  gtk_widget_hide (GTK_WINDOW (st->lyrics_tab));
-  gtk_widget_hide (GTK_WINDOW (st->lastfm_tab));
+  gtk_widget_hide (GTK_WIDGET (st->play_list_selector_view.window));
+  gtk_widget_hide (GTK_WIDGET (st->lyrics_tab));
+  gtk_widget_hide (GTK_WIDGET (st->lastfm_tab));
 #endif
 
   serialize (st);
@@ -1732,7 +1775,13 @@ play (Starling *st, PlayList *pl, int uid)
     gtk_check_menu_item_set_active
       (GTK_CHECK_MENU_ITEM (st->group_by_radio_widgets->data), true);
 
-  if (pl == st->queue)
+  bool from_queue;
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  from_queue = strcmp (play_list_get (st->library), "queue") == 0;
+#else
+  from_queue = (pl == st->queue);
+#endif
+  if (from_queue)
     /* When playing a song from the queue, remove it.  */
     {
       int idx = play_list_uid_to_index (pl, uid);
@@ -1751,8 +1800,11 @@ activated_cb (GtkTreeView *view, GtkTreePath *path,
 {
   g_assert (gtk_tree_path_get_depth (path) == 1);
 
-  PlayList *pl = view == GTK_TREE_VIEW (st->library_view)
-    ? st->library : st->queue;
+  PlayList *pl = st->library;
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
+  if (view != GTK_TREE_VIEW (st->library_view))
+    pl = st->queue;
+#endif
 
   if (pl == st->library && st->group_by)
     {
@@ -3272,8 +3324,13 @@ starling_run (void)
   g_signal_connect_swapped (G_OBJECT (st->db), "changed-entry",
 			    G_CALLBACK (meta_data_changed), st);
 
-  st->library = play_list_new (st->db, NULL);
+  /* We set it initially to an impossible play list.  This way when we
+     change play lists, we haven't wasted time loading the library
+     (which is potentially expensive).  */
+  st->library = play_list_new (st->db, "{103985430985435830534095803245083}");
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
   st->queue = play_list_new (st->db, "queue");
+#endif
 
   st->player = player_new ();
 
@@ -3842,6 +3899,14 @@ starling_run (void)
   gtk_widget_show (scrolled);
   gtk_container_add (GTK_CONTAINER (hbox), scrolled);
 
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  st->library_view_loading_label = gtk_label_new (_("Loading..."));
+  gtk_box_pack_start (GTK_BOX (hbox),
+		      GTK_WIDGET (st->library_view_loading_label),
+		      TRUE, TRUE, 0);
+  gtk_widget_show (st->library_view_loading_label);
+#endif
+
 
   /* Build the alpha scroller.  */
   GtkEventBox *event_box = GTK_EVENT_BOX (gtk_event_box_new ());
@@ -4094,6 +4159,7 @@ starling_run (void)
 #ifdef USE_SEARCH_BAR_TOGGLE
   /* Hide the search bar by default.  */
   gtk_widget_hide (GTK_WIDGET (st->search_bar));
+  gtk_widget_hide (GTK_WIDGET (st->library_view_window));
 #endif
 
   set_title (st);

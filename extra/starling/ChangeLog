@@ -1,5 +1,28 @@
 2010-01-09  Neal Walfield  <neal@gnu.org>
 
+	* src/starling.c (struct
+	_Starling) [!HAVE_HILDON_STACKABLE_WINDOWS]: Remove fields
+	queue_tab or queue.
+	[HAVE_HILDON_STACKABLE_WINDOWS]: Add field
+	library_view_loading_label.
+	(play_list_combo_set_library) [!HAVE_HILDON_STACKABLE_WINDOWS]:
+	Only define in this case.
+	(struct play_list_selector_changed): New structure.
+	(play_list_selector_changed_to): Move body of this function...
+	(play_list_selector_changed_flush): ... to this new function.
+	(play_list_selector_changed_to): Call it from an idle handler.
+	[HAVE_HILDON_STACKABLE_WINDOWS]: Initialize
+	ST->LIBRARY_VIEW_LOADING_LABEL.  Hide ST->LIBRARY_VIEW_WINDOW.
+
+	(play) [HAVE_HILDON_STACKABLE_WINDOWS]: Determine if the entry
+	came from the queue by checking ST->LIBRARY's play list.
+	(activated_cb) [HAVE_HILDON_STACKABLE_WINDOWS]: Fix PL to
+	ST->LIBRARY.
+	(starling_run) [!HAVE_HILDON_STACKABLE_WINDOWS]: Don't initialize
+	ST->QUEUE.
+
+2010-01-09  Neal Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_open): Free memory returned by sqlite
 	using sqlite_freemem, not free.
 	(music_db_for_each): Likewise.
