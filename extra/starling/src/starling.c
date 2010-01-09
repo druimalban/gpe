@@ -1777,7 +1777,9 @@ play (Starling *st, PlayList *pl, int uid)
 
   bool from_queue;
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
-  from_queue = strcmp (play_list_get (st->library), "queue") == 0;
+  char *play_list = play_list_get (st->library);
+  if (play_list)
+    from_queue = strcmp (play_list, "queue") == 0;
 #else
   from_queue = (pl == st->queue);
 #endif
