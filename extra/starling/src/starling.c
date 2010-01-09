@@ -1853,7 +1853,11 @@ search_bar_toggle_toggled_cb (Starling *st, GtkToggleButton *search_toggle)
   if (visible)
     gtk_widget_hide (st->search_bar);
   else
-    gtk_widget_show (st->search_bar);
+    {
+      gtk_widget_show (st->search_bar);
+      gtk_editable_select_region (GTK_EDITABLE (st->search_entry), 0, -1);
+      gtk_widget_grab_focus (GTK_WIDGET (st->search_entry));
+    }
 
   search_bar_toggle_toggle_update (st);
 }

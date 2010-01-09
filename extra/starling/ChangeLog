@@ -1,5 +1,10 @@
 2010-01-09  Neal Walfield  <neal@gnu.org>
 
+	* src/starling.c (search_bar_toggle_toggled_cb): When showing the
+	toolbar, have the search entry grab the focus and select any text.
+
+2010-01-09  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c (starling_quit): Hide the windows.
 
 2010-01-09  Neal Walfield  <neal@gnu.org>
