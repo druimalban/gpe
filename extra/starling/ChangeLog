@@ -1,5 +1,9 @@
 2010-01-09  Neal H. Walfield  <neal@gnu.org>
 
+	* src/sqlite.h: Remove file.
+
+2010-01-09  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (struct _MusicDB): Add field scanning.
 	(status_update): Set DIRS_PENDIGN to the length of
 	DB->DIRS_PENDING plus DB->SCANNING.
