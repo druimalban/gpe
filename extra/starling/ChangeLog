@@ -1,5 +1,9 @@
 2010-01-09  Neal Walfield  <neal@gnu.org>
 
+	* src/starling.c (starling_quit): Hide the windows.
+
+2010-01-09  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c [HAVE_MAEMO && HAVE_MAEMO_VERSION >= 500]: Define
 	USE_SEARCH_BAR_TOGGLE.
 	(struct _Starling): Add field search_bar.

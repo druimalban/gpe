@@ -1360,6 +1360,14 @@ starling_come_to_front (Starling *st)
 void
 starling_quit (Starling *st)
 {
+  /* Make the application appear to close faster...  */
+  gtk_widget_hide (GTK_WINDOW (st->window));
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  gtk_widget_hide (GTK_WINDOW (st->play_list_selector_view.window));
+  gtk_widget_hide (GTK_WINDOW (st->lyrics_tab));
+  gtk_widget_hide (GTK_WINDOW (st->lastfm_tab));
+#endif
+
   serialize (st);
   gtk_main_quit();
 }
