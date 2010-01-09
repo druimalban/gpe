@@ -1,5 +1,10 @@
 2010-01-09  Neal Walfield  <neal@gnu.org>
 
+	* src/starling.c (deserialize_bottom_half): Always call
+	play_list_selector_changed_to.
+
+2010-01-09  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c (play): Don't call strcmp if the play list is
 	NULL.
 

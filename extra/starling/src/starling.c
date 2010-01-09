@@ -606,6 +606,8 @@ deserialize_bottom_half (gpointer data)
 				st->play_list_selector_changed_signal);
       play_list_selector_changed_to (st, bh->playlist, true);
     }
+  else
+    play_list_selector_changed_to (st, NULL, true);
   g_free (bh->playlist);
   
   gtk_toggle_button_set_active (st->search_enabled, bh->search_enabled);
@@ -1252,7 +1254,6 @@ play_list_selector_changed_flush (struct play_list_selector_changed *info)
       g_signal_handler_unblock (st->play_list_selector,
 				st->play_list_selector_changed_signal);
     }
-
 #endif
 
   /* Save the current position and selection.  */
@@ -1300,13 +1301,13 @@ play_list_selector_changed_to (Starling *st,
       info->play_list = g_strdup (play_list);
       info->initial_restore = initial_restore;
 
-      gtk_idle_add (play_list_selector_changed_flush, info);  
-
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
       gtk_widget_hide (GTK_WIDGET (st->playlist_alpha_seek));
       gtk_widget_hide (st->library_view_window);
       gtk_widget_show (st->library_view_loading_label);
 #endif
+
+      gtk_idle_add (play_list_selector_changed_flush, info);  
     }
 
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
