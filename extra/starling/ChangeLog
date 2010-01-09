@@ -1,3 +1,9 @@
+2010-01-09  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c (starling_run) [HAVE_HILDON_STACKABLE_WINDOWS]:
+	Hide ST->LIBRARY_VIEW_WINDOW in this case.
+	[USE_SEARCH_BAR_TOGGLE]: Not this case.
+
 2010-01-09  Neal Walfield  <neal@gnu.org>
 
 	* src/starling.c (deserialize_bottom_half): Always call

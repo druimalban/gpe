@@ -4162,6 +4162,9 @@ starling_run (void)
 #ifdef USE_SEARCH_BAR_TOGGLE
   /* Hide the search bar by default.  */
   gtk_widget_hide (GTK_WIDGET (st->search_bar));
+#endif
+#ifdef HAVE_HILDON_STACKABLE_WINDOWS
+  /* Hide the library view while we load.  */
   gtk_widget_hide (GTK_WIDGET (st->library_view_window));
 #endif
 
