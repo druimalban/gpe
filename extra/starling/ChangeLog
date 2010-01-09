@@ -1,5 +1,13 @@
 2010-01-09  Neal Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (music_db_open): Free memory returned by sqlite
+	using sqlite_freemem, not free.
+	(music_db_for_each): Likewise.
+	(music_db_play_list_clear): Likewise.
+	(music_db_play_lists_for_each): Likewise.
+
+2010-01-09  Neal Walfield  <neal@gnu.org>
+
 	* src/starling.c (search_bar_toggle_toggled_cb): When showing the
 	toolbar, have the search entry grab the focus and select any text.
 

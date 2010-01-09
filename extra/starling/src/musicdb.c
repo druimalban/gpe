@@ -524,7 +524,7 @@ music_db_open (const char *file, GError **error)
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-      g_free (err);
+      sqlite_freemem (err);
     }
   else
     {
@@ -1593,7 +1593,7 @@ music_db_for_each (MusicDB *db, const char *list,
     {
       g_warning ("%s:%d: %s (statement: `%s')",
 		 __FUNCTION__, __LINE__, err, statement);
-      free (err);
+      sqlite_freemem (err);
     }
 
   obstack_free (&sql, NULL);
@@ -1732,7 +1732,7 @@ music_db_play_list_clear (MusicDB *db, const char *list)
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-      free (err);
+      sqlite_freemem (err);
     }
 
   for (; count > 0; count --)
@@ -1760,7 +1760,7 @@ music_db_play_lists_for_each (MusicDB *db,
   if (err)
     {
       g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
-      free (err);
+      sqlite_freemem (err);
     }
 
   return ret;
