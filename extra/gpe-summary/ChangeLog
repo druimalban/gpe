@@ -1,3 +1,24 @@
+2010-01-10  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpesummary.c: Many changes to make reloading widget reliable and remove console 
+	error messages...
+	Remove some globals to reduce bugs associated with re-creating the widgets
+	without reloading the code.
+	Change handling of GtkEventBox throughout the code to remove GTK warning messages.
+	(reset_globals): Add routine to reset global variables when re-creating widget.
+	(on_menuitem_settings): Get parent window from user data instead of from global.
+	(home_applet_timer): Manage current_timer so we know whether it needs cancelling.
+	(hildon_home_applet_lib_initialize): Call reset_globals.
+	(hildon_home_applet_lib_deinitialize): Clear globals when data structures freed.
+	(hildon_home_applet_lib_settings): Pass parent to on_menuitem_settings
+	(gpe_summary_plugin_init): Fix declaration of gpe_dir to remove warning.
+	Manage current_timer so we know whether it needs cancelling.
+	Call reset_globals.
+	(gpe_summary_plugin_class_finalize): Close dbus connections correctly.
+	Clear globals when data structures freed.
+	Close event, contacts and todos databases when widget destroyed.
+	(g_module_check_init): Prevent module being unloaded.
+
 2009-09-19  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c (gpe_summary_plugin_init): Create GPE home directory if it

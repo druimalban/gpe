@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007-2008 Christoph Würstle <n800@axique.de>
+ * Copyright (C) 2008-2010 Graham R. Cobb <g+gpe@cobb.uk.net>
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version
@@ -80,42 +81,71 @@ gchar *todo_file = NULL;
 #define WIDTH 300
 #define HEIGHT 400
 
-GtkWidget *button =NULL;
-GtkWidget *mainvbox =NULL;
-GtkWidget *prefsvbox =NULL;
-GtkWidget *mainwidget =NULL;
+GtkWidget *mainwidget = NULL;
+GtkWidget *mainvbox = NULL;
 GtkWidget *headtitle = NULL;
-GtkWidget *settingswidget = NULL;
-GtkWindow *settingswindow = NULL;
-HildonWindow *window;
-GtkWidget *scrolled_window;
-time_t last_gui_update = 0;
-char timestring[40];
+GtkWidget *scrolled_window = NULL;
+time_t last_gui_update;
 
-gboolean doshow_birthdays=TRUE; /* Whether we are currently showing birthdays */
-gboolean show_birthdays_pref=TRUE; /* Whether the user wants us to try to show birthdays */
-gboolean doshow_appointments=TRUE;
-gboolean doshow_todos=TRUE;
-gboolean doshow_alltodos=TRUE;
+gboolean doshow_birthdays; /* Whether we are currently showing birthdays */
+gboolean show_birthdays_pref; /* Whether the user wants us to try to show birthdays */
+gboolean doshow_appointments;
+gboolean doshow_todos;
+gboolean doshow_alltodos;
 
-gboolean doshow_buttons=FALSE;
-gint doshow_countitems=8;
-//gboolean doshow_autorefresh=FALSE;
-gboolean doshow_extended=TRUE; //waste space
-gboolean doshow_vexpand=FALSE; //no option yet!
+gboolean doshow_buttons;
+gint doshow_countitems;
+//gboolean doshow_autorefresh;
+gboolean doshow_extended; //waste space
+gboolean doshow_vexpand; //no option yet!
 
+gboolean refresh_now; //User asked for refresh update_clock manages this
 
-gboolean refresh_now=FALSE; //User asked for refresh update_clock manages this
+static osso_context_t *osso = NULL;
 
-static osso_context_t *osso;
-
-GSList *birthdaylist =NULL;
-gchar lastGPEDBupdate[6] = "xxxx";
+GSList *birthdaylist = NULL;
+gchar lastGPEDBupdate[6];
 int todocount;
+
+guint current_timer = 0;
 
 time_t calendar_mtime = 0;
 time_t todo_mtime = 0;
 EventDB *event_db = NULL;
+
+static void reset_globals() {
+  /* Initialise globals and reset options to default */
+  /* Note: this is to handle re-adding the widget to the home 
+     screen without reloading the code.  No pointers to allocated
+     memory should be reset unless the memory concerned has been
+     freed, otherwise memory loss will occur.  To avoid bugs, pointers
+     should be reset at the same time as the memory concerned is
+     freed, not here */
+
+  g_message("%s",__func__);
+
+  last_gui_update = 0;
+
+  doshow_birthdays = TRUE; /* Whether we are currently showing birthdays */
+  show_birthdays_pref = TRUE; /* Whether the user wants us to try to show birthdays */
+  doshow_appointments = TRUE;
+  doshow_todos = TRUE;
+  doshow_alltodos = TRUE;
+
+  doshow_buttons = FALSE;
+  doshow_countitems = 8;
+  // doshow_autorefresh = FALSE;
+  doshow_extended = TRUE; //waste space
+  doshow_vexpand = FALSE; //no option yet!
+
+  refresh_now = FALSE; //User asked for refresh update_clock manages this
+
+  lastGPEDBupdate[0] = '\0';
+  todocount = 0;
+
+  calendar_mtime = 0;
+  todo_mtime = 0;
+}
 
 void printTime(gchar * comment) {
   g_message(comment);
@@ -181,16 +211,19 @@ static void todo_clicked( GtkWidget      *button,
 	todocount--;
 	g_message("todocount %i",todocount);
 	if (todocount==0) {
-		g_message("adding no todos");
-		GtkWidget *eventbox;
-		eventbox = gtk_event_box_new();
-		gtk_box_pack_start(GTK_BOX(vbox),eventbox,doshow_vexpand,doshow_vexpand,0);	
-		button = gtk_label_new_with_mnemonic(_("(no todos)"));
-		gtk_container_add(GTK_CONTAINER(eventbox),button);
-		gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
-		gtk_misc_set_alignment(GTK_MISC(button),0,0);
-		g_signal_connect( GTK_OBJECT( eventbox ), "button_press_event",   GTK_SIGNAL_FUNC( todo_gpestart ), NULL );
-		gtk_widget_show_all(GTK_WIDGET(vbox));
+	  GtkWidget *button;
+	  g_message("adding no todos");
+	  GtkWidget *eventbox;
+	  eventbox = gtk_event_box_new();
+	  gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
+	  gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox), TRUE);
+	  gtk_event_box_set_visible_window(GTK_EVENT_BOX(eventbox), FALSE);
+	  gtk_box_pack_start(GTK_BOX(vbox),eventbox,doshow_vexpand,doshow_vexpand,0);	
+	  button = gtk_label_new_with_mnemonic(_("(no todos)"));
+	  gtk_container_add(GTK_CONTAINER(eventbox),button);
+	  gtk_misc_set_alignment(GTK_MISC(button),0,0);
+	  g_signal_connect( GTK_OBJECT( eventbox ), "button_press_event",   GTK_SIGNAL_FUNC( todo_gpestart ), NULL );
+	  gtk_widget_show_all(GTK_WIDGET(vbox));
 	}	
 		
 	g_slist_free(iter);
@@ -333,6 +366,7 @@ gint show_todos(GtkWidget *vbox, gint count) {
 			g_string_append(label," (!)");
 		}
 
+		GtkWidget *button;
 		GtkWidget *hbox_todo;
 		GtkWidget *eventbox;
 		hbox_todo = gtk_hbox_new (FALSE, 0);
@@ -346,11 +380,14 @@ gint show_todos(GtkWidget *vbox, gint count) {
 		g_signal_connect( GTK_OBJECT( button ), "clicked",   GTK_SIGNAL_FUNC( todo_clicked ), NULL );
 		
 		eventbox= gtk_event_box_new();
+		gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
+		gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox), TRUE);
+		gtk_event_box_set_visible_window(GTK_EVENT_BOX(eventbox), FALSE);
+
 		gtk_box_pack_start(GTK_BOX(hbox_todo),eventbox,doshow_vexpand,doshow_vexpand,0);
 		
 		button = gtk_label_new(label->str);
 		gtk_container_add(GTK_CONTAINER(eventbox),button);//,TRUE,TRUE,0);
-		gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
 		gtk_misc_set_alignment(GTK_MISC(button),0,0.5);
 		g_signal_connect( GTK_OBJECT( eventbox ), "button_press_event",   GTK_SIGNAL_FUNC( todo_startclicked ), NULL );	
 	}
@@ -358,11 +395,14 @@ gint show_todos(GtkWidget *vbox, gint count) {
 	if (todocount==0) {
 		//g_message("todocount 0");
 		GtkWidget *eventbox;
+		GtkWidget *button;
 		eventbox = gtk_event_box_new();
+		gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
+		gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox), TRUE);
+		gtk_event_box_set_visible_window(GTK_EVENT_BOX(eventbox), FALSE);
 		gtk_box_pack_start(GTK_BOX(vbox),eventbox,doshow_vexpand,doshow_vexpand,0);	
 		button = gtk_label_new_with_mnemonic(_("(no todos)"));
 		gtk_container_add(GTK_CONTAINER(eventbox),button);
-		gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
 		gtk_misc_set_alignment(GTK_MISC(button),0,0);
 		g_signal_connect( GTK_OBJECT( eventbox ), "button_press_event",   GTK_SIGNAL_FUNC( todo_gpestart ), NULL );
 
@@ -380,6 +420,7 @@ gint show_todos(GtkWidget *vbox, gint count) {
 
 void show_title(GtkWidget *vbox,gchar *title) {
 	if (title!=NULL) {
+		GtkWidget *button;
 		button = gtk_label_new("");
 		gtk_label_set_markup(GTK_LABEL(button),title);
 		gtk_misc_set_alignment(GTK_MISC(button),0,0);
@@ -490,6 +531,7 @@ gboolean show_birthdays (GtkWidget *vbox,time_t start,gchar *title) {
 		ctv=contacts_db_find_tag(p,"BIRTHDAY");
 		
 		if (strncmp(buf2,(ctv->value)+4,4)==0) {
+		  GtkWidget *button;
 				g_message(ctv->value);
 				if (titletoshow==TRUE) show_title(vbox,title);
 				titletoshow=FALSE;
@@ -499,11 +541,13 @@ gboolean show_birthdays (GtkWidget *vbox,time_t start,gchar *title) {
 				g_message( label->str );
 
 				GtkWidget *eventbox= gtk_event_box_new();
+				gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
+				gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox), TRUE);
+				gtk_event_box_set_visible_window(GTK_EVENT_BOX(eventbox), FALSE);
 				gtk_box_pack_start(GTK_BOX(vbox),eventbox,doshow_vexpand,doshow_vexpand,0);
 		
 				button = gtk_label_new_with_mnemonic(label->str);  
 				gtk_container_add(GTK_CONTAINER(eventbox),button);
-				gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
 				gtk_misc_set_alignment(GTK_MISC(button),0,0);
 				g_signal_connect( G_OBJECT( eventbox ), "button_press_event",   GTK_SIGNAL_FUNC( contacts_startclicked ), NULL );	
 
@@ -590,10 +634,14 @@ gint add_events(GtkWidget *vbox,EventDB *event_db, time_t start, time_t stop, gc
 			strcat(buf,event_get_summary(ev, error) );
 		
 			GtkWidget *eventbox= gtk_event_box_new();
+			gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
+			gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox), TRUE);
+			gtk_event_box_set_visible_window(GTK_EVENT_BOX(eventbox), FALSE);
+			gtk_box_pack_start(GTK_BOX(vbox),eventbox,doshow_vexpand,doshow_vexpand,0);
 			gtk_box_pack_start(GTK_BOX(vbox),eventbox,doshow_vexpand,doshow_vexpand,0);		
+			GtkWidget *button;
 			button = gtk_label_new_with_mnemonic(buf);  
 			gtk_container_add(GTK_CONTAINER(eventbox),button);
-			gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
 			gtk_misc_set_alignment(GTK_MISC(button),0,0);
 			g_signal_connect( G_OBJECT( eventbox ), "button_press_event",   GTK_SIGNAL_FUNC( events_startclicked ), NULL );
 		}
@@ -607,10 +655,13 @@ gint add_events(GtkWidget *vbox,EventDB *event_db, time_t start, time_t stop, gc
 		}
 		
 		GtkWidget *eventbox= gtk_event_box_new();
+		gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
+		gtk_event_box_set_above_child(GTK_EVENT_BOX(eventbox), TRUE);
+		gtk_event_box_set_visible_window(GTK_EVENT_BOX(eventbox), FALSE);
 		gtk_box_pack_start(GTK_BOX(vbox),eventbox,doshow_vexpand,doshow_vexpand,0);	
+		GtkWidget *button;
 		button = gtk_label_new_with_mnemonic(_(" (no appointments)"));
 		gtk_container_add(GTK_CONTAINER(eventbox),button);
-		gtk_widget_set_events(eventbox,GDK_BUTTON_PRESS_MASK);
 		gtk_misc_set_alignment(GTK_MISC(button),0,0);
 		g_signal_connect( GTK_OBJECT( eventbox ), "button_press_event",   GTK_SIGNAL_FUNC( events_startclicked ), NULL );
 		count+=1;
@@ -732,6 +783,7 @@ void show_all() {
 	g_message ("show_all 2");
 	GtkWidget *vbox_todo;
 	GtkWidget *vbox_events;
+	GtkWidget *button;
 	
 	
 	if (mainvbox!=NULL) gtk_widget_destroy(mainvbox);
@@ -740,6 +792,7 @@ void show_all() {
 	gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW(scrolled_window), mainvbox );
 
 	//Show headtitle
+	g_message ("show_all 3");
 	
 	GtkWidget *hbox = gtk_hbox_new (FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(mainvbox),hbox,doshow_vexpand,doshow_vexpand,0);
@@ -749,6 +802,7 @@ void show_all() {
 	gtk_misc_set_alignment(GTK_MISC(headtitle),0,0);
 	
 	
+	g_message ("show_all 4");
 	GtkWidget *event_box1 = gtk_event_box_new ();
 	gtk_container_add (GTK_CONTAINER (event_box1), headtitle);	
 	gtk_box_pack_start(GTK_BOX(hbox),event_box1,TRUE,TRUE,0);	
@@ -762,7 +816,7 @@ void show_all() {
 	gtk_box_pack_start(GTK_BOX(mainvbox),vbox_events,TRUE,TRUE,0);
     
 	
-	
+	g_message ("show_all 5");
 	if (((doshow_appointments==TRUE)&&(doshow_todos==TRUE))||((doshow_birthdays==TRUE)&&(doshow_todos==TRUE))) {
 		button=gtk_hseparator_new();
 		gtk_box_pack_start(GTK_BOX(mainvbox),button,TRUE,TRUE,0);
@@ -774,6 +828,7 @@ void show_all() {
 	gint count=0;
 	count=show_todos(vbox_todo,count);
 
+	g_message ("show_all 6");
 	count=show_events(vbox_events,count);
 
 	//scroll = gtk_vscrollbar_new (GTK_BOX (mainvbox)->vadj);
@@ -811,6 +866,7 @@ void show_all() {
 
 
 gint update_clock(gpointer data) {
+  char timestring[40];
         struct tm tm;
 	if (mainwidget==NULL) { return FALSE;}  //already destroyed itself?
 
@@ -971,20 +1027,14 @@ static void options_showcountchanged(GtkComboBox *widget,gpointer user_data) {
 static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 {
   g_message("%s",__func__);
-    /*if (!window && user_data)
-	window = gtk_widget_get_ancestor(GTK_WIDGET(user_data), GTK_TYPE_WINDOW);
-    
-	if (window && GTK_IS_WINDOW(window))*/
-	//execute_rss_settings(rss_appl_inf->osso, NULL, TRUE);
-	//settingswidget=gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	//gtk_widget_show_all(GTK_WIDGET(settingswidget));
-
 	GtkWidget *dialog;
+	GtkWidget *button;
+	GtkWindow *window = GTK_WINDOW(user_data);
    
 	/* Create the widgets */
    
 	dialog = gtk_dialog_new_with_buttons (_("GPE Summary Options"),
-					      settingswindow,
+					      window,
 					      GTK_DIALOG_DESTROY_WITH_PARENT,
 					      GTK_STOCK_OK,
 					      GTK_RESPONSE_NONE,
@@ -1085,6 +1135,7 @@ gboolean focus_in(GtkWidget *widget, GdkEventFocus *event, gpointer user_data) {
 int main (int argc, char *argv[])
 {
     HildonProgram *program;
+    HildonWindow *main_window;
 
     osso = osso_initialize ("gpesummary", "0.6", FALSE, NULL);
     if (! osso)
@@ -1101,12 +1152,12 @@ int main (int argc, char *argv[])
     program = HILDON_PROGRAM(hildon_program_get_instance());
     g_set_application_name("GPE Summary");
 
-    window = HILDON_WINDOW(hildon_window_new());
-    hildon_program_add_window(program, window);
+    main_window = HILDON_WINDOW(hildon_window_new());
+    hildon_program_add_window(program, main_window);
     
     scrolled_window = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
-    gtk_container_add( GTK_CONTAINER( window ), scrolled_window );	
+    gtk_container_add( GTK_CONTAINER( main_window ), scrolled_window );	
 
     show_all();
     update_clock(NULL);
@@ -1127,7 +1178,7 @@ int main (int argc, char *argv[])
 }*/
 
 static guint log_handler_id = 0;
-#define LOG_HANDLER "/tmp/gpesummary.log"
+#define NOLOG_HANDLER "/tmp/gpesummary.log"
 #ifdef LOG_HANDLER
 static void log_handler (const char *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data)
 {
@@ -1154,6 +1205,8 @@ static void add_home_applet_timer (void);
 /* Do updates for this minute */
 static gboolean home_applet_timer (gpointer data)
 {
+  current_timer = 0; /* We will not be repeating this timer */
+
   update_clock(NULL);
 
   /* Set new timer for next minute */
@@ -1174,7 +1227,7 @@ static void add_home_applet_timer (void)
 
   delay = 60 - (now.tv_sec % 60);
 
-  g_timeout_add (delay * 1000, home_applet_timer, NULL);
+  current_timer = g_timeout_add (delay * 1000, home_applet_timer, NULL);
 }
 
 void *
@@ -1188,6 +1241,8 @@ void *
 #endif
 
   g_message("%s",__func__);
+
+  reset_globals();
 
 	g_type_init();
  	//setlocale(LC_ALL, "");
@@ -1233,18 +1288,24 @@ void
 		hildon_home_applet_lib_deinitialize (void *applet_data)
 {
   g_message("%s",__func__);
-	if (osso)
-		osso_deinitialize (osso);
+  if (osso) {
+    osso_deinitialize (osso);
+    osso = NULL;
+  }
 	g_message("hildon_home_applet_lib_deinitialize 2");
 	g_slist_free(birthdaylist);
 	birthdaylist=NULL;
 	g_message("hildon_home_applet_lib_deinitialize 3");
-	if (prefsvbox) gtk_widget_destroy(prefsvbox);
 	g_message("hildon_home_applet_lib_deinitialize 4");
-	if (mainwidget) gtk_widget_destroy(mainwidget);
+	//if (mainwidget) gtk_widget_destroy(mainwidget);
 	g_message("hildon_home_applet_lib_deinitialize 5");
         //if (mainwidget) g_free(mainwidget);
 	mainwidget=NULL;
+	mainvbox = NULL;
+	headtitle = NULL;
+	scrolled_window = NULL;
+	if (current_timer) g_source_destroy(g_main_context_find_source_by_id(NULL,current_timer));
+	current_timer = 0;
 	g_message("hildon_home_applet_lib_deinitialize 6");
 	/*if (app) {
 		g_free (app);
@@ -1290,26 +1351,14 @@ void
 	return;
 }
 
-/*static gint prefs_ok( GtkWidget      *button, 
-			  GdkEventButton *event,
-			  gpointer user_data ) {
-				  
-	gtk_widget_hide(prefsvbox);
-	if (prefsvbox) gtk_widget_destroy(prefsvbox);
-	
-}*/
-
 GtkWidget *
 		hildon_home_applet_lib_settings (void *data, GtkWindow *parent)
 {
-
-	settingswindow = parent;
-    
 	GtkWidget *settings;
 
 	settings = gtk_menu_item_new_with_label(("GPE Summary"));
 	g_signal_connect (settings, "activate",
-			  G_CALLBACK (on_menuitem_settings), NULL);
+			  G_CALLBACK (on_menuitem_settings), parent);
 
 	return settings;
 
@@ -1383,6 +1432,8 @@ gpe_summary_plugin_init (GpeSummaryPlugin *desktop_plugin)
   DBusError dbus_error;
 
   g_message("%s",__func__);
+  reset_globals();
+
   const gchar *file = hd_home_plugin_item_get_dl_filename(HD_HOME_PLUGIN_ITEM(desktop_plugin));
   g_message("plugin loaded from %s", file);
 
@@ -1410,7 +1461,7 @@ gpe_summary_plugin_init (GpeSummaryPlugin *desktop_plugin)
   }
 
   /* Create the GPE directory if it does not already exist */
-  const gchar *gpe_dir = GPE_DIR();
+  gchar *gpe_dir = GPE_DIR();
   if (mkdir(gpe_dir, 0777) == 0) g_message("GPE directory %s created", gpe_dir);
   g_free(gpe_dir);
 
@@ -1438,9 +1489,10 @@ gpe_summary_plugin_init (GpeSummaryPlugin *desktop_plugin)
 	update_clock(NULL); //->Also shows all because it runs show_all()
 	gtk_widget_show_all(GTK_WIDGET(mainwidget));
 
-	if (! hd_home_plugin_item_heartbeat_signal_add (
-		   HD_HOME_PLUGIN_ITEM(desktop_plugin), 60, 70, 
-		   (GSourceFunc)home_applet_timer, NULL, NULL))
+	current_timer = hd_home_plugin_item_heartbeat_signal_add (
+		HD_HOME_PLUGIN_ITEM(desktop_plugin), 60, 70, 
+		(GSourceFunc)home_applet_timer, NULL, NULL);
+	if (!current_timer)
 	  {
 	    g_warning("hd_home_plugin_item_heartbeat_signal_add failed");
 	  }
@@ -1465,24 +1517,63 @@ gpe_summary_plugin_class_finalize (GpeSummaryPluginClass *class)
 
   if (osso) osso_deinitialize (osso);
   osso = NULL;
-  if (dbus_system) dbus_connection_unref(dbus_system);
-  dbus_system = NULL;
+  if (dbus_system) {
+    dbus_connection_close(dbus_system);
+    dbus_connection_unref(dbus_system);
+    dbus_system = NULL;
+  }
   g_message("hildon_home_applet_lib_deinitialize 2");
-  if (dbus_session) dbus_connection_unref(dbus_session);
-  dbus_session = NULL;
+  if (dbus_session) {
+    dbus_connection_close(dbus_session);
+    dbus_connection_unref(dbus_session);
+    dbus_session = NULL;
+  }
 
   g_slist_free(birthdaylist);
   birthdaylist=NULL;
   g_message("hildon_home_applet_lib_deinitialize 3");
-  if (prefsvbox) gtk_widget_destroy(prefsvbox);
   g_message("hildon_home_applet_lib_deinitialize 4");
-  if (mainwidget) gtk_widget_destroy(mainwidget);
+  mainwidget = NULL;
+  mainvbox = NULL;
+  headtitle = NULL;
+  scrolled_window = NULL;
+  if (current_timer) g_source_destroy(g_main_context_find_source_by_id(NULL,current_timer));
+  else g_warning("No current timer running");
+  current_timer = 0;
   g_message("hildon_home_applet_lib_deinitialize 5");
-  //if (mainwidget) g_free(mainwidget);
-  mainwidget=NULL;
+  contacts_db_close();
+  g_message("hildon_home_applet_lib_deinitialize 5a");
+  if (event_db) {
+    g_object_unref(event_db);
+    event_db = NULL;
+  }
+  g_message("hildon_home_applet_lib_deinitialize 5b");
+  todo_db_stop ();
   g_message("hildon_home_applet_lib_deinitialize 6");
+
 
   if (log_handler_id) g_log_remove_handler(G_LOG_DOMAIN, log_handler_id);
 } 
+
+/* Prevent unloading */
+/* Note: because libeventdb registers GTypes, which contain pointers to functions in
+   the libeventdb code but which cannot be unregistered or re-registered when we are 
+   reloaded, we need to prevent hildon-home from unloading our code.
+   This does not stop the widget from being removed from the home screen (or added back
+   later) but does mean that if the plugin code is replaced the new code will not be 
+   used until the next reboot (actually the next time hildon-home is restarted) even
+   if the user removes and re-adds the widget. */
+/* See GLib documentation on dynamic loading of modules for how the following code
+   works */
+/* Note: of course, this means the plugin code above has to handle the plugin being initialised 
+   and finalised several times without the code being reloaded */
+const gchar *
+g_module_check_init (GModule *module)
+{
+     g_module_make_resident(module);
+
+     return NULL;
+}
+
 
 #endif /* MAEMO_VERSION_MAJOR >= 5 */
