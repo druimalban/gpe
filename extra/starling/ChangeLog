@@ -1,5 +1,10 @@
 2010-01-11  Neal H. Walfield  <neal@gnu.org>
 
+	* src/playlist.c (do_refresh): Sort tracks without meta-data after
+	those with meta-data.
+
+2010-01-11  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.c (do_refresh): Fix comparison.
 
 2010-01-11  Neal H. Walfield  <neal@gnu.org>

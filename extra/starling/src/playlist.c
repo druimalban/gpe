@@ -257,9 +257,9 @@ do_refresh (gpointer data)
   {
     obstack_blank (&obstack, sizeof (struct e));
     struct e *saved = obstack_base (&obstack);
-    saved->artist_len = (info->artist ? strlen (info->artist) : 0) + 1;
-    saved->album_len = (info->album ? strlen (info->album) : 0) + 1;
-    saved->title_len = (info->title ? strlen (info->title) : 0) + 1;
+    saved->artist_len = (info->artist ? strlen (info->artist) : 1) + 1;
+    saved->album_len = (info->album ? strlen (info->album) : 1) + 1;
+    saved->title_len = (info->title ? strlen (info->title) : 1) + 1;
     int source_len = (info->source ? strlen (info->source) : 0) + 1;
     obstack_blank (&obstack,
 		   saved->artist_len + saved->album_len
@@ -280,17 +280,26 @@ do_refresh (gpointer data)
       for (i = 0; i < saved->artist_len; i ++)
 	artist[i] = tolower (info->artist[i]);
     else
-      artist[0] = 0;
+      {
+	artist[0] = 255;
+	artist[1] = 0;
+      }
     if (info->album)
       for (i = 0; i < saved->album_len; i ++)
 	album[i] = tolower (info->album[i]);
     else
-      album[0] = 0;
+      {
+	album[0] = 255;
+	album[1] = 0;
+      }
     if (info->title)
       for (i = 0; i < saved->title_len; i ++)
 	title[i] = tolower (info->title[i]);
     else
-      title[0] = 0;
+      {
+	title[0] = 255;
+	title[1] = 0;
+      }
     if (info->source)
       memcpy (source, info->source, source_len);
     else
