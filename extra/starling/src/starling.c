@@ -242,8 +242,9 @@ set_title (Starling *st)
   char *title_bar;
   bool free_title_bar = true;
 
+#define TITLE_MDB_FIELDS (MDB_SOURCE | MDB_ARTIST | MDB_TITLE | MDB_RATING)
   struct music_db_info info;
-  info.fields = MDB_SOURCE | MDB_ARTIST | MDB_TITLE | MDB_RATING;
+  info.fields = TITLE_MDB_FIELDS;
   if (! music_db_get_info (st->db, st->loaded_song, &info))
     {
       title_bar = PROGRAM_NAME;
@@ -328,9 +329,9 @@ set_title (Starling *st)
 }
 
 static void
-meta_data_changed (Starling *st, gint uid, MusicDB *db)
+meta_data_changed (Starling *st, guint uid, guint changed_mask, MusicDB *db)
 {
-  if (uid == st->loaded_song)
+  if (uid == st->loaded_song && (changed_mask & TITLE_MDB_FIELDS))
     set_title (st);
 }
 

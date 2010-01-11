@@ -108,8 +108,9 @@ info_cache_constructor (void)
 
 struct sig
 {
-  int sig_id;
-  int uid;
+  guint sig_id;
+  guint uid;
+  guint mask;
 };
 
 struct _MusicDB
@@ -161,7 +162,10 @@ signals_flush (gpointer data)
       struct sig *sig = g_queue_pop_head (db->signal_queue);
       g_mutex_unlock (db->signal_lock);
 
-      g_signal_emit (db, sig->sig_id, 0, sig->uid);
+      if (sig->sig_id == MUSIC_DB_GET_CLASS (db)->changed_entry_signal_id)
+	g_signal_emit (db, sig->sig_id, 0, sig->uid, sig->mask);
+      else
+	g_signal_emit (db, sig->sig_id, 0, sig->uid);
 
       free (sig);
 
@@ -175,16 +179,28 @@ signals_flush (gpointer data)
 }
 
 static void
-signal_schedule (MusicDB *db, int sig_id, int uid)
+signal_schedule (MusicDB *db, guint sig_id, guint uid, guint mask)
 {
   struct sig *sig;
 
   sig = malloc (sizeof (*sig));
   sig->sig_id = sig_id;
   sig->uid = uid;
+  sig->mask = mask;
 
   g_mutex_lock (db->signal_lock);
-  g_queue_push_tail (db->signal_queue, sig);
+
+  struct sig *tail = g_queue_peek_tail (db->signal_queue);
+  if (tail && tail->sig_id == sig_id && tail->uid == uid)
+    {
+      tail->mask |= mask;
+      g_free (sig);
+      g_assert (db->signal_id);
+    }
+  else
+    g_queue_push_tail (db->signal_queue, sig);
+
+  g_mutex_unlock (db->signal_lock);
 
   if (! db->signal_id)
     {
@@ -192,7 +208,6 @@ signal_schedule (MusicDB *db, int sig_id, int uid)
       db->signal_id = g_idle_add (signals_flush, db);
       UNLOCK ();
     }
-  g_mutex_unlock (db->signal_lock);
 }
 
 static void music_db_dispose (GObject *obj);
@@ -226,8 +241,8 @@ music_db_class_init (MusicDBClass *klass)
 		    G_TYPE_FROM_CLASS (klass),
 		    G_SIGNAL_RUN_FIRST,
 		    0, NULL, NULL,
-		    g_cclosure_marshal_VOID__UINT,
-		    G_TYPE_NONE, 1, G_TYPE_UINT);
+		    g_cclosure_user_marshal_VOID__UINT_UINT,
+		    G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_UINT);
 
   music_db_class->deleted_entry_signal_id
     = g_signal_new ("deleted-entry",
@@ -738,7 +753,7 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
   for (i = 0; i < total; i ++)
     {
       signal_schedule (db, MUSIC_DB_GET_CLASS (db)->new_entry_signal_id,
-		       uids[i]);
+		       uids[i], 0);
 
       /* Queue the file in the meta-data crawler (if appropriate).  */
       if (crawl[i] && s[i][0] == '/')
@@ -749,6 +764,8 @@ music_db_add (MusicDB *db, sqlite *sqliteh,
 	  *uidp = uids[i];
 
 	  g_mutex_lock (db->work_lock);
+	  printf ("%s: Queuing %d (%s) for meta data scan\n",
+		  __func__, uids[i], s[i]);
 	  g_queue_push_tail (db->meta_data_pending, uidp);
 	  g_mutex_unlock (db->work_lock);
 	}
@@ -1157,17 +1174,22 @@ music_db_set_info_internal (MusicDB *db, sqlite *sqliteh,
   if (! info->fields)
     return;
 
-  struct obstack sql;
+  struct obstack sql1;
+  struct obstack sql2;
 
   bool need_comma = false;
 
-  void munge_str (char *key, char *val)
+  void munge_str (enum mdb_fields field, char *key, char *val)
   {
+    g_assert (field);
     g_assert (key);
     g_assert (val);
 
     if (need_comma)
-      obstack_1grow (&sql, ',');
+      {
+	obstack_1grow (&sql1, '|');
+	obstack_1grow (&sql2, ',');
+      }
     need_comma = true;
 
     char *s = NULL;
@@ -1181,113 +1203,168 @@ music_db_set_info_internal (MusicDB *db, sqlite *sqliteh,
 	else
 	  s = val;
 
-	obstack_printf (&sql, "%s = '%s'", key, s);
+	obstack_printf
+	  (&sql1,
+	   "(case when cast (coalesce (%s, 0) as string)"
+	   " != cast ('%s' as string) then %u"
+	   " else 0 end)",
+	   key, s, field);
+
+	obstack_printf (&sql2, "%s = '%s'", key, s);
 
 	if (has_quote)
 	  sqlite_freemem (s);
       }
     else
-      obstack_printf (&sql, "%s = NULL", key);
+      {
+	obstack_printf (&sql1, "(case when %s NOTNULL then %u else 0 end)",
+			key, field);
+	obstack_printf (&sql2, "%s = NULL", key);
+      }
   }
 
-  void munge_int (char *key, int val)
+  void munge_int (enum mdb_fields field, char *key, int val)
   {
     g_assert (key);
 
     if (need_comma)
-      obstack_1grow (&sql, ',');
+      {
+	obstack_1grow (&sql1, '|');
+	obstack_1grow (&sql2, ',');
+      }
     need_comma = true;
 
-    obstack_printf (&sql, "%s = %d", key, val);
+    obstack_printf
+      (&sql1, "(case when coalesce (%s, 0) != %d then %u else 0 end)",
+       key, val, field);
+    obstack_printf (&sql2, "%s = %d", key, val);
   }
 
-  void munge_lit (char *key, const char *val)
+  void munge_lit (enum mdb_fields field, char *key, const char *val)
   {
     g_assert (key);
 
     if (need_comma)
-      obstack_1grow (&sql, ',');
+      {
+	obstack_1grow (&sql1, '|');
+	obstack_1grow (&sql2, ',');
+      }
     need_comma = true;
 
-    obstack_printf (&sql, "%s = %s", key, val);
+	obstack_printf
+	  (&sql1,
+	   "(case when cast (coalesce (%s, 0) as string)"
+	   " != cast (%s as string) then %u"
+	   " else 0 end)",
+	   key, val, field);
+
+    obstack_printf (&sql2, "%s = %s", key, val);
   }
 
-  obstack_init (&sql);
-  obstack_printf (&sql, "update files set ");
+  obstack_init (&sql1);
+  obstack_init (&sql2);
+  obstack_printf (&sql1, "select ");
+  obstack_printf (&sql2, "update files set ");
 
   if ((info->fields & MDB_SOURCE))
-    munge_str ("source", info->source);
+    munge_str (MDB_SOURCE, "source", info->source);
   if ((info->fields & MDB_ARTIST))
-    munge_str ("artist", info->artist);
+    munge_str (MDB_ARTIST, "artist", info->artist);
   if ((info->fields & MDB_PERFORMER))
-    munge_str ("performer", info->performer);
+    munge_str (MDB_PERFORMER, "performer", info->performer);
   if ((info->fields & MDB_ALBUM))
-    munge_str ("album", info->album);
+    munge_str (MDB_ALBUM, "album", info->album);
   if ((info->fields & MDB_TITLE))
-    munge_str ("title", info->title);
+    munge_str (MDB_TITLE, "title", info->title);
   if ((info->fields & MDB_GENRE))
-    munge_str ("genre", info->genre);
+    munge_str (MDB_GENRE, "genre", info->genre);
 
   if ((info->fields & MDB_TRACK))
-    munge_int ("track", info->track);
+    munge_int (MDB_TRACK, "track", info->track);
   if ((info->fields & MDB_VOLUME_NUMBER))
-    munge_int ("volume_number", info->volume_number);
+    munge_int (MDB_VOLUME_NUMBER, "volume_number", info->volume_number);
   if ((info->fields & MDB_VOLUME_COUNT))
-    munge_int ("volume_count", info->volume_count);
+    munge_int (MDB_VOLUME_COUNT, "volume_count", info->volume_count);
   if ((info->fields & MDB_DURATION))
-    munge_int ("duration", info->duration);
+    munge_int (MDB_DURATION, "duration", info->duration);
 
   if ((info->fields & MDB_DATE))
-    munge_str ("date", info->date);
+    munge_str (MDB_DATE, "date", info->date);
 
   if ((info->fields & MDB_DATE_ADDED))
-    munge_int ("date_added", info->date_added);
+    munge_int (MDB_DATE_ADDED, "date_added", info->date_added);
 
   if ((info->fields & MDB_INC_PLAY_COUNT))
-    munge_lit ("play_count", "coalesce (play_count, 0) + 1");
+    munge_lit (MDB_INC_PLAY_COUNT,
+	       "play_count", "coalesce (play_count, 0) + 1");
   else if ((info->fields & MDB_PLAY_COUNT))
-    munge_int ("play_count", info->play_count);
+    munge_int (MDB_PLAY_COUNT, "play_count", info->play_count);
 
   if ((info->fields & MDB_UPDATE_DATE_LAST_PLAYED))
-    munge_lit ("date_last_played", "strftime('%s', 'now')");
+    munge_lit (MDB_UPDATE_DATE_LAST_PLAYED,
+	       "date_last_played", "strftime('%s', 'now')");
   else if ((info->fields & MDB_DATE_LAST_PLAYED))
-    munge_int ("date_last_played", info->date_last_played);
+    munge_int (MDB_DATE_LAST_PLAYED,
+	       "date_last_played", info->date_last_played);
 
   if ((info->fields & MDB_UPDATE_DATE_TAGS_UPDATED))
-    munge_lit ("date_tags_updated", "strftime('%s', 'now')");
+    munge_lit (MDB_UPDATE_DATE_TAGS_UPDATED,
+	       "date_tags_updated", "strftime('%s', 'now')");
   else if ((info->fields & MDB_DATE_TAGS_UPDATED))
-    munge_int ("date_tags_updated", info->date_tags_updated);
+    munge_int (MDB_DATE_TAGS_UPDATED,
+	       "date_tags_updated", info->date_tags_updated);
 
   if ((info->fields & MDB_RATING))
-    munge_int ("rating", info->rating);
+    munge_int (MDB_RATING, "rating", info->rating);
 
   if ((info->fields & MDB_MTIME))
-    munge_int ("mtime", info->mtime);
+    munge_int (MDB_MTIME, "mtime", info->mtime);
   if ((info->fields & MDB_SIZE))
-    munge_int ("size", info->size);
+    munge_int (MDB_SIZE, "size", info->size);
 
-  obstack_printf (&sql, " where ROWID = %d;", uid);
+  obstack_printf (&sql1, " from files where ROWID = %d;", uid);
+  obstack_printf (&sql2, " where ROWID = %d;", uid);
 
-  obstack_1grow (&sql, 0);
-  char *statement = obstack_finish (&sql);
+  obstack_1grow (&sql1, 0);
+  obstack_1grow (&sql2, 0);
 
+  unsigned int changed = 0;
+  int callback (void *arg, int argc, char **argv, char **names)
+  {
+    changed = atoi (argv[0]);
+    return 0;
+  }
+  char *statement = obstack_finish (&sql1);
   char *err = NULL;
-  sqlite_exec (sqliteh, statement, NULL, NULL, &err);
+  sqlite_exec (sqliteh, statement, callback, NULL, &err);
   if (err)
     {
-      g_warning ("%s: %s", __FUNCTION__, err);
+      g_warning ("%s: %s -> %s", __FUNCTION__, statement, err);
       sqlite_freemem (err);
     }
 
-  obstack_free (&sql, NULL);
-
-  if (! err)
+  if (changed)
     {
-      simple_cache_shootdown (&info_cache, uid);
+      char *statement = obstack_finish (&sql2);
+      char *err = NULL;
+      sqlite_exec (sqliteh, statement, NULL, NULL, &err);
+      if (err)
+	{
+	  g_warning ("%s: %s -> %s", __FUNCTION__, statement, err);
+	  sqlite_freemem (err);
+	}
 
-      signal_schedule (db, MUSIC_DB_GET_CLASS (db)->changed_entry_signal_id,
-		       uid);
+      if (! err)
+	{
+	  simple_cache_shootdown (&info_cache, uid);
+
+	  signal_schedule (db, MUSIC_DB_GET_CLASS (db)->changed_entry_signal_id,
+			   uid, changed);
+	}
     }
+
+  obstack_free (&sql1, NULL);
+  obstack_free (&sql2, NULL);
 }
 
 void
@@ -2132,7 +2209,7 @@ worker_thread (gpointer data)
 
 		  signal_schedule
 		    (db, MUSIC_DB_GET_CLASS (db)->deleted_entry_signal_id,
-		     track->uid);
+		     track->uid, 0);
 		}
 	    }
 	}
@@ -2161,7 +2238,7 @@ worker_thread (gpointer data)
 	      && ! (track->last_played > st.st_mtime
 		    ? track->last_played - st.st_mtime
 		    : st.st_mtime - track->last_played < 5))
-	    g_debug ("%s: mtime (%u, %u; %u)",
+	    g_debug ("%s: mtime (%lu, %lu; %lu)",
 		     track->filename, track->mtime, st.st_mtime,
 		     track->last_played);
 	  if (track->size != st.st_size)
@@ -2173,6 +2250,8 @@ worker_thread (gpointer data)
 	  *uidp = track->uid;
 
 	  g_mutex_lock (db->work_lock);
+	  printf ("%s: Queuing %d (%s) for scan\n",
+		  __func__, *uidp, track->filename);
 	  g_queue_push_tail (db->meta_data_pending, uidp);
 	  g_mutex_unlock (db->work_lock);
 	}

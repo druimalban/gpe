@@ -361,10 +361,8 @@ new_entry (MusicDB *db, gint uid, gpointer data)
 }
 
 static void
-changed_entry (MusicDB *db, gint uid, gpointer data)
+changed_entry (MusicDB *db, guint uid, guint changed_mask, gpointer data)
 {
-  /* If an entry changes, the contents of a filter play list may
-     change.  */
   PlayLists *pl = PLAY_LISTS (data);
 
   refresh_schedule (pl, false);

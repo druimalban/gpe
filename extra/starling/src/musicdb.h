@@ -29,6 +29,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include <config.h>
 
@@ -154,10 +155,47 @@ enum mdb_fields
     MDB_SIZE = 1 << 18,
 
     /* These take precedent of the simple set variants.  */
-    MDB_INC_PLAY_COUNT = 1 << 29,
-    MDB_UPDATE_DATE_LAST_PLAYED = 1 << 30,
-    MDB_UPDATE_DATE_TAGS_UPDATED = 1 << 31,
+    MDB_INC_PLAY_COUNT = 1 << 28,
+    MDB_UPDATE_DATE_LAST_PLAYED = 1 << 29,
+    MDB_UPDATE_DATE_TAGS_UPDATED = 1 << 30,
   };
+
+static char *
+mdb_fields_mask_to_string (enum mdb_fields fields)
+{
+  char *s
+    = g_strdup_printf ("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
+		       fields & MDB_SOURCE ? "source, " : "",
+		       fields & MDB_ARTIST ? "artist, " : "",
+		       fields & MDB_ALBUM ? "album, " : "",
+		       fields & MDB_TRACK ? "track, " : "",
+		       fields & MDB_TITLE ? "title, " : "",
+		       fields & MDB_DURATION ? "duration, " : "",
+		       fields & MDB_GENRE ? "genre, " : "",
+		       fields & MDB_DATE_ADDED ? "date added, " : "",
+		       fields & MDB_PLAY_COUNT ? "play count, " : "",
+		       fields & MDB_DATE_LAST_PLAYED ? "last played, " : "",
+		       fields & MDB_DATE_TAGS_UPDATED
+		       ? "date tags updated, " : "",
+		       fields & MDB_RATING ? "rating, " : "",
+		       fields & MDB_PRESENT ? "present, " : "",
+		       fields & MDB_MTIME ? "mtime, " : "",
+		       fields & MDB_DATE ? "date, " : "",
+		       fields & MDB_VOLUME_NUMBER ? "volume number, " : "",
+		       fields & MDB_VOLUME_COUNT ? "volume count, " : "",
+		       fields & MDB_PERFORMER ? "performer, " : "",
+		       fields & MDB_SIZE ? "size, " : "",
+		       fields & MDB_INC_PLAY_COUNT ? "play count, " : "",
+		       fields & MDB_UPDATE_DATE_LAST_PLAYED
+		       ? "date last played, " : "",
+		       fields & MDB_UPDATE_DATE_TAGS_UPDATED
+		       ? "date tags udpated, " : "");
+  if (s && s[0])
+    /* Chop off the last ", ".  */
+    s[strlen (s) - 2] = 0;
+
+  return s;
+}
 
 struct music_db_info
 {

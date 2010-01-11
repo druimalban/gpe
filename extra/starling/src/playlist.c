@@ -171,6 +171,10 @@ timeval_subtract (result, x, y)
   return x->tv_sec < y->tv_sec;
 }
 
+static enum mdb_fields library_order[]
+  = { MDB_ARTIST, MDB_ALBUM, MDB_VOLUME_NUMBER, MDB_TRACK, 
+      MDB_TITLE, MDB_SOURCE, 0 };
+
 static gboolean
 do_refresh (gpointer data)
 {
@@ -221,9 +225,6 @@ do_refresh (gpointer data)
 
     return 0;
   }
-  enum mdb_fields library_order[]
-    = { MDB_ARTIST, MDB_ALBUM, MDB_VOLUME_NUMBER, MDB_TRACK, 
-	MDB_TITLE, MDB_SOURCE, 0 };
   music_db_for_each (pl->db, pl->list, cb,
 		     pl->list ? NULL : library_order,
 		     pl->scope, pl->constraint);
@@ -351,12 +352,17 @@ new_entry (MusicDB *db, gint uid, gpointer data)
 }
 
 static void
-changed_entry (MusicDB *db, gint uid, gpointer data)
+changed_entry (MusicDB *db, gint uid, guint changed_mask, gpointer data)
 {
   PlayList *pl = PLAY_LIST (data);
 
-  /* In queue mode, there may be several indexes that reference the
-     same track.  The refresh will catch the others.  */
+  char *m = mdb_fields_mask_to_string (changed_mask);
+  printf ("%s: %u changed signal: %s\n", __func__, uid, m);
+  g_free (m);
+
+  /* XXX: in a play list, there may be several indexes that reference
+     the same track.  This is only emit a row-changed for one of
+     them.  */
   int idx = play_list_uid_to_index (pl, uid);
   if (idx == -1)
     return;
@@ -367,9 +373,44 @@ changed_entry (MusicDB *db, gint uid, gpointer data)
 
   gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
 
-  play_list_idx_uid_refresh_schedule (pl, false);
-
   gtk_tree_path_free (path);
+
+
+  /* See if we need to refresh the play list's contents.  */
+
+  if (0 /* Is filter play list?  */)
+    /* If an entry changes, the contents of a filter play list may
+       change.  Be conservative and just refresh.  */
+    {
+      play_list_idx_uid_refresh_schedule (pl, false);
+      return;
+    }
+
+  if (pl->list)
+    /* A change to an entry does not effect a normal play list's
+       contents.  Ignore.  */
+    return;
+
+  /* A change to an entry may effect the library's order.  If this is
+     the case, we schedule a refresh.  Otherwise, we can safely ignore
+     the change.  */
+  static uint library_order_mask;
+  if (! library_order_mask)
+    {
+      int i;
+      for (i = 0; i < sizeof (library_order) / sizeof (library_order[0]); i ++)
+	library_order_mask |= library_order[i];
+    }
+  
+  if (! (changed_mask & library_order_mask))
+    return;
+
+  m = mdb_fields_mask_to_string (changed_mask & library_order_mask);
+  printf ("uid %d changed (%u & %u => %u: %s)\n",
+	  uid, changed_mask, library_order_mask,
+	  changed_mask & library_order_mask, m);
+  g_free (m);
+  play_list_idx_uid_refresh_schedule (pl, false);
 }
 
 static void
@@ -458,6 +499,8 @@ play_list_set (PlayList *pl, const char *list)
     return;
   if (pl->list && list && strcmp (pl->list, list) == 0)
     return;
+
+  printf ("%p: %s -> %s\n", pl, pl->list, list);
 
   g_free (pl->list);
   if (list)

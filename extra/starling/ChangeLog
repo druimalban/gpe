@@ -1,3 +1,30 @@
+2010-01-11  Neal H. Walfield  <neal@gnu.org>
+
+	* src/marshal.list: Add closure void (*) (guint, guint).
+	* src/musicdb.h: Include <string.h>.
+	(enum mdb_fields): Don't use 1 << 31.
+	(mdb_fields_mask_to_string): New function.
+	* src/musicdb.c (struct sig): Add field mask.
+	(signals_flush): If emitted a "changed-entry" signal, also pass
+	SIG->MASK.
+	(signal_schedule): Take additional parameter MASK.  Save it in
+	SIG->MASK.  Try to coalesce the last entry on the queue with the
+	new entry.
+	(music_db_class_init): Initialize the "changed-entry" as a void
+	(*) (guint, guint).
+	(music_db_set_info_internal): Compute the fields that actually
+	changed.  Only shoot the cache or schedule a "changed-entry"
+	signal if something actually changed.
+	* src/playlist.c (changed_entry): Update prototype according to
+	new calling semantics.  Avoid scheduling a refresh if possible.
+	(library_order): New global static.
+	* src/playlists.c (changed_entry): Update prototype according to
+	new calling semantics.
+	* src/starling.c (TITLE_MDB_FIELDS): Define.
+	(set_title): Use it.
+	(meta_data_changed): Update prototype according to new calling
+	semantics.  Avoid scheduling a refresh if possible.
+
 2010-01-09  Neal H. Walfield  <neal@gnu.org>
 
 	* src/sqlite.h: Remove file.
