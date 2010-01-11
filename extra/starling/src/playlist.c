@@ -25,6 +25,10 @@
 #include <glib.h>
 #include <gtk/gtktreemodel.h>
 
+#define obstack_chunk_alloc g_malloc
+#define obstack_chunk_free g_free
+#include <obstack.h>
+
 #include "playlist.h"
 #include "musicdb.h"
 
@@ -216,33 +220,166 @@ do_refresh (gpointer data)
 
 
   GArray *old_idx_uid_map = pl->idx_uid_map;
+  pl->idx_uid_map = g_array_sized_new (false, false, sizeof (int), pl->count);
 
   if (pl->uid_idx_hash)
     g_hash_table_destroy (pl->uid_idx_hash);
   pl->uid_idx_hash = g_hash_table_new (NULL, NULL);
 
+  struct e
+  {
+    int volume_number;
+    int track;
+    guint uid;
+    int artist_len;
+    int album_len;
+    int title_len;
+  };
+
+  /* Sort the results if we are viewing the library.  */
+  bool do_sort = ! pl->list;
+
   /* We can't get the play list's count.  That is not reliable: there
-     is a race.  Between getting the count and iterating over all of
+     is a race; between getting the count and iterating over all of
      the elements, the number of elements may have changed!  */
-  pl->idx_uid_map = g_array_sized_new (false, false, sizeof (int), pl->count);
+  GArray *elements;
+  if (do_sort)
+    elements = g_array_sized_new (false, false,
+				  sizeof (struct e *), pl->count);
+
+  struct obstack obstack;
+  if (do_sort)
+    obstack_init (&obstack);
+
   pl->count = 0;
 
-  int cb (int uid, struct music_db_info *info)
+  int sorting_cb (int uid, struct music_db_info *info)
   {
-    g_array_append_val (pl->idx_uid_map, uid);
+    obstack_blank (&obstack, sizeof (struct e));
+    struct e *saved = obstack_base (&obstack);
+    saved->artist_len = (info->artist ? strlen (info->artist) : 0) + 1;
+    saved->album_len = (info->album ? strlen (info->album) : 0) + 1;
+    saved->title_len = (info->title ? strlen (info->title) : 0) + 1;
+    int source_len = (info->source ? strlen (info->source) : 0) + 1;
+    obstack_blank (&obstack,
+		   saved->artist_len + saved->album_len
+		   + saved->title_len + source_len);
+    saved = obstack_finish (&obstack);
+
+    saved->uid = uid;
+    saved->volume_number = info->volume_number;
+    saved->track = info->track;
+
+    char *artist = (void *) &saved[1];
+    char *album = artist + saved->artist_len;
+    char *title = album + saved->album_len;
+    char *source = title + saved->title_len;
+
+    int i;
+    if (info->artist)
+      for (i = 0; i < saved->artist_len; i ++)
+	artist[i] = tolower (info->artist[i]);
+    else
+      artist[0] = 0;
+    if (info->album)
+      for (i = 0; i < saved->album_len; i ++)
+	album[i] = tolower (info->album[i]);
+    else
+      album[0] = 0;
+    if (info->title)
+      for (i = 0; i < saved->title_len; i ++)
+	title[i] = tolower (info->title[i]);
+    else
+      title[0] = 0;
+    if (info->source)
+      memcpy (source, info->source, source_len);
+    else
+      source[0] = 0;
+
+    g_array_append_val (elements, saved);
+
     g_hash_table_insert (pl->uid_idx_hash,
 			 (gpointer) uid, (gpointer) pl->count);
     pl->count ++;
 
     return 0;
   }
+
+  int not_sorting_cb (int uid, struct music_db_info *info)
+  {
+    g_array_append_val (pl->idx_uid_map, uid);
+    g_hash_table_insert (pl->uid_idx_hash,
+ 			 (gpointer) uid, (gpointer) pl->count);
+    pl->count ++;
+
+    return 0;
+  }
   uint64_t s = now ();
-  music_db_for_each (pl->db, pl->list, cb,
-		     pl->list ? NULL : library_order,
-		     pl->scope, pl->constraint);
+  music_db_for_each (pl->db, pl->list,
+		     do_sort ? sorting_cb : not_sorting_cb,
+		     NULL, pl->scope, pl->constraint);
   uint64_t d = now () - s;
   printf ("%s: Loading: %d.%06d s\n", __func__,
 	  (int) (d / 1000000ULL), (int) (d % 1000000ULL));
+
+  if (do_sort)
+    {
+      /* Recall: negative value if a < b; zero if a = b; positive
+	 value if a > b.  */
+      gint element_compare (gconstpointer ag, gconstpointer bg)
+      {
+	const struct e *const*ap = ag;
+	const struct e *a = *ap;
+	const struct e *const*bp = bg;
+	const struct e *b = *bp;
+
+	char *a_artist = (void *) &a[1];
+	char *a_album = a_artist + a->artist_len;
+	char *a_title = a_album + a->album_len;
+	char *a_source = a_title + a->title_len;
+
+	char *b_artist = (void *) &b[1];
+	char *b_album = b_artist + b->artist_len;
+	char *b_title = b_album + b->album_len;
+	char *b_source = b_title + b->title_len;
+
+	int ret = strcmp (a_artist, b_artist);
+	if (! ret)
+	  return ret;
+	ret = strcmp (a_album, b_album);
+	if (! ret)
+	  return ret;
+	ret = a->volume_number - b->volume_number;
+	if (! ret)
+	  return ret;
+	ret = a->track - b->track;
+	if (! ret)
+	  return ret;
+	ret = strcmp (a_title, b_title);
+	if (! ret)
+	  return ret;
+	ret = strcmp (a_source, b_source);
+	if (! ret)
+	  return ret;
+      }
+
+
+      s = now ();
+      g_array_sort (elements, element_compare);
+      d = now () - s;
+      printf ("%s: Sorting: %d.%06d s\n", __func__,
+	      (int) (d / 1000000ULL), (int) (d % 1000000ULL));
+
+      int i;
+      for (i = 0; i < elements->len; i ++)
+	{
+	  struct e *e = g_array_index (elements, struct e *, i);
+	  g_array_append_val (pl->idx_uid_map, e->uid);
+	}
+
+      obstack_free (&obstack, NULL);
+      g_array_free (elements, TRUE);
+    }
 
   g_assert (pl->count == pl->idx_uid_map->len);
   g_array_set_size (pl->idx_uid_map, pl->count);
