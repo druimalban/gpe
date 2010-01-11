@@ -536,6 +536,21 @@ music_db_open (const char *file, GError **error)
       created = true;
     }
 
+  /* Create a few indices (if they don't already exist).  */
+  err = NULL;
+  sqlite_exec (db->sqliteh,
+	       /* Create the main table for the files.  */
+	       "create index if not exists files_removed"
+	       " on files (removed);"
+	       "create index if not exists playlists_list"
+	       " on playlists (list);", NULL, NULL, &err);
+  if (err)
+    {
+      g_warning ("%s:%d: %s", __FUNCTION__, __LINE__, err);
+      sqlite_freemem (err);
+    }
+    
+
   err = NULL;
   sqlite *sqliteh = sqlite_open (file, 0, &err);
   if (err)
@@ -1658,6 +1673,7 @@ music_db_for_each (MusicDB *db, const char *list,
 
   obstack_1grow (&sql, 0);
   char *statement = obstack_finish (&sql);
+  printf ("%s: %s\n", __func__, statement);
 
   struct info_callback_data data;
   data.ret = 0;
