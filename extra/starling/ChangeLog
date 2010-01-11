@@ -1,5 +1,12 @@
 2010-01-11  Neal H. Walfield  <neal@gnu.org>
 
+	* configure.ac: Only define HAVE_HILDON and HAVE_MAEMO if they are
+	actually available.
+	* src/starling.c (starling_run): Correctly use the HAVE_HILDON
+	macro.
+
+2010-01-11  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.c (do_refresh): Update the uid to index has
 	correctly in the sorted case.
 

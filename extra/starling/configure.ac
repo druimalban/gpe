@@ -58,10 +58,9 @@ PKG_CHECK_EXISTS(libosso,
   [
     AC_MSG_RESULT([no])
   ])
-HAVE_HILDON=$(if test x$HAVE_HILDON_VERSION = x; then echo 0; else echo 1; fi)
-AC_DEFINE_UNQUOTED(HAVE_HILDON,
-	[$HAVE_HILDON],
-	[Whether we are building for Hildon.])
+if test x$HAVE_MAEMO_VERSION != x; then
+  AC_DEFINE_UNQUOTED(HAVE_HILDON, [1], [Whether we are building for Hildon.])
+fi
 AM_CONDITIONAL([HILDON], test x$HAVE_HILDON = x1)
 
 # Check whether we are running on Maemo and which version.
@@ -84,10 +83,10 @@ PKG_CHECK_EXISTS(maemo-version,
 	[
 		AC_MSG_RESULT([no, configuring for a GTK-based environment])
 	])
-HAVE_MAEMO=$(if test x$HAVE_MAEMO_VERSION = x; then echo 0; else echo 1; fi)
-AC_DEFINE_UNQUOTED(HAVE_MAEMO,
-	[$HAVE_MAEMO],
-	[Whether we are building for Maemo.])
+if test x$HAVE_MAEMO_VERSION != x
+then
+  AC_DEFINE_UNQUOTED(HAVE_MAEMO, 1, [Whether we are building for Maemo.])
+fi
 AM_CONDITIONAL([MAEMO], [test 0$HAVE_MAEMO_VERSION -gt 0])
 AM_CONDITIONAL([MAEMO5], [test 0$HAVE_MAEMO_VERSION -ge 500])
 

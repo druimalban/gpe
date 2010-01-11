@@ -1308,7 +1308,7 @@ play_list_selector_changed_to (Starling *st,
       gtk_widget_show (st->library_view_loading_label);
 #endif
 
-      gtk_idle_add (play_list_selector_changed_flush, info);  
+      gtk_idle_add ((GtkFunction) play_list_selector_changed_flush, info);  
     }
 
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
@@ -3483,9 +3483,11 @@ starling_run (void)
       }
     else
       {
-	if (stock && !HAVE_HILDON)
+# ifndef HAVE_HILDON
+	if (stock)
 	  item = gtk_image_menu_item_new_from_stock (stock, NULL);
 	else
+# endif
 	  item = gtk_menu_item_new_with_mnemonic (text);
 	signal = "activate";
       }
