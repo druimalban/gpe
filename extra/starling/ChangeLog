@@ -1,5 +1,9 @@
 2010-01-11  Neal H. Walfield  <neal@gnu.org>
 
+	* src/playlist.c (do_refresh): Fix comparison.
+
+2010-01-11  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.c: Include <obstack.h>.
 	(obstack_chunk_alloc): Define.
 	(obstack_chunk_free): Define.

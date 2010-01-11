@@ -344,22 +344,22 @@ do_refresh (gpointer data)
 	char *b_source = b_title + b->title_len;
 
 	int ret = strcmp (a_artist, b_artist);
-	if (! ret)
+	if (ret)
 	  return ret;
 	ret = strcmp (a_album, b_album);
-	if (! ret)
+	if (ret)
 	  return ret;
 	ret = a->volume_number - b->volume_number;
-	if (! ret)
+	if (ret)
 	  return ret;
 	ret = a->track - b->track;
-	if (! ret)
+	if (ret)
 	  return ret;
 	ret = strcmp (a_title, b_title);
-	if (! ret)
+	if (ret)
 	  return ret;
 	ret = strcmp (a_source, b_source);
-	if (! ret)
+	if (ret)
 	  return ret;
       }
 
