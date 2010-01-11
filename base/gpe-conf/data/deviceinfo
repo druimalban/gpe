@@ -363,3 +363,57 @@ Model =
 Type = eval
 Manufacturer = Toshiba
 Features = 0x21
+
+[AT91SAM9261EK]
+ID = 41
+Pattern = AT91SAM9261
+Name = AT91SAM9261-EK
+Model = AT91SAM9261-EK
+Type = Evaluation Kit
+Manufacturer = ATMEL
+Features = 0x21
+
+[AT91SAM9263EK]
+ID = 42
+Pattern = AT91SAM9263
+Name = AT91SAM9263-EK
+Model = AT91SAM9263-EK
+Type = Evaluation Kit
+Manufacturer = ATMEL
+Features = 0x21
+
+[AT91SAM9RLEK]
+ID = 43
+Pattern = AT91SAM9RL
+Name = AT91SAM9RL-EK
+Model = AT91SAM9RL-EK
+Type = Evaluation Kit
+Manufacturer = ATMEL
+Features = 0x21
+
+[AT91SAM9G10EK]
+ID = 44
+Pattern = AT91SAM9G10
+Name = AT91SAM9G10-EK
+Model = AT91SAM9G10-EK
+Type = Evaluation Kit
+Manufacturer = ATMEL
+Features = 0x21
+
+[AT91SAM9G45EK]
+ID = 45
+Pattern = AT91SAM9G45
+Name = AT91SAM9G45-EK
+Model = AT91SAM9G45-EK
+Type = Evaluation Kit
+Manufacturer = ATMEL
+Features = 0x21
+
+[AT91SAM9M10EK]
+ID = 46
+Pattern = AT91SAM9M10
+Name = AT91SAM9M10-EK
+Model = AT91SAM9M10-EK
+Type = Evaluation Kit
+Manufacturer = ATMEL
+Features = 0x21
