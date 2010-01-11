@@ -523,10 +523,6 @@ changed_entry (MusicDB *db, gint uid, guint changed_mask, gpointer data)
 {
   PlayList *pl = PLAY_LIST (data);
 
-  char *m = mdb_fields_mask_to_string (changed_mask);
-  printf ("%s: %u changed signal: %s\n", __func__, uid, m);
-  g_free (m);
-
   /* XXX: in a play list, there may be several indexes that reference
      the same track.  This is only emit a row-changed for one of
      them.  */
@@ -572,11 +568,6 @@ changed_entry (MusicDB *db, gint uid, guint changed_mask, gpointer data)
   if (! (changed_mask & library_order_mask))
     return;
 
-  m = mdb_fields_mask_to_string (changed_mask & library_order_mask);
-  printf ("uid %d changed (%u & %u => %u: %s)\n",
-	  uid, changed_mask, library_order_mask,
-	  changed_mask & library_order_mask, m);
-  g_free (m);
   play_list_idx_uid_refresh_schedule (pl, false);
 }
 
