@@ -307,8 +307,6 @@ do_refresh (gpointer data)
 
     g_array_append_val (elements, saved);
 
-    g_hash_table_insert (pl->uid_idx_hash,
-			 (gpointer) uid, (gpointer) pl->count);
     pl->count ++;
 
     return 0;
@@ -384,6 +382,8 @@ do_refresh (gpointer data)
 	{
 	  struct e *e = g_array_index (elements, struct e *, i);
 	  g_array_append_val (pl->idx_uid_map, e->uid);
+	  g_hash_table_insert (pl->uid_idx_hash,
+			       (gpointer) e->uid, (gpointer) i);
 	}
 
       obstack_free (&obstack, NULL);
