@@ -879,7 +879,10 @@ has_audio_extension (const char *filename)
 			      ".mp3", ".MP3",
 			      ".rm", ".RM",
 			      ".wav", ".WAV",
-			      ".flac", ".FLAC"
+			      ".flac", ".FLAC",
+                              ".m4a", ".M4A",
+                              ".wma", ".WMA",
+                              ".mpc", ".MPC"
   };
 
   int i;

@@ -1,5 +1,10 @@
 2010-01-11  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (has_audio_extension): Add ".m4a", ".M4A", ".wma",
+	".WMA", ".mpc", and ".MPC".
+
+2010-01-11  Neal H. Walfield  <neal@gnu.org>
+
 	* configure.ac: Only define HAVE_HILDON and HAVE_MAEMO if they are
 	actually available.
 	* src/starling.c (starling_run): Correctly use the HAVE_HILDON
