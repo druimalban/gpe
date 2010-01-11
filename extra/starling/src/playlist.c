@@ -171,6 +171,17 @@ timeval_subtract (result, x, y)
   return x->tv_sec < y->tv_sec;
 }
 
+static inline uint64_t
+now (void)
+{
+  struct timeval t;
+  struct timezone tz;
+
+  if (gettimeofday( &t, &tz ) == -1)
+    return 0;
+  return (t.tv_sec * 1000000ULL + t.tv_usec);
+}
+
 static enum mdb_fields library_order[]
   = { MDB_ARTIST, MDB_ALBUM, MDB_VOLUME_NUMBER, MDB_TRACK, 
       MDB_TITLE, MDB_SOURCE, 0 };
@@ -225,9 +236,13 @@ do_refresh (gpointer data)
 
     return 0;
   }
+  uint64_t s = now ();
   music_db_for_each (pl->db, pl->list, cb,
 		     pl->list ? NULL : library_order,
 		     pl->scope, pl->constraint);
+  uint64_t d = now () - s;
+  printf ("%s: Loading: %d.%06d s\n", __func__,
+	  (int) (d / 1000000ULL), (int) (d % 1000000ULL));
 
   g_assert (pl->count == pl->idx_uid_map->len);
   g_array_set_size (pl->idx_uid_map, pl->count);
@@ -267,6 +282,8 @@ do_refresh (gpointer data)
   else
     min_count = pl->count;
 
+  s = now ();
+
   int i;
   for (i = 0; i < min_count; i ++)
     if (g_array_index (pl->idx_uid_map, int, i)
@@ -283,6 +300,10 @@ do_refresh (gpointer data)
 
   if (old_idx_uid_map)
     g_array_free (old_idx_uid_map, TRUE);
+
+  d = now () - s;
+  printf ("%s: Signalling: %d.%06d s\n", __func__,
+	  (int) (d / 1000000ULL), (int) (d % 1000000ULL));
 
   pl->total = -1;
 

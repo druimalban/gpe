@@ -1,5 +1,10 @@
 2010-01-11  Neal H. Walfield  <neal@gnu.org>
 
+	* src/playlist.c (now): New function.
+	(do_refresh): Time loading the play list and emitting signals.
+
+2010-01-11  Neal H. Walfield  <neal@gnu.org>
+
 	* src/marshal.list: Add closure void (*) (guint, guint).
 	* src/musicdb.h: Include <string.h>.
 	(enum mdb_fields): Don't use 1 << 31.
