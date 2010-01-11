@@ -84,7 +84,7 @@ gchar *todo_file = NULL;
 GtkWidget *mainwidget = NULL;
 GtkWidget *mainvbox = NULL;
 GtkWidget *headtitle = NULL;
-GtkWidget *scrolled_window = NULL;
+GtkWidget *widget_window = NULL;
 time_t last_gui_update;
 
 gboolean doshow_birthdays; /* Whether we are currently showing birthdays */
@@ -164,7 +164,7 @@ static void async_cb(const gchar *interface, const gchar *method,
         g_warning("method '%s' returned\n", method);
 }
 
-void todo_gpestart(GtkButton *button, gpointer user_data) {
+void todo_gpestart(GtkWidget *button, gpointer user_data) {
 	g_message("starting gpe-todo");
 	osso_return_t ret = osso_rpc_async_run(osso,
                                  "com.nokia.gpe_todo",
@@ -230,7 +230,7 @@ static void todo_clicked( GtkWidget      *button,
 }
 
 
-void calendar_gpestart(GtkButton *button, gpointer user_data) {
+void calendar_gpestart(GtkWidget *button, gpointer user_data) {
 	g_message("starting gpe-calendar");
 	osso_return_t ret = osso_rpc_async_run(osso,
                                  "com.nokia.gpe_calendar",
@@ -245,7 +245,7 @@ void calendar_gpestart(GtkButton *button, gpointer user_data) {
         }	
 }
 
-void contacts_gpestart(GtkButton *button, gpointer user_data) {
+void contacts_gpestart(GtkWidget *button, gpointer user_data) {
 	g_message("starting gpe-contacts");
 	osso_return_t ret = osso_rpc_async_run(osso,
                                  "com.nokia.gpe_contacts",
@@ -279,18 +279,18 @@ static gboolean start_clock(GtkWidget *button, GdkEventButton *event, gpointer u
 
 
 static gboolean todo_startclicked(GtkWidget *button, GdkEventButton *event, gpointer user_data ) {
-	todo_gpestart(GTK_BUTTON(button), user_data);
+	todo_gpestart(button, user_data);
 	return FALSE;
 }
 
 static gboolean events_startclicked(GtkWidget *button, GdkEventButton *event, gpointer user_data ) {
 	g_message("events_startclicked");
-	calendar_gpestart(GTK_BUTTON(button), user_data);
+	calendar_gpestart(button, user_data);
 	return FALSE;
 }
 
 static gboolean contacts_startclicked(GtkWidget *button, GdkEventButton *event, gpointer user_data ) {
-	contacts_gpestart(GTK_BUTTON(button), user_data);
+	contacts_gpestart(button, user_data);
 	return FALSE;
 }
 
@@ -789,7 +789,11 @@ void show_all() {
 	if (mainvbox!=NULL) gtk_widget_destroy(mainvbox);
 	
 	mainvbox = gtk_vbox_new (FALSE, 0);
-	gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW(scrolled_window), mainvbox );
+#if MAEMO_VERSION_MAJOR >= 5
+	gtk_container_add(GTK_CONTAINER(widget_window), mainvbox);
+#else
+	gtk_scrolled_window_add_with_viewport( GTK_SCROLLED_WINDOW(widget_window), mainvbox );
+#endif
 
 	//Show headtitle
 	g_message ("show_all 3");
@@ -838,7 +842,7 @@ void show_all() {
 		printTime("preButtons");
 	
 		GtkWidget *hbox_buttons;
-		hbox_buttons = gtk_hbox_new (FALSE, 1);
+		hbox_buttons = gtk_hbox_new (TRUE, 1);
 		gtk_box_pack_start(GTK_BOX(mainvbox),hbox_buttons,TRUE,TRUE,0);
 
 		button = gtk_button_new_with_label(_("Calendar"));  
@@ -1155,9 +1159,13 @@ int main (int argc, char *argv[])
     main_window = HILDON_WINDOW(hildon_window_new());
     hildon_program_add_window(program, main_window);
     
-    scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
-    gtk_container_add( GTK_CONTAINER( main_window ), scrolled_window );	
+#if MAEMO_VERSION_MAJOR >= 5
+    widget_window = main_window;
+#else
+    widget_window = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(widget_window),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC);
+    gtk_container_add( GTK_CONTAINER( main_window ), widget_window );	
+#endif
 
     show_all();
     update_clock(NULL);
@@ -1271,10 +1279,14 @@ void *
 
   	gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 15, 15, 15, 15);
 
-	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC); //GTK_POLICY_NEVER
 	gtk_container_add (GTK_CONTAINER (mainwidget), alignment);
-	gtk_container_add( GTK_CONTAINER( alignment ), scrolled_window );	
+#if MAEMO_VERSION_MAJOR >= 5
+	widget_window = alignment;
+#else
+	widget_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(widget_window),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC); //GTK_POLICY_NEVER
+	gtk_container_add( GTK_CONTAINER( alignment ), widget_window );	
+#endif
 
 	//show_all();
 	update_clock(NULL); //->Also shows all because it runs show_all()
@@ -1303,7 +1315,7 @@ void
 	mainwidget=NULL;
 	mainvbox = NULL;
 	headtitle = NULL;
-	scrolled_window = NULL;
+	widget_window = NULL;
 	if (current_timer) g_source_destroy(g_main_context_find_source_by_id(NULL,current_timer));
 	current_timer = 0;
 	g_message("hildon_home_applet_lib_deinitialize 6");
@@ -1470,17 +1482,21 @@ gpe_summary_plugin_init (GpeSummaryPlugin *desktop_plugin)
 	gtk_widget_set_name (mainwidget, "GPE Summary");
 	gtk_widget_set_size_request (mainwidget, WIDTH, HEIGHT); 
 	g_message("mainwidget created");
-  
+	
   	gtk_container_set_border_width (GTK_CONTAINER (mainwidget), 0);
 
   	GtkWidget* alignment = gtk_alignment_new (0.5,0.5,1.0,1.0);
 
   	gtk_alignment_set_padding (GTK_ALIGNMENT (alignment), 15, 15, 15, 15);
 
-	scrolled_window = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC); //GTK_POLICY_NEVER
 	gtk_container_add (GTK_CONTAINER (mainwidget), alignment);
-	gtk_container_add( GTK_CONTAINER( alignment ), scrolled_window );	
+#if MAEMO_VERSION_MAJOR >= 5
+	widget_window = alignment;
+#else
+	widget_window = gtk_scrolled_window_new (NULL, NULL);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(widget_window),GTK_POLICY_AUTOMATIC,GTK_POLICY_AUTOMATIC); //GTK_POLICY_NEVER
+	gtk_container_add( GTK_CONTAINER( alignment ), widget_window );	
+#endif
 
 	g_signal_connect (desktop_plugin, "show-settings",
 			  G_CALLBACK (on_menuitem_settings), NULL);
@@ -1536,7 +1552,7 @@ gpe_summary_plugin_class_finalize (GpeSummaryPluginClass *class)
   mainwidget = NULL;
   mainvbox = NULL;
   headtitle = NULL;
-  scrolled_window = NULL;
+  widget_window = NULL;
   if (current_timer) g_source_destroy(g_main_context_find_source_by_id(NULL,current_timer));
   else g_warning("No current timer running");
   current_timer = 0;

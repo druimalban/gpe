@@ -1,3 +1,9 @@
+2010-01-11  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpesummary.c: Replace scrolled_window with widget_window.
+	Only use scrolled window on Maemo 4 and earlier.
+	Pass a widget instead of a button into the *_gpestart functions.
+
 2010-01-10  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c: Many changes to make reloading widget reliable and remove console 
