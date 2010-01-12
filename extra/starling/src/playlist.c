@@ -523,25 +523,37 @@ changed_entry (MusicDB *db, gint uid, guint changed_mask, gpointer data)
 {
   PlayList *pl = PLAY_LIST (data);
 
-  /* XXX: in a play list, there may be several indexes that reference
-     the same track.  This is only emit a row-changed for one of
-     them.  */
-  int idx = play_list_uid_to_index (pl, uid);
-  if (idx == -1)
+  /* Ignore changes in fields that are never filtered.  */
+  changed_mask &= ~(MDB_DATE_TAGS_UPDATED | MDB_MTIME | MDB_SIZE);
+  if (! changed_mask)
     return;
 
-  GtkTreePath *path = gtk_tree_path_new_from_indices (idx, -1);
-  GtkTreeIter iter;
-  ITER_INIT (pl, &iter, idx);
+  /* XXX: in a play list, there may be several indexes that reference
+     the same track.  This only emits a row-changed for one of
+     them.  */
+  int idx = play_list_uid_to_index (pl, uid);
 
-  gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
+  /* If the track is not in the current play list, then there is
+     nothing to do.  Unless there is a constraint, in which case, this
+     change may make the entry eligible for the play list.  */
+  if (! pl->constraint && idx == -1)
+    return;
+  else
+    {
+      GtkTreePath *path = gtk_tree_path_new_from_indices (idx, -1);
+      GtkTreeIter iter;
+      ITER_INIT (pl, &iter, idx);
 
-  gtk_tree_path_free (path);
+      gtk_tree_model_row_changed (GTK_TREE_MODEL (pl), path, &iter);
+
+      gtk_tree_path_free (path);
+    }
 
 
   /* See if we need to refresh the play list's contents.  */
 
-  if (0 /* Is filter play list?  */)
+  /* If this is a filter play list, we conservatively refresh...  */
+  if (pl->constraint)
     /* If an entry changes, the contents of a filter play list may
        change.  Be conservative and just refresh.  */
     {
