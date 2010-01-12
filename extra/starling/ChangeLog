@@ -1,5 +1,10 @@
 2010-01-12  Neal H. Walfield  <neal@gnu.org>
 
+	* src/musicdb.c (music_db_play_list_dequeue): Only emit a
+	"removed-from-play-list" signal if we actually remove something.
+
+2010-01-12  Neal H. Walfield  <neal@gnu.org>
+
 	* src/lyrics.c: Fix warnings.
 	* src/musicdb.h: Likewise.
 	* src/musicdb.c: Likewise.

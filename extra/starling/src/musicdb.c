@@ -1759,8 +1759,10 @@ music_db_play_list_dequeue (MusicDB *db, const char *list)
       sqlite_freemem (err);
     }
 
-  g_signal_emit (db, MUSIC_DB_GET_CLASS (db)->removed_from_play_list_signal_id,
-		 0, list, 0);
+  if (uid)
+    g_signal_emit
+      (db, MUSIC_DB_GET_CLASS (db)->removed_from_play_list_signal_id,
+       0, list, 0);
 
   return uid;
 }
