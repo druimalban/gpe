@@ -1496,7 +1496,7 @@ music_db_set_info_from_tags (MusicDB *db, int uid, GstTagList *tags)
 
 struct info_callback_data
 {
-  int (*user_callback) (int uid, struct music_db_info *info);
+  int (*user_callback) (guint uid, struct music_db_info *info);
   int ret;
   /* The number of leading columns to ignore.  */
   int ignore;
@@ -1516,7 +1516,7 @@ info_callback (void *arg, int argc, char **argv, char **names)
   if (argv[0])
     info.aggregate = atoi (argv[0]);
 
-  int uid = atoi (argv[1]);
+  guint uid = atoll (argv[1]);
 
   info.fields = 0;
 
@@ -1554,7 +1554,7 @@ info_callback (void *arg, int argc, char **argv, char **names)
 
 int
 music_db_for_each (MusicDB *db, const char *list,
-		   int (*user_callback) (int uid, struct music_db_info *info),
+		   int (*user_callback) (guint uid, struct music_db_info *info),
 		   enum mdb_fields *order,
 		   enum mdb_fields scope,
 		   const char *constraint)

@@ -265,7 +265,7 @@ exp:      TERM
 int
 yylex (YYSTYPE *lvalp, YYLTYPE *llocp, char *search_string, void **state)
 {
-  int pos = (int) *state;
+  int pos = GPOINTER_TO_INT (*state);
 
   g_assert (pos <= strlen (search_string));
 

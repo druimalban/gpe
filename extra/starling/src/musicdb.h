@@ -160,7 +160,7 @@ enum mdb_fields
     MDB_UPDATE_DATE_TAGS_UPDATED = 1 << 30,
   };
 
-static char *
+static inline char *
 mdb_fields_mask_to_string (enum mdb_fields fields)
 {
   char *s
@@ -263,7 +263,7 @@ extern void music_db_set_info_from_tags (MusicDB *db, int uid,
    If CONSTRAINT is non-NULL, it is where SQL clause (without the
    where), e.g., `artist in ("Foo", "Bar")'.  */
 extern int music_db_for_each (MusicDB *db, const char *list,
-			      int (*cb) (int uid, struct music_db_info *info),
+			      int (*cb) (guint uid, struct music_db_info *info),
 			      enum mdb_fields *order,
 			      enum mdb_fields scope,
 			      const char *constraint);

@@ -339,10 +339,10 @@ got_lyrics (SoupSession *session, SoupMessage *msg, gpointer provider)
 
   gchar *lyrics = NULL;
   if (SOUP_STATUS_IS_SUCCESSFUL (msg->status_code))
-    lyrics = providers[(int) provider].parse (msg);
+    lyrics = providers[GPOINTER_TO_INT (provider)].parse (msg);
 
   g_debug ("%d (%d extant): Returned %.20s%s (status: %d)\n",
-	   (int) provider, extant,
+	   GPOINTER_TO_INT (provider), extant,
 	   lyrics ?: "nothing!", lyrics ? "..." : "",
 	   msg->status_code);
 
@@ -412,7 +412,8 @@ lyrics_display (const gchar *a, const gchar *t, GtkTextView *v,
 	  SoupMessage *msg = soup_message_new (SOUP_METHOD_GET, uri);
 	  g_free (uri);
 
-	  soup_session_queue_message (session, msg, got_lyrics, (gpointer) i);
+	  soup_session_queue_message (session, msg, got_lyrics,
+				      GINT_TO_POINTER (i));
 
 	  extant ++;
 	}

@@ -20,6 +20,7 @@
 
 #define ERROR_DOMAIN() g_quark_from_static_string ("playlist")
 
+#include <ctype.h>
 #include <string.h>
 #include <sys/time.h>
 #include <glib.h>
@@ -220,7 +221,7 @@ do_refresh (gpointer data)
 
 
   GArray *old_idx_uid_map = pl->idx_uid_map;
-  pl->idx_uid_map = g_array_sized_new (false, false, sizeof (int), pl->count);
+  pl->idx_uid_map = g_array_sized_new (false, false, sizeof (guint), pl->count);
 
   if (pl->uid_idx_hash)
     g_hash_table_destroy (pl->uid_idx_hash);
@@ -253,7 +254,7 @@ do_refresh (gpointer data)
 
   pl->count = 0;
 
-  int sorting_cb (int uid, struct music_db_info *info)
+  int sorting_cb (guint uid, struct music_db_info *info)
   {
     obstack_blank (&obstack, sizeof (struct e));
     struct e *saved = obstack_base (&obstack);
@@ -312,11 +313,11 @@ do_refresh (gpointer data)
     return 0;
   }
 
-  int not_sorting_cb (int uid, struct music_db_info *info)
+  int not_sorting_cb (guint uid, struct music_db_info *info)
   {
     g_array_append_val (pl->idx_uid_map, uid);
     g_hash_table_insert (pl->uid_idx_hash,
- 			 (gpointer) uid, (gpointer) pl->count);
+ 			 GUINT_TO_POINTER (uid), GINT_TO_POINTER (pl->count));
     pl->count ++;
 
     return 0;
@@ -368,6 +369,7 @@ do_refresh (gpointer data)
 	ret = strcmp (a_source, b_source);
 	if (ret)
 	  return ret;
+	return 0;
       }
 
 
@@ -383,7 +385,7 @@ do_refresh (gpointer data)
 	  struct e *e = g_array_index (elements, struct e *, i);
 	  g_array_append_val (pl->idx_uid_map, e->uid);
 	  g_hash_table_insert (pl->uid_idx_hash,
-			       (gpointer) e->uid, (gpointer) i);
+			       GUINT_TO_POINTER (e->uid), GINT_TO_POINTER (i));
 	}
 
       obstack_free (&obstack, NULL);
@@ -432,8 +434,8 @@ do_refresh (gpointer data)
 
   int i;
   for (i = 0; i < min_count; i ++)
-    if (g_array_index (pl->idx_uid_map, int, i)
-	!= g_array_index (old_idx_uid_map, int, i))
+    if (g_array_index (pl->idx_uid_map, guint, i)
+	!= g_array_index (old_idx_uid_map, guint, i))
       {
 	GtkTreePath *path = gtk_tree_path_new_from_indices (i, -1);
 	GtkTreeIter iter;
@@ -486,7 +488,7 @@ play_list_idx_uid_refresh_schedule (PlayList *pl, bool now)
 }
 
 /* Return the UID of the record at index IDX.  */
-int
+guint
 play_list_index_to_uid (PlayList *pl, int idx)
 {
   int count = play_list_count (pl);
@@ -494,19 +496,19 @@ play_list_index_to_uid (PlayList *pl, int idx)
   g_assert (idx >= 0);
   g_assert (idx < count || (idx == 0 && count == 0));
 
-  return g_array_index (pl->idx_uid_map, int, idx);
+  return g_array_index (pl->idx_uid_map, guint, idx);
 }
 
 int
-play_list_uid_to_index (PlayList *pl, int uid)
+play_list_uid_to_index (PlayList *pl, guint uid)
 {
   gpointer key;
   gpointer value;
-  if (! g_hash_table_lookup_extended (pl->uid_idx_hash, (gpointer) uid,
+  if (! g_hash_table_lookup_extended (pl->uid_idx_hash, GUINT_TO_POINTER (uid),
 				      &key, &value))
     return -1;
   else
-    return (int) value;
+    return GPOINTER_TO_INT (value);
 }
 
 static void
@@ -833,9 +835,10 @@ get_iter (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *path)
 static GtkTreePath *
 get_path (GtkTreeModel *tree_model, GtkTreeIter *iter)
 {
-  g_return_val_if_fail (iter->user_data != (gpointer) -1, NULL);
+  g_return_val_if_fail (GPOINTER_TO_INT (iter->user_data) != -1, NULL);
 
-  return gtk_tree_path_new_from_indices ((int) iter->user_data, -1);
+  return gtk_tree_path_new_from_indices (GPOINTER_TO_INT (iter->user_data),
+					 -1);
 }
 
 static void
@@ -843,11 +846,11 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
 	   GValue *value)
 {
   PlayList *pl = PLAY_LIST (tree_model);
-  int i = (int) iter->user_data;
+  int i = GPOINTER_TO_INT (iter->user_data);
 
   g_return_if_fail (i != -1);
 
-  int uid = play_list_index_to_uid (pl, i);
+  guint uid = play_list_index_to_uid (pl, i);
 
   struct music_db_info info;
 
@@ -982,11 +985,11 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
 static gboolean
 iter_next (GtkTreeModel *tree_model, GtkTreeIter *iter)
 {
-  g_return_val_if_fail (iter->user_data != (gpointer) -1, FALSE);
+  g_return_val_if_fail (GPOINTER_TO_INT (iter->user_data) != -1, FALSE);
 
   PlayList *pl = PLAY_LIST (tree_model);
 
-  int pos = 1 + (int) iter->user_data;
+  int pos = 1 + GPOINTER_TO_INT (iter->user_data);
   ITER_INIT (tree_model, iter, pos);
   if (pos >= play_list_count (pl))
     {

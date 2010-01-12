@@ -108,11 +108,11 @@ extern void play_list_remove (PlayList *pl, gint idx);
 
     Returns the uid associated with INDEX.  If invalid, returns 0.
     (A valid UID is guaranteed to be non-0.)  */
-extern int play_list_index_to_uid (PlayList *pl, int index);
+extern guint play_list_index_to_uid (PlayList *pl, int index);
 
 /* Return an index (if any) associated with UID.  If none, return
    -1.  */
-extern int play_list_uid_to_index (PlayList *pl, int uid);
+extern int play_list_uid_to_index (PlayList *pl, guint uid);
 
 /* Force a "row-changed" signal to be emitted for row N.  */
 extern void play_list_force_changed (PlayList *pl, gint n);

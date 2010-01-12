@@ -359,7 +359,7 @@ starling_random_set (Starling *st, bool value)
 }
 
 static gboolean
-starling_load (Starling *st, int uid)
+starling_load (Starling *st, guint uid)
 {
   int old_idx = -1;
   if (st->loaded_song)
@@ -397,14 +397,14 @@ starling_load (Starling *st, int uid)
   info.fields = MDB_SOURCE | MDB_PRESENT;
   if (! music_db_get_info (st->db, uid, &info))
     {
-      g_warning ("%s: No entry found for %d!", __FUNCTION__, uid);
+      g_warning ("%s: No entry found for %u!", __FUNCTION__, uid);
       return FALSE;
     }
 
   if (! info.present)
     return FALSE;
 
-  player_set_source (st->player, info.source, (gpointer) uid);
+  player_set_source (st->player, info.source, GUINT_TO_POINTER (uid));
 
   g_free (info.source);
 
@@ -868,7 +868,8 @@ deserialize (Starling *st)
 	for (tok = strtok (selection, ","); tok; tok = strtok (NULL, ","))
 	  if (*tok)
 	    conf->selected_rows
-	      = g_list_append (conf->selected_rows, (gpointer) atoi (tok));
+	      = g_list_append (conf->selected_rows,
+			       GINT_TO_POINTER (atoi (tok)));
       }
 
     g_strfreev (values);
@@ -980,7 +981,7 @@ serialize (Starling *st)
 	    if (l != conf->selected_rows)
 	      obstack_1grow (&paths, ',');
 
-	    obstack_printf (&paths, "%d", (int) l->data);
+	    obstack_printf (&paths, "%d", GPOINTER_TO_INT (l->data));
 	  }
 	obstack_1grow (&paths, 0);
 
@@ -1159,7 +1160,7 @@ play_list_state_save (Starling *st)
     gint *indices = gtk_tree_path_get_indices (path);
     int uid = play_list_index_to_uid (st->library, indices[0]);
     conf->selected_rows = g_list_append (conf->selected_rows,
-					 (gpointer) uid);
+					 GUINT_TO_POINTER (uid));
   }
   gtk_tree_selection_selected_foreach (selection, callback, NULL);
 }
@@ -1200,7 +1201,8 @@ play_list_state_restore (Starling *st)
 	  /* Grab the next pointer in case we remove L.  */
 	  n = l->next;
 
-	  int idx = play_list_uid_to_index (st->library, (int) l->data);
+	  int idx = play_list_uid_to_index (st->library,
+					    GPOINTER_TO_INT (l->data));
 	  if (idx == -1)
 	    {
 	      conf->selected_rows
@@ -1214,16 +1216,6 @@ play_list_state_restore (Starling *st)
 	}
     }
 }
-
-#ifndef HAVE_HILDON_STACKABLE_WINDOWS
-static gboolean
-play_list_combo_set_library (gpointer user_data)
-{
-  Starling *st = user_data;
-
-  return FALSE;
-}
-#endif
 
 struct play_list_selector_changed
 {
@@ -1476,14 +1468,14 @@ remove_cb (Starling *st, GtkWidget *w)
 		 GtkTreePath *path, GtkTreeIter *iter, gpointer data)
   {
     gint *indices = gtk_tree_path_get_indices (path);
-    g_queue_push_head (selected, (gpointer) indices[0]);
+    g_queue_push_head (selected, GINT_TO_POINTER (indices[0]));
   }
   gtk_tree_selection_selected_foreach (selection, callback, NULL);
 
 
   while (! g_queue_is_empty (selected))
     {
-      int idx = (int) g_queue_pop_head (selected);
+      int idx = GPOINTER_TO_INT (g_queue_pop_head (selected));
       play_list_remove (pl, idx);
     }
 
@@ -1558,7 +1550,7 @@ change_caption_format (gpointer user_data, GtkMenuItem *menuitem)
   GKeyFile *keyfile = config_file_load ();
   char *caption = NULL;
   char **history = NULL;
-  unsigned int history_len;
+  gsize history_len;
   if (keyfile)
     {
       caption = g_key_file_get_string (keyfile, GROUP,
@@ -2810,7 +2802,7 @@ queue_cb (GtkWidget *widget, gpointer d)
 	return;
     }
 
-  int callback (int uid, struct music_db_info *i)
+  int callback (guint uid, struct music_db_info *i)
   {
     music_db_play_list_enqueue (st->db, list, uid);
 
@@ -3141,7 +3133,7 @@ track_popup_menu (Starling *st, int idx, GdkEventButton *event)
   {
     gint *indices = gtk_tree_path_get_indices (path);
 
-    int uid = play_list_index_to_uid (st->library, indices[0]);
+    guint uid = play_list_index_to_uid (st->library, indices[0]);
     if (first)
       {
 	struct music_db_info info;
@@ -3154,8 +3146,7 @@ track_popup_menu (Starling *st, int idx, GdkEventButton *event)
 	first = false;
       }
 
-    selection_list
-      = g_list_append (selection_list, (gpointer) uid);
+    selection_list = g_list_append (selection_list, GUINT_TO_POINTER (uid));
     sel_count ++;
   }
   gtk_tree_selection_selected_foreach (selection, sel_callback, NULL);

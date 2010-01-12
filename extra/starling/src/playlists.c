@@ -547,9 +547,9 @@ get_iter (GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *path)
 static GtkTreePath *
 get_path (GtkTreeModel *tree_model, GtkTreeIter *iter)
 {
-  g_return_val_if_fail (iter->user_data != (gpointer) -1, NULL);
+  g_return_val_if_fail (GPOINTER_TO_INT (iter->user_data) != -1, NULL);
 
-  return gtk_tree_path_new_from_indices ((int) iter->user_data, -1);
+  return gtk_tree_path_new_from_indices (GPOINTER_TO_INT (iter->user_data), -1);
 }
 
 static void
@@ -557,7 +557,7 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
 	   GValue *value)
 {
   PlayLists *pl = PLAY_LISTS (tree_model);
-  int i = (int) iter->user_data;
+  int i = GPOINTER_TO_INT (iter->user_data);
 
   g_return_if_fail (i != -1);
 
@@ -608,11 +608,11 @@ get_value (GtkTreeModel *tree_model, GtkTreeIter *iter, gint column,
 static gboolean
 iter_next (GtkTreeModel *tree_model, GtkTreeIter *iter)
 {
-  g_return_val_if_fail (iter->user_data != (gpointer) -1, FALSE);
+  g_return_val_if_fail (GPOINTER_TO_INT (iter->user_data) != -1, FALSE);
 
   PlayLists *pl = PLAY_LISTS (tree_model);
 
-  int pos = 1 + (int) iter->user_data;
+  int pos = 1 + GPOINTER_TO_INT (iter->user_data);
   if (pos >= play_lists_count (pl))
     {
       ITER_INIT (tree_model, iter, -1);

@@ -1,5 +1,16 @@
 2010-01-12  Neal H. Walfield  <neal@gnu.org>
 
+	* src/lyrics.c: Fix warnings.
+	* src/musicdb.h: Likewise.
+	* src/musicdb.c: Likewise.
+	* src/playlist.c: Likewise.
+	* src/playlist.h: Likewise.
+	* src/playlists.c: Likewise.
+	* src/search.y: Likewise.
+	* src/starling.c: Likewise.
+
+2010-01-12  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.c (changed_entry): Don't ignore most changes for
 	filter play lists.
 
