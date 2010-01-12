@@ -540,7 +540,7 @@ changed_entry (MusicDB *db, gint uid, guint changed_mask, gpointer data)
      change may make the entry eligible for the play list.  */
   if (! pl->constraint && idx == -1)
     return;
-  else
+  else if (idx != -1)
     {
       GtkTreePath *path = gtk_tree_path_new_from_indices (idx, -1);
       GtkTreeIter iter;
@@ -701,7 +701,7 @@ play_list_constrain (PlayList *pl, const char *constraint)
     return;
 
   g_free (pl->constraint);
-  if (constraint)
+  if (constraint && *constraint)
     pl->constraint = g_strdup (constraint);
   else
     pl->constraint = NULL;

@@ -1,5 +1,12 @@
 2010-01-12  Neal H. Walfield  <neal@gnu.org>
 
+	* src/playlist.c (play_list_constrain): If CONSTRAINT is the empty
+	string, set PL->CONSTRAINT to NULL.
+
+	(changed_entry): Don't emit a "row-changed" signal if IDX is -1.
+
+2010-01-12  Neal H. Walfield  <neal@gnu.org>
+
 	* src/musicdb.c (music_db_play_list_dequeue): Only emit a
 	"removed-from-play-list" signal if we actually remove something.
 
