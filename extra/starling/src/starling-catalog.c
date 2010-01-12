@@ -205,7 +205,7 @@ main (int argc, char *argv[])
   if (caption)
     caption_renderer = caption_create (caption);
 
-  int callback (int uid, struct music_db_info *info)
+  int callback (guint uid, struct music_db_info *info)
   {
     if (caption_renderer)
       {

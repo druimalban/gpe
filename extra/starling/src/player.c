@@ -18,6 +18,8 @@
    along with this program.  If not, see
    <http://www.gnu.org/licenses/>.  */
 
+#define _GNU_SOURCE
+
 #define ERROR_DOMAIN() g_quark_from_static_string ("player")
 
 #include <string.h>

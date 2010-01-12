@@ -506,7 +506,7 @@ render (struct caption *caption, struct my_info *info, struct chunk *c)
 }
 
 char *
-caption_render (struct caption *caption, MusicDB *db, int uid)
+caption_render (struct caption *caption, MusicDB *db, guint uid)
 {
   struct my_info info;
   memset (&info, 0, sizeof (info));

@@ -41,4 +41,4 @@ void caption_free (struct caption *caption);
 
 /* Create a caption for the track with uid UID.  Caller is responsible
    for freeing it.  */
-char *caption_render (struct caption *caption, MusicDB *db, int uid);
+char *caption_render (struct caption *caption, MusicDB *db, guint uid);

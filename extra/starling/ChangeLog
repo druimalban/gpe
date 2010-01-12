@@ -1,5 +1,12 @@
 2010-01-12  Neal H. Walfield  <neal@gnu.org>
 
+	* src/caption.c: Fix warnings.
+	* src/caption.h: Likewise.
+	* src/player.c: Likewise.
+	* src/starling-catalog.c: Likewise.
+
+2010-01-12  Neal H. Walfield  <neal@gnu.org>
+
 	* src/playlist.c (play_list_constrain): If CONSTRAINT is the empty
 	string, set PL->CONSTRAINT to NULL.
 
