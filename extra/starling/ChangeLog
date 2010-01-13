@@ -1,5 +1,9 @@
 2010-01-13  Neal Walfield  <neal@gnu.org>
 
+	* configure.ac: Corrently set the HILDON conditional.
+
+2010-01-13  Neal Walfield  <neal@gnu.org>
+
 	* src/main.c (USE_CACHE_WARMER) [HAVE_MAEMO]: Define.
 	(cache_warmer_quit) [HAVE_MAEMO]: New global.
 	(cache_warmer) [HAVE_MAEMO]: New function.

@@ -61,7 +61,7 @@ PKG_CHECK_EXISTS(libosso,
 if test x$HAVE_HILDON_VERSION != x; then
   AC_DEFINE_UNQUOTED(HAVE_HILDON, [1], [Whether we are building for Hildon.])
 fi
-AM_CONDITIONAL([HILDON], test x$HAVE_HILDON = x1)
+AM_CONDITIONAL([HILDON], test x$HAVE_HILDON_VERSION != x)
 
 # Check whether we are running on Maemo and which version.
 AC_MSG_CHECKING([for a Maemo environment])
