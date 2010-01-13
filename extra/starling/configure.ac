@@ -58,7 +58,7 @@ PKG_CHECK_EXISTS(libosso,
   [
     AC_MSG_RESULT([no])
   ])
-if test x$HAVE_MAEMO_VERSION != x; then
+if test x$HAVE_HILDON_VERSION != x; then
   AC_DEFINE_UNQUOTED(HAVE_HILDON, [1], [Whether we are building for Hildon.])
 fi
 AM_CONDITIONAL([HILDON], test x$HAVE_HILDON = x1)

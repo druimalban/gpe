@@ -1,3 +1,9 @@
+2010-01-13  Neal Walfield  <neal@gnu.org>
+
+	* configure.ac: Fix typo: when determining whether to define
+	HAVE_HILDON, check if HAVE_HILDON_VERSION is defined, not
+	HAVE_MAEMO_VERSION.
+
 2010-01-12  Neal H. Walfield  <neal@gnu.org>
 
 	* src/caption.c: Fix warnings.
