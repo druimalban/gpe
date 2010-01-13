@@ -1,3 +1,8 @@
+2010-01-13  Neal H. Walfield  <neal@gnu.org>
+
+	* src/caption.c (build): Be sure to fill in the format part of the
+	caption.
+
 2010-01-13  Neal Walfield  <neal@gnu.org>
 
 	* configure.ac: Corrently set the HILDON conditional.

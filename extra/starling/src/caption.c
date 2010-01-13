@@ -44,6 +44,7 @@ struct chunk
 
   /* If not 0, assumes a stirng and tries to do ellipsizing.  */
   int width;
+
   /* The format string.  It contains exactly one format specifier.  */
   char fmt[0];
 };
@@ -88,17 +89,17 @@ build (struct caption *caption, const char *fmt)
   /* Start a new chunk.  */
   struct chunk *start_chunk (void)
   {
-    obstack_blank (&caption->pool, sizeof (struct chunk));
+    obstack_blank (&caption->pool, offsetof (struct chunk, fmt));
 
     struct chunk *chunk = obstack_base (&caption->pool);
-    memset (chunk, 0, sizeof (*chunk));
+    memset (chunk, 0, offsetof (struct chunk, fmt));
     chunk->offset = -1;
     return chunk;
   }
 
   struct chunk *new_chunk (void)
   {
-    if (obstack_object_size (&caption->pool) == sizeof (struct chunk))
+    if (obstack_object_size (&caption->pool) == offsetof (struct chunk, fmt))
       /* Nothing has been added to this chunk.  */
       return obstack_base (&caption->pool);
 
