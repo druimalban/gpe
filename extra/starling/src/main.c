@@ -103,6 +103,31 @@ osso_top_callback (const gchar *arguments, gpointer data)
 }
 #endif
 
+#ifdef HAVE_MAEMO
+#define USE_CACHE_WARMER
+static volatile gboolean cache_warmer_quit;
+
+void *
+cache_warmer (void *arg)
+{
+  FILE *f = fopen ("/home/user/.starling/playlist", "r");
+  if (! f)
+    return NULL;
+
+  int count = 0;
+  char buffer[4096 * 4];
+  while (! ferror (f) && ! feof (f) && ! cache_warmer_quit)
+    count += fread (buffer, 1, sizeof (buffer), f);
+
+  fclose (f);
+
+  printf ("Read %d kbytes (cache warmer quit: %d)\n",
+	  count / 1024, cache_warmer_quit);
+
+  return NULL;
+}
+#endif
+
 int
 main (int argc, char *argv[])
 {
@@ -113,6 +138,10 @@ main (int argc, char *argv[])
   if (! g_thread_supported ())
     g_thread_init (NULL);
   gdk_threads_init ();
+
+#ifdef USE_CACHE_WARMER
+  g_thread_create (cache_warmer, NULL, FALSE, NULL);
+#endif
 
 #ifdef ENABLE_GPE
   gpe_application_init (&argc, &argv);
@@ -159,6 +188,10 @@ main (int argc, char *argv[])
 #endif
 
   st = starling_run ();
+
+#ifdef USE_CACHE_WARMER
+  cache_warmer_quit = TRUE;
+#endif
 
   gdk_threads_enter ();
   gtk_main ();

@@ -1,5 +1,14 @@
 2010-01-13  Neal Walfield  <neal@gnu.org>
 
+	* src/main.c (USE_CACHE_WARMER) [HAVE_MAEMO]: Define.
+	(cache_warmer_quit) [HAVE_MAEMO]: New global.
+	(cache_warmer) [HAVE_MAEMO]: New function.
+	(main) [USE_CACHE_WARMER]: Create a thread that executes
+	cache_warmer.  Set cache_warmer_quit to true once starling_run
+	returns.
+
+2010-01-13  Neal Walfield  <neal@gnu.org>
+
 	* configure.ac: Fix typo: when determining whether to define
 	HAVE_HILDON, check if HAVE_HILDON_VERSION is defined, not
 	HAVE_MAEMO_VERSION.
