@@ -1,3 +1,9 @@
+2010-01-13  Neal Walfield  <neal@gnu.org>
+
+	* src/starling.c (play_list_selector_changed_to): Only run
+	play_list_selector_changed_flush from an idle handler if
+	INITIAL_RESTORE is false.
+
 2010-01-13  Neal H. Walfield  <neal@gnu.org>
 
 	* src/caption.c (build): Be sure to fill in the format part of the

@@ -1300,7 +1300,10 @@ play_list_selector_changed_to (Starling *st,
       gtk_widget_show (st->library_view_loading_label);
 #endif
 
-      gtk_idle_add ((GtkFunction) play_list_selector_changed_flush, info);  
+      if (! initial_restore)
+	gtk_idle_add ((GtkFunction) play_list_selector_changed_flush, info);
+      else
+	play_list_selector_changed_flush (info);
     }
 
 #ifdef HAVE_HILDON_STACKABLE_WINDOWS
