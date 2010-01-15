@@ -1859,6 +1859,26 @@ rate (Starling *st)
   music_db_set_info (st->db, st->loaded_song, &info);
 }
 
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
+static gboolean
+notebook_switch_page_cb (Starling *st,
+			 GtkNotebookPage *page,
+			 guint page_num,
+			 GtkNotebook *notebook)
+{
+  /* Free the caption format and force its regeneration.  If the
+     library is zoomed to only show artists, the queue should never
+     the less show the full track information.  */
+  if (st->caption)
+    {
+      caption_free (st->caption);
+      st->caption = NULL;
+    }
+
+  return TRUE;
+}
+#endif
+
 static void
 jump_to_current (Starling *st)
 {
@@ -2665,22 +2685,24 @@ title_data_func (GtkCellLayout *cell_layout,
   Starling *st = data;
 
   if (G_UNLIKELY (! st->caption))
-    switch (st->group_by)
-      {
-      case 0:
+    {
+      if (st->group_by == 0
+#ifndef HAVE_HILDON_STACKABLE_WINDOWS
+	  || gtk_notebook_get_current_page (GTK_NOTEBOOK (st->notebook)) == 1
+#endif
+	  )
 	st->caption
 	  = caption_create (st->caption_format ?: CAPTION_FMT_DEFAULT);
-	break;
-      case MDB_ALBUM:
+      else if (st->group_by == MDB_ALBUM)
 	st->caption = caption_create ("%a?(%.50a)(%.-90u) - %A");
-	break;
-      case MDB_ARTIST:
+      else if (st->group_by == MDB_ARTIST)
 	st->caption = caption_create ("%a?(%.50a)(%.-90u)");
-	break;
-      default:
-	g_assert (! "Unexpected value for ST->GROUP_BY");
-	return;
-      }
+      else
+	{
+	  g_assert (! "Unexpected value for ST->GROUP_BY");
+	  return;
+	}
+    }
 
 
   int uid;
@@ -3719,6 +3741,8 @@ starling_run (void)
 #ifndef HAVE_HILDON_STACKABLE_WINDOWS
   /* The notebook containing the tabs.  */
   st->notebook = gtk_notebook_new ();
+  g_signal_connect_swapped (G_OBJECT (st->notebook), "switch-page",
+			    G_CALLBACK (notebook_switch_page_cb), st);
   gtk_container_add (GTK_CONTAINER (main_box), GTK_WIDGET (st->notebook));
 #endif
 

@@ -1,3 +1,14 @@
+2010-01-15  Neal H. Walfield  <neal@gnu.org>
+
+	Always use the default caption in the queue tab.
+	Reported by Thomas Schwinge <tschwinge@gnu.org>.
+	* src/starling.c (notebook_switch_page_cb)
+	[!HAVE_HILDON_STACKABLE_WINDOWS]: New function.
+	(title_data_func): If the current notebook page is the queue, use
+	the normal caption format.
+	(starling_run) [!HAVE_HILDON_STACKABLE_WINDOWS]: Connect
+	notebook_switch_page_cb to ST->NOTEBOOK's "switch-page" signal.
+
 2010-01-13  Neal Walfield  <neal@gnu.org>
 
 	* src/starling.c (play_list_selector_changed_to): Only run
