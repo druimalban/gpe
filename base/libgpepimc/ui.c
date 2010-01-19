@@ -707,7 +707,7 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 	 Thanks to Conny Hald for this workround */
       /* Apply the HildonCheckButton style to the whole tree view */
       /* Note: this means the formatting of the text column is wrong and has to be forced in
-	 the layout of the calendar_text_cell_renderer */
+	 the layout of the cell_renderer below */
       GtkStyle *style = gtk_rc_get_style_by_paths (gtk_widget_get_settings (GTK_WIDGET(window)),
 						   NULL,
 						   "*.HildonCheckButton.GtkAlignment.GtkHBox.GtkCellView",
