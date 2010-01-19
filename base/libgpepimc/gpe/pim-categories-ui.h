@@ -24,8 +24,12 @@
 
 #ifdef IS_HILDON
 extern GtkWidget *gpe_pim_categories_dialog (GSList *selected_categories, gboolean select, GCallback callback, gpointer data);
+extern GtkWidget *gpe_pim_categories_list_window (gboolean select);
 #else
 extern GtkWidget *gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpointer data);
-#endif 
+extern GtkWidget *gpe_pim_categories_list_window (void);
+#endif
+void gpe_pim_categories_reset_window (GtkWidget *w, GSList *selected_categories);
+extern GSList *gpe_pim_categories_from_window (GtkWidget *w);
 
 #endif

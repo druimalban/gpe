@@ -1,3 +1,18 @@
+2010-01-19  Graham Cobb  <g+770@cobb.uk.net>
+
+	* Makefile.am (libgpepimc_la_LDFLAGS): Set -version-info to 2:0:1 as 
+	new functions have been added to the interface
+
+	* gpe/pim-categories-ui.h: Add gpe_pim_categories_list_window
+	Add gpe_pim_categories_reset_window
+	Add gpe_pim_categories_from_window
+
+	* ui.c (gpe_pim_categories_list): Split gpe_pim_categories_list_window out 
+	of gpe_pim_categories_dialog
+	(gpe_pim_categories_reset_window): Split gpe_pim_categories_reset_window out
+	of gpe_pim_categories_dialog
+	(gpe_pim_categories_from_window): Create gpe_pim_categories_from_window
+
 2010-01-07  Graham Cobb  <g+770@cobb.uk.net>
 
 	* ui.c (gpe_pim_categories_dialog): Bring back OK button on Fremantle

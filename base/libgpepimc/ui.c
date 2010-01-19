@@ -24,6 +24,7 @@
 #include <gpe/picturebutton.h>
 
 #include "gpe/pim-categories.h"
+#include "gpe/pim-categories-ui.h"
 
 #include "internal.h"
 
@@ -613,14 +614,8 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
 #endif
   GtkWidget *window;
   GtkWidget *sw, *editbutton = NULL, *deletebutton = NULL;
-  GSList *iter;
   GtkWidget *okbutton = NULL, *cancelbutton = NULL;
-  GtkListStore *list_store;
-  GtkWidget *tree_view;
-  GtkCellRenderer *renderer;
-  GtkTreeViewColumn *col;
-  GSList *list;
-  GtkTreeSelection *sel;
+  GtkWidget *tree_view, *list_store;
 
 #ifdef IS_HILDON
   GtkWidget *newbutton = NULL;
@@ -628,20 +623,18 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
     
   window = gtk_dialog_new ();
 
-  list_store = gtk_list_store_new (LS_MAX, G_TYPE_BOOLEAN, G_TYPE_STRING, 
-                                   G_TYPE_INT, G_TYPE_STRING);
-
-  tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
-  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
-  gtk_tree_selection_set_mode(sel, GTK_SELECTION_SINGLE);
-
 #ifdef IS_HILDON
-
-#if HILDON_VER == 0
-    g_object_set(G_OBJECT(tree_view), "allow-checkbox-mode", FALSE, NULL);
+  sw = gpe_pim_categories_list_window(select);
+#else
+  sw = gpe_pim_categories_list_window();
 #endif
 
-#else
+  gpe_pim_categories_reset_window(sw, selected_categories);
+
+  tree_view = GTK_WIDGET(g_object_get_data(G_OBJECT(sw), "tree_view"));
+  list_store = GTK_WIDGET(g_object_get_data(G_OBJECT(sw), "list_store"));
+
+#ifndef IS_HILDON
     toolbar = gtk_toolbar_new ();
     gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbar), GTK_ORIENTATION_HORIZONTAL);
     gtk_toolbar_set_style (GTK_TOOLBAR (toolbar), GTK_TOOLBAR_ICONS);
@@ -665,81 +658,6 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
     gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox),
                 toolbar, FALSE, FALSE, 0);                
 #endif      
-  sw = gtk_scrolled_window_new (NULL, NULL);
-
-  list = gpe_pim_categories_list ();
-  for (iter = list; iter != NULL; iter = iter->next)
-    {
-      gint id = (gint) iter->data;
-      GtkTreeIter titer;
-
-      gtk_list_store_append (list_store, &titer);
-      gtk_list_store_set (list_store, &titer, 
-			  LS_CHECKED, g_slist_find (selected_categories, (gpointer)id) ? TRUE : FALSE,
-			  LS_NAME, gpe_pim_category_name(id), 
-			  LS_ID, id,
-              LS_COLOR, gpe_pim_category_colour(id), -1);
-    }
-  g_slist_free (list);
-
-  renderer = gtk_cell_renderer_text_new ();
-  g_object_set (G_OBJECT (renderer), "text", "  ", NULL);
-  col = gtk_tree_view_column_new_with_attributes (NULL, renderer,
-                              "cell-background", LS_COLOR, NULL);
-  gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
-#ifdef IS_HILDON
-  if (select)
-#endif
-    {  
-      renderer = gtk_cell_renderer_toggle_new ();
-      g_object_set (G_OBJECT (renderer), "activatable", TRUE, NULL);
-      col = gtk_tree_view_column_new_with_attributes (NULL, renderer,
-                              "active", LS_CHECKED, NULL);
-    
-      gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
-    
-      g_object_set_data (G_OBJECT (tree_view), "toggle-col", col);
-      g_signal_connect(G_OBJECT(renderer), "toggled", 
-                       G_CALLBACK(category_toggled), (gpointer) list_store);
-
-#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
-      /* HACK to workround Maemo5 bug with toggle rendering.
-	 Thanks to Conny Hald for this workround */
-      /* Apply the HildonCheckButton style to the whole tree view */
-      /* Note: this means the formatting of the text column is wrong and has to be forced in
-	 the layout of the cell_renderer below */
-      GtkStyle *style = gtk_rc_get_style_by_paths (gtk_widget_get_settings (GTK_WIDGET(window)),
-						   NULL,
-						   "*.HildonCheckButton.GtkAlignment.GtkHBox.GtkCellView",
-						   G_TYPE_NONE);
-      gtk_widget_set_style(GTK_WIDGET(tree_view), style);
-      /* Set the indicator to the right size (the size of the pixmap) */
-      g_object_set (renderer, "indicator-size", 38, NULL);
-#endif
-    }
-  renderer = gtk_cell_renderer_text_new ();
-  g_object_set (G_OBJECT (renderer), "editable", TRUE, NULL);
-#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
-  /* The HACK to workround Maemo5 bug with toggle rendering (see above)
-     means that we have to force the font size here */
-  g_object_set (G_OBJECT (renderer), "size-points", (gdouble) 24, NULL);
-#endif
-  col = gtk_tree_view_column_new_with_attributes (NULL, renderer, 
-                                                  "text", LS_NAME, NULL);
-
-  g_signal_connect (G_OBJECT (renderer), "edited", 
-                    G_CALLBACK(change_category_name),
-                    list_store);
-
-  gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
-
-  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree_view), FALSE);
-
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
-				  GTK_POLICY_NEVER,
-				  GTK_POLICY_AUTOMATIC);
-
-  gtk_container_add (GTK_CONTAINER (sw), tree_view);
 
   gtk_box_pack_start (GTK_BOX (GTK_DIALOG (window)->vbox), sw, TRUE, TRUE, 0);
 
@@ -772,7 +690,7 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
   cancelbutton = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
 #endif
 
-  g_object_set_data (G_OBJECT (window), "list_store", list_store);
+  g_object_set_data (G_OBJECT (window), "list_store", g_object_get_data(G_OBJECT(sw), "list_store"));
   g_object_set_data (G_OBJECT (window), "edit-button", editbutton);
   g_object_set_data (G_OBJECT (window), "delete-button", deletebutton);
 
@@ -782,7 +700,7 @@ gpe_pim_categories_dialog (GSList *selected_categories, GCallback callback, gpoi
     g_signal_connect (G_OBJECT (cancelbutton), "clicked", G_CALLBACK (categories_dialog_cancel), window);
 
 #ifdef IS_HILDON
-gtk_tree_view_set_hover_selection(GTK_TREE_VIEW(tree_view), FALSE);
+  gtk_tree_view_set_hover_selection(GTK_TREE_VIEW(tree_view), FALSE);
     
 if (select)
   {
@@ -823,4 +741,163 @@ else
   gtk_widget_show_all (window);
 
   return window;
+}
+
+#ifdef IS_HILDON
+GtkWidget *
+gpe_pim_categories_list_window (gboolean select)
+#else
+GtkWidget *
+gpe_pim_categories_list_window (void)
+#endif
+{
+  GtkWidget *sw;
+  GtkListStore *list_store;
+  GtkWidget *tree_view;
+  GtkCellRenderer *renderer;
+  GtkTreeViewColumn *col;
+  GtkTreeSelection *sel;
+
+  list_store = gtk_list_store_new (LS_MAX, G_TYPE_BOOLEAN, G_TYPE_STRING, 
+                                   G_TYPE_INT, G_TYPE_STRING);
+
+  tree_view = gtk_tree_view_new_with_model (GTK_TREE_MODEL (list_store));
+  sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree_view));
+  gtk_tree_selection_set_mode(sel, GTK_SELECTION_SINGLE);
+
+#ifdef IS_HILDON
+#if HILDON_VER == 0
+    g_object_set(G_OBJECT(tree_view), "allow-checkbox-mode", FALSE, NULL);
+#endif
+#endif
+
+  sw = gtk_scrolled_window_new (NULL, NULL);
+
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set (G_OBJECT (renderer), "text", "  ", NULL);
+  col = gtk_tree_view_column_new_with_attributes (NULL, renderer,
+                              "cell-background", LS_COLOR, NULL);
+  gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
+#ifdef IS_HILDON
+  if (select)
+#endif
+    {  
+      renderer = gtk_cell_renderer_toggle_new ();
+      g_object_set (G_OBJECT (renderer), "activatable", TRUE, NULL);
+      col = gtk_tree_view_column_new_with_attributes (NULL, renderer,
+                              "active", LS_CHECKED, NULL);
+    
+      gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
+    
+      g_object_set_data (G_OBJECT (tree_view), "toggle-col", col);
+      g_signal_connect(G_OBJECT(renderer), "toggled", 
+                       G_CALLBACK(category_toggled), (gpointer) list_store);
+
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+      /* HACK to workround Maemo5 bug with toggle rendering.
+	 Thanks to Conny Hald for this workround */
+      /* Apply the HildonCheckButton style to the whole tree view */
+      /* Note: this means the formatting of the text column is wrong and has to be forced in
+	 the layout of the cell_renderer below */
+      GtkStyle *style = gtk_rc_get_style_by_paths (gtk_widget_get_settings (GTK_WIDGET(sw)),
+						   NULL,
+						   "*.HildonCheckButton.GtkAlignment.GtkHBox.GtkCellView",
+						   G_TYPE_NONE);
+      gtk_widget_set_style(GTK_WIDGET(tree_view), style);
+      /* Set the indicator to the right size (the size of the pixmap) */
+      g_object_set (renderer, "indicator-size", 38, NULL);
+#endif
+    }
+  renderer = gtk_cell_renderer_text_new ();
+  g_object_set (G_OBJECT (renderer), "editable", TRUE, NULL);
+#if defined(IS_HILDON) && (MAEMO_VERSION_MAJOR >= 5)
+  /* The HACK to workround Maemo5 bug with toggle rendering (see above)
+     means that we have to force the font size here */
+  g_object_set (G_OBJECT (renderer), "size-points", (gdouble) 24, NULL);
+#endif
+  col = gtk_tree_view_column_new_with_attributes (NULL, renderer, 
+                                                  "text", LS_NAME, NULL);
+
+  g_signal_connect (G_OBJECT (renderer), "edited", 
+                    G_CALLBACK(change_category_name),
+                    list_store);
+
+  gtk_tree_view_insert_column (GTK_TREE_VIEW (tree_view), col, -1);
+
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (tree_view), FALSE);
+
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (sw),
+				  GTK_POLICY_NEVER,
+				  GTK_POLICY_AUTOMATIC);
+
+  gtk_container_add (GTK_CONTAINER (sw), tree_view);
+
+  g_object_set_data (G_OBJECT (sw), "tree_view", tree_view);
+  g_object_set_data (G_OBJECT (sw), "list_store", list_store);
+
+  gtk_widget_show_all (sw);
+
+  return sw;
+}
+
+void
+gpe_pim_categories_reset_window (GtkWidget *w, GSList *selected_categories)
+{
+  GSList *iter;
+  GSList *list;
+  GtkListStore *list_store;
+    
+  list_store = g_object_get_data (G_OBJECT (w), "list_store");
+  list = gpe_pim_categories_list ();
+
+  gtk_list_store_clear(list_store);
+  for (iter = list; iter != NULL; iter = iter->next)
+    {
+      gint id = (gint) iter->data;
+      GtkTreeIter titer;
+
+      gtk_list_store_append (list_store, &titer);
+      gtk_list_store_set (list_store, &titer, 
+			  LS_CHECKED, g_slist_find (selected_categories, (gpointer)id) ? TRUE : FALSE,
+			  LS_NAME, gpe_pim_category_name(id), 
+			  LS_ID, id,
+			  LS_COLOR, gpe_pim_category_colour(id), 
+			  -1);
+    }
+    
+  g_slist_free (list);
+}
+
+GSList *
+gpe_pim_categories_from_window (GtkWidget *w)
+{
+  GtkTreeIter iter;
+  GtkListStore *list_store;
+  GSList *selected_categories = NULL;
+
+  list_store = g_object_get_data (G_OBJECT (w), "list_store");
+
+  if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (list_store), &iter))
+    {
+      do
+        {
+          gint id;
+          gchar *title;
+          gboolean selected;
+    
+          gtk_tree_model_get (GTK_TREE_MODEL (list_store), &iter, 
+			      LS_CHECKED, &selected, 
+			      LS_NAME, &title, 
+			      LS_ID, &id, 
+			      -1);
+    
+          if (selected)
+            selected_categories =
+              g_slist_prepend (selected_categories, (gpointer) id);
+    
+        }
+      while (gtk_tree_model_iter_next (GTK_TREE_MODEL (list_store), &iter));
+    }
+
+  return selected_categories;
 }
