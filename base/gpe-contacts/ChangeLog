@@ -1,3 +1,14 @@
+2010-01-19  Graham Cobb  <g+770@cobb.uk.net>
+
+	* Makefile.am (gpe_contacts_SOURCES): Remove pimc-ui.c,.h
+
+	* editing.c (edit_window): Use gpe_pim_categories_list_window for consistency with
+	other applications
+	(edit_person): Use gpe_pim_categories_reset_window
+	(on_edit_save_clicked): Use gpe_pim_categories_from_window
+	
+	* pimc-ui.c, pimc-ui.h: Remove pimc-ui.c,.h
+
 2009-10-04  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main-hildon.c (create_app_menu): Create a real Fremantle menu.

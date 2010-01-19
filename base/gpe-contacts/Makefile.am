@@ -30,7 +30,7 @@ if HILDON
 desktopdir = 
 desktop_in_files = 
                    
-gpe_contacts_SOURCES += main-hildon.c pimc-ui.c pimc-ui.h
+gpe_contacts_SOURCES += main-hildon.c
 
 pixmaps_extradir = $(datadir)/pixmaps
 pixmaps_extra_DATA =

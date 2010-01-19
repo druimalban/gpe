@@ -29,7 +29,6 @@
 #include "namedetail.h"
 
 #ifdef IS_HILDON
-#include "pimc-ui.h"
 #if HILDON_VER > 0
 #include <hildon/hildon-file-chooser-dialog.h>
 #include <hildon/hildon-caption.h>
@@ -662,7 +661,7 @@ edit_window (gboolean isdialog)
       if (!page->next)
         {
 #ifdef IS_HILDON
-          GtkWidget *list = build_pim_categories_list();
+          GtkWidget *list = gpe_pim_categories_list_window(TRUE);
           
           gtk_box_pack_start (GTK_BOX (table), list, TRUE, TRUE, 0);
           g_object_set_data(G_OBJECT(w), "categories", list);
@@ -889,7 +888,7 @@ edit_person (struct contacts_person *p, gchar *title, gboolean isdialog)
 #endif        
     }
 #ifdef IS_HILDON
-  populate_pim_categories_list(g_object_get_data(G_OBJECT(window), "categories"), 
+  gpe_pim_categories_reset_window(g_object_get_data(G_OBJECT(window), "categories"), 
                                catlist);
   if (catlist)
       g_slist_free(catlist);
@@ -1374,7 +1373,7 @@ on_edit_save_clicked (GtkButton * button, gpointer user_data)
 #ifdef IS_HILDON
     {   
         GtkWidget *clist = g_object_get_data(G_OBJECT(edit), "categories");
-        GSList *categories = get_categories(clist);
+        GSList *categories = gpe_pim_categories_from_window(clist);
         /* hildon app need to take care about categories itself */
         update_categories_list(NULL, categories, edit);
         g_slist_free(categories);
