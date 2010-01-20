@@ -1,6 +1,7 @@
  /*
  * Copyright (C) 2001, 2002 Damien Tanner <dctanner@magenet.com>
  *               2004, 2005, 2007 Florian Boor <florian@linuxtogo.org>
+ *               2007, 2008, 2010 Graham R. Cobb <g+gpe@cobb.uk.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -617,12 +618,17 @@ rename_file (GtkWidget *dialog_window, gint response_id)
 }
 
 
+
 static void
-popup_ask_rename_file ()
+rename_one_file (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter,
+                 gpointer data)
 {
   GtkWidget *dialog_window;
   GtkWidget *vbox, *label, *entry, *btnok;
   gchar *label_text;
+  gint col = (gint)data;
+
+  gtk_tree_model_get(model, iter, col, &current_popup_file, -1);
 
   g_return_if_fail(current_popup_file->vfs);
 
@@ -661,6 +667,45 @@ popup_ask_rename_file ()
   gtk_box_pack_start (GTK_BOX (vbox), entry, FALSE, FALSE, 0);
 
   gtk_widget_show_all (dialog_window);
+}
+
+static void
+popup_ask_rename_file ()
+{
+
+  /* FIXME: different functions use different ways to find the file(s) 
+     to be operated on.
+
+     popup_ask_move_file and others which use the functions in fileops.c
+     always act on the active selection.
+
+     popup_ask_open_with and others rely on current_popup_file being set
+     (this is set if we are invoked from a right click and is set from the
+     x,y co-ords of the mouse click, not the selection).  These functions
+     crash or operate on the wrong file if called from the main menu.
+
+     These two mechanisms result in different files being selected depending
+     on the operation.  One day they should be fully combined.
+
+     For now, in order to make rename work from the main menu, we set up
+     current_popup_file here (from the selection), over-riding the value
+     set up by show_popup, if any. */
+
+  gint col;
+  GtkTreeSelection *sel = NULL;
+  
+  if (active_view == view_widget)
+    col = COL_DATA;
+  else
+    col = COL_DIRDATA;
+
+  sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(active_view));
+
+  if (gtk_tree_selection_count_selected_rows(sel) == 0) return;
+
+  gtk_tree_selection_selected_foreach(sel, 
+				      (GtkTreeSelectionForeachFunc)rename_one_file,
+				      (gpointer)col);
 }
 
 

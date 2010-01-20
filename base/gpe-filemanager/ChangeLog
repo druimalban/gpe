@@ -1,3 +1,8 @@
+2010-01-20  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main.c (popup_ask_rename_file): Make this work from the main menu.
+	(rename_one_file): Add callback function to handle multiple selections.
+
 2009-09-13  Graham Cobb  <g+770@cobb.uk.net>
 
 	* configure.ac: set up MAEMO5 condition for automake
