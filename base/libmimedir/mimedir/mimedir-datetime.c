@@ -1,5 +1,6 @@
 /* MIME Directory Date/Time Object
  * Copyright (C) 2002-2005  Sebastian Rittau <srittau@jroger.in-berlin.de>
+ * Copyright (C) 2010 Graham R. Cobb <g+gpe@cobb.uk.net>
  *
  * $Id: mimedir-datetime.c 214 2005-09-01 16:42:06Z srittau $
  *
@@ -885,7 +886,7 @@ mimedir_datetime_parse (MIMEDirDateTime *dt, const gchar *str)
 
 		/* Time zone */
 
-		if (str[0] == 'Z') {
+		if (str[0] == 'Z' || str[0] == 'z') {
 			str++;
 			tz = MIMEDIR_DATETIME_UTC;
 		} else if (str[0] == '+' || str[0] == '-') {

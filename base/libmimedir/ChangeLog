@@ -1,3 +1,7 @@
+2010-01-20  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-datetime.c (mimedir_datetime_parse): Allow lower case z in time parsing
+
 2009-09-01  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-attribute.c (accept_tokenchar): Correctly handle unicode characters in message
