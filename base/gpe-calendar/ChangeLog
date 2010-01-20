@@ -1,3 +1,8 @@
+2010-01-20  Graham Cobb  <g+770@cobb.uk.net>
+
+	* calendar-update.c (authenticate): Handle changes for LIBSOUP2.4 
+	(fixes bug 311)
+
 2009-10-05  Graham Cobb  <g+770@cobb.uk.net>
 
 	* calendars-dialog.c (calendars_dialog_init): HACK to workround Maemo5 bug with toggle rendering.

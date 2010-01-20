@@ -1,5 +1,6 @@
 /* calendar-update.c - Calendar update implementation.
    Copyright (C) 2006, 2007 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2009, 2010 Graham R. Cobb <g+gpe@cobb.uk.net>
 
    This file is part of GPE.
 
@@ -190,6 +191,7 @@ show_info (const char *fmt, ...)
   gtk_widget_show (GTK_WIDGET (info));
 }
 
+#ifdef LIBSOUP22
 static void
 authenticate (SoupSession *session, SoupMessage *msg,
 	      gchar *auth_type, gchar *auth_realm,
@@ -199,6 +201,22 @@ authenticate (SoupSession *session, SoupMessage *msg,
   *username = event_calendar_get_username (ec, NULL);
   *password = event_calendar_get_password (ec, NULL);
 }
+#else
+static void
+authenticate (SoupSession *session, SoupMessage *msg,
+	      SoupAuth *auth, gboolean retrying,
+	      gpointer user_data) 
+{
+  EventCalendar *ec = EVENT_CALENDAR (user_data);
+
+  if (!retrying) {
+    soup_auth_authenticate (auth,
+			    event_calendar_get_username (ec, NULL),
+			    event_calendar_get_password (ec, NULL)
+			    );
+  }
+}
+#endif
 
 enum
   {
