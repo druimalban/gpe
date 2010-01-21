@@ -1741,6 +1741,9 @@ main (int argc, char *argv[])
     if (arg == 'v')
       edit_vcard = TRUE;
   }
+   
+  /* initialise data backends */ 
+  gpe_pim_categories_init ();
   
   /* are we called to import a file? */
   if (ifile)
@@ -1788,9 +1791,6 @@ main (int argc, char *argv[])
         gpe_perror_box(_("Saving vcard failed"));
       exit (EXIT_SUCCESS);
     }
-   
-   /* initialise data backends */ 
-   gpe_pim_categories_init ();
  
    /* Open contacts database */
    if (contacts_db_open (FALSE))

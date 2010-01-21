@@ -1,5 +1,10 @@
 2010-01-21  Graham Cobb  <g+770@cobb.uk.net>
 
+	* main.c (main): Initialise categories subsystem before attempting an import.
+
+	* main-hildon.c (main): Initialise categories subsystem before attempting 
+	an import (bug 309).
+
 	* configure.ac: Check for correct version of libgpepimc.
 
 2010-01-19  Graham Cobb  <g+770@cobb.uk.net>

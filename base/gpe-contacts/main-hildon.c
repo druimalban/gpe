@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  * Copyright (C) 2005, 2006, 2007, 2008 by Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2007, 2008, 2009, 2010 Graham R. Cobb <g+gpe@cobb.uk.net>
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -1949,6 +1950,9 @@ main (int argc, char *argv[])
       edit_vcard = TRUE;
   }    
 
+  /* initialise data backends */ 
+  gpe_pim_categories_init ();
+
   /* are we called to import a file? */
   if (ifile)
     {
@@ -1972,9 +1976,6 @@ main (int argc, char *argv[])
     }
   
   export_init ();
-
-  /* initialise data backends */ 
-  gpe_pim_categories_init ();
     
  /* we are called to edit a users personal vcard */
   if (edit_vcard)
