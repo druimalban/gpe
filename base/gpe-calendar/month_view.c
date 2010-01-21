@@ -1,6 +1,7 @@
 /*
    Copyright (C) 2001, 2002, 2003, 2004, 2005 Philip Blundell <philb@gnu.org>
    Copyright (C) 2006, 2007, 2008 Neal H. Walfield <neal@walfield.org>
+   Copyright (C) 2009, 2010 Graham R. Cobb <g+gpe@cobb.uk.net>
    
    This file is part of GPE.
 
@@ -1087,7 +1088,6 @@ reload_events_hard (GtkMonthView *month_view)
       time_t s = event_get_start (ev);
       GDate start;
       g_date_set_time_t (&start, s);
-      g_date_clamp (&start, &period_start, &period_end);
 
       time_t e = s + event_get_duration (ev) - 1;
       GDate end;
@@ -1103,8 +1103,9 @@ reload_events_hard (GtkMonthView *month_view)
       else
 	{
 	  g_date_set_time_t (&end, e);
-	  g_date_clamp (&end, &period_start, &period_end);
 	}
+      g_date_clamp (&start, &period_start, &period_end);
+      g_date_clamp (&end, &period_start, &period_end);
 
       for (i = g_date_get_julian (&start); i <= g_date_get_julian (&end); i ++)
 	{

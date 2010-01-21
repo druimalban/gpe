@@ -1,3 +1,8 @@
+2010-01-21  Graham Cobb  <g+770@cobb.uk.net>
+
+	* month_view.c (reload_events_hard): clamp start and end dates after
+	doing calculations, not before (fix bug 320)
+
 2010-01-20  Graham Cobb  <g+770@cobb.uk.net>
 
 	* calendar-update.c (authenticate): Handle changes for LIBSOUP2.4 
