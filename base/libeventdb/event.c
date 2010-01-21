@@ -482,9 +482,11 @@ event_duplicate (EventDB *edb, Event *src, GError **error)
     evsrc->location = g_strdup (srcsrc->location);
 
   GSList *l;
+  evsrc->byday = NULL;
   for (l = srcsrc->byday; l; l = l->next)
     evsrc->byday = g_slist_append (evsrc->byday, g_strdup (l->data));
 
+  evsrc->categories = NULL;
   for (l = srcsrc->categories; l; l = l->next)
     evsrc->categories = g_slist_append (evsrc->categories, l->data);
 
