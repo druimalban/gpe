@@ -1,3 +1,7 @@
+2010-01-21  Graham Cobb  <g+770@cobb.uk.net>
+
+	* configure.ac: Check for correct version of libgpepimc.
+
 2010-01-19  Graham Cobb  <g+770@cobb.uk.net>
 
 	* Makefile.am (gpe_contacts_SOURCES): Remove pimc-ui.c,.h
