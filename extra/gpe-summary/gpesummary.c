@@ -55,6 +55,8 @@
 
 #include <libosso.h>
 
+#include <libgnomevfs/gnome-vfs.h>
+#include <libgnomevfs/gnome-vfs-utils.h>
 
 #include <config.h>
 
@@ -70,16 +72,20 @@
 #define CALENDAR_FILE() \
   g_strdup_printf ("%s" GPE_DIR_ CALENDAR_FILE_, g_get_home_dir ())
 gchar *calendar_file = NULL;
+GnomeVFSMonitorHandle *monitor_calendar = NULL;
 
 #define TODO_FILE_ "/todo"
 #define TODO_FILE() \
   g_strdup_printf ("%s" GPE_DIR_ TODO_FILE_, g_get_home_dir ())
 gchar *todo_file = NULL;
+GnomeVFSMonitorHandle *monitor_todo = NULL;
  
 #define _(String) dgettext (PACKAGE,String)
 
 #define WIDTH 300
 #define HEIGHT 400
+
+gboolean is_visible;
 
 GtkWidget *mainwidget = NULL;
 GtkWidget *mainvbox = NULL;
@@ -109,8 +115,6 @@ int todocount;
 
 guint current_timer = 0;
 
-time_t calendar_mtime = 0;
-time_t todo_mtime = 0;
 EventDB *event_db = NULL;
 
 static void reset_globals() {
@@ -123,6 +127,8 @@ static void reset_globals() {
      freed, not here */
 
   g_message("%s",__func__);
+
+  is_visible = TRUE;
 
   last_gui_update = 0;
 
@@ -142,9 +148,6 @@ static void reset_globals() {
 
   lastGPEDBupdate[0] = '\0';
   todocount = 0;
-
-  calendar_mtime = 0;
-  todo_mtime = 0;
 }
 
 void printTime(gchar * comment) {
@@ -306,11 +309,6 @@ alarm_fired (EventDB *edb, Event *ev)
 static gboolean
 alarms_process_pending (gpointer data)
 {
-  struct stat statbuf2;
-  if (stat(todo_file,&statbuf2) == 0) {
-    todo_mtime = statbuf2.st_mtime;
-  }
-
   // Do nothing if Event DB not open
   if (event_db == NULL) return FALSE;
 
@@ -322,12 +320,6 @@ alarms_process_pending (gpointer data)
   for (i = list; i; i = g_slist_next (i))
     alarm_fired (event_db, EVENT (i->data));
   event_list_unref (list);
-
-  /* Remember modification time of database */
-  struct stat statbuf;
-  if (stat(calendar_file,&statbuf) == 0) {
-    calendar_mtime = statbuf.st_mtime;
-  }
 
   /* Don't run again.  */
   return FALSE;
@@ -343,7 +335,6 @@ gint show_todos(GtkWidget *vbox, gint count) {
 	time_t todaystart = time (NULL)-tm.tm_hour*3600-tm.tm_min*60-tm.tm_sec;
 	todocount=0;
 	
-	if (!todo_file) todo_file = TODO_FILE();
 	if (todo_db_start () != 0) {
 	  g_message("todo_db_start returned error");
 	  return count;
@@ -686,7 +677,6 @@ gint show_events(GtkWidget *vbox, gint count) {
 	g_message("endtime: %s", buf);*/
 	
 	// Note we re-open the event DB (if we can find it), even if we are not showing appointments
-	if (!calendar_file) calendar_file = CALENDAR_FILE();
 	if (event_db) {
 	  g_object_unref(event_db);
 	  event_db = NULL;
@@ -887,24 +877,6 @@ gint update_clock(gpointer data) {
 		strftime (lastGPEDBupdate, sizeof(lastGPEDBupdate), "%m%d", &tm);	
 		printTime("new Day");
 		refresh_now = TRUE;
-	}
-
-	// Check if the Calendar database has been updated
-	if (!calendar_file) calendar_file = CALENDAR_FILE();
-	struct stat statbuf;
-	if (stat(calendar_file,&statbuf) == 0) {
-	  if (statbuf.st_mtime > calendar_mtime) {
-	    refresh_now = TRUE;
-	  }
-	}
-
-	// Check if the Todo database has been updated
-	if (!todo_file) todo_file = TODO_FILE();
-	struct stat statbuf2;
-	if (stat(todo_file,&statbuf2) == 0) {
-	  if (statbuf2.st_mtime > todo_mtime) {
-	    refresh_now = TRUE;
-	  }
 	}
 
 	if (refresh_now==TRUE) {
@@ -1125,6 +1097,28 @@ static void on_menuitem_settings(GtkWidget *widget, gpointer user_data)
 	//g_free(dialog);
 }
 
+static void calendar_changed (GnomeVFSMonitorHandle *handle,
+			      const gchar *monitor_uri,
+			      const gchar *info_uri,
+			      GnomeVFSMonitorEventType event_type,
+			      gpointer user_data)
+{
+  g_message("%s",__func__);
+  refresh_now = TRUE; // Tells update_clock to also do show_all
+  update_clock(NULL);
+}
+
+static void todo_changed (GnomeVFSMonitorHandle *handle,
+			      const gchar *monitor_uri,
+			      const gchar *info_uri,
+			      GnomeVFSMonitorEventType event_type,
+			      gpointer user_data)
+{
+  g_message("%s",__func__);
+  refresh_now = TRUE; // Tells update_clock to also do show_all
+  update_clock(NULL);
+}
+
 
 /*
 gboolean focus_in(GtkWidget *widget, GdkEventFocus *event, gpointer user_data) {
@@ -1258,6 +1252,10 @@ void *
  	//bind_textdomain_codeset(PACKAGE, "UTF-8");
  	//textdomain(PACKAGE);
 	
+	calendar_file = CALENDAR_FILE();
+	gnome_vfs_monitor_add (&monitor_calendar, calendar_file, GNOME_VFS_MONITOR_FILE, calendar_changed, NULL);
+	todo_file = TODO_FILE();
+	gnome_vfs_monitor_add (&todo_calendar, todo_file, GNOME_VFS_MONITOR_FILE, todo_changed, NULL);
 	
 	osso = osso_initialize ("gpesummary", "0.7.2", FALSE, NULL);
     	if (!osso) {
@@ -1319,6 +1317,11 @@ void
 	if (current_timer) g_source_destroy(g_main_context_find_source_by_id(NULL,current_timer));
 	current_timer = 0;
 	g_message("hildon_home_applet_lib_deinitialize 6");
+	if (monitor_calendar) gnome_vfs_monitor_cancel(monitor_calendar);
+	monitor_calendar = NULL;
+	if (monitor_todo) gnome_vfs_monitor_cancel(monitor_todo);
+	monitor_todo = NULL;
+
 	/*if (app) {
 		g_free (app);
 		app = NULL;
@@ -1392,22 +1395,22 @@ G_BEGIN_DECLS
 typedef struct _GpeSummaryPlugin GpeSummaryPlugin;
 typedef struct _GpeSummaryPluginClass GpeSummaryPluginClass;
 
-#define GPE_SUMMARY_TYPE_HOME_PLUGIN   (gpe_summary_home_plugin_get_type ())
+#define GPE_SUMMARY_TYPE_PLUGIN   (gpe_summary_plugin_get_type ())
 
-#define GPE_SUMMARY_HOME_PLUGIN(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
-                        GPE_SUMMARY_TYPE_HOME_PLUGIN, GpeSummaryHomePlugin))
+#define GPE_SUMMARY_PLUGIN(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
+                        GPE_SUMMARY_TYPE_PLUGIN, GpeSummaryPlugin))
 
-#define GPE_SUMMARY_HOME_PLUGIN_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), \
-                        GPE_SUMMARY_TYPE_HOME_PLUGIN,  GpeSummaryHomePluginClass))
+#define GPE_SUMMARY_PLUGIN_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), \
+                        GPE_SUMMARY_TYPE_PLUGIN,  GpeSummaryPluginClass))
 
-#define GPE_SUMMARY_IS_HOME_PLUGIN(obj)  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), \
-                        GPE_SUMMARY_TYPE_HOME_PLUGIN))
+#define GPE_SUMMARY_IS_PLUGIN(obj)  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), \
+                        GPE_SUMMARY_TYPE_PLUGIN))
  
-#define GPE_SUMMARY_IS_HOME_PLUGIN_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), \
-                        GPE_SUMMARY_TYPE_HOME_PLUGIN))
+#define GPE_SUMMARY_IS_PLUGIN_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), \
+                        GPE_SUMMARY_TYPE_PLUGIN))
 
-#define GPE_SUMMARY_HOME_PLUGIN_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), \
-                        GPE_SUMMARY_TYPE_HOME_PLUGIN,  GpeSummaryHomePluginClass))
+#define GPE_SUMMARY_PLUGIN_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), \
+                        GPE_SUMMARY_TYPE_PLUGIN,  GpeSummaryPluginClass))
  
 struct _GpeSummaryPlugin
 {
@@ -1419,7 +1422,7 @@ struct _GpeSummaryPluginClass
     HDHomePluginItemClass parent_class;
 };
  
-GType gpe_summary_home_plugin_get_type(void);
+GType gpe_summary_plugin_get_type(void);
 
 G_END_DECLS
 
@@ -1430,10 +1433,35 @@ HD_DEFINE_PLUGIN_MODULE (GpeSummaryPlugin, gpe_summary_plugin,      HD_TYPE_HOME
 /* Do updates for this minute */
 static gboolean home_applet_timer (gpointer data)
 {
-  update_clock(NULL);
+  if (is_visible) {
+    update_clock(NULL);
+    /* Repeat the timer */
+    return TRUE;
+  } else {
+    /* Cancel the timer */
+    g_message("%s: cancelling timer",__func__);
+    current_timer = 0;
+    return FALSE;
+  }
+}
 
-  /* Repeat the timer */
-  return TRUE;
+static void restart_timer(GpeSummaryPlugin *desktop_plugin)
+{
+  current_timer = hd_home_plugin_item_heartbeat_signal_add (
+		HD_HOME_PLUGIN_ITEM(desktop_plugin), 60, 70, 
+		(GSourceFunc)home_applet_timer, NULL, NULL);
+}
+
+static void on_desktop_changed (GObject *gobject, GParamSpec *pspec, gpointer user_data)
+{
+  g_object_get(gobject, "is-on-current-desktop", &is_visible, NULL);
+  g_message("%s: new visibility = %d",__func__,is_visible);
+
+  if (is_visible) {
+    update_clock(NULL);
+    /* Restart the timer if necesary */
+    if (current_timer == 0) restart_timer(GPE_SUMMARY_PLUGIN(gobject));
+  }
 }
 
 static DBusConnection *dbus_system, *dbus_session;
@@ -1445,6 +1473,14 @@ gpe_summary_plugin_init (GpeSummaryPlugin *desktop_plugin)
 
   g_message("%s",__func__);
   reset_globals();
+
+  g_object_get(G_OBJECT(desktop_plugin), "is-on-current-desktop", &is_visible, NULL);
+  g_signal_connect(G_OBJECT(desktop_plugin), "notify::is-on-current-desktop", G_CALLBACK(on_desktop_changed), NULL);
+
+  calendar_file = CALENDAR_FILE();
+  gnome_vfs_monitor_add (&monitor_calendar, calendar_file, GNOME_VFS_MONITOR_FILE, calendar_changed, NULL);
+  todo_file = TODO_FILE();
+  gnome_vfs_monitor_add (&monitor_todo, todo_file, GNOME_VFS_MONITOR_FILE, todo_changed, NULL);
 
   const gchar *file = hd_home_plugin_item_get_dl_filename(HD_HOME_PLUGIN_ITEM(desktop_plugin));
   g_message("plugin loaded from %s", file);
@@ -1505,9 +1541,7 @@ gpe_summary_plugin_init (GpeSummaryPlugin *desktop_plugin)
 	update_clock(NULL); //->Also shows all because it runs show_all()
 	gtk_widget_show_all(GTK_WIDGET(mainwidget));
 
-	current_timer = hd_home_plugin_item_heartbeat_signal_add (
-		HD_HOME_PLUGIN_ITEM(desktop_plugin), 60, 70, 
-		(GSourceFunc)home_applet_timer, NULL, NULL);
+	restart_timer(desktop_plugin);
 	if (!current_timer)
 	  {
 	    g_warning("hd_home_plugin_item_heartbeat_signal_add failed");
@@ -1566,6 +1600,15 @@ gpe_summary_plugin_class_finalize (GpeSummaryPluginClass *class)
   g_message("hildon_home_applet_lib_deinitialize 5b");
   todo_db_stop ();
   g_message("hildon_home_applet_lib_deinitialize 6");
+  if (monitor_calendar) gnome_vfs_monitor_cancel(monitor_calendar);
+  monitor_calendar = NULL;
+  if (calendar_file) g_free(calendar_file);
+  calendar_file = NULL;
+  if (monitor_todo) gnome_vfs_monitor_cancel(monitor_todo);
+  monitor_todo = NULL;
+  if (todo_file) g_free(todo_file);
+  todo_file = NULL;
+  g_message("hildon_home_applet_lib_deinitialize 7");
 
 
   if (log_handler_id) g_log_remove_handler(G_LOG_DOMAIN, log_handler_id);

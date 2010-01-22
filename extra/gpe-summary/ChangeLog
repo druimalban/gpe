@@ -1,3 +1,17 @@
+2010-01-22  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpesummary.c: Replace polling for file mtime changes
+	with GnomeVFSMonitor to spot todo or event database
+	changes.
+	(calendar_changed, todo_changed): Callback functions for GnomeVFSMonitor.
+	Reload databases.
+	(home_applet_timer): Only update clock if widget is visible.
+	Cancel timer if not visible.
+	(restart_timer): Move timer start into re-usable function.
+	(on_desktop_changed): Track widget visibility state.
+	Update clock and restart timer if now visible.
+	(GPE_SUMMARY_PLUGIN_CLASS): Correct typos in plugin class definitions.
+
 2010-01-11  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c: Replace scrolled_window with widget_window.
