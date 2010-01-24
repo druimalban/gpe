@@ -1255,7 +1255,7 @@ void *
 	calendar_file = CALENDAR_FILE();
 	gnome_vfs_monitor_add (&monitor_calendar, calendar_file, GNOME_VFS_MONITOR_FILE, calendar_changed, NULL);
 	todo_file = TODO_FILE();
-	gnome_vfs_monitor_add (&todo_calendar, todo_file, GNOME_VFS_MONITOR_FILE, todo_changed, NULL);
+	gnome_vfs_monitor_add (&monitor_todo, todo_file, GNOME_VFS_MONITOR_FILE, todo_changed, NULL);
 	
 	osso = osso_initialize ("gpesummary", "0.7.2", FALSE, NULL);
     	if (!osso) {

@@ -1,3 +1,8 @@
+2010-01-24  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpesummary.c (hildon_home_applet_lib_initialize): Fix typo in GnomeVFSMonitor
+	setup for Maemo 4 applet
+
 2010-01-22  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c: Replace polling for file mtime changes
