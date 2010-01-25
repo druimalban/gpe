@@ -57,8 +57,6 @@
 #  include <hildon/hildon-program.h>
 #  include <hildon/hildon-window.h>
 #  include <hildon/hildon-file-chooser-dialog.h>
-#  include <hildon/hildon-button.h>
-#  include <hildon/hildon-check-button.h>
 # else
 #  include <hildon-widgets/hildon-app.h>
 #  include <hildon-widgets/hildon-appview.h>
@@ -66,6 +64,8 @@
 # endif /* HAVE_HILDON_VERSION */
 
 # if HAVE_HILDON_VERSION >= 202
+#  include <hildon/hildon-button.h>
+#  include <hildon/hildon-check-button.h>
 #  include <hildon/hildon-defines.h>
 #  include <hildon/hildon-picker-button.h>
 # endif
@@ -2520,7 +2520,7 @@ update_library_count_flush (gpointer user_data)
 {
   Starling *st = user_data;
 
-  assert (st->library_tab_update_source);
+  g_assert (st->library_tab_update_source);
 
   int count = play_list_count (st->library);
   int total = play_list_total (st->library);
