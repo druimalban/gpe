@@ -1528,9 +1528,13 @@ toggle_fullscreen (gpointer user_data, GtkWidget *menuitem)
   hildon_appview_set_fullscreen (HILDON_APPVIEW (user_data),
 				 gtk_check_menu_item_get_active (menuitem));
 # else
-  if (GTK_IS_CHECK_MENU_ITEM (menuitem)
-      ? gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem))
-      : hildon_check_button_get_active (HILDON_CHECK_BUTTON (menuitem)))
+  if (
+#  ifdef HAVE_HILDON_APP_MENU
+      hildon_check_button_get_active (HILDON_CHECK_BUTTON (menuitem))
+#  else
+      gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (menuitem))
+#  endif
+      )
     gtk_window_fullscreen(GTK_WINDOW(user_data));
   else
     gtk_window_unfullscreen(GTK_WINDOW(user_data));

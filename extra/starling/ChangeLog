@@ -1,3 +1,9 @@
+2010-01-26  Neal H. Walfield  <neal@gnu.org>
+
+	* src/starling.c (toggle_fullscreen) [HAVE_HILDON_APP_MENU]:
+	MENUITEM can only be a HildonCheckButton in this case.
+	Reported by Graham Cobb <g+770@cobb.uk.net>.
+
 2010-01-25  Neal H. Walfield  <neal@gnu.org>
 
 	* src/starling.c [HAVE_HILDON_VERSION >= 202]: Only include
