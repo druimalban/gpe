@@ -5,6 +5,9 @@ iter=0
 while [ $(xmodmap -pke | awk '{if ($2 == 36) { if ($4 == "Return") { print "good" } else {print "bad" }}}') = "bad" ] ; do
 	xmodmap - </etc/X11/default.xmodmap
 	let iter=iter+1
+	if [ $iter -eq 30 ]; then
+		exit 0
+	fi 
 done
 
 echo "modmap applied after $iter additional tries"

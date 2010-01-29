@@ -1,3 +1,5 @@
+2010-01-29  Florian Boor <florian@kernelconcepts.de>
+	* Avoid X startup to hang in keymap fixing loop.
 
 2009-11-20  Florian Boor <florian@kernelconcepts.de>
 	* Release 1.33
