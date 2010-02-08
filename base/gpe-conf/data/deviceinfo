@@ -417,3 +417,13 @@ Model = AT91SAM9M10-EK
 Type = Evaluation Kit
 Manufacturer = ATMEL
 Features = 0x21
+
+[Archos 7]
+ID = 47
+Pattern = ARCHOS G6L
+Name = Archos 7
+Model =
+Type = pad
+Manufacturer = Archos
+Features = 0x04
+

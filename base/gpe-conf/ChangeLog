@@ -1,3 +1,6 @@
+2010-02-08      Florian Boor <florian.boor@kernelconcepts.de>
+	* Device information for Archos 7
+
 2010-01-11      Florian Boor <florian.boor@kernelconcepts.de>
 	* Add device information for various Atmel boards. 
 	  Patch contributed by Nicolas Ferre <nicolas.ferre@atmel.com>
