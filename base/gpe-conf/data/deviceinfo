@@ -418,12 +418,58 @@ Type = Evaluation Kit
 Manufacturer = ATMEL
 Features = 0x21
 
-[Archos 7]
+[Archos 7 A7]
 ID = 47
 Pattern = ARCHOS G6L
-Name = Archos 7
+Name = Archos 7 (A7)
 Model =
 Type = pad
 Manufacturer = Archos
 Features = 0x04
+
+[Archos 7 S]
+ID = 48
+Pattern = ARCHOS G6S
+Name = Archos 7 (slim)
+Model =
+Type = pad
+Manufacturer = Archos
+Features = 0x04
+
+[Archos 7 H]
+ID = 49
+Pattern = ARCHOS G6H
+Name = Archos 7 (2.5" disk)
+Model =
+Type = pad
+Manufacturer = Archos
+Features = 0x04
+
+[Archos 7 3G]
+ID = 50
+Pattern = ARCHOS G6PLUS
+Name = Archos 7 (with 3G support)
+Model =
+Type = pad
+Manufacturer = Archos
+Features = 0x04
+
+[Archos 5 A5S]
+ID = 51
+Pattern = ARCHOS A5S
+Name = Archos 5 Flash Series
+Model =
+Type = pad
+Manufacturer = Archos
+Features = 0x04
+
+[Archos 5 A5H]
+ID = 52
+Pattern = ARCHOS A5H
+Name = Archos 5 Hard Drive Series
+Model =
+Type = pad
+Manufacturer = Archos
+Features = 0x04
+
 
