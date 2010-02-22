@@ -349,6 +349,14 @@ build_message (SoupSession **session, SoupMessage **msg,
 	       const char *method, struct info *info)
 {
   *session = soup_session_async_new ();
+#ifndef LIBSOUP22
+  if (getenv("GPE_SOUP_DEBUG")) {
+    SoupLogger *logger = soup_logger_new (SOUP_LOGGER_LOG_BODY, -1);
+    soup_session_add_feature (*session, logger);
+    g_object_unref(G_OBJECT(logger));
+  }
+#endif
+
   g_signal_connect (G_OBJECT (*session), "authenticate",
 		    G_CALLBACK (authenticate), info->ec);
 

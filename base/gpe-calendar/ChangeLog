@@ -1,3 +1,9 @@
+2010-02-22  Graham Cobb  <g+770@cobb.uk.net>
+
+	* calendar-update.c (build_message): Add Soup session logging if
+	GPE_SOUP_DEBUG is defined in the environment. Note that this may 
+	generate a lot of output and/or may expose sensitive data.
+
 2010-01-21  Graham Cobb  <g+770@cobb.uk.net>
 
 	* month_view.c (reload_events_hard): clamp start and end dates after
