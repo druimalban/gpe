@@ -252,8 +252,15 @@ mimedir_valarm_read_from_profile (MIMEDirVAlarm *valarm, MIMEDirProfile *profile
 			return FALSE;
 		}
 		if (duration == 0  && repeat > 0) {
-			g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_ATTRIBUTE_MISSING, MIMEDIR_PROFILE_ERROR_ATTRIBUTE_MISSING_STR, "DURATION");
-			return FALSE;
+		  /* HACK - some buggy programs generate repeating alarms with a duration of 0,
+		     even though the RFC says "positive" (not "non-negative").  We have no way
+		     to distinguish a duration of 0 from a missing duration so the
+		     following error is disabled and replaced with a printed warning */
+
+		  /* g_set_error (error, MIMEDIR_PROFILE_ERROR, MIMEDIR_PROFILE_ERROR_ATTRIBUTE_MISSING, MIMEDIR_PROFILE_ERROR_ATTRIBUTE_MISSING_STR, "DURATION");
+		     return FALSE; */
+
+		  g_printerr (_("Repeating alarm DURATION is either missing or 0 -- error ignored.\n"));
 		}
 	}
 

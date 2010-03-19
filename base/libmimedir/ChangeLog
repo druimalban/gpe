@@ -1,3 +1,9 @@
+2010-03-19  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-valarm.c (mimedir_valarm_read_from_profile): Allow duration of 0
+	when validating a repeated alarm.  This workround is necessary because Maemo 
+	Calendar can sometimes specify the duration as 0 when exporting some events.
+
 2010-01-20  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-datetime.c (mimedir_datetime_parse): Allow lower case z in time parsing
