@@ -2496,7 +2496,7 @@ mimedir_vcard_write_to_profile (MIMEDirVCard *vcard)
 
 	priv = vcard->priv;
 
-	if (priv->changed || priv->revision->year == 0)
+	if (priv->changed || (!priv->revision) || priv->revision->year == 0)
 		mimedir_vcard_update_revision (vcard);
 
 	profile = mimedir_profile_new ("VCARD");

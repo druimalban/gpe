@@ -1,3 +1,7 @@
+2010-06-22  Graham Cobb  <g+770@cobb.uk.net>
+
+	* mimedir/mimedir-vcard.c (mimedir_vcard_write_to_profile): Tolerate missing revision data.
+
 2010-03-19  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-valarm.c (mimedir_valarm_read_from_profile): Allow duration of 0
