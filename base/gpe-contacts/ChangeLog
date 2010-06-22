@@ -1,3 +1,19 @@
+2010-06-22  Graham Cobb  <g+770@cobb.uk.net>
+
+	* main-hildon.c (show_help_and_exit): Add show_help_and_exit.
+	(export_one_file): Add export_one_file.
+	(main): Add -e and -h options, remove -n option (not used in Hildon)
+
+	* main.c (show_help_and_exit): Add show_help_and_exit.
+	(export_one_file): Add export_one_file.
+	(main): Add -e and -h options
+
+	* export.h: Add export_db
+
+	* export.c (export_db): Add export_db
+
+	* import-vcard.h: add errors for export_db 
+
 2010-01-21  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (main): Initialise categories subsystem before attempting an import.

@@ -134,6 +134,18 @@ t_filter filter[]= {
 gint num_filter = sizeof(filter) / sizeof(t_filter);
 gint current_filter = 0;
 
+static void
+show_help_and_exit (void)
+{
+  g_print ("\nUsage: gpe-contacts [-hv] [-i <file>] [-e <file>]\n\n");
+  g_print ("-h          : Show this help\n");
+  g_print ("-v          : Edit owner's vcard\n");
+  g_print ("-i <file>   : Import a given file and exit\n");
+  g_print ("-e <file>   : Write contacts from database to vcf file using the given filename and exit\n");
+  g_print ("Without command line option the GUI is launched\n\n");    
+  exit (EXIT_SUCCESS);
+}
+
 #if MAEMO_VERSION_MAJOR < 5
 static void
 toggle_fullscreen (GtkCheckMenuItem *menuitem, gpointer user_data)
@@ -1368,6 +1380,24 @@ import_one_file(const gchar *filename, GError **error)
   return result;
 }
 
+static int 
+export_one_file(const gchar *filename, GError **error)
+{
+  int result;
+
+  result = contacts_db_open (FALSE);
+  if (result != 0) {
+    g_set_error(error, GPECONTACT_IMPEXPORT_ERROR, GPECONTACT_IMPEXPORT_ERROR_DBOPEN, GPECONTACT_IMPEXPORT_ERROR_DBOPEN_STR);
+    return result;
+  }
+	
+  result = export_db(filename, error);
+
+  contacts_db_close();
+
+  return result;
+}
+
 static void
 on_import_vcard (GtkWidget *widget, gpointer main_window)
 {
@@ -1910,6 +1940,7 @@ main (int argc, char *argv[])
   gboolean edit_structure = TRUE;
   gboolean edit_vcard = FALSE;
   gchar *ifile = NULL;
+  gchar *efile = NULL;
   GtkTreePath *path;
   gint size_x, size_y;
   
@@ -1934,17 +1965,17 @@ main (int argc, char *argv[])
   mode_landscape = (size_x > size_y);
   
   /* check command line args */
-  while ((arg = getopt(argc, argv, "ni:v")) >= 0)
+  while ((arg = getopt(argc, argv, "hi:e:v")) >= 0)
   {
-    /* -n suppress edition of the structure in the preferences */
-    if (arg == 'n')
-      {
-        edit_structure = FALSE;
-        break;
-      }
+    /* -h show help */
+    if (arg == 'h')
+        show_help_and_exit ();
     /* -i imports a file */
     if (arg == 'i')
 		ifile = optarg;
+    /* -e exports a file */
+    if (arg == 'e')
+		efile = optarg;
     /* -v edits owner's vcard */
     if (arg == 'v')
       edit_vcard = TRUE;
@@ -1976,7 +2007,27 @@ main (int argc, char *argv[])
     }
   
   export_init ();
-    
+
+  /* are we called to export a file? */
+  if (efile)
+    {
+      int ret;
+      GError *error = NULL;
+      
+      ret =  export_one_file(efile, &error);
+      if (ret) 
+	{
+	  g_print(_("Could not export file %s: %s.\n"), efile, error->message);
+	  g_error_free(error);
+	  exit (EXIT_FAILURE);
+	}
+      else
+	{
+	  g_print(_("File %s exported sucessfully.\n"), efile);      
+	  exit (EXIT_SUCCESS);
+	}
+    }
+  
  /* we are called to edit a users personal vcard */
   if (edit_vcard)
     {

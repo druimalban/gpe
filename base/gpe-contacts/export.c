@@ -24,6 +24,7 @@
 #include <fcntl.h>
 
 #include "export.h"
+#include "import-vcard.h" /* For GPECONTACT_IMPEXPORT_ERROR codes */
 #include "main.h"
 #include "support.h"
 #include <gpe/contacts-db.h>
@@ -260,4 +261,45 @@ export_init (void)
   if (connection)
     dbus_connection_setup_with_g_main (connection, NULL);
 #endif /* USE_DBUS */
+}
+
+/* Note: export_db expects the database to be already open */
+int 
+export_db(const gchar *filename, GError **error)
+{
+  GIOChannel *channel;
+  GSList *list = NULL, *iter = NULL;
+
+  channel = g_io_channel_new_file (filename, "w", error);
+  if (!channel) return -2;
+
+  list = contacts_db_get_entries();
+  if (!list) {
+    g_io_channel_unref (channel);
+    g_set_error(error, GPECONTACT_IMPEXPORT_ERROR, GPECONTACT_IMPEXPORT_ERROR_DBREAD, GPECONTACT_IMPEXPORT_ERROR_DBREAD_STR);
+    return -3;
+  }
+
+  for (iter = list; iter; iter = iter->next)
+    {
+      struct contacts_person *p = iter->data, *fullp;
+      MIMEDirVCard *vcard;
+
+      fullp = contacts_db_get_by_uid(p->id);
+      contacts_discard_person (p);
+
+      vcard = vcard_from_tags (fullp->data);
+      contacts_discard_person (fullp);
+
+      if (!mimedir_vcard_write_to_channel (vcard, channel, error)) {
+	g_object_unref (vcard);
+	g_io_channel_unref (channel);
+	return -4;
+      }
+      g_object_unref (vcard);
+    }
+  g_slist_free (list);
+  g_io_channel_unref (channel);
+
+  return 0;
 }

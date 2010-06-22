@@ -5,3 +5,4 @@ void export_init (void);
 gboolean export_bluetooth_available (void);
 gboolean export_irda_available (void);
 gboolean save_to_file(guint uid, const gchar *filename, gboolean append);
+int export_db(const gchar *filename, GError **error);

@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2001, 2002, 2003, 2004 Philip Blundell <philb@gnu.org>
  *               2004, 2005, 2006, 2008 Florian Boor <florian@kernelconcepts.de>
+ * Copyright (C) 2010 Graham R. Cobb <g+gpe@cobb.uk.net>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -68,6 +69,19 @@ struct gpe_icon my_icons[] = {
   {"icon", PREFIX "/share/pixmaps/gpe-contacts.png" },
   {NULL, NULL}
 };
+
+static void
+show_help_and_exit (void)
+{
+  g_print ("\nUsage: gpe-contacts [-hnv] [-i <file>] [-e <file>]\n\n");
+  g_print ("-h          : Show this help\n");
+  g_print ("-n          : Suppress editing layout\n");
+  g_print ("-v          : Edit owner's vcard\n");
+  g_print ("-i <file>   : Import a given file and exit\n");
+  g_print ("-e <file>   : Write contacts from database to vcf file using the given filename and exit\n");
+  g_print ("Without command line option the GUI is launched\n\n");    
+  exit (EXIT_SUCCESS);
+}
 
 static void
 menu_do_edit (void)
@@ -1295,6 +1309,25 @@ import_one_file(const gchar *filename, GError **error)
 
 }
 
+static int 
+export_one_file(const gchar *filename, GError **error)
+{
+  int result;
+
+  result = contacts_db_open (FALSE);
+  if (result != 0) {
+    g_set_error(error, GPECONTACT_IMPEXPORT_ERROR, GPECONTACT_IMPEXPORT_ERROR_DBOPEN, GPECONTACT_IMPEXPORT_ERROR_DBOPEN_STR);
+    return result;
+  }
+	
+  result = export_db(filename, error);
+
+  contacts_db_close();
+
+  return result;
+}
+
+
 static void
 on_import_vcard (GtkWidget *widget, gpointer data)
 {
@@ -1702,6 +1735,7 @@ main (int argc, char *argv[])
   gboolean edit_structure = TRUE;
   gboolean edit_vcard = FALSE;
   gchar *ifile = NULL;
+  gchar *efile = NULL;
   GtkTreePath *path;
   gint size_x, size_y;
     
@@ -1726,9 +1760,12 @@ main (int argc, char *argv[])
   mode_landscape = (size_x > size_y);
   
   /* check command line args */
-  while ((arg = getopt(argc, argv, "ni:v")) >= 0)
+  while ((arg = getopt(argc, argv, "hni:e:v")) >= 0)
   {
-    /* -n suppress edition of the structure in the preferences */
+    /* -h show help */
+    if (arg == 'h')
+        show_help_and_exit ();
+    /* -n suppress editing of the layout in the preferences */
     if (arg == 'n')
       {
         edit_structure = FALSE;
@@ -1737,6 +1774,9 @@ main (int argc, char *argv[])
     /* -i imports a file */
     if (arg == 'i')
 		ifile = optarg;
+    /* -e exports a file */
+    if (arg == 'e')
+		efile = optarg;
     /* -v edits owner's vcard */
     if (arg == 'v')
       edit_vcard = TRUE;
@@ -1769,6 +1809,28 @@ main (int argc, char *argv[])
   
   export_init ();
 
+  /* are we called to export a file? */
+  if (efile)
+    {
+      int ret;
+      GError *error = NULL;
+      
+      ret =  export_one_file(efile, &error);
+      if (ret) 
+	{
+	  g_print(_("Could not export file %s: %s.\n"), efile, error->message);
+	  g_error_free(error);
+	  contacts_db_close();
+	  exit (EXIT_FAILURE);
+	}
+      else
+	{
+	  g_print(_("File %s exported sucessfully.\n"), efile);      
+	  contacts_db_close();
+	  exit (EXIT_SUCCESS);
+	}
+    }
+  
   /* we are called to edit a users personal vcard */
   if (edit_vcard)
     {

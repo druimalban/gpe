@@ -24,10 +24,18 @@ extern int import_vcard (const gchar *filename, GError **error);
 
 typedef enum {
   GPECONTACT_IMPEXPORT_ERROR_COMPER,
-  GPECONTACT_IMPEXPORT_ERROR_DBOPEN
+  GPECONTACT_IMPEXPORT_ERROR_DBOPEN,
+  GPECONTACT_IMPEXPORT_ERROR_FILOPEN,
+  GPECONTACT_IMPEXPORT_ERROR_DBREAD,
+  GPECONTACT_IMPEXPORT_ERROR_FILEWR,
+  GPECONTACT_IMPEXPORT_ERROR_FILCLS
 } GpecontactImpexportError;
 
 #define GPECONTACT_IMPEXPORT_ERROR_COMPER_STR _("cannot save contact to database")
 #define GPECONTACT_IMPEXPORT_ERROR_DBOPEN_STR _("cannot open contacts database")
+#define GPECONTACT_IMPEXPORT_ERROR_FILOPEN_STR _("cannot create file")
+#define GPECONTACT_IMPEXPORT_ERROR_DBREAD_STR _("cannot read contacts from database")
+#define GPECONTACT_IMPEXPORT_ERROR_FILEWR_STR _("cannot write contact to file")
+#define GPECONTACT_IMPEXPORT_ERROR_FILCLS_STR _("cannot close file")
 
 #endif /* _IMPORT-VCARD_H */
