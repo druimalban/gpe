@@ -1,3 +1,7 @@
+2010-08-16  Florian Boor <florian@kernelconcepts.de>
+	* Sort KDrive parameters and RGB order fixes. (Patch from
+	  OpenEmbedded)
+
 2010-01-29  Florian Boor <florian@kernelconcepts.de>
 	* Avoid X startup to hang in keymap fixing loop.
 
