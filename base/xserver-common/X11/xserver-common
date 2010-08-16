@@ -168,15 +168,20 @@ else
             ARGS="$ARGS -screen ${SCREEN_SIZE}"
             DPI="100" ;;
         "palm_treo_650")
-                DPI="181"
+            DPI="181"
             ARGS="$ARGS -screen 320x320 -hide-cursor" ;;
         "glofiish_m800")
-                DPI="285"
+            DPI="285"
             ARGS="$ARGS -screen ${SCREEN_SIZE} -hide-cursor vt1" ;;
         "freescale_mx21ads")
         # That's what /proc/cpuinfo shows as hardware on the chumby
-                DPI="121"
+            DPI="121"
             ARGS="$ARGS -screen 320x240 -hide-cursor" ;;
+        "telechips_tcc8900_demo_board")
+        # This is what we get on a SmartQV7
+            DPI="121"
+            KDRIVEARGS=" -fb /dev/fb2" ;;
+            ARGS="$ARGS -screen ${SCREEN_SIZE} -hide-cursor " ;;
 
             # this is to rotate X display properly, tested with display TX09D71VM1CCA
             ronetix*pm9261*  | ronetix*pm9263*)
