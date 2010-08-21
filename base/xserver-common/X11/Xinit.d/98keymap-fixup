@@ -3,7 +3,7 @@
 # kdrive 1.4 and up have a heisenbug where it may take multiple tries to apply a modmap
 iter=0
 while [ $(xmodmap -pke | awk '{if ($2 == 36) { if ($4 == "Return") { print "good" } else {print "bad" }}}') = "bad" ] ; do
-	xmodmap - </etc/X11/default.xmodmap
+	xmodmap - </etc/X11/xmodmap/default.xmodmap
 	let iter=iter+1
 	if [ $iter -eq 30 ]; then
 		exit 0

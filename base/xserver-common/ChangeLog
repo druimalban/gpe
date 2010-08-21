@@ -1,3 +1,6 @@
+2010-08-22  Florian Boor <florian@kernelconcepts.de>
+	* Fix xmodmap install script
+
 2010-08-16  Florian Boor <florian@kernelconcepts.de>
 	* Sort KDrive parameters and RGB order fixes. (Patch from
 	  OpenEmbedded)
