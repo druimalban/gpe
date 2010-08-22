@@ -180,7 +180,7 @@ else
         "telechips_tcc8900_demo_board")
         # This is what we get on a SmartQV7
             DPI="121"
-            KDRIVEARGS=" -fb /dev/fb2 -hide-cursor " ;;
+            KDRIVEARGS=" -fb /dev/fb2 -hide-cursor "
             ARGS="$ARGS -screen ${SCREEN_SIZE} " ;;
 
             # this is to rotate X display properly, tested with display TX09D71VM1CCA
