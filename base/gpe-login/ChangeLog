@@ -1,3 +1,6 @@
+2010-08-30 Florian Boor <florian@kernelconcepts.de>
+	* Filter HAL and DBus users 
+
 2009-04-15 Ned Ludd  <solar@gentoo.org>
 	* gpe-base/gpe-login: gpe-logout.c Makefile.am 
 	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/

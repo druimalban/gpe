@@ -347,6 +347,10 @@ slurp_passwd (GtkWidget *menu)
 
       if (pw->pw_uid < 100 || pw->pw_uid >= 65534)
 	continue;
+      if (!strcmp (pw->pw_name, "messagebus"))
+	continue;
+      if (!strcmp (pw->pw_name, "haldaemon"))
+	continue;
 
       have_users = TRUE;
       name = g_strdup (pw->pw_name);
