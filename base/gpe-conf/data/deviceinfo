@@ -1,4 +1,4 @@
-# Keep devices.h in sync with this file
+# Keep device.h in sync with this file
 
 #dummy entry
 [none]
@@ -472,4 +472,30 @@ Type = pad
 Manufacturer = Archos
 Features = 0x04
 
+[Ka-Ro TX25]
+ID = 53
+Pattern = Ka-Ro electronics TX25 module (Freescale i.MX25)
+Name = Ka-Ro TX25 module
+Model = Device based on Ka-Ro TX25
+Type = eval
+Manufacturer = Ka-Ro electronics
+Features = 0x21
+
+[Ka-Ro TX27]
+ID = 54
+Pattern = Ka-Ro electronics TX27 module (Freescale i.MX27)
+Name = Ka-Ro TX27 module
+Model = Device based on Ka-Ro TX27
+Type = eval
+Manufacturer = Ka-Ro electronics
+Features = 0x21
+
+[Ka-Ro TX51]
+ID = 55
+Pattern = Ka-Ro TX51 module
+Name = Ka-Ro TX51 module
+Model = Device based on Ka-Ro TX51
+Type = eval
+Manufacturer = Ka-Ro electronics
+Features = 0x21
 

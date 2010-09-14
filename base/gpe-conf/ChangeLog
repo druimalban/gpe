@@ -1,3 +1,7 @@
+2010-09-14      Florian Boor <florian.boor@kernelconcepts.de>
+	* Several sysinfo fixes, add display of µCross distribution
+	* Device information for some Ka-Ro boards
+
 2010-02-08      Florian Boor <florian.boor@kernelconcepts.de>
 	* Device information for Archos 5 and 7 series
 
