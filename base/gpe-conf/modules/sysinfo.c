@@ -1,7 +1,8 @@
 /*
  * gpe-conf
  *
- * Copyright (C) 2003 - 2005, 2006, 2007  Florian Boor <florian.boor@kernelconcepts.de>
+ * Copyright (C) 2003 - 2005, 2006, 2007, 2010  
+ * Florian Boor <florian.boor@kernelconcepts.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,6 +51,7 @@
 #define FAMILIAR_VINFO 	"/etc/familiar-version"
 #define OPENZAURUS_VINFO 	"/etc/openzaurus-version"
 #define ANGSTROM_VINFO 	"/etc/angstrom-version"
+#define MUCROSS_VINFO 	"/etc/mucross-version"
 #define DEBIAN_VINFO 	"/etc/debian_version"
 #define FAMILIAR_TIME 	"/etc/familiar-timestamp"
 #define OE_VERSION 		"/etc/version"
@@ -211,8 +213,8 @@ get_distribution_version()
 	/* check for Debian */
 	if (g_file_get_contents(DEBIAN_VINFO, &tmp, &len, NULL))
 	{
-    	/*TRANSLATORS: "Debian" is the name of a linux distribution.*/
-		result = g_strdup_printf("%s %s", _("Debian"), g_strstrip(tmp));
+    	/*TRANSLATORS: "Debian" and "Ubuntu" are names of linux distributions.*/
+		result = g_strdup_printf("%s %s", _("Debian / Ubuntu"), g_strstrip(tmp));
 		g_free(tmp);
 	 	return result;
 	}
@@ -228,6 +230,17 @@ get_distribution_version()
 	 	return result;
 	}
 	
+	/* check for µCross */
+	if (g_file_get_contents(MUCROSS_VINFO, &tmp, &len, NULL))
+	{
+		if (strchr(tmp,'\n'))
+			strchr(tmp,'\n')[0] = 0;
+    	/*TRANSLATORS: "µCross" is the name of a linux distribution.*/
+		result = g_strdup_printf("%s %s", _("µCross"), g_strstrip(strstr(tmp, " ")));
+		g_free(tmp);
+	 	return result;
+	}
+
 	/* check for OpenEmbedded */
 	if (g_file_get_contents(OE_VERSION,&tmp,&len,&err))
 	{
@@ -270,13 +283,14 @@ get_distribution_time()
 	/* OpenEmbedded */
 	if (g_file_get_contents(OE_VERSION,&tmp,&len,&err))
 	{
-		if (strchr(tmp,'\n'))
-			strchr(tmp,'\n')[0] = 0;
-		if (strlen(tmp) >= 10)
+		if (strchr(tmp, '\n'))
+			strchr(tmp, '\n')[0] = 0;
+		if ((strlen(tmp) >= 10) && g_ascii_isdigit(tmp[0])) /* Openembedded has the date here only */
 			result = g_strdup_printf("%s %.4s-%.2s-%.2s\n%.2s:%.2s", 
 				_("Build"), &tmp[0], &tmp[4], &tmp[6], &tmp[8], &tmp[10]);
 		else
-			result = g_strdup_printf("%s %s",_("Build"),tmp);
+			result = g_strdup_printf("%s: %s", _("Build"), tmp);
+
 		g_free(tmp);
 	 	return (result);
 	}
@@ -285,7 +299,10 @@ get_distribution_time()
 		g_error_free(err);
 		err = NULL;
 	}
-	if (!result) result = g_strdup("");
+
+	if (!result) 
+		result = g_strdup(" ");
+
 	return result;
 }
 
@@ -511,6 +528,7 @@ Sysinfo_Build_Objects (int whichtab)
 	/* distribution section */
 	fv = get_distribution_version();
 	ft = get_distribution_time();
+
 	if (fv && ft) /* is a known one? */
 	{	
 		tw = gtk_label_new(" ");
