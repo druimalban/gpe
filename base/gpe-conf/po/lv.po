@@ -1,26 +1,24 @@
-# Dutch translations for gpe-conf.
-# Copyright (C) 2010 Free Software Foundation, Inc.
+# Latvian translation of gpe-conf.
+# Copyright (C) 2009 gpe-conf
 # This file is distributed under the same license as the gpe-conf package.
+# Rihards Prieditis <rprieditis@gmail.com>, 2009.
 #
-# Elros Cyriatan <cyriatan@fastmail.fm>, 2003, 2004.
-# Benno Schulenberg <benno@vertaalt.nl>, 2010.
 msgid ""
 msgstr ""
-"Project-Id-Version: gpe-conf 0.2.6\n"
+"Project-Id-Version: gpe-conf-0.2.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2007-06-05 16:51+0200\n"
-"PO-Revision-Date: 2010-07-24 13:47+0200\n"
-"Last-Translator: Benno Schulenberg <benno@vertaalt.nl>\n"
-"Language-Team: Dutch <vertaling@vrijschrift.org>\n"
+"PO-Revision-Date: 2009-06-06 14:48+0200\n"
+"Last-Translator: Rihards Prieditis <rprieditis@gmail.com>\n"
+"Language-Team: Latvian <translation-team-lv@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.0\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #: ../applets.c:413
 msgid "Root access"
-msgstr "Root-toegang"
+msgstr "Root pieeja"
 
 #: ../applets.c:427
 msgid ""
@@ -28,189 +26,189 @@ msgid ""
 "accessible for user root.\n"
 "Please enter password."
 msgstr ""
-"Sommige opties zijn alleen voor\n"
-"gebruiker root toegankelijk.\n"
-"Voer diens wachtwoord in."
+"Dažas opcijas ir pieejams\n"
+"tikai root lietotājam.\n"
+"Lūdzu ievadiet paroli."
 
 #: ../applets.c:474 ../modules/screen/calibrate.c:32
 msgid "Sorry, wrong password."
-msgstr "Sorry, verkeerd wachtwoord."
+msgstr "Piedodiet, nepareiza parole."
 
 #: ../modules/battery.c:186 ../modules/battery.c:247
 msgid "unknown"
-msgstr "onbekend"
+msgstr "nezināms"
 
 #: ../modules/battery.c:195 ../modules/battery.c:255 ../modules/battery.c:356
 msgid "Status: high"
-msgstr "Status: hoog"
+msgstr "Status: augsts"
 
 #: ../modules/battery.c:198 ../modules/battery.c:258 ../modules/battery.c:360
 msgid "Status: low"
-msgstr "Status: laag"
+msgstr "Status: zems"
 
 #: ../modules/battery.c:201 ../modules/battery.c:261 ../modules/battery.c:364
 msgid "Status: critical"
-msgstr "Status: kritisch"
+msgstr "Status: kritisks"
 
 #: ../modules/battery.c:204 ../modules/battery.c:264 ../modules/battery.c:368
 msgid "Status: charging"
-msgstr "Status: opladend"
+msgstr "Status: lādējas"
 
 #: ../modules/battery.c:207 ../modules/battery.c:267
 msgid "Status: charge main"
-msgstr "Status: opladen hoofd"
+msgstr "Status: lādējas no galvenā"
 
 #: ../modules/battery.c:210
 msgid "Status: dead"
-msgstr "Status: dood"
+msgstr "StatusL miris"
 
 #: ../modules/battery.c:213 ../modules/battery.c:273 ../modules/battery.c:354
 msgid "Status: full"
-msgstr "Status: vol"
+msgstr "StatusL pilns"
 
 #: ../modules/battery.c:216 ../modules/battery.c:276
 msgid "Status: no battery"
-msgstr "Status: geen accu"
+msgstr "Status: nav baterijas"
 
 #: ../modules/battery.c:219 ../modules/battery.c:279 ../modules/battery.c:297
 #: ../modules/battery.c:371
 msgid "Status: unknown"
-msgstr "Status: onbekend"
+msgstr "Status: nezināms"
 
 #: ../modules/battery.c:224
 msgid "learning"
-msgstr "leren"
+msgstr "mācās"
 
 #: ../modules/battery.c:228 ../modules/battery.c:283
 msgid "Voltage"
-msgstr "Voltage"
+msgstr "Spriegums"
 
 #: ../modules/battery.c:232 ../modules/battery.c:287 ../modules/battery.c:388
 msgid "AC connected"
-msgstr "Netspanning aanwezig"
+msgstr "AC pievienots"
 
 #: ../modules/battery.c:234 ../modules/battery.c:289 ../modules/battery.c:390
 msgid "Lifetime"
-msgstr "Levensduur"
+msgstr "Dzīves ilgums"
 
 #: ../modules/battery.c:270
 msgid "Status: not installed"
-msgstr "Status: niet geïnstalleerd"
+msgstr "Status: nav instalēts"
 
 #: ../modules/battery.c:296
 msgid "not installed"
-msgstr "niet geïnstalleerd"
+msgstr "nav instalēts"
 
 #: ../modules/battery.c:298
 msgid "Voltage: unknown"
-msgstr "Voltage: onbekend"
+msgstr "Spriegums: nezināms"
 
 #: ../modules/battery.c:299
 msgid "Lifetime: unknown"
-msgstr "Levensduur: onbekend"
+msgstr "Dzīves ilgums: nezināms"
 
 #: ../modules/battery.c:346
 msgid "No battery"
-msgstr "Geen accu"
+msgstr "Nav baterijas"
 
 #: ../modules/battery.c:451
 msgid "Internal battery"
-msgstr "Interne accu"
+msgstr "Iekšējā baterija"
 
 #: ../modules/battery.c:455
 msgid "Jacket battery"
-msgstr "Jacket-accu"
+msgstr "Jakas baterija"
 
 #: ../modules/cfgfile.c:919
 msgid "No write access to network configuration."
-msgstr "Geen schrijftoegang tot netwerkinstellingen."
+msgstr "Nav rakstīšanas tiesības uz tīkla konfigurāciju"
 
 #: ../main-info.c:67
 #, c-format
 msgid "usage: gpe-info [page]\n"
-msgstr "Gebruik:  gpe-info [pagina]\n"
+msgstr "lietošana: gpe-ingo [lapa]\n"
 
 #: ../main-info.c:68
 #, c-format
 msgid "    Where page may be \"global\" (default)\n"
-msgstr "    Waar pagina \"global\" mag zijn (standaard)\n"
+msgstr "    Kur lapas var būt \"global\" (pēc noklusētā)\n"
 
 #: ../main-info.c:78 ../desktop/gpe-conf-sysinfo.desktop.in.h:2
 msgid "System Information"
-msgstr "Systeeminformatie"
+msgstr "Sistēmas informācija"
 
 #: ../main.c:89 ../modules/timeanddate.c:489
 msgid "Time"
-msgstr "Tijd"
+msgstr "Laiks"
 
 #: ../main.c:89
 msgid "Time and Date Setup"
-msgstr "Tijd en datum instellen"
+msgstr "Laika un datuma uzstādījumi"
 
 #: ../main.c:91
 msgid "Screen"
-msgstr "Scherm"
+msgstr "Ekrāns"
 
 #: ../main.c:91 ../desktop/gpe-conf-screen.desktop.in.h:1
 msgid "Screen Setup"
-msgstr "Scherminstellingen"
+msgstr "Ekrāna uzstādījumi"
 
 #: ../main.c:93
 msgid "Keys & Buttons"
-msgstr "Toetsen en knoppen"
+msgstr "Taustiņi un pogas"
 
 #: ../main.c:93
 msgid "Keys and Buttons Setup"
-msgstr "Toetsen en knoppen instellen"
+msgstr "Pogu un taustiņu uzstādījumi"
 
 #: ../main.c:95 ../modules/timeanddate.c:502
 msgid "Network"
-msgstr "Netwerk"
+msgstr "Tīkls"
 
 #: ../main.c:95 ../desktop/gpe-conf-network.desktop.in.h:1
 msgid "Network Setup"
-msgstr "Netwerkinstellingen"
+msgstr "Tīkla uzstādījumi"
 
 #: ../main.c:97 ../modules/theme.c:985
 msgid "Theme"
-msgstr "Thema"
+msgstr "Tēmas"
 
 #: ../main.c:97 ../modules/theme.c:987
 #: ../desktop/gpe-conf-theme.desktop.in.h:2
 msgid "Look and Feel"
-msgstr "Uiterlijk en gevoel"
+msgstr "Izskats un sajūtas"
 
 #: ../main.c:99
 msgid "Power"
-msgstr "Energie"
+msgstr "Enerģija"
 
 #: ../main.c:99
 msgid "Configure Power Saving"
-msgstr "Energiebesparing instellen"
+msgstr "Konfigurēt enerģijas taupīšanu"
 
 #: ../main.c:101
 msgid "Owner"
-msgstr "Eigenaar"
+msgstr "Īpašnieks"
 
 #: ../main.c:101 ../desktop/gpe-conf-ownerinfo.desktop.in.h:1
 msgid "Owner Information"
-msgstr "Eigenaarsinformatie"
+msgstr "Īpašnieka informācija"
 
 #: ../main.c:103
 msgid "Login"
-msgstr "Aanmelden"
+msgstr "Pieteikties"
 
 #: ../main.c:103 ../desktop/gpe-conf-login-setup.desktop.in.h:1
 msgid "Login Setup"
-msgstr "Aanmeldingsinstellingen"
+msgstr "Pieteikšanās uzstādījumi"
 
 #: ../main.c:105
 msgid "Users"
-msgstr "Gebruikers"
+msgstr "Lietotājs"
 
 #: ../main.c:105
 msgid "User Administration"
-msgstr "Gebruikersbeheer"
+msgstr "Lietotāja administrēšana"
 
 #: ../main.c:107
 msgid "GPE"
@@ -218,15 +216,15 @@ msgstr "GPE"
 
 #: ../main.c:107
 msgid "GPE Conf Administration"
-msgstr "GPE Conf-beheer"
+msgstr "GPE Konfigurācijas administrātors"
 
 #: ../main.c:109 ../desktop/gpe-conf-serial.desktop.in.h:2
 msgid "Serial Ports"
-msgstr "Seriële poorten"
+msgstr "Seriālais porti"
 
 #: ../main.c:109
 msgid "Serial Port Configuration"
-msgstr "Seriële poorten instellen"
+msgstr "Seriālo portu konfigurācija"
 
 #: ../main.c:111
 msgid "USB"
@@ -234,83 +232,83 @@ msgstr "USB"
 
 #: ../main.c:111
 msgid "USB Configuration"
-msgstr "USB-instellingen"
+msgstr "USB konfigurācija"
 
 #: ../main.c:113
 msgid "PCMCIA/CF Cards"
-msgstr "PCMCIA/CF-kaarten"
+msgstr "PCMCIA/CF kartes"
 
 #: ../main.c:113
 msgid "PCMCIA/CF Card Info and Config"
-msgstr "Info en instellingen van PCMCIA/CF-kaarten"
+msgstr "PCMCIA/CF karšu informācija un konfigurācija"
 
 #: ../main.c:115
 msgid "Sound"
-msgstr "Geluid"
+msgstr "Skaņa"
 
 #: ../main.c:115
 msgid "Sound Setup"
-msgstr "Geluidsinstellingen"
+msgstr "Skaņas uzstādījumi"
 
 #: ../main.c:117
 msgid "Task nameserver"
-msgstr "Taaknaamserver"
+msgstr "Uzdevumu vārduserveris"
 
 #: ../main.c:117
 msgid "Task for changing nameserver"
-msgstr "Taak voor wijzigen van naamserver"
+msgstr "Uzdevumi, lai mainītu vārduserveri"
 
 #: ../main.c:119
 msgid "Task sound"
-msgstr "Taakgeluid"
+msgstr "Uzdevumu skaņa"
 
 #: ../main.c:119
 msgid "Command line task saving/restoring sound settings."
-msgstr "Opslaan/herstellen van geluidsinstellingen via opdrachtregeltaak."
+msgstr "Komandlīnijas uzdevums saglabāt/atjaunot skaņas uzstādījumus."
 
 #: ../main.c:121
 msgid "Task background image"
-msgstr "Taakachtergrondafbeelding"
+msgstr "Uzdevuma fona attēls"
 
 #: ../main.c:121
 msgid "Only select background image."
-msgstr "Alleen een achtergrondafbeelding kiezen."
+msgstr "Tikai atlasītais fona attēls."
 
 #: ../main.c:123
 msgid "Task backlight setting"
-msgstr "Taakachtergrondlicht-instellingen"
+msgstr "Uzdevuma aizmugures gaismas uzstādījumi"
 
 #: ../main.c:123
 msgid "Change backlight power and brightness."
-msgstr "Achtergrondlichtsterkte en -helderheid wijzigen."
+msgstr "Mainīt aizmugures gaismas enerģiju un spilgtumu"
 
 #: ../main.c:144
 msgid "Settings saved"
-msgstr "Instellingen zijn opgeslagen"
+msgstr "Uzstādījumi saglabāti"
 
 #: ../main.c:339
 #, c-format
 msgid "'task_backlight' supports zero, one and two arguments.\n"
-msgstr "'task_backlight' staat nul of één of twee argumenten toe.\n"
+msgstr "'task_backlight' atbalsta nevienu, vienu un divus argumentus.\n"
 
 #: ../main.c:358
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
-msgstr "'task_nameserver' vereist een nieuwe (en slechts één) naamserver als argument.\n"
+msgstr "\"task_nameserver\" argumentā nepieciešamas jauns (un tikai viens) nosaukumserveris.\n"
 
 #: ../main.c:376
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
-msgstr "'task_sound' vereist 'save' of 'restore' als argument.\n"
+msgstr "'task_sound' argumentā nepieciešams  (s)ave/(r)estore.\n"
 
 #: ../main.c:444
 msgid "Warning: PCMCIA init failed."
-msgstr "Waarschuwing: PCMCIA-initialisatie is mislukt."
+msgstr "Uzmanību: PCMCIA inicializācija neizdevās."
 
 #: ../main.c:476
 #, c-format
 msgid "This mode is disabled, please try:\n"
-msgstr "Deze modus is uitgeschakeld; probeer:\n"
+msgstr "Šis režīms ir atspējots, lūdzu mēģiniet:\n"
 
 #: ../main.c:477
 #, c-format
@@ -320,13 +318,13 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 "\n"
-"gpe-conf [Appletnaam]\n"
-"waarbij Appletnaam een is van:\n"
+"gpe-conf [SīklietotnesNosaukums]\n"
+"kur SīklietotnesNosaukums ir iekš:\n"
 
 #: ../main.c:493
 #, c-format
 msgid "Applet %s unknown!\n"
-msgstr "Applet %s is onbekend!\n"
+msgstr "Sīklietotne %s nezināma!\n"
 
 #: ../main.c:494
 #, c-format
@@ -338,25 +336,25 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Gebruik: gpe-conf [Appletnaam]\n"
-"waarbij Appletnaam een is van:\n"
+"Lietot: gpe-conf [SīklietotnesNosaukums]\n"
+"kur SīklietotnesNosaukums ir iekš:\n"
 
 #: ../tools/interface.c:315 ../tools/interface.c:515 ../tools/interface.c:531
 #: ../tools/interface.c:651
 msgid "[NONE SET]"
-msgstr "[GEEN INGESTELD]"
+msgstr "[NEKAS NAV UZSTĀDĪTS]"
 
 #: ../tools/interface.c:706 ../tools/interface.c:1704
 msgid "UNSPEC"
-msgstr "NIET AANGEVEN"
+msgstr "UNSPEC"
 
 #: ../tools/interface.c:708
 msgid "UNIX Domain"
-msgstr "UNIX-domein"
+msgstr "UNIX domēns"
 
 #: ../tools/interface.c:711
 msgid "DARPA Internet"
-msgstr "DARPA-internet"
+msgstr "DARPA Internet"
 
 #: ../tools/interface.c:714
 msgid "IPv6"
@@ -397,71 +395,71 @@ msgstr "Ash"
 #: ../tools/interface.c:765
 #, c-format
 msgid "Too many address family arguments.\n"
-msgstr "Te veel adresfamilie-argumenten.\n"
+msgstr "Pārāk daudz adrešu ģimenes argumentu.\n"
 
 #: ../tools/interface.c:776
 #, c-format
 msgid "Unknown address family '%s'.\n"
-msgstr "Onbekende adresfamilie '%s'.\n"
+msgstr "Nezināma adreses ģimene \"%s\".\n"
 
 #: ../tools/interface.c:839
 #, c-format
 msgid "Please don't supply more than one address family.\n"
-msgstr "Geef niet meer dan één adresfamilie op.\n"
+msgstr "Lūdzu nenorādiet vairāk par vienu adreses ģiemeni.\n"
 
 #: ../tools/interface.c:966
 #, c-format
 msgid "No usable address families found.\n"
-msgstr "Geen bruikbare adresfamilies gevonden.\n"
+msgstr "Netika atrasta neviena lietojama adrešu ģimene.\n"
 
 #: ../tools/interface.c:1036
 #, c-format
 msgid "Warning: no inet socket available: %s\n"
-msgstr "Waarschuwing: er is geen inet-socket beschikbaar: %s\n"
+msgstr "Uzmanību: nav inet sokets pieejams: %s\n"
 
 #: ../tools/interface.c:1188
 #, c-format
 msgid "Warning: cannot open %s (%s). Limited output.\n"
-msgstr "Waarschuwing: kan %s niet openen (%s). Beperkte uitvoer.\n"
+msgstr "Uzmanību: nevar atvērt %s (%s). Ierobežots izvads.\n"
 
 #. Give better error message for this case.
 #: ../tools/interface.c:1431
 msgid "Device not found"
-msgstr "Apparaat is niet gevonden"
+msgstr "Ierīce nav atrasta"
 
 #: ../tools/interface.c:1435
 #, c-format
 msgid "%s: error fetching interface information: %s\n"
-msgstr "%s: fout bij verkrijgen van interface-informatie: %s\n"
+msgstr "%s: kļūda iegūstot interfeisu informāciju: %s\n"
 
 #: ../tools/interface.c:1609
 #, c-format
 msgid "You cannot start PPP with this program.\n"
-msgstr "U kunt PPP niet met dit programma starten.\n"
+msgstr "Jūs nevarat sākt PPP ar šo programu.\n"
 
 #: ../tools/interface.c:1703
 msgid "Local Loopback"
-msgstr "Lokale lus"
+msgstr "Vietējā cilpa"
 
 #: ../tools/interface.c:1706
 msgid "Serial Line IP"
-msgstr "IP van seriële lijn"
+msgstr "Serial Line IP"
 
 #: ../tools/interface.c:1707
 msgid "VJ Serial Line IP"
-msgstr "IP van VJ-seriële lijn"
+msgstr "VJ Serial Line IP"
 
 #: ../tools/interface.c:1708
 msgid "6-bit Serial Line IP"
-msgstr "IP van 6-bit seriële lijn"
+msgstr "6-bit Serial Line IP"
 
 #: ../tools/interface.c:1709
 msgid "VJ 6-bit Serial Line IP"
-msgstr "IP van VJ-6-bit seriële lijn"
+msgstr "VJ 6-bit Serial Line IP"
 
 #: ../tools/interface.c:1710
 msgid "Adaptive Serial Line IP"
-msgstr "IP van aanpassende seriële lijn"
+msgstr "Adaptive Serial Line IP"
 
 #: ../tools/interface.c:1713
 msgid "Ethernet"
@@ -469,7 +467,7 @@ msgstr "Ethernet"
 
 #: ../tools/interface.c:1719
 msgid "Fiber Distributed Data Interface"
-msgstr ""
+msgstr "Fiber Distributed Data Interface"
 
 #: ../tools/interface.c:1722
 msgid "HIPPI"
@@ -477,15 +475,15 @@ msgstr "HIPPI"
 
 #: ../tools/interface.c:1734
 msgid "generic X.25"
-msgstr "algemeen X.25"
+msgstr "generic X.25"
 
 #: ../tools/interface.c:1737
 msgid "IPIP Tunnel"
-msgstr "IPIP-tunnel"
+msgstr "IPIP Tunnel"
 
 #: ../tools/interface.c:1740
 msgid "Point-to-Point Protocol"
-msgstr "Punt-naar-puntprotocol"
+msgstr "Point-to-Point Protocol"
 
 #: ../tools/interface.c:1743
 msgid "(Cisco)-HDLC"
@@ -501,11 +499,11 @@ msgstr "ARCnet"
 
 #: ../tools/interface.c:1750
 msgid "Frame Relay DLCI"
-msgstr ""
+msgstr "Frame Relay DLCI"
 
 #: ../tools/interface.c:1751
 msgid "Frame Relay Access Device"
-msgstr "Frame Relay-toegangsapparaat"
+msgstr "Frame Relay Access Device"
 
 #: ../tools/interface.c:1754
 msgid "IPv6-in-IPv4"
@@ -517,25 +515,25 @@ msgstr "IrLAP"
 
 #: ../tools/interface.c:1760
 msgid "16/4 Mbps Token Ring"
-msgstr "16/4 Mbps tokenring"
+msgstr "16/4 Mbps Token Ring"
 
 #: ../tools/interface.c:1762
 msgid "16/4 Mbps Token Ring (New)"
-msgstr "16/4 Mbps tokenring (nieuw)"
+msgstr "16/4 Mbps Token Ring (New)"
 
 #: ../tools/interface.c:1874
 msgid "Interface:"
-msgstr "Interface:"
+msgstr "Interfeiss:"
 
 #: ../tools/interface.c:1875
 #, c-format
 msgid "Type: %s"
-msgstr "Soort: %s"
+msgstr "Tips: %s"
 
 #: ../tools/interface.c:1884
 #, c-format
 msgid "Media: %s"
-msgstr "Media: %s"
+msgstr "Datu nesējs: %s"
 
 #: ../tools/interface.c:1889
 #, c-format
@@ -545,52 +543,52 @@ msgstr "(auto)"
 #: ../tools/interface.c:1901
 #, c-format
 msgid "Address: %s\n"
-msgstr "Adres: %s\n"
+msgstr "Adrese: %s\n"
 
 #: ../tools/interface.c:1906
 #, c-format
 msgid "P-t-P: %s\n"
-msgstr "P-n-P: %s\n"
+msgstr "P-t-P: %s\n"
 
 #: ../tools/interface.c:1910
 #, c-format
 msgid "Netmask: %s\n"
-msgstr "Netmasker: %s\n"
+msgstr "Tīklu maska: %s\n"
 
 #: ../tools/interface.c:1914
 #, c-format
 msgid "Broadcast: %s\n"
-msgstr "Broadcast: %s\n"
+msgstr "Raidadrese: %s\n"
 
 #: ../tools/interface.c:1926
 #, c-format
 msgid "HWaddr (MAC): %s\n"
-msgstr "HWadres (MAC): %s\n"
+msgstr "HWaddr (MAC): %s\n"
 
 #: ../tools/interface.c:1956
 #, c-format
 msgid "IPv6 Address: %s/%d\n"
-msgstr "IPv6-adres: %s/%d\n"
+msgstr "IPv6 adrese: %s/%d\n"
 
 #: ../tools/interface.c:1959
 #, c-format
 msgid "Scope: "
-msgstr "Bereik: "
+msgstr "Vēriens: "
 
 #: ../tools/interface.c:1964
 #, c-format
 msgid "Global"
-msgstr "Algemeen"
+msgstr "Globāls"
 
 #: ../tools/interface.c:1967
 #, c-format
 msgid "Link"
-msgstr "Verbinding"
+msgstr "Saite"
 
 #: ../tools/interface.c:1970
 #, c-format
 msgid "Site"
-msgstr "Site"
+msgstr "Vietne"
 
 #: ../tools/interface.c:1973
 #, c-format
@@ -600,321 +598,321 @@ msgstr "Compat"
 #: ../tools/interface.c:1976
 #, c-format
 msgid "Host"
-msgstr "Host"
+msgstr "Resursdators"
 
 #: ../tools/interface.c:1979
 #, c-format
 msgid "Unknown"
-msgstr "Onbekend"
+msgstr "Nezināms"
 
 #: ../device.c:215
 msgid "Unknown Device"
-msgstr "Onbekend apparaat"
+msgstr "Nezināma ierīce"
 
 #: ../modules/logread.c:116
 msgid "Can't find circular buffer, is syslog running?\n"
-msgstr "Kan circulaire buffer niet vinden; draait syslog wel?\n"
+msgstr "Nevar atrast apļa buferi, vai syslog skrien?\n"
 
 #: ../modules/logread.c:123
 msgid "Can't get access to syslogd's circular buffer."
-msgstr "Kan geen toegang krijgen tot circulaire buffer van syslogd."
+msgstr "Nevar piekļūt pie syslogd's apļa bufera."
 
 #: ../modules/logread.c:130
 msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
-msgstr "Kan geen toegang krijgen tot semaforen voor circulaire buffer van syslogd."
+msgstr "Nevar iegūt piekļuvi pie semaphore(s), priekš syslogd apļa bufera."
 
 #: ../modules/logread.c:156
 msgid "<empty syslog>"
-msgstr "<leeg syslog>"
+msgstr "<tukšs sistēmas žurnāls>"
 
 #: ../modules/logread.c:227 ../modules/logread.c:243
 msgid "System Log"
-msgstr "Systeemlog"
+msgstr "Sistēmas žurnāls"
 
 #: ../modules/logread.c:252 ../modules/logread.c:268
 msgid "Session Log"
-msgstr "Sessielog"
+msgstr "Sesijas žurnāls"
 
 #: ../modules/logread.c:275
 msgid "Could not open X session log.\n"
-msgstr "Kan X-sessielog niet openen.\n"
+msgstr "Nevarēja atvērt X sesijas žurnālu.\n"
 
 #: ../modules/usb.c:80
 msgid "Choose backing file"
-msgstr "Kies ondersteunend bestand"
+msgstr "Izvēlaties aizmugures failu"
 
 #: ../modules/usb.c:240
 msgid "USB Peripheral Mode"
-msgstr "USB-randapparatuurmodus"
+msgstr "USB perifērijas režīms"
 
 #: ../modules/usb.c:247
 msgid "Ethernet Networking"
-msgstr "Ethernet-netwerk"
+msgstr "Ethernet tīklošana"
 
 #: ../modules/usb.c:252 ../modules/sysinfo.c:645
 msgid "Storage"
-msgstr "Opslag"
+msgstr "Nesējs"
 
 #: ../modules/usb.c:258 ../modules/serial.c:573
 msgid "Serial Port"
-msgstr "Seriële poort"
+msgstr "Seriālais ports"
 
 #: ../modules/usb.c:267
 msgid "Storage Behaviour"
-msgstr "Opslaggedrag"
+msgstr "Glabāšanas uzvedība"
 
 #: ../modules/usb.c:274
 msgid "CF/SD Card Reader"
-msgstr "CF/SD-kaartlezer"
+msgstr "CF/SD karšu lasītājs"
 
 #: ../modules/usb.c:280
 msgid "File-backed"
-msgstr "Door bestand ondersteund"
+msgstr "Faila-aizmugure"
 
 #: ../modules/usb.c:290
 msgid "Select"
-msgstr "Selecteer"
+msgstr "Atlasīt:"
 
 #: ../modules/usb.c:298
 msgid "Allow write access"
-msgstr "Schrijftoegang toestaan"
+msgstr "Atļaut rakstīšanas pieeju"
 
 #: ../modules/usb.c:307
 msgid "Serial Settings"
-msgstr "Seriële instellingen"
+msgstr "Seriālie uzstādījumi"
 
 #: ../modules/usb.c:314
 msgid "Use CDC ACM"
-msgstr "CDC-ACM gebruiken"
+msgstr "Izmantot CDC ACM"
 
 #: ../modules/theme.c:234
 msgid "Choose backgound image"
-msgstr "Kies achtergrondafbeelding"
+msgstr "Izvēlaties aizmugures fonu"
 
 #: ../modules/theme.c:248
 msgid "You are not allowed to read this file, choose another."
-msgstr "U hebt geen leestoegang tot dit bestand; kies een andere."
+msgstr "Jums nav tiesību lasīt šo failu, izvēlaties citu."
 
 #: ../modules/theme.c:269
 msgid "Succesfully changed background image."
-msgstr "Achtergrondafbeelding is met succes gewijzigd."
+msgstr "Veiksmīgi nomainīts aizmgures fons."
 
 #: ../modules/theme.c:270
 msgid "Use \"Look and Feel\" setup tool to change details."
-msgstr "Gebruik de instellingen van \"Uiterlijk en gevoel\" om details te veranderen."
+msgstr "Izmantojiet \"Izskats un sajūtas\", lai izmainītu detaļas."
 
 #: ../modules/theme.c:781 ../modules/theme.c:859
 msgid "You don't have read access to selected background image!"
-msgstr "U hebt geen leestoegang tot de gekozen achtergrondafbeelding!"
+msgstr "Jums nav lasīšanas pieeja atlasītājam fona attēlam!"
 
 #: ../modules/theme.c:997
 msgid "Desktop Theme"
-msgstr "Bureaubladthema"
+msgstr "Darbavirsmas tēma"
 
 #: ../modules/theme.c:1009
 msgid "Name"
-msgstr "Naam"
+msgstr "Nosaukums"
 
 #: ../modules/theme.c:1023
 msgid "Icon Size"
-msgstr "Pictogramgrootte"
+msgstr "Ikonu izmērs"
 
 #: ../modules/theme.c:1038
 msgid "Visual Effects"
-msgstr "Visuele effecten"
+msgstr "Vizuālie efekti"
 
 #: ../modules/theme.c:1044
 msgid "Enable Visual Effects"
-msgstr "Visuele effecten aanzetten"
+msgstr "Ieslēgt vizuālos efektus"
 
 #. Background tab
 #: ../modules/theme.c:1051
 msgid "Background"
-msgstr "Achtergrond"
+msgstr "Fons"
 
 #: ../modules/theme.c:1065 ../modules/theme.c:1067
 msgid "Background Settings"
-msgstr "Achtergrondinstellingen"
+msgstr "Fona uzstādījumi"
 
 #: ../modules/theme.c:1077 ../modules/theme.c:1088
 msgid "Theme Default"
-msgstr "Standaardthema"
+msgstr "Noklusētā tēma"
 
 #: ../modules/theme.c:1096
 msgid "Solid colour"
-msgstr "Effen kleur"
+msgstr "Viendabīga krāsa"
 
 #: ../modules/theme.c:1110
 msgid "Horizontal"
-msgstr "Horizontaal"
+msgstr "Horizontāla"
 
 #: ../modules/theme.c:1114
 msgid "Vertical"
-msgstr "Verticaal"
+msgstr "Vertikāla"
 
 #: ../modules/theme.c:1119 ../modules/theme.c:1138 ../modules/theme.c:1312
 #: ../modules/theme.c:1318
 msgid "Colour"
-msgstr "Kleur"
+msgstr "Krāsa"
 
 #: ../modules/theme.c:1129
 msgid "Colour gradient"
-msgstr "Kleurverloop"
+msgstr "Krāsu pakāpe"
 
 #: ../modules/theme.c:1148
 msgid "Image"
-msgstr "Afbeelding"
+msgstr "Attēls"
 
 #: ../modules/theme.c:1174
 msgid "Center"
-msgstr "Gecentreerd"
+msgstr "Centrēts"
 
 #: ../modules/theme.c:1178
 msgid "Tile"
-msgstr "Getegeld"
+msgstr "Flīzēts"
 
 #: ../modules/theme.c:1181
 msgid "Stretch"
-msgstr "Uitgerekt"
+msgstr "Izstiepts"
 
 #: ../modules/theme.c:1188
 msgid "Toolbars"
-msgstr "Werkbalken"
+msgstr "Rīkjosla"
 
 #: ../modules/theme.c:1200 ../modules/theme.c:1202
 msgid "Toolbar Style"
-msgstr "Werkbalkstijl"
+msgstr "Rīkjoslas stils"
 
 #: ../modules/theme.c:1211 ../modules/theme.c:1235
 msgid "Icons"
-msgstr "Pictogrammen"
+msgstr "Ikonas"
 
 #: ../modules/theme.c:1216 ../modules/theme.c:1239
 msgid "Text"
-msgstr "Tekst"
+msgstr "Teksts"
 
 #: ../modules/theme.c:1221 ../modules/theme.c:1242
 msgid "Both"
-msgstr "Beide"
+msgstr "Abi"
 
 #: ../modules/theme.c:1249
 msgid "Toolbar Icon Size"
-msgstr "Grootte van werkbalkpictogrammen"
+msgstr "Rīkjoslas ikonu izmērs"
 
 #: ../modules/theme.c:1265
 msgid "Fonts"
-msgstr "Lettertypen"
+msgstr "Fonti"
 
 #: ../modules/theme.c:1274 ../modules/theme.c:1294
 msgid "Desktop Font"
-msgstr "Bureaubladlettertype"
+msgstr "Darbavirsmas fonts"
 
 #: ../modules/theme.c:1281 ../modules/theme.c:1340 ../modules/theme.c:1375
 #: ../modules/theme.c:1425
 msgid "Family"
-msgstr "Familie"
+msgstr "Ģimene"
 
 #: ../modules/theme.c:1301 ../modules/theme.c:1360 ../modules/theme.c:1395
 #: ../modules/theme.c:1445
 msgid "Size"
-msgstr "Grootte"
+msgstr "Izmērs"
 
 #: ../modules/theme.c:1329 ../modules/theme.c:1331 ../modules/theme.c:1353
 #: ../modules/theme.c:1388
 msgid "Application Font"
-msgstr "Toepassingenlettertype"
+msgstr "Lietotnes fonts"
 
 #. terminal tab
 #: ../modules/theme.c:1409
 msgid "Terminal"
-msgstr "Terminal"
+msgstr "Termināls"
 
 #: ../modules/theme.c:1418
 msgid "Font"
-msgstr "Lettertype"
+msgstr "Fonts"
 
 #: ../modules/theme.c:1438
 msgid "Terminal Font"
-msgstr "Terminallettertype"
+msgstr "Termināļa fonts"
 
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
 #: ../modules/sysinfo.c:195
 msgid "Familiar"
-msgstr ""
+msgstr "Tuvs"
 
 #. TRANSLATORS: "OpenZaurus" is the name of a linux distribution.
 #: ../modules/sysinfo.c:206
 msgid "OpenZaurus"
-msgstr ""
+msgstr "OpenZaurus"
 
 #. TRANSLATORS: "Debian" is the name of a linux distribution.
 #: ../modules/sysinfo.c:215
 msgid "Debian"
-msgstr ""
+msgstr "Debian"
 
 #. TRANSLATORS: "Ångström" is the name of a linux distribution.
 #: ../modules/sysinfo.c:226
 msgid "Ångström"
-msgstr ""
+msgstr "Ångström"
 
 #. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
 #: ../modules/sysinfo.c:235
 msgid "OpenEmbedded"
-msgstr ""
+msgstr "OpenEmbedded"
 
 #: ../modules/sysinfo.c:277 ../modules/sysinfo.c:279
 msgid "Build"
-msgstr ""
+msgstr "Būvēts"
 
 #: ../modules/sysinfo.c:381
 msgid "Network Status"
-msgstr "Netwerkstatus"
+msgstr "Tīkla status"
 
 #. split string into long and short lines
 #: ../modules/sysinfo.c:395 ../modules/sysinfo.c:398
 msgid "HWaddr (MAC)"
-msgstr "HWadres (MAC)"
+msgstr "HWaddr (MAC)"
 
 #: ../modules/sysinfo.c:409 ../modules/sysinfo.c:410
 #, c-format
 msgid "Wireless"
-msgstr "Draadloos"
+msgstr "Bezvadu"
 
 #: ../modules/sysinfo.c:437
 msgid "Default Gateway"
-msgstr "Standaard gateway"
+msgstr "Noklusētā vārteja"
 
 #: ../modules/sysinfo.c:480
 msgid "System information"
-msgstr "Systeeminformatie"
+msgstr "Sistēmas informācija"
 
 #: ../modules/sysinfo.c:490
 msgid "Version"
-msgstr "Versie"
+msgstr "Versija"
 
 #: ../modules/sysinfo.c:522
 msgid "Distribution"
-msgstr "Distributie"
+msgstr "Distributīvs"
 
 #: ../modules/sysinfo.c:547
 msgid "System"
-msgstr "Systeem"
+msgstr "Sistēma"
 
 #: ../modules/sysinfo.c:556
 msgid "Device information"
-msgstr "Apparaatinformatie"
+msgstr "Ierīces informācija"
 
 #: ../modules/sysinfo.c:568
 msgid "Device Name"
-msgstr "Apparaatnaam"
+msgstr "Ierīces nosaukums"
 
 #: ../modules/sysinfo.c:587
 msgid "Manufacturer:"
-msgstr "Fabrikant:"
+msgstr "Ražotājs:"
 
 #: ../modules/sysinfo.c:600
 msgid "RAM:"
-msgstr "RAM:"
+msgstr "Atmiņa:"
 
 #. TRANSLATORS: MB == Mega Bytes
 #: ../modules/sysinfo.c:606 ../modules/sysinfo.c:622 ../modules/storage.c:176
@@ -925,162 +923,162 @@ msgstr "MB"
 
 #: ../modules/sysinfo.c:616
 msgid "Storage:"
-msgstr "Opslag:"
+msgstr "Glabāšana:"
 
 #: ../modules/sysinfo.c:628
 msgid "Hardware"
-msgstr "Hardware"
+msgstr "Dzelži"
 
 #: ../modules/sysinfo.c:638
 msgid "Battery"
-msgstr "Accu"
+msgstr "Baterija"
 
 #: ../modules/sysinfo.c:652
 msgid "Networks"
-msgstr "Netwerken"
+msgstr "Tīkls"
 
 #: ../modules/sysinfo.c:659
 msgid "Log Display"
-msgstr "Logboek-weergave"
+msgstr "Žurnāla attēlošana"
 
 #: ../modules/timeanddate.c:222
 msgid "Time adjusted from network."
-msgstr "Tijd opvragen van netwerk."
+msgstr "Laika pielāgošana no tīkla"
 
 #: ../modules/timeanddate.c:224
 msgid "Adjusting time from network failed."
-msgstr "Tijd instellen vanuit netwerk is mislukt."
+msgstr "Pielāgot laiku no tīkla neizdevās."
 
 #: ../modules/timeanddate.c:458
 msgid "Time & Date"
-msgstr "Tijd en datum"
+msgstr "Laiks un datums"
 
 #: ../modules/timeanddate.c:470
 msgid "Date"
-msgstr "Datum"
+msgstr "Datums"
 
 #: ../modules/timeanddate.c:486
 msgid "Enter current date here or use button to select."
-msgstr "Voer hier de huidige datum in of gebruik de knop om te selecteren."
+msgstr "Ievadiet pašreozējo datumu vai izmantojiet pogu, lai izvēlētos"
 
 #: ../modules/timeanddate.c:521
 msgid "Select the timeserver to use to set the clock."
-msgstr "Selecteer de tijdserver waarmee de klok moet worden ingesteld."
+msgstr "Izvēlaties laikaserveri, kuru izmantot, lai uzstādītu pulksteni."
 
 #: ../modules/timeanddate.c:523
 msgid "Get time from network"
-msgstr "Tijd opvragen van netwerk"
+msgstr "Iegūt laiku no tīkla"
 
 #: ../modules/timeanddate.c:531
 msgid "If connected to the Internet, you may press this button to set the time on this device using the timeserver above."
-msgstr "Als u verbonden bent met het internet, kunt u op de bovenstaande knop drukken om de tijd op dit apparaat in te stellen, met de bovenstaande tijdserver."
+msgstr "Ja savienots ar Internetu, jūs varat nospiežot šo pogu uzstādīt laiku no augstāk uzstādītā laikaservera."
 
 #. root_mode
 #: ../modules/timeanddate.c:534 ../modules/timeanddate.c:544
 msgid "Timezone"
-msgstr "Tijdzone"
+msgstr "Laikazona"
 
 #: ../modules/timeanddate.c:588
 msgid "Area"
-msgstr "Regio"
+msgstr "Rajons"
 
 #: ../modules/timeanddate.c:603
 msgid "Select your current timezone area here. The setting will apply after the next login."
-msgstr "Selecteer hier uw huidige tijdzone. Deze instelling treedt in werking bij de volgende login."
+msgstr "Norādiet pašreizējo laikazonas rajonu. Šie uzstādījumi, stāsies spēkā pie nākamās pieteikšanās."
 
 #: ../modules/timeanddate.c:610
 msgid "Zone"
-msgstr "Zone"
+msgstr "Zona"
 
 #: ../modules/timeanddate.c:635
 msgid "Select your current timezone here. The setting applies after the next login."
-msgstr "Selecteer hier uw huidige tijdzone. Deze instelling treedt bij de volgende login in werking."
+msgstr "Norādiet pašreizējo laikazonu. Uzstādījumi stāsies spēkā pēc nākamās pieteikšanās."
 
 #: ../modules/timeanddate.c:698
 msgid "To make timezone settings take effect, you'll need to log out and log in again."
-msgstr "Om de zorgen dat de tijdzone-instellingen actief worden, dient u uit te loggen en opnieuw in te loggen."
+msgstr "Lai laikazonas izmaiņas stātos spēka, jums ir jaatsakās un jāpiesakās atkārtoti."
 
 #: ../modules/login-setup.c:160
 msgid "Some of these settings can only be changed by the user 'root'."
-msgstr "Sommige van deze instellingen kunnen alleen door gebruiker 'root' worden gewijzigd."
+msgstr "Daži no uzstādījumiem var tikt mainīti tikai ar \"root\" lietotāju."
 
 #: ../modules/login-setup.c:183 ../modules/gpe-admin.c:85
 msgid "General"
-msgstr "Algemeen"
+msgstr "Vispārēji"
 
 #: ../modules/login-setup.c:200
 msgid "Show owner information at login."
-msgstr "Eigenaarsinformatie weergeven bij inloggen."
+msgstr "Rādīt īpašnieka informāciju uz pieteikšanos."
 
 #: ../modules/login-setup.c:204
 msgid "Lock display on suspend."
-msgstr "Beeldscherm blokkeren bij slaapmodus."
+msgstr "Slēgt ekrānu uz gaidstāvi."
 
 #: ../modules/login-setup.c:208
 msgid ""
 "Lock display on suspend. \n"
 "  (needs password)"
 msgstr ""
-"Beeldscherm blokkeren bij slaapmodus. \n"
-"  (vraagt om wachtwoord)"
+"Slēgt ekrānu uz gaidstāvi.\n"
+" (nepieciešama parole)"
 
 #: ../modules/login-setup.c:213
 msgid ""
 "Automatic login. \n"
 "  (without password)"
 msgstr ""
-"Automatische login. \n"
-"  (zonder wachtwoord)"
+"Automātiski pieteikties.\n"
+" (bez paroles)"
 
 #: ../modules/ownerinfo.c:210
 msgid "Information about the Owner"
-msgstr "Informatie over de eigenaar"
+msgstr "Informācija par Īpašnieku"
 
 #: ../modules/ownerinfo.c:218
 msgid "Only the user 'root' is allowed to change this information"
-msgstr "Alleen gebruiker 'root' mag deze informatie wijzigen"
+msgstr "Tikai \"root\" lietotājam ir atļauts mainīt šo informāciju"
 
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:237 ../modules/network.c:246
 msgid "Name:"
-msgstr "Naam:"
+msgstr "Nosaukums:"
 
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:252
 msgid "E-Mail:"
-msgstr "E-mail:"
+msgstr "E-pasts:"
 
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:267
 msgid "Phone:"
-msgstr "Telefoon:"
+msgstr "Telefons:"
 
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:282
 msgid "Address:"
-msgstr "Adres:"
+msgstr "Adrese:"
 
 #. ------------------------------------------------------------------------
 #: ../modules/ownerinfo.c:308
 msgid "Photofile:"
-msgstr "Fotobestand:"
+msgstr "Fotofails:"
 
 #: ../modules/storage.c:166 ../modules/storage.c:423
 msgid "System Memory"
-msgstr "Systeemgeheugen"
+msgstr "Sistēmas atmiņa"
 
 #. TRANSLATORS: MB == Mega Bytes
 #: ../modules/storage.c:174 ../modules/storage.c:443
 msgid "Free memory"
-msgstr "Vrij geheugen"
+msgstr "Brīvā atmiņa"
 
 #: ../modules/storage.c:181 ../modules/storage.c:328 ../modules/storage.c:456
 msgid "Total:"
-msgstr "Totaal:"
+msgstr "Kopā:"
 
 #: ../modules/storage.c:292
 msgid "Internal Flash"
-msgstr "Interne flash"
+msgstr "Iekšējais  Flash"
 
 #: ../modules/storage.c:298
 msgid "MMC"
@@ -1088,79 +1086,79 @@ msgstr "MMC"
 
 #: ../modules/storage.c:304
 msgid "Compact Flash"
-msgstr "Compact-flash"
+msgstr "Compact Flash"
 
 #: ../modules/storage.c:310
 msgid "Network Filesystem"
-msgstr "Netwerkbestandssysteem"
+msgstr "Tīklu failusistēma"
 
 #: ../modules/storage.c:330
 msgid "Mounted at "
-msgstr "Aangekoppeld op "
+msgstr "Montēts uz"
 
 #: ../modules/storage.c:338
 msgid "Free space"
-msgstr "Vrije ruimte"
+msgstr "Brīvā vieta"
 
 #: ../modules/serial.c:428 ../modules/serial.c:434
 msgid "Simple interface to serial port configuration. Disabled components are not installed."
-msgstr "Eenvoudige interface voor seriëlepoortconfiguratie. Uitgeschakelde componenten zijn niet geïnstalleerd."
+msgstr "Vienkārš serialā porta interfeica konfigurētājs. Atspējotie elementi nav instalēti."
 
 #: ../modules/serial.c:431
 msgid "Port A"
-msgstr "Poort A"
+msgstr "Ports A"
 
 #: ../modules/serial.c:438
 msgid "Serial port default usage"
-msgstr "Standaardgebruik van seriële poort"
+msgstr "Srialā prota noklusētā lietošana"
 
 #: ../modules/serial.c:443
 msgid "Select desired software to use serial port here."
-msgstr "Selecteer hier de gewenste software die gebruik maakt van de seriële poort."
+msgstr "Atlasiet vēlamo programmatūru, kuru izmantot serialām portam."
 
 #: ../modules/serial.c:446
 msgid "Console"
-msgstr "Console"
+msgstr "Konsole"
 
 #: ../modules/serial.c:449
 msgid "This option runs console on serial port. (default)"
-msgstr "Deze optie start een console op de seriële poort. (standaard)"
+msgstr "Opcija palaiž konsoli uz serialo portu. (noklusēti)"
 
 #: ../modules/serial.c:457
 msgid "GPS Daemon"
-msgstr "GPS-daemon"
+msgstr "GPS Daemon"
 
 #: ../modules/serial.c:462
 msgid "GPS Daemon (needs 'gpsd')"
-msgstr "GPS-daemon (vereist 'gpsd')"
+msgstr "GPS Daemon (nepieciešams \"gpsd\")"
 
 #: ../modules/serial.c:467
 msgid "This option enables the start of GPSD, which provides data from a GPS reciver to applications."
-msgstr "Deze optie schakelt het starten van GPSD in, die gegevens van een GPS-ontvanger beschikbaar maakt voor toepassingen."
+msgstr "Opcija iespējo sākt GPSD, kurš nodrošina datus GPS datu saņēmēja lietotnei."
 
 #: ../modules/serial.c:474
 msgid "Nothing (free)"
-msgstr "Niets (vrij)"
+msgstr "Nekas (brīvs)"
 
 #: ../modules/serial.c:477
 msgid "Don't start any software that uses the serial port."
-msgstr "Geen software starten die de seriële poort gebruikt."
+msgstr "Nesākt nevienu programmatūru, kas izmanto serialo protu."
 
 #: ../modules/serial.c:514 ../modules/serial.c:521
 msgid "This page configures the GPS receiver software."
-msgstr "Deze pagina configureert de GPS-ontvangersoftware."
+msgstr "Šī lapa konfigurē GPS uztvērēja programmatūru."
 
 #: ../modules/serial.c:518
 msgid "GPS Receiver"
-msgstr "GPS-ontvanger"
+msgstr "GPS uztvērējs"
 
 #: ../modules/serial.c:525
 msgid "GPS settings"
-msgstr "GPS-instellingen"
+msgstr "GPS uzstādījumi"
 
 #: ../modules/serial.c:531
 msgid "Receiver Type"
-msgstr "Soort ontvanger"
+msgstr "Uztvērēja tips"
 
 #: ../modules/serial.c:536
 msgid "NMEA"
@@ -1168,7 +1166,7 @@ msgstr "NMEA"
 
 #: ../modules/serial.c:541
 msgid "The GPS receiver sends NMEA data (default, no need to change for most receivers)."
-msgstr "De GPS-ontvanger verzendt NMEA-gegevens (standaard, hiervoor hoeft meestal niets te worden ingesteld)."
+msgstr "GPS uztvērējs sūta NMEA datus (noklusēti, nav nepieciešams mainīt, lielākai uztvērēju daļai)"
 
 #: ../modules/serial.c:547
 msgid "Earthmate"
@@ -1176,124 +1174,124 @@ msgstr "Earthmate"
 
 #: ../modules/serial.c:553
 msgid "GPS receiver is an Earthmate GPS."
-msgstr "GPS-ontvanger is een Earthmate-GPS."
+msgstr "GPS uztvērējs ir Earthmate GPS."
 
 #: ../modules/serial.c:557
 msgid "Baud Rate"
-msgstr "Baudsnelheid"
+msgstr "Baud ātrums"
 
 #: ../modules/cardinfo.c:103
 msgid "/_Card"
-msgstr "/_Kaart"
+msgstr "/_Karte"
 
 #: ../modules/cardinfo.c:104
 msgid "/Card/_Insert"
-msgstr "/Kaart/_Invoeren"
+msgstr "/Karte/_Ievietot"
 
 #: ../modules/cardinfo.c:105
 msgid "/Card/_Eject"
-msgstr "/Kaart/_Uitwerpen"
+msgstr "/Karte/_Izgrūst"
 
 #: ../modules/cardinfo.c:106
 msgid "/Card/_Suspend"
-msgstr "/Kaart/_Slaapstand"
+msgstr "/Karte/_Gaidstāve"
 
 #: ../modules/cardinfo.c:107
 msgid "/Card/_Resume"
-msgstr "/Kaart/_Hervatten"
+msgstr "/Karte/_Atjaunot"
 
 #: ../modules/cardinfo.c:108
 msgid "/Card/_Reset"
-msgstr "/Kaart/_Resetten"
+msgstr "/Karte/_Restartēt"
 
 #: ../modules/cardinfo.c:109
 msgid "/Card/s1"
-msgstr "/Kaart/s1"
+msgstr "/Karte/s1"
 
 #: ../modules/cardinfo.c:110
 msgid "/Card/_Assign Driver"
-msgstr "/Kaart/Stuurprogramma _toewijzen"
+msgstr "/Karte/_Nozīmēt draiveri"
 
 #: ../modules/cardinfo.c:111
 msgid "/Card/s2"
-msgstr "/Kaart/s2"
+msgstr "/Karte/s2"
 
 #: ../modules/cardinfo.c:112
 msgid "/Card/_Close"
-msgstr "/Kaart/_Afsluiten"
+msgstr "/Karte/_Aizvērt"
 
 #: ../modules/cardinfo.c:113
 msgid "/_Help"
-msgstr "/_Hulp"
+msgstr "/_Palīdzība"
 
 #: ../modules/cardinfo.c:114
 msgid "/_Help/Index"
-msgstr "/Hulp/_Inhoud"
+msgstr "/_Palīdzība/Satura rādītājs"
 
 #: ../modules/cardinfo.c:115
 msgid "/_Help/About"
-msgstr "/Hulp/I_nfo"
+msgstr "/_Palīdzība/Par"
 
 #: ../modules/cardinfo.c:175 ../modules/cardinfo.c:848
 msgid "card not recognized"
-msgstr "kaart niet herkend"
+msgstr "nevarēja atpazīt"
 
 #: ../modules/cardinfo.c:277 ../modules/cardinfo.c:348
 msgid "Could not write to temporal config file."
-msgstr "Kan niet schrijven naar tijdelijk configuratiebestand."
+msgstr "Nevarēja rakstīt pagaidu konfigurācijas failā"
 
 #: ../modules/cardinfo.c:554
 msgid "Could not open pidfile:"
-msgstr "Kan PID-bestand niet openen:"
+msgstr "Nevarētja atvēt pidfile:"
 
 #: ../modules/cardinfo.c:560
 msgid "Could not read pidfile"
-msgstr "Kan PID-bestand niet lezen"
+msgstr "Nevarēja nolasīt pidfile"
 
 #: ../modules/cardinfo.c:564
 msgid "Could not signal cardmgr:"
-msgstr "Kan cardmgr niet bereiken:"
+msgstr "Nevarēja signalizēt cardmgr:"
 
 #: ../modules/cardinfo.c:638
 msgid "gpe-conf must be setuid root to use cardinfo feature."
-msgstr "gpe-conf moet setuid root zijn om de cardinfo-mogelijkheid te gebruiken."
+msgstr "gpe-conf jābūt setuid root, lai izmantotu cardinfo iespēju."
 
 #: ../modules/cardinfo.c:656
 msgid "No PCMCIA driver in '/proc/devices'"
-msgstr "Geen PCMCIA-stuurprogramma in '/proc/devices'"
+msgstr "Nav PCMCIA draivers iekš \"/proc/devices\""
 
 #: ../modules/cardinfo.c:659
 msgid "Could not open '/proc/devices'"
-msgstr "Kan '/proc/devices' niet openen"
+msgstr "Nevar atvērt \"/proc/devices\""
 
 #: ../modules/cardinfo.c:671
 msgid "No sockets found\n"
-msgstr "Geen sockets gevonden\n"
+msgstr "Netika atrasts sokets\n"
 
 #: ../modules/cardinfo.c:835
 msgid "flock(stabfile) failed"
-msgstr "flock(stabbestand) is mislukt"
+msgstr "flock(stabfile) neizdevās"
 
 #: ../modules/cardinfo.c:854
 #, c-format
 msgid "no driver loaded"
-msgstr "geen stuurprogramma geladen"
+msgstr "nav ielādēts draiveris"
 
 #: ../modules/cardinfo.c:963
 msgid "ready"
-msgstr "gereed"
+msgstr "gatavs"
 
 #: ../modules/cardinfo.c:981
 msgid "not ready"
-msgstr "niet gereed"
+msgstr "nav gatavs"
 
 #: ../modules/cardinfo.c:996
 msgid "suspended"
-msgstr "in slaapmodus"
+msgstr "gaidstāve"
 
 #: ../modules/cardinfo.c:1188
 msgid "Assign Driver"
-msgstr "Stuurprogramma toewijzen"
+msgstr "Nozīmēt draiveri"
 
 #: ../modules/cardinfo.c:1197
 msgid ""
@@ -1301,50 +1299,50 @@ msgid ""
 "change the driver assignment for a\n"
 "PCMCIA or CF card."
 msgstr ""
-"Deze dialoog laat u de stuurprogramma-\n"
-"toewijzing voor een PCMCIA- of CF-kaart\n"
-"selecteren of wijzigen."
+"Dialoglogs atļauj atlasīt/\n"
+"izmainīt draive nozīmējumu priekš\n"
+"PCMCIA vai CF kartēm."
 
 #: ../modules/cardinfo.c:1207
 msgid "Your current card identifies itself as:"
-msgstr "Uw huidige kaart identificeert zichzelf als:"
+msgstr "Jūsu karte identificējas, kā:"
 
 #: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
 msgid "Manuf. Id"
-msgstr "Fabrikants-ID"
+msgstr "Izstrādātāja Id."
 
 #: ../modules/cardinfo.c:1221 ../modules/cardinfo.c:1227
 msgid "Class"
-msgstr "Klasse"
+msgstr "Klase"
 
 #: ../modules/cardinfo.c:1327 ../modules/cardinfo.c:1340
 msgid "PC/CF card socket information."
-msgstr "Socket-informatie van PC/CF-kaart."
+msgstr "PC/CF karšu soketa informācija"
 
 #: ../modules/cardinfo.c:1335
 msgid "Socket"
-msgstr "Socket"
+msgstr "Sokets"
 
 #: ../modules/cardinfo.c:1366
 msgid "Information for socket"
-msgstr "Informatie over socket"
+msgstr "Informācija par soketu"
 
 #. fields
 #: ../modules/cardinfo.c:1375
 msgid "State:"
-msgstr "Status:"
+msgstr "Stāvoklis:"
 
 #: ../modules/cardinfo.c:1376
 msgid "Device:"
-msgstr "Apparaat:"
+msgstr "Ierīce:"
 
 #: ../modules/cardinfo.c:1377
 msgid "Driver:"
-msgstr "Stuurprogramma:"
+msgstr "Draiveris:"
 
 #: ../modules/cardinfo.c:1378
 msgid "Type:"
-msgstr "Soort:"
+msgstr "Tips:"
 
 #: ../modules/cardinfo.c:1379
 msgid "I/O:"
@@ -1356,31 +1354,31 @@ msgstr "IRQ:"
 
 #: ../modules/cardinfo.c:1387
 msgid "Flags:"
-msgstr "Opties:"
+msgstr "Karodziņi:"
 
 #: ../modules/cardinfo.c:1404
 msgid "PCMCIA initialisation failed"
-msgstr "PCMCIA-initialisatie is mislukt"
+msgstr "PCMCIA instalācija neizdevās"
 
 #: ../modules/gpe-admin.c:92
 msgid "Allow users to configure everything"
-msgstr "Gebruikers toestaan om alles in te stellen"
+msgstr "Ļaut lietotājam konfigurēt visu"
 
 #: ../modules/users/ucallbacks.c:107
 msgid "You need at least one user account!"
-msgstr "U hebt minstens één gebruikersaccount nodig!"
+msgstr "Jums ir nepieciešams vismaz viens konts!"
 
 #: ../modules/users/ucallbacks.c:131
 msgid "You can't remove this user!"
-msgstr "U kunt deze gebruiker niet verwijderen!"
+msgstr "Jūs nevarat noņemt šo lietotāju"
 
 #: ../modules/users/ucallbacks.c:136
 msgid ""
 "You can't remove\n"
 " system users!"
 msgstr ""
-"U kunt geen systeem-\n"
-"gebruikers verwijderen!"
+"Jūs nevar noņemt\n"
+" sistēmas lietotāju!"
 
 #: ../modules/users/ucallbacks.c:138
 msgid ""
@@ -1388,311 +1386,310 @@ msgid ""
 "This action is not revertable\n"
 "and is executed instantly."
 msgstr ""
-"Gebruiker en al diens gegevens\n"
-"verwijderen?  Deze actie is\n"
-"onomkeerbaar en wordt meteen\n"
-"uitgevoerd."
+"Dzēst lietotāju un visus viņa datus?'\n"
+"Šī darbība nav atsaucama\n"
+"un izpildās uzreiz."
 
 #: ../modules/users/ucallbacks.c:138 ../modules/network.c:343
 msgid "Question"
-msgstr "Vraag"
+msgstr "Jautājums"
 
 #: ../modules/users/ucallbacks.c:173
 msgid "Please choose a user name."
-msgstr "Kies een gebruikersnaam."
+msgstr "Lūdzu izvēlaties lietotāja vārdu."
 
 #: ../modules/users/ucallbacks.c:191
 msgid "Please choose a home directory."
-msgstr "Kies een persoonlijke map."
+msgstr "Lūdzu izvēlaties mājas direktoriju."
 
 #: ../modules/users/ucallbacks.c:279
 msgid ""
 "The two new pass are different!\n"
 " Please try again!"
 msgstr ""
-"De twee nieuwe wachtwoorden verschillen!\n"
-"  Probeer het nog eens!"
+"Abas jaunās paroles nesakrīt!\n"
+" Lūdzu mēģiniet vēlreiz!"
 
 #: ../modules/users/ucallbacks.c:282
 msgid ""
 "Wrong password\n"
 " Please try again!"
 msgstr ""
-"Onjuist wachtwoord\n"
-"  Probeer het nog eens!"
+"Nepareiza parole\n"
+" Lūdzu mēģiniet vēlreiz!"
 
 #: ../modules/users/uinterface.c:214
 msgid "User Name"
-msgstr "Gebruikersnaam"
+msgstr "Lietotāja vārds"
 
 #: ../modules/users/uinterface.c:215
 msgid "User Info"
-msgstr "Gebruikersinfo"
+msgstr "Lietotāja informācija"
 
 #: ../modules/users/uinterface.c:216
 msgid "Home"
-msgstr "Persoonlijke map"
+msgstr "Mājas"
 
 #: ../modules/users/uinterface.c:226
 msgid "Password"
-msgstr "Wachtwoord"
+msgstr "Parole"
 
 #: ../modules/users/uinterface.c:235
 msgid "Delete User"
-msgstr "Gebruiker verwijderen"
+msgstr "Dzēst lietotāju"
 
 #: ../modules/users/uinterface.c:244
 msgid "Edit User"
-msgstr "Gebruiker bewerken"
+msgstr "Rediģēt lietotāju"
 
 #: ../modules/users/uinterface.c:253
 msgid "New User"
-msgstr "Nieuwe gebruiker"
+msgstr "Jauns lietotājs"
 
 #: ../modules/users/uinterface.c:327
 msgid "User settings"
-msgstr "Gebruikersinstellingen"
+msgstr "Lietotāja uzstādījumi"
 
 #: ../modules/users/uinterface.c:341
 msgid "User Name:"
-msgstr "Gebruikersnaam:"
+msgstr "Lietotāja vārds:"
 
 #: ../modules/users/uinterface.c:357
 msgid "Password:"
-msgstr "Wachtwoord:"
+msgstr "Parole:"
 
 #: ../modules/users/uinterface.c:365
 msgid "User Info:"
-msgstr "Gebruikersinfo:"
+msgstr "Lietotāja informācija:"
 
 #: ../modules/users/uinterface.c:381
 msgid "Shell:"
-msgstr "Shell:"
+msgstr "Čaula:"
 
 #: ../modules/users/uinterface.c:400
 msgid "Home:"
-msgstr "Persoonlijke map:"
+msgstr "Mājas:"
 
 #: ../modules/users/uinterface.c:419
 msgid "Change"
-msgstr "Wijzigen"
+msgstr "Mainīt"
 
 #: ../modules/users/uinterface.c:420
 msgid "Set"
-msgstr "Instellen"
+msgstr "Uzstādīt"
 
 #: ../modules/users/uinterface.c:484
 msgid "Change Password"
-msgstr "Wachtwoord wijzigen"
+msgstr "Mainīt paroli"
 
 #. 2nd column:
 #: ../modules/users/uinterface.c:510
 msgid "Old Password:"
-msgstr "Oud wachtwoord:"
+msgstr "Vecā parole:"
 
 #: ../modules/users/uinterface.c:517
 msgid "New Password:"
-msgstr "Nieuw wachtwoord:"
+msgstr "Jaunā parole:"
 
 #: ../modules/users/uinterface.c:525
 msgid "Confirm:"
-msgstr "Bevestigen:"
+msgstr "Apstiprināt:"
 
 #: ../modules/sound/sound.c:250
 msgid "Audio Settings"
-msgstr "Geluidsinstellingen"
+msgstr "Skaņas uzstādījumi"
 
 #: ../modules/sound/sound.c:257
 msgid "Mute Everything"
-msgstr "Alles"
+msgstr "Visu apklusināt"
 
 #: ../modules/sound/sound.c:298
 msgid "Alarm Settings"
-msgstr "Wekkerinstellingen"
+msgstr "Brīdinājuma uzstādījumi"
 
 #: ../modules/sound/sound.c:305
 msgid "Enable Alarm Sound"
-msgstr "Wekkergeluid inschakelen"
+msgstr "Ieslēgt skaņas brīdinājumu"
 
 #: ../modules/sound/sound.c:312
 msgid "Automatic Volume (rising)"
-msgstr "Automatisch volume (oplopend)"
+msgstr "Automātisks skaļums (augošs)"
 
 #: ../modules/sound/sound.c:322 ../modules/sound/soundctrl.c:258
 msgid "Volume"
-msgstr "Volume"
+msgstr "Skaļums"
 
 #: ../modules/sound/sound.c:329
 msgid "Test"
-msgstr "Testen"
+msgstr "Tests"
 
 #: ../modules/keys/keyboard.c:76
 msgid "none"
-msgstr "geen"
+msgstr "nekas"
 
 #: ../modules/keys/keyboard.c:77
 msgid "Foldable"
-msgstr ""
+msgstr "Foldable"
 
 #: ../modules/keys/keyboard.c:78
 msgid "SnapNType"
-msgstr ""
+msgstr "SnapNType"
 
 #: ../modules/keys/keyboard.c:79
 msgid "Stowaway"
-msgstr ""
+msgstr "Stowaway"
 
 #: ../modules/keys/keyboard.c:80
 msgid "StowawayXT"
-msgstr ""
+msgstr "StowawayXT"
 
 #: ../modules/keys/keyboard.c:81
 msgid "HP Slim"
-msgstr ""
+msgstr "HP Slim"
 
 #: ../modules/keys/keyboard.c:82
 msgid "Smart BT"
-msgstr ""
+msgstr "Smart BT"
 
 #: ../modules/keys/keyboard.c:83
 msgid "LIRC"
-msgstr ""
+msgstr "LIRC"
 
 #: ../modules/keys/keyboard.c:84
 msgid "Belkin IR"
-msgstr ""
+msgstr "Belkin IR"
 
 #: ../modules/keys/keyboard.c:85
 msgid "Flexis"
-msgstr ""
+msgstr "Flexis"
 
 #: ../modules/keys/keyboard.c:86
 msgid "Benq Gamepad"
-msgstr ""
+msgstr "Benq Gamepad"
 
 #: ../modules/keys/keyboard.c:87
 msgid "Pocketvik"
-msgstr ""
+msgstr "Pocketvik"
 
 #: ../modules/keys/keyboard.c:88
 msgid "Micro Foldaway"
-msgstr ""
+msgstr "Micro Foldaway"
 
 #: ../modules/keys/keyboard.c:89
 msgid "Micro Datapad"
-msgstr ""
+msgstr "Micro Datapad"
 
 #: ../modules/keys/keyboard.c:255
 msgid "External keyboard configuration."
-msgstr "Instellingen voor extern toetsenbord."
+msgstr "Ārējās klaviatūras konfigurācija."
 
 #: ../modules/keys/keyboard.c:258
 msgid "External Keyboard Port"
-msgstr "Poort voor extern toetsenbord."
+msgstr "Ārējās klaviatūras ports."
 
 #: ../modules/keys/keyboard.c:265
 msgid "Here you may select your external keyboard model."
-msgstr "Hier kunt u het model van uw extern toetsenbord kiezen."
+msgstr "Šeit jūs varat atlasīt ārējās klaviatūras modeli."
 
 #: ../modules/keys/keyboard.c:288
 msgid "External Keyboard Type"
-msgstr "Soort extern toetsenbord"
+msgstr "Ārējās klaviatūras tips"
 
 #: ../modules/keys/kbd.c:142
 msgid "Keyboard Geometry / Layout"
-msgstr "Toetsenbordafmetingen/-indeling"
+msgstr "Klaviatūras ģeometrija / Izkārtojums"
 
 #: ../modules/keys/kbd.c:182
 msgid "User defined"
-msgstr "Door gebruiker bepaald"
+msgstr "Lietotāja definēts"
 
 #: ../modules/keys/keyctl.c:195
 msgid "Button layout file is missing a global section."
-msgstr "Globale sectie ontbreekt in toetsenindelingsbestand."
+msgstr "Globālajā sekcijā trūkst pogu izkārtojuma fails."
 
 #: ../modules/keys/keyctl.c:411
 msgid "No button configuration available for this device."
-msgstr "Er is geen toetsenindeling beschikbaar voor dit apparaat."
+msgstr "Ierīcei nav pieejama pogu konfigurācija."
 
 #: ../modules/keys/keyctl.c:583
 msgid "Critical: Can't open keylaunchrc for writing!"
-msgstr "Ernstig: kan keylaunchrc niet openen om te schrijven!"
+msgstr "Kritiski: Nevar atvērt keylaunchrc rakstīšanai!"
 
 #: ../modules/keys/keyctl.c:606
 msgid "Could not restart key handler!"
-msgstr "Kan sleutelverwerker niet herstarten!"
+msgstr "Nevar pārstartēt atslēgu apstrādātāju!"
 
 #: ../modules/keys/keyctl.c:629
 msgid "The file you selected is not executable."
-msgstr "Het door u gekozen bestand is niet uitvoerbaar."
+msgstr "Atlasītais fails nav izpildāmais fails."
 
 #: ../modules/keys/keys.c:79
 msgid "Buttons"
-msgstr "Knoppen"
+msgstr "Pogas"
 
 #: ../modules/keys/keys.c:83
 msgid "Virtual Keyb."
-msgstr "Virtueel toetsenbord"
+msgstr "Virtuālā klaviatūra"
 
 #: ../modules/keys/keys.c:87
 msgid "External Keyb."
-msgstr "Extern toetsenbord"
+msgstr "Ārējā klaviātūra"
 
 #: ../modules/screen/screen.c:73
 msgid "Portrait"
-msgstr "Portret"
+msgstr "Portrets"
 
 #: ../modules/screen/screen.c:74
 msgid "Landscape (left)"
-msgstr "Landschap (links)"
+msgstr "Ainava (kreisā)"
 
 #: ../modules/screen/screen.c:75
 msgid "Landscape (right)"
-msgstr "Landschap (rechts)"
+msgstr "Ainava (labā)"
 
 #: ../modules/screen/screen.c:79
 msgid "Landscape"
-msgstr "Landschap"
+msgstr "Ainava"
 
 #: ../modules/screen/screen.c:80
 msgid "Portrait (left)"
-msgstr "Portret (links)"
+msgstr "Portrets (kreisā)"
 
 #: ../modules/screen/screen.c:81
 msgid "Portrait (right)"
-msgstr "Portret (rechts)"
+msgstr "Portrets (labā)"
 
 #: ../modules/screen/screen.c:84
 msgid "Inverted"
-msgstr "Omgekeerd"
+msgstr "Invertēts"
 
 #: ../modules/screen/screen.c:111
 msgid "Light"
-msgstr "Licht"
+msgstr "Gaišs"
 
 #: ../modules/screen/screen.c:117
 msgid "Brightness"
-msgstr "Helderheid"
+msgstr "Spilgtums"
 
 #: ../modules/screen/screen.c:129
 msgid "Display"
-msgstr "Scherm"
+msgstr "Displejs"
 
 #: ../modules/screen/screen.c:133
 msgid "Rotation"
-msgstr "Rotatie"
+msgstr "Rotācija"
 
 #: ../modules/screen/screen.c:153
 msgid "Touchscreen"
-msgstr "Aanraakscherm"
+msgstr "Skārienjūtīgs ekrāns"
 
 #: ../modules/screen/screen.c:157
 msgid "Calibrate"
-msgstr "Kalibreren"
+msgstr "Kalibrēt"
 
 #: ../modules/screen/screen.c:159
 msgid "Start"
-msgstr "Starten"
+msgstr "Sākt"
 
 #: ../modules/screen/screen.c:275 ../modules/sleep/scallbacks.c:39
 msgid "min"
@@ -1700,32 +1697,32 @@ msgstr "min"
 
 #: ../modules/screen/screen.c:278 ../modules/sleep/scallbacks.c:42
 msgid "sec"
-msgstr "sec"
+msgstr "sek"
 
 #: ../modules/network.c:103
 msgid "Current Config"
-msgstr "Huidige instellingen"
+msgstr "Patreizējā konfigurācija"
 
 #: ../modules/network.c:252
 msgid "New Interface"
-msgstr "Nieuwe interface"
+msgstr "Jauns interfeiss"
 
 #: ../modules/network.c:261
 msgid "This interface definition already exists!"
-msgstr "Deze interface-definitie bestaat al!"
+msgstr "Interfeisa definīcija jau eksistē!"
 
 #: ../modules/network.c:343
 msgid "Do you want to delete this interface?"
-msgstr "Wilt u deze interface verwijderen?"
+msgstr "Vai vēlaties dzēst šo interfeisu?"
 
 #: ../modules/network.c:592
 msgid "WiFi config"
-msgstr "WiFi-instellingen"
+msgstr "WiFi konfigurācija"
 
 #: ../modules/network.c:631
 #, c-format
 msgid "WiFi config for %s"
-msgstr "WiFi-instellingen voor %s"
+msgstr "WiFi konfigurācija priekš %s"
 
 #. page items
 #: ../modules/network.c:643
@@ -1734,11 +1731,11 @@ msgstr "ESSID"
 
 #: ../modules/network.c:665
 msgid "Mode"
-msgstr "Modus"
+msgstr "Režīms"
 
 #: ../modules/network.c:675
 msgid "managed"
-msgstr "gemanaged"
+msgstr "pārvaldītais"
 
 #: ../modules/network.c:687
 msgid "ad-hoc"
@@ -1746,7 +1743,7 @@ msgstr "ad-hoc"
 
 #: ../modules/network.c:704
 msgid "Channel"
-msgstr "Kanaal"
+msgstr "Kanāls"
 
 #: ../modules/network.c:725
 msgid "WEP"
@@ -1754,231 +1751,231 @@ msgstr "WEP"
 
 #: ../modules/network.c:735
 msgid "off"
-msgstr "uit"
+msgstr "izslēgts"
 
 #: ../modules/network.c:747
 msgid "open"
-msgstr "open"
+msgstr "atvērtais"
 
 #: ../modules/network.c:759
 msgid "restricted"
-msgstr "ingeperkt"
+msgstr "ierobežotais"
 
 #: ../modules/network.c:775
 msgid "Key 1"
-msgstr "Sleutel 1"
+msgstr "Atslēga 1"
 
 #: ../modules/network.c:803
 msgid "Key 2"
-msgstr "Sleutel 2"
+msgstr "Atslēga 2"
 
 #: ../modules/network.c:831
 msgid "Key 3"
-msgstr "Sleutel 3"
+msgstr "Atslēga 3"
 
 #: ../modules/network.c:861
 msgid "Key 4"
-msgstr "Sleutel 4"
+msgstr "Atslēga 4"
 
 #: ../modules/network.c:1015 ../modules/network.c:1142
 #: ../modules/network.c:1259
 msgid "Interface"
-msgstr "Interface"
+msgstr "Interfeiss"
 
 #. page items
 #: ../modules/network.c:1065
 msgid "Address"
-msgstr "Adres"
+msgstr "Adrese"
 
 #: ../modules/network.c:1067
 msgid "Enter your IP address here, e.g. 192.168.1.2"
-msgstr "Voer hier uw IP-adres in, bijv. 192.168.1.2"
+msgstr "Ievadiet šeit savu IP adresi, piemēram, 192.168.1.2"
 
 #: ../modules/network.c:1068
 msgid "Netmask"
-msgstr "Netmasker"
+msgstr "Tīkla maska"
 
 #: ../modules/network.c:1070
 msgid "Enter your netmask here, e.g. 255.255.255.0 in most cases"
-msgstr "Voer hier uw netmasker in, bijv. 255.255.255.0 in de meeste gevallen"
+msgstr "Ievadiet šeit savu tīkla masku, piemēram, visbiežāk 255.255.255.0"
 
 #: ../modules/network.c:1072
 msgid "Broadcast"
-msgstr "Broadcast"
+msgstr "Raidadrese"
 
 #: ../modules/network.c:1074
 msgid "Enter your broadcast address here, usually the same like your IP with 255 as last number."
-msgstr "Voer hier uw broadcast-adres in, meestal hetzelfde als uw IP met 255 als laatste getal."
+msgstr "Ievadiet raidadresi šeit, parasti tāda pati, kā jūsu IP adrese, tikai ar 255 pēdējo ciparu vietā."
 
 #: ../modules/network.c:1076
 msgid "Gateway"
-msgstr "Gateway"
+msgstr "Vārteja"
 
 #: ../modules/network.c:1078
 msgid "Enter the IP Address of your default gateway here."
-msgstr "Voer hier het IP-adres van uw standaard gateway in."
+msgstr "Ievadiet šeit noklusētās vārtejas IP adresi."
 
 #: ../modules/network.c:1087 ../modules/network.c:1201
 msgid "WiFi device"
-msgstr "WiFi-apparaat"
+msgstr "WiFi ierīce"
 
 #: ../modules/network.c:1095 ../modules/network.c:1209
 msgid "Configure"
-msgstr "Instellen"
+msgstr "Konfigurēt"
 
 #. page items
 #: ../modules/network.c:1192 ../modules/network.c:1419
 msgid "Hostname"
-msgstr "Hostnaam"
+msgstr "Resursdatora nosaukums"
 
 #: ../modules/network.c:1194
 msgid "Enter your desired hostname here. This parameter is optional."
-msgstr "Voer hier uw gewenste hostnaam in. Deze parameter is optioneel."
+msgstr "Ievadiet savu vēlēmu resursdatora nosaukumu. Šis parametrs nav obligāts."
 
 #. page items
 #: ../modules/network.c:1309
 msgid "Provider"
-msgstr "Provider"
+msgstr "Devējs"
 
 #: ../modules/network.c:1311
 msgid "Here you need to enter the name of the provider configuration to use for this interface."
-msgstr "Hier dient u de naam in te voeren van de te gebruiken providerinstellingen voor deze interface."
+msgstr "Šeit jums jāievada nosaukums konfigurācijas devējam, lai izmantotu šo interfeisu."
 
 #: ../modules/network.c:1334
 msgid "Global Settings"
-msgstr "Algemene instellingen"
+msgstr "Globālie uzstādījumi"
 
 #: ../modules/network.c:1375
 msgid "Proxy"
-msgstr "Proxy"
+msgstr "Starpniekserveris"
 
 #: ../modules/network.c:1376
 msgid "If you want/need to use a proxy, enter it here. (This only applies to dillo for now.)"
-msgstr "Als u een proxy wilt/moet gebruiken, kunt u die hier invoeren. (Voorlopig alleen van toepassing voor dillo.)"
+msgstr "Ja jūs gribētu/vajadzētu izmantot starpniekserveri, ievadiet to šeit. (Pagaidām tas attiecas tikai uz dillo.)"
 
 #: ../modules/network.c:1382
 msgid "No proxy for"
-msgstr "Geen proxy voor"
+msgstr "Neizmantot starpniekserveri priekš"
 
 #: ../modules/network.c:1384
 msgid "Here you should enter your local domain for that you don't want to use a proxy."
-msgstr "Hier dient u uw lokale domein in te voeren, als u geen proxy wilt gebruiken."
+msgstr "Šeit jums būtu jāievada lokālais domēns, kuram jūs nevēlaties izmantot starpniekserveri."
 
 #: ../modules/network.c:1391
 msgid "DNS server"
-msgstr "DNS-server"
+msgstr "DNS serveris"
 
 #: ../modules/network.c:1393
 msgid "Enter the IP of the DNS(name-) server to use here."
-msgstr "Voer hier het IP-adres van uw DNS-(naam)server in."
+msgstr "Ievadiet IP izmantojamajam DNS (nosaukumu-) severim."
 
 #: ../modules/network.c:1421
 msgid "Enter the Hostname to use for this machine"
-msgstr "Voer de te gebruiken hostnaam voor deze machine in"
+msgstr "Ievadiet šīs mašīnas resursdatora nosaukumu."
 
 #: ../modules/network.c:1612
 msgid ""
 "Here you may change the basic configuration type of your device.\n"
 "Use \"static\" for manual interface configuration, \"dhcp\" to use DHCP and \"ppp\" to make the device a point-to-point device."
 msgstr ""
-"Hier kunt u de basisconfiguratiesoort van uw apparaat wijzigen.\n"
-"Gebruik \"static\" voor handmatige interfaceconfiguratie, \"dhcp\" om DHCP te gebruiken, en \"ppp\" om het apparaat punt-naar-punt te maken."
+"Šeit jūs vart izmainīt ierīces pamata konfigurācijas tipu.\n"
+"Izmantojiet \"statisko\", lai ievadītu pats konfigurāciju, \"DHCP\", lai izmantotu DHCP serveri un \"ppp\", lai izveidoti punkts-uz-punktu ierīci."
 
 #: ../modules/network.c:1618
 msgid "Enable this option if your device is a WiFi device"
-msgstr "Schakel deze optie in als uw apparaat een WiFi-apparaat is"
+msgstr "Ieslēgt šīs opecijas WiFi ierīcei"
 
 #: ../modules/network.c:1620
 msgid "Click to set the wireless options for this device"
-msgstr "Klik om de opties voor dit draadloze apparaat in te stellen"
+msgstr "Uzklikšķiniet, lai uztādītu ierīcei bezvadu opcijas"
 
 #: ../modules/network.c:1622
 msgid "Set the mode your WiFi card should work. (managed or ad-hoc)."
-msgstr "Stel de te gebruiken modus van uw WiFi-card in ('gemanaged' of 'ad-hoc')."
+msgstr "Uzstādīt WiFi kartes darba režīmu. (pārvaldītais vai ad-hoc)."
 
 #: ../modules/network.c:1625
 msgid "Set the enrcyption mode: off for no WEP encryption, open for open system and restricted for resticted WEP connections only."
-msgstr "Stel de versleutelingsmodus in: 'uit' voor geen WEP-versleuteling, 'open' voor een open systeem, en 'ingeperkt' voor alleen ingeperkte WEP-verbindingen."
+msgstr "Uzstādīt šifrēšanas režīmu: izlēgēt, ja nav WEP šifrēšana; atvērts, priekš atvērtām sistēmām; ierobežoto, tikai priekš WEP ierobežotajiem savienojumiem."
 
 #: ../modules/network.c:1630
 msgid "Enter the essid of your WiFi network here."
-msgstr "Voer hier de ESSID van uw WiFi-netwerk in."
+msgstr "Ievadiet šeit sava WiFi tīkla essid."
 
 #: ../modules/network.c:1633
 msgid "Enter your WEP key here in (iwconfig format), e.g.: \"s:12345\""
-msgstr "Voer hier uw WEP-sleutel in (iwconfig-opmaak), bijv.: \"s:12345\""
+msgstr "Ievadiet savu WEP atslēgu šeit (iwconfig formātā), tas ir: \"s:12345\""
 
 #: ../modules/network.c:1636
 msgid "Select the WEP key to use."
-msgstr "Kies de te gebruiken WEP-sleutel."
+msgstr "Norādiet izmantojamo WEP atslēgu."
 
 #: ../modules/network.c:1639
 msgid "Enter the channel number or frequency if needed. If not needed leave this field blank."
-msgstr "Voer zo nodig het kanaalnummer of de frequentie in. Laat het veld anders leeg."
+msgstr "Ievadiet kanāla numuru vai frekvenci, pēc vajadzības. Ja nav nepieciešamas, atstājiet laukus tukšus."
 
 #: ../modules/network.c:1655
 msgid "Remove current Interface"
-msgstr "Huidige interface verwijderen"
+msgstr "Noņemt patreizējo interfeisu"
 
 #: ../modules/network.c:1665
 msgid "Add a new Interface"
-msgstr "Een nieuwe interface toevoegen"
+msgstr "Pievienot jaunu interfeisu"
 
 #: ../modules/network.c:1672
 msgid "Info"
-msgstr "Info"
+msgstr "Informācija"
 
 #: ../modules/network.c:1676
 msgid "Show current configuration."
-msgstr "Huidige instellingen weergeven."
+msgstr "Rādīt patreizējo konfigurāciju."
 
 #: ../modules/network.c:1694
 msgid "Couldn't read network configuration."
-msgstr "Kan netwerkinstellingen niet lezen."
+msgstr "Nevar nolasīt tīkla konfigurāciju."
 
 #: ../modules/network.c:1701
 msgid "global"
-msgstr "algemeen"
+msgstr "globāls"
 
 #: ../modules/sleep/sinterface.c:64
 msgid "Auto sleep"
-msgstr "Automatisch slapen"
+msgstr "Auto gulēšana"
 
 #: ../modules/sleep/sinterface.c:74 ../modules/sleep/sinterface.c:105
 msgid "enabled"
-msgstr "ingeschakeld"
+msgstr "ieslēgt"
 
 #: ../modules/sleep/sinterface.c:92
 msgid "sleep timeout"
-msgstr "slaapwachttijd"
+msgstr "gulēšanas iztece"
 
 #: ../modules/sleep/sinterface.c:95
 msgid "Auto dim"
-msgstr "Automatisch dimmen"
+msgstr "Auto izdzišana"
 
 #: ../modules/sleep/sinterface.c:122
 msgid "backlight dim timeout"
-msgstr "dim-wachttijd voor achtergrondlicht"
+msgstr "aizmugures gaismas izdzišanas iztece"
 
 #: ../modules/sleep/sinterface.c:124
 msgid "Auto dim level"
-msgstr "Automatisch dimniveau"
+msgstr "Auto izdzišanas līmenis"
 
 #: ../modules/sleep/sinterface.c:144
 msgid "Advanced Controls"
-msgstr "Geavanceerde mogelijkheden"
+msgstr "Paplašinātās kontroles"
 
 #: ../modules/sleep/sinterface.c:154
 msgid "CPU"
-msgstr "Processor"
+msgstr "CPU"
 
 #: ../modules/sleep/sinterface.c:160
 msgid "Sleep on cpu less than load"
-msgstr "Slapen bij processorbelasting minder dan"
+msgstr "Gulēt uz CPU, mazāks noslogojums"
 
 #: ../modules/sleep/sinterface.c:164
 msgid "load below"
-msgstr "belasting onder"
+msgstr "noslogojums zem"
 
 #: ../modules/sleep/sinterface.c:180
 msgid "APM"
@@ -1986,247 +1983,96 @@ msgstr "APM"
 
 #: ../modules/sleep/sinterface.c:186
 msgid "Sleep on AC"
-msgstr "Slapen op AC"
+msgstr "Gulēt uz AC"
 
 #: ../modules/sleep/sinterface.c:188
 msgid "probe IRQs"
-msgstr "IRQs onderzoeken"
+msgstr "izpētīt IRQ"
 
 #: ../modules/sleep/sinterface.c:194
 msgid "Check IRQ activity"
-msgstr "IRQ-activiteit controleren"
+msgstr "Pārbaudīt IRQ aktivitāti"
 
 #: ../desktop/gpe-conf-admin.desktop.in.h:1
 msgid "User Access"
-msgstr "Gebruikerstoegang"
+msgstr "Lietotāja pieeja"
 
 #: ../desktop/gpe-conf-admin.desktop.in.h:2
 msgid "User access administration"
-msgstr "Gebruikerstoegangbeheer"
+msgstr "Lietotāja pieejas administrēšana"
 
 #: ../desktop/gpe-conf-cardinfo.desktop.in.h:1
 msgid "PC/CF Cards"
-msgstr "PC/CF-kaarten"
+msgstr "PC/CF kartes"
 
 #: ../desktop/gpe-conf-cardinfo.desktop.in.h:2
 msgid "PC/CF Cards info and config"
-msgstr "Info en instellingen van PC/CF-kaarten"
+msgstr "PC/CF karšu informācija un konfigurācija"
 
 #: ../desktop/gpe-conf.desktop.in.h:1
 msgid "Control Panel"
-msgstr "Configuratiescherm"
+msgstr "Kontroles panelis"
 
 #: ../desktop/gpe-conf-keys.desktop.in.h:1
 msgid "Keyboard and Button Setup"
-msgstr "Toetsenbord- en knoppeninstellingen"
+msgstr "Klaviatūras un pogu uzstādījumi"
 
 #: ../desktop/gpe-conf-keys.desktop.in.h:2
 msgid "Keys and Buttons"
-msgstr "Toetsenbord en knoppen"
+msgstr "Taustiņi un pogas"
 
 #: ../desktop/gpe-conf-ownerinfo.desktop.in.h:2
 msgid "Set Owner Information"
-msgstr "Eigenaarsinformatie instellen"
+msgstr "Uzstādīt īpašnieka informāciju"
 
 #: ../desktop/gpe-conf-serial.desktop.in.h:1
 msgid "Serial Port Settings"
-msgstr "Seriëlepoortinstellingen"
+msgstr "Seriālā porta uzstādījumi"
 
 #: ../desktop/gpe-conf-sleep.desktop.in.h:1
 msgid "Sleep Config"
-msgstr "Slaapinstellingen"
+msgstr "Gulēšanas konfigurācija"
 
 #: ../desktop/gpe-conf-sleep.desktop.in.h:2
 msgid "Sleep Configuration"
-msgstr "Slaapinstellingen"
+msgstr "Gulēšanas konfigurācija"
 
 #: ../desktop/gpe-conf-sound.desktop.in.h:1
 msgid "Sound Settings"
-msgstr "Geluidsinstellingen"
+msgstr "Skaņas uzstādījumi"
 
 #: ../desktop/gpe-conf-sound.desktop.in.h:2
 msgid "Sound defaults and setup"
-msgstr "Geluidsstandaardwaarden en -instellingen"
+msgstr "Skaņas noklusējumi un uzstādījumi"
 
 #: ../desktop/gpe-conf-sysinfo.desktop.in.h:1
 msgid "System Info"
-msgstr "Systeeminfo"
+msgstr "Sistēmas informācija"
 
 #: ../desktop/gpe-conf-theme.desktop.in.h:1
 msgid "Global Appearance Setup"
-msgstr "Globale instellingen van uiterlijk"
+msgstr "Globālā izskata uzstādījumi"
 
 #: ../desktop/gpe-conf-time.desktop.in.h:1
 msgid "Date/Time Setup"
-msgstr "Datum/tijd-instellingen"
+msgstr "Datuma un laika uzstādījumi"
 
 #: ../desktop/gpe-conf-time.desktop.in.h:2
 msgid "Setup Date and Time"
-msgstr "Datum en tijd instellen"
+msgstr "Uzstādīt datumu un laiku"
 
 #: ../desktop/gpe-conf-usb.desktop.in.h:1
 msgid "Change USB settings"
-msgstr "USB-instellingen wijzigen"
+msgstr "Mainīt USB uzstādījumus"
 
 #: ../desktop/gpe-conf-usb.desktop.in.h:2
 msgid "USB Settings"
-msgstr "USB-instellingen"
+msgstr "USB uzstādījumi"
 
 #: ../desktop/gpe-conf-users.desktop.in.h:1
 msgid "Manage local users"
-msgstr "Lokale gebruikers beheren"
+msgstr "Pārvaldīt vietējos lietoājus"
 
 #: ../desktop/gpe-conf-users.desktop.in.h:2
 msgid "User Manager"
-msgstr "Gebruikersbeheer"
-
-#~ msgid "Daylight Saving"
-#~ msgstr "Zomertijd"
-
-#~ msgid "Use daylight saving time"
-#~ msgstr "Zomertijd gebruiken"
-
-#~ msgid "Check this box if you want your device to handle daylight saving time for you."
-#~ msgstr "Selecteer deze optie als u wilt dat het apparaat voor u zomertijd regelt."
-
-#~ msgid "Offset:"
-#~ msgstr "Positie:"
-
-#~ msgid "Default"
-#~ msgstr "Standaard"
-
-#~ msgid "Use default DST offset of one hour?"
-#~ msgstr "Wilt u de standaard DST positie van 1 uur gebruiken?"
-
-#~ msgid "Hours"
-#~ msgstr "Uren"
-
-#~ msgid "Select daylight saving time offset hours here."
-#~ msgstr "Selecteer hier de positie in uren voor zomertijd."
-
-#~ msgid "Minutes"
-#~ msgstr "Minuten"
-
-#~ msgid "Select daylight saving time offset minutes here."
-#~ msgstr "Selecteer hier de positie in minuten voor zomertijd."
-
-#~ msgid "Screensaver"
-#~ msgstr "Schermbeveiliging"
-
-#~ msgid "Delay until start"
-#~ msgstr "Uitstellen tot start"
-
-#~ msgid "Orientation"
-#~ msgstr "Oriëntatie"
-
-#~ msgid "Couldn't read screen settings!"
-#~ msgstr "Kon scherminstellingen niet lezen!"
-
-#~ msgid "Use DHCP in any case (usually not needed)."
-#~ msgstr "In ieder geval DHCP gebruiken (meestal niet nodig)."
-
-#~ msgid "yes"
-#~ msgstr "ja"
-
-#~ msgid "Add Interface"
-#~ msgstr "Interface toevoegen"
-
-#~ msgid "Remove Interface"
-#~ msgstr "Interface verwijderen"
-
-#~ msgid "Close"
-#~ msgstr "Sluiten"
-
-#~ msgid "Close network tool"
-#~ msgstr "Netwerkgereedschap sluiten"
-
-#~ msgid "Red"
-#~ msgstr "Rood"
-
-#~ msgid "Blue"
-#~ msgstr "Blauw"
-
-#~ msgid "Both H"
-#~ msgstr "Beide H"
-
-#~ msgid "Reset button config to default?"
-#~ msgstr "Knoppenconfig terugzetten naar standaard?"
-
-#~ msgid "User Defined"
-#~ msgstr "Door gebruiker bepaald"
-
-#~ msgid "Record Memo"
-#~ msgstr "Memo opnemen"
-
-#~ msgid "Calendar"
-#~ msgstr "Kalender"
-
-#~ msgid "Contacts"
-#~ msgstr "Contacten"
-
-#~ msgid "Audio Player"
-#~ msgstr "Geluidspeler"
-
-#~ msgid "Web Browser"
-#~ msgstr "Webbladerprogramma"
-
-#~ msgid "To-do List"
-#~ msgstr "Te-doen lijst"
-
-#~ msgid "Toggle Desktop"
-#~ msgstr "Bureaublad schakelen"
-
-#~ msgid "Defaults"
-#~ msgstr "Standaardwaarden"
-
-#~ msgid "Image:"
-#~ msgstr "Afbeelding:"
-
-#~ msgid "idle(sec)"
-#~ msgstr "niet bezig (sec)"
-
-#~ msgid "load"
-#~ msgstr "belasting"
-
-#~ msgid "Add user"
-#~ msgstr "Gebruiker toevoegen"
-
-#~ msgid "Add a new user"
-#~ msgstr "Een nieuwe gebruiker toevoegen"
-
-#~ msgid "Edit existing user"
-#~ msgstr "Bestaande gebruiker bewerken"
-
-#~ msgid "Delete existing user"
-#~ msgstr "Bestaande gebruiker verwijderen"
-
-#~ msgid "Couldn't find default runlevel!"
-#~ msgstr "Kon standaard runlevel niet vinden!"
-
-#~ msgid "Card Services release does not match!"
-#~ msgstr "Kaartvoorzieningen versie komt niet overeen!"
-
-#~ msgid "Could not get CS revision info!\n"
-#~ msgstr "Kon CS revisie info niet verkrijgen!\n"
-
-#~ msgid ""
-#~ "<b>Interface %s</b>\n"
-#~ "Type: %s\n"
-#~ msgstr ""
-#~ "<b>Interface %s</b>\n"
-#~ "Soort: %s\n"
-
-#~ msgid "could not open touchscreen device '%s'\n"
-#~ msgstr "kon aanraakscherm-apparaat '%s' niet openen\n"
-
-#~ msgid "Familiar Version"
-#~ msgstr "Familiar-versie"
-
-#~ msgid "Flash"
-#~ msgstr "Flash"
-
-#~ msgid "Syslog"
-#~ msgstr "Syslog"
-
-#~ msgid "Button Configuration"
-#~ msgstr "Knop configuratie"
+msgstr "Lietotāju pārvaldība"
