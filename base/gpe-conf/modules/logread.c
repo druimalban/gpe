@@ -138,27 +138,33 @@ int logread_main(void)
 	INIT_G();
 
 	log_shmid = shmget(KEY_ID, 0, 0);
-	if (log_shmid == -1)
+	if (log_shmid == -1) {
 		printlog(txLog,
 		  _("Can't find circular buffer, is syslog running?\n"));
+		return FALSE;
+	}
 
 	/* Attach shared memory to our char* */
 	shbuf = shmat(log_shmid, NULL, SHM_RDONLY);
-	if (shbuf == NULL)
+	if (shbuf == NULL) {
 		printlog(txLog,
 		  _("Can't get access to syslogd's circular buffer."));
+		return FALSE;
+	}
 
 	log_semid = semget(KEY_ID, 0, 0);
-	if (log_semid == -1)
+	if (log_semid == -1) {
 	    printlog(txLog,
 		         _("Can't get access to semaphore(s) "\
 		         "for syslogd's circular buffer."));
+		return FALSE;
+	}
 
 	/* Suppose atomic memory read */
 	/* Max possible value for tail is shbuf->size - 1 */
 	cur = shbuf->tail;
        
-		if (semop(log_semid, SMrdn, 2) == -1) {
+	if (semop(log_semid, SMrdn, 2) == -1) {
         	shmdt(shbuf);
             return FALSE;
         }
@@ -167,7 +173,6 @@ int logread_main(void)
 		shbuf_size = shbuf->size;
 		shbuf_tail = shbuf->tail;
 		shbuf_data = shbuf->data; /* pointer! */
-#define DEBUG
 #ifdef DEBUG
     	printf("cur:%d tail:%i size:%i\n",
 					cur, shbuf_tail, shbuf_size);
