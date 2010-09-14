@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-05 16:51+0200\n"
+"POT-Creation-Date: 2010-09-14 18:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,7 +27,7 @@ msgid ""
 "Please enter password."
 msgstr ""
 
-#: ../applets.c:474 ../modules/screen/calibrate.c:32
+#: ../applets.c:474 ../modules/screen/calibrate.c:28
 msgid "Sorry, wrong password."
 msgstr ""
 
@@ -116,7 +116,7 @@ msgstr ""
 msgid "Jacket battery"
 msgstr ""
 
-#: ../modules/cfgfile.c:919
+#: ../modules/cfgfile.c:928
 msgid "No write access to network configuration."
 msgstr ""
 
@@ -279,35 +279,43 @@ msgstr ""
 msgid "Change backlight power and brightness."
 msgstr ""
 
-#: ../main.c:144
+#: ../main.c:125
+msgid "Task shutdown device"
+msgstr ""
+
+#: ../main.c:125
+msgid "Shut down device."
+msgstr ""
+
+#: ../main.c:146
 msgid "Settings saved"
 msgstr ""
 
-#: ../main.c:339
+#: ../main.c:341
 #, c-format
 msgid "'task_backlight' supports zero, one and two arguments.\n"
 msgstr ""
 
-#: ../main.c:358
+#: ../main.c:366
 #, c-format
 msgid "'task_nameserver' needs a new (and only one) nameserver as argument.\n"
 msgstr ""
 
-#: ../main.c:376
+#: ../main.c:384
 #, c-format
 msgid "'task_sound' needs (s)ave/(r)estore as argument.\n"
 msgstr ""
 
-#: ../main.c:444
+#: ../main.c:452
 msgid "Warning: PCMCIA init failed."
 msgstr ""
 
-#: ../main.c:476
+#: ../main.c:484
 #, c-format
 msgid "This mode is disabled, please try:\n"
 msgstr ""
 
-#: ../main.c:477
+#: ../main.c:485
 #, c-format
 msgid ""
 "\n"
@@ -315,12 +323,12 @@ msgid ""
 "where AppletName is in:\n"
 msgstr ""
 
-#: ../main.c:493
+#: ../main.c:501
 #, c-format
 msgid "Applet %s unknown!\n"
 msgstr ""
 
-#: ../main.c:494
+#: ../main.c:502
 #, c-format
 msgid ""
 "\n"
@@ -599,31 +607,27 @@ msgstr ""
 msgid "Unknown Device"
 msgstr ""
 
-#: ../modules/logread.c:116
+#: ../modules/logread.c:143
 msgid "Can't find circular buffer, is syslog running?\n"
 msgstr ""
 
-#: ../modules/logread.c:123
+#: ../modules/logread.c:151
 msgid "Can't get access to syslogd's circular buffer."
 msgstr ""
 
-#: ../modules/logread.c:130
+#: ../modules/logread.c:158
 msgid "Can't get access to semaphore(s) for syslogd's circular buffer."
 msgstr ""
 
-#: ../modules/logread.c:156
-msgid "<empty syslog>"
-msgstr ""
-
-#: ../modules/logread.c:227 ../modules/logread.c:243
+#: ../modules/logread.c:262 ../modules/logread.c:278
 msgid "System Log"
 msgstr ""
 
-#: ../modules/logread.c:252 ../modules/logread.c:268
+#: ../modules/logread.c:287 ../modules/logread.c:303
 msgid "Session Log"
 msgstr ""
 
-#: ../modules/logread.c:275
+#: ../modules/logread.c:310
 msgid "Could not open X session log.\n"
 msgstr ""
 
@@ -639,7 +643,7 @@ msgstr ""
 msgid "Ethernet Networking"
 msgstr ""
 
-#: ../modules/usb.c:252 ../modules/sysinfo.c:645
+#: ../modules/usb.c:252 ../modules/sysinfo.c:663
 msgid "Storage"
 msgstr ""
 
@@ -825,109 +829,121 @@ msgstr ""
 msgid "Terminal Font"
 msgstr ""
 
+#: ../modules/tasks.c:100
+msgid ""
+"Are you sure you want to power down?\n"
+"Unsaved data from applications will be lost."
+msgstr ""
+
 #. TRANSLATORS: "Familiar" is the name of a linux distribution.
-#: ../modules/sysinfo.c:195
+#: ../modules/sysinfo.c:197
 msgid "Familiar"
 msgstr ""
 
 #. TRANSLATORS: "OpenZaurus" is the name of a linux distribution.
-#: ../modules/sysinfo.c:206
+#: ../modules/sysinfo.c:208
 msgid "OpenZaurus"
 msgstr ""
 
-#. TRANSLATORS: "Debian" is the name of a linux distribution.
-#: ../modules/sysinfo.c:215
-msgid "Debian"
+#. TRANSLATORS: "Debian" and "Ubuntu" are names of linux distributions.
+#: ../modules/sysinfo.c:217
+msgid "Debian / Ubuntu"
 msgstr ""
 
 #. TRANSLATORS: "Ångström" is the name of a linux distribution.
-#: ../modules/sysinfo.c:226
+#: ../modules/sysinfo.c:228
 msgid "Ångström"
 msgstr ""
 
+#. TRANSLATORS: "µCross" is the name of a linux distribution.
+#: ../modules/sysinfo.c:239
+msgid "µCross"
+msgstr ""
+
 #. TRANSLATORS: "OpenEmbedded" is the name of a linux distribution.
-#: ../modules/sysinfo.c:235
+#: ../modules/sysinfo.c:248
+#, c-format
 msgid "OpenEmbedded"
 msgstr ""
 
-#: ../modules/sysinfo.c:277 ../modules/sysinfo.c:279
+#: ../modules/sysinfo.c:290 ../modules/sysinfo.c:292
 msgid "Build"
 msgstr ""
 
-#: ../modules/sysinfo.c:381
+#: ../modules/sysinfo.c:398
 msgid "Network Status"
 msgstr ""
 
 #. split string into long and short lines
-#: ../modules/sysinfo.c:395 ../modules/sysinfo.c:398
+#: ../modules/sysinfo.c:412 ../modules/sysinfo.c:415
 msgid "HWaddr (MAC)"
 msgstr ""
 
-#: ../modules/sysinfo.c:409 ../modules/sysinfo.c:410
+#: ../modules/sysinfo.c:426 ../modules/sysinfo.c:427
 #, c-format
 msgid "Wireless"
 msgstr ""
 
-#: ../modules/sysinfo.c:437
+#: ../modules/sysinfo.c:454
 msgid "Default Gateway"
 msgstr ""
 
-#: ../modules/sysinfo.c:480
+#: ../modules/sysinfo.c:497
 msgid "System information"
 msgstr ""
 
-#: ../modules/sysinfo.c:490
+#: ../modules/sysinfo.c:507
 msgid "Version"
 msgstr ""
 
-#: ../modules/sysinfo.c:522
+#: ../modules/sysinfo.c:540
 msgid "Distribution"
 msgstr ""
 
-#: ../modules/sysinfo.c:547
+#: ../modules/sysinfo.c:565
 msgid "System"
 msgstr ""
 
-#: ../modules/sysinfo.c:556
+#: ../modules/sysinfo.c:574
 msgid "Device information"
 msgstr ""
 
-#: ../modules/sysinfo.c:568
+#: ../modules/sysinfo.c:586
 msgid "Device Name"
 msgstr ""
 
-#: ../modules/sysinfo.c:587
+#: ../modules/sysinfo.c:605
 msgid "Manufacturer:"
 msgstr ""
 
-#: ../modules/sysinfo.c:600
+#: ../modules/sysinfo.c:618
 msgid "RAM:"
 msgstr ""
 
 #. TRANSLATORS: MB == Mega Bytes
-#: ../modules/sysinfo.c:606 ../modules/sysinfo.c:622 ../modules/storage.c:176
+#: ../modules/sysinfo.c:624 ../modules/sysinfo.c:640 ../modules/storage.c:176
 #: ../modules/storage.c:183 ../modules/storage.c:329 ../modules/storage.c:340
 #: ../modules/storage.c:445 ../modules/storage.c:458
 msgid "MB"
 msgstr ""
 
-#: ../modules/sysinfo.c:616
+#: ../modules/sysinfo.c:634
 msgid "Storage:"
 msgstr ""
 
-#: ../modules/sysinfo.c:628
+#: ../modules/sysinfo.c:646
 msgid "Hardware"
 msgstr ""
 
-#: ../modules/sysinfo.c:638
+#: ../modules/sysinfo.c:656
 msgid "Battery"
 msgstr ""
 
-#: ../modules/sysinfo.c:652
+#: ../modules/sysinfo.c:670
 msgid "Networks"
 msgstr ""
 
-#: ../modules/sysinfo.c:659
+#: ../modules/sysinfo.c:677
 msgid "Log Display"
 msgstr ""
 

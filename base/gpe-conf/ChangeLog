@@ -1,18 +1,20 @@
-2010-09-14      Florian Boor <florian.boor@kernelconcepts.de>
+2010-09-14  Florian Boor <florian.boor@kernelconcepts.de>
+	* Release 0.2.9
 	* Several sysinfo fixes, add display of µCross distribution
 	* Device information for some Ka-Ro boards
+	* Update translations
 
-2010-02-08      Florian Boor <florian.boor@kernelconcepts.de>
+2010-02-08  Florian Boor <florian.boor@kernelconcepts.de>
 	* Device information for Archos 5 and 7 series
 
-2010-01-11      Florian Boor <florian.boor@kernelconcepts.de>
+2010-01-11  Florian Boor <florian.boor@kernelconcepts.de>
 	* Add device information for various Atmel boards. 
 	  Patch contributed by Nicolas Ferre <nicolas.ferre@atmel.com>
 
-2009-10-24      Florian Boor <florian.boor@kernelconcepts.de>
+2009-10-24  Florian Boor <florian.boor@kernelconcepts.de>
 	* Add information about the TopasA900.
 
-2009-05-05      Florian Boor <florian.boor@kernelconcepts.de>
+2009-05-05  Florian Boor <florian.boor@kernelconcepts.de>
 	* Add information about the mini2440 class of devices.
 
 2009-04-15 Ned Ludd  <solar@gentoo.org>
@@ -20,7 +22,7 @@
 	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
 	* Targeted for gpe-3.0 release.
 
-2009-03-11      Florian Boor <florian.boor@kernelconcepts.de>
+2009-03-11  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* suid.c: Use 'shutdown' command instead of 'poweroff' which might
 	  fail in some cases.
