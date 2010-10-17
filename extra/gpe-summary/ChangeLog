@@ -1,3 +1,10 @@
+2010-10-17  Graham Cobb  <g+770@cobb.uk.net>
+
+	* gpesummary.c (show_all): Check gpesyncd lock
+	(hildon_home_applet_lib_deinitialize): Close gpesyncd lock file
+	(gpe_summary_plugin_class_finalize): Close gpesyncd lock file
+	Add get_sync_lock() and release_sync_lock()
+
 2010-01-24  Graham Cobb  <g+770@cobb.uk.net>
 
 	* gpesummary.c (hildon_home_applet_lib_initialize): Fix typo in GnomeVFSMonitor

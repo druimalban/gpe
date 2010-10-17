@@ -39,6 +39,10 @@
 #include <libintl.h>
 #include <locale.h>
 
+#include <sys/file.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 /* Hildon includes */
 #if HILDON_VER > 0
@@ -80,6 +84,9 @@ GnomeVFSMonitorHandle *monitor_calendar = NULL;
 gchar *todo_file = NULL;
 GnomeVFSMonitorHandle *monitor_todo = NULL;
  
+#define LOCK_FILENAME "/.gpe/gpesyncd.lock"
+int lock_fd = -1;
+
 #define _(String) dgettext (PACKAGE,String)
 
 #define WIDTH 300
@@ -765,9 +772,43 @@ void loadPrefs(){
 	g_message ("load_prefs 5");
 }
 
+gboolean get_sync_lock() {
+  /* Note that the gpesyncd lock is purely advisory.
+     The actual database consistency is guaranteed
+     by sqlite.  However, if a sync is in progress
+     it is best for gpesummary not to bother reading the
+     databases until it finishes and it is best for the
+     sync to wait until gpesummary has finished before
+     starting.  This minimises "database is locked"
+     errors from sqlite. */
+
+  if (lock_fd < 0) {
+    GString *filename = g_string_new(g_get_home_dir());
+    g_string_append(filename, LOCK_FILENAME);
+    lock_fd = open(filename->str, O_RDONLY);
+    g_string_free(filename, TRUE);
+    if (lock_fd < 0) return TRUE; /* If no lock file is present, just continue */
+  }
+
+  /* Try to take out the shared lock, if it fails return false */
+  return flock(lock_fd, LOCK_SH | LOCK_NB) >= 0;
+}
+void release_sync_lock() {
+  if (lock_fd >= 0) flock(lock_fd, LOCK_UN | LOCK_NB);
+}
+
 
 void show_all() {
   g_message("%s",__func__);
+
+  /* Check if there is a sync in progress */
+  if (!get_sync_lock()) {
+    /* Don't bother with this update until the sync completes */
+    g_message("%s cancelled: sync in progress",__func__);
+    refresh_now = TRUE; /* Call us again when the next minute goes by */
+    return;
+  }
+
 	last_gui_update=time(NULL);
 	loadPrefs();
 	g_message ("show_all 2");
@@ -855,6 +896,8 @@ void show_all() {
 	}
 
 	gtk_widget_show_all(GTK_WIDGET(mainvbox));
+
+	release_sync_lock();
 	g_message ("show_all 7");
 }
 
@@ -1321,6 +1364,8 @@ void
 	monitor_calendar = NULL;
 	if (monitor_todo) gnome_vfs_monitor_cancel(monitor_todo);
 	monitor_todo = NULL;
+	if (lock_fd >= 0) close(lock_fd);
+	lock_fd = -1;
 
 	/*if (app) {
 		g_free (app);
@@ -1608,6 +1653,8 @@ gpe_summary_plugin_class_finalize (GpeSummaryPluginClass *class)
   monitor_todo = NULL;
   if (todo_file) g_free(todo_file);
   todo_file = NULL;
+  if (lock_fd >= 0) close(lock_fd);
+  lock_fd = -1;
   g_message("hildon_home_applet_lib_deinitialize 7");
 
 
