@@ -70,10 +70,12 @@
  *
  * 1.3.3    Support for additional RFC2426 attributes implemented in libmimedir and libgpevtype.
  *
+ * 1.3.4    Locking improved so reliability should be better.
+ *
  */
 #define PROTOCOL_MAJOR 1
 #define PROTOCOL_MINOR 3
-#define PROTOCOL_EDIT 3
+#define PROTOCOL_EDIT 4
 
 #define BUFFER_LEN 25 
 
@@ -87,11 +89,17 @@ typedef enum
 
 //typedef struct gpesyncd_context gpesyncd_context;
 
+/* Advisory sync in progress lock */
+#define LOCK_FILENAME "/.gpe/gpesyncd.lock"
+#define LOCK_RETRY 100000000 /* nanoseconds */
+#define LOCK_ATTEMPTS 30
+
 typedef struct
 {
   FILE *ifp, *ofp;
   int socket;
   int remote;
+  int lock;
 
   EventDB *event_db;
   GSList *event_calendars;
@@ -104,6 +112,8 @@ typedef struct
 
 #include "import.h"
 #include "export.h"
+
+gboolean gpesyncd_lock(gpesyncd_context *ctx);
 
 extern void free_object_list(GSList *);
 

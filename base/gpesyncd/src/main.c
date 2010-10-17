@@ -13,6 +13,12 @@
  */
 
 #include "gpesyncd.h"
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/file.h>
+#include <time.h>
 
 int verbose = 0;
 
@@ -81,6 +87,20 @@ gboolean setup_calendars (gpesyncd_context * ctx, char *calendar)
   return TRUE;
 }
 
+/*! \brief Retry getting sync lock
+ *
+ * \param ctx	The current context
+ *
+ * Retries getting the sync lock in case we haven't got it yet.
+ *
+ * Only tries once, non-blocking. Returns true if the lock has
+ * been obtained, false if not.
+ */
+gboolean gpesyncd_lock(gpesyncd_context *ctx)
+{
+  return flock(ctx->lock, LOCK_EX | LOCK_NB) >= 0;
+}
+
 /*! \brief Initializes the databases
  *
  * \param ctx	The current context
@@ -91,6 +111,47 @@ gboolean setup_calendars (gpesyncd_context * ctx, char *calendar)
 void
 gpesyncd_setup_databases (gpesyncd_context * ctx)
 {
+  /* Create advisory lock to signal sync in progress
+
+     Note that this is purely for information of any other
+     process that might be interested to know that a sync
+     is in process. This is NOT used for database
+     consistency: sqlite handles that.
+
+     It is mostly used by gpesummary to tell it not to
+     bother trying to update the display until the sync
+     is complete as there may be lot of changes happening.
+
+     As this is just advisory, we continue if errors occur or
+     the lock cannot be obtained.  The locking logic is:
+     
+     * Try for LOCK_RETRY*LOCK_ATTEMPTS nanoseconds to get the exclusive lock now.
+
+     * Also try to get the lock each time any update is made.
+
+     * Release the lock when the databases are closed.
+
+  */
+  GString *filename = g_string_new(g_get_home_dir());
+  g_string_append(filename, LOCK_FILENAME);
+  ctx->lock = creat(filename->str, S_IRUSR | S_IWUSR);
+  if (ctx->lock >= 0) {
+    struct timespec req = {0, LOCK_RETRY};
+    gboolean _ret;
+    unsigned int _tries = 0;
+    for (;;) {
+      _ret = gpesyncd_lock(ctx);
+      if ((!_ret) && _tries < LOCK_ATTEMPTS) {
+	nanosleep(&req, NULL);
+	_tries++;
+      } else break;
+    }
+    if (! _ret) fprintf(stderr, "Continuing without sync lock.\n");
+  } else {
+    perror("Continuing without sync lock");
+  }
+  g_string_free(filename, TRUE);
+
   if (! gpe_pim_categories_init() ) {
     fprintf(stderr, "Could not open catagories database.\n");
   }
@@ -99,7 +160,7 @@ gpesyncd_setup_databases (gpesyncd_context * ctx)
     fprintf(stderr, "Could not open contacts database.\n");
   }
 
-  GString *filename = g_string_new(g_get_home_dir());
+  filename = g_string_new(g_get_home_dir());
   g_string_append(filename, "/.gpe/calendar");
   ctx->event_db = event_db_new (filename->str, NULL);
   g_string_free(filename, TRUE);
@@ -221,6 +282,9 @@ gpesyncd_context_free (gpesyncd_context * ctx)
 
       if (ctx->result)
 	g_string_free (ctx->result, TRUE);
+
+      /* Sync lock */
+      close(ctx->lock);
 
       g_free (ctx);
     }
@@ -345,7 +409,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
       data = (gchar *) (cmd_string->str + pos - 1);
       /* We remove any leading spaces */
       while (data[0] == ' ')
-	*data++;
+	data++;
     }
   else
     data = NULL;
@@ -390,6 +454,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
   else if ((!strcasecmp (cmd, "ADD")) && (type != GPE_DB_TYPE_UNKNOWN)
 	   && (data))
     {
+      gpesyncd_lock(ctx);
       uid = 0;
       switch (type)
 	{
@@ -418,6 +483,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
   else if ((!strcasecmp (cmd, "MODIFY")) && (type != GPE_DB_TYPE_UNKNOWN)
 	   && (data) && (uid > 0))
     {
+      gpesyncd_lock(ctx);
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
@@ -444,6 +510,7 @@ do_command (gpesyncd_context * ctx, gchar * command)
   else if ((!strcasecmp (cmd, "DEL")) && (type != GPE_DB_TYPE_UNKNOWN)
 	   && (uid > 0))
     {
+      gpesyncd_lock(ctx);
       switch (type)
 	{
 	case GPE_DB_TYPE_VCARD:
@@ -608,7 +675,7 @@ command_loop (gpesyncd_context * ctx)
       tmpstr = strrchr (cmd_string->str, ' ');
       if (tmpstr)
 	{
-	  *tmpstr++;
+	  tmpstr++;
 	  if (!strncasecmp (tmpstr, "BEGIN", 5))
 	    {
 	      addtype = strchr (tmpstr, 'V');
