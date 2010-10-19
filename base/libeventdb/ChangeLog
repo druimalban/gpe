@@ -1,3 +1,9 @@
+2010-10-20  Graham Cobb  <g+770@cobb.uk.net>
+
+	* sqlite.c (sqlite_db_finalize): We have to delay closing
+	the database until after the parent finalize has run.
+	This undoes the change made in this function on 2009-09-14.
+
 2010-01-21  Graham Cobb  <g+770@cobb.uk.net>
 
 	* event.c (event_duplicate): do not copy the pointers for

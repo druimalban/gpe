@@ -1194,9 +1194,12 @@ sqlite_db_finalize (GObject *object)
 {
   SqliteDB *db = SQLITE_DB (object);
 
-  if (db->sqliteh) sqlite_close (db->sqliteh);
-
   G_OBJECT_CLASS (sqlite_db_parent_class)->finalize (object);
+
+  /* Note: the database cannot be closed until after the parent's
+     finalize has run because that triggers writing out the cached
+     events */
+  if (db->sqliteh) sqlite_close (db->sqliteh);
 }
 
 static int
