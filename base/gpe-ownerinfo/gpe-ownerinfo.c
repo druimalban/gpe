@@ -52,7 +52,7 @@ static GtkWidget *name;
 static GtkWidget *phone;
 static GtkWidget *email;
 static GtkWidget *address;
-static GdkPixbuf *photopixbuf;
+static GdkPixbuf *photopixbuf = NULL;
 static GtkWidget *smallphotobutton;
 static GtkWidget *bigphotobutton;
 static gchar *photofile = PREFIX "/share/pixmaps/gpe/gpe-logo.png";
@@ -67,6 +67,9 @@ on_expose_event (GtkWidget *widget, GdkEventExpose *event, gpointer data)
   guint resultwidth, resultheight;
   gfloat scale, scale_width = 2.72, scale_height = 3.14;
   GdkPixbuf *scaledpixbuf;
+
+  if (!photopixbuf)
+    return TRUE;
 
   maxwidth  = widget->allocation.width;
   maxheight = widget->allocation.height;
@@ -292,6 +295,7 @@ gpe_owner_info (void)
   GtkWidget *rightcolvbox;
   GtkSizeGroup *sizegroup;
   GtkWidget *sv, *vp;
+  GError *error = NULL;
   gint upgrade_result = UPGRADE_ERROR;
   
   /* gchar *gpe_catindent = gpe_get_catindent ();  */
@@ -378,8 +382,13 @@ gpe_owner_info (void)
       fclose (fp);
     }
 
-  /* FIXME: check error */
-  photopixbuf = gdk_pixbuf_new_from_file (photofile, NULL);
+  photopixbuf = gdk_pixbuf_new_from_file (photofile, &error);
+  if (!photopixbuf)
+    {
+      fprintf (stderr, "gpe-ownerinfo: failed to open icon '%s' (%s),",
+               photofile, error->message);
+      g_error_free(error);
+    }
 
   /* notebook with two pages;
    * page 1 holds the small photo and the info text,

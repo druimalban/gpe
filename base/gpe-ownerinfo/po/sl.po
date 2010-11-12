@@ -1,13 +1,14 @@
 # -*- mode:po; coding:utf-8; -*- Slovenian message catalogue for gpe-ownerinfo-0.22.
+# This file is distributed under the same license as the gpe-ownerinfo package.
 # Copyright (C) 2005 Free Software Foundation, Inc.
-# Matej Urbančič <matej.urban@gmail.com>, 2005.
+# Matej Urbančič <matej.urban@gmail.com>, 2005 - 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gpe-ownerinfo 0.22\n"
 "Report-Msgid-Bugs-To: bug-bison@gnu.org\n"
 "POT-Creation-Date: 2003-10-10 00:14+0200\n"
-"PO-Revision-Date: 2005-10-03 16:15+0100\n"
+"PO-Revision-Date: 2009-12-30 10:42+0100\n"
 "Last-Translator: Matej Urbančič <matej.urban@gmail.com>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"

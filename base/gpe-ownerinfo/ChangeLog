@@ -1,3 +1,8 @@
+2010-11-12 Florian Boor <florian@kernelconcepts.de>
+	* Apply patch fixing a segfault if an icon file is not present.
+          Contribution by Paulius Zaleckas <paulius.zaleckas@gmail.com>
+	* Update translations
+
 2009-04-15 Ned Ludd  <solar@gentoo.org>
 	* gpe-base/gpe-ownerinfo: gpe-ownerinfo.c 
 	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
