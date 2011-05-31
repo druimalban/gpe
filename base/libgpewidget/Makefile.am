@@ -56,7 +56,7 @@ pixmap_DATA = pixmaps/clock.png pixmaps/clock24.png pixmaps/day-night-wheel.png
 bin_PROGRAMS = infoprint
 infoprint_DEPENDENCIES = libgpewidget.la
 infoprint_SOURCES = infoprint-main.c
-infoprint_LDADD = -lgpewidget
+infoprint_LDADD = -lX11 -lgpewidget
 
 EXTRA_DIST = $(pixmap_DATA) \
              intltool-extract.in \
