@@ -1,3 +1,8 @@
+2011-05-31  Phil Blundell  <philb@gnu.org>
+
+	* COPYING: New.  For the avoidance of doubt, this package is
+	distributable under GPL 2 or (at your option) later versions.
+
 2009-05-12  Florian Boor <floriankernelconcepts.de>
 
 	* Remove minimix from default applets.
