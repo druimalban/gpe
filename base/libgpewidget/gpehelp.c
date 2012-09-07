@@ -33,7 +33,6 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <gdk/gdk.h>
 #include <glib.h>
-#include <glib/gkeyfile.h>
 
 
 /* helper function definitions*/
