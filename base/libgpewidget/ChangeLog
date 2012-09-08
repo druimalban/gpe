@@ -1,7 +1,8 @@
 2012-09-08 Philippe De Swert <philippedeswert@gmail.com>
 
-	* Update to support and work well with newer glib 2.32
-	* Apply patch to remove double include. Thanks go to Pacho Ramos and Neil Williams
+	* gpeiconlistitem.c dirbrowser.c colordialog.c gpetimesel.c color-slider.c gpeclockface.c 
+	  gpeiconlistview.c gtksimplemenu.c : Update to support and work well with newer glib 2.32
+	* gpehelp.c : Apply patch to remove double include. Thanks go to Pacho Ramos and Neil Williams 
 
 2009-09-19  Graham Cobb  <g+770@cobb.uk.net>
 
