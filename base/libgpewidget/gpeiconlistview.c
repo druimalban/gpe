@@ -99,7 +99,7 @@ void
 gpe_icon_list_view_set_bg (GPEIconListView *self, char *bg)
 {
   if (self->bgpixbuf)
-    g_object_unref (self->bgpixbuf);
+    gdk_pixbuf_unref (self->bgpixbuf);
   if (bg)
     self->bgpixbuf = gdk_pixbuf_new_from_file (bg, NULL);
   else
@@ -110,9 +110,9 @@ void
 gpe_icon_list_view_set_bg_pixmap (GPEIconListView *self, GdkPixbuf *bg)
 {
   if (self->bgpixbuf)
-    g_object_unref (self->bgpixbuf);
+    gdk_pixbuf_unref (self->bgpixbuf);
   if (bg)
-    g_object_ref (bg);
+    gdk_pixbuf_ref (bg);
   self->bgpixbuf = bg;
 }
 
@@ -246,7 +246,7 @@ _gpe_icon_list_view_check_icon_size (GPEIconListView *il, GObject *obj)
 	} 
       else 
 	{
-	  g_object_ref (icon->pb);
+	  gdk_pixbuf_ref (icon->pb);
 	  icon->pb_scaled = icon->pb;
 	}
     }
@@ -285,7 +285,7 @@ apply_translucency (GPEIconListView *il, GdkPixbuf *p)
   guchar *line;
   int i, j, w, h;
   int alpha, br, bg, bb;
-  int stride;
+  int stride, bpp;
 
   bb = il->bg_color.blue >> 8;
   bg = il->bg_color.green >> 8;
@@ -298,6 +298,7 @@ apply_translucency (GPEIconListView *il, GdkPixbuf *p)
   line = gdk_pixbuf_get_pixels (p);
   w = gdk_pixbuf_get_width (p);
   h = gdk_pixbuf_get_height (p);
+  bpp = gdk_pixbuf_get_bits_per_sample (p);
   stride = gdk_pixbuf_get_has_alpha (p) ? 4 : 3;
 
   for (j = 0; j < h; j++)
@@ -375,8 +376,8 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 		       w, h,
 		       GDK_RGB_DITHER_NORMAL, 0, 0);
       
-      g_object_unref (s);
-      g_object_unref (p);
+      gdk_pixbuf_unref (s);
+      gdk_pixbuf_unref (p);
 
     }
   else
@@ -434,7 +435,7 @@ _gpe_icon_list_view_expose (GtkWidget *widget, GdkEventExpose *event)
 	      
 	      if (icon->icon && icon->pb)
 		{
-		  g_object_unref (icon->pb);
+		  gdk_pixbuf_unref (icon->pb);
 		  icon->pb = NULL;
 		}
 	      
@@ -676,7 +677,7 @@ GObject *
 gpe_icon_list_view_add_item_pixbuf (GPEIconListView *self, char *title, GdkPixbuf *icon, gpointer udata)
 {
   GObject *new;
-  g_object_ref (icon);
+  gdk_pixbuf_ref (icon);
   new = _gpe_icon_list_view_new_icon (title, NULL, udata, icon);
   gpe_icon_list_item_set_parent (GPE_ICON_LIST_ITEM (new), self);
   self->icons = g_list_append (self->icons, new);
@@ -702,12 +703,12 @@ gpe_icon_list_view_set_item_icon (GPEIconListView *self, GObject *item, GdkPixbu
   i = GPE_ICON_LIST_ITEM (item);
   
   if (i->pb)
-    g_object_unref (i->pb);
+    gdk_pixbuf_unref (i->pb);
   if (i->pb_scaled)
-    g_object_unref (i->pb_scaled);
+    gdk_pixbuf_unref (i->pb_scaled);
   
   i->pb = new_pixbuf;
-  g_object_ref (i->pb);
+  gdk_pixbuf_ref (i->pb);
   
   _gpe_icon_list_view_check_icon_size (self, item);
 }
@@ -756,7 +757,7 @@ gpe_icon_list_view_set_icon_size (GPEIconListView *self, guint size)
     {
       GPEIconListItem *i = GPE_ICON_LIST_ITEM (iter->data);
       if (i->pb_scaled)
-	g_object_unref (i->pb_scaled);
+	gdk_pixbuf_unref (i->pb_scaled);
       i->pb_scaled = NULL;
     }
   

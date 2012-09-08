@@ -90,9 +90,9 @@ static void
 gpe_icon_list_item_fini (GPEIconListItem *item)
 {
   if (item->pb)
-    g_object_unref (item->pb);
+    gdk_pixbuf_unref (item->pb);
   if (item->pb_scaled)
-    g_object_unref (item->pb_scaled);
+    gdk_pixbuf_unref (item->pb_scaled);
 }
 
 GType
@@ -144,18 +144,18 @@ gpe_icon_list_item_get_pixbuf (GPEIconListItem *i)
  * Set the icon displayed by the item. 
  * The pixbuf will be resized to the icon size defined by the #GPEIconListView
  * the item belongs to. If an old icon exists its reference will be released by 
- * g_object_unref(). 
+ * gdk_pixbuf_unref(). 
  *
  */
 void
 gpe_icon_list_item_set_pixbuf (GPEIconListItem *i, GdkPixbuf *pixbuf)
 {
   if (i->pb)
-    g_object_unref (i->pb);
+    gdk_pixbuf_unref (i->pb);
   if (i->pb_scaled)
-    g_object_unref (i->pb_scaled);
+    gdk_pixbuf_unref (i->pb_scaled);
   
-  g_object_ref (pixbuf);
+  gdk_pixbuf_ref (pixbuf);
   i->pb = pixbuf;
 
   if (i->parent)

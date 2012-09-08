@@ -143,6 +143,29 @@ row_collapsed (GtkTreeView *tree_view, GtkTreeIter *iter, GtkTreePath *path, voi
 }
 
 static void
+build_parent_directories (GtkTreeStore *store, GtkTreeIter *iter, gchar *path)
+{
+  gchar *leafname;
+  GtkTreeIter new;
+  
+  if (strcmp (path, ".") && strcmp (path, "/"))
+    {
+      gchar *parent = g_path_get_dirname (path);
+      build_parent_directories (store, iter, parent);
+      g_free (parent);
+      gtk_tree_store_append (store, &new, iter);
+    }
+  else
+    gtk_tree_store_append (store, &new, NULL);
+
+  leafname = g_path_get_basename (path);
+  gtk_tree_store_set (store, &new, NAME_COLUMN, leafname, PATH_COLUMN, path, PIX_COLUMN, pix_closed, -1);
+  g_free (leafname);
+
+  memcpy (iter, &new, sizeof (new));
+}
+
+static void
 ok_clicked (GObject *obj, GObject *window)
 {
   GtkTreeView *view = g_object_get_data (window, "view");
