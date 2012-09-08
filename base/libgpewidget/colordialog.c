@@ -141,10 +141,8 @@ gpe_color_dialog_get_type (void)
 static void
 gpe_color_dialog_class_init (GpeColorDialogClass *class)
 {
-  GtkWidgetClass *widget_class;
   GObjectClass *gobject_class;
 
-  widget_class = GTK_WIDGET_CLASS (class);
   gobject_class = G_OBJECT_CLASS (class);
 
   parent_class = g_type_class_peek_parent (class);
