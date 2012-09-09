@@ -1,3 +1,9 @@
+2012-09-10	Philippe De Swert <philippedeswert@gmail.com>
+
+	* Makefile fixes from Debian (Thanks Neil Willaims)
+	* Add -ldl linker flag as that seems needed for the dl* functions
+	* callbacks.c : comment out an unused function
+
 2009-05-08      Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release 0.14

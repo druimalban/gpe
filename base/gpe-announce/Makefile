@@ -13,7 +13,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 PACKAGE = gpe-announce
-PREFIX = /usr/local
+PREFIX = /usr
 CVSBUILD = yes
 DEBUG = no
 LINGUAS = 
@@ -22,8 +22,10 @@ VERSION = 0.14
 MEMBERS = main interface callbacks
 
 PACKAGE_CPPFLAGS = $(STANDARD_CPPFLAGS)
-PACKAGE_CFLAGS = $(STANDARD_CFLAGS) $(GPECFLAGS) `pkg-config --cflags gthread-2.0`  `pkg-config --cflags gstreamer-0.10 esound`
-PACKAGE_LDFLAGS = $(STANDARD_LDFLAGS) $(GPELIBS) `pkg-config --libs gthread-2.0 esound`
+SCHEDULE_CFLAGS=$(shell pkg-config --cflags libgpeschedule)
+SCHEDULE_LIBS=$(shell pkg-config --libs libgpeschedule)
+PACKAGE_CFLAGS = $(STANDARD_CFLAGS) $(SCHEDULE_CFLAGS) $(GPECFLAGS) `pkg-config --cflags gthread-2.0`  `pkg-config --cflags gstreamer-0.10 esound`
+PACKAGE_LDFLAGS = $(STANDARD_LDFLAGS) $(SCHEDULE_LIBS) $(GPELIBS) `pkg-config --libs gthread-2.0 esound`
 
 ifeq ($(CVSBUILD),yes)
 PACKAGE_CPPFLAGS += -I../libsoundgen -I../libschedule
@@ -43,7 +45,7 @@ endif
 all: $(PACKAGE)
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS) -lsoundgen -lschedule
+	$(CC) -o $@ $^ $(LDFLAGS) $(PACKAGE_LDFLAGS) -lsoundgen $(SCHEDULE_LIBS) -ldl
 
 install-program: all 
 	install -d $(DESTDIR)$(PREFIX)/bin

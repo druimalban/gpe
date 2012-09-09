@@ -81,8 +81,10 @@ player_t alarm_player=NULL;
 extern int alarm_volume;
 
 void play_url(player_t p, char *url);
-static void player_stop (player_t p);
 void player_set_volume (player_t p, int v);
+#ifdef UNUSED
+static void player_stop (player_t p);
+#endif
 
 player_t player_new (int);
 
@@ -472,13 +474,13 @@ void play_url(player_t p, char *url)
 		g_object_set (G_OBJECT (p->filesrc), "location", url, NULL);
 		
 		player_set_volume(p,p->volume_value);
-		gst_bin_add_many ( (p->thread), p->filesrc, p->decoder, p->volume, p->audiosink, NULL);
+		gst_bin_add_many ((p->thread), p->filesrc, p->decoder, p->volume, p->audiosink, NULL);
 		gst_element_link_many (p->filesrc, p->decoder, p->volume, p->audiosink, NULL );
 		gst_element_set_state (p->thread, GST_STATE_PLAYING);
 	}
 }
 
-
+#ifdef UNUSED
 static void
 player_stop (player_t p)
 {	
@@ -492,6 +494,7 @@ player_stop (player_t p)
 		}
 	}
 }
+#endif
 
 void
 player_set_volume (player_t p, int v)
