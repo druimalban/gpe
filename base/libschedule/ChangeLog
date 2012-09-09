@@ -1,3 +1,8 @@
+2012-09-10  Philippe De Swert <philippedeswert@gmail.com>
+
+	* atd.c, libschedule.pc.in, configure.ac : Migrate to libsqlite3
+	* 
+
 2007-06-08  Florian Boor  <florian.boor@kernelconcepts.de>
 
 	* Release version 0.17

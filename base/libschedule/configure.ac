@@ -10,7 +10,7 @@ AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AC_PROG_CC
 AC_PROG_LIBTOOL
 
-PKG_CHECK_MODULES(SCHEDULE, glib-2.0 sqlite libgpewidget)
+PKG_CHECK_MODULES(SCHEDULE, glib-2.0 sqlite3 libgpewidget)
 
 ENABLE_HAVEAT=false
 

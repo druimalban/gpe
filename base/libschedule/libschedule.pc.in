@@ -6,6 +6,6 @@ includedir=${prefix}/include
 Name: libschedule
 Description: GPE event scheduling library
 Version: @VERSION@
-Requires: glib-2.0 sqlite
+Requires: glib-2.0 sqlite3
 Libs: -L${libdir} -lschedule
 Cflags: -I${includedir}

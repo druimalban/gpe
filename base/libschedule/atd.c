@@ -18,7 +18,7 @@
 
 #include <glib.h>
 
-#include <sqlite.h>
+#include <sqlite3.h>
 #include <gpe/errorbox.h>
 
 #include "gpe/schedule.h"
@@ -27,7 +27,7 @@
 
 #define TRIGGER ATD_BASE "/trigger"
 
-static sqlite *sqliteh;
+static struct sqlite3 *sqliteh;
 static const char *fname = "/.gpe/next_alarm_id";
 
 char *no_export[] =
@@ -65,7 +65,7 @@ alarm_db_start (void)
   buf = g_malloc (len);
   strcpy (buf, home);
   strcat (buf, fname);
-  sqliteh = sqlite_open (buf, 0, &err);
+  sqlite3_open (buf, &sqliteh);
   g_free (buf);
   if (sqliteh == NULL)
     {
@@ -74,9 +74,9 @@ alarm_db_start (void)
       return FALSE;
     }
 
-  sqlite_exec (sqliteh, schema_str, NULL, NULL, &err);
+  sqlite3_exec (sqliteh, schema_str, NULL, NULL, &err);
   
-  if (sqlite_exec (sqliteh, "select alarm_uid from alarms", dbinfo_callback, NULL, &err))
+  if (sqlite3_exec (sqliteh, "select alarm_uid from alarms", dbinfo_callback, NULL, &err))
     {
       alarm_uid=-1;
       gpe_error_box (err);
@@ -163,7 +163,7 @@ cancel_alarm_uid(guint alarm_uid)
   int ret_val;
   char erase_at[256];
   
-  sqlite_exec_printf (sqliteh, "delete from alarms where alarm_uid=%d", 
+  sqlite3_exec_printf (sqliteh, "delete from alarms where alarm_uid=%d", 
 		      NULL, NULL, NULL, alarm_uid);
   sprintf(erase_at, "/usr/bin/atrm %d  2>&1", alarm_uid);
   ret_val = system(erase_at);
@@ -320,7 +320,7 @@ schedule_set_alarm (guint id, time_t start, const gchar *action, gboolean calend
 	if (fscanf(at_return, "%i ", &alarm_uid))
 	{
 	  char *err;
-	  if (sqlite_exec_printf (sqliteh, 
+	  if (sqlite3_exec_printf (sqliteh, 
 	  		    "insert into alarms (alarm_uid) values (%d)", 
 	  		    NULL, NULL, &err, alarm_uid))
 	  {
