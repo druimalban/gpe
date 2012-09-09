@@ -1,0 +1,4 @@
+Mon, 10 Sep 2012 01:08:45 +0300 Philippe De Swert <philippedeswert@gmail.com>
+
+  * Add Changelog
+  * desktop_file.c : Remove deprecated function in preparation of Gtk3

@@ -1255,7 +1255,7 @@ gnome_desktop_file_get_boolean (GnomeDesktopFile   *df,
   if (!gnome_desktop_file_get_raw (df, section, keyname, NULL, &raw))
     return FALSE;
 
-  if (!g_strcasecmp (raw, "true"))
+  if (!g_ascii_strncasecmp (raw, "true", 4))
     *val = TRUE;
   
   return TRUE;
