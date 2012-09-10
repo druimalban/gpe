@@ -108,7 +108,7 @@ GpePrefsResult gpe_prefs_get (gchar * key, GType type, gpointer pvalue){
   if(!prefs_db) return GPE_PREFS_ERROR;
   
   sql = g_strdup_printf("SELECT value FROM prefs WHERE key='%q'", key);
-  result = sqlite3_exec (prefs_db, (const char *) &sql,
+  result = sqlite3_exec (prefs_db, (const char *) sql,
                          _get_single_value , &_pvalue, &errmsg);
   g_free(sql);
   if(result != SQLITE_OK){
@@ -159,28 +159,28 @@ GpePrefsResult gpe_prefs_set (gchar * key, GType type, gconstpointer pvalue){
   if(!prefs_db) return GPE_PREFS_ERROR;
   
   sql = g_strdup_printf("SELECT key FROM prefs WHERE key='%q'", key);
-  result = sqlite3_exec (prefs_db, (const char *) &sql,_key_exists , &exists, &errmsg);
+  result = sqlite3_exec (prefs_db, (const char *) sql,_key_exists , &exists, &errmsg);
   g_free(sql);
 
   if(exists){
     switch(type){
       case G_TYPE_INT:
 	sql = g_strdup_printf("UPDATE prefs SET value='%d' WHERE key='%q'", *(gint *)pvalue, key);
-        result = sqlite3_exec (prefs_db, (const char *) &sql,
+        result = sqlite3_exec (prefs_db, (const char *) sql,
                                NULL, NULL, &errmsg);
         g_free(sql);
         TRACE("update> %s = %d", key,*(gint *)pvalue);
         break;
       case G_TYPE_FLOAT:
 	sql = g_strdup_printf("UPDATE prefs SET value='%g' WHERE key='%q'", key, *(gfloat *)pvalue);
-        result = sqlite3_exec (prefs_db, (const char *)&sql,
+        result = sqlite3_exec (prefs_db, (const char *) sql,
                                NULL, NULL, &errmsg);
         g_free(sql);
         TRACE("update> %s = %g", key,*(gfloat *)pvalue);
         break;
       case G_TYPE_STRING:
 	sql = g_strdup_printf("UPDATE prefs SET value='%q' WHERE key='%q'", *(gchar **)pvalue, key);
-        result = sqlite3_exec (prefs_db, (const char *)&sql,
+        result = sqlite3_exec (prefs_db, (const char *) sql,
                                NULL, NULL, &errmsg);
         g_free(sql);
         TRACE("update> %s = %s", key,*(gchar **)pvalue);
@@ -194,21 +194,21 @@ GpePrefsResult gpe_prefs_set (gchar * key, GType type, gconstpointer pvalue){
     switch(type){
       case G_TYPE_INT:
 	sql = g_strdup_printf("INSERT INTO prefs VALUES('%q', %d, %d)", key, type, * (gint *)pvalue);
-        result = sqlite3_exec (prefs_db, (const char *) &sql,
+        result = sqlite3_exec (prefs_db, (const char *) sql,
                                NULL, NULL, &errmsg);
         g_free(sql);
         TRACE("insert> %s = %d", key,*(gint *)pvalue);
         break;
       case G_TYPE_FLOAT:
 	sql = g_strdup_printf("INSERT INTO prefs VALUES('%q', %d, %g)",key, type, * (gfloat *)pvalue);
-        result = sqlite3_exec (prefs_db, (const char *) &sql,
+        result = sqlite3_exec (prefs_db, (const char *) sql,
                                NULL, NULL, &errmsg);
         g_free(sql);
         TRACE("insert> %s = %g", key,*(gfloat *)pvalue);
         break;
       case G_TYPE_STRING:
 	sql = g_strdup_printf("INSERT INTO prefs VALUES('%q', %d, '%q')", key, type, * (gchar **)pvalue);
-        result = sqlite3_exec (prefs_db, (const char *) &sql,
+        result = sqlite3_exec (prefs_db, (const char *) sql,
                                NULL, NULL, &errmsg);
         g_free(sql);
         TRACE("insert> %s = %s", key,*(gchar **)pvalue);

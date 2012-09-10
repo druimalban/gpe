@@ -109,7 +109,7 @@ void db_update_timestamp (const gint id, const gint timestamp){
   gchar *errmsg, *sql;
 
   sql = g_strdup_printf("UPDATE notes SET updated='%d' WHERE ROWID='%d'", timestamp, id);
-  result = sqlite3_exec (db, (const char*) &sql, NULL, NULL, &errmsg);
+  result = sqlite3_exec (db, (const char*) sql, NULL, NULL, &errmsg);
   g_free(sql);
 
   TRACE("SQL> [%d] update timestamp >>%d<<", id, timestamp);
@@ -124,7 +124,7 @@ void db_update_title(const gint id, const gchar *title){
   gchar *errmsg, *sql;
 
   sql = g_strdup_printf("UPDATE notes SET title='%q' WHERE ROWID='%d'", title, id);
-  result = sqlite3_exec (db, (const char*) &sql, NULL, NULL, &errmsg);
+  result = sqlite3_exec (db, (const char*) sql, NULL, NULL, &errmsg);
   g_free(sql);
 
   TRACE("SQL> [%d] update title >>%s<<", id, title);
@@ -143,7 +143,7 @@ int db_insert_note(const Note *note){
   
   sql = g_strdup_printf("INSERT INTO notes VALUES(%d, '%q', %d, %d, '%q')", note->type,
                         note->title, note->created, note->updated, note->url);
-  result = sqlite3_exec (db, (const char*) &sql, NULL, NULL, &errmsg);
+  result = sqlite3_exec (db, (const char*) sql, NULL, NULL, &errmsg);
   g_free(sql);
 
   if(result != SQLITE_OK){
@@ -161,7 +161,7 @@ void db_delete_note(const gint id){ //FIXME: use it!
   gchar *errmsg, *sql;
 
   sql = g_strdup_printf("DELETE FROM notes WHERE ROWID='%d'", id);
-  result = sqlite3_exec (db, (const char*) &sql, NULL, NULL, &errmsg);
+  result = sqlite3_exec (db, (const char*) sql, NULL, NULL, &errmsg);
   g_free(sql);
 
   if(result != SQLITE_OK){

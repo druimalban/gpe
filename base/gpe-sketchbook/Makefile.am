@@ -10,7 +10,7 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 pixmapsdir = $(datadir)/pixmaps
 pixmaps_DATA = gpe-sketchbook.png
 
-pixmapsextradir = $(datadir)/pixmaps/gpe/default/gpe-sketchbook
+pixmapsextradir = $(datadir)/gpe/pixmaps/default/gpe-sketchbook
 pixmapsextra_DATA =     \
 	pixmaps/brush_large.png \
 	pixmaps/brush_medium.png \
