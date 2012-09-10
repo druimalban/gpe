@@ -49,7 +49,6 @@ dbinfo_callback (void *arg, int argc, char **argv, char **names)
     {
       alarm_uid = atoi (argv[0]);
     }
-
   return 0;
 }
 
@@ -115,6 +114,7 @@ trigger_atd (void)
   return rc;
 }
 
+#ifdef UNUSED
 static gboolean
 same_alarm (guint alarm_uid, guint id, guint start_time)
 {
@@ -137,6 +137,7 @@ same_alarm (guint alarm_uid, guint id, guint start_time)
   pclose (at_return);
   return FALSE;
 }
+#endif
 
 static gchar *
 alarm_filename (guint id, time_t start)
@@ -145,6 +146,7 @@ alarm_filename (guint id, time_t start)
   return g_strdup_printf ("%s/%ld.%d-%d", ATD_BASE, start, id, uid);
 }
 
+#ifdef UNUSED
 static gchar *
 write_tail (guint id, time_t start)
 {
@@ -162,14 +164,17 @@ cancel_alarm_uid(guint alarm_uid)
 {
   int ret_val;
   char erase_at[256];
+  gchar *sql;
   
-  sqlite3_exec_printf (sqliteh, "delete from alarms where alarm_uid=%d", 
-		      NULL, NULL, NULL, alarm_uid);
+  sql = g_strdup_printf("delete from alarms where alarm_uid=%d", alarm_uid);  
+  sqlite3_exec (sqliteh, (const char *) sql, NULL, NULL, NULL);
+  g_free(sql);
   sprintf(erase_at, "/usr/bin/atrm %d  2>&1", alarm_uid);
   ret_val = system(erase_at);
   if (ret_val == 0) return TRUE;
   else return FALSE;
 }  
+#endif /* UNUSED */
   
 static const char *boilerplate_1 = "#!/bin/sh\nexport DISPLAY=:0\n";
 static const char *condensorplate_1 = "\nrm -f $0\n";
@@ -320,14 +325,17 @@ schedule_set_alarm (guint id, time_t start, const gchar *action, gboolean calend
 	if (fscanf(at_return, "%i ", &alarm_uid))
 	{
 	  char *err;
-	  if (sqlite3_exec_printf (sqliteh, 
-	  		    "insert into alarms (alarm_uid) values (%d)", 
-	  		    NULL, NULL, &err, alarm_uid))
+	  gchar *sql;
+
+	  sql = g_strdup_printf("insert into alarms (alarm_uid) values (%d)", alarm_uid);
+	  if (sqlite3_exec (sqliteh, NULL, NULL, &err))
 	  {
 	    gpe_error_box (err);
 	    free (err);
+ 	    g_free(sql);
 	    return FALSE;
 	  }
+	  g_free(sql);
 	}
         pclose (at_return);
         sprintf(erase_tmpat, "rm /tmp/atjob.txt");
