@@ -170,7 +170,7 @@ GdkCursor * _eraser_cursors_new(unsigned char * bits, gint width, gint height){/
 //void sketchpad_set_tool (gint _tool)  { tool  = _tool;}
 //void sketchpad_set_brush(gint _brush) { brush = _brush;}
 void sketchpad_set_tool_s  (gchar * _tool) {
-  if(g_strcasecmp(_tool, "eraser") == 0){
+  if(g_ascii_strcasecmp(_tool, "eraser") == 0){
     tool   = ERASER;
     current_cursor = &cursor_eraser;
   }
@@ -182,15 +182,15 @@ void sketchpad_set_tool_s  (gchar * _tool) {
 }
 
 void sketchpad_set_brush_s (gchar * _brush){
-  if(g_strcasecmp(_brush, "medium") == 0){
+  if(g_ascii_strcasecmp(_brush, "medium") == 0){
     brush = MEDIUM;
     cursor_eraser = cursor_eraser_medium;
   }
-  else if(g_strcasecmp(_brush, "large" ) == 0){
+  else if(g_ascii_strcasecmp(_brush, "large" ) == 0){
     brush = LARGE;
     cursor_eraser = cursor_eraser_large;
   }
-  else if(g_strcasecmp(_brush, "xlarge") == 0){
+  else if(g_ascii_strcasecmp(_brush, "xlarge") == 0){
     brush = XLARGE;
     cursor_eraser = cursor_eraser_xlarge;
   }

@@ -188,7 +188,7 @@ sketchpad_build_alternate_drawing_toolbar(GtkWidget * window){
   GdkPixbuf * pixbuf;
   GtkWidget * pixmap;
 
-  GtkWidget * files_popup_button;
+  GtkToolItem * files_popup_button;
 	
   //brushes
   GtkWidget * button_brushes;
@@ -216,8 +216,8 @@ sketchpad_build_alternate_drawing_toolbar(GtkWidget * window){
   gtk_tool_button_set_label(GTK_TOOL_BUTTON(files_popup_button), _("Sketch menu"));
   gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(files_popup_button), _files_popup_new(GTK_WIDGET(files_popup_button)));
   gtk_toolbar_insert(GTK_TOOLBAR(toolbar), GTK_TOOL_ITEM(files_popup_button), -1);
-  sketchpad.files_popup_button = files_popup_button;
-  gtk_menu_tool_button_set_arrow_tooltip(files_popup_button, tooltips, _("Sketch file menu"), NULL);
+  sketchpad.files_popup_button = GTK_WIDGET(files_popup_button);
+  gtk_menu_tool_button_set_arrow_tooltip(GTK_MENU_TOOL_BUTTON(files_popup_button), tooltips, _("Sketch file menu"), NULL);
 
   if (gdk_screen_width() > 480) {
     item = gtk_separator_tool_item_new();

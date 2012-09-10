@@ -170,7 +170,7 @@ void load_thumbnails(){
     pixbuf    = gdk_pixbuf_new_from_file(filename, NULL); //GError **error
     thumbnail = gdk_pixbuf_scale_simple (pixbuf, THUMBNAIL_SIZE, THUMBNAIL_SIZE,
                                          GDK_INTERP_BILINEAR);
-    gdk_pixbuf_unref(pixbuf);
+    g_object_unref(pixbuf);
     gtk_list_store_set (GTK_LIST_STORE(model), &iter, ENTRY_THUMBNAIL, thumbnail, -1);
 
     while (gtk_events_pending ()) gtk_main_iteration ();

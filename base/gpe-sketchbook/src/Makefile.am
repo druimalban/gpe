@@ -6,7 +6,7 @@ DEFS = @DEFS@ -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
 
 bin_PROGRAMS = gpe-sketchbook
 
-gpe_sketchbook_LDADD = $(DEPS_LIBS)
+gpe_sketchbook_LDADD = $(DEPS_LIBS) -lm
 
 gpe_sketchbook_SOURCES = \
 	cursor_eraser_data.h \

@@ -1,7 +1,15 @@
+2012-09-10 Philippe De Swert <philippedeswert@gmail.com>
+
+    * src/Makefile.am : Seems -lm is needed now to make it compile
+    * src/sketchpad-cb.c src/sketchpad-gui.c src/files.c src/sketchpad.c 
+      src/selector.c : clean-up preparations for GTK3
+
+
 2009-04-15 Ned Ludd  <solar@gentoo.org>
-	* gpe-base/gpe-sketchbook: src/gpe-sketchbook.c Makefile.am 
-	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
-	* Targeted for gpe-3.0 release.
+
+    * gpe-base/gpe-sketchbook: src/gpe-sketchbook.c Makefile.am 
+    * Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
+    * Targeted for gpe-3.0 release.
 
 2008-10-28  Florian Boor  <florian.boor@kernelconcepts.de>
 

@@ -62,7 +62,7 @@ gint file_save_png(const gchar * fullpath_filename){
       return 0;
     }
 
-    gdk_pixbuf_unref(pixbuf);
+    g_object_unref(pixbuf);
 
     return 1;
 }//file_save_png()
@@ -76,7 +76,7 @@ gint file_load_png(const gchar * fullpath_filename){
   }
 
   sketchpad_set_current_sketch_from_pixbuf(pixbuf);
-  gdk_pixbuf_unref(pixbuf);
+  g_object_unref(pixbuf);
 
   return 1; 
 }//file_load_png()
