@@ -9,7 +9,7 @@
  */
 
 #include <glib.h>
-#include <sqlite.h>
+#include <sqlite3.h>
 #include <stdlib.h> //free()
 #include <unistd.h> //access()
 
@@ -42,7 +42,7 @@ static const gchar *db_schema_notes = "CREATE TABLE notes ("
                                       " content TEXT" //url...
                                       ");";
 
-static sqlite *db;
+static sqlite3 *db;
 
 static void report_error(const int errno, gchar * errmsg){
     TRACE("ERROR> #%d : %s", errno, errmsg);
@@ -93,9 +93,8 @@ int db_load_notes(){
   gint result;
   gchar *errmsg;
 
-  result = sqlite_exec_printf (db, "SELECT ROWID,* FROM notes",
-                               load_note_cb, NULL,
-                               &errmsg);
+  result = sqlite3_exec (db, "SELECT ROWID,* FROM notes",
+                         load_note_cb, NULL, &errmsg);
 
   if(result != SQLITE_OK){
     report_error(result, errmsg);
@@ -107,13 +106,11 @@ int db_load_notes(){
 
 void db_update_timestamp (const gint id, const gint timestamp){
   gint   result;
-  gchar *errmsg;
+  gchar *errmsg, *sql;
 
-  result = sqlite_exec_printf (db, "UPDATE notes SET updated='%d' WHERE ROWID='%d'",
-                               NULL, NULL,
-                               &errmsg,
-                               timestamp,
-                               id);
+  sql = g_strdup_printf("UPDATE notes SET updated='%d' WHERE ROWID='%d'", timestamp, id);
+  result = sqlite3_exec (db, (const char*) &sql, NULL, NULL, &errmsg);
+  g_free(sql);
 
   TRACE("SQL> [%d] update timestamp >>%d<<", id, timestamp);
 
@@ -124,13 +121,11 @@ void db_update_timestamp (const gint id, const gint timestamp){
 
 void db_update_title(const gint id, const gchar *title){
   gint result;
-  gchar *errmsg;
+  gchar *errmsg, *sql;
 
-  result = sqlite_exec_printf (db, "UPDATE notes SET title='%q' WHERE ROWID='%d'",
-                               NULL, NULL,
-                               &errmsg,
-                               title,
-                               id);
+  sql = g_strdup_printf("UPDATE notes SET title='%q' WHERE ROWID='%d'", title, id);
+  result = sqlite3_exec (db, (const char*) &sql, NULL, NULL, &errmsg);
+  g_free(sql);
 
   TRACE("SQL> [%d] update title >>%s<<", id, title);
 
@@ -142,18 +137,14 @@ void db_update_title(const gint id, const gchar *title){
 int db_insert_note(const Note *note){
   //gboolean exists = FALSE;
   gint    result;
-  gchar * errmsg;
+  gchar * errmsg, *sql;
 
   if(!db) return -1;
   
-  result = sqlite_exec_printf (db,"INSERT INTO notes VALUES(%d, '%q', %d, %d, '%q')",
-                               NULL, NULL, //no callback function
-                               &errmsg,
-                               note->type,
-                               note->title,
-                               note->created,
-                               note->updated,
-                               note->url);
+  sql = g_strdup_printf("INSERT INTO notes VALUES(%d, '%q', %d, %d, '%q')", note->type,
+                        note->title, note->created, note->updated, note->url);
+  result = sqlite3_exec (db, (const char*) &sql, NULL, NULL, &errmsg);
+  g_free(sql);
 
   if(result != SQLITE_OK){
     report_error(result, errmsg);
@@ -162,17 +153,17 @@ int db_insert_note(const Note *note){
 
   TRACE("SQL> inserted NOTE: %s", note->title);
 
-  return sqlite_last_insert_rowid(db);
+  return sqlite3_last_insert_rowid(db);
 }
 
 void db_delete_note(const gint id){ //FIXME: use it!
   gint result;
-  gchar *errmsg;
+  gchar *errmsg, *sql;
 
-  result = sqlite_exec_printf (db, "DELETE FROM notes WHERE ROWID='%d'",
-                               NULL, NULL,
-                               &errmsg,
-                               id);
+  sql = g_strdup_printf("DELETE FROM notes WHERE ROWID='%d'", id);
+  result = sqlite3_exec (db, (const char*) &sql, NULL, NULL, &errmsg);
+  g_free(sql);
+
   if(result != SQLITE_OK){
     report_error(result, errmsg);
     return;
@@ -180,7 +171,7 @@ void db_delete_note(const gint id){ //FIXME: use it!
 }
 
 void db_close(){
-  if(db) sqlite_close(db);
+  if(db) sqlite3_close(db);
 }
 
 int db_open(){
@@ -196,7 +187,7 @@ int db_open(){
 
   dbexists = !access(db_name, F_OK); //access() in unistd.h
 
-  db = sqlite_open(db_name, mode, &errmsg);
+  sqlite3_open(db_name, &db);
   g_free(db_name);
 
   if( db == NULL ){
@@ -208,8 +199,8 @@ int db_open(){
 
   //--Create table if necessary, we assume table exists if database is present  
   if (!dbexists){
-    error = sqlite_exec (db, db_schema_meta,  NULL, NULL, &errmsg);
-    error = sqlite_exec (db, db_schema_notes, NULL, NULL, &errmsg);
+    error = sqlite3_exec (db, db_schema_meta,  NULL, NULL, &errmsg);
+    error = sqlite3_exec (db, db_schema_notes, NULL, NULL, &errmsg);
 
     TRACE("SQL> %s", db_schema_meta);
     TRACE("SQL> %s", db_schema_notes);

@@ -25,7 +25,7 @@ AC_STDC_HEADERS
 AC_PROG_INSTALL
 
 # library dependencies
-DEP_MODULES="gtk+-2.0 >= 2.4 libgpewidget >= 0.82 libxsettings-client sqlite"
+DEP_MODULES="gtk+-2.0 >= 2.4 libgpewidget >= 0.82 libxsettings-client sqlite3"
 
 # library dependencies
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)

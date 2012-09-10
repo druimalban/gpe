@@ -33,7 +33,7 @@
 /********************************************************/
 
 #include <glib.h>
-#include <sqlite.h> //backend
+#include <sqlite3.h> //backend
 #include <stdlib.h> //free() atoi() atof()
 #include <unistd.h> //access
 
@@ -44,7 +44,7 @@
 #endif
 
 
-sqlite * prefs_db = NULL;
+sqlite3 * prefs_db = NULL;
 
 static const char * db_schema = "CREATE TABLE prefs ("
                                 " key   VARCHAR(30) PRIMARY KEY,"
@@ -65,7 +65,7 @@ GpePrefsResult gpe_prefs_init(gchar * prog_name){
   dbexists = !access(db_name, F_OK);
 	
   TRACE("Opening: %s", db_name);
-  prefs_db = sqlite_open(db_name, mode, &errmsg);
+  sqlite3_open(db_name, &prefs_db);
   g_free(db_name);
   if( prefs_db == NULL ){
     TRACE("ERROR> Can't open database: %s", errmsg);
@@ -75,7 +75,7 @@ GpePrefsResult gpe_prefs_init(gchar * prog_name){
   //--Create table if necessary, we assume table exists if database is present
   
   if (!dbexists){
-    error = sqlite_exec (prefs_db, db_schema, NULL, NULL, &errmsg);
+    error = sqlite3_exec (prefs_db, db_schema, NULL, NULL, &errmsg);
     TRACE("%s", db_schema);
     if(error){
 	  g_printerr("ERROR> #%d %s\n", error, errmsg);
@@ -87,7 +87,7 @@ GpePrefsResult gpe_prefs_init(gchar * prog_name){
 }
 
 void gpe_prefs_exit(){
-  if(prefs_db) sqlite_close(prefs_db);
+  if(prefs_db) sqlite3_close(prefs_db);
 }
 
 int _get_single_value(void * pvalue, int argc, char **argv, char **columnNames){
@@ -103,14 +103,14 @@ int _get_single_value(void * pvalue, int argc, char **argv, char **columnNames){
 GpePrefsResult gpe_prefs_get (gchar * key, GType type, gpointer pvalue){
   int    result;
   char * errmsg;
-  gchar * _pvalue = NULL;
+  gchar * _pvalue = NULL, *sql;
 
   if(!prefs_db) return GPE_PREFS_ERROR;
   
-  result = sqlite_exec_printf (prefs_db,
-                               "SELECT value FROM prefs WHERE key='%q'",
-                               _get_single_value , &_pvalue, &errmsg,
-                               key);
+  sql = g_strdup_printf("SELECT value FROM prefs WHERE key='%q'", key);
+  result = sqlite3_exec (prefs_db, (const char *) &sql,
+                         _get_single_value , &_pvalue, &errmsg);
+  g_free(sql);
   if(result != SQLITE_OK){
     TRACE("ERROR> #%d : %s", result, errmsg);
     free(errmsg);
@@ -154,35 +154,35 @@ int _key_exists(void * pbool, int argc, char **argv, char **columnNames){
 GpePrefsResult gpe_prefs_set (gchar * key, GType type, gconstpointer pvalue){
   gboolean exists = FALSE;
   gint    result;
-  gchar * errmsg;
+  gchar * errmsg, *sql;
 
   if(!prefs_db) return GPE_PREFS_ERROR;
   
-  result = sqlite_exec_printf (prefs_db,
-                               "SELECT key FROM prefs WHERE key='%q'",
-                               _key_exists , &exists, &errmsg,
-                               key);
+  sql = g_strdup_printf("SELECT key FROM prefs WHERE key='%q'", key);
+  result = sqlite3_exec (prefs_db, (const char *) &sql,_key_exists , &exists, &errmsg);
+  g_free(sql);
+
   if(exists){
     switch(type){
       case G_TYPE_INT:
-        result = sqlite_exec_printf (prefs_db,
-                                     "UPDATE prefs SET value='%d' WHERE key='%q'",
-                                     NULL, NULL, &errmsg,
-                                     *(gint *)pvalue, key);
+	sql = g_strdup_printf("UPDATE prefs SET value='%d' WHERE key='%q'", *(gint *)pvalue, key);
+        result = sqlite3_exec (prefs_db, (const char *) &sql,
+                               NULL, NULL, &errmsg);
+        g_free(sql);
         TRACE("update> %s = %d", key,*(gint *)pvalue);
         break;
       case G_TYPE_FLOAT:
-        result = sqlite_exec_printf (prefs_db,
-                                     "UPDATE prefs SET value='%g' WHERE key='%q'",
-                                     NULL, NULL, &errmsg,
-                                     *(gfloat *)pvalue, key);
+	sql = g_strdup_printf("UPDATE prefs SET value='%g' WHERE key='%q'", key, *(gfloat *)pvalue);
+        result = sqlite3_exec (prefs_db, (const char *)&sql,
+                               NULL, NULL, &errmsg);
+        g_free(sql);
         TRACE("update> %s = %g", key,*(gfloat *)pvalue);
         break;
       case G_TYPE_STRING:
-        result = sqlite_exec_printf (prefs_db,
-                                     "UPDATE prefs SET value='%q' WHERE key='%q'",
-                                     NULL, NULL, &errmsg,
-                                     *(gchar **)pvalue, key);
+	sql = g_strdup_printf("UPDATE prefs SET value='%q' WHERE key='%q'", *(gchar **)pvalue, key);
+        result = sqlite3_exec (prefs_db, (const char *)&sql,
+                               NULL, NULL, &errmsg);
+        g_free(sql);
         TRACE("update> %s = %s", key,*(gchar **)pvalue);
         break;
       default:
@@ -193,30 +193,30 @@ GpePrefsResult gpe_prefs_set (gchar * key, GType type, gconstpointer pvalue){
   else{
     switch(type){
       case G_TYPE_INT:
-        result = sqlite_exec_printf (prefs_db,
-                                     "INSERT INTO prefs VALUES('%q', %d, %d)",
-                                     NULL, NULL, &errmsg,
-                                     key, type, * (gint *)pvalue);
+	sql = g_strdup_printf("INSERT INTO prefs VALUES('%q', %d, %d)", key, type, * (gint *)pvalue);
+        result = sqlite3_exec (prefs_db, (const char *) &sql,
+                               NULL, NULL, &errmsg);
+        g_free(sql);
         TRACE("insert> %s = %d", key,*(gint *)pvalue);
         break;
       case G_TYPE_FLOAT:
-        result = sqlite_exec_printf (prefs_db,
-                                     "INSERT INTO prefs VALUES('%q', %d, %g)",
-                                     NULL, NULL, &errmsg,
-                                     key, type, * (gfloat *)pvalue);
+	sql = g_strdup_printf("INSERT INTO prefs VALUES('%q', %d, %g)",key, type, * (gfloat *)pvalue);
+        result = sqlite3_exec (prefs_db, (const char *) &sql,
+                               NULL, NULL, &errmsg);
+        g_free(sql);
         TRACE("insert> %s = %g", key,*(gfloat *)pvalue);
         break;
       case G_TYPE_STRING:
-        result = sqlite_exec_printf (prefs_db,
-                                     "INSERT INTO prefs VALUES('%q', %d, '%q')",
-                                     NULL, NULL, &errmsg,
-                                     key, type, * (gchar **)pvalue);
+	sql = g_strdup_printf("INSERT INTO prefs VALUES('%q', %d, '%q')", key, type, * (gchar **)pvalue);
+        result = sqlite3_exec (prefs_db, (const char *) &sql,
+                               NULL, NULL, &errmsg);
+        g_free(sql);
         TRACE("insert> %s = %s", key,*(gchar **)pvalue);
         break;
       default:
         //ERROR: Unhandled type
         break;
-    }
+    } 
   }
 
   if(result != SQLITE_OK){

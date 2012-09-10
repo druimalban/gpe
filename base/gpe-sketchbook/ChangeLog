@@ -3,6 +3,8 @@
     * src/Makefile.am : Seems -lm is needed now to make it compile
     * src/sketchpad-cb.c src/sketchpad-gui.c src/files.c src/sketchpad.c 
       src/selector.c : clean-up preparations for GTK3
+    * src/db.ci, src/preferences.c, configure.ac : Migrate to sqlite3
+
 
 
 2009-04-15 Ned Ludd  <solar@gentoo.org>
