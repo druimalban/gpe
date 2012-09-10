@@ -13,7 +13,7 @@
 #include <libintl.h>
 #include <glib.h>
 #include <string.h>
-#include <sqlite.h>
+#include <sqlite3.h>
 #include <libintl.h>
 
 #include <gpe/errorbox.h>
@@ -33,7 +33,7 @@ static const char *schema_with_todo_str =
 "create table tasks (id integer, description text, cftime integer, parent integer, todo_id integer);"
 "create table log (action text, task integer, time integer, info text);";
 
-static sqlite *sqliteh;
+static sqlite3 *sqliteh;
 static guint max_task_id;
 static time_t time_start = 0;
 static gchar *note_start = NULL;
@@ -53,17 +53,18 @@ gboolean
 check_if_item_has_logs(int id)
 {
   int check=0;
-  gchar *err;
+  gchar *err, *sql;
 
-  if (sqlite_exec_printf (sqliteh,
-              "select task from log where task = %d",
-              check_if_item_has_logs_cb, &check, &err, id))
+  sql = g_strdup_printf("select task from log where task = %d", id);
+  if (sqlite3_exec (sqliteh, sql, check_if_item_has_logs_cb, &check, &err))
     {
       gpe_error_box (err);
       free (err);
+      g_free (sql);
       return TRUE;
     }
     free(err);
+    g_free (sql);
     if (check)
       return TRUE;
     else
@@ -74,16 +75,19 @@ gboolean
 log_entry (action_t action, time_t time, struct task *task, const char *info)
 {
   char *err;
-  if (sqlite_exec_printf (sqliteh,
-			  "insert into log values ('%s', %d, %d, '%q')",
-			  NULL, NULL, &err,
-			  actions[action], task->id, time, info))
+  gchar *sql;
+
+  sql = g_strdup_printf("insert into log values ('%s', %d, %d, '%q')", actions[action], task->id, time, info);
+  if (sqlite3_exec (sqliteh, (const char*) &sql,
+			  NULL, NULL, &err))
     {
       gpe_error_box (err);
       free (err);
+      g_free(sql);
       return FALSE;
     }
   free (err);
+  g_free(sql);
   return TRUE;
 }
 
@@ -151,7 +155,7 @@ tasks_get_old_entries (void)
   char *err;
   int r;
 
-  r = sqlite_exec (sqliteh, "select id, description, cftime, parent from tasks",
+  r = sqlite3_exec (sqliteh, "select id, description, cftime, parent from tasks",
                    tasks_get_old_entries_cb, &list, &err);
 
   if (r)
@@ -169,12 +173,12 @@ sql_check_tasks_table_update(void)
 {/* check if the tasks table is already updated*/
   
   int r;
-  gchar *err = NULL;
+  gchar *err = NULL, *sql;
   GSList *entries = NULL, *iter=NULL;
   
 
   /* check if we have the field todo_id */
-  r = sqlite_exec (sqliteh, "select todo_id from tasks",
+  r = sqlite3_exec (sqliteh, "select todo_id from tasks",
                    NULL, NULL, &err);
 
   if (r) 
@@ -196,15 +200,15 @@ sql_check_tasks_table_update(void)
         {
           struct task *t;
           free (err);
-          r = sqlite_exec (sqliteh, "begin transaction", NULL, NULL, &err);
+          r = sqlite3_exec (sqliteh, "begin transaction", NULL, NULL, &err);
           if (r)
               goto error;
           entries = tasks_get_old_entries();
-          r = sqlite_exec (sqliteh, "drop table tasks",
+          r = sqlite3_exec (sqliteh, "drop table tasks",
                           NULL, NULL, &err);
           if (r)
               goto error;
-          r = sqlite_exec (sqliteh, schema_new_tasks_table, NULL, NULL, &err);
+          r = sqlite3_exec (sqliteh, schema_new_tasks_table, NULL, NULL, &err);
           if (r)
               goto error;
           for (iter = entries; iter; iter=iter->next)
@@ -212,12 +216,14 @@ sql_check_tasks_table_update(void)
               t = (struct task*)iter->data;
               if (t)
                 {
-                    sqlite_exec_printf(sqliteh, "insert into tasks values (%d, '%s', '%d', '%d', NULL)", 
-                                      NULL, NULL, &err, t->id, t->description, t->time_cf, t->parent);
+		    sql = g_strdup_printf("insert into tasks values (%d, '%s', '%d', '%d', NULL)",
+					  t->id, t->description, t->time_cf, t->parent);	
+                    sqlite3_exec(sqliteh, (const char *) sql, NULL, NULL, &err);
+		    g_free(sql);
                     g_free (t);
                   }
             }
-          r = sqlite_exec (sqliteh, "commit transaction", NULL, NULL, &err);
+          r = sqlite3_exec (sqliteh, "commit transaction", NULL, NULL, &err);
           if (r)
               goto error;
           g_slist_free(entries);
@@ -228,7 +234,7 @@ sql_check_tasks_table_update(void)
             {
               gpe_error_box_fmt ("Couldn't convert database data to new format: %s", err);
               g_free(err);
-              sqlite_exec (sqliteh, "rollback transaction", NULL, NULL, &err);
+              sqlite3_exec (sqliteh, "rollback transaction", NULL, NULL, &err);
             }
         }
     }
@@ -247,7 +253,7 @@ sql_start (void)
   buf = g_malloc (len);
   strcpy (buf, home);
   strcat (buf, fname);
-  sqliteh = sqlite_open (buf, 0, &err);
+  sqlite3_open (fname, &sqliteh);
   g_free (buf);
   if (sqliteh == NULL)
     {
@@ -256,7 +262,7 @@ sql_start (void)
       return FALSE;
     }
 
-  sqlite_exec (sqliteh, schema_with_todo_str, NULL, NULL, &err);
+  sqlite3_exec (sqliteh, schema_with_todo_str, NULL, NULL, &err);
 
   sql_check_tasks_table_update();
 
@@ -268,7 +274,7 @@ sql_start (void)
 
   /* here we load all tasks of exclusive
   ** pertinence of timesheet, i.e. tasks with no todo parents */
-  if (sqlite_exec (sqliteh, "select id, description, cftime, parent, todo_id from tasks where parent=0 and todo_id is null", load_to_treestore, NULL, &err))
+  if (sqlite3_exec (sqliteh, "select id, description, cftime, parent, todo_id from tasks where parent=0 and todo_id is null", load_to_treestore, NULL, &err))
   {
     gpe_error_box (err);
     free (err);
@@ -285,7 +291,7 @@ sql_append_todo(void)
   GSList *todo_list = NULL;
   GSList *list = NULL;
   GtkTreeIter iter;
-  gchar *err;
+  gchar *err, *sql;
 
   if (!todo_db_start())
     {
@@ -305,12 +311,15 @@ sql_append_todo(void)
                                   -1);
               /* for each of these todos, we go and check into db
               ** for tasks children of todo */
-                if (sqlite_exec_printf (sqliteh, "select id, description, cftime, parent, todo_id from tasks where parent=0 and todo_id ='%d'", load_to_treestore, &iter, &err, i->id))
+		sql = g_strdup_printf("select id, description, cftime, parent, todo_id from tasks where parent=0 and todo_id ='%d'", i->id);
+                if (sqlite3_exec (sqliteh, sql, load_to_treestore, &iter, &err))
                   {
                     gpe_error_box (err);
                     free (err);
+		    g_free(sql);
                     return FALSE;
                    }
+		g_free(sql);
              }
         }
       todo_db_stop();
@@ -352,7 +361,7 @@ load_to_treestore(void *arg, int argc, char **argv, char **names)
 
       /*  and call recursively the load_to_treestore when reading datas
           in order to load also children */
-      if (sqlite_exec (sqliteh, query, load_to_treestore, parent, &err))
+      if (sqlite3_exec (sqliteh, query, load_to_treestore, parent, &err))
       {
         gpe_error_box(err);
         g_free (err);
@@ -425,10 +434,12 @@ scan_journal (gint id)
   char *err;
   int r;
   time_start = 0;
+  gchar *sql;
 
-  r = sqlite_exec_printf (sqliteh, "select time, action, info, task from log where task=%d order by time", 
-			  scan_journal_cb, &id, &err,
-			  id);
+  sql = g_strdup_printf("select time, action, info, task from log where task=%d order by time", id);
+  r = sqlite3_exec (sqliteh, sql, scan_journal_cb, &id, &err);
+  g_free (sql);
+
   if (r != 0 && r != SQLITE_ABORT)
     {
       gpe_error_box (err);
@@ -443,59 +454,53 @@ new_task (gchar *description, guint parent, guint todo_id)
   ** parent is the task index parent of the one we are inserting...
   ** if todo_id has some value it means that this is a parent task
   ** which is child of a todo item */
-  char *err;
+  char *err, *sql;
   guint new_id = max_task_id + 1;
 
     if (todo_id == 0 || parent)
       { /* it means that it is a task which belongs only to tasks */
-        if (sqlite_exec_printf (sqliteh,
-                  "insert into tasks values (%d, '%q', %d, %d, NULL)",
-                  NULL, NULL, &err,
-                  new_id, description, 0, parent))
-          {
-            gpe_error_box (err);
-            g_free (err);
-            return NULL;
-          }
+	sql = g_strdup_printf("insert into tasks values (%d, '%q', %d, %d, NULL)", new_id, description, 0, parent);
+        if (sqlite3_exec (sqliteh, sql, NULL, NULL, &err))
+    		goto error;
       }
     else
       { /* this is a task used to connect todos with their children tasks */
-        if (sqlite_exec_printf (sqliteh,
-                  "insert into tasks values (%d, '%q', %d, %d, %d)",
-                  NULL, NULL, &err,
-                  new_id, description, 0, 0, todo_id))
-          {
-            gpe_error_box (err);
-            g_free (err);
-            return NULL;
-          }
-      }
-
+	sql = g_strdup_printf("insert into tasks values (%d, '%q', %d, %d, %d)", new_id, description, 0, 0, todo_id);
+        if (sqlite3_exec (sqliteh, sql, NULL, NULL, &err))
+		goto error;
+      } 
+  
+  g_free (sql);
   return internal_note_task (new_id, description, 0, parent, todo_id);
+
+error:
+  gpe_error_box (err);
+  g_free (err);
+  g_free (sql);
+  return NULL;
 }
 
 void
 delete_task (int idx)
 {
   char *err;
+  gchar *sql;
 
-  if (sqlite_exec_printf (sqliteh,
-			  "delete from tasks where id=%d",
-			  NULL, NULL, &err, idx))
-  {
-    gpe_error_box (err);
-    free (err);
-    return;
-  }
+  sql = g_strdup_printf("delete from tasks where id=%d", idx);
+  if (sqlite3_exec (sqliteh, sql,NULL, NULL, &err))
+	goto error;
+  g_free (sql);
 
-  if (sqlite_exec_printf (sqliteh,
-			  "delete from log where task=%d",
-			  NULL, NULL, &err, idx))
-    {
-      gpe_error_box (err);
-      free (err);
-      return;
-    }
+  sql = g_strdup_printf("delete from log where task=%d", idx);
+  if (sqlite3_exec (sqliteh, sql, NULL, NULL, &err))
+	goto error;
+  g_free (sql);
+
+error:
+  gpe_error_box (err);
+  free (err);
+  g_free (sql);
+  return;
 }
 
 void 
@@ -518,18 +523,19 @@ int
 find_children_cb (void *arg, int argc, char **argv, char **names)
 {
   char *err;
+  gchar *sql;
 
   if (argc=2)
     {
-    if (sqlite_exec_printf (sqliteh,
-                          "select id, parent from tasks where parent=%s",
-                          find_children_cb,
-                          NULL, &err, argv[0]))
+    sql = g_strdup_printf("select id, parent from tasks where parent=%s", argv[0]);
+    if (sqlite3_exec (sqliteh, sql, find_children_cb, NULL, &err))
       {
         gpe_error_box(err);
         g_free (err);
+	g_free (sql);
         return;
       }
+    g_free (sql);
 
     children_list = g_slist_prepend (children_list,GINT_TO_POINTER(atoi(argv[0])));
 
@@ -542,28 +548,33 @@ int
 find_children (int idx)
 {
   char *err;
+  gchar *sql;
 
-  if (sqlite_exec_printf  (sqliteh,
-                          "select id, parent from tasks where parent=%d",
-                          find_children_cb, NULL, &err, idx))
+  sql = g_strdup_printf("select id, parent from tasks where parent=%d", idx);
+  if (sqlite3_exec  (sqliteh, sql, find_children_cb, NULL, &err))
     {
       gpe_error_box(err);
       free (err);
+      g_free (sql);
       return;
     }
+  g_free (sql);
 }
 
 void 
 update_log (gchar *info, time_t oldtime, time_t newtime, int task, action_t action)
 {
   char *err;
+  gchar *sql;
   
-  if (sqlite_exec_printf  (sqliteh,
-                          "update log set info='%s', time=%d where (task=%d and action = '%s' and time=%d)",
-                          NULL, NULL, &err, info, newtime, task, actions[action], oldtime))
+  sql = g_strdup_printf("update log set info='%s', time=%d where (task=%d and action = '%s' and time=%d)", 
+			info, newtime, task, actions[action], oldtime);
+  if (sqlite3_exec  (sqliteh, sql, NULL, NULL, &err))
     {
       gpe_error_box(err);
       free (err);
+      g_free (sql);
       return;
     }
+  g_free (sql);
 }

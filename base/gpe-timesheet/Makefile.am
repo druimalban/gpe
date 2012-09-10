@@ -5,6 +5,8 @@ CFLAGS += -DIS_HILDON
 SUBDIRS += hildon
 endif
 
+CFLAGS += -Wall
+
 INCLUDES = $(DEPS_CFLAGS) $(HILDON_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE \
            -DPACKAGE_LOCALE_DIR=\"@gpetimesheet_localedir@\"

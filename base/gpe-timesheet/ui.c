@@ -491,7 +491,6 @@ GtkWidget * create_interface(GtkWidget *main_window)
   GtkWidget *journal_scrolled_window, *main_scrolled_window;
   GtkWidget *main_toolbar, *journal_toolbar;
   GtkWidget *pw;
-  GtkWidget *w;
   GtkWidget *task_view, *journal_view;
   GtkTreeStore *task_store;
   GtkTreeModel *model;
@@ -499,7 +498,7 @@ GtkWidget * create_interface(GtkWidget *main_window)
   GtkTreeSelection *task_selection, *journal_selection;
   GtkCellRenderer *main_renderer[3], *renderer[4];
   GdkPixbuf *p;
-  GtkToolItem *new, *new_sub, *delete, *refresh, *edit, *clock_in, *clock_out, *html, *quit, *back;
+  GtkToolItem *new, *new_sub, *delete, *refresh, *edit, *clock_in, *clock_out, *quit, *back;
 #ifndef IS_HILDON
   GtkToolItem *show;
 #endif

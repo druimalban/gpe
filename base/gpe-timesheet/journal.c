@@ -207,6 +207,7 @@ confirm_edit_destruction (GtkWidget *widget, gpointer p)
     }
 }
 
+#ifdef UNUSED
 static toggle_in_progress (GtkWidget *check, gpointer user_data)
 {
   GtkWidget *w = user_data;
@@ -215,6 +216,7 @@ static toggle_in_progress (GtkWidget *check, gpointer user_data)
   else
       gtk_widget_set_sensitive (w, TRUE);
 }
+#endif /* UNUSED */
 
 static void
 load_journal_children(GtkTreeModel *model, GtkTreeIter iter)
@@ -293,9 +295,9 @@ ui_edit_journal (GtkWidget *w, gpointer user_data)
   GtkWidget *progress_hbox = gtk_hbox_new (FALSE, 0);
   GtkWidget *vbox = gtk_vbox_new (FALSE, 0);
   GtkWidget *vbox2 = gtk_vbox_new (FALSE, 0);
-  GtkWidget *edit_label, *taskname_label, *warning_label;
-  GtkWidget *start_frame, *start_entry, *start_note, *start_date, *start_hh, *start_mm, *start_ss;
-  GtkWidget *stop_frame, *stop_entry, *stop_note, *stop_date, *stop_hh, *stop_mm, *stop_ss;
+  GtkWidget *warning_label /*, *edit_label */;
+  GtkWidget *start_frame, *start_note, *start_date, *start_hh, *start_mm, *start_ss;
+  GtkWidget *stop_frame, *stop_note, *stop_date, *stop_hh, *stop_mm, *stop_ss;
   //GtkWidget *check_in_progress;
 
   GtkTreeSelection  *selection = user_data;
@@ -303,9 +305,9 @@ ui_edit_journal (GtkWidget *w, gpointer user_data)
   GtkTreeModel *model;
   GtkTreePath *path;
 
-  int idx, i, type, test;
+  int idx, type, test;
   time_t tstart, tstop, previous_stop, next_start;
-  time_t old_tstart, old_tstop, old_logtime, old_totaltime;
+  time_t old_tstart, old_tstop, old_logtime;
   const gchar *text_start, *text_stop;
   gchar *start_time = g_malloc(sizeof(char)*26);
   gchar *stop_time = g_malloc(sizeof(char)*26);

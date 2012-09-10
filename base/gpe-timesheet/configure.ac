@@ -11,7 +11,7 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
 
-DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget libtododb"
+DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget libtododb sqlite3"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
