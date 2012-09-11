@@ -63,4 +63,13 @@ extern int load_to_treestore(void *arg, int argc, char **argv, char **names);
 extern GtkTreeStore *global_task_store;
 extern GtkTreeIter *global_task_iter;
 
+/* exported functions */
+void update_log (gchar *info, time_t oldtime, time_t newtime, int task, action_t action);
+void delete_children (int idx);
+int find_children_cb (void *arg, int argc, char **argv, char **names);
+int find_children (int idx);
+gboolean sql_append_todo(void);
+
+
+
 #endif

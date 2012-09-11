@@ -12,6 +12,7 @@
  */
 
 #include "journal.h"
+#include "sql.h"
 
 #define _(x) gettext(x)
 
@@ -251,7 +252,6 @@ prepare_onscreen_journal (GtkTreeSelection *selection, gpointer user_data)
 {
   GtkTreeModel *model;
   GtkTreeIter iter;
-  GtkTreePath *path;
   gint id;
   gchar *description;
 
@@ -333,7 +333,7 @@ ui_edit_journal (GtkWidget *w, gpointer user_data)
       /*edit_label = gtk_label_new (_("Editing log"));
         gtk_box_pack_start (GTK_BOX (vbox), edit_label, FALSE, FALSE, 0);
         gtk_widget_show (edit_label);
-        gtk_misc_set_alignment (GTK_MISC (edit_label), 0.0, 0.5);
+        gtk_misc_set_alignment (GTK_MISC (edit_label), 0.0, 0.5); */
 
       /* retrieve start and end time of current log */
       gtk_tree_model_get (model, &iter, 
@@ -580,12 +580,12 @@ ui_edit_journal (GtkWidget *w, gpointer user_data)
       else
         { /* let's update logs!*/
 /*TODO: check if update_log had success before updating the onscreen_juornal*/
-          update_log(text_start, old_tstart, tstart, idx, START);
+          update_log((gchar *)text_start, old_tstart, tstart, idx, START);
           t->id = idx;
           if ((type == JL_TYPE_START_OPEN) || (type == JL_TYPE_STOP_OPEN))
             log_entry(STOP, tstop, t, text_stop);
           else
-            update_log(text_stop, old_tstop, tstop, idx, STOP);
+            update_log((gchar *)text_stop, old_tstop, tstop, idx, STOP);
         /* and update the onscreen journal:
         ** we have to update the two modified logs 
         ** and also the total time! */
@@ -635,5 +635,8 @@ ui_edit_journal (GtkWidget *w, gpointer user_data)
   else
     { /* we should never be here */
       g_print ("no log selected to edit!\n");
+      return FALSE;
     }
+  /* something went wrong */
+  return FALSE;
 }

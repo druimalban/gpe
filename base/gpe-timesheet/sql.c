@@ -20,14 +20,15 @@
 #include <gpe/todo-db.h>
 
 #include "sql.h"
+#include "journal.h"
 
 #define _(x) gettext(x)
 
 static const char *fname = "/.gpe/timesheet";
 
-static const char *schema_str = 
-"create table tasks (id integer, description text, cftime integer, parent integer);"
-"create table log (action text, task integer, time integer, info text);";
+/*static const char *schema_str = 
+"create table tasks (id integer, description text, cftime integer, parent integer);" 
+"create table log (action text, task integer, time integer, info text);"; */
 static const char *schema_new_tasks_table = "create table tasks (id integer, description text, cftime integer, parent integer, todo_id integer);";
 static const char *schema_with_todo_str =
 "create table tasks (id integer, description text, cftime integer, parent integer, todo_id integer);"
@@ -77,7 +78,7 @@ log_entry (action_t action, time_t time, struct task *task, const char *info)
   char *err;
   gchar *sql;
 
-  sql = g_strdup_printf("insert into log values ('%s', %d, %d, '%q')", actions[action], task->id, time, info);
+  sql = g_strdup_printf("insert into log values ('%s', %d, %ld, %s)", actions[action], task->id, time, info);
   if (sqlite3_exec (sqliteh, (const char*) &sql,
 			  NULL, NULL, &err))
     {
@@ -111,6 +112,7 @@ internal_note_task (guint id, gchar *text, guint elapsed, guint pt, guint todo_i
   return t;
 }
 
+#ifdef UNUSED
 static int
 load_callback (void *arg, int argc, char **argv, char **names)
 {
@@ -129,6 +131,7 @@ load_callback (void *arg, int argc, char **argv, char **names)
 
   return 0;
 }
+#endif /* UNUSED */
 
 /* used by sql_check_tasks_table_update to convert database */
 static int
@@ -338,7 +341,6 @@ load_to_treestore(void *arg, int argc, char **argv, char **names)
     {
       GtkTreeIter iter, *parent;
       char *query, *err;
-      int test;
 
       parent=arg;
       query = g_malloc( sizeof (char)*80);
@@ -370,8 +372,11 @@ load_to_treestore(void *arg, int argc, char **argv, char **names)
       g_free (query);
       return 0;
     }
+  /* return error too if argc is not as expected */
+  return 99;
 }
 
+#ifdef UNUSED
 static int
 scan_log_cb (void *arg, int argc, char **argv, char **names)
 {
@@ -391,12 +396,13 @@ scan_log_cb (void *arg, int argc, char **argv, char **names)
     }
   return 0;
 }
+#endif /* UNUSED */
 
 static int
 scan_journal_cb (void *arg, int argc, char **argv, char **names)
 {
   time_t ti;
-  gint *id = arg;
+  guint *id = arg;
   gint type;
 
   if (argc == 4)
@@ -459,13 +465,13 @@ new_task (gchar *description, guint parent, guint todo_id)
 
     if (todo_id == 0 || parent)
       { /* it means that it is a task which belongs only to tasks */
-	sql = g_strdup_printf("insert into tasks values (%d, '%q', %d, %d, NULL)", new_id, description, 0, parent);
+	sql = g_strdup_printf("insert into tasks values (%d, '%s', %d, %d, NULL)", new_id, description, 0, parent);
         if (sqlite3_exec (sqliteh, sql, NULL, NULL, &err))
     		goto error;
       }
     else
       { /* this is a task used to connect todos with their children tasks */
-	sql = g_strdup_printf("insert into tasks values (%d, '%q', %d, %d, %d)", new_id, description, 0, 0, todo_id);
+	sql = g_strdup_printf("insert into tasks values (%d, '%s', %d, %d, %d)", new_id, description, 0, 0, todo_id);
         if (sqlite3_exec (sqliteh, sql, NULL, NULL, &err))
 		goto error;
       } 
@@ -525,7 +531,7 @@ find_children_cb (void *arg, int argc, char **argv, char **names)
   char *err;
   gchar *sql;
 
-  if (argc=2)
+  if (argc==2)
     {
     sql = g_strdup_printf("select id, parent from tasks where parent=%s", argv[0]);
     if (sqlite3_exec (sqliteh, sql, find_children_cb, NULL, &err))
@@ -533,7 +539,7 @@ find_children_cb (void *arg, int argc, char **argv, char **names)
         gpe_error_box(err);
         g_free (err);
 	g_free (sql);
-        return;
+        return -1;
       }
     g_free (sql);
 
@@ -542,6 +548,7 @@ find_children_cb (void *arg, int argc, char **argv, char **names)
     return 0;
 
     }
+   return -1;
 }
 
 int 
@@ -556,9 +563,10 @@ find_children (int idx)
       gpe_error_box(err);
       free (err);
       g_free (sql);
-      return;
+      return -1;
     }
   g_free (sql);
+  return 0;
 }
 
 void 
@@ -567,7 +575,7 @@ update_log (gchar *info, time_t oldtime, time_t newtime, int task, action_t acti
   char *err;
   gchar *sql;
   
-  sql = g_strdup_printf("update log set info='%s', time=%d where (task=%d and action = '%s' and time=%d)", 
+  sql = g_strdup_printf("update log set info='%s', time=%ld where (task=%d and action = '%s' and time=%ld)", 
 			info, newtime, task, actions[action], oldtime);
   if (sqlite3_exec  (sqliteh, sql, NULL, NULL, &err))
     {

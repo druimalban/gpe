@@ -2,7 +2,7 @@
   #define _GPE_TIMESHEET_UI_H
 #endif
 
-#define MY_PIXMAPS_DIR PREFIX "/share/pixmaps/gpe/default"
+#define MY_PIXMAPS_DIR PREFIX "/share/gpe/pixmaps/default"
 #ifdef IS_HILDON
   #define ICON_PATH PREFIX "/share/icons/hicolor/26x26/hildon"
 #endif
@@ -45,12 +45,14 @@
 GtkTreeStore *global_task_store;
 
 /* function definitions */
+/* no need to declare static functions
 static void show_help (void);
 static void view_selected_row_cb (GtkTreeSelection *selection, gpointer data);
 static void ui_new_task (GtkWidget *w, gpointer p);
 static void ui_delete_task (GtkWidget *w, gpointer data);
 static void start_timing (GtkWidget *w, gpointer data);
 static void stop_timing (GtkWidget *w, gpointer data);
+*/
 void prepare_onscreen_journal (GtkTreeSelection *selection, gpointer data);
 GtkWidget * create_interface(GtkWidget *main_window);
 

@@ -487,7 +487,7 @@ refresh_list(GtkCheckMenuItem *menuitem, gpointer user_data)
 GtkWidget * create_interface(GtkWidget *main_window)
 {  /* this is the procedure that is going to be executed at startup and loads data
       from database into the global_task_store structure */
-  GtkWidget *main_vbox, *main_hpaned, *journal_vbox;
+  GtkWidget *main_vbox, *journal_vbox /*, *main_hpaned */;
   GtkWidget *journal_scrolled_window, *main_scrolled_window;
   GtkWidget *main_toolbar, *journal_toolbar;
   GtkWidget *pw;
