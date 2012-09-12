@@ -1,3 +1,8 @@
+2012-09-13 Philippe De Swert <philippedeswert@gmail.com>
+
+	* configure.ac db.c : Switch to sqlite3
+	* ui.c, Makefile.am : Enable -Wall & fix some warnings
+
 2010-01-19  Graham Cobb  <g+770@cobb.uk.net>
 
 	* Makefile.am (libgpepimc_la_LDFLAGS): Set -version-info to 2:0:1 as 

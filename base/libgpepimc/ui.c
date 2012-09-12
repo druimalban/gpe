@@ -108,7 +108,6 @@ palette_color (GtkWidget *w, gpointer data)
 {
   GtkWidget *parent = gtk_widget_get_toplevel (w);
   GtkWidget *preview = g_object_get_data (G_OBJECT (parent), "preview");
-  gchar *cur_col = g_object_get_data (G_OBJECT (parent), "col");
   const gchar *colstr = data;
     
   g_object_set_data_full (G_OBJECT (parent), "col", g_strdup (colstr), g_free);

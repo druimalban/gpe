@@ -23,15 +23,21 @@
 #include <string.h>
 #include <strings.h>
 #include <stdlib.h>
-#include <sqlite.h>
+
+#include <sqlite3.h>
 
 #include <gpe/errorbox.h>
-
 #include "gpe/pim-categories.h"
 
 #include "internal.h"
 
 #define _(x) (x)
+/* define own sqlite3 equivalent of sqlite3_exec_printf */
+#define sqlite3_exec_printf(handle_, query_, cb_, cookie_, err_, args_...) \
+  ({ char *q_ = sqlite3_mprintf (query_ , ## args_); \
+     int ret_ = sqlite3_exec (handle_, q_, cb_, cookie_, err_); \
+     sqlite3_free (q_); \
+     ret_; })
 
 #define DB_NAME "/.gpe/categories"
 
@@ -39,7 +45,7 @@ static const char *schema_old_tmp_str = "create temporary table old_category (id
 static const char *schema_str = "create table category (id INTEGER PRIMARY KEY, description TEXT, colour TEXT);";
 
 static GSList *categories;
-static sqlite *db;
+static sqlite3 *db;
 
 static int
 load_one (void *arg, int argc, char **argv, char **names)
@@ -67,36 +73,36 @@ check_table_update (void)
   gchar *err = NULL;
 
   /* check if we have the colour field */
-  r = sqlite_exec (db, "select colour from category", NULL, NULL, &err);
+  r = sqlite3_exec (db, "select colour from category", NULL, NULL, &err);
 
   if (r) /* r > 0 indicates a failure, need to recreate that table with new schema */
     {
       g_free (err);
-      r = sqlite_exec (db, "begin transaction", NULL, NULL, &err);
+      r = sqlite3_exec (db, "begin transaction", NULL, NULL, &err);
       if (r)
         goto error;
-      r = sqlite_exec (db, schema_old_tmp_str, NULL, NULL, &err);
+      r = sqlite3_exec (db, schema_old_tmp_str, NULL, NULL, &err);
       if (r)
         goto error;
-      r = sqlite_exec (db, "insert into old_category select id,description from category", NULL, NULL, &err);
+      r = sqlite3_exec (db, "insert into old_category select id,description from category", NULL, NULL, &err);
       if (r)
         goto error;
-      r = sqlite_exec (db, "drop table category", NULL, NULL, &err);
+      r = sqlite3_exec (db, "drop table category", NULL, NULL, &err);
       if (r)
         goto error;
-      r = sqlite_exec (db, schema_str, NULL, NULL, NULL);
+      r = sqlite3_exec (db, schema_str, NULL, NULL, NULL);
       if (r)
        goto error;
-      r = sqlite_exec (db, "insert into category select id,description,NULL from old_category", NULL, NULL, &err);
+      r = sqlite3_exec (db, "insert into category select id,description,NULL from old_category", NULL, NULL, &err);
       if (r)
         goto error;
-      r = sqlite_exec (db, "drop table old_category", NULL, NULL, &err);
+      r = sqlite3_exec (db, "drop table old_category", NULL, NULL, &err);
       if (r)
         goto error;
-      r = sqlite_exec (db, "commit transaction", NULL, NULL, &err);
+      r = sqlite3_exec (db, "commit transaction", NULL, NULL, &err);
       if (r)
         goto error;
-      r = sqlite_exec (db, "vacuum", NULL, NULL, &err);
+      r = sqlite3_exec (db, "vacuum", NULL, NULL, &err);
       if (r)
         goto error;
 
@@ -107,7 +113,7 @@ check_table_update (void)
         gpe_error_box_fmt ("Couldn't convert database data to new format: %s",
                            err);
         g_free (err);
-        sqlite_exec (db, "rollback transaction", NULL, NULL, &err);
+        sqlite3_exec (db, "rollback transaction", NULL, NULL, &err);
       }
     }
 }
@@ -140,7 +146,7 @@ gpe_pim_categories_refresh (void)
     gpe_pim_category_free((struct gpe_pim_category *)categories->data);
   }
 
-  if (sqlite_exec (db, "select id,description,colour from category order by description desc",
+  if (sqlite3_exec (db, "select id,description,colour from category order by description desc",
                    load_one, &categories, &err))
     {
       gpe_error_box (err);
@@ -160,7 +166,6 @@ gpe_pim_categories_init (void)
     return TRUE;
   run_once = TRUE;
 
-  gchar *err;
   gchar *buf;
   size_t len;
   gchar *home = getenv ("HOME");
@@ -172,18 +177,17 @@ gpe_pim_categories_init (void)
   strcpy (buf, home);
   strcat (buf, DB_NAME);
   
-  db = sqlite_open (buf, 0, &err);
+  sqlite3_open (buf, &db );
   g_free (buf);
 	
   if (db == NULL) 
     {
-      gpe_error_box (err);
-      free (err);
+      gpe_error_box ("Could not open the database");
       return FALSE;
     }
   
   /* make sure table exists */
-  sqlite_exec (db, schema_str, NULL, NULL, NULL);
+  sqlite3_exec (db, schema_str, NULL, NULL, NULL);
   
   /* update table layout if necessary */
   check_table_update ();
@@ -289,7 +293,7 @@ gpe_pim_category_new (const gchar *name, gint *id)
       return TRUE;
     }
   
-  r = sqlite_exec_printf (db, "insert into category values (NULL, '%q', NULL)",
+  r = sqlite3_exec_printf (db, "insert into category values (NULL, '%q', NULL)",
                           NULL, NULL, &err, name);
   if (r)
     {
@@ -298,7 +302,7 @@ gpe_pim_category_new (const gchar *name, gint *id)
       return FALSE;
     }
   
-  *id = sqlite_last_insert_rowid (db);
+  *id = sqlite3_last_insert_rowid (db);
 
   c = g_malloc0 (sizeof (c));
 
@@ -322,7 +326,7 @@ gpe_pim_category_delete (gint id)
 {
   struct gpe_pim_category *c = gpe_pim_category_by_id(id);
 
-  sqlite_exec_printf (db, "delete from category where id='%d'", NULL, NULL, NULL, c->id);
+  sqlite3_exec_printf (db, "delete from category where id='%d'", NULL, NULL, NULL, c->id);
 
   gpe_pim_category_free(c);
 }
@@ -348,7 +352,7 @@ gpe_pim_category_rename (gint id, gchar *new_name)
       return FALSE;
     }
 
-  r = sqlite_exec_printf (db,
+  r = sqlite3_exec_printf (db,
                           "update category set description = '%q' where id =%d",
                           NULL, NULL, &err, new_name, id);
 
@@ -383,7 +387,7 @@ gpe_pim_category_set_colour (gint id, const gchar *new_colour)
   gchar *err;
   gint r;
 
-  r = sqlite_exec_printf (db,
+  r = sqlite3_exec_printf (db,
                           "update category set colour = '%q' where id =%d",
                           NULL, NULL, &err, new_colour, id);
 

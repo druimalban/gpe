@@ -25,7 +25,7 @@ AC_PROG_CC
 AC_PROG_LIBTOOL
 
 # depends on...
-DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 sqlite libgpewidget"
+DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 sqlite3 libgpewidget"
 
 
 ENABLE_HILDON=false
