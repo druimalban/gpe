@@ -1,3 +1,8 @@
+2012-10-13 Philippe De Swert <philippedeswert@gmail.com>
+
+	* Makefile.am todo-db.c old-db.c configure.ac : migrate to sqlite3
+
+
 2007-06-08  Florian Boor <florian@kernelconcepts.de>
 
         * Version 0.11 released.

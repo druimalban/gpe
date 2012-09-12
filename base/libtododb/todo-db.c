@@ -7,29 +7,39 @@
  * as published by the Free Software Foundation; either version
  * 2 of the License, or (at your option) any later version.
  */
-
+#define _GNU_SOURCE
+#define _XOPEN_SOURCE
+#include <unistd.h>
 #include <sys/types.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
-#include <sqlite.h>
-#include <unistd.h>
+#include <strings.h>
 #include <sys/stat.h>
 #include <glib.h>
+
+#include <sqlite3.h>
 
 #include <gpe/errorbox.h>
 #include <gpe/todo-db.h>
 
-static sqlite *sqliteh;
+/* define own sqlite3 equivalent of sqlite3_exec_printf */
+#define sqlite3_exec_printf(handle_, query_, cb_, cookie_, err_, args_...) \
+  ({ char *q_ = sqlite3_mprintf (query_ , ## args_); \
+     int ret_ = sqlite3_exec (handle_, q_, cb_, cookie_, err_); \
+     sqlite3_free (q_); \
+     ret_; })
+
+static sqlite3 *sqliteh;
 static GSList *todo_db_items;
 
 static unsigned long dbversion;
 
 static const char *fname = "/.gpe/todo";
 
-extern gboolean convert_old_db (int oldversion, sqlite *);
-extern void migrate_old_categories (sqlite * db);
+extern gboolean convert_old_db (int oldversion, sqlite3 *);
+extern void migrate_old_categories (sqlite3 * db);
 
 /**
  * todo_db_make_todoid:
@@ -116,7 +126,7 @@ item_callback (void *arg, int argc, char **argv, char **names)
       struct todo_item *i = g_malloc0 (sizeof (struct todo_item));
       i->id = id;
       i->priority = PRIORITY_STANDARD;
-      if (sqlite_exec_printf
+      if (sqlite3_exec_printf
 	  (sqliteh, "select tag,value from todo where uid=%d",
 	   item_data_callback, i, &err, id))
 	{
@@ -170,7 +180,7 @@ todo_db_start (void)
   buf = g_malloc (len);
   strcpy (buf, home);
   strcat (buf, fname);
-  sqliteh = sqlite_open (buf, 0, &err);
+  sqlite3_open (buf, &sqliteh);
   if (sqliteh == NULL)
     {
       gpe_error_box (err);
@@ -178,10 +188,11 @@ todo_db_start (void)
       g_free (buf);
       return -1;
     }
+  g_free (buf);
 
-  sqlite_exec (sqliteh, schema_info, NULL, NULL, &err);
+  sqlite3_exec (sqliteh, schema_info, NULL, NULL, &err);
 
-  if (sqlite_exec
+  if (sqlite3_exec
       (sqliteh, "select version from todo_dbinfo", dbinfo_callback, NULL,
        &err))
     {
@@ -191,14 +202,14 @@ todo_db_start (void)
       return FALSE;
     }
 
-  if (sqlite_exec (sqliteh, schema2_str, NULL, NULL, &err))
+  if (sqlite3_exec (sqliteh, schema2_str, NULL, NULL, &err))
     free (err);
-  if (sqlite_exec (sqliteh, schema3_str, NULL, NULL, &err))
+  if (sqlite3_exec (sqliteh, schema3_str, NULL, NULL, &err))
     free (err);
 
   if (dbversion == 1)
     {
-      if (sqlite_exec
+      if (sqlite3_exec
 	  (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
 	{
 	  gpe_error_box (err);
@@ -208,7 +219,7 @@ todo_db_start (void)
     }
   else if (dbversion == 0)
     {
-      if (sqlite_exec
+      if (sqlite3_exec
 	  (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
 	{
 	  gpe_error_box (err);
@@ -243,7 +254,7 @@ todo_db_refresh (void)
   g_slist_free (todo_db_items);
   todo_db_items = NULL;
 
-  if (sqlite_exec
+  if (sqlite3_exec
       (sqliteh, "select uid from todo_urn", item_callback, NULL, &err))
     {
       gpe_error_box (err);
@@ -269,7 +280,7 @@ todo_db_stop (void)
   g_slist_free (todo_db_items);
   todo_db_items = NULL;
 
-  sqlite_close (sqliteh);
+  sqlite3_close (sqliteh);
 }
 
 gint
@@ -289,7 +300,7 @@ list_sort_func (gconstpointer a, gconstpointer b)
 }
 
 #define insert_values(db, id, key, format, value)	\
-	sqlite_exec_printf (db, "insert into todo values (%d, '%q', '" format "')", \
+	sqlite3_exec_printf (db, "insert into todo values (%d, '%q', '" format "')", \
 			    NULL, NULL, &err, id, key, value)
 
 gboolean
@@ -302,7 +313,7 @@ todo_db_push_item (struct todo_item * i)
 
   modified = time (NULL);
 
-  if (sqlite_exec (sqliteh, "begin transaction", NULL, NULL, &err))
+  if (sqlite3_exec (sqliteh, "begin transaction", NULL, NULL, &err))
     goto error;
 
   rollback = TRUE;
@@ -312,7 +323,7 @@ todo_db_push_item (struct todo_item * i)
       i->todoid = todo_db_make_todoid ();
     }
 
-  if (sqlite_exec_printf (sqliteh, "delete from todo where uid=%d",
+  if (sqlite3_exec_printf (sqliteh, "delete from todo where uid=%d",
 			  NULL, NULL, &err, i->id)
       || (i->summary
 	  && insert_values (sqliteh, i->id, "SUMMARY", "%q", i->summary))
@@ -345,14 +356,14 @@ todo_db_push_item (struct todo_item * i)
   if (insert_values (sqliteh, i->id, "MODIFIED", "%d", (int) modified))
     goto error;
 
-  if (sqlite_exec (sqliteh, "commit transaction", NULL, NULL, &err))
+  if (sqlite3_exec (sqliteh, "commit transaction", NULL, NULL, &err))
     goto error;
 
   return TRUE;
 
 error:
   if (rollback)
-    sqlite_exec (sqliteh, "rollback transaction", NULL, NULL, NULL);
+    sqlite3_exec (sqliteh, "rollback transaction", NULL, NULL, NULL);
   gpe_error_box (err);
   free (err);
   return FALSE;
@@ -362,11 +373,11 @@ gboolean
 converted_item (struct todo_item * i)
 {
   char *err;
-  if (sqlite_exec (sqliteh, "insert into todo_urn values (NULL)",
+  if (sqlite3_exec (sqliteh, "insert into todo_urn values (NULL)",
 		   NULL, NULL, &err))
     return FALSE;
 
-  i->id = sqlite_last_insert_rowid (sqliteh);
+  i->id = sqlite3_last_insert_rowid (sqliteh);
 
   todo_db_items = g_slist_append (todo_db_items, i);
   return todo_db_push_item (i);
@@ -385,13 +396,13 @@ todo_db_new_item (void)
   char *err;
   struct todo_item *i;
 
-  if (sqlite_exec (sqliteh, "insert into todo_urn values (NULL)",
+  if (sqlite3_exec (sqliteh, "insert into todo_urn values (NULL)",
 		   NULL, NULL, &err))
     return NULL;
 
   i = g_malloc0 (sizeof (struct todo_item));
 
-  i->id = sqlite_last_insert_rowid (sqliteh);
+  i->id = sqlite3_last_insert_rowid (sqliteh);
 
   todo_db_items = g_slist_append (todo_db_items, i);
 
@@ -423,9 +434,9 @@ todo_db_destroy_item (struct todo_item *i)
 void
 todo_db_delete_item (struct todo_item *i)
 {
-  sqlite_exec_printf (sqliteh, "delete from todo where uid=%d",
+  sqlite3_exec_printf (sqliteh, "delete from todo where uid=%d",
 		      NULL, NULL, NULL, i->id);
-  sqlite_exec_printf (sqliteh, "delete from todo_urn where uid=%d",
+  sqlite3_exec_printf (sqliteh, "delete from todo_urn where uid=%d",
 		      NULL, NULL, NULL, i->id);
 
   todo_db_items = g_slist_remove (todo_db_items, i);

@@ -11,7 +11,7 @@ AM_INIT_AUTOMAKE([foreign dist-bzip2])
 AC_PROG_CC
 AC_PROG_LIBTOOL
 
-PKG_CHECK_MODULES(TODODB, sqlite libgpepimc)
+PKG_CHECK_MODULES(TODODB, sqlite3 libgpepimc)
 
 #gtk-doc for documentation
 GTK_DOC_CHECK(1.2)

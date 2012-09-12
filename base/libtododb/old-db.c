@@ -7,6 +7,8 @@
  * 2 of the License, or (at your option) any later version.
  */
 
+#define _GNU_SOURCE_
+#define _XOPEN_SOURCE
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -15,22 +17,29 @@
 #include <time.h>
 #include <sys/stat.h>
 
-#include <sqlite.h>
+#include <sqlite3.h>
 
 #include <gpe/errorbox.h>
 #include <gpe/todo-db.h>
 #include <gpe/pim-categories.h>
 
+/* define own sqlite3 equivalent of sqlite3_exec_printf */
+#define sqlite3_exec_printf(handle_, query_, cb_, cookie_, err_, args_...) \
+  ({ char *q_ = sqlite3_mprintf (query_ , ## args_); \
+     int ret_ = sqlite3_exec (handle_, q_, cb_, cookie_, err_); \
+     sqlite3_free (q_); \
+     ret_; })
+
 extern gboolean converted_item (struct todo_item *i);
 
-static sqlite *sqliteh_here;
+static sqlite3 *sqliteh_here;
 
 static int
 item_callback0 (void *arg, int argc, char **argv, char **names)
 {
   if (argc == 6)
     {
-      int list = atoi (argv[1]);
+      //int list = atoi (argv[1]);
       char *summary = argv[2];
       char *description = argv[3];
       int state = atoi (argv[4]);
@@ -41,7 +50,7 @@ item_callback0 (void *arg, int argc, char **argv, char **names)
 
       memset (i, 0, sizeof (*i));
       
-      i->id = sqlite_last_insert_rowid (sqliteh_here);
+      i->id = sqlite3_last_insert_rowid (sqliteh_here);
 
       i->what = g_strdup (description);
       i->state = state;
@@ -64,7 +73,7 @@ item_callback0 (void *arg, int argc, char **argv, char **names)
 }
 
 gboolean
-convert_old_db (int oldversion, sqlite *sqliteh)
+convert_old_db (int oldversion, sqlite3 *sqliteh)
 {
   char *err;
   
@@ -72,14 +81,14 @@ convert_old_db (int oldversion, sqlite *sqliteh)
   
   if (oldversion == 0) 
     {
-      sqlite_exec (sqliteh, 
+      sqlite3_exec (sqliteh, 
 		       "select uid,list,summary,description,state,due_by from todo_items",
 		   item_callback0, NULL, NULL);
     }
   
   oldversion = 1; /* set equal to new version */
   
-  if (sqlite_exec_printf (sqliteh, 
+  if (sqlite3_exec_printf (sqliteh, 
 			  "insert into todo_dbinfo (version) values (%d)", 
 			  NULL, NULL, &err, oldversion))
     {
@@ -101,13 +110,13 @@ struct map
 GSList *mapping;
 
 void
-migrate_one_category (sqlite *db, int id, gchar *string)
+migrate_one_category (sqlite3 *db, int id, gchar *string)
 {
   struct map *map;
   int new_id;
   char *err;
 
-  if (sqlite_exec_printf (db, "update todo set value='MIGRATED-%d' where tag='CATEGORY' and value='%d'",
+  if (sqlite3_exec_printf (db, "update todo set value='MIGRATED-%d' where tag='CATEGORY' and value='%d'",
 			  NULL, NULL, &err, id, id) != SQLITE_OK)
     {
       gpe_error_box (err);
@@ -124,12 +133,12 @@ migrate_one_category (sqlite *db, int id, gchar *string)
 }
 
 void
-migrate_old_categories (sqlite *db)
+migrate_old_categories (sqlite3 *db)
 {
   gint r, c;
   gchar **list;
 
-  if (sqlite_get_table (db, "select id,description from todo_categories", &list, &r, &c, NULL) == SQLITE_OK)
+  if (sqlite3_get_table (db, "select id,description from todo_categories", &list, &r, &c, NULL) == SQLITE_OK)
     {
       int i;
       GSList *iter;
@@ -147,14 +156,14 @@ migrate_old_categories (sqlite *db)
 	{
 	  struct map *map = iter->data;
 
-	  sqlite_exec_printf (db, "update todo set value='%d' where tag='CATEGORY' and value='MIGRATED-%d'",
+	  sqlite3_exec_printf (db, "update todo set value='%d' where tag='CATEGORY' and value='MIGRATED-%d'",
 			      NULL, NULL, NULL, map->new, map->old);
 
 	  g_free (map);
 	}
 
-      sqlite_exec_printf (db, "drop table todo_categories", NULL, NULL, NULL);
+      sqlite3_exec (db, "drop table todo_categories", NULL, NULL, NULL);
 
-      sqlite_free_table (list);
+      sqlite3_free_table (list);
     }
 }

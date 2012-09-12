@@ -1,5 +1,7 @@
 SUBDIRS = doc
 
+CFLAGS += -Wall
+
 lib_LTLIBRARIES = libtododb.la
 
 INCLUDES = @TODODB_CFLAGS@ -DPACKAGE_LOCALE_DIR=\"@datadir@/locale/@PACKAGE_NAME@\"
@@ -17,7 +19,7 @@ pkgconfig_DATA = libtododb.pc
 EXTRA_DIST = libtool-cross.patch \
 			 debian/changelog \
 			 debian/compat \
-			 debian/copyright \	
+			 debian/copyright \
 			 debian/control \
 			 debian/rules \
 			 debian/libtododb0.files \
