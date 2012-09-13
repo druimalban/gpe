@@ -1,3 +1,7 @@
+v0.6 - 09/2012 Philippe De Swert <philippedeswert@gmail.com>
+
+* port to gtk-webkit
+
 2005-06-27  Florian Boor <florian@kernelconcepts.de>
 
 * gpe-helpviewer.desktop: make name uppercase.

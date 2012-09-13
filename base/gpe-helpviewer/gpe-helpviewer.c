@@ -24,10 +24,10 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <stdlib.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include <webi.h>
 
 #include <gdk/gdk.h>
 
@@ -35,15 +35,18 @@
 #include <gpe/init.h>
 #include <gpe/errorbox.h>
 
+#include <webkit/webkit.h>
+
 #include <sys/un.h>
 #include <sys/socket.h>
 #include <time.h>
 #include <errno.h>
-#include <pthread.h>
 
 #define SOCKETNAME "/tmp/comm"
 #define EC_FAIL 1
 //#define DEBUG /* uncomment this if you want debug output*/
+
+WebKitWebView *web_view;
 
 /* read a file into gtk-webcore */
 void
@@ -60,8 +63,8 @@ read_file (const gchar * url, GtkWidget * html)
 #ifdef DEBUG
       fprintf (stderr, "loading html %s\n", filename);
 #endif
-      webi_stop_load (WEBI (html));
-      webi_load_url (WEBI (html), url);
+      webkit_web_view_stop_loading (web_view);
+      webkit_web_view_open (web_view, filename);
     }
   else
     {
@@ -110,22 +113,28 @@ static void
 forward_func (GtkWidget * forward, GtkWidget * html)
 {
 
+  webkit_web_view_go_forward (web_view);
+/* TODO: check if we can provide similar functionality
   if (webi_can_go_forward (WEBI (html)))
     webi_go_forward (WEBI (html));
   else
     gpe_error_box ("no more pages forward!");
-
+*/
 }
 
 /* makes the engine go back one page */
 static void
 back_func (GtkWidget * back, GtkWidget * html)
 {
+
+  webkit_web_view_go_back (web_view);
+
+/* TODO: check if we can provide similar functionality
   if (webi_can_go_back (WEBI (html)))
     webi_go_back (WEBI (html));
   else
     gpe_error_box ("No more pages back!");
-
+*/
 
 }
 
@@ -216,10 +225,6 @@ main (int argc, char *argv[])
   const gchar *base;
   gchar *p;
   gint width = 240, height = 320;
-  pthread_t tid;
-
-  WebiSettings s = { 0, };
-  WebiSettings *ks = &s;
 
   gpe_application_init (&argc, &argv);
   checkinstance (argv[1]);
@@ -262,14 +267,12 @@ main (int argc, char *argv[])
   gtk_container_set_border_width (GTK_CONTAINER (toolbar), 5);
 
   //create html object (must be created before function calls to html to avoid segfault)
-  html = webi_new ();
-  webi_set_emit_internal_status (WEBI (html), TRUE);
+  html = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (html), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-  ks->default_font_size = 11;
-  ks->default_fixed_font_size = 11;
-  webi_set_settings (WEBI (html), ks);
+  web_view = WEBKIT_WEB_VIEW (webkit_web_view_new ());
+  gtk_container_add (GTK_CONTAINER (html), GTK_WIDGET (web_view));
 
-  pthread_create (&tid, NULL, reportinstance, html);
 #ifdef DEBUG
   printf ("report running! html=%d\n", html);
   printf ("continuing!\n");
