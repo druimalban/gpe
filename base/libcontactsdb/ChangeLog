@@ -1,3 +1,7 @@
+2012-09-13  Philippe De Swert <philippedeswert@gmail.com>
+
+	* contacts-db.c old-db.c Makefile.am configure.ac : 
+	  migrate to sqlite3
 
 2008-01-21  Florian Boor  <florian@kernelconcepts.de>
 

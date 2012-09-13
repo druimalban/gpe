@@ -29,7 +29,13 @@
 #include <gpe/pim-categories.h>
 #include <gpe/errorbox.h>
 
-#include <sqlite.h>
+#include <sqlite3.h>
+/* define own sqlite3 equivalent of sqlite3_exec_printf */
+#define sqlite3_exec_printf(handle_, query_, cb_, cookie_, err_, args_...) \
+  ({ char *q_ = sqlite3_mprintf (query_ , ## args_); \
+     int ret_ = sqlite3_exec (handle_, q_, cb_, cookie_, err_); \
+     sqlite3_free (q_); \
+     ret_; })
 
 struct map
 {
@@ -39,13 +45,13 @@ struct map
 static GSList *mapping;
 
 static void
-migrate_one_category (sqlite *db, int id, gchar *string)
+migrate_one_category (sqlite3 *db, int id, gchar *string)
 {
   struct map *map;
   int new_id;
   char *err;
 
-  if (sqlite_exec_printf (db, "update contacts set value='MIGRATED-%d' where tag='CATEGORY' and value='%d'",
+  if (sqlite3_exec_printf (db, "update contacts set value='MIGRATED-%d' where tag='CATEGORY' and value='%d'",
 			  NULL, NULL, &err, id, id) != SQLITE_OK)
     {
       gpe_error_box (err);
@@ -64,12 +70,12 @@ migrate_one_category (sqlite *db, int id, gchar *string)
 }
 
 void
-contacts_db_migrate_old_categories (sqlite *db)
+contacts_db_migrate_old_categories (sqlite3 *db)
 {
   gint r, c;
   gchar **list;
 
-  if (sqlite_get_table (db, "select id,description from contacts_category", &list, &r, &c, NULL) == SQLITE_OK)
+  if (sqlite3_get_table (db, "select id,description from contacts_category", &list, &r, &c, NULL) == SQLITE_OK)
     {
       int i;
       GSList *iter;
@@ -87,15 +93,15 @@ contacts_db_migrate_old_categories (sqlite *db)
 	{
 	  struct map *map = iter->data;
 
-	  sqlite_exec_printf (db, "update contacts set value='%d' where tag='CATEGORY' and value='MIGRATED-%d'",
+	  sqlite3_exec_printf (db, "update contacts set value='%d' where tag='CATEGORY' and value='MIGRATED-%d'",
 			      NULL, NULL, NULL, map->new, map->old);
 
 	  g_free (map);
 	}
 
-      sqlite_exec_printf (db, "drop table contacts_category", NULL, NULL, NULL);
+      sqlite3_exec_printf (db, "drop table contacts_category", NULL, NULL, NULL);
 
-      sqlite_free_table (list);
+      sqlite3_free_table (list);
     }
 }
 

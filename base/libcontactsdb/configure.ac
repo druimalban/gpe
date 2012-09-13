@@ -12,7 +12,7 @@ AC_PROG_LIBTOOL
 
 GTK_DOC_CHECK(1.2)
 
-PKG_CHECK_MODULES(CONTACTSDB, sqlite libgpepimc)
+PKG_CHECK_MODULES(CONTACTSDB, sqlite3 libgpepimc)
 
 AC_CONFIG_FILES([Makefile libcontactsdb.pc doc/Makefile])
 AC_OUTPUT
