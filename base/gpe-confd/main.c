@@ -26,8 +26,14 @@ XSettingsManager *manager;
 #include <db.h>
 DB *database;
 #else
-#include <sqlite.h>
-sqlite *database;
+#include <sqlite3.h>
+sqlite3 *database;
+/* define own sqlite3 equivalent of sqlite3_exec_printf */
+#define sqlite3_exec_printf(handle_, query_, cb_, cookie_, err_, args_...) \
+  ({ char *q_ = sqlite3_mprintf (query_ , ## args_); \
+     int ret_ = sqlite3_exec (handle_, q_, cb_, cookie_, err_); \
+     sqlite3_free (q_); \
+     ret_; })
 #endif
 
 Atom gpe_settings_update_atom;
@@ -54,6 +60,9 @@ xsetting_stringize (XSettingsSetting *setting)
 
     case XSETTINGS_TYPE_STRING:
       s = g_strdup_printf ("S:%s", setting->data.v_string);
+      break;
+
+    case XSETTINGS_TYPE_NONE:
       break;
     }
 
@@ -211,12 +220,12 @@ read_one_setting (void *arg, int argc, char **argv, char **names)
 }
 
 void
-db_store_setting (sqlite *db, XSettingsSetting *setting)
+db_store_setting (sqlite3 *db, XSettingsSetting *setting)
 {
   gchar *str =  xsetting_stringize (setting);
   char *err;
 
-  if (sqlite_exec_printf (db, "delete from xsettings where key='%q'", NULL, NULL, &err,
+  if (sqlite3_exec_printf (db, "delete from xsettings where key='%q'", NULL, NULL, &err,
 			  setting->name))
     {
       fprintf (stderr, "sqlite: %s\n", err);
@@ -225,7 +234,7 @@ db_store_setting (sqlite *db, XSettingsSetting *setting)
 
   if (setting->type != 0xff)
     {
-      if (sqlite_exec_printf (db, "insert into xsettings values ('%q', '%q')", NULL, NULL, &err,
+      if (sqlite3_exec_printf (db, "insert into xsettings values ('%q', '%q')", NULL, NULL, &err,
 			      setting->name, str))
 	{
 	  fprintf (stderr, "sqlite: %s\n", err);
@@ -237,7 +246,7 @@ db_store_setting (sqlite *db, XSettingsSetting *setting)
 }
 
 void
-load_defaults_file (XSettingsManager *manager, sqlite *db, const char *file)
+load_defaults_file (XSettingsManager *manager, sqlite3 *db, const char *file)
 {
   FILE *fp = fopen (file, "r");
   if (fp)
@@ -279,7 +288,7 @@ load_defaults_file (XSettingsManager *manager, sqlite *db, const char *file)
 #define DEFAULT_DIR  "/etc/gpe/xsettings-default.d"
 
 void
-load_defaults (XSettingsManager *manager, sqlite *db)
+load_defaults (XSettingsManager *manager, sqlite3 *db)
 {
   GDir *dir = g_dir_open (DEFAULT_DIR, 0, NULL);
   char *file = g_strdup (DEFAULT_FILE);
@@ -302,11 +311,11 @@ load_defaults (XSettingsManager *manager, sqlite *db)
 }
 
 gboolean
-suck_in_settings (XSettingsManager *manager, sqlite *db)
+suck_in_settings (XSettingsManager *manager, sqlite3 *db)
 {
   char *err;
 
-  if (sqlite_exec (db, "select key, value from xsettings", read_one_setting,
+  if (sqlite3_exec (db, "select key, value from xsettings", read_one_setting,
 		   NULL, &err))
     {
       fprintf (stderr, "sqlite: %s\n", err);
@@ -322,10 +331,10 @@ suck_in_settings (XSettingsManager *manager, sqlite *db)
   return TRUE;
 }
 
-sqlite *
+sqlite3 *
 database_open (void)
 {
-  sqlite *db;
+  sqlite3 *db;
   const char *home = g_get_home_dir ();
   char *err, *file;
   struct stat buf;
@@ -354,13 +363,13 @@ database_open (void)
 
   file = g_strdup_printf ("%s/.gpe/settings", home);
  
-  db = sqlite_open (file, 0, &err);
+  sqlite3_open (file, &db);
   g_free (file);
 
   if (db)
     {
       static const char *schema_info = "create table xsettings (key text, value text)";
-      if (sqlite_exec (db, schema_info, NULL, NULL, &err) == 0)
+      if (sqlite3_exec (db, schema_info, NULL, NULL, &err) == 0)
 	defaults_needed = TRUE;
     }
   else

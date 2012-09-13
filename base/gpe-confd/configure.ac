@@ -11,7 +11,7 @@ AC_STDC_HEADERS
 AC_PROG_INSTALL
 
 
-DEP_MODULES="sqlite glib-2.0 >= 2.2 x11 libxsettings-client"
+DEP_MODULES="sqlite3 glib-2.0 >= 2.2 x11 libxsettings-client"
 LDFLAGS="$LDFLAGS -lXsettings"
 
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)

@@ -1,3 +1,7 @@
+2012-09-13  Philippe De Swert <philippedeswert#gmail.com>
+
+	* configure.ac main.c : Migrate to sqlite3
+
 2008-10-29  Neal H. Walfield  <neal@gnu.org>
 
 	* configure.ac: Depend on libxsettings-client.

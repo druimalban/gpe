@@ -2,6 +2,8 @@
 INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir) \
            -DPREFIX=\"@prefix@\" -D_GNU_SOURCE
 
+CFLAGS += -Wall
+
 bin_PROGRAMS = gpe-confd
 
 gpe_confd_LDADD = @DEPS_LIBS@

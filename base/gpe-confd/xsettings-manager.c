@@ -308,6 +308,8 @@ setting_length (XSettingsSetting *setting)
     case XSETTINGS_TYPE_COLOR:
       length += 8;
       break;
+    case XSETTINGS_TYPE_NONE:
+      break;
     }
 
   return length;
@@ -369,6 +371,9 @@ setting_store (XSettingsSetting *setting,
       *(CARD16 *)(buffer->pos + 4) = setting->data.v_color.blue;
       *(CARD16 *)(buffer->pos + 6) = setting->data.v_color.alpha;
       buffer->pos += 8;
+      break;
+
+    case XSETTINGS_TYPE_NONE:
       break;
     }
 }
