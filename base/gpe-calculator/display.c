@@ -42,7 +42,6 @@ static int display_result_counter = 0;
 
 void display_init (GtkWidget *a_parent_widget)
 {
-	GtkTextTag 		*result_tag, *active_base_tag, *passive_base_tag;
 	GtkTextIter 	iter;
 	GdkColor		color;
 	
@@ -55,8 +54,8 @@ void display_init (GtkWidget *a_parent_widget)
 	buffer = gtk_text_view_get_buffer (view);
 	
 	/* remark: wrap MUST NOT be set to none in order to justify the text! */
-	
-	result_tag = gtk_text_buffer_create_tag (buffer, "result", \
+
+	gtk_text_buffer_create_tag (buffer, "result", \
 		"justification", GTK_JUSTIFY_RIGHT, \
 		"weight", PANGO_WEIGHT_BOLD, \
 		"scale", 1.8, \
@@ -64,12 +63,12 @@ void display_init (GtkWidget *a_parent_widget)
 		"pixels_below_lines", 1, \
 		NULL);
 	
-	active_base_tag = gtk_text_buffer_create_tag (buffer, "active_base", \
+	gtk_text_buffer_create_tag (buffer, "active_base", \
 		"scale", 0.8, \
 	 	"weight", PANGO_WEIGHT_BOLD, \
 		NULL);
 	
-	passive_base_tag = gtk_text_buffer_create_tag (buffer, "passive_base", \
+	gtk_text_buffer_create_tag (buffer, "passive_base", \
 		"scale", 0.8, \
 		"foreground", "darkgrey", \
 		NULL);

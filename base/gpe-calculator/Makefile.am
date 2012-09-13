@@ -1,3 +1,4 @@
+CFLAGS += -Wall -lm
 
 SUBDIRS = po
 

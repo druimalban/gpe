@@ -1,3 +1,8 @@
+2012-09-13 Philippe De Swert <philippedeswert@gmail.com>
+
+	* Fix build issue due to missing -lm linker flag
+	* Enable -Wall and fix related warnings
+
 2009-10-23 Florian Boor <fb@kernelconcepts.de>
 
 	* Apply patch to set window icon. Contributed by 
