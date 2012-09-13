@@ -57,6 +57,7 @@
 #include <X11/Xatom.h>
 
 #include <cairo.h>
+#include <cairo-xlib.h>
 #include <math.h>
 
 //#define DEBUG

@@ -3,12 +3,12 @@ DEBUG = yes
 PACKAGE = gpe-appmgr
 VERSION = 2.8
 
-PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -Wall 
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS) -I../libgpelaunch -I../libxsettings-client -I../libxsettings
-PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libgpelaunch/.libs -lgpelaunch -Wl,-rpath-link,../libxsettings -L../libxsettings-client -lXsettings-client
+PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS) -L../libgpelaunch/.libs -lgpelaunch -Wl,-rpath-link,../libxsettings -L../libxsettings-client -lXsettings-client -lm
 
-PACKAGE_CFLAGS += $(shell pkg-config --cflags cairo)
-PACKAGE_LDFLAGS += $(shell pkg-config --libs cairo)
+PACKAGE_CFLAGS += $(shell pkg-config --cflags cairo-xlib)
+PACKAGE_LDFLAGS += $(shell pkg-config --libs cairo-xlib)
 
 DESTDIR =
 PREFIX ?= /usr

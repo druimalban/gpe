@@ -157,7 +157,7 @@ create_icon_pixmap (GtkStyle *style, char *fn, int size)
     return NULL;
   
   spixbuf = gdk_pixbuf_scale_simple (pixbuf, size, size, GDK_INTERP_BILINEAR);
-  gdk_pixbuf_unref (pixbuf);
+  g_object_unref (pixbuf);
   
   w = gtk_image_new_from_pixbuf (spixbuf);
   return w;
@@ -247,7 +247,7 @@ run_package (GnomeDesktopFile *p, GObject *item)
   gpe_popup_infoprint (dpy, text);
   g_free (text);
 
-  if (gnome_desktop_file_get_raw (p, X_APPMGR_SECTION, "Root", NULL, &root))
+  if (gnome_desktop_file_get_raw (p, X_APPMGR_SECTION, "Root", NULL, (const char**) &root))
     gpe_launch_set_root (root);
 
   /* Can't have single instance without startup notification */
@@ -405,7 +405,7 @@ load_from (const char *path, const char *root)
 	      if (type == NULL || strcmp (type, "Application"))
 		gnome_desktop_file_free (p);
 	      else
-		add_one_package (p, root);
+		add_one_package (p, (gchar *)root);
 
 	      if (type)
 		g_free (type);
