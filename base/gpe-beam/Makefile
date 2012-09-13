@@ -28,7 +28,7 @@ PACKAGE_CFLAGS += -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\" -DDBUS_API_SUB
 PACKAGE_CPPFLAGS += -I. -Wall
 
 MIMECFLAGS =`pkg-config --cflags mimedir-1.0`
-MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite `pkg-config --libs mimedir-1.0`
+MIMELDFLAGS = $(GTKLDFLAGS) -lsqlite3 `pkg-config --libs mimedir-1.0`
 
 ifeq ($(CVSBUILD),yes)
 MIMECFLAGS += $(shell PKG_CONFIG_PATH=../libgpevtype pkg-config --cflags libgpevtype-uninstalled)

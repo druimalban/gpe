@@ -1,3 +1,7 @@
+2012-10-13   Philippe De Swert <philippedeswert@gmail.com>
+
+	* Move to sqlite3
+
 2010-01-08   Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Update translations

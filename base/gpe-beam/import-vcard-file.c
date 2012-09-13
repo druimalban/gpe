@@ -7,13 +7,13 @@
 #include <mimedir/mimedir-vcard.h>
 #include <gpe/vcard.h>
 
-#include <sqlite.h>
+#include <sqlite3.h>
 
 #define _(x) gettext (x)
 
 #define DB_NAME "/.gpe/contacts"
 
-sqlite *db;
+sqlite3 *db;
 
 int 
 db_open(void) 
@@ -29,7 +29,7 @@ db_open(void)
   strcpy (buf, home);
   strcat (buf, DB_NAME);
   
-  db = sqlite_open (buf, 0, &errmsg);
+  sqlite3_open (buf, &db);
   g_free (buf);
   
   if (db == NULL) 
