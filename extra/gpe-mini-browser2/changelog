@@ -1,5 +1,10 @@
 GPE-mini-browser2 v0.0.1
 
+- 19/09/2012 - Philippe De Swert
+
+* main.c: 
+	- Avoid g_thread_init issue with newer glib
+
 - 09/08/2008 - Philippe De Swert
 
 * TODO:
