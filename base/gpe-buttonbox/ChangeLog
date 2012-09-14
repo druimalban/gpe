@@ -1,4 +1,10 @@
+2012-09-15 Philippe De Swert <philippedeswert@gmail.com>
+
+	* configure.ac: Depends on libx11, so add x11 pkg-config check
+	* Makefile.am gpe-buttonbox.c: Add -Wall and fix some warnings
+
 2009-04-15 Ned Ludd  <solar@gentoo.org>
+
 	* gpe-base/gpe-buttonbox: Makefile.am 
 	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
 	* Targeted for gpe-3.0 release.

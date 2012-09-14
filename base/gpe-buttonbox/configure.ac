@@ -19,7 +19,7 @@ ALL_LINGUAS=""
 AM_GLIB_GNU_GETTEXT
 AC_PROG_INTLTOOL([0.23])
 
-PKG_CHECK_MODULES(BUTTONBOX, gtk+-2.0 libgpewidget libgpelaunch)
+PKG_CHECK_MODULES(BUTTONBOX, gtk+-2.0 libgpewidget libgpelaunch x11)
 
 AC_DEFINE_UNQUOTED(PACKAGE_LOCALE_DIR, "$prefix/share/locale/$PACKAGE_NAME", [Directory for locale files])
 

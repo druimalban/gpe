@@ -776,7 +776,7 @@ gpe_get_wm_icon_name (Display *dpy, Window w)
 
   if (nitems)
     {
-      name = g_strdup (prop);
+      name = g_strdup ((gchar *)prop);
       XFree (prop);
     }
 

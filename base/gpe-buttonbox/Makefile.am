@@ -1,5 +1,7 @@
 bin_PROGRAMS = gpe-buttonbox gpe-buttonbox-config
 
+CFLAGS += -Wall
+
 gpe_buttonbox_SOURCES = gpe-buttonbox.c system-tray.c cfgfile.c cfgfile.h globals.h
 
 gpe_buttonbox_config_SOURCES = gpe-buttonbox-config.c cfgfile.c cfgfile.h globals.h
