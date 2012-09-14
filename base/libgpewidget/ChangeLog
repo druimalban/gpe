@@ -1,6 +1,6 @@
 2012-09-15 Philippe De Swert <philippedeswert@gmail.com>
 
-	* Makefile.am: Add -lm to linker options to fix build issues for packages depending
+	* Makefile.am: Add -lm and -lX11 to linker options to fix build issues for packages depending
 	 	       on libgpewidget
 
 2012-09-08 Philippe De Swert <philippedeswert@gmail.com>
