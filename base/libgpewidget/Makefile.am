@@ -34,7 +34,7 @@ libgpewidget_la_SOURCES = gtkdatecombo.c errorbox.c init.c pixmaps.c smallbox.c 
                           color-slider.c colordialog.c link-warning.h \
                           colorrenderer.c
                           
-libgpewidget_la_LDFLAGS = @GPEWIDGET_LIBS@ @HILDON_LIBS@ -version-info 1:0:0
+libgpewidget_la_LDFLAGS = @GPEWIDGET_LIBS@ @HILDON_LIBS@ -version-info 1:0:0 -lm
 
 gpeincludedir = $(includedir)/gpe
 gpeinclude_HEADERS = gpe/init.h gpe/errorbox.h gpe/smallbox.h gpe/pixmaps.h gpe/gtkdatecombo.h \
