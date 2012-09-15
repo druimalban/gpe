@@ -1,3 +1,7 @@
+2012-09-15	Philippe De Swert <philippedeswert@gmail.com>
+
+    * Makefile: Add -lX11 as it is required to build
+
 2009-03-11      Florian Boor <florian.boor@kernelconcepts.de>
 
     * Makefile: Install binaries without using '-s'. Patch courtesy by
