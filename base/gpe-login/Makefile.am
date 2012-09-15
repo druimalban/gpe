@@ -1,3 +1,4 @@
+CFLAGS += -Wall
 
 SUBDIRS = po
 
@@ -7,7 +8,7 @@ INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir) \
 
 bin_PROGRAMS = gpe-login gpe-logout gpe-lock-display
 
-gpe_login_LDADD = @DEPS_LIBS@ -lgpe-ownerinfo -lcrypt
+gpe_login_LDADD = @DEPS_LIBS@ @DEPS_LOCK_LIBS@ -lgpe-ownerinfo -lcrypt
 gpe_login_SOURCES = gpe-login.c
 
 gpe_logout_LDADD = @DEPS_LIBS@

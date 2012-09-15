@@ -28,6 +28,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
 
+#include <gpe/init.h>
 #include <gpe/spacing.h>
 #include <gpe/infoprint.h>
 

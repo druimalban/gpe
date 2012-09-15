@@ -863,7 +863,7 @@ locale_set_xprop (const char *locale)
   atom = XInternAtom (dpy, "_GPE_LOCALE", 0);
 
   XChangeProperty (dpy, root, atom, XA_STRING, 8, PropModeReplace,
-		   locale, strlen (locale));
+		   (const unsigned char *)locale, strlen (locale));
 
   return 0;
 }
@@ -1010,7 +1010,6 @@ locale_install_check(const char* locale)
     /* check for the .utf8 type directory */
     if (strstr(locale, ".UTF-8"))
       {
-        int l1, l2, lm;
         char *cu = strstr(locale, ".UTF-8");
         cu [0] = 0;
         char *dir_alt = g_strconcat (PREFIX "/lib/locale/", locale, ".utf8", NULL);
@@ -1763,7 +1762,8 @@ main (int argc, char *argv[])
     {
       if (geometry_str)
 	{
-	  int x = -1, y = -1, h, w;
+	  int x = -1, y = -1;
+	  uint h, w;
 	  int val = XParseGeometry (geometry_str, &x, &y, &w, &h);
 	  if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
 	    {
@@ -1783,7 +1783,8 @@ main (int argc, char *argv[])
 	      if (fgets (buf, sizeof (buf), fp))
 		{
 		  int val;
-		  int x = -1, y = -1, h, w;
+		  int x = -1, y = -1;
+		  uint h, w;
 		  buf[strlen(buf)-1] = 0;
 		  val = XParseGeometry (buf, &x, &y, &w, &h);
 		  if ((val & (HeightValue | WidthValue)) == (HeightValue | WidthValue))
