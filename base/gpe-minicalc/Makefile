@@ -6,8 +6,8 @@ VERSION = 0.06
 
 MEMBERS = minicalc display
 
-GTKCFLAGS = `pkg-config --cflags gtk+-2.0`
-GTKLDFLAGS += `pkg-config --libs gtk+-2.0`
+GTKCFLAGS = `pkg-config --cflags gtk+-2.0` 
+GTKLDFLAGS += `pkg-config --libs gtk+-2.0 x11`
 
 CFLAGS = $(GTKCFLAGS) -D_GNU_SOURCE -Wall
 ifeq ($(DEBUG),yes)
