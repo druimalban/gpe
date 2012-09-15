@@ -41,11 +41,10 @@ static gint
 name_update(GtkWidget *widget, deskno *dc)
 {
     char buffer [15];
-    int n;
     int desknum = get_net_current_desktop() + 1;
 
     ENTER;
-    n = sprintf(buffer, "<b>%d</b>", desknum);
+    sprintf(buffer, "<b>%d</b>", desknum);
     gtk_label_set_markup (GTK_LABEL(dc->namew), buffer) ;
     RET(TRUE);
 }

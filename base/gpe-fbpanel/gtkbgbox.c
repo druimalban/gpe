@@ -352,7 +352,9 @@ static void
 gtk_bgbox_set_bg_root(GtkWidget *widget, GtkBgboxPrivate *priv)
 {
     priv = GTK_BGBOX_GET_PRIVATE (widget);
+#ifdef UNUSED
     GdkRectangle rect;
+#endif
     
     ENTER;
     priv->pixmap = fb_bg_get_xroot_pix_for_win(priv->bg, widget);
@@ -365,12 +367,14 @@ gtk_bgbox_set_bg_root(GtkWidget *widget, GtkBgboxPrivate *priv)
     fb_bg_composite(priv->pixmap, widget->style->black_gc, priv->tintcolor, priv->alpha);
     DBG("here\n");
     gdk_window_set_back_pixmap(widget->window, priv->pixmap, FALSE);
+#ifdef UNUSED
     //gdk_window_clear(widget->window);
     rect.x = widget->allocation.x;
     rect.y = widget->allocation.y;
     rect.width = widget->allocation.width;
     rect.height = widget->allocation.height;
     //gdk_window_invalidate_rect(widget->window, &rect, TRUE);
+#endif /* UNUSED */
     gtk_widget_queue_draw_area(widget, 0, 0, widget->allocation.width, widget->allocation.height);
     RET();
 }

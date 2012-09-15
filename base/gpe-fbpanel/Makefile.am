@@ -1,3 +1,5 @@
+CFLAGS += -Wall
+
 SUBDIRS = po systray plugins
 
 INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir) -DSTATIC_PLUGINS\

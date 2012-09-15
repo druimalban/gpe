@@ -64,7 +64,7 @@ typedef struct {
 static int
 cpu_update(cpu_t *c)
 {
-    int cpu_u=0, cpu_s=0, cpu_n=0, cpu_i=100;
+    int cpu_u=0, cpu_s=0, cpu_n=0;
     unsigned int i;
     struct cpu_stat cpu, cpu_r;
     FILE *stat;
@@ -89,7 +89,6 @@ cpu_update(cpu_t *c)
     cpu_u = cpu_r.u * c->Hwg / total;
     cpu_s = cpu_r.n * c->Hwg / total;
     cpu_n = cpu_r.s * c->Hwg / total;
-    cpu_i = cpu_r.i * c->Hwg / total;
 
     c->cpu_anterior = cpu;
     

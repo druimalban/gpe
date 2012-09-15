@@ -856,15 +856,9 @@ get_button_spacing(GtkRequisition *req, GtkContainer *parent, gchar *name)
 guint32 gcolor2rgb24(GdkColor *color)
 {
     guint32 i;
-    guint16 r, g, b;
     
     ENTER;
 
-    r = color->red * 0xFF / 0xFFFF;
-    g = color->green * 0xFF / 0xFFFF;
-    b = color->blue * 0xFF / 0xFFFF;
-    DBG("%x %x %x ==> %x %x %x\n", color->red, color->green, color->blue, r, g, b);
-    
     i = (color->red * 0xFF / 0xFFFF) & 0xFF;
     i <<= 8;
     i |= (color->green * 0xFF / 0xFFFF) & 0xFF;

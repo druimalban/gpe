@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-
+#include <gmodule.h>
 
 #include "misc.h"
 #include "bg.h"

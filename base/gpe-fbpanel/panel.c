@@ -68,7 +68,7 @@ FILE *pconf; // plugin part of profile file
 
 panel *p;
 
-
+#ifdef UNUSED
 static void
 panel_save_session (void)
 {
@@ -86,6 +86,7 @@ panel_save_session (void)
   if (tr)
     tray_save_session (tr);
 }
+#endif /* UNUSED */
 
 static void
 panel_restore_session (void)

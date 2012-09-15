@@ -1,4 +1,10 @@
+2012-09-15 Philippe De Swert <philippedeswert@gmail.com>
+
+	* configure.ac : Add dependencies on xmp, gmodule and xmu
+	* Random warning fixes
+
 2009-04-15 Ned Ludd  <solar@gentoo.org>
+
 	* gpe-base/gpe-fbpanel: misc.h panel.c config/default.gpe 
 	* Icon Dir Unification. /usr/share/gpe/pixmaps/ -> /usr/share/pixmaps/gpe/
 	* Targeted for gpe-3.0 release.
