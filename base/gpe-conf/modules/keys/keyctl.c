@@ -89,13 +89,14 @@ static gint active_button = 0;
 static gboolean
 commands_load(void)
 {
-	GKeyFile *cmdfile;
-	GError *err = NULL;
-	gchar **keys;
-	guint i, cmdcnt;
+    GKeyFile *cmdfile;
+    GError *err = NULL;
+    gchar **keys;
+    guint i;
+    gsize cmdcnt;
     gchar *filename;
 	
-	cmdfile = g_key_file_new();
+    cmdfile = g_key_file_new();
     filename = device_get_specific_file (FILE_COMMANDS);
     if (!filename)
         filename = g_strdup (FILE_COMMANDS);
@@ -116,7 +117,7 @@ commands_load(void)
 	{
 		for (i=0; i < cmdcnt; i++)
 		{
-			guint cnt = 0;
+			gsize cnt = 0;
 			gchar **vals;
 			commands = realloc(commands, (NUM_COMMANDS+1) * sizeof(t_scommand));
 			vals = g_key_file_get_string_list (cmdfile, "Commands",
@@ -147,10 +148,11 @@ commands_load(void)
 static gboolean
 layout_load(void)
 {
-	GKeyFile *layoutfile;
-	GError *err = NULL;
-	gchar **btndefs;
-	guint i, btncnt;
+    GKeyFile *layoutfile;
+    GError *err = NULL;
+    gchar **btndefs;
+    guint i;
+    gsize btncnt;
     gchar *filename;
 	
 	layoutfile = g_key_file_new();

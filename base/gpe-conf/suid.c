@@ -234,7 +234,6 @@ suidloop (int write, int read)
 	char cmd[5];
 	char passwd[100];
 	FILE *in = fdopen (read, "r");
-	char *bin = NULL;
 	char arg1[255];
 	char arg2[100];
 	int numarg = 0;
@@ -253,7 +252,6 @@ suidloop (int write, int read)
 		fscanf (in, "%4s\n%s\n", cmd, passwd);
 		{
 			cmd[4] = 0;
-			bin = NULL;
 			if ((check_user_access (cmd) == TRUE) || (check_root_passwd (passwd)))	// we want to know it exact
 			{
 
@@ -279,7 +277,6 @@ suidloop (int write, int read)
 				/* but certainly enough for PDA..  */
 				else if (strcmp (cmd, "CPPW") == 0)  // installs a new passwd file
 				{
-					bin = "/bin/cp";
 					strcpy (arg1, "/tmp/passwd");
 					strcpy (arg2, "/etc/passwd");
 					numarg = 2;
@@ -294,7 +291,6 @@ suidloop (int write, int read)
 				}
 				else if (strcmp (cmd, "CPOI") == 0)  // rewrites owner information data
 				{
-					bin = "/bin/cp";
 					system_printf ("/bin/cp %s %s",
 						       GPE_OWNERINFO_TMP,
 						       GPE_OWNERINFO_DATA);

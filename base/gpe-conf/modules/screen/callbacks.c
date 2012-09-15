@@ -51,8 +51,7 @@ on_screensaver_button_clicked           (GtkWidget       *widget,
                                         GdkRectangle    *area,
                                         gpointer         user_data)
 {
-  GtkAdjustment *adjustment;
-  adjustment = gtk_range_get_adjustment (GTK_RANGE(widget));
+  gtk_range_get_adjustment (GTK_RANGE(widget));
 }
 
 

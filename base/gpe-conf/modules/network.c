@@ -1356,7 +1356,7 @@ create_global_widgets ()
 
 			gchar *content;
 			FILE *fnew;
-			guint length;
+			gsize length;
 			GError *err = NULL;
 
 			if (g_file_get_contents ("/etc/profile", &content,
@@ -1397,7 +1397,7 @@ create_global_widgets ()
 	// system-hostname
 	gchar *content;
 	gchar **lines;
-	gint length;
+	gsize length;
 	gchar *delim;
 	gint i = 0;
 	gchar *hostfile = "/etc/hostname";

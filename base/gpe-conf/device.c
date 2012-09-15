@@ -77,7 +77,8 @@ devices_load(void)
 	GKeyFile *devicefile;
 	GError *err = NULL;
 	gchar **devices;
-	guint i, devcnt;
+	guint i;
+	gsize devcnt;
 	
 	devicefile = g_key_file_new();
 	
@@ -127,7 +128,7 @@ device_get_id (void)
 {
 	static gint id = -1;
 	gchar **strv = NULL;
-	guint len = 0;
+	gsize len = 0;
 	gint i = 0;
 	gint dnr, pnr;
 	gchar *iptr, *str = NULL;

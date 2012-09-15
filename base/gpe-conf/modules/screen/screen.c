@@ -32,6 +32,8 @@
 #include "callbacks.h"
 #include "xset.h"
 
+#include <math.h>
+
 #define _(x) gettext(x)
 
 int initialising = 1;
@@ -64,7 +66,7 @@ GtkWidget *screen_Build_Objects()
   GtkAttachOptions table_attach_right_col_x;
   GtkAttachOptions table_attach_right_col_y;
   GtkJustification table_justify_left_col;
-  GtkJustification table_justify_right_col;
+  //GtkJustification table_justify_right_col;
   
   GtkObject* adjLight;
 
@@ -89,7 +91,7 @@ GtkWidget *screen_Build_Objects()
   table_attach_right_col_y = GTK_FILL;
   
   table_justify_left_col = GTK_JUSTIFY_LEFT;
-  table_justify_right_col = GTK_JUSTIFY_RIGHT;
+  //table_justify_right_col = GTK_JUSTIFY_RIGHT;
 
   backlight_init();
 

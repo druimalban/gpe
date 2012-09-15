@@ -17,6 +17,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+
+#include <libintl.h>
  
 #include "tasks.h"
 #include "applets.h"

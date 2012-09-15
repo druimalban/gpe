@@ -51,7 +51,7 @@ file_set_line (const gchar *file, const gchar *pattern, const gchar *newline)
 {
 	gchar *content = NULL;
 	gchar **lines = NULL;
-	guint length;
+	gsize length;
 	gchar *delim;
 	FILE *fnew;
 	gint i = 0;
@@ -125,7 +125,7 @@ change_cfg_value (const gchar *file, const gchar *var, const gchar *val,
 {
 	gchar *content, *tmpval;
 	gchar **lines = NULL;
-	guint length;
+	gsize length;
 	gchar *delim;
 	FILE *fnew;
 	gint i = 0;

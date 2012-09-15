@@ -85,7 +85,7 @@ int
 get_flash_size (void)
 {
 	gchar **strv;
-	guint len = 0;
+	gsize len = 0;
 	GError *err = NULL;
 	gint i = 0;
 	gchar *str = NULL;
@@ -185,7 +185,7 @@ get_distribution_version()
 {
 	gchar *result = NULL;
 	gchar *tmp = NULL;
-	guint len = 0;
+	gsize len = 0;
 	GError *err = NULL;
 	
 	/* check for Familiar */
@@ -264,7 +264,7 @@ get_distribution_time()
 {
 	gchar *result = NULL;
 	gchar *tmp = NULL;
-	guint len = 0;
+	gsize len = 0;
 	GError *err = NULL;
 
 	/* Familiar */

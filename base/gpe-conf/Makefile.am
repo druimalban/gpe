@@ -1,3 +1,4 @@
+CFLAGS += -Wall
 
 SUBDIRS = po
 
@@ -7,7 +8,7 @@ INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) -I$(top_srcdir)/mo
            -DVERSION=\"$(VERSION)\" \
            -DDBUS_API_SUBJECT_TO_CHANGE
 
-#LDFLAGS = -pg
+LDFLAGS = -lm
 #INCLUDES = $(INCLUDES) -pg
 
 pcmcia_headers = pcmcia/version.h pcmcia/cs_types.h \

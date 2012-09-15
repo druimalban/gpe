@@ -58,7 +58,7 @@ gchar* get_file_var(const gchar *file, const gchar *var)
 {
   gchar *content;
   gchar **lines;
-  gint length;
+  gsize length;
   gchar *delim;
   gint i = 0;
 
@@ -566,7 +566,6 @@ void get_wifikey_string(NWInterface_t iface, gchar** key)
 {
 	gint nokeys = FALSE;
 	gint count;
-	gchar temp[42];
 	gchar *lkey = g_strdup(""), *t;
 	
 	

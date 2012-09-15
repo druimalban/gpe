@@ -1,3 +1,8 @@
+2012-09-15  Philippe De Swert <philippedeswert@gmail.com>
+	* Add -Wall
+	* Fix a number of warnings
+	* Add -lm linking flag (exp used in screen.c requires it)
+
 2010-09-14  Florian Boor <florian.boor@kernelconcepts.de>
 	* Release 0.2.9
 	* Several sysinfo fixes, add display of µCross distribution
