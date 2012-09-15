@@ -1,3 +1,9 @@
+2012-09-15  Philippe De Swert <philippedeswert@gmail.com>
+
+    * Add -Wall to build
+    * Remove unused function for now (cut functionality should be
+      added somehow later)
+
 2009-11-20  Florian Boor <florian.boor@kernelconcepts.de>
 
     * Update translations (de, it, lv).

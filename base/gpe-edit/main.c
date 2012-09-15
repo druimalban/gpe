@@ -383,6 +383,7 @@ ask_save_before_exit (void)
   }
 }
 
+#ifdef UNUSED
 static void
 cut_selection (void)
 {
@@ -391,6 +392,7 @@ cut_selection (void)
 
   gtk_text_buffer_cut_clipboard (GTK_TEXT_BUFFER (buf), clipboard, TRUE);
 }
+#endif /* UNUSED */
 
 static void
 copy_selection (void)
