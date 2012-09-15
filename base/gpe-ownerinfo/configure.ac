@@ -27,7 +27,7 @@ AC_PROG_LIBTOOL
 PKG_PROG_PKG_CONFIG
 
 # library dependencies
-DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 gdk-2.0 gdk-pixbuf-2.0 libgpewidget"
+DEP_MODULES="gtk+-2.0 >= 2.4 glib-2.0 >= 2.2 gdk-2.0 gdk-pixbuf-2.0 libgpewidget x11"
 
 # library dependencies
 PKG_CHECK_MODULES(DEPS, $DEP_MODULES)
