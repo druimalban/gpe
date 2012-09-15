@@ -139,6 +139,8 @@ handle_size_allocate (GtkWidget *w, GtkAllocation *a)
   gtk_widget_shape_combine_mask (w, bitmap, 0, 0);
 
   g_object_unref (bitmap);
+ 
+  return TRUE;
 }
 
 static gboolean
@@ -179,7 +181,6 @@ static void
 popup_box (const gchar *text, gint length, gint x, gint y, gint type)
 {
   GtkWidget *label, *box, *icon;
-  GtkRequisition req;
   GdkGeometry geometry;
   gint spacing = gpe_get_border ();
   gint width = 18;
@@ -339,7 +340,8 @@ handle_click (Window w, Window orig_w, int x, int y)
 
       if (root != w && root != parent)
         {
-          unsigned int px, py, b, d, root_w, root_h;
+          unsigned int b, d, root_w, root_h;
+	  int px, py;
           Window r;
           XGetGeometry (dpy, w, &r, &px, &py, &root_w, &root_h, &b, &d);
 
@@ -461,7 +463,7 @@ do_help_message (GdkXEvent * xevent, GdkEvent * event, gpointer data)
        gdk_x11_atom_to_xatom (help_atom), 0, 65536, False, XA_STRING, &type,
        &format, &nitems, &bytes_after, &prop) == Success)
     {
-      popup_box (prop, nitems, last_x, last_y, PU_HELP);
+      popup_box ((const gchar *)prop, nitems, last_x, last_y, PU_HELP);
       XFree (prop);
     }
 
@@ -481,7 +483,7 @@ do_infoprint_message (GdkXEvent * xevent, GdkEvent * event, gpointer data)
 			  False, XA_STRING, &type, &format, &nitems,
 			  &bytes_after, &prop) == Success)
     {
-      popup_box (prop, nitems, -1, -1, PU_INFO);
+      popup_box ((const gchar*)prop, nitems, -1, -1, PU_INFO);
       XFree (prop);
     }
 

@@ -1,3 +1,5 @@
+CFLAGS += -Wall
+
 SUBDIRS = po
 
 INCLUDES = $(DEPS_CFLAGS) -I$(top_srcdir)/gpe -I$(top_srcdir) \

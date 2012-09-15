@@ -1,3 +1,8 @@
+2012-09-16  Philippe De Swert <philippedeswert@gmail.com>
+
+	* Enable -Wall and fix warnings
+	* Add x11 dependency
+
 2006-12-05  Florian Boor  <florian@kernelconcepts.de>
 
 	* gpe-what.c (popup_box): Set type hint of popup window.

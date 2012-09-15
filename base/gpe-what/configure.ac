@@ -10,7 +10,7 @@ AC_STDC_HEADERS
 AC_PROG_INSTALL
 
 
-DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget"
+DEP_MODULES="gtk+-2.0 >= 2.2 glib-2.0 >= 2.2 libgpewidget x11"
 
 # i8n stuff
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
