@@ -533,9 +533,9 @@ GtkWidget
     return NULL;
 
   spixbuf = gdk_pixbuf_scale_simple (pixbuf, size, size, GDK_INTERP_BILINEAR);
-  gdk_pixbuf_unref (pixbuf);
+  g_object_unref (pixbuf);
   w = gtk_image_new_from_pixbuf(spixbuf);
-  gdk_pixbuf_unref (spixbuf);
+  g_object_unref (spixbuf);
 
   return w;
 }
@@ -789,8 +789,8 @@ show_file_properties ()
 static void
 ask_open_with (FileInformation *file_info)
 {
-  GtkWidget *dialog_window, *combo, *label, *entry;
-  GtkWidget *open_button, *cancel_button;
+  GtkWidget *dialog_window, *combo, *label; // *entry;
+  GtkWidget *open_button;
   GList *applications = NULL;
   GList *appnames = NULL;
   gchar *s;
@@ -807,13 +807,12 @@ ask_open_with (FileInformation *file_info)
 
   gtk_misc_set_alignment (GTK_MISC (label), 0.0, 0.5);
 
-  entry = gtk_entry_new ();
+  //entry = gtk_entry_new ();
 
   combo = gtk_combo_new();
   gtk_combo_set_value_in_list(GTK_COMBO(combo), TRUE, FALSE);
     
-  cancel_button = gtk_dialog_add_button(GTK_DIALOG(dialog_window), 
-                                        GTK_STOCK_CANCEL, 
+  gtk_dialog_add_button(GTK_DIALOG(dialog_window), GTK_STOCK_CANCEL, 
                                         GTK_RESPONSE_CANCEL);
 
   open_button = gtk_dialog_add_button(GTK_DIALOG(dialog_window), GTK_STOCK_OK, 
@@ -1163,7 +1162,7 @@ add_icon (FileInformation *file_info)
 			                COL_DIRDATA, (gpointer) file_info,
 			                -1);
 #ifndef USE_HILDON
-		gdk_pixbuf_unref(pb);
+		g_object_unref(pb);
 #endif
     }
   else
@@ -1204,7 +1203,7 @@ add_icon (FileInformation *file_info)
 		g_free(size);
 		g_free(time);
 #ifndef USE_HILDON
-		gdk_pixbuf_unref(pb);
+		g_object_unref(pb);
 #endif
 	  }
   }  
@@ -1252,7 +1251,7 @@ make_view (void)
 		{
 			gtk_tree_model_get(GTK_TREE_MODEL(store),&iter,COL_DATA,&i,COL_ICON,&buf,-1);
 			gnome_vfs_file_info_unref(i->vfs);
-			gdk_pixbuf_unref(buf);
+			g_object_unref(buf);
 			g_free(i->filename);
 		}while (gtk_tree_model_iter_next(GTK_TREE_MODEL(store),&iter));
 	}

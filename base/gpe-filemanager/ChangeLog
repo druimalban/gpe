@@ -1,3 +1,8 @@
+2012-09-15  Philippe De Swert <philippedeswert@gmail.com>
+
+	* Makefile.am : Add -Wall
+	* Miscg GTK3 preparation fixes
+
 2010-01-20  Graham Cobb  <g+770@cobb.uk.net>
 
 	* main.c (popup_ask_rename_file): Make this work from the main menu.

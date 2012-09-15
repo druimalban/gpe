@@ -15,7 +15,7 @@ typedef struct
 extern gchar *current_directory;
 
 void refresh_current_directory (void);
-
+void browse_directory (gchar *directory);
 
 #ifdef __cplusplus
 }

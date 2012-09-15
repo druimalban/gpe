@@ -24,6 +24,8 @@
 #include <libgnomevfs/gnome-vfs.h>
 #include <gpe/spacing.h>
 
+#include "main.h"
+
 #define _(x) gettext(x)
 
 #define FILE_MTAB "/etc/mtab"

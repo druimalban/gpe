@@ -45,7 +45,6 @@ do_send_file (const gchar *service, const gchar *path, const gchar *method,
 	      const gchar *uri, GnomeVFSFileInfo *info)
 {
   DBusMessage *message;
-  DBusMessageIter iter;
   gchar *data;
   GnomeVFSHandle *handle;
   GnomeVFSResult r;
@@ -81,6 +80,8 @@ do_send_file (const gchar *service, const gchar *path, const gchar *method,
 			    DBUS_TYPE_ARRAY, DBUS_TYPE_BYTE, 
 			    &data, real_size, DBUS_TYPE_INVALID);
 #else
+  DBusMessageIter iter;
+
   dbus_message_append_iter_init (message, &iter);
 
   dbus_message_iter_append_string (&iter, filename);

@@ -1,3 +1,4 @@
+CFLAGS += -Wall
 
 SUBDIRS = po pixmaps
 
