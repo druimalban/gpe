@@ -1,9 +1,12 @@
+2012-09-15  Philippe De Swert <philippedeswert@gmail.com>
 
-2009-05-08      Florian Boor <florian.boor@kernelconcepts.de>
+	* Makefile: Needs -lX11 now
+
+2009-05-08  Florian Boor <florian.boor@kernelconcepts.de>
 
 	* Release 0.27
 
-2009-03-11      Florian Boor <florian.boor@kernelconcepts.de>
+2009-03-11  Florian Boor <florian.boor@kernelconcepts.de>
 
     * Makefile: Install binaries without using '-s'. Patch courtesy by
       Ned Ludd <solar@gentoo.org>

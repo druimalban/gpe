@@ -10,7 +10,7 @@ LINGUAS = nl pt cs fr de ro ru sr sk sv es fi ja hu ko ky pt_BR sl tr vi wa zh_C
 
 MEMBERS = clock 
 
-PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS)
+PACKAGE_CPPFLAGS += $(STANDARD_CPPFLAGS) -Wall
 PACKAGE_CFLAGS += $(STANDARD_CFLAGS) $(GPECFLAGS)
 PACKAGE_LDFLAGS += $(STANDARD_LDFLAGS) $(GPELIBS)
 
@@ -28,7 +28,7 @@ else
 BUILD = build
 endif
 
-PACKAGE_LDFLAGS += -lschedule -lgpelaunch
+PACKAGE_LDFLAGS += -lschedule -lgpelaunch -lX11
 
 all: $(PACKAGE)
 
