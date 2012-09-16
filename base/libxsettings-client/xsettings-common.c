@@ -63,6 +63,8 @@ xsettings_setting_copy (XSettingsSetting *setting)
 
       memcpy (result->data.v_string, setting->data.v_string, str_len + 1);
       break;
+     case XSETTINGS_TYPE_NONE:
+	break;
     }
 
   result->last_change_serial = setting->last_change_serial;
@@ -137,6 +139,8 @@ xsettings_setting_equal (XSettingsSetting *setting_a,
 	      setting_a->data.v_color.alpha == setting_b->data.v_color.alpha);
     case XSETTINGS_TYPE_STRING:
       return strcmp (setting_a->data.v_string, setting_b->data.v_string) == 0;
+    case XSETTINGS_TYPE_NONE:
+	break;
     }
 
   return 0;
