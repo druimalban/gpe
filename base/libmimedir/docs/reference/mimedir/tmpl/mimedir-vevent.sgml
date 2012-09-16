@@ -17,6 +17,9 @@ iCalendar event object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT MIMEDirVEvent ##### -->
 <para>
 
@@ -30,6 +33,7 @@ iCalendar event object
 
 </para>
 
+@void: 
 @Returns: 
 
 

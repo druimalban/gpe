@@ -17,6 +17,9 @@ vCard/iCalendar attachment object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT MIMEDirAttachment ##### -->
 <para>
 
@@ -30,6 +33,7 @@ vCard/iCalendar attachment object
 
 </para>
 
+@void: 
 @Returns: 
 
 

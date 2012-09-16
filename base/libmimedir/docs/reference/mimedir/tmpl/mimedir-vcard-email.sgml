@@ -19,6 +19,9 @@ that relate to the type of e-mail address.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### ENUM MIMEDirVCardEMailType ##### -->
 <para>
 Type of e-mail address.
@@ -42,6 +45,7 @@ should be accessed using the functions below.
 
 </para>
 
+@void: 
 @Returns: 
 
 

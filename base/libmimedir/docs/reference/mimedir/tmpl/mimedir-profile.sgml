@@ -17,6 +17,9 @@ MIME Directory Profile object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### MACRO MIMEDIR_PROFILE_ERROR ##### -->
 <para>
 Error domain for #MIMEDirProfile operations. Errors in this domain will be

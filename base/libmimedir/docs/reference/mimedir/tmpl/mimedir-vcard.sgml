@@ -17,6 +17,9 @@ vCard business card object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### ENUM MIMEDirVCardKeyType ##### -->
 <para>
 The type of a public key that is associated with the vCard.
@@ -112,6 +115,7 @@ should be accessed using the functions below.
 
 </para>
 
+@void: 
 @Returns: 
 
 

@@ -1,3 +1,7 @@
+2012-09-16  Philippe De Swert <philippedeswert@gmail.com>
+
+	* Remove deprecated and removed G_CONST_RETURN
+
 2010-06-22  Graham Cobb  <g+770@cobb.uk.net>
 
 	* mimedir/mimedir-vcard.c (mimedir_vcard_write_to_profile): Tolerate missing revision data.

@@ -17,6 +17,9 @@ MIME Directory Attribute object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### MACRO MIMEDIR_ATTRIBUTE_ERROR ##### -->
 <para>
 Error domain for #MIMEDirAttribute operations. Errors in this domain will be
@@ -177,6 +180,7 @@ should be accessed using the functions below.
 
 </para>
 
+@void: 
 @Returns: 
 
 

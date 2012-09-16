@@ -17,6 +17,9 @@ main iCalendar object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### MACRO MIMEDIR_VCAL_ERROR ##### -->
 <para>
 Error domain for #MIMEDirAttribute operations. Errors in this domain
@@ -62,6 +65,7 @@ error code.
 
 </para>
 
+@void: 
 @Returns: 
 
 

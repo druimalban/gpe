@@ -17,6 +17,9 @@ iCalendar free/busy object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT MIMEDirVFreeBusy ##### -->
 <para>
 
@@ -40,6 +43,7 @@ iCalendar free/busy object
 
 </para>
 
+@void: 
 @Returns: 
 
 

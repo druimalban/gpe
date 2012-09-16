@@ -457,7 +457,7 @@ mimedir_vcal_read_file (const gchar *filename, GError **error)
 			return NULL;
 		}
 
-		G_CONST_RETURN char *encoding;
+		const char *encoding;
 		g_get_charset(&encoding);
 		if (g_io_channel_set_encoding (channel, encoding, error) != G_IO_STATUS_NORMAL) {
 			g_io_channel_unref (channel);

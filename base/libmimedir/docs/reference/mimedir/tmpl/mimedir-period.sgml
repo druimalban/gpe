@@ -17,6 +17,9 @@ MIMEDirPeriod
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT MIMEDirPeriod ##### -->
 <para>
 
@@ -30,6 +33,7 @@ MIMEDirPeriod
 
 </para>
 
+@void: 
 @Returns: 
 
 

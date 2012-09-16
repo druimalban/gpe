@@ -17,6 +17,9 @@ date time object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### MACRO MIMEDIR_DATETIME_NOTZ ##### -->
 <para>
 This date time object does not specify the time zone.
@@ -52,6 +55,7 @@ The time is given in Universal Standard Time (UTC).
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -60,6 +64,7 @@ The time is given in Universal Standard Time (UTC).
 
 </para>
 
+@void: 
 @Returns: 
 
 

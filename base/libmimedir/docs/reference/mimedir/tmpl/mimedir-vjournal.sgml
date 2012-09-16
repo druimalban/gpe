@@ -17,6 +17,9 @@ iCalendar journal object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT MIMEDirVJournal ##### -->
 <para>
 
@@ -30,6 +33,7 @@ iCalendar journal object
 
 </para>
 
+@void: 
 @Returns: 
 
 

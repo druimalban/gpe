@@ -17,6 +17,9 @@ iCalendar time zone object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT MIMEDirVTimeZone ##### -->
 <para>
 
@@ -30,6 +33,7 @@ iCalendar time zone object
 
 </para>
 
+@void: 
 @Returns: 
 
 

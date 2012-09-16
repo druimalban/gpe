@@ -19,6 +19,9 @@ that relate to the type of address.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT MIMEDirVCardAddress ##### -->
 <para>
 The #MIMEDirVCardAddress-struct struct contains private data only, and
@@ -33,6 +36,7 @@ should be accessed using the functions below.
 
 </para>
 
+@void: 
 @Returns: 
 
 

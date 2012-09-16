@@ -17,6 +17,9 @@ mimedir-utils
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### FUNCTION mimedir_utils_strcat_list ##### -->
 <para>
 

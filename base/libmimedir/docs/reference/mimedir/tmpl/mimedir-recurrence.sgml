@@ -17,6 +17,9 @@ iCalendar recurrence object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT MIMEDirRecurrence ##### -->
 <para>
 
@@ -30,6 +33,7 @@ iCalendar recurrence object
 
 </para>
 
+@void: 
 @Returns: 
 
 

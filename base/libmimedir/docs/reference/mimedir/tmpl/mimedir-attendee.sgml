@@ -17,6 +17,9 @@ iCalendar attendee object
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT MIMEDirAttendee ##### -->
 <para>
 
@@ -31,6 +34,7 @@ iCalendar attendee object
 
 </para>
 
+@void: 
 @Returns: 
 
 

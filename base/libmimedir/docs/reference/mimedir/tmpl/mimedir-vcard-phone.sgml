@@ -19,6 +19,9 @@ propertiesthat relate to the type of telephone number.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT MIMEDirVCardPhone ##### -->
 <para>
 The #MIMEDirVCardPhone-struct struct contains private data only, and
@@ -33,6 +36,7 @@ should be accessed using the functions below.
 
 </para>
 
+@void: 
 @Returns: 
 
 

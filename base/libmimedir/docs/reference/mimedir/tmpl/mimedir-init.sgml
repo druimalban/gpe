@@ -17,10 +17,14 @@ library initialization routines
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### FUNCTION mimedir_init ##### -->
 <para>
 
 </para>
 
+@void: 
 
 
