@@ -8,7 +8,7 @@ CC        = gcc
 PACKAGE_CFLAGS    = -Os -fomit-frame-pointer -Wall
 XROOT     = /usr/X11R6
 PACKAGE_CFLAGS  += $(STANDARD_CFLAGS) `pkg-config --cflags xtst xau`
-LIBS      = `pkg-config --libs xtst xau`
+LIBS      = `pkg-config --libs xtst xau x11`
 
 PROG      = keylaunch
 
