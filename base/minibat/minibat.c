@@ -9,12 +9,6 @@
  * 2 of the License, or (at your option) any later version.
  */
 
-#include <cairo.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
-#include <X11/extensions/Xrender.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,6 +17,13 @@
 #include <libintl.h>
 #include <stdint.h>
 #include <apm.h>
+
+#include <cairo.h>
+#include <cairo-xlib.h>
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+#include <X11/extensions/Xrender.h>
 
 #include <libmb/mbpixbuf.h>
 
@@ -72,9 +73,9 @@ static void
 clear (cairo_t	*cr, double width, double height, double alpha)
 {
   cairo_save (cr);
-  cairo_set_rgb_color (cr, 1, 1, 1);
-  cairo_set_alpha (cr, alpha);
-  cairo_set_operator (cr, CAIRO_OPERATOR_SRC);
+  cairo_set_source_rgb (cr, 1, 1, 1);
+  cairo_paint_with_alpha(cr, alpha);
+  cairo_set_operator (cr, CAIRO_OPERATOR_SOURCE);
   cairo_rectangle (cr, 0, 0, width, height);
   cairo_fill (cr);
   cairo_restore (cr);
@@ -86,9 +87,8 @@ draw_state (void)
   cairo_move_to (popup.cr, 0, 0);
   clear (popup.cr, popup.width, popup.img_offset, 0);
 
-  cairo_set_rgb_color (popup.cr, 1, 1, 1);
-  cairo_set_alpha (popup.cr, 0.8);
-
+  cairo_set_source_rgb (popup.cr, 1, 1, 1);
+  cairo_paint_with_alpha (popup.cr, 0.8);
   cairo_new_path (popup.cr);
 
 #define CORNER 5
@@ -118,11 +118,11 @@ draw_state (void)
   cairo_close_path (popup.cr);
   cairo_fill (popup.cr);
 
-  cairo_select_font (popup.cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-  cairo_set_rgb_color (popup.cr, 0, 0, 0);
-  cairo_set_alpha (popup.cr, 1.0);
+  cairo_select_font_face (popup.cr, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+  cairo_set_source_rgb (popup.cr, 0, 0, 0);
+  cairo_paint_with_alpha (popup.cr, 1.0);
   cairo_move_to (popup.cr, CORNER * 2, popup.img_offset / 2);
-  cairo_scale_font (popup.cr, 10);
+  cairo_set_font_size (popup.cr, 10);
   cairo_show_text (popup.cr, "75%");
 }
 
@@ -151,23 +151,23 @@ initialize_popup (Display *dpy, Visual *visual, Window root, Colormap cmap)
 				32, InputOutput, visual, wmask, &wattr);
   popup.gc = XCreateGC (dpy, popup.window, GCGraphicsExposures, &gcv);
   popup.pixmap = XCreatePixmap (dpy, popup.window, popup.width, popup.height, 32);
-  popup.cr = cairo_create ();
   popup.surface = cairo_xlib_surface_create (dpy, popup.pixmap, visual, 0, cmap);
 
-  cairo_set_target_surface (popup.cr, popup.surface);
+  //cairo_set_target_surface (popup.cr, popup.surface);
 
   clear (popup.cr, popup.width, popup.height, 0);
 
   popup.img_offset = popup.height - pixbufs[IMG_POPUP]->height;
 
-  img_surface = cairo_surface_create_for_image (pixbufs[IMG_POPUP]->rgba,
+  img_surface = cairo_image_surface_create_for_data (pixbufs[IMG_POPUP]->rgba,
 						CAIRO_FORMAT_ARGB32,
 						pixbufs[IMG_POPUP]->width,
 						pixbufs[IMG_POPUP]->height,
 						pixbufs[IMG_POPUP]->width * 4);
   
+  popup.cr = cairo_create (img_surface);
   cairo_translate (popup.cr, 0, popup.img_offset);
-  cairo_show_surface (popup.cr, img_surface, pixbufs[IMG_POPUP]->width, pixbufs[IMG_POPUP]->height);
+  cairo_set_source_surface (popup.cr, img_surface, pixbufs[IMG_POPUP]->width, pixbufs[IMG_POPUP]->height);
   cairo_translate (popup.cr, 0, -popup.img_offset);
 
   draw_state ();
@@ -204,19 +204,18 @@ initialize_panel (Display *dpy, Visual *visual, Window root, Colormap cmap)
 
   panel.gc = XCreateGC (dpy, panel.window, 0, &gcv);
 
-  cr = cairo_create ();
 
   surface = cairo_xlib_surface_create (dpy, panel.pixmap, visual, 0, cmap);
 
-  cairo_set_target_surface (cr, surface);
-
-  img_surface = cairo_surface_create_for_image (pixbufs[IMG_PANEL]->rgba,
+  img_surface = cairo_image_surface_create_for_data (pixbufs[IMG_PANEL]->rgba,
 						CAIRO_FORMAT_ARGB32,
 						pixbufs[IMG_PANEL]->width,
 						pixbufs[IMG_PANEL]->height,
 						pixbufs[IMG_PANEL]->width * 4);
 
-  cairo_show_surface (cr, img_surface, pixbufs[IMG_PANEL]->width, pixbufs[IMG_PANEL]->height);
+  cr = cairo_create (img_surface);
+
+  cairo_set_source_surface (cr, img_surface, pixbufs[IMG_PANEL]->width, pixbufs[IMG_PANEL]->height);
 
   cairo_destroy (cr);
 

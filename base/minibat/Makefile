@@ -4,22 +4,22 @@ DEBUG = yes
 CVSBUILD = yes
 VERSION = 0.18
 
-PKGS = x11 cairo libmb xext
+PKGS = x11 cairo libmb xext xrender
 
 LINGUAS = 
 
 MEMBERS = minibat mbtray findargb
 
-CPPFLAGS = -D_GNU_SOURCE -DHAVE_APM_H `pkg-config $(PKG_CONFIG) --cflags $(PKGS)`
+CPPFLAGS = -D_GNU_SOURCE -DHAVE_APM_H `pkg-config --cflags $(PKGS)`
+
 ifeq ($(DEBUG),yes)
 CFLAGS += -O2 -g
-LDFLAGS = -g #-lefence
+LDFLAGS += -g #-lefence
 else
 CFLAGS += -Os -fomit-frame-pointer
 endif
 CFLAGS += -Wall
 
-LDFLAGS = `pkg-config $(PKG_CONFIG) --libs $(PKGS)` -lapm -lm
 
 CPPFLAGS += -DPACKAGE=\"$(PACKAGE)\" -DPREFIX=\"$(PREFIX)\" -DPACKAGE_LOCALE_DIR=\"$(PREFIX)/share/locale\"
 CFLAGS += -MD
@@ -41,7 +41,7 @@ export PKG_CONFIG_PATH = $(BUILD)
 all: $(PACKAGE) all-mo
 
 $(PACKAGE): $(OBJS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) -o $@ $^ `pkg-config --libs $(PKGS)` $(LDFLAGS)
 
 install-program: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
