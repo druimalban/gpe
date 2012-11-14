@@ -182,8 +182,11 @@ color_slider_dispose (GObject *object)
 static void
 color_slider_realize (GtkWidget *widget)
 {
+	ColorSlider *slider;
 	GdkWindowAttr attributes;
 	gint attributes_mask;
+
+	slider = COLOR_SLIDER (widget);
 
 	GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
 
@@ -213,6 +216,10 @@ color_slider_realize (GtkWidget *widget)
 static void
 color_slider_size_request (GtkWidget *widget, GtkRequisition *requisition)
 {
+        ColorSlider *slider;
+
+        slider = COLOR_SLIDER (widget);
+
 	requisition->width = SLIDER_WIDTH + widget->style->xthickness * 2;
 	requisition->height = SLIDER_HEIGHT + widget->style->ythickness * 2;
 }
@@ -220,6 +227,10 @@ color_slider_size_request (GtkWidget *widget, GtkRequisition *requisition)
 static void
 color_slider_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
 {
+        ColorSlider *slider;
+
+        slider = COLOR_SLIDER (widget);
+
 	widget->allocation = *allocation;
 
 	if (GTK_WIDGET_REALIZED (widget)) {
@@ -236,6 +247,9 @@ color_slider_expose (GtkWidget *widget, GdkEventExpose *event)
 	slider = COLOR_SLIDER (widget);
 
 	if (GTK_WIDGET_DRAWABLE (widget)) {
+                gint width, height;
+                width = widget->allocation.width;
+                height = widget->allocation.height;
 		color_slider_paint (slider, &event->area);
 	}
 

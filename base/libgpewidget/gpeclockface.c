@@ -174,6 +174,7 @@ gpe_clock_face_expose (GtkWidget *widget,
   GdkDrawable *drawable;
   GdkGC *gc;
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
+  Display *dpy;
   int cur_hour;
   gboolean afternoon;
   GdkGC *white_gc;
@@ -190,6 +191,8 @@ gpe_clock_face_expose (GtkWidget *widget,
 
   cur_hour = gtk_adjustment_get_value (clock->hour_adj);
   afternoon = (cur_hour >= 12) ? TRUE : FALSE;
+
+  dpy = GDK_WINDOW_XDISPLAY (drawable);
 
   if (event)
     {
@@ -542,6 +545,9 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
 {
   GpeClockFace *clock = GPE_CLOCK_FACE (widget);
   GdkGCValues gcv;
+  Display *dpy;
+  GdkVisual *gv;
+  GdkColormap *gcm;
 
   clock->backing_pixmap = gdk_pixmap_new (widget->window,
 					  widget->allocation.width, 
@@ -552,6 +558,10 @@ gpe_clock_face_prepare_xrender (GtkWidget *widget)
   gdk_gc_get_values (widget->style->bg_gc[GTK_STATE_NORMAL], &gcv);
   gdk_gc_set_foreground (clock->backing_gc, &gcv.foreground);
 
+  dpy = GDK_WINDOW_XDISPLAY (widget->window);
+  gv = gdk_window_get_visual (widget->window);
+  gcm = gdk_drawable_get_colormap (widget->window);
+      
 #ifdef HAVE_CAIRO
   clock->cr = gdk_cairo_create (clock->backing_pixmap);
 #else
@@ -764,9 +774,11 @@ gpe_clock_face_init (GpeClockFace *clock)
 static void
 gpe_clock_face_class_init (GpeClockFaceClass * klass)
 {
+  GObjectClass *oclass;
   GtkWidgetClass *widget_class;
 
   parent_class = g_type_class_ref (gtk_widget_get_type ());
+  oclass = (GObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
 
   widget_class->realize = gpe_clock_face_realize;

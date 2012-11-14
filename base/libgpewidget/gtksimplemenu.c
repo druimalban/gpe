@@ -70,9 +70,11 @@ gtk_simple_menu_show (GtkWidget *widget)
 static void
 gtk_simple_menu_class_init (GtkSimpleMenuClass * klass)
 {
+  GtkObjectClass *oclass;
   GtkWidgetClass *widget_class;
 
   parent_class = gtk_type_class (gtk_option_menu_get_type ());
+  oclass = (GtkObjectClass *) klass;
   widget_class = (GtkWidgetClass *) klass;
 
   widget_class->show = gtk_simple_menu_show;

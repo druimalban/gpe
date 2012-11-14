@@ -732,7 +732,12 @@ gpe_time_sel_init (GpeTimeSel *sel)
 static void
 gpe_time_sel_class_init (GpeTimeSelClass * klass)
 {
+  GObjectClass *oclass;
+  GtkWidgetClass *widget_class;
+
   parent_class = g_type_class_ref (gtk_hbox_get_type ());
+  oclass = (GObjectClass *) klass;
+  widget_class = (GtkWidgetClass *) klass;
 
   my_signals[0]
     = g_signal_new ("changed",
