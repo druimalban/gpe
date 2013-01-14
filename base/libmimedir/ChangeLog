@@ -1,3 +1,7 @@
+2013-01-14  Florian Boor <florian@kernelconcepts.de>
+
+        * Relase 0.4.3
+
 2012-09-16  Philippe De Swert <philippedeswert@gmail.com>
 
 	* Remove deprecated and removed G_CONST_RETURN
