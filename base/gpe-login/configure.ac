@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(gpe-login,0.95,gpe-list@linuxtogo.org)
+AC_INIT(gpe-login,0.96,gpe-list@linuxtogo.org)
 AC_CONFIG_SRCDIR([gpe-login.c])
 AM_INIT_AUTOMAKE([foreign dist-bzip2])
 
